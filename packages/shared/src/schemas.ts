@@ -48,6 +48,12 @@ export const createUserSchema = z.object({
 });
 export type CreateUserDto = z.infer<typeof createUserSchema>;
 
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(8).max(128),
+});
+export type ChangePasswordDto = z.infer<typeof changePasswordSchema>;
+
 export const createDiscussionSchema = z.object({
   body: z.string().min(1).max(4000),
 });

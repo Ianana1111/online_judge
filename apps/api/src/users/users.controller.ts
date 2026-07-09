@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
-import { createUserSchema, type CreateUserDto } from "@oj/shared";
-import { Public, Roles } from "../common/decorators";
+import { Body, Controller, Get, HttpCode, Param, Patch, Post } from "@nestjs/common";
+import { changePasswordSchema, createUserSchema, type ChangePasswordDto, type CreateUserDto } from "@oj/shared";
+import { CurrentUser, Public, Roles, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { UsersService } from "./users.service";
 
@@ -13,6 +13,14 @@ export class UsersController {
   @HttpCode(201)
   create(@Body(new ZodValidationPipe(createUserSchema)) body: CreateUserDto) {
     return this.users.createByAdmin(body);
+  }
+
+  @Patch("me/password")
+  changePassword(
+    @Body(new ZodValidationPipe(changePasswordSchema)) body: ChangePasswordDto,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.users.changePassword(user.id, body);
   }
 
   @Roles("ADMIN")

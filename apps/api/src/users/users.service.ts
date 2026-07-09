@@ -1,7 +1,7 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import argon2 from "argon2";
 import { prisma } from "@oj/db";
-import type { CreateUserDto } from "@oj/shared";
+import type { ChangePasswordDto, CreateUserDto } from "@oj/shared";
 
 const HEATMAP_DAYS = 365;
 
@@ -19,6 +19,18 @@ export class UsersService {
       data: { handle: dto.handle, email: dto.email, passwordHash, role: dto.role },
     });
     return { id: user.id, handle: user.handle, email: user.email, role: user.role, createdAt: user.createdAt };
+  }
+
+  async changePassword(userId: string, dto: ChangePasswordDto): Promise<{ ok: true }> {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException("User not found");
+
+    const ok = await argon2.verify(user.passwordHash, dto.currentPassword);
+    if (!ok) throw new UnauthorizedException("Current password is incorrect");
+
+    const passwordHash = await argon2.hash(dto.newPassword, { type: argon2.argon2id });
+    await prisma.user.update({ where: { id: userId }, data: { passwordHash } });
+    return { ok: true };
   }
 
   async listAll() {
