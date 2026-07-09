@@ -1,0 +1,223 @@
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { prisma } from "@oj/db";
+import type { CreateContestDto } from "@oj/shared";
+import type { RequestUser } from "../common/decorators";
+
+@Injectable()
+export class ContestsService {
+  async list() {
+    const contests = await prisma.contest.findMany({ orderBy: { createdAt: "desc" } });
+    return contests.map((c) => ({
+      id: c.id,
+      title: c.title,
+      slug: c.slug,
+      kind: c.kind,
+      startAt: c.startAt,
+      durationMin: c.durationMin,
+      isPublic: c.isPublic,
+    }));
+  }
+
+  async detail(id: string, requester: RequestUser | null) {
+    const contest = await prisma.contest.findUnique({
+      where: { id },
+      include: {
+        problems: {
+          orderBy: { ord: "asc" },
+          include: { problem: { include: { tags: { include: { tag: true } }, samples: { orderBy: { ord: "asc" } } } } },
+        },
+      },
+    });
+    if (!contest) throw new NotFoundException("Contest not found");
+
+    let myParticipant: { startedAt: Date; endsAt: Date; status: string } | null = null;
+    if (requester) {
+      const participant = await prisma.contestParticipant.findUnique({
+        where: { contestId_userId: { contestId: id, userId: requester.id } },
+      });
+      if (participant) {
+        myParticipant = {
+          startedAt: participant.startedAt,
+          endsAt: participant.endsAt,
+          status: participant.status,
+        };
+      }
+    }
+
+    return {
+      id: contest.id,
+      title: contest.title,
+      slug: contest.slug,
+      kind: contest.kind,
+      startAt: contest.startAt,
+      durationMin: contest.durationMin,
+      freezeMin: contest.freezeMin,
+      penaltyMin: contest.penaltyMin,
+      isPublic: contest.isPublic,
+      myParticipant,
+      problems: contest.problems.map((cp) => ({
+        label: cp.label,
+        ord: cp.ord,
+        problem: {
+          id: cp.problem.id,
+          slug: cp.problem.slug,
+          title: cp.problem.title,
+          statementMd: cp.problem.statementMd,
+          inputSpecMd: cp.problem.inputSpecMd,
+          outputSpecMd: cp.problem.outputSpecMd,
+          timeLimitMs: cp.problem.timeLimitMs,
+          memoryLimitKb: cp.problem.memoryLimitKb,
+          difficulty: cp.problem.difficulty,
+          source: cp.problem.source,
+          tags: cp.problem.tags.map((t) => t.tag.slug),
+          samples: cp.problem.samples.map((s) => ({ ord: s.ord, input: s.input, output: s.output })),
+        },
+      })),
+    };
+  }
+
+  async register(id: string, userId: string) {
+    const contest = await prisma.contest.findUnique({ where: { id } });
+    if (!contest) throw new NotFoundException("Contest not found");
+
+    const existing = await prisma.contestParticipant.findUnique({
+      where: { contestId_userId: { contestId: id, userId } },
+    });
+    if (existing) return existing;
+
+    const now = new Date();
+    let startedAt: Date;
+    let endsAt: Date;
+    let status: "REGISTERED" | "RUNNING";
+
+    if (contest.startAt) {
+      // Scheduled/group session: everyone shares the same clock, regardless of when each
+      // participant clicks "register" — that's what makes it a synchronized CPE sitting rather
+      // than a per-user virtual window.
+      startedAt = contest.startAt;
+      endsAt = new Date(contest.startAt.getTime() + contest.durationMin * 60_000);
+      if (now >= endsAt) {
+        throw new BadRequestException("This contest has already ended.");
+      }
+      status = now < contest.startAt ? "REGISTERED" : "RUNNING";
+    } else {
+      // Virtual/individual: personal window starting the moment they register.
+      startedAt = now;
+      endsAt = new Date(now.getTime() + contest.durationMin * 60_000);
+      status = "RUNNING";
+    }
+
+    return prisma.contestParticipant.create({
+      data: { contestId: id, userId, startedAt, endsAt, status },
+    });
+  }
+
+  async createByAdmin(dto: CreateContestDto) {
+    return prisma.contest.create({
+      data: {
+        title: dto.title,
+        slug: dto.slug,
+        kind: dto.kind,
+        startAt: dto.startAt ? new Date(dto.startAt) : undefined,
+        durationMin: dto.durationMin,
+        freezeMin: dto.freezeMin,
+        penaltyMin: dto.penaltyMin,
+        scoring: dto.scoring,
+        isPublic: dto.isPublic,
+        problems: {
+          create: dto.problems.map((p, ord) => ({ problemId: p.problemId, label: p.label, ord })),
+        },
+      },
+      include: { problems: true },
+    });
+  }
+
+  async scoreboard(id: string) {
+    const contest = await prisma.contest.findUnique({
+      where: { id },
+      include: { problems: { orderBy: { ord: "asc" } } },
+    });
+    if (!contest) throw new NotFoundException("Contest not found");
+
+    const participants = await prisma.contestParticipant.findMany({
+      where: { contestId: id },
+      include: { user: { select: { id: true, handle: true } } },
+    });
+
+    if (participants.length === 0) {
+      return { standings: [], frozen: false };
+    }
+
+    const now = Date.now();
+    let anyFrozen = false;
+
+    const rows = await Promise.all(
+      participants.map(async (p) => {
+        const freezeCutoff = p.endsAt.getTime() - contest.freezeMin * 60_000;
+        const stillRunning = now < p.endsAt.getTime();
+        const isFrozenForThisParticipant = stillRunning && now >= freezeCutoff;
+        if (isFrozenForThisParticipant) anyFrozen = true;
+
+        const submissions = await prisma.submission.findMany({
+          where: { contestId: id, userId: p.userId },
+          orderBy: { createdAt: "asc" },
+        });
+
+        const visibleSubmissions = isFrozenForThisParticipant
+          ? submissions.filter((s) => s.createdAt.getTime() <= freezeCutoff)
+          : submissions;
+
+        const problemCells: Record<string, { solved: boolean; attempts: number; solveMin: number | null }> = {};
+        let solvedCount = 0;
+        let penalty = 0;
+
+        for (const cp of contest.problems) {
+          const subsForProblem = visibleSubmissions.filter(
+            (s) => s.problemId === cp.problemId && isTerminal(s.verdict),
+          );
+          const firstAc = subsForProblem.find((s) => s.verdict === "AC");
+
+          if (firstAc) {
+            const wrongBefore = subsForProblem.filter(
+              (s) => s.verdict !== "AC" && s.createdAt.getTime() < firstAc.createdAt.getTime(),
+            ).length;
+            const solveMin = Math.max(0, Math.round((firstAc.createdAt.getTime() - p.startedAt.getTime()) / 60_000));
+            problemCells[cp.label] = { solved: true, attempts: wrongBefore + 1, solveMin };
+            solvedCount += 1;
+            penalty += solveMin + contest.penaltyMin * wrongBefore;
+          } else {
+            const wrongAttempts = subsForProblem.filter((s) => s.verdict !== "AC").length;
+            problemCells[cp.label] = { solved: false, attempts: wrongAttempts, solveMin: null };
+          }
+        }
+
+        return {
+          userId: p.user.id,
+          handle: p.user.handle,
+          solvedCount,
+          penalty,
+          problems: problemCells,
+        };
+      }),
+    );
+
+    rows.sort((a, b) => (b.solvedCount - a.solvedCount) || (a.penalty - b.penalty));
+
+    let rank = 0;
+    let lastKey: string | null = null;
+    const standings = rows.map((row, idx) => {
+      const key = `${row.solvedCount}:${row.penalty}`;
+      if (key !== lastKey) {
+        rank = idx + 1;
+        lastKey = key;
+      }
+      return { ...row, rank };
+    });
+
+    return { standings, frozen: anyFrozen };
+  }
+}
+
+function isTerminal(verdict: string): boolean {
+  return verdict !== "PENDING" && verdict !== "JUDGING";
+}

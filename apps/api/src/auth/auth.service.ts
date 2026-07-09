@@ -1,0 +1,103 @@
+import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import argon2 from "argon2";
+import { randomUUID } from "node:crypto";
+import type Redis from "ioredis";
+import { prisma } from "@oj/db";
+import type { LoginDto } from "@oj/shared";
+import { generateCsrfToken } from "../common/csrf.util";
+import { REDIS_CLIENT } from "../common/redis.providers";
+import { TokenService } from "./token.service";
+
+export interface IssuedSession {
+  user: { id: string; handle: string; email: string; role: string };
+  accessToken: string;
+  accessMaxAgeMs: number;
+  refreshToken: string;
+  refreshMaxAgeMs: number;
+  csrfToken: string;
+}
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly tokens: TokenService,
+    @Inject(REDIS_CLIENT) private readonly redis: Redis,
+  ) {}
+
+  async login(dto: LoginDto): Promise<IssuedSession> {
+    const user = await prisma.user.findUnique({ where: { handle: dto.handle } });
+    if (!user) throw new UnauthorizedException("Invalid handle or password");
+    const ok = await argon2.verify(user.passwordHash, dto.password);
+    if (!ok) throw new UnauthorizedException("Invalid handle or password");
+    return this.issueSession(user.id, user.handle, user.email, user.role);
+  }
+
+  async refresh(refreshToken: string | undefined): Promise<IssuedSession> {
+    if (!refreshToken) throw new UnauthorizedException("Missing refresh token");
+
+    let payload;
+    try {
+      payload = this.tokens.verifyRefreshToken(refreshToken);
+    } catch {
+      throw new UnauthorizedException("Invalid or expired refresh token");
+    }
+
+    const exists = await this.redis.exists(`refresh:${payload.sub}:${payload.jti}`);
+    if (!exists) throw new UnauthorizedException("Session has been revoked");
+
+    const user = await prisma.user.findUnique({ where: { id: payload.sub } });
+    if (!user) throw new UnauthorizedException("User no longer exists");
+
+    return this.issueSession(user.id, user.handle, user.email, user.role);
+  }
+
+  async logout(refreshToken: string | undefined): Promise<void> {
+    if (!refreshToken) return;
+    try {
+      const payload = this.tokens.verifyRefreshToken(refreshToken);
+      await this.redis.del(`refresh:${payload.sub}:${payload.jti}`);
+      const current = await this.redis.get(`refresh:current:${payload.sub}`);
+      if (current === payload.jti) {
+        await this.redis.del(`refresh:current:${payload.sub}`);
+      }
+    } catch {
+      // Best-effort cleanup; an invalid/expired refresh token on logout is not an error.
+    }
+  }
+
+  async me(userId: string): Promise<{ id: string; handle: string; email: string; role: string }> {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new UnauthorizedException();
+    return { id: user.id, handle: user.handle, email: user.email, role: user.role };
+  }
+
+  /**
+   * Issues a fresh access/refresh/csrf token triple and rotates the refresh session: the
+   * previous jti (tracked via a `refresh:current:{userId}` pointer) is invalidated so only one
+   * refresh token is valid per user at a time.
+   */
+  private async issueSession(id: string, handle: string, email: string, role: string): Promise<IssuedSession> {
+    const previousJti = await this.redis.get(`refresh:current:${id}`);
+    if (previousJti) {
+      await this.redis.del(`refresh:${id}:${previousJti}`);
+    }
+
+    const jti = randomUUID();
+    const refreshTtlSec = Math.max(1, Math.round(this.tokens.refreshTtlMs / 1000));
+    await this.redis.set(`refresh:${id}:${jti}`, "1", "EX", refreshTtlSec);
+    await this.redis.set(`refresh:current:${id}`, jti, "EX", refreshTtlSec);
+
+    const accessToken = this.tokens.signAccessToken({ sub: id, handle, role });
+    const refreshToken = this.tokens.signRefreshToken({ sub: id, jti });
+    const csrfToken = generateCsrfToken();
+
+    return {
+      user: { id, handle, email, role },
+      accessToken,
+      accessMaxAgeMs: this.tokens.accessTtlMs,
+      refreshToken,
+      refreshMaxAgeMs: this.tokens.refreshTtlMs,
+      csrfToken,
+    };
+  }
+}

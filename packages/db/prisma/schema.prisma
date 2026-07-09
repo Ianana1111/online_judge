@@ -1,0 +1,333 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ProblemSource {
+  UVA
+  CPE
+  CUSTOM
+}
+
+enum CheckerType {
+  EXACT
+  IGNORE_TRAILING_WS
+  FLOAT
+  SPECIAL
+}
+
+enum Verdict {
+  PENDING
+  JUDGING
+  AC
+  WA
+  TLE
+  MLE
+  RE
+  CE
+  PE
+  OLE
+  SE
+}
+
+enum JudgedOn {
+  SELF
+  REMOTE
+}
+
+enum ContestKind {
+  CPE
+  VIRTUAL
+  PUBLIC
+}
+
+enum ScoringMode {
+  ICPC
+  SUBTASK
+}
+
+enum ParticipantStatus {
+  REGISTERED
+  RUNNING
+  FINISHED
+}
+
+// ---------------------------------------------------------------------------
+// Models
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(cuid())
+  handle       String   @unique
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(USER)
+  settings     Json     @default("{}")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  submissions          Submission[]
+  contestParticipants  ContestParticipant[]
+  discussions          Discussion[]
+  createdAssignments   Assignment[]          @relation("AssignmentCreator")
+  assignments          AssignmentAssignee[]  @relation("AssignmentAssigneeUser")
+
+  @@map("users")
+}
+
+model Problem {
+  id            String        @id @default(cuid())
+  uvaId         Int?          @unique
+  slug          String        @unique
+  title         String
+  statementMd   String
+  inputSpecMd   String        @default("")
+  outputSpecMd  String        @default("")
+  timeLimitMs   Int           @default(1000)
+  memoryLimitKb Int           @default(65536)
+  difficulty    Int           @default(1)
+  source        ProblemSource @default(CUSTOM)
+  checkerType   CheckerType   @default(IGNORE_TRAILING_WS)
+  floatEps      Float?
+  isRemoteOnly  Boolean       @default(false)
+  visibility    Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  samples          Sample[]
+  testCases        TestCase[]
+  tags             ProblemTag[]
+  submissions      Submission[]
+  contestProblems  ContestProblem[]
+  discussions      Discussion[]
+  assignmentLinks  AssignmentProblem[]
+
+  @@index([uvaId])
+  @@map("problems")
+}
+
+model Sample {
+  id        String  @id @default(cuid())
+  problemId String
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  ord       Int
+  input     String
+  output    String
+
+  @@index([problemId])
+  @@map("samples")
+}
+
+model TestCase {
+  id        String  @id @default(cuid())
+  problemId String
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  ord       Int
+  inputKey  String
+  answerKey String
+  isSample  Boolean @default(false)
+  points    Int     @default(0)
+
+  testResults SubmissionTestResult[]
+
+  @@index([problemId, ord])
+  @@map("test_cases")
+}
+
+model Tag {
+  id   String @id @default(cuid())
+  slug String @unique
+  name String
+
+  problems ProblemTag[]
+
+  @@map("tags")
+}
+
+model ProblemTag {
+  problemId String
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  tagId     String
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([problemId, tagId])
+  @@map("problem_tags")
+}
+
+model Language {
+  id             String  @id @default(cuid())
+  key            String  @unique
+  name           String
+  compileCmd     String?
+  runCmd         String
+  srcName        String
+  timeFactor     Float   @default(1)
+  memOverheadKb  Int     @default(8192)
+  enabled        Boolean @default(true)
+
+  @@map("languages")
+}
+
+model Submission {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problemId   String
+  problem     Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  contestId   String?
+  contest     Contest? @relation(fields: [contestId], references: [id], onDelete: SetNull)
+  languageKey String
+  sourceCode  String
+  status      Verdict  @default(PENDING)
+  verdict     Verdict  @default(PENDING)
+  timeMs      Int?
+  memoryKb    Int?
+  score       Float    @default(0)
+  compileError String?
+  judgedOn    JudgedOn @default(SELF)
+  createdAt   DateTime @default(now())
+  judgedAt    DateTime?
+
+  testResults SubmissionTestResult[]
+
+  @@index([userId, createdAt])
+  @@index([problemId, verdict])
+  @@index([contestId, userId])
+  @@map("submissions")
+}
+
+model SubmissionTestResult {
+  id           String     @id @default(cuid())
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  testCaseId   String
+  testCase     TestCase   @relation(fields: [testCaseId], references: [id], onDelete: Cascade)
+  testOrd      Int
+  verdict      Verdict
+  timeMs       Int
+  memoryKb     Int
+  points       Float      @default(0)
+
+  @@index([submissionId])
+  @@map("submission_test_results")
+}
+
+model Contest {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
+  kind        ContestKind @default(PUBLIC)
+  startAt     DateTime?
+  durationMin Int         @default(180)
+  freezeMin   Int         @default(60)
+  penaltyMin  Int         @default(20)
+  scoring     ScoringMode @default(ICPC)
+  isPublic    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  /// CPE's own published "average correct count" for this sitting (scraped from the exam listing
+  /// page), e.g. 1.55 — a difficulty/pass-rate signal independent of anything our own users do.
+  avgCorrectCount Float?
+  /// Total real-world exam takers for this sitting (CPE's own published figure, e.g. 2446) —
+  /// the denominator behind each ContestProblem's "考生答對率".
+  totalCandidates Int?
+
+  problems     ContestProblem[]
+  participants ContestParticipant[]
+  submissions  Submission[]
+
+  @@map("contests")
+}
+
+model ContestProblem {
+  contestId String
+  contest   Contest @relation(fields: [contestId], references: [id], onDelete: Cascade)
+  problemId String
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  label     String
+  ord       Int
+  /// Real-world CPE exam stats for this problem in this specific sitting (scraped from the exam
+  /// listing page's per-problem stats table — 繳交次數/作答人數/答對人數). Null for the demo contest
+  /// and anything not scraped from the real CPE site.
+  submissions Int?
+  attempted   Int?
+  correct     Int?
+
+  @@id([contestId, problemId])
+  @@map("contest_problems")
+}
+
+model ContestParticipant {
+  id        String            @id @default(cuid())
+  contestId String
+  contest   Contest           @relation(fields: [contestId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startedAt DateTime          @default(now())
+  endsAt    DateTime
+  status    ParticipantStatus @default(RUNNING)
+
+  @@unique([contestId, userId])
+  @@map("contest_participants")
+}
+
+model Discussion {
+  id        String   @id @default(cuid())
+  problemId String
+  problem   Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  body      String
+  createdAt DateTime @default(now())
+
+  @@index([problemId, createdAt])
+  @@map("discussions")
+}
+
+model Assignment {
+  id          String    @id @default(cuid())
+  title       String
+  description String    @default("")
+  dueAt       DateTime?
+  createdById String
+  createdBy   User      @relation("AssignmentCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  problems  AssignmentProblem[]
+  assignees AssignmentAssignee[]
+
+  @@map("assignments")
+}
+
+model AssignmentProblem {
+  assignmentId String
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  problemId    String
+  problem      Problem    @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  ord          Int        @default(0)
+
+  @@id([assignmentId, problemId])
+  @@map("assignment_problems")
+}
+
+model AssignmentAssignee {
+  assignmentId String
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User       @relation("AssignmentAssigneeUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([assignmentId, userId])
+  @@map("assignment_assignees")
+}

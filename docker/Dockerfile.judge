@@ -1,0 +1,51 @@
+# Judge worker image: Node runtime + gcc/g++/python3/openjdk + the `isolate` sandbox
+# (https://github.com/ioi/isolate), built from source. This container is the ONLY place
+# untrusted user code ever executes. It is run with elevated container privileges
+# (see docker/compose.yml) because `isolate` itself needs to manage cgroups/namespaces
+# for the boxes it creates — that is the accepted trade-off documented in the plan
+# (section 4/7), mitigated by keeping this service on an isolated Docker network with
+# no inbound exposure and no mounted host paths beyond the test-data volume.
+
+FROM node:20-bookworm AS isolate-build
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential git libcap-dev libsystemd-dev pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+# `make install` alone (skipping the bare `make`/`all` target) builds only the
+# PROGRAMS + CONFIGS it depends on — not the man pages, which would otherwise pull in
+# asciidoc/xmlto/xmllint for no benefit in a container image.
+RUN git clone --depth 1 --branch v2.1 https://github.com/ioi/isolate.git /tmp/isolate \
+    && cd /tmp/isolate \
+    && make install -j"$(nproc)"
+
+FROM node:20-bookworm
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc g++ python3 openjdk-17-jdk-headless libcap2 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=isolate-build /usr/local/bin/isolate /usr/local/bin/isolate
+COPY --from=isolate-build /usr/local/etc/isolate /usr/local/etc/isolate
+
+# Use a plain delegated cgroup subtree instead of the systemd-keeper-managed
+# /run/isolate/cgroup indirection (we don't run systemd in this container) —
+# see docker/judge-entrypoint.sh, which sets up the delegation on every start.
+RUN sed -i 's|cg_root = auto:/run/isolate/cgroup|cg_root = /sys/fs/cgroup/isolate|' /usr/local/etc/isolate
+
+RUN npm install -g pnpm@10.8.1
+
+WORKDIR /repo
+COPY pnpm-workspace.yaml package.json turbo.json ./
+COPY packages/config ./packages/config
+COPY packages/shared ./packages/shared
+COPY packages/db ./packages/db
+COPY apps/judge ./apps/judge
+
+RUN pnpm install --frozen-lockfile=false
+RUN pnpm --filter @oj/db exec prisma generate
+
+COPY docker/judge-entrypoint.sh /usr/local/bin/judge-entrypoint.sh
+RUN chmod +x /usr/local/bin/judge-entrypoint.sh
+
+WORKDIR /repo/apps/judge
+ENTRYPOINT ["/usr/local/bin/judge-entrypoint.sh"]
+CMD ["pnpm", "exec", "tsx", "src/worker.ts"]

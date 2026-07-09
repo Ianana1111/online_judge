@@ -1,0 +1,14 @@
+node_modules
+dist
+.next
+.turbo
+*.log
+.env
+.env.local
+.DS_Store
+coverage
+.pnpm-store
+apps/judge/boxes
+packages/db/prisma/dev.db
+generated
+.claude/

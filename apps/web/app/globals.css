@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    @apply bg-ink-950 text-ink-100;
+  }
+
+  body {
+    @apply font-body antialiased;
+  }
+
+  ::selection {
+    @apply bg-brand/30 text-ink-50;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+
+  code, pre, kbd, .font-tabular {
+    @apply font-mono;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme("colors.brand.DEFAULT");
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .oj-card {
+    @apply rounded border border-ink-700 bg-ink-900;
+  }
+
+  .oj-input {
+    @apply w-full rounded border border-ink-600 bg-ink-800 px-3 py-2 text-sm text-ink-50 placeholder:text-ink-400 focus:border-brand;
+  }
+
+  .oj-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded bg-brand px-4 py-2 text-sm font-semibold text-ink-950 transition-colors hover:bg-brand-light disabled:cursor-not-allowed disabled:bg-ink-600 disabled:text-ink-400;
+  }
+
+  .oj-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded border border-ink-600 bg-transparent px-4 py-2 text-sm font-medium text-ink-100 transition-colors hover:border-brand hover:text-brand;
+  }
+
+  .oj-table {
+    @apply w-full border-collapse text-sm;
+  }
+
+  .oj-table th {
+    @apply border-b border-ink-700 px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-ink-400;
+  }
+
+  .oj-table td {
+    @apply border-b border-ink-800 px-3 py-2;
+  }
+
+  .prose-statement {
+    @apply max-w-none text-sm leading-relaxed text-ink-200;
+  }
+
+  .prose-statement p {
+    @apply mb-3;
+  }
+
+  .prose-statement code {
+    @apply rounded bg-ink-800 px-1 py-0.5 text-xs text-brand-light;
+  }
+
+  .prose-statement pre {
+    @apply oj-card mb-3 overflow-x-auto p-3;
+  }
+
+  .prose-statement h1, .prose-statement h2, .prose-statement h3 {
+    @apply mb-2 mt-4 font-display font-semibold text-ink-50;
+  }
+
+  .prose-statement ul {
+    @apply mb-3 ml-5 list-disc;
+  }
+
+  .prose-statement ol {
+    @apply mb-3 ml-5 list-decimal;
+  }
+
+  .prose-statement table {
+    @apply mb-3 w-full border-collapse text-xs;
+  }
+
+  .prose-statement th, .prose-statement td {
+    @apply border border-ink-700 px-2 py-1;
+  }
+}

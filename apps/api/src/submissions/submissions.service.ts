@@ -1,0 +1,214 @@
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import type { Queue } from "bullmq";
+import type Redis from "ioredis";
+import { prisma } from "@oj/db";
+import {
+  JUDGE_QUEUE_NAME,
+  isTerminalVerdict,
+  submissionResultChannel,
+  type CreateSubmissionDto,
+  type JudgeResultDto,
+  type Verdict,
+} from "@oj/shared";
+import type { RequestUser } from "../common/decorators";
+import { JUDGE_QUEUE, REDIS_CLIENT } from "../common/redis.providers";
+
+const PAGE_SIZE = 20;
+const COOLDOWN_MS = 10_000;
+
+export interface SubmissionListQuery {
+  user?: string;
+  problem?: string;
+  contestId?: string;
+  page?: string;
+}
+
+@Injectable()
+export class SubmissionsService {
+  constructor(
+    @Inject(JUDGE_QUEUE) private readonly queue: Queue,
+    @Inject(REDIS_CLIENT) private readonly redis: Redis,
+  ) {}
+
+  async create(userId: string, dto: CreateSubmissionDto): Promise<{ id: string }> {
+    const lastSubmission = await prisma.submission.findFirst({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      select: { createdAt: true },
+    });
+    if (lastSubmission && Date.now() - lastSubmission.createdAt.getTime() < COOLDOWN_MS) {
+      throw new HttpException("You are submitting too fast. Please wait a few seconds.", HttpStatus.TOO_MANY_REQUESTS);
+    }
+
+    const problem = await prisma.problem.findUnique({ where: { id: dto.problemId } });
+    if (!problem) throw new NotFoundException("Problem not found");
+
+    if (dto.contestId) {
+      const participant = await prisma.contestParticipant.findUnique({
+        where: { contestId_userId: { contestId: dto.contestId, userId } },
+      });
+      const now = Date.now();
+      if (!participant || participant.endsAt.getTime() < now || participant.startedAt.getTime() > now) {
+        throw new ForbiddenException("This contest window is closed or you have not started it yet.");
+      }
+    }
+
+    const submission = await prisma.submission.create({
+      data: {
+        userId,
+        problemId: dto.problemId,
+        contestId: dto.contestId,
+        languageKey: dto.languageKey,
+        sourceCode: dto.sourceCode,
+        status: "PENDING",
+        verdict: "PENDING",
+      },
+    });
+
+    // Default attempts (1) is intentional: silently re-running arbitrary user code on a
+    // transient job failure is not safe, so we don't override BullMQ's retry behavior here.
+    await this.queue.add(JUDGE_QUEUE_NAME, { submissionId: submission.id });
+
+    return { id: submission.id };
+  }
+
+  async detail(id: string, requester: RequestUser | null) {
+    const submission = await this.findWithResults(id);
+    if (!submission) throw new NotFoundException("Submission not found");
+    return this.toPublicDetail(submission, this.canSeeSource(submission.userId, requester));
+  }
+
+  async list(query: SubmissionListQuery, requester: RequestUser | null) {
+    const where: Record<string, unknown> = {};
+
+    if (query.user === "me") {
+      if (!requester) throw new ForbiddenException("Authentication required");
+      where.userId = requester.id;
+    } else if (query.user) {
+      where.userId = query.user;
+    }
+    if (query.problem) where.problemId = query.problem;
+    if (query.contestId) where.contestId = query.contestId;
+
+    const page = Math.max(1, parseInt(query.page ?? "1", 10) || 1);
+
+    const [rows, total] = await Promise.all([
+      prisma.submission.findMany({
+        where,
+        include: { problem: { select: { title: true } } },
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * PAGE_SIZE,
+        take: PAGE_SIZE,
+      }),
+      prisma.submission.count({ where }),
+    ]);
+
+    return {
+      items: rows.map((s) => ({
+        id: s.id,
+        problemId: s.problemId,
+        problemTitle: s.problem.title,
+        languageKey: s.languageKey,
+        status: s.status,
+        verdict: s.verdict,
+        timeMs: s.timeMs,
+        memoryKb: s.memoryKb,
+        createdAt: s.createdAt,
+      })),
+      total,
+      page,
+    };
+  }
+
+  /** Used by the internal judge-result callback. Returns the updated public detail (no
+   * sourceCode) so the caller can publish it to the SSE channel. */
+  async applyJudgeResult(submissionId: string, dto: JudgeResultDto) {
+    const submission = await prisma.submission.findUnique({ where: { id: submissionId } });
+    if (!submission) throw new NotFoundException("Submission not found");
+
+    const terminal = isTerminalVerdict(dto.status as Verdict);
+    const data: Record<string, unknown> = { status: dto.status, verdict: dto.status };
+    if (dto.timeMs !== undefined) data.timeMs = dto.timeMs;
+    if (dto.memoryKb !== undefined) data.memoryKb = dto.memoryKb;
+    if (dto.score !== undefined) data.score = dto.score;
+    if (dto.compileError !== undefined) data.compileError = dto.compileError;
+    if (terminal) data.judgedAt = new Date();
+
+    if (dto.testResults && dto.testResults.length > 0) {
+      const testCases = await prisma.testCase.findMany({
+        where: { problemId: submission.problemId, ord: { in: dto.testResults.map((t) => t.testOrd) } },
+      });
+      const testCaseIdByOrd = new Map(testCases.map((tc) => [tc.ord, tc.id]));
+
+      await prisma.submissionTestResult.deleteMany({ where: { submissionId } });
+      const rows = dto.testResults
+        .filter((tr) => testCaseIdByOrd.has(tr.testOrd))
+        .map((tr) => ({
+          submissionId,
+          testCaseId: testCaseIdByOrd.get(tr.testOrd)!,
+          testOrd: tr.testOrd,
+          verdict: tr.verdict,
+          timeMs: tr.timeMs,
+          memoryKb: tr.memoryKb,
+          points: tr.points,
+        }));
+      if (rows.length > 0) {
+        await prisma.submissionTestResult.createMany({ data: rows });
+      }
+    }
+
+    await prisma.submission.update({ where: { id: submissionId }, data });
+
+    const updated = await this.findWithResults(submissionId);
+    const publicDetail = this.toPublicDetail(updated!, false);
+    await this.redis.publish(submissionResultChannel(submissionId), JSON.stringify(publicDetail));
+    return publicDetail;
+  }
+
+  private canSeeSource(ownerId: string, requester: RequestUser | null): boolean {
+    return !!requester && (requester.id === ownerId || requester.role === "ADMIN");
+  }
+
+  private async findWithResults(id: string) {
+    return prisma.submission.findUnique({
+      where: { id },
+      include: { testResults: { orderBy: { testOrd: "asc" } } },
+    });
+  }
+
+  toPublicDetail(
+    submission: NonNullable<Awaited<ReturnType<SubmissionsService["findWithResults"]>>>,
+    includeSource: boolean,
+  ) {
+    return {
+      id: submission.id,
+      userId: submission.userId,
+      problemId: submission.problemId,
+      contestId: submission.contestId,
+      languageKey: submission.languageKey,
+      status: submission.status,
+      verdict: submission.verdict,
+      timeMs: submission.timeMs,
+      memoryKb: submission.memoryKb,
+      score: submission.score,
+      compileError: submission.compileError,
+      createdAt: submission.createdAt,
+      judgedAt: submission.judgedAt,
+      testResults: submission.testResults.map((tr) => ({
+        testOrd: tr.testOrd,
+        verdict: tr.verdict,
+        timeMs: tr.timeMs,
+        memoryKb: tr.memoryKb,
+        points: tr.points,
+      })),
+      ...(includeSource ? { sourceCode: submission.sourceCode } : {}),
+    };
+  }
+}
