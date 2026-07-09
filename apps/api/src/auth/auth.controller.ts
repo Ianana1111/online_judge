@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, Post, Req, Res } from "@nestjs/common";
 import type { Request, Response } from "express";
 import { loginSchema, type LoginDto } from "@oj/shared";
-import { clearAuthCookies, setAuthCookies } from "../common/cookies.util";
+import { clearAuthCookies, setAuthCookies, setCsrfCookie } from "../common/cookies.util";
 import { CurrentUser, Public, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { AuthService } from "./auth.service";
@@ -21,7 +21,9 @@ export class AuthController {
   ) {
     const session = await this.authService.login(body);
     setAuthCookies(res, session);
-    return session.user;
+    // Echoed in the body too: cross-domain (prod), the web app can't read this cookie via
+    // document.cookie, so it keeps this value in memory instead — see cookies.util.ts.
+    return { ...session.user, csrfToken: session.csrfToken };
   }
 
   @Public()
@@ -30,7 +32,7 @@ export class AuthController {
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const session = await this.authService.refresh(req.cookies?.refresh_token);
     setAuthCookies(res, session);
-    return { ok: true };
+    return { ok: true, csrfToken: session.csrfToken };
   }
 
   @Public()
@@ -43,7 +45,9 @@ export class AuthController {
   }
 
   @Get("me")
-  async me(@CurrentUser() user: RequestUser) {
-    return this.authService.me(user.id);
+  async me(@CurrentUser() user: RequestUser, @Res({ passthrough: true }) res: Response) {
+    const { csrfMaxAgeMs, ...body } = await this.authService.me(user.id);
+    setCsrfCookie(res, body.csrfToken, csrfMaxAgeMs);
+    return body;
   }
 }

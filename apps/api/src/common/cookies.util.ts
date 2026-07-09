@@ -10,28 +10,41 @@ export interface SessionCookies {
 
 const isProd = () => process.env.NODE_ENV === "production";
 
+// In production the web app and API live on different domains (e.g. Vercel + Railway), so
+// cookies must be SameSite=None (which requires Secure) to be sent cross-site at all. In dev
+// they're same-site (different localhost ports), where Lax is fine and Secure would require
+// HTTPS we don't have locally.
+function baseCookieOpts() {
+  return isProd() ? ({ secure: true, sameSite: "none" } as const) : ({ secure: false, sameSite: "lax" } as const);
+}
+
 export function setAuthCookies(res: Response, session: SessionCookies): void {
   res.cookie("access_token", session.accessToken, {
     httpOnly: true,
-    secure: isProd(),
-    sameSite: "lax",
+    ...baseCookieOpts(),
     maxAge: session.accessMaxAgeMs,
     path: "/",
   });
   res.cookie("refresh_token", session.refreshToken, {
     httpOnly: true,
-    secure: isProd(),
-    sameSite: "lax",
+    ...baseCookieOpts(),
     maxAge: session.refreshMaxAgeMs,
     path: "/",
   });
-  // Not HttpOnly: the web app's client-side fetch wrapper reads this cookie via
-  // document.cookie to populate the x-csrf-token header (double-submit pattern).
-  res.cookie("csrf_token", session.csrfToken, {
+  setCsrfCookie(res, session.csrfToken, session.refreshMaxAgeMs);
+}
+
+// Not HttpOnly, in principle: the double-submit pattern normally has the client read this via
+// document.cookie. Cross-domain (prod), the browser won't let JS on the web app's origin read a
+// cookie set by the API's origin at all, so the API also echoes csrfToken in JSON response
+// bodies (see AuthController) and the web app keeps it in memory instead. The cookie still gets
+// set either way — the guard only compares header vs. cookie, it doesn't care how the client
+// learned the value.
+export function setCsrfCookie(res: Response, csrfToken: string, maxAge: number): void {
+  res.cookie("csrf_token", csrfToken, {
     httpOnly: false,
-    secure: isProd(),
-    sameSite: "lax",
-    maxAge: session.refreshMaxAgeMs,
+    ...baseCookieOpts(),
+    maxAge,
     path: "/",
   });
 }

@@ -5,11 +5,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
-import type { User } from "@/lib/types";
 
 export default function LoginPage() {
   const router = useRouter();
-  const setUser = useAuthStore((s) => s.setUser);
+  const hydrate = useAuthStore((s) => s.hydrate);
   const [handle, setHandle] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -21,8 +20,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await apiFetch("/auth/login", { method: "POST", body: { handle, password } });
-      const user = await apiFetch<User>("/auth/me");
-      setUser(user);
+      await hydrate();
       router.push("/");
     } catch (e) {
       setError(e instanceof ApiError ? e.message : "Log in failed");

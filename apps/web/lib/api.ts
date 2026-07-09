@@ -6,6 +6,16 @@ function readCookie(name: string): string | undefined {
   return match ? decodeURIComponent(match[1]) : undefined;
 }
 
+// When the API lives on a different domain than the web app (e.g. Railway + Vercel), the browser
+// won't let this page's JS read a cookie set by the API's origin via document.cookie, so the API
+// echoes the CSRF token in JSON response bodies (login/refresh/me) and we keep it here instead.
+// Same-origin/local dev never needs this — readCookie() below still works there as a fallback.
+let inMemoryCsrfToken: string | null = null;
+
+export function setCsrfToken(token: string | null): void {
+  inMemoryCsrfToken = token;
+}
+
 export class ApiError extends Error {
   status: number;
   body: unknown;
@@ -16,6 +26,10 @@ export class ApiError extends Error {
   }
 }
 
+function csrfHeader(): string {
+  return inMemoryCsrfToken ?? readCookie("csrf_token") ?? "";
+}
+
 let refreshPromise: Promise<boolean> | null = null;
 
 async function doRefresh(): Promise<boolean> {
@@ -23,9 +37,15 @@ async function doRefresh(): Promise<boolean> {
     refreshPromise = fetch(`${API_URL}/auth/refresh`, {
       method: "POST",
       credentials: "include",
-      headers: { "x-csrf-token": readCookie("csrf_token") ?? "" },
+      headers: { "x-csrf-token": csrfHeader() },
     })
-      .then((res) => res.ok)
+      .then(async (res) => {
+        if (res.ok) {
+          const body = (await res.json().catch(() => null)) as { csrfToken?: string } | null;
+          if (body?.csrfToken) setCsrfToken(body.csrfToken);
+        }
+        return res.ok;
+      })
       .finally(() => {
         refreshPromise = null;
       });
@@ -45,7 +65,7 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
 
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (isMutating) {
-    headers["x-csrf-token"] = readCookie("csrf_token") ?? "";
+    headers["x-csrf-token"] = csrfHeader();
   }
 
   const res = await fetch(`${API_URL}${path}`, {

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { User } from "@/lib/types";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, setCsrfToken } from "@/lib/api";
 
 interface AuthState {
   user: User | null;
@@ -16,9 +16,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   hydrate: async () => {
     set({ status: "loading" });
     try {
-      const user = await apiFetch<User>("/auth/me");
+      const { csrfToken, ...user } = await apiFetch<User & { csrfToken: string }>("/auth/me");
+      setCsrfToken(csrfToken);
       set({ user, status: "ready" });
     } catch {
+      setCsrfToken(null);
       set({ user: null, status: "ready" });
     }
   },
@@ -27,6 +29,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       await apiFetch("/auth/logout", { method: "POST" });
     } finally {
+      setCsrfToken(null);
       set({ user: null });
     }
   },

@@ -65,10 +65,22 @@ export class AuthService {
     }
   }
 
-  async me(userId: string): Promise<{ id: string; handle: string; email: string; role: string }> {
+  async me(
+    userId: string,
+  ): Promise<{ id: string; handle: string; email: string; role: string; csrfToken: string; csrfMaxAgeMs: number }> {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new UnauthorizedException();
-    return { id: user.id, handle: user.handle, email: user.email, role: user.role };
+    // Stateless token (see csrf.util.ts) — safe to mint a fresh one on every /auth/me call so
+    // the web app always has a working value in memory, including right after a hard refresh
+    // when it can no longer read the cookie itself cross-domain.
+    return {
+      id: user.id,
+      handle: user.handle,
+      email: user.email,
+      role: user.role,
+      csrfToken: generateCsrfToken(),
+      csrfMaxAgeMs: this.tokens.refreshTtlMs,
+    };
   }
 
   /**
