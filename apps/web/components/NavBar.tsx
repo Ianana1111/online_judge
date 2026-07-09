@@ -10,12 +10,14 @@ const LINKS = [
   { href: "/contests", label: "Contests" },
   { href: "/cpe", label: "CPE" },
   { href: "/assignments", label: "Assignments" },
+  { href: "/classes", label: "My Classes" },
 ];
 
 const ADMIN_LINKS = [
   { href: "/admin/problems", label: "Problems" },
   { href: "/admin/contests", label: "Contests" },
   { href: "/admin/assignments", label: "Assignments" },
+  { href: "/admin/classes", label: "Classes" },
   { href: "/admin/users", label: "Users" },
   { href: "/admin/analytics", label: "Analytics" },
 ];
@@ -38,7 +40,7 @@ export default function NavBar() {
             judge<span className="text-brand">.</span>
           </Link>
           <nav className="hidden gap-4 sm:flex">
-            {LINKS.filter((l) => user?.role !== "ADMIN" || l.href !== "/assignments").map((l) => (
+            {LINKS.filter((l) => user?.role !== "ADMIN" || (l.href !== "/assignments" && l.href !== "/classes")).map((l) => (
               <Link
                 key={l.href}
                 href={l.href}

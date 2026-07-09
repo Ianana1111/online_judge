@@ -141,29 +141,6 @@ export class SubmissionsService {
     if (dto.compileError !== undefined) data.compileError = dto.compileError;
     if (terminal) data.judgedAt = new Date();
 
-    if (dto.testResults && dto.testResults.length > 0) {
-      const testCases = await prisma.testCase.findMany({
-        where: { problemId: submission.problemId, ord: { in: dto.testResults.map((t) => t.testOrd) } },
-      });
-      const testCaseIdByOrd = new Map(testCases.map((tc) => [tc.ord, tc.id]));
-
-      await prisma.submissionTestResult.deleteMany({ where: { submissionId } });
-      const rows = dto.testResults
-        .filter((tr) => testCaseIdByOrd.has(tr.testOrd))
-        .map((tr) => ({
-          submissionId,
-          testCaseId: testCaseIdByOrd.get(tr.testOrd)!,
-          testOrd: tr.testOrd,
-          verdict: tr.verdict,
-          timeMs: tr.timeMs,
-          memoryKb: tr.memoryKb,
-          points: tr.points,
-        }));
-      if (rows.length > 0) {
-        await prisma.submissionTestResult.createMany({ data: rows });
-      }
-    }
-
     await prisma.submission.update({ where: { id: submissionId }, data });
 
     const updated = await this.findWithResults(submissionId);
@@ -177,10 +154,7 @@ export class SubmissionsService {
   }
 
   private async findWithResults(id: string) {
-    return prisma.submission.findUnique({
-      where: { id },
-      include: { testResults: { orderBy: { testOrd: "asc" } } },
-    });
+    return prisma.submission.findUnique({ where: { id } });
   }
 
   toPublicDetail(
@@ -201,13 +175,6 @@ export class SubmissionsService {
       compileError: submission.compileError,
       createdAt: submission.createdAt,
       judgedAt: submission.judgedAt,
-      testResults: submission.testResults.map((tr) => ({
-        testOrd: tr.testOrd,
-        verdict: tr.verdict,
-        timeMs: tr.timeMs,
-        memoryKb: tr.memoryKb,
-        points: tr.points,
-      })),
       ...(includeSource ? { sourceCode: submission.sourceCode } : {}),
     };
   }

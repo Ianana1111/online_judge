@@ -33,17 +33,6 @@ export const judgeResultSchema = z.object({
   memoryKb: z.number().int().min(0).optional(),
   score: z.number().min(0).max(100).optional(),
   compileError: z.string().max(16384).optional(),
-  testResults: z
-    .array(
-      z.object({
-        testOrd: z.number().int().min(0),
-        verdict: z.enum(VERDICTS),
-        timeMs: z.number().int().min(0),
-        memoryKb: z.number().int().min(0),
-        points: z.number().min(0).default(0),
-      }),
-    )
-    .optional(),
 });
 export type JudgeResultDto = z.infer<typeof judgeResultSchema>;
 
@@ -103,7 +92,21 @@ export const createProblemSchema = z.object({
   source: z.enum(["UVA", "CPE", "CUSTOM"]).default("CUSTOM"),
   checkerType: z.enum(["EXACT", "IGNORE_TRAILING_WS", "FLOAT", "SPECIAL"]).default("IGNORE_TRAILING_WS"),
   floatEps: z.number().positive().optional(),
-  isRemoteOnly: z.boolean().default(false),
   tagSlugs: z.array(z.string()).default([]),
 });
 export type CreateProblemDto = z.infer<typeof createProblemSchema>;
+
+export const createClassSessionSchema = z.object({
+  studentId: z.string().cuid(),
+  title: z.string().max(200).default(""),
+  contentMd: z.string().max(20_000).default(""),
+  problemIds: z.array(z.string().cuid()).default([]),
+});
+export type CreateClassSessionDto = z.infer<typeof createClassSessionSchema>;
+
+export const updateClassSessionSchema = z.object({
+  title: z.string().max(200).optional(),
+  contentMd: z.string().max(20_000).optional(),
+  problemIds: z.array(z.string().cuid()).optional(),
+});
+export type UpdateClassSessionDto = z.infer<typeof updateClassSessionSchema>;

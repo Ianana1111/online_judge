@@ -1,9 +1,9 @@
-# UVa remote judge (best-effort)
+# UVa remote judge
 
-Problems with `isRemoteOnly=true` have no local test data — this adapter judges them by
-submitting through onlinejudge.org's own web form (there is no submission API) and reading the
-verdict back from [uHunt](https://uhunt.onlinejudge.org/api), which is read-only but stable and
-documented.
+Every submission on this platform is judged by proxying to the real UVa Online Judge — there is no
+local sandbox anymore. This adapter judges by submitting through onlinejudge.org's own web form
+(there is no submission API) and reading the verdict back from
+[uHunt](https://uhunt.onlinejudge.org/api), which is read-only but stable and documented.
 
 **Status: verified against a real account.** Login, form submission (multipart, radio-button
 language selection), and uHunt verdict polling have all been exercised end-to-end through this
@@ -56,6 +56,6 @@ the site changing its markup in the future; if submissions start returning unexp
    ```
    UVA_BOT_USERNAME=... UVA_BOT_PASSWORD=... pnpm --filter @oj/judge exec tsx src/remote/diagnostic.ts 36
    ```
-4. Submissions to `isRemoteOnly` problems route through `judgeViaUva()` automatically (see
-   `worker.ts`) whenever credentials are set — leaving them unset keeps the existing "not
-   configured" SE message, so it's always safe to leave blank until ready.
+4. Every submission routes through `judgeViaUva()` automatically (see `worker.ts`) whenever
+   credentials are set — leaving them unset keeps the existing "not configured" SE message, so
+   it's always safe to leave blank until ready.

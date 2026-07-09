@@ -1,8 +1,6 @@
 import { Worker, type Job } from "bullmq";
 import { prisma } from "@oj/db";
-import { JUDGE_QUEUE_NAME, type JudgeJobData, TestDataStore } from "@oj/shared";
-import { BoxIdPool } from "./isolate.js";
-import { judgeSubmission } from "./runners.js";
+import { JUDGE_QUEUE_NAME, type JudgeJobData } from "@oj/shared";
 import { judgeViaUva } from "./remote/uva.js";
 import { reportResult } from "./reportResult.js";
 
@@ -14,39 +12,24 @@ const CONCURRENCY = parseInt(process.env.JUDGE_CONCURRENCY ?? "2", 10);
 // range) can resolve to a structurally distinct class in a pnpm store, which then fails
 // `Worker`'s ConnectionOptions type check. Letting BullMQ build the client itself sidesteps that.
 const connection = { url: REDIS_URL, maxRetriesPerRequest: null };
-const store = new TestDataStore();
-const boxIdPool = new BoxIdPool(CONCURRENCY);
 
+// Every submission is judged by proxying to the real UVa Online Judge — there is no local
+// sandbox anymore (see apps/judge/src/remote/README.md for how that adapter works and its
+// caveats). Concurrency here just bounds how many submissions are mid-flight through the UVa
+// adapter at once; judgeViaUva itself throttles actual requests to onlinejudge.org.
 async function processJob(job: Job<JudgeJobData>): Promise<void> {
   const { submissionId } = job.data;
 
   const submission = await prisma.submission.findUniqueOrThrow({
     where: { id: submissionId },
-    include: {
-      problem: { include: { testCases: { orderBy: { ord: "asc" } } } },
-    },
+    include: { problem: true },
   });
 
-  if (submission.problem.isRemoteOnly) {
-    await reportResult({ submissionId, status: "JUDGING" }).catch(() => {});
-    const outcome = await judgeViaUva(submission.problem, submission.languageKey, submission.sourceCode);
-    await reportResult({ submissionId, ...outcome });
-    return;
-  }
-
-  // Interim status so the live SSE stream shows "Judging..." while the sandbox runs, rather
-  // than sitting at PENDING for the whole compile+run duration.
+  // Interim status so the live SSE stream shows "Judging..." while we wait on UVa, rather than
+  // sitting at PENDING for the whole login+submit+poll duration.
   await reportResult({ submissionId, status: "JUDGING" }).catch(() => {});
 
-  const outcome = await judgeSubmission(
-    boxIdPool,
-    submission.problem,
-    submission.problem.testCases,
-    submission.languageKey,
-    submission.sourceCode,
-    store,
-  );
-
+  const outcome = await judgeViaUva(submission.problem, submission.languageKey, submission.sourceCode);
   await reportResult({ submissionId, ...outcome });
 }
 

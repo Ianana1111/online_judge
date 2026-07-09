@@ -1,6 +1,5 @@
 import type { Problem } from "@oj/db";
 import type { Verdict } from "@oj/shared";
-import type { JudgeOutcome } from "../runners.js";
 import {
   findUhuntUid,
   submitSolution,
@@ -9,6 +8,14 @@ import {
   UHUNT_VERDICT,
   type UvaSession,
 } from "./uvaClient.js";
+
+export interface JudgeOutcome {
+  status: Verdict;
+  timeMs?: number;
+  memoryKb?: number;
+  score?: number;
+  compileError?: string;
+}
 
 const LANGUAGE_HINTS: Record<string, string[]> = {
   cpp17: ["c++11", "c++17", "c++"],

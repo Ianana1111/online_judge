@@ -128,8 +128,8 @@ export default function AdminProblemsPage() {
           {saving ? "Creating…" : "Create problem"}
         </button>
         <p className="text-xs text-ink-500 sm:col-span-2">
-          Test data upload isn't wired into this form yet — add test cases via the API/seed pipeline after
-          creating the problem.
+          Submissions are judged by the real UVa Online Judge, not locally — set a UVa problem id above so
+          students' submissions have somewhere to be judged against.
         </p>
       </form>
 

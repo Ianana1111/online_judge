@@ -5,6 +5,7 @@ import { AnalyticsModule } from "./analytics/analytics.module";
 import { AssignmentsModule } from "./assignments/assignments.module";
 import { AuthGuard } from "./auth/auth.guard";
 import { AuthModule } from "./auth/auth.module";
+import { ClassesModule } from "./classes/classes.module";
 import { ContestsModule } from "./contests/contests.module";
 import { CsrfGuard } from "./common/csrf.guard";
 import { DiscussionsModule } from "./discussions/discussions.module";
@@ -29,6 +30,7 @@ import { UsersModule } from "./users/users.module";
     DiscussionsModule,
     AssignmentsModule,
     AnalyticsModule,
+    ClassesModule,
   ],
   controllers: [HealthController],
   providers: [

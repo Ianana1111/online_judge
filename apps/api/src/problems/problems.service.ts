@@ -1,12 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import type { CreateProblemDto } from "@oj/shared";
-import { TestDataStore } from "@oj/shared";
 import { prisma } from "@oj/db";
 import type { RequestUser } from "../common/decorators";
 
 const PAGE_SIZE = 20;
-
-const store = new TestDataStore();
 
 export interface ListQuery {
   tag?: string;
@@ -106,7 +103,6 @@ export class ProblemsService {
         source: dto.source,
         checkerType: dto.checkerType,
         floatEps: dto.floatEps,
-        isRemoteOnly: dto.isRemoteOnly,
       },
     });
     if (dto.tagSlugs.length > 0) {
@@ -132,34 +128,6 @@ export class ProblemsService {
     if (!existing) throw new NotFoundException("Problem not found");
     await prisma.problem.delete({ where: { id } });
     return { ok: true };
-  }
-
-  async addTestCase(
-    problemId: string,
-    body: { input: string; output: string; isSample?: boolean; points?: number },
-  ) {
-    const problem = await prisma.problem.findUnique({ where: { id: problemId } });
-    if (!problem) throw new NotFoundException("Problem not found");
-
-    const count = await prisma.testCase.count({ where: { problemId } });
-    const ord = count + 1;
-    const ordStr = String(ord).padStart(2, "0");
-    const inputKey = `${problem.slug}/${ordStr}.in`;
-    const answerKey = `${problem.slug}/${ordStr}.out`;
-
-    await store.putText(inputKey, body.input);
-    await store.putText(answerKey, body.output);
-
-    return prisma.testCase.create({
-      data: {
-        problemId,
-        ord,
-        inputKey,
-        answerKey,
-        isSample: body.isSample ?? false,
-        points: body.points ?? 0,
-      },
-    });
   }
 
   async addSample(problemId: string, body: { ord?: number; input: string; output: string }) {

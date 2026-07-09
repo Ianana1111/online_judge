@@ -29,39 +29,14 @@ services:
       retries: 10
     networks: [backend]
 
-  minio:
-    image: minio/minio:latest
-    restart: unless-stopped
-    command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    volumes:
-      - minio_data:/data
-    healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-    networks: [backend]
-
   migrate:
     build:
       context: .
       dockerfile: packages/db/Dockerfile.migrate
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
-      MINIO_ENDPOINT: http://minio:9000
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-      MINIO_BUCKET: ${MINIO_BUCKET}
     depends_on:
       postgres:
-        condition: service_healthy
-      minio:
         condition: service_healthy
     networks: [backend]
 
@@ -73,10 +48,6 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
       REDIS_URL: redis://redis:6379
-      MINIO_ENDPOINT: http://minio:9000
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-      MINIO_BUCKET: ${MINIO_BUCKET}
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       JWT_ACCESS_TTL: ${JWT_ACCESS_TTL}
@@ -92,8 +63,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      minio:
-        condition: service_healthy
       migrate:
         condition: service_completed_successfully
     networks: [backend]
@@ -103,14 +72,9 @@ services:
       context: .
       dockerfile: docker/Dockerfile.judge
     restart: unless-stopped
-    privileged: true # required so `isolate` can manage cgroups/namespaces for its boxes
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
       REDIS_URL: redis://redis:6379
-      MINIO_ENDPOINT: http://minio:9000
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-      MINIO_BUCKET: ${MINIO_BUCKET}
       INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN}
       API_INTERNAL_URL: http://api:4000
       JUDGE_CONCURRENCY: ${JUDGE_CONCURRENCY}
@@ -121,11 +85,9 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      minio:
-        condition: service_healthy
       api:
         condition: service_started
-    networks: [judge_net, backend]
+    networks: [backend]
 
   web:
     build:
@@ -144,11 +106,6 @@ services:
 
 networks:
   backend:
-  # The judge sits on its own network in addition to `backend` — in production this
-  # network should have egress restricted so relayed/malicious code can't phone home.
-  judge_net:
-    internal: false
 
 volumes:
   pg_data:
-  minio_data:

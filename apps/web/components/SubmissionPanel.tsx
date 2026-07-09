@@ -88,7 +88,6 @@ export default function SubmissionPanel({
         verdict: "PENDING",
         score: 0,
         createdAt: new Date().toISOString(),
-        testResults: [],
       });
       esRef.current?.close();
       const es = openSubmissionStream(id);
@@ -175,30 +174,7 @@ export default function SubmissionPanel({
               {detail.compileError}
             </pre>
           )}
-          {detail.testResults.length > 0 && (
-            <table className="oj-table">
-              <thead>
-                <tr>
-                  <th>Test</th>
-                  <th>Verdict</th>
-                  <th>Time</th>
-                  <th>Memory</th>
-                </tr>
-              </thead>
-              <tbody>
-                {detail.testResults.map((tr) => (
-                  <tr key={tr.testOrd}>
-                    <td className="font-mono">#{tr.testOrd}</td>
-                    <td>
-                      <VerdictBadge verdict={tr.verdict} size="sm" />
-                    </td>
-                    <td className="font-mono text-ink-400">{tr.timeMs} ms</td>
-                    <td className="font-mono text-ink-400">{Math.round(tr.memoryKb / 1024)} MB</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+          <p className="text-xs text-ink-500">Judged by the real UVa Online Judge — this is their verdict.</p>
         </div>
       )}
     </div>

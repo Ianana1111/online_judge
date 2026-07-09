@@ -39,15 +39,6 @@ export class ProblemsController {
   }
 
   @Roles("ADMIN")
-  @Post(":id/testcases")
-  addTestCase(
-    @Param("id") id: string,
-    @Body() body: { input: string; output: string; isSample?: boolean; points?: number },
-  ) {
-    return this.problems.addTestCase(id, body);
-  }
-
-  @Roles("ADMIN")
   @Post(":id/samples")
   addSample(@Param("id") id: string, @Body() body: { ord?: number; input: string; output: string }) {
     return this.problems.addSample(id, body);

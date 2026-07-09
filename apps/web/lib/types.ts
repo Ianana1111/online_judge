@@ -76,14 +76,6 @@ export interface ProblemDetail {
   samples: Sample[];
 }
 
-export interface TestResult {
-  testOrd: number;
-  verdict: Verdict;
-  timeMs: number;
-  memoryKb: number;
-  points: number;
-}
-
 export interface SubmissionDetail {
   id: string;
   userId: string;
@@ -97,7 +89,6 @@ export interface SubmissionDetail {
   score: number;
   compileError?: string | null;
   createdAt: string;
-  testResults: TestResult[];
 }
 
 export interface SubmissionListItem {
@@ -205,6 +196,36 @@ export interface AdminAssignment {
   assigneeCount: number;
   problems: { slug: string; title: string }[];
   assignees: string[];
+}
+
+export type HomeworkStatus = Verdict | "NOT_STARTED";
+
+export interface ClassHomeworkItem {
+  id: string;
+  slug: string;
+  title: string;
+  uvaId: number | null;
+  status: HomeworkStatus;
+}
+
+export interface ClassSessionItem {
+  id: string;
+  number: number;
+  title: string;
+  contentMd: string;
+  createdAt: string;
+  homework: ClassHomeworkItem[];
+}
+
+export interface ClassOverviewRow {
+  studentId: string;
+  handle: string;
+  currentClass: number;
+  totalHomework: number;
+  ac: number;
+  wrong: number;
+  pending: number;
+  notStarted: number;
 }
 
 export interface AvgCorrectPoint {

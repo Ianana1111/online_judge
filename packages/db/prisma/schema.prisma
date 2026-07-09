@@ -84,6 +84,8 @@ model User {
   discussions          Discussion[]
   createdAssignments   Assignment[]          @relation("AssignmentCreator")
   assignments          AssignmentAssignee[]  @relation("AssignmentAssigneeUser")
+  classSessions        ClassSession[]        @relation("ClassSessionStudent")
+  createdClassSessions ClassSession[]        @relation("ClassSessionTeacher")
 
   @@map("users")
 }
@@ -102,18 +104,17 @@ model Problem {
   source        ProblemSource @default(CUSTOM)
   checkerType   CheckerType   @default(IGNORE_TRAILING_WS)
   floatEps      Float?
-  isRemoteOnly  Boolean       @default(false)
   visibility    Boolean       @default(true)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
   samples          Sample[]
-  testCases        TestCase[]
   tags             ProblemTag[]
   submissions      Submission[]
   contestProblems  ContestProblem[]
   discussions      Discussion[]
   assignmentLinks  AssignmentProblem[]
+  classHomework    ClassHomework[]
 
   @@index([uvaId])
   @@map("problems")
@@ -129,22 +130,6 @@ model Sample {
 
   @@index([problemId])
   @@map("samples")
-}
-
-model TestCase {
-  id        String  @id @default(cuid())
-  problemId String
-  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
-  ord       Int
-  inputKey  String
-  answerKey String
-  isSample  Boolean @default(false)
-  points    Int     @default(0)
-
-  testResults SubmissionTestResult[]
-
-  @@index([problemId, ord])
-  @@map("test_cases")
 }
 
 model Tag {
@@ -167,20 +152,6 @@ model ProblemTag {
   @@map("problem_tags")
 }
 
-model Language {
-  id             String  @id @default(cuid())
-  key            String  @unique
-  name           String
-  compileCmd     String?
-  runCmd         String
-  srcName        String
-  timeFactor     Float   @default(1)
-  memOverheadKb  Int     @default(8192)
-  enabled        Boolean @default(true)
-
-  @@map("languages")
-}
-
 model Submission {
   id          String   @id @default(cuid())
   userId      String
@@ -197,32 +168,14 @@ model Submission {
   memoryKb    Int?
   score       Float    @default(0)
   compileError String?
-  judgedOn    JudgedOn @default(SELF)
+  judgedOn    JudgedOn @default(REMOTE)
   createdAt   DateTime @default(now())
   judgedAt    DateTime?
-
-  testResults SubmissionTestResult[]
 
   @@index([userId, createdAt])
   @@index([problemId, verdict])
   @@index([contestId, userId])
   @@map("submissions")
-}
-
-model SubmissionTestResult {
-  id           String     @id @default(cuid())
-  submissionId String
-  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
-  testCaseId   String
-  testCase     TestCase   @relation(fields: [testCaseId], references: [id], onDelete: Cascade)
-  testOrd      Int
-  verdict      Verdict
-  timeMs       Int
-  memoryKb     Int
-  points       Float      @default(0)
-
-  @@index([submissionId])
-  @@map("submission_test_results")
 }
 
 model Contest {
@@ -330,4 +283,37 @@ model AssignmentAssignee {
 
   @@id([assignmentId, userId])
   @@map("assignment_assignees")
+}
+
+/// A single lesson/tutoring session for one specific student — "Class 1", "Class 2", ... in that
+/// student's own personal sequence (not a shared classroom timeline: two students can both have a
+/// "Class 3" with entirely different content, taught on different days, at their own pace).
+model ClassSession {
+  id        String   @id @default(cuid())
+  studentId String
+  student   User     @relation("ClassSessionStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  teacherId String
+  teacher   User     @relation("ClassSessionTeacher", fields: [teacherId], references: [id], onDelete: Cascade)
+  number    Int
+  title     String   @default("")
+  contentMd String   @default("") // what was taught that day
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  homework ClassHomework[]
+
+  @@unique([studentId, number])
+  @@map("class_sessions")
+}
+
+model ClassHomework {
+  id        String       @id @default(cuid())
+  classId   String
+  class     ClassSession @relation(fields: [classId], references: [id], onDelete: Cascade)
+  problemId String
+  problem   Problem      @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  ord       Int          @default(0)
+
+  @@unique([classId, problemId])
+  @@map("class_homework")
 }
