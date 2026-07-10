@@ -96,6 +96,7 @@ model Problem {
   slug          String        @unique
   title         String
   statementMd   String
+  sourceUrl     String?
   inputSpecMd   String        @default("")
   outputSpecMd  String        @default("")
   timeLimitMs   Int           @default(1000)

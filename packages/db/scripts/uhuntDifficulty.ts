@@ -1,13 +1,20 @@
 /**
- * Derives a 1-4 star difficulty rating from uHunt's real, community-wide accept-rate data for a
- * UVa problem (https://uhunt.onlinejudge.org/api/p — documented field order below) rather than
- * guessing. There's no official CPE difficulty scale published anywhere (the exam listing pages
- * only show problem order P1..P7, no star rating), so this is the most objective signal available.
+ * Derives a 1-4 star difficulty rating from uHunt's data for a UVa problem
+ * (https://uhunt.onlinejudge.org/api/p — documented field order below) rather than guessing.
+ * There's no official CPE difficulty scale published anywhere (the exam listing pages only show
+ * problem order P1..P7, no star rating), so this is the most objective signal available.
  *
- * Thresholds are the 25th/50th/75th percentile accept rates across this project's own 335 CPE
- * problems (computed once, hardcoded here rather than recomputed live) - deliberately calibrated
- * to this problem set rather than the full ~5000-problem UVa archive, so the four buckets actually
- * come out balanced for what students here will see (roughly 84/84/84/83 problems per bucket).
+ * Ranked by DACU (distinct accepted users) — NOT accept rate. First attempt used accept rate and
+ * it was badly miscalibrated: famous, genuinely-easy "first problem ever" classics like Hashmat
+ * the Brave Warrior and The 3n+1 Problem have LOW accept rates precisely because they attract a
+ * huge volume of complete first-time judge users who fumble the *judge* (int overflow, EOF
+ * handling, output formatting) rather than the problem itself - accept rate conflates "trips up
+ * judge newcomers" with "conceptually hard." DACU sidesteps that: it just counts how many people
+ * worldwide have ever actually solved it, which tracks how introductory/canonical a problem is
+ * far better for a curated "must-know basics" set like this project's CPE collection.
+ *
+ * Thresholds are the 25th/50th/75th percentile DACU across this project's own ~344 problems
+ * (CPE-scraped + the hand-picked "CPE 必考 49 題" collection), computed once and hardcoded here.
  */
 
 const UHUNT_PROBLEM_LIST_URL = "https://uhunt.onlinejudge.org/api/p";
@@ -19,29 +26,26 @@ type UhuntProblemRow = [
   number, number, number, number, number, number, number, number, number, number,
 ];
 
-const JUDGED_VERDICT_INDICES = [7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18]; // SE..AC, excludes noVerdict/inQueue
-const AC_INDEX = 18;
+const DACU_INDEX = 3;
 
-const DIFFICULTY_THRESHOLDS = { thirdQuartile: 0.53, median: 0.431, firstQuartile: 0.332 };
+const DIFFICULTY_THRESHOLDS = { thirdQuartile: 8328, median: 3614, firstQuartile: 1345 };
 
-export function acRateToDifficulty(acRate: number): number {
-  if (acRate >= DIFFICULTY_THRESHOLDS.thirdQuartile) return 1;
-  if (acRate >= DIFFICULTY_THRESHOLDS.median) return 2;
-  if (acRate >= DIFFICULTY_THRESHOLDS.firstQuartile) return 3;
+export function dacuToDifficulty(dacu: number): number {
+  if (dacu >= DIFFICULTY_THRESHOLDS.thirdQuartile) return 1;
+  if (dacu >= DIFFICULTY_THRESHOLDS.median) return 2;
+  if (dacu >= DIFFICULTY_THRESHOLDS.firstQuartile) return 3;
   return 4;
 }
 
-/** Fetches uHunt's full problem list once and returns a uvaId -> accept-rate map. */
-export async function fetchUhuntAcRates(): Promise<Map<number, number>> {
+/** Fetches uHunt's full problem list once and returns a uvaId -> DACU map. */
+export async function fetchUhuntDacu(): Promise<Map<number, number>> {
   const res = await fetch(UHUNT_PROBLEM_LIST_URL);
   if (!res.ok) throw new Error(`uHunt problem list fetch failed: HTTP ${res.status}`);
   const rows = (await res.json()) as UhuntProblemRow[];
 
-  const rates = new Map<number, number>();
+  const dacuByUvaId = new Map<number, number>();
   for (const row of rows) {
-    const uvaId = row[1];
-    const total = JUDGED_VERDICT_INDICES.reduce((sum, i) => sum + row[i], 0);
-    if (total > 0) rates.set(uvaId, row[AC_INDEX] / total);
+    dacuByUvaId.set(row[1], row[DACU_INDEX]);
   }
-  return rates;
+  return dacuByUvaId;
 }

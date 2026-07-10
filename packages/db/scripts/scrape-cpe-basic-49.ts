@@ -12,7 +12,7 @@
 import { PrismaClient } from "@prisma/client";
 import { PDFParse } from "pdf-parse";
 import { cleanPdfStatementText, extractSampleFromPdfText } from "./formatStatement.js";
-import { acRateToDifficulty, fetchUhuntAcRates } from "./uhuntDifficulty.js";
+import { dacuToDifficulty, fetchUhuntDacu } from "./uhuntDifficulty.js";
 
 const prisma = new PrismaClient();
 
@@ -91,7 +91,9 @@ function sanitizeForPostgres(s: string): string {
   return s.replace(/\x00/g, "");
 }
 
-async function fetchOfficialStatement(uvaId: number): Promise<{ statementMd: string; sample: { input: string; output: string } | null }> {
+async function fetchOfficialStatement(
+  uvaId: number,
+): Promise<{ statementMd: string; sourceUrl: string; sample: { input: string; output: string } | null }> {
   const folder = Math.floor(uvaId / 100);
   const pdfUrl = `https://onlinejudge.org/external/${folder}/${uvaId}.pdf`;
   const res = await fetch(pdfUrl);
@@ -105,15 +107,12 @@ async function fetchOfficialStatement(uvaId: number): Promise<{ statementMd: str
 
   const body = cleanPdfStatementText(raw, uvaId);
   const sample = extractSampleFromPdfText(raw);
-  const statementMd = sanitizeForPostgres(
-    `**UVa ${uvaId}**\n\nSourced from onlinejudge.org. [原始 PDF](${pdfUrl})\n\n${body}`,
-  );
-  return { statementMd, sample };
+  return { statementMd: sanitizeForPostgres(body), sourceUrl: pdfUrl, sample };
 }
 
 async function main() {
-  console.log("Fetching uHunt accept-rate data (for difficulty)...");
-  const uhuntRates = await fetchUhuntAcRates();
+  console.log("Fetching uHunt DACU data (for difficulty)...");
+  const uhuntDacu = await fetchUhuntDacu();
 
   const problemIds: string[] = [];
 
@@ -127,9 +126,9 @@ async function main() {
 
     console.log(`[${i + 1}/${PROBLEMS.length}] uva${uvaId} (${title}): fetching from onlinejudge.org...`);
     try {
-      const { statementMd, sample } = await fetchOfficialStatement(uvaId);
-      const rate = uhuntRates.get(uvaId);
-      const difficulty = rate !== undefined ? acRateToDifficulty(rate) : 1;
+      const { statementMd, sourceUrl, sample } = await fetchOfficialStatement(uvaId);
+      const dacu = uhuntDacu.get(uvaId);
+      const difficulty = dacu !== undefined ? dacuToDifficulty(dacu) : 1;
       const slug = `uva-${uvaId}-${slugifyTitle(title)}`;
 
       const problem = await prisma.problem.create({
@@ -138,6 +137,7 @@ async function main() {
           slug,
           title: `${uvaId} - ${title}`,
           statementMd,
+          sourceUrl,
           timeLimitMs: 2000,
           memoryLimitKb: 65536,
           difficulty,
@@ -163,8 +163,7 @@ async function main() {
     create: {
       slug: "cpe-basic-49",
       title: "CPE 必考 49 題",
-      description:
-        "CPE 考前必練的 49 道基礎題，取自 https://weilin1205.github.io/2022/07/28/UVa/CPEbasic/ 整理的清單。",
+      description: "CPE 考前必練的 49 道基礎題。",
     },
   });
 

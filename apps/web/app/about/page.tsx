@@ -22,7 +22,7 @@ export default function AboutPage() {
         <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-wide text-brand">About the author</p>
         <h2 className="font-display text-2xl font-bold text-ink-50">關於架站的人</h2>
         <p className="mt-2 text-sm text-ink-400">
-          台大資工系學生，現於中研院從事研究工作，帶學生準備 APCS 與 CPE 檢定、打好程式基礎。
+          台大資工系學生，現於中研院當 Research Assistant Intern，帶學生準備 APCS 與 CPE 檢定、打好程式基礎。
         </p>
 
         <div className="mt-6 grid gap-8 sm:grid-cols-2">
@@ -48,7 +48,7 @@ export default function AboutPage() {
             <ul className="space-y-1.5 text-sm text-ink-300">
               <li>微積分 A+（大一上、下）</li>
               <li>系排名第 1，獲頒書卷獎（大一上）</li>
-              <li>APCS：觀念 5 級分、實作 3 級分</li>
+              {/* <li>APCS：觀念 5 級分、實作 3 級分</li> */}
               <li>GPE 580 / 600（交大資工畢業門檻為 240 / 600）</li>
             </ul>
           </div>
@@ -73,7 +73,7 @@ export default function AboutPage() {
           <div>
             <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-ink-500">課程內容</h3>
             <ul className="space-y-1 text-sm text-ink-300">
-              <li>Python / C / C++ 語法教學</li>
+              <li>C++ / C / Python 語法教學</li>
               <li>進階演算法教學——透過 CPE、LeetCode 題目掌握核心演算法思維</li>
               <li>（有興趣的話）個人網站架設，從前端到後端、資料庫串接，一步步做出自己的網站</li>
             </ul>

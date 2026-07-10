@@ -87,7 +87,7 @@
   }
 
   .prose-statement h1, .prose-statement h2, .prose-statement h3 {
-    @apply mb-2 mt-4 font-display font-semibold text-ink-50;
+    @apply mb-2 mt-5 font-display text-lg font-semibold text-ink-50;
   }
 
   .prose-statement ul {

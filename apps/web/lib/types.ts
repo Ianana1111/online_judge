@@ -66,6 +66,7 @@ export interface ProblemDetail {
   slug: string;
   title: string;
   statementMd: string;
+  sourceUrl: string | null;
   inputSpecMd: string;
   outputSpecMd: string;
   timeLimitMs: number;

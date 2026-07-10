@@ -34,7 +34,7 @@ export function cleanPdfStatementText(raw: string, uvaId: number): string {
 
     const headerMatch = SECTION_HEADERS.find((h) => h.toLowerCase() === line.toLowerCase());
     if (headerMatch) {
-      out.push("", `**${headerMatch}**`, "");
+      out.push("", `### ${headerMatch}`, "");
       continue;
     }
     out.push(lines[i]);

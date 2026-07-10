@@ -77,6 +77,7 @@ export class ProblemsService {
       slug: problem.slug,
       title: problem.title,
       statementMd: problem.statementMd,
+      sourceUrl: problem.sourceUrl,
       inputSpecMd: problem.inputSpecMd,
       outputSpecMd: problem.outputSpecMd,
       timeLimitMs: problem.timeLimitMs,

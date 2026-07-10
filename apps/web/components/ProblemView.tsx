@@ -18,8 +18,16 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
   const left = (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-ink-50">{problem.title}</h1>
-        <span className="font-mono text-sm text-brand">{"★".repeat(problem.difficulty)}</span>
+        <h1 className="font-display text-3xl font-bold text-ink-50">
+          {problem.sourceUrl ? (
+            <a href={problem.sourceUrl} target="_blank" rel="noopener noreferrer" className="hover:text-brand">
+              {problem.title}
+            </a>
+          ) : (
+            problem.title
+          )}
+        </h1>
+        <span className="font-mono text-base text-brand">{"★".repeat(problem.difficulty)}</span>
       </div>
       <div className="mb-4 flex gap-4 border-b border-ink-800 text-sm">
         <button
@@ -51,13 +59,13 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
           <StatementRenderer content={problem.statementMd} />
           {problem.inputSpecMd && (
             <>
-              <h3 className="mb-2 mt-4 font-display font-semibold text-ink-50">Input</h3>
+              <h3 className="mb-2 mt-5 font-display text-lg font-semibold text-ink-50">Input</h3>
               <StatementRenderer content={problem.inputSpecMd} />
             </>
           )}
           {problem.outputSpecMd && (
             <>
-              <h3 className="mb-2 mt-4 font-display font-semibold text-ink-50">Output</h3>
+              <h3 className="mb-2 mt-5 font-display text-lg font-semibold text-ink-50">Output</h3>
               <StatementRenderer content={problem.outputSpecMd} />
             </>
           )}
