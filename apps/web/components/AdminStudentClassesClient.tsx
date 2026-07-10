@@ -6,6 +6,7 @@ import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { AdminUser, ClassSessionItem, ProblemListResponse } from "@/lib/types";
 import HomeworkStatusBadge from "@/components/HomeworkStatusBadge";
+import StatementRenderer from "@/components/StatementRenderer";
 
 interface ProblemPick {
   id: string;
@@ -119,11 +120,19 @@ function EditClassForm({
       <div>
         <label className="mb-1 block text-sm text-ink-300">What was taught today</label>
         <textarea
-          className="oj-input h-32 text-sm"
+          className="oj-input h-48 font-mono text-sm"
           value={contentMd}
           onChange={(e) => setContentMd(e.target.value)}
-          placeholder="Markdown notes on today's lesson…"
+          placeholder={"Markdown — headings, links, and code blocks all render on the student's page:\n\n## Today\nCovered greedy algorithms.\n\n```cpp\n#include <bits/stdc++.h>\n...\n```"}
         />
+        {contentMd && (
+          <div className="mt-2">
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-500">Preview</p>
+            <div className="oj-card p-3">
+              <StatementRenderer content={contentMd} />
+            </div>
+          </div>
+        )}
       </div>
       <ProblemPicker
         selected={problems}
@@ -210,7 +219,11 @@ export default function AdminStudentClassesClient({ studentId }: { studentId: st
                   </button>
                 </div>
               </div>
-              {c.contentMd && <p className="mb-3 whitespace-pre-wrap text-sm text-ink-300">{c.contentMd}</p>}
+              {c.contentMd && (
+                <div className="mb-3">
+                  <StatementRenderer content={c.contentMd} />
+                </div>
+              )}
               {c.homework.length > 0 && (
                 <div className="space-y-1.5">
                   {c.homework.map((hw) => (
