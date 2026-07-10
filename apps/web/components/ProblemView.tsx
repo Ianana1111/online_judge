@@ -7,9 +7,13 @@ import SubmissionHistory from "@/components/SubmissionHistory";
 import DiscussionPanel from "@/components/DiscussionPanel";
 import ProblemStatsPanel from "@/components/ProblemStatsPanel";
 import ProblemNotePanel from "@/components/ProblemNotePanel";
+import InfoTooltip from "@/components/InfoTooltip";
 import SplitPane from "@/components/SplitPane";
 import type { ProblemDetail } from "@/lib/types";
 import { useExamTimerStore } from "@/store/examTimer";
+
+const DIFFICULTY_EXPLANATION =
+  "Based on how many people worldwide have solved this problem on UVa — more solvers means a more introductory problem. There's no official CPE difficulty rating, so this is the most objective signal available.";
 
 export default function ProblemView({ problem, contestId }: { problem: ProblemDetail; contestId?: string }) {
   const [tab, setTab] = useState<"statement" | "history" | "discussion" | "stats" | "notes">("statement");
@@ -29,7 +33,10 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
             problem.title
           )}
         </h1>
-        <span className="font-mono text-base text-brand">{"★".repeat(problem.difficulty)}</span>
+        <span className="flex items-center gap-1.5 font-mono text-base text-brand">
+          {"★".repeat(problem.difficulty)}
+          <InfoTooltip text={DIFFICULTY_EXPLANATION} />
+        </span>
       </div>
       <div className="mb-4 flex gap-4 border-b border-ink-800 text-sm">
         <button

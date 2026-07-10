@@ -5,7 +5,11 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
+import InfoTooltip from "@/components/InfoTooltip";
 import type { ProblemListResponse } from "@/lib/types";
+
+const DIFFICULTY_EXPLANATION =
+  "Based on how many people worldwide have solved this problem on UVa — more solvers means a more introductory problem. There's no official CPE difficulty rating, so this is the most objective signal available.";
 
 const PAGE_SIZE = 20;
 
@@ -78,7 +82,12 @@ export default function ProblemListClient({
             <th></th>
             <th>Title</th>
             <th>Source</th>
-            <th>Difficulty</th>
+            <th>
+              <span className="inline-flex items-center gap-1">
+                Difficulty
+                <InfoTooltip text={DIFFICULTY_EXPLANATION} />
+              </span>
+            </th>
             <th>Tags</th>
           </tr>
         </thead>
