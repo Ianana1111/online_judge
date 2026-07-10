@@ -1,13 +1,6 @@
 import type { Problem } from "@oj/db";
 import type { Verdict } from "@oj/shared";
-import {
-  findUhuntUid,
-  submitSolution,
-  uhuntRecentSubmissions,
-  uvaLogin,
-  UHUNT_VERDICT,
-  type UvaSession,
-} from "./uvaClient.js";
+import { fetchMyStatus, mapUvaVerdictText, submitSolution, uvaLogin, type UvaSession } from "./uvaClient.js";
 
 export interface JudgeOutcome {
   status: Verdict;
@@ -29,7 +22,6 @@ const POLL_TIMEOUT_MS = 120_000;
 const POLL_INTERVAL_MS = 5_000;
 
 let cachedSession: UvaSession | null = null;
-let cachedUid: number | null = null;
 let lastSubmitAt = 0;
 
 async function throttle(): Promise<void> {
@@ -72,8 +64,7 @@ export async function judgeViaUva(problem: Problem, languageKey: string, sourceC
     const session = await getSession(username, password);
     const { submittedAtUnix } = await submitSolution(session, problem.uvaId, hints, sourceCode);
 
-    if (!cachedUid) cachedUid = await findUhuntUid(session);
-    return await pollUhunt(cachedUid, problem.uvaId, submittedAtUnix);
+    return await pollMyStatus(session, submittedAtUnix);
   } catch (err) {
     // Most failure modes here (bad session, markup drift, stale localId) look the same from the
     // caller's side — drop the cached session so the next attempt starts clean instead of
@@ -83,20 +74,29 @@ export async function judgeViaUva(problem: Problem, languageKey: string, sourceC
   }
 }
 
-async function pollUhunt(uid: number, uvaProblemNumber: number, submittedAfterUnix: number): Promise<JudgeOutcome> {
+/**
+ * Polls onlinejudge.org's own "My Submissions" status page (Itemid=9) rather than uHunt's
+ * subs-user-last mirror. The status table has no stable problem-number column we can match on
+ * (its `problem=` link parameter is an internal localid, not the public UVa number, and is
+ * sometimes blank for problems the site's own title lookup doesn't resolve) — but since this bot
+ * account only ever has one submission in flight at a time (see `throttle()`), the row with the
+ * *oldest* timestamp that's still >= our own submit time is unambiguously ours, even if a later
+ * submission's row has since landed above it.
+ */
+async function pollMyStatus(session: UvaSession, submittedAfterUnix: number): Promise<JudgeOutcome> {
   const deadline = Date.now() + POLL_TIMEOUT_MS;
+  const afterMs = (submittedAfterUnix - 5) * 1000;
   while (Date.now() < deadline) {
-    const subs = await uhuntRecentSubmissions(uid, 20);
-    const match = subs.find(
-      (s) => s.problemId === uvaProblemNumber && s.submittedAtUnix >= submittedAfterUnix - 5,
-    );
+    const rows = await fetchMyStatus(session);
+    const candidates = rows.filter((r) => r.submittedAt.getTime() >= afterMs);
+    const match = candidates[candidates.length - 1]; // rows are newest-first; oldest candidate = ours
     if (match) {
-      const mapped = UHUNT_VERDICT[match.verdictCode];
-      if (mapped && mapped !== "PENDING") {
-        return { status: mapped as Verdict, timeMs: match.runtimeCs * 10 };
+      const mapped = mapUvaVerdictText(match.verdictText);
+      if (mapped) {
+        return { status: mapped as Verdict, timeMs: Math.round(match.runtimeSec * 1000) };
       }
     }
     await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
   }
-  return { status: "SE", compileError: "Timed out waiting for UVa's verdict (uHunt never reported one)." };
+  return { status: "SE", compileError: "Timed out waiting for UVa's verdict." };
 }

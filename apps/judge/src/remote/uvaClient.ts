@@ -299,3 +299,60 @@ export async function uhuntRecentSubmissions(uid: number, count = 20): Promise<U
     return { submissionId, problemId, verdictCode, runtimeCs, submittedAtUnix, languageId };
   });
 }
+
+// --- onlinejudge.org's own "My Submissions" status page: the actual verdict source used for
+// polling (see uva.ts). Confirmed by direct testing that uHunt's subs-user-last mirror can sit
+// completely stale (multiple minutes, observed once stale for 3+ days) for a real, freshly-
+// judged submission even though the site itself judged it in seconds — so verdicts are read
+// straight from the site instead of trusting a third-party mirror's sync cadence. ---
+
+export interface UvaStatusRow {
+  submissionId: number;
+  verdictText: string;
+  language: string;
+  runtimeSec: number;
+  submittedAt: Date;
+}
+
+function stripTags(html: string): string {
+  return html.replace(/<[^>]+>/g, "").trim();
+}
+
+export async function fetchMyStatus(session: UvaSession): Promise<UvaStatusRow[]> {
+  const res = await fetchWithJar(`${BASE}/index.php?option=com_onlinejudge&Itemid=9`, session.jar);
+  const rowBlocks = res.body.match(/<tr class="sectiontableentry[12]">[\s\S]*?<\/tr>/g) ?? [];
+  const rows: UvaStatusRow[] = [];
+  for (const block of rowBlocks) {
+    const cells = [...block.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((m) => stripTags(m[1]));
+    if (cells.length < 6) continue;
+    const submissionId = parseInt(cells[0], 10);
+    const dateText = cells[cells.length - 1];
+    if (!submissionId || !dateText) continue;
+    rows.push({
+      submissionId,
+      verdictText: cells[3],
+      language: cells[4],
+      runtimeSec: parseFloat(cells[5]) || 0,
+      // The site displays these timestamps in UTC (confirmed by comparing against our own
+      // submit-time UTC clock on a real submission), so treat the string as UTC directly.
+      submittedAt: new Date(`${dateText.replace(" ", "T")}Z`),
+    });
+  }
+  return rows;
+}
+
+/** Maps onlinejudge.org's own status-page verdict text to our Verdict enum. Returns null for
+ * anything still in flight (queued/compiling/running) so the caller keeps polling. */
+export function mapUvaVerdictText(text: string): string | null {
+  const t = text.toLowerCase();
+  if (t.includes("accept")) return "AC";
+  if (t.includes("wrong answer")) return "WA";
+  if (t.includes("time limit")) return "TLE";
+  if (t.includes("memory limit")) return "MLE";
+  if (t.includes("compil")) return "CE";
+  if (t.includes("presentation")) return "PE";
+  if (t.includes("output limit")) return "OLE";
+  if (t.includes("runtime error") || t.includes("restricted function")) return "RE";
+  if (t.includes("submission error") || t.includes("can't be judged") || t.includes("cannot be judged")) return "SE";
+  return null;
+}
