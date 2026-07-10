@@ -5,12 +5,14 @@ import StatementRenderer from "@/components/StatementRenderer";
 import SubmissionPanel from "@/components/SubmissionPanel";
 import SubmissionHistory from "@/components/SubmissionHistory";
 import DiscussionPanel from "@/components/DiscussionPanel";
+import ProblemStatsPanel from "@/components/ProblemStatsPanel";
+import ProblemNotePanel from "@/components/ProblemNotePanel";
 import SplitPane from "@/components/SplitPane";
 import type { ProblemDetail } from "@/lib/types";
 import { useExamTimerStore } from "@/store/examTimer";
 
 export default function ProblemView({ problem, contestId }: { problem: ProblemDetail; contestId?: string }) {
-  const [tab, setTab] = useState<"statement" | "history" | "discussion">("statement");
+  const [tab, setTab] = useState<"statement" | "history" | "discussion" | "stats" | "notes">("statement");
   const examActive = useExamTimerStore((s) => s.active);
   const remaining = useExamTimerStore((s) => s.remainingMs());
   const locked = examActive && remaining <= 0;
@@ -47,6 +49,18 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
           className={`border-b-2 px-1 py-2 ${tab === "discussion" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}
         >
           Discussion
+        </button>
+        <button
+          onClick={() => setTab("stats")}
+          className={`border-b-2 px-1 py-2 ${tab === "stats" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}
+        >
+          Stats
+        </button>
+        <button
+          onClick={() => setTab("notes")}
+          className={`border-b-2 px-1 py-2 ${tab === "notes" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}
+        >
+          Notes
         </button>
       </div>
 
@@ -85,6 +99,8 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
       )}
       {tab === "history" && <SubmissionHistory problemId={problem.id} />}
       {tab === "discussion" && <DiscussionPanel problemId={problem.id} />}
+      {tab === "stats" && <ProblemStatsPanel slug={problem.slug} />}
+      {tab === "notes" && <ProblemNotePanel slug={problem.slug} />}
     </div>
   );
 

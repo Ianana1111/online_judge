@@ -78,6 +78,18 @@ export interface ProblemDetail {
   samples: Sample[];
 }
 
+export interface ProblemStats {
+  solvedCount: number;
+  time: { minMs: number; medianMs: number; maxMs: number } | null;
+  memoryAvailable: boolean;
+  yourBest: { timeMs: number; beatsPct: number | null } | null;
+}
+
+export interface ProblemNote {
+  content: string;
+  updatedAt: string | null;
+}
+
 export interface SubmissionDetail {
   id: string;
   userId: string;

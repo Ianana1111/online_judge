@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
-import { createProblemSchema, type CreateProblemDto } from "@oj/shared";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from "@nestjs/common";
+import { createProblemSchema, noteSchema, type CreateProblemDto, type NoteDto } from "@oj/shared";
 import { CurrentUser, OptionalAuth, Roles, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { ListQuery, ProblemsService } from "./problems.service";
@@ -18,6 +18,26 @@ export class ProblemsController {
   @Get(":slug")
   detail(@Param("slug") slug: string, @CurrentUser() user: RequestUser | null) {
     return this.problems.detail(slug, user);
+  }
+
+  @OptionalAuth()
+  @Get(":slug/stats")
+  stats(@Param("slug") slug: string, @CurrentUser() user: RequestUser | null) {
+    return this.problems.stats(slug, user);
+  }
+
+  @Get(":slug/note")
+  getNote(@Param("slug") slug: string, @CurrentUser() user: RequestUser) {
+    return this.problems.getNote(slug, user.id);
+  }
+
+  @Put(":slug/note")
+  saveNote(
+    @Param("slug") slug: string,
+    @Body(new ZodValidationPipe(noteSchema)) body: NoteDto,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.problems.saveNote(slug, user.id, body.content);
   }
 
   @Roles("ADMIN")

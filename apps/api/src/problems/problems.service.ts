@@ -89,6 +89,68 @@ export class ProblemsService {
     };
   }
 
+  /** Community runtime stats for this problem, LeetCode-style. Memory is never available -
+   * onlinejudge.org's own status page doesn't publish it (that column is literally commented out
+   * in their markup), so every submission judged through the remote adapter has memoryKb=null. */
+  async stats(slug: string, requester: RequestUser | null) {
+    const problem = await prisma.problem.findUnique({ where: { slug }, select: { id: true } });
+    if (!problem) throw new NotFoundException("Problem not found");
+
+    const acSubs = await prisma.submission.findMany({
+      where: { problemId: problem.id, verdict: "AC", timeMs: { not: null } },
+      select: { userId: true, timeMs: true },
+    });
+
+    const bestByUser = new Map<string, number>();
+    for (const s of acSubs) {
+      const t = s.timeMs!;
+      const prev = bestByUser.get(s.userId);
+      if (prev === undefined || t < prev) bestByUser.set(s.userId, t);
+    }
+    const times = [...bestByUser.values()].sort((a, b) => a - b);
+
+    const percentileOf = (t: number) => {
+      if (times.length === 0) return null;
+      const slower = times.filter((x) => x >= t).length;
+      return Math.round((slower / times.length) * 100);
+    };
+
+    let yourBest: { timeMs: number; beatsPct: number | null } | null = null;
+    if (requester) {
+      const mine = bestByUser.get(requester.id);
+      if (mine !== undefined) yourBest = { timeMs: mine, beatsPct: percentileOf(mine) };
+    }
+
+    return {
+      solvedCount: times.length,
+      time:
+        times.length > 0
+          ? { minMs: times[0], medianMs: times[Math.floor(times.length / 2)], maxMs: times[times.length - 1] }
+          : null,
+      memoryAvailable: false,
+      yourBest,
+    };
+  }
+
+  /** Private per-user notes — never shown to anyone else, including admins. */
+  async getNote(slug: string, userId: string): Promise<{ content: string; updatedAt: Date | null }> {
+    const problem = await prisma.problem.findUnique({ where: { slug }, select: { id: true } });
+    if (!problem) throw new NotFoundException("Problem not found");
+    const note = await prisma.note.findUnique({ where: { userId_problemId: { userId, problemId: problem.id } } });
+    return { content: note?.content ?? "", updatedAt: note?.updatedAt ?? null };
+  }
+
+  async saveNote(slug: string, userId: string, content: string): Promise<{ content: string; updatedAt: Date }> {
+    const problem = await prisma.problem.findUnique({ where: { slug }, select: { id: true } });
+    if (!problem) throw new NotFoundException("Problem not found");
+    const note = await prisma.note.upsert({
+      where: { userId_problemId: { userId, problemId: problem.id } },
+      update: { content },
+      create: { userId, problemId: problem.id, content },
+    });
+    return { content: note.content, updatedAt: note.updatedAt };
+  }
+
   async create(dto: CreateProblemDto) {
     const problem = await prisma.problem.create({
       data: {
