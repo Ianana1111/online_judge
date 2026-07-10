@@ -10,9 +10,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@oj/shared": "workspace:*",
     "@monaco-editor/react": "^4.6.0",
+    "@oj/shared": "workspace:*",
     "@tanstack/react-query": "^5.59.0",
+    "@vercel/analytics": "^2.0.1",
     "hast-util-sanitize": "^5.0.2",
     "katex": "^0.16.11",
     "next": "^15.0.0",
