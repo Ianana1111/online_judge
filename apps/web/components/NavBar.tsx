@@ -74,6 +74,14 @@ export default function NavBar() {
               <Link href={`/u/${user.handle}`} className="text-sm text-ink-200 hover:text-brand">
                 {user.handle}
               </Link>
+              <Link
+                href="/settings"
+                className={`text-sm font-medium transition-colors ${
+                  pathname === "/settings" ? "text-brand" : "text-ink-300 hover:text-ink-50"
+                }`}
+              >
+                Settings
+              </Link>
               <button
                 onClick={async () => {
                   await logout();
