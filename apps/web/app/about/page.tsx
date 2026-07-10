@@ -30,7 +30,7 @@ export default function AboutPage() {
             <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">學歷</h3>
             <ul className="space-y-1.5 text-sm text-ink-300">
               <li>國立台灣大學 電機資訊學院資料科學碩士學位學程（準碩一）</li>
-              <li>國立台灣大學 資訊工程學系（大四）</li>
+              <li>國立台灣大學 資訊工程學系 畢業</li>
               <li>國立台灣師範大學附屬高級中學 畢業</li>
             </ul>
           </div>

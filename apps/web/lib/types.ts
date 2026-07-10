@@ -108,7 +108,9 @@ export interface SubmissionDetail {
 export interface SubmissionListItem {
   id: string;
   problemId: string;
+  problemSlug?: string;
   problemTitle?: string;
+  problemTags?: string[];
   languageKey: string;
   verdict: Verdict;
   timeMs?: number | null;

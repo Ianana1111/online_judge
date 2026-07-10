@@ -16,6 +16,9 @@ const PUBLIC_LINKS = [
   { href: "/about", label: "About" },
 ];
 
+// Any logged-in user — registered visitors and students alike.
+const AUTH_LINKS = [{ href: "/submissions", label: "My Submissions" }];
+
 // Only for logged-in students (isStudent, set by an admin) — not admins, they get the console link.
 const STUDENT_LINKS = [{ href: "/classes", label: "My Classes" }];
 
@@ -113,7 +116,19 @@ export default function NavBar() {
                 {l.label}
               </Link>
             ))}
-            {showStudentLinks && <span className="mx-1 text-ink-700">|</span>}
+            {!!user && <span className="mx-1 text-ink-700">|</span>}
+            {!!user &&
+              AUTH_LINKS.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className={`text-sm font-medium transition-colors ${
+                    pathname?.startsWith(l.href) ? "text-brand" : "text-ink-300 hover:text-ink-50"
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              ))}
             {showStudentLinks &&
               STUDENT_LINKS.map((l) => (
                 <Link

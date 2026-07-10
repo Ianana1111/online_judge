@@ -28,6 +28,7 @@ export interface SubmissionListQuery {
   problem?: string;
   contestId?: string;
   page?: string;
+  pageSize?: string;
 }
 
 @Injectable()
@@ -98,14 +99,17 @@ export class SubmissionsService {
     if (query.contestId) where.contestId = query.contestId;
 
     const page = Math.max(1, parseInt(query.page ?? "1", 10) || 1);
+    const pageSize = query.pageSize ? Math.min(200, Math.max(1, parseInt(query.pageSize, 10) || PAGE_SIZE)) : PAGE_SIZE;
 
     const [rows, total] = await Promise.all([
       prisma.submission.findMany({
         where,
-        include: { problem: { select: { title: true } } },
+        include: {
+          problem: { select: { slug: true, title: true, tags: { include: { tag: true } } } },
+        },
         orderBy: { createdAt: "desc" },
-        skip: (page - 1) * PAGE_SIZE,
-        take: PAGE_SIZE,
+        skip: (page - 1) * pageSize,
+        take: pageSize,
       }),
       prisma.submission.count({ where }),
     ]);
@@ -114,7 +118,9 @@ export class SubmissionsService {
       items: rows.map((s) => ({
         id: s.id,
         problemId: s.problemId,
+        problemSlug: s.problem.slug,
         problemTitle: s.problem.title,
+        problemTags: s.problem.tags.map((t) => t.tag.slug),
         languageKey: s.languageKey,
         status: s.status,
         verdict: s.verdict,
