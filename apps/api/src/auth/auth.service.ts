@@ -1,9 +1,9 @@
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import argon2 from "argon2";
 import { randomUUID } from "node:crypto";
 import type Redis from "ioredis";
 import { prisma } from "@oj/db";
-import type { LoginDto } from "@oj/shared";
+import type { LoginDto, RegisterDto } from "@oj/shared";
 import { generateCsrfToken } from "../common/csrf.util";
 import { REDIS_CLIENT } from "../common/redis.providers";
 import { TokenService } from "./token.service";
@@ -24,9 +24,22 @@ export class AuthService {
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
   ) {}
 
+  async register(dto: RegisterDto): Promise<IssuedSession> {
+    const existing = await prisma.user.findFirst({
+      where: { OR: [{ handle: dto.handle }, { email: dto.email }] },
+    });
+    if (existing) throw new ConflictException("Handle or email already in use");
+
+    const passwordHash = await argon2.hash(dto.password, { type: argon2.argon2id });
+    const user = await prisma.user.create({
+      data: { handle: dto.handle, email: dto.email, passwordHash, role: "USER" },
+    });
+    return this.issueSession(user.id, user.handle, user.email, user.role);
+  }
+
   async login(dto: LoginDto): Promise<IssuedSession> {
     const user = await prisma.user.findUnique({ where: { handle: dto.handle } });
-    if (!user) throw new UnauthorizedException("Invalid handle or password");
+    if (!user || !user.passwordHash) throw new UnauthorizedException("Invalid handle or password");
     const ok = await argon2.verify(user.passwordHash, dto.password);
     if (!ok) throw new UnauthorizedException("Invalid handle or password");
     return this.issueSession(user.id, user.handle, user.email, user.role);
@@ -65,9 +78,15 @@ export class AuthService {
     }
   }
 
-  async me(
-    userId: string,
-  ): Promise<{ id: string; handle: string; email: string; role: string; csrfToken: string; csrfMaxAgeMs: number }> {
+  async me(userId: string): Promise<{
+    id: string;
+    handle: string;
+    email: string;
+    role: string;
+    isStudent: boolean;
+    csrfToken: string;
+    csrfMaxAgeMs: number;
+  }> {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new UnauthorizedException();
     // Stateless token (see csrf.util.ts) — safe to mint a fresh one on every /auth/me call so
@@ -78,6 +97,7 @@ export class AuthService {
       handle: user.handle,
       email: user.email,
       role: user.role,
+      isStudent: user.isStudent,
       csrfToken: generateCsrfToken(),
       csrfMaxAgeMs: this.tokens.refreshTtlMs,
     };

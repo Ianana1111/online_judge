@@ -1,5 +1,12 @@
 import { Body, Controller, Get, HttpCode, Param, Patch, Post } from "@nestjs/common";
-import { changePasswordSchema, createUserSchema, type ChangePasswordDto, type CreateUserDto } from "@oj/shared";
+import {
+  changePasswordSchema,
+  createUserSchema,
+  setIsStudentSchema,
+  type ChangePasswordDto,
+  type CreateUserDto,
+  type SetIsStudentDto,
+} from "@oj/shared";
 import { CurrentUser, Public, Roles, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { UsersService } from "./users.service";
@@ -27,6 +34,12 @@ export class UsersController {
   @Get()
   list() {
     return this.users.listAll();
+  }
+
+  @Roles("ADMIN")
+  @Patch(":id/student")
+  setIsStudent(@Param("id") id: string, @Body(new ZodValidationPipe(setIsStudentSchema)) body: SetIsStudentDto) {
+    return this.users.setIsStudent(id, body.isStudent);
   }
 
   @Public()

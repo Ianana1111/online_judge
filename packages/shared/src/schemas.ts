@@ -54,6 +54,16 @@ export const changePasswordSchema = z.object({
 });
 export type ChangePasswordDto = z.infer<typeof changePasswordSchema>;
 
+export const setIsStudentSchema = z.object({
+  isStudent: z.boolean(),
+});
+export type SetIsStudentDto = z.infer<typeof setIsStudentSchema>;
+
+export const noteSchema = z.object({
+  content: z.string().max(20_000),
+});
+export type NoteDto = z.infer<typeof noteSchema>;
+
 export const createDiscussionSchema = z.object({
   body: z.string().min(1).max(4000),
 });

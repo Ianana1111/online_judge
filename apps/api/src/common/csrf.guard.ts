@@ -6,7 +6,7 @@ const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 // cookie, and cross-domain (web + API on different origins) the client has no CSRF token to
 // present yet on a fresh page load until *after* a successful refresh/me call hands it one -
 // requiring CSRF here would be a chicken-and-egg deadlock, not meaningful extra protection.
-const EXEMPT_PATHS = new Set(["/auth/login", "/auth/refresh"]);
+const EXEMPT_PATHS = new Set(["/auth/login", "/auth/register", "/auth/refresh"]);
 
 @Injectable()
 export class CsrfGuard implements CanActivate {

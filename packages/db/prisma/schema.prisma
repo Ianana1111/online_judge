@@ -73,8 +73,13 @@ model User {
   id           String   @id @default(cuid())
   handle       String   @unique
   email        String   @unique
-  passwordHash String
+  passwordHash String?
+  googleId     String?  @unique
   role         Role     @default(USER)
+  /// Set by an admin to mark this account as one of their actual tutoring students (distinct
+  /// from role=USER, which now also covers anyone who self-registered out of general interest).
+  /// Gates the "My Classes" nav link and Class-tracking features.
+  isStudent    Boolean  @default(false)
   settings     Json     @default("{}")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -86,6 +91,7 @@ model User {
   assignments          AssignmentAssignee[]  @relation("AssignmentAssigneeUser")
   classSessions        ClassSession[]        @relation("ClassSessionStudent")
   createdClassSessions ClassSession[]        @relation("ClassSessionTeacher")
+  notes                Note[]
 
   @@map("users")
 }
@@ -117,6 +123,7 @@ model Problem {
   assignmentLinks  AssignmentProblem[]
   classHomework    ClassHomework[]
   collectionLinks  CollectionProblem[]
+  notes            Note[]
 
   @@index([uvaId])
   @@map("problems")
@@ -343,4 +350,18 @@ model ClassHomework {
 
   @@unique([classId, problemId])
   @@map("class_homework")
+}
+
+/// A user's own private notes on a problem — never shown to anyone else.
+model Note {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problemId String
+  problem   Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  content   String   @default("")
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, problemId])
+  @@map("notes")
 }

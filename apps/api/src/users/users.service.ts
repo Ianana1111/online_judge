@@ -25,6 +25,7 @@ export class UsersService {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException("User not found");
 
+    if (!user.passwordHash) throw new UnauthorizedException("This account signs in with Google, not a password");
     const ok = await argon2.verify(user.passwordHash, dto.currentPassword);
     if (!ok) throw new UnauthorizedException("Current password is incorrect");
 
@@ -36,9 +37,16 @@ export class UsersService {
   async listAll() {
     const users = await prisma.user.findMany({
       orderBy: { createdAt: "desc" },
-      select: { id: true, handle: true, email: true, role: true, createdAt: true },
+      select: { id: true, handle: true, email: true, role: true, isStudent: true, createdAt: true },
     });
     return users;
+  }
+
+  async setIsStudent(id: string, isStudent: boolean) {
+    const existing = await prisma.user.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException("User not found");
+    const user = await prisma.user.update({ where: { id }, data: { isStudent } });
+    return { id: user.id, handle: user.handle, isStudent: user.isStudent };
   }
 
   async profile(handle: string) {

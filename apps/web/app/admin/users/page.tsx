@@ -42,12 +42,22 @@ export default function AdminUsersPage() {
     }
   }
 
+  async function toggleStudent(id: string, isStudent: boolean) {
+    try {
+      await apiFetch(`/users/${id}/student`, { method: "PATCH", body: { isStudent } });
+      await qc.invalidateQueries({ queryKey: ["users", "admin"] });
+    } catch {
+      /* best-effort */
+    }
+  }
+
   return (
     <div className="space-y-8">
       <h1 className="font-display text-2xl font-bold text-ink-50">Admin · Students &amp; Users</h1>
       <p className="text-sm text-ink-400">
-        There's no public sign-up — create each student's account here and share the handle/password with
-        them directly.
+        Anyone can create their own account now — use the toggle below to mark someone as your actual
+        tutoring student, which is what gives them the Class-tracking features. You can still provision an
+        account directly here too.
       </p>
 
       <form onSubmit={createUser} className="oj-card grid gap-3 p-4 sm:grid-cols-2">
@@ -117,6 +127,7 @@ export default function AdminUsersPage() {
               <th>Handle</th>
               <th>Email</th>
               <th>Role</th>
+              <th>My student</th>
               <th>Created</th>
             </tr>
           </thead>
@@ -126,6 +137,18 @@ export default function AdminUsersPage() {
                 <td>{u.handle}</td>
                 <td className="text-xs text-ink-400">{u.email}</td>
                 <td className="text-xs text-ink-400">{u.role}</td>
+                <td>
+                  {u.role === "USER" && (
+                    <label className="flex items-center gap-2 text-xs text-ink-300">
+                      <input
+                        type="checkbox"
+                        checked={u.isStudent}
+                        onChange={(e) => toggleStudent(u.id, e.target.checked)}
+                      />
+                      {u.isStudent ? "Student" : "—"}
+                    </label>
+                  )}
+                </td>
                 <td className="font-mono text-xs text-ink-500">{new Date(u.createdAt).toLocaleDateString()}</td>
               </tr>
             ))}

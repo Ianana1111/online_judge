@@ -6,16 +6,18 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 import { useExamTimerStore } from "@/store/examTimer";
 
-const LINKS = [
+// Visible to everyone, including logged-out visitors.
+const PUBLIC_LINKS = [
   { href: "/problems", label: "Problems" },
   { href: "/collections", label: "Collections" },
   { href: "/contests", label: "Contests" },
   { href: "/cpe", label: "CPE" },
   { href: "/leaderboard", label: "Leaderboard" },
-  { href: "/assignments", label: "Assignments", authOnly: true },
-  { href: "/classes", label: "My Classes", authOnly: true },
   { href: "/about", label: "About" },
 ];
+
+// Only for logged-in students (isStudent, set by an admin) or admins previewing the student view.
+const STUDENT_LINKS = [{ href: "/classes", label: "My Classes" }];
 
 const ADMIN_LINKS = [
   { href: "/admin/problems", label: "Problems" },
@@ -97,6 +99,8 @@ export default function NavBar() {
     return null; // ExamModeShell supplies its own minimal header while a timed window is running
   }
 
+  const showStudentLinks = !!user && (user.isStudent || user.role === "ADMIN");
+
   return (
     <header className="sticky top-0 z-40 border-b border-ink-800 bg-ink-950/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
@@ -105,9 +109,7 @@ export default function NavBar() {
             judge<span className="text-brand">.</span>
           </Link>
           <nav className="hidden gap-4 sm:flex">
-            {LINKS.filter(
-              (l) => (!l.authOnly || user) && (user?.role !== "ADMIN" || (l.href !== "/assignments" && l.href !== "/classes")),
-            ).map((l) => (
+            {PUBLIC_LINKS.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
@@ -118,6 +120,19 @@ export default function NavBar() {
                 {l.label}
               </Link>
             ))}
+            {showStudentLinks && <span className="mx-1 text-ink-700">|</span>}
+            {showStudentLinks &&
+              STUDENT_LINKS.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className={`text-sm font-medium transition-colors ${
+                    pathname?.startsWith(l.href) ? "text-brand" : "text-ink-300 hover:text-ink-50"
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              ))}
             {user?.role === "ADMIN" && (
               <span className="mx-1 text-ink-700">|</span>
             )}

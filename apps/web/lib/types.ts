@@ -37,6 +37,7 @@ export interface User {
   handle: string;
   email: string;
   role: "USER" | "ADMIN";
+  isStudent: boolean;
 }
 
 export interface ProblemListItem {
@@ -179,6 +180,7 @@ export interface AdminUser {
   handle: string;
   email: string;
   role: "USER" | "ADMIN";
+  isStudent: boolean;
   createdAt: string;
 }
 

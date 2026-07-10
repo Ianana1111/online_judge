@@ -1,16 +1,26 @@
 import { Body, Controller, Get, HttpCode, Post, Req, Res } from "@nestjs/common";
 import type { Request, Response } from "express";
-import { loginSchema, type LoginDto } from "@oj/shared";
+import { loginSchema, registerSchema, type LoginDto, type RegisterDto } from "@oj/shared";
 import { clearAuthCookies, setAuthCookies, setCsrfCookie } from "../common/cookies.util";
 import { CurrentUser, Public, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { AuthService } from "./auth.service";
 
-// Accounts are provisioned by an admin (see UsersController POST /users), not self-registered —
-// there is deliberately no public /auth/register route.
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Public()
+  @HttpCode(201)
+  @Post("register")
+  async register(
+    @Body(new ZodValidationPipe(registerSchema)) body: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const session = await this.authService.register(body);
+    setAuthCookies(res, session);
+    return { ...session.user, csrfToken: session.csrfToken };
+  }
 
   @Public()
   @HttpCode(200)
