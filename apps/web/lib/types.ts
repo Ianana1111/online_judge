@@ -6,6 +6,7 @@ export type Verdict =
   | "TLE"
   | "MLE"
   | "RE"
+  | "RF"
   | "CE"
   | "PE"
   | "OLE"
@@ -19,6 +20,7 @@ export const VERDICT_LABEL: Record<Verdict, string> = {
   TLE: "Time Limit Exceeded",
   MLE: "Memory Limit Exceeded",
   RE: "Runtime Error",
+  RF: "Restricted Function",
   CE: "Compile Error",
   PE: "Presentation Error",
   OLE: "Output Limit Exceeded",

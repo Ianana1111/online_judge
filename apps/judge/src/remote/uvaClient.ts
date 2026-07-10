@@ -255,7 +255,7 @@ export const UHUNT_VERDICT: Record<number, string> = {
   15: "SE",
   20: "PENDING",
   30: "CE",
-  35: "RE",
+  35: "RF",
   40: "RE",
   45: "OLE",
   50: "TLE",
@@ -352,7 +352,8 @@ export function mapUvaVerdictText(text: string): string | null {
   if (t.includes("compil")) return "CE";
   if (t.includes("presentation")) return "PE";
   if (t.includes("output limit")) return "OLE";
-  if (t.includes("runtime error") || t.includes("restricted function")) return "RE";
+  if (t.includes("restricted function")) return "RF";
+  if (t.includes("runtime error")) return "RE";
   if (t.includes("submission error") || t.includes("can't be judged") || t.includes("cannot be judged")) return "SE";
   return null;
 }

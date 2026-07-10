@@ -40,6 +40,7 @@ const config: Config = {
           tle: themedColor("verdict-tle"),
           mle: themedColor("verdict-mle"),
           re: themedColor("verdict-re"),
+          rf: themedColor("verdict-rf"),
           ce: themedColor("verdict-ce"),
           pe: themedColor("verdict-pe"),
           ole: themedColor("verdict-ole"),

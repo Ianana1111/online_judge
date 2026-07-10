@@ -37,6 +37,7 @@ enum Verdict {
   TLE
   MLE
   RE
+  RF
   CE
   PE
   OLE

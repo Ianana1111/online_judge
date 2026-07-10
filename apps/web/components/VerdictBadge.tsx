@@ -7,6 +7,7 @@ const VERDICT_STYLE: Record<Verdict, string> = {
   TLE: "bg-verdict-tle/15 text-verdict-tle border-verdict-tle/40",
   MLE: "bg-verdict-mle/15 text-verdict-mle border-verdict-mle/40",
   RE: "bg-verdict-re/15 text-verdict-re border-verdict-re/40",
+  RF: "bg-verdict-rf/15 text-verdict-rf border-verdict-rf/40",
   CE: "bg-verdict-ce/15 text-verdict-ce border-verdict-ce/40",
   PE: "bg-verdict-pe/15 text-verdict-pe border-verdict-pe/40",
   OLE: "bg-verdict-ole/15 text-verdict-ole border-verdict-ole/40",

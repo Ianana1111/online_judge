@@ -14,13 +14,14 @@ const LANGUAGE_COLOR: Record<string, string> = {
 };
 
 // Reserved status colors — same mapping used by VerdictBadge, never reused for anything else.
-const VERDICT_ORDER: Verdict[] = ["AC", "WA", "TLE", "MLE", "RE", "CE", "PE", "OLE", "SE"];
+const VERDICT_ORDER: Verdict[] = ["AC", "WA", "TLE", "MLE", "RE", "RF", "CE", "PE", "OLE", "SE"];
 const VERDICT_COLOR: Record<Verdict, string> = {
   AC: "#2fae5e",
   WA: "#d9534f",
   TLE: "#e08a2f",
   MLE: "#c9772f",
   RE: "#c44f6b",
+  RF: "#b34a9e",
   CE: "#8b8f9b",
   PE: "#c9a13b",
   OLE: "#b3672f",
