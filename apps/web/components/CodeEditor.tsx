@@ -1,6 +1,7 @@
 "use client";
 
 import Editor from "@monaco-editor/react";
+import { useTheme } from "@/lib/useTheme";
 
 const MONACO_LANG: Record<string, string> = {
   cpp17: "cpp",
@@ -18,11 +19,13 @@ export default function CodeEditor({
   value: string;
   onChange: (v: string) => void;
 }) {
+  const theme = useTheme();
+
   return (
     <div className="oj-card overflow-hidden">
       <Editor
         height="480px"
-        theme="vs-dark"
+        theme={theme === "dark" ? "vs-dark" : "light"}
         language={MONACO_LANG[languageKey] ?? "plaintext"}
         value={value}
         onChange={(v) => onChange(v ?? "")}

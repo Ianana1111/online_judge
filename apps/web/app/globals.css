@@ -3,12 +3,145 @@
 @tailwind utilities;
 
 @layer base {
+  /* Color tokens as "R G B" triplets (not hex) so Tailwind's opacity modifiers, e.g.
+   * bg-ink-950/90, keep working via rgb(var(--x) / <alpha-value>) — see tailwind.config.ts.
+   * Dark is this site's baseline look; :root holds the dark values directly so nothing changes
+   * for anyone until a theme mechanism below actually overrides it. */
   :root {
+    --ink-950: 10 13 18;
+    --ink-900: 14 18 24;
+    --ink-800: 20 26 34;
+    --ink-700: 28 37 48;
+    --ink-600: 42 52 65;
+    --ink-500: 71 84 99;
+    --ink-400: 107 122 139;
+    --ink-300: 154 168 181;
+    --ink-200: 199 208 216;
+    --ink-100: 232 236 239;
+    --ink-50: 245 247 248;
+
+    --brand: 232 163 61;
+    --brand-light: 240 182 96;
+    --brand-dark: 200 132 42;
+    /* Fixed, not theme-aware: text sitting directly on the brand color (e.g. primary button
+     * labels) always wants a strong dark tone for contrast, in both themes. */
+    --onbrand: 13 17 23;
+
+    --verdict-ac: 47 174 94;
+    --verdict-wa: 217 83 79;
+    --verdict-tle: 224 138 47;
+    --verdict-mle: 201 119 47;
+    --verdict-re: 196 79 107;
+    --verdict-ce: 139 143 155;
+    --verdict-pe: 201 161 59;
+    --verdict-ole: 179 103 47;
+    --verdict-se: 122 92 201;
+    --verdict-pending: 74 111 165;
+
     color-scheme: dark;
   }
 
+  /* System preference for light, honored only when the user hasn't explicitly picked a theme
+   * (the [data-theme] rules below are more specific and always win once stamped). */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --ink-950: 247 248 249;
+      --ink-900: 238 240 242;
+      --ink-800: 227 230 233;
+      --ink-700: 210 215 220;
+      --ink-600: 183 191 198;
+      --ink-500: 139 150 161;
+      --ink-400: 100 112 124;
+      --ink-300: 72 84 95;
+      --ink-200: 49 60 70;
+      --ink-100: 28 37 46;
+      --ink-50: 14 21 27;
+
+      --brand: 184 121 31;
+      --brand-light: 217 154 53;
+      --brand-dark: 143 92 22;
+
+      --verdict-ac: 31 143 73;
+      --verdict-wa: 194 61 57;
+      --verdict-tle: 194 111 26;
+      --verdict-mle: 168 95 26;
+      --verdict-re: 168 53 83;
+      --verdict-ce: 102 107 120;
+      --verdict-pe: 163 128 31;
+      --verdict-ole: 148 80 26;
+      --verdict-se: 95 63 176;
+      --verdict-pending: 52 86 138;
+
+      color-scheme: light;
+    }
+  }
+
+  /* Explicit toggle (see ThemeToggle.tsx) — a stamped [data-theme] always overrides system
+   * preference in either direction, since [data-theme="..."] out-specifies a plain :root. */
+  :root[data-theme="dark"] {
+    --ink-950: 10 13 18;
+    --ink-900: 14 18 24;
+    --ink-800: 20 26 34;
+    --ink-700: 28 37 48;
+    --ink-600: 42 52 65;
+    --ink-500: 71 84 99;
+    --ink-400: 107 122 139;
+    --ink-300: 154 168 181;
+    --ink-200: 199 208 216;
+    --ink-100: 232 236 239;
+    --ink-50: 245 247 248;
+
+    --brand: 232 163 61;
+    --brand-light: 240 182 96;
+    --brand-dark: 200 132 42;
+
+    --verdict-ac: 47 174 94;
+    --verdict-wa: 217 83 79;
+    --verdict-tle: 224 138 47;
+    --verdict-mle: 201 119 47;
+    --verdict-re: 196 79 107;
+    --verdict-ce: 139 143 155;
+    --verdict-pe: 201 161 59;
+    --verdict-ole: 179 103 47;
+    --verdict-se: 122 92 201;
+    --verdict-pending: 74 111 165;
+
+    color-scheme: dark;
+  }
+
+  :root[data-theme="light"] {
+    --ink-950: 247 248 249;
+    --ink-900: 238 240 242;
+    --ink-800: 227 230 233;
+    --ink-700: 210 215 220;
+    --ink-600: 183 191 198;
+    --ink-500: 139 150 161;
+    --ink-400: 100 112 124;
+    --ink-300: 72 84 95;
+    --ink-200: 49 60 70;
+    --ink-100: 28 37 46;
+    --ink-50: 14 21 27;
+
+    --brand: 184 121 31;
+    --brand-light: 217 154 53;
+    --brand-dark: 143 92 22;
+
+    --verdict-ac: 31 143 73;
+    --verdict-wa: 194 61 57;
+    --verdict-tle: 194 111 26;
+    --verdict-mle: 168 95 26;
+    --verdict-re: 168 53 83;
+    --verdict-ce: 102 107 120;
+    --verdict-pe: 163 128 31;
+    --verdict-ole: 148 80 26;
+    --verdict-se: 95 63 176;
+    --verdict-pending: 52 86 138;
+
+    color-scheme: light;
+  }
+
   html {
-    @apply bg-ink-950 text-ink-100;
+    @apply bg-ink-950 text-ink-100 transition-colors duration-150;
   }
 
   body {
@@ -51,7 +184,7 @@
   }
 
   .oj-btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded bg-brand px-4 py-2 text-sm font-semibold text-ink-950 transition-colors hover:bg-brand-light disabled:cursor-not-allowed disabled:bg-ink-600 disabled:text-ink-400;
+    @apply inline-flex items-center justify-center gap-2 rounded bg-brand px-4 py-2 text-sm font-semibold text-onbrand transition-colors hover:bg-brand-light disabled:cursor-not-allowed disabled:bg-ink-600 disabled:text-ink-400;
   }
 
   .oj-btn-secondary {

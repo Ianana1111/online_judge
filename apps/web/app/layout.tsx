@@ -28,9 +28,23 @@ export const metadata: Metadata = {
   description: "Solve UVa problems, take timed CPE virtual exams, track your progress.",
 };
 
+// Runs before paint so a stored theme choice applies immediately — otherwise the page would
+// flash the wrong theme for a frame while React hydrates. No stored choice means "follow system
+// preference," handled entirely by the @media (prefers-color-scheme) rule in globals.css, so
+// this script deliberately does nothing in that case rather than guessing.
+const THEME_BOOTSTRAP_SCRIPT = `
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark ${display.variable} ${body.variable} ${mono.variable}`}>
+    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
+      </head>
       <body>
         <Providers>
           <NavBar />

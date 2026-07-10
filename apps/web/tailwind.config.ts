@@ -1,5 +1,14 @@
 import type { Config } from "tailwindcss";
 
+// Colors reference CSS custom properties (defined per-theme in globals.css) instead of fixed hex,
+// so every existing bg-ink-*/text-ink-*/border-brand-* etc. utility automatically becomes
+// theme-aware with no per-component changes. RGB triplets (not hex) so Tailwind's opacity
+// modifiers (bg-ink-950/90, border-brand/40, ...) keep working — that syntax needs `rgb(var(...)
+// / <alpha-value>)`, a plain var() can't take an alpha modifier.
+function themedColor(name: string) {
+  return `rgb(var(--${name}) / <alpha-value>)`;
+}
+
 const config: Config = {
   darkMode: "class",
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
@@ -7,34 +16,35 @@ const config: Config = {
     extend: {
       colors: {
         ink: {
-          950: "#0a0d12",
-          900: "#0e1218",
-          800: "#141a22",
-          700: "#1c2530",
-          600: "#2a3441",
-          500: "#475463",
-          400: "#6b7a8b",
-          300: "#9aa8b5",
-          200: "#c7d0d8",
-          100: "#e8ecef",
-          50: "#f5f7f8",
+          950: themedColor("ink-950"),
+          900: themedColor("ink-900"),
+          800: themedColor("ink-800"),
+          700: themedColor("ink-700"),
+          600: themedColor("ink-600"),
+          500: themedColor("ink-500"),
+          400: themedColor("ink-400"),
+          300: themedColor("ink-300"),
+          200: themedColor("ink-200"),
+          100: themedColor("ink-100"),
+          50: themedColor("ink-50"),
         },
         brand: {
-          DEFAULT: "#e8a33d",
-          light: "#f0b660",
-          dark: "#c8842a",
+          DEFAULT: themedColor("brand"),
+          light: themedColor("brand-light"),
+          dark: themedColor("brand-dark"),
         },
+        onbrand: themedColor("onbrand"),
         verdict: {
-          ac: "#2fae5e",
-          wa: "#d9534f",
-          tle: "#e08a2f",
-          mle: "#c9772f",
-          re: "#c44f6b",
-          ce: "#8b8f9b",
-          pe: "#c9a13b",
-          ole: "#b3672f",
-          se: "#7a5cc9",
-          pending: "#4a6fa5",
+          ac: themedColor("verdict-ac"),
+          wa: themedColor("verdict-wa"),
+          tle: themedColor("verdict-tle"),
+          mle: themedColor("verdict-mle"),
+          re: themedColor("verdict-re"),
+          ce: themedColor("verdict-ce"),
+          pe: themedColor("verdict-pe"),
+          ole: themedColor("verdict-ole"),
+          se: themedColor("verdict-se"),
+          pending: themedColor("verdict-pending"),
         },
       },
       fontFamily: {

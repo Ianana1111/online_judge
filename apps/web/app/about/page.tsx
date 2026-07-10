@@ -38,7 +38,7 @@ export default function AboutPage() {
           <div>
             <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">工作經歷</h3>
             <ul className="space-y-1.5 text-sm text-ink-300">
-              <li>中研院資訊科技創新研究中心 — Research Assistant（2025.09 – 迄今）</li>
+              <li>中研院資訊科技創新研究中心 — BCI Lab - Research Assistant（2025.09 – 迄今）</li>
               <li>中研院資訊科學研究所 — Summer Intern（2025.07 – 2025.08）</li>
             </ul>
           </div>
@@ -46,9 +46,6 @@ export default function AboutPage() {
           <div>
             <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">學科成績</h3>
             <ul className="space-y-1.5 text-sm text-ink-300">
-              <li>微積分 A+（大一上、下）</li>
-              <li>系排名第 1，獲頒書卷獎（大一上）</li>
-              {/* <li>APCS：觀念 5 級分、實作 3 級分</li> */}
               <li>GPE 580 / 600（交大資工畢業門檻為 240 / 600）</li>
             </ul>
           </div>
