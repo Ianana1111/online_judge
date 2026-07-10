@@ -16,16 +16,8 @@ const PUBLIC_LINKS = [
   { href: "/about", label: "About" },
 ];
 
-// Only for logged-in students (isStudent, set by an admin) or admins previewing the student view.
+// Only for logged-in students (isStudent, set by an admin) — not admins, they get the console link.
 const STUDENT_LINKS = [{ href: "/classes", label: "My Classes" }];
-
-const ADMIN_LINKS = [
-  { href: "/admin/problems", label: "Problems" },
-  { href: "/admin/contests", label: "Contests" },
-  { href: "/admin/classes", label: "Classes" },
-  { href: "/admin/users", label: "Users" },
-  { href: "/admin/analytics", label: "Analytics" },
-];
 
 function UserMenu({ handle, isAdmin, onLogout }: { handle: string; isAdmin: boolean; onLogout: () => void }) {
   const [open, setOpen] = useState(false);
@@ -99,7 +91,8 @@ export default function NavBar() {
     return null; // ExamModeShell supplies its own minimal header while a timed window is running
   }
 
-  const showStudentLinks = !!user && (user.isStudent || user.role === "ADMIN");
+  const showStudentLinks = !!user && user.isStudent;
+  const isAdmin = user?.role === "ADMIN";
 
   return (
     <header className="sticky top-0 z-40 border-b border-ink-800 bg-ink-950/90 backdrop-blur">
@@ -133,21 +126,17 @@ export default function NavBar() {
                   {l.label}
                 </Link>
               ))}
-            {user?.role === "ADMIN" && (
-              <span className="mx-1 text-ink-700">|</span>
+            {isAdmin && <span className="mx-1 text-ink-700">|</span>}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className={`text-sm font-medium transition-colors ${
+                  pathname?.startsWith("/admin") ? "text-brand" : "text-ink-300 hover:text-ink-50"
+                }`}
+              >
+                Console
+              </Link>
             )}
-            {user?.role === "ADMIN" &&
-              ADMIN_LINKS.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className={`text-sm font-medium transition-colors ${
-                    pathname === l.href ? "text-brand" : "text-ink-300 hover:text-ink-50"
-                  }`}
-                >
-                  {l.label}
-                </Link>
-              ))}
           </nav>
         </div>
         <div className="flex items-center gap-3">
