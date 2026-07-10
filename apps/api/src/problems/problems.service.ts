@@ -28,7 +28,7 @@ export class ProblemsService {
       prisma.problem.findMany({
         where,
         include: { tags: { include: { tag: true } } },
-        orderBy: { createdAt: "asc" },
+        orderBy: [{ uvaId: { sort: "asc", nulls: "last" } }, { createdAt: "asc" }],
         skip: (page - 1) * PAGE_SIZE,
         take: PAGE_SIZE,
       }),
