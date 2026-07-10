@@ -79,7 +79,9 @@ export default function DiscussionPanel({ problemId }: { problemId: string }) {
           <div key={d.id} className="oj-card p-3">
             <div className="mb-1 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-ink-100">{d.userHandle}</span>
+                <Link href={`/u/${d.userHandle}`} className="text-sm font-medium text-ink-100 hover:text-brand">
+                  {d.userHandle}
+                </Link>
                 {d.userRole === "ADMIN" && (
                   <span className="rounded bg-brand/20 px-1.5 py-0.5 text-[10px] font-semibold text-brand">
                     ADMIN

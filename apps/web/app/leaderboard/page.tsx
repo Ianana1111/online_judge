@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
@@ -59,10 +60,10 @@ export default function LeaderboardPage() {
               className={`oj-card flex items-center gap-4 p-3 ${RANK_STYLE[r.rank] ?? ""} ${isMe ? "ring-1 ring-brand" : ""}`}
             >
               <span className="w-8 text-center font-display text-lg font-bold text-ink-400">{r.rank}</span>
-              <span className="flex-1 text-sm font-medium text-ink-50">
+              <Link href={`/u/${r.handle}`} className="flex-1 text-sm font-medium text-ink-50 hover:text-brand">
                 {r.handle}
                 {isMe && <span className="ml-2 text-xs font-normal text-brand">(you)</span>}
-              </span>
+              </Link>
               {r.streak > 0 && (
                 <span className="font-mono text-xs text-verdict-tle" title="Consecutive days with an AC">
                   {r.streak}d streak
