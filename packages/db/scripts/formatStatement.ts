@@ -12,6 +12,8 @@
 
 const SECTION_HEADERS = ["Input and Output", "Input", "Output", "Explanation", "Note", "Constraints"];
 const SAMPLE_HEADERS = ["Sample Input and Output", "Sample Input", "Sample Output"];
+const LIST_ITEM_RE = /^\d+\.\s/;
+const TERMINAL_PUNCTUATION_RE = /[.!?"'’”)]$/;
 
 export function cleanPdfStatementText(raw: string, uvaId: number): string {
   const lines = raw.split("\n").map((l) => l.replace(/\s+$/, ""));
@@ -22,6 +24,7 @@ export function cleanPdfStatementText(raw: string, uvaId: number): string {
   if (start < lines.length && new RegExp(`^\\s*${uvaId}\\b`).test(lines[start])) start++;
 
   const out: string[] = [];
+  let inList = false;
   for (let i = start; i < lines.length; i++) {
     const line = lines[i].trim();
 
@@ -35,8 +38,30 @@ export function cleanPdfStatementText(raw: string, uvaId: number): string {
     const headerMatch = SECTION_HEADERS.find((h) => h.toLowerCase() === line.toLowerCase());
     if (headerMatch) {
       out.push("", `### ${headerMatch}`, "");
+      inList = false;
       continue;
     }
+
+    if (LIST_ITEM_RE.test(line)) {
+      // A numbered list item always starts fresh, on its own line, with a blank line before it
+      // so it can't get swallowed into whatever paragraph preceded it.
+      if (!inList && out.length > 0 && out[out.length - 1] !== "") out.push("");
+      out.push(lines[i]);
+      inList = true;
+      continue;
+    }
+
+    if (inList && out.length > 0 && !TERMINAL_PUNCTUATION_RE.test(out[out.length - 1])) {
+      // pdf-parse wraps mid-sentence at the PDF's line width — if the last list item's line
+      // doesn't end on a sentence boundary, this line is its wrapped continuation, not a new
+      // paragraph. Re-join them so the whole item stays associated with its "N." marker instead
+      // of falling out of the list.
+      out[out.length - 1] = `${out[out.length - 1]} ${line}`;
+      continue;
+    }
+
+    if (inList) out.push(""); // list item's sentence completed - blank line closes the list
+    inList = false;
     out.push(lines[i]);
   }
 
