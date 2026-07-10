@@ -45,6 +45,33 @@ export class AuthService {
     return this.issueSession(user.id, user.handle, user.email, user.role);
   }
 
+  /** Finds an existing account by googleId, links Google to an existing password account with
+   * the same email, or creates a brand new account — then issues a normal session either way. */
+  async loginWithGoogle(googleId: string, email: string, suggestedHandle: string): Promise<IssuedSession> {
+    let user = await prisma.user.findUnique({ where: { googleId } });
+    if (!user) {
+      const byEmail = await prisma.user.findUnique({ where: { email } });
+      if (byEmail) {
+        user = await prisma.user.update({ where: { id: byEmail.id }, data: { googleId } });
+      } else {
+        const handle = await this.uniqueHandleFrom(suggestedHandle);
+        user = await prisma.user.create({ data: { handle, email, googleId, role: "USER" } });
+      }
+    }
+    return this.issueSession(user.id, user.handle, user.email, user.role);
+  }
+
+  private async uniqueHandleFrom(base: string): Promise<string> {
+    const cleaned = base.replace(/[^a-zA-Z0-9_]/g, "").slice(0, 20) || "user";
+    let candidate = cleaned;
+    let suffix = 0;
+    while (await prisma.user.findUnique({ where: { handle: candidate } })) {
+      suffix += 1;
+      candidate = `${cleaned}${suffix}`;
+    }
+    return candidate;
+  }
+
   async refresh(refreshToken: string | undefined): Promise<IssuedSession> {
     if (!refreshToken) throw new UnauthorizedException("Missing refresh token");
 

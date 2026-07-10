@@ -1,17 +1,31 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
+import GoogleLoginButton from "@/components/GoogleLoginButton";
 
 export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const hydrate = useAuthStore((s) => s.hydrate);
   const [handle, setHandle] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    searchParams.get("error") === "google_failed" || searchParams.get("error") === "google_state_mismatch"
+      ? "Google sign-in didn't work — try again, or use your handle and password."
+      : null,
+  );
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
@@ -57,6 +71,13 @@ export default function LoginPage() {
           {loading ? "Logging in…" : "Log in"}
         </button>
       </form>
+
+      <div className="my-4 flex items-center gap-3">
+        <div className="h-px flex-1 bg-ink-800" />
+        <span className="text-xs text-ink-500">or</span>
+        <div className="h-px flex-1 bg-ink-800" />
+      </div>
+      <GoogleLoginButton />
       <p className="mt-4 text-sm text-ink-400">
         No account yet?{" "}
         <Link href="/register" className="text-brand hover:underline">

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
+import GoogleLoginButton from "@/components/GoogleLoginButton";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -81,6 +82,14 @@ export default function RegisterPage() {
           {loading ? "Creating account…" : "Create account"}
         </button>
       </form>
+
+      <div className="my-4 flex items-center gap-3">
+        <div className="h-px flex-1 bg-ink-800" />
+        <span className="text-xs text-ink-500">or</span>
+        <div className="h-px flex-1 bg-ink-800" />
+      </div>
+      <GoogleLoginButton />
+
       <p className="mt-4 text-sm text-ink-400">
         Already have an account?{" "}
         <Link href="/login" className="text-brand hover:underline">
