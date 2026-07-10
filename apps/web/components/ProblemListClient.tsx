@@ -7,6 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import type { ProblemListResponse } from "@/lib/types";
 
+const PAGE_SIZE = 20;
+
 export default function ProblemListClient({
   initial,
   initialParams,
@@ -18,23 +20,35 @@ export default function ProblemListClient({
   const pathname = usePathname();
   const [q, setQ] = useState(initialParams.q ?? "");
   const [difficulty, setDifficulty] = useState(initialParams.difficulty ?? "");
+  const [page, setPage] = useState(parseInt(initialParams.page ?? "1", 10) || 1);
 
   const params = new URLSearchParams();
   if (q) params.set("q", q);
   if (difficulty) params.set("difficulty", difficulty);
-  params.set("page", "1");
+  params.set("page", String(page));
 
   const { data } = useQuery({
-    queryKey: ["problems", q, difficulty],
+    queryKey: ["problems", q, difficulty, page],
     queryFn: () => apiFetch<ProblemListResponse>(`/problems?${params.toString()}`),
-    initialData: !q && !difficulty ? initial : undefined,
+    initialData: !q && !difficulty && page === (parseInt(initialParams.page ?? "1", 10) || 1) ? initial : undefined,
   });
 
   const items = data?.items ?? initial.items;
+  const total = data?.total ?? initial.total;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+  function navigate(nextPage: number) {
+    const p = new URLSearchParams();
+    if (q) p.set("q", q);
+    if (difficulty) p.set("difficulty", difficulty);
+    p.set("page", String(nextPage));
+    setPage(nextPage);
+    router.push(`${pathname}?${p.toString()}`);
+  }
 
   function applyFilters(e: React.FormEvent) {
     e.preventDefault();
-    router.push(`${pathname}?${params.toString()}`);
+    navigate(1);
   }
 
   return (
@@ -91,6 +105,30 @@ export default function ProblemListClient({
           )}
         </tbody>
       </table>
+
+      <div className="mt-4 flex items-center justify-between text-sm text-ink-400">
+        <span>
+          {total} problem{total === 1 ? "" : "s"} · page {page} of {totalPages}
+        </span>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => navigate(page - 1)}
+            disabled={page <= 1}
+            className="oj-btn-secondary px-3 py-1.5 text-xs disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate(page + 1)}
+            disabled={page >= totalPages}
+            className="oj-btn-secondary px-3 py-1.5 text-xs disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
