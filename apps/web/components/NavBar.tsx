@@ -8,10 +8,13 @@ import { useExamTimerStore } from "@/store/examTimer";
 
 const LINKS = [
   { href: "/problems", label: "Problems" },
+  { href: "/collections", label: "Collections" },
   { href: "/contests", label: "Contests" },
   { href: "/cpe", label: "CPE" },
-  { href: "/assignments", label: "Assignments" },
-  { href: "/classes", label: "My Classes" },
+  { href: "/leaderboard", label: "Leaderboard" },
+  { href: "/assignments", label: "Assignments", authOnly: true },
+  { href: "/classes", label: "My Classes", authOnly: true },
+  { href: "/about", label: "About" },
 ];
 
 const ADMIN_LINKS = [
@@ -102,7 +105,9 @@ export default function NavBar() {
             judge<span className="text-brand">.</span>
           </Link>
           <nav className="hidden gap-4 sm:flex">
-            {LINKS.filter((l) => user?.role !== "ADMIN" || (l.href !== "/assignments" && l.href !== "/classes")).map((l) => (
+            {LINKS.filter(
+              (l) => (!l.authOnly || user) && (user?.role !== "ADMIN" || (l.href !== "/assignments" && l.href !== "/classes")),
+            ).map((l) => (
               <Link
                 key={l.href}
                 href={l.href}

@@ -115,9 +115,35 @@ model Problem {
   discussions      Discussion[]
   assignmentLinks  AssignmentProblem[]
   classHomework    ClassHomework[]
+  collectionLinks  CollectionProblem[]
 
   @@index([uvaId])
   @@map("problems")
+}
+
+/// A named, curated problem list (LeetCode-style) — e.g. "CPE 必考 49 題". Distinct from Contest:
+/// no timer/scoring, just a themed set of problems to work through at your own pace.
+model Collection {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String   @default("")
+  createdAt   DateTime @default(now())
+
+  problems CollectionProblem[]
+
+  @@map("collections")
+}
+
+model CollectionProblem {
+  collectionId String
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  problemId    String
+  problem      Problem    @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  ord          Int        @default(0)
+
+  @@id([collectionId, problemId])
+  @@map("collection_problems")
 }
 
 model Sample {

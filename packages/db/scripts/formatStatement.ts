@@ -45,3 +45,42 @@ export function cleanPdfStatementText(raw: string, uvaId: number): string {
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
+
+/** Best-effort extraction of the "Sample Input"/"Sample Output" section as structured data, for
+ * problems with no other测资 source (see scrape-uva-extra.ts) — cleanPdfStatementText() above
+ * drops this same section from the displayed statement since it'd otherwise be shown twice. */
+const PDF_JUNK_LINE_RE = /^--\s*\d+\s*of\s*\d+\s*--$|^Universidad de Valladolid OJ:/i;
+
+export function extractSampleFromPdfText(raw: string): { input: string; output: string } | null {
+  const lines = raw.split("\n").map((l) => l.replace(/\s+$/, ""));
+  const isInputHeader = (l: string) => /^sample input$/i.test(l.trim());
+  const isOutputHeader = (l: string) => /^sample output$/i.test(l.trim());
+
+  const inputStart = lines.findIndex(isInputHeader);
+  // A page break can duplicate the "Sample Output" header (once where the real section starts,
+  // again as part of a running page header) — take the last occurrence after the input section.
+  let outputStart = -1;
+  for (let i = lines.length - 1; i > inputStart; i--) {
+    if (isOutputHeader(lines[i])) {
+      outputStart = i;
+      break;
+    }
+  }
+  if (inputStart === -1 || outputStart === -1) return null;
+
+  // Page-footer/running-header junk can land in the middle of a sample block on multi-page PDFs
+  // (not just at the very end) — filter it out everywhere rather than just stopping at the first
+  // occurrence.
+  const input = lines
+    .slice(inputStart + 1, outputStart)
+    .filter((l) => !PDF_JUNK_LINE_RE.test(l.trim()))
+    .join("\n")
+    .trim();
+  const output = lines
+    .slice(outputStart + 1)
+    .filter((l) => !PDF_JUNK_LINE_RE.test(l.trim()))
+    .join("\n")
+    .trim();
+  if (!input || !output) return null;
+  return { input: `${input}\n`, output: `${output}\n` };
+}

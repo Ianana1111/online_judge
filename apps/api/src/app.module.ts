@@ -6,9 +6,11 @@ import { AssignmentsModule } from "./assignments/assignments.module";
 import { AuthGuard } from "./auth/auth.guard";
 import { AuthModule } from "./auth/auth.module";
 import { ClassesModule } from "./classes/classes.module";
+import { CollectionsModule } from "./collections/collections.module";
 import { ContestsModule } from "./contests/contests.module";
 import { CsrfGuard } from "./common/csrf.guard";
 import { DiscussionsModule } from "./discussions/discussions.module";
+import { LeaderboardModule } from "./leaderboard/leaderboard.module";
 import { RedisModule } from "./common/redis.module";
 import { RolesGuard } from "./common/roles.guard";
 import { HealthController } from "./health.controller";
@@ -31,6 +33,8 @@ import { UsersModule } from "./users/users.module";
     AssignmentsModule,
     AnalyticsModule,
     ClassesModule,
+    CollectionsModule,
+    LeaderboardModule,
   ],
   controllers: [HealthController],
   providers: [

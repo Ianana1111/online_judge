@@ -228,6 +228,31 @@ export interface ClassOverviewRow {
   notStarted: number;
 }
 
+export interface CollectionListItem {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  problemCount: number;
+}
+
+export interface CollectionProblemItem {
+  id: string;
+  slug: string;
+  title: string;
+  difficulty: number;
+  source: "UVA" | "CPE" | "CUSTOM";
+  solvedByMe: boolean;
+}
+
+export interface CollectionDetail {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  problems: CollectionProblemItem[];
+}
+
 export interface AvgCorrectPoint {
   date: string;
   title: string;
@@ -269,4 +294,13 @@ export interface UserStats {
   languageBreakdown: { languageKey: string; count: number }[];
   verdictBreakdown: { verdict: Verdict; count: number }[];
   solvedByDifficulty: { difficulty: number; count: number }[];
+}
+
+export interface LeaderboardRow {
+  userId: string;
+  handle: string;
+  score: number;
+  solved: number;
+  streak: number;
+  rank: number;
 }
