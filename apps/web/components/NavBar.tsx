@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
@@ -16,11 +17,72 @@ const LINKS = [
 const ADMIN_LINKS = [
   { href: "/admin/problems", label: "Problems" },
   { href: "/admin/contests", label: "Contests" },
-  { href: "/admin/assignments", label: "Assignments" },
   { href: "/admin/classes", label: "Classes" },
   { href: "/admin/users", label: "Users" },
   { href: "/admin/analytics", label: "Analytics" },
 ];
+
+function UserMenu({ handle, isAdmin, onLogout }: { handle: string; isAdmin: boolean; onLogout: () => void }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex items-center gap-1.5 text-sm text-ink-200 hover:text-brand"
+      >
+        {isAdmin && (
+          <span className="rounded border border-brand/40 bg-brand/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-brand">
+            Admin
+          </span>
+        )}
+        {handle}
+        <svg width="10" height="10" viewBox="0 0 10 10" className={`transition-transform ${open ? "rotate-180" : ""}`}>
+          <path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      </button>
+      {open && (
+        <div className="oj-card absolute right-0 top-full mt-2 w-44 overflow-hidden p-1">
+          <Link
+            href={`/u/${handle}`}
+            onClick={() => setOpen(false)}
+            className="block rounded px-3 py-2 text-sm text-ink-200 hover:bg-ink-800"
+          >
+            Activity
+          </Link>
+          <Link
+            href="/settings"
+            onClick={() => setOpen(false)}
+            className="block rounded px-3 py-2 text-sm text-ink-200 hover:bg-ink-800"
+          >
+            Language &amp; settings
+          </Link>
+          <div className="my-1 border-t border-ink-800" />
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              onLogout();
+            }}
+            className="block w-full rounded px-3 py-2 text-left text-sm text-ink-400 hover:bg-ink-800 hover:text-verdict-wa"
+          >
+            Log out
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -70,28 +132,14 @@ export default function NavBar() {
         </div>
         <div className="flex items-center gap-3">
           {user ? (
-            <>
-              <Link href={`/u/${user.handle}`} className="text-sm text-ink-200 hover:text-brand">
-                {user.handle}
-              </Link>
-              <Link
-                href="/settings"
-                className={`text-sm font-medium transition-colors ${
-                  pathname === "/settings" ? "text-brand" : "text-ink-300 hover:text-ink-50"
-                }`}
-              >
-                Settings
-              </Link>
-              <button
-                onClick={async () => {
-                  await logout();
-                  router.push("/");
-                }}
-                className="oj-btn-secondary px-3 py-1.5 text-xs"
-              >
-                Log out
-              </button>
-            </>
+            <UserMenu
+              handle={user.handle}
+              isAdmin={user.role === "ADMIN"}
+              onLogout={async () => {
+                await logout();
+                router.push("/");
+              }}
+            />
           ) : (
             <Link href="/login" className="oj-btn-primary px-3 py-1.5 text-xs">
               Log in
