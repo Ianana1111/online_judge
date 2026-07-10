@@ -8,6 +8,7 @@ import DiscussionPanel from "@/components/DiscussionPanel";
 import ProblemStatsPanel from "@/components/ProblemStatsPanel";
 import ProblemNotePanel from "@/components/ProblemNotePanel";
 import InfoTooltip from "@/components/InfoTooltip";
+import CopyButton from "@/components/CopyButton";
 import SplitPane from "@/components/SplitPane";
 import type { ProblemDetail } from "@/lib/types";
 import { useExamTimerStore } from "@/store/examTimer";
@@ -93,11 +94,17 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
           {problem.samples.map((s) => (
             <div key={s.ord} className="mt-4 grid gap-2 sm:grid-cols-2">
               <div>
-                <p className="mb-1 text-xs font-medium text-ink-400">Sample input {s.ord}</p>
+                <div className="mb-1 flex items-center justify-between">
+                  <p className="text-xs font-medium text-ink-400">Sample input {s.ord}</p>
+                  <CopyButton text={s.input} />
+                </div>
                 <pre className="oj-card overflow-x-auto p-2 font-mono text-xs">{s.input}</pre>
               </div>
               <div>
-                <p className="mb-1 text-xs font-medium text-ink-400">Sample output {s.ord}</p>
+                <div className="mb-1 flex items-center justify-between">
+                  <p className="text-xs font-medium text-ink-400">Sample output {s.ord}</p>
+                  <CopyButton text={s.output} />
+                </div>
                 <pre className="oj-card overflow-x-auto p-2 font-mono text-xs">{s.output}</pre>
               </div>
             </div>
