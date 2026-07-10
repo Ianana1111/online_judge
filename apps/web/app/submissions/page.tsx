@@ -7,7 +7,7 @@ import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import VerdictBadge from "@/components/VerdictBadge";
 import { LANGUAGE_LABEL } from "@/lib/types";
-import type { SubmissionListItem } from "@/lib/types";
+import type { SubmissionListItem, UserProfile } from "@/lib/types";
 
 function SubmissionRow({ s }: { s: SubmissionListItem }) {
   return (
@@ -41,6 +41,12 @@ export default function MySubmissionsPage() {
     enabled: !!user,
   });
 
+  const { data: profile } = useQuery({
+    queryKey: ["users", user?.handle, "profile"],
+    queryFn: () => apiFetch<UserProfile>(`/users/${user!.handle}`),
+    enabled: !!user,
+  });
+
   const byTopic = useMemo(() => {
     const groups = new Map<string, SubmissionListItem[]>();
     for (const s of data?.items ?? []) {
@@ -58,11 +64,23 @@ export default function MySubmissionsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-bold text-ink-50">My Submissions</h1>
-        <p className="mt-1 text-sm text-ink-400">
-          {data ? `${data.total} submission${data.total === 1 ? "" : "s"} total` : "Loading…"}
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-ink-50">My Submissions</h1>
+          <p className="mt-1 text-sm text-ink-400">
+            {data ? `${data.total} submission${data.total === 1 ? "" : "s"} total` : "Loading…"}
+          </p>
+        </div>
+        {profile && (
+          <Link href={`/u/${profile.handle}`} className="oj-card flex items-center gap-3 px-4 py-2 hover:border-brand/40">
+            <span className="font-display text-2xl font-bold text-brand">{profile.solvedCount}</span>
+            <span className="text-sm text-ink-400">
+              problem{profile.solvedCount === 1 ? "" : "s"} solved
+              <br />
+              <span className="text-xs text-ink-500">view full activity →</span>
+            </span>
+          </Link>
+        )}
       </div>
 
       <div className="flex gap-2">
