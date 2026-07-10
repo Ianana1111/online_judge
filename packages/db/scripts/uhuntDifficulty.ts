@@ -37,6 +37,35 @@ export function dacuToDifficulty(dacu: number): number {
   return 4;
 }
 
+/**
+ * DACU alone tracks "how many people worldwide have solved this" — it's a good signal for how
+ * introductory/canonical a problem is, but it doesn't know anything about the *technique* the
+ * problem requires. A DP or graph problem can be old/famous enough to have a huge DACU (so it'd
+ * score ★ on DACU alone) while still genuinely requiring an algorithm a beginner has no chance of
+ * discovering unaided. So a topic tag (see apps/web/app/admin/analytics/page.tsx's TOPIC_ORDER,
+ * the same easiest -> hardest taxonomy used for the analytics stacked bars) sets a *floor* — DACU
+ * can still push a problem's difficulty above the floor, just never below it.
+ */
+const TOPIC_FLOOR: Record<string, number> = {
+  adhoc: 1,
+  array: 1,
+  math: 1,
+  string: 1,
+  simulation: 2,
+  geometry: 2,
+  "sorting-searching": 2,
+  greedy: 3,
+  "recursion-backtracking": 3,
+  datastructure: 3,
+  graph: 4,
+  dp: 4,
+};
+
+export function combinedDifficulty(dacu: number, topicSlugs: string[]): number {
+  const floor = Math.max(1, ...topicSlugs.map((slug) => TOPIC_FLOOR[slug] ?? 1));
+  return Math.max(dacuToDifficulty(dacu), floor);
+}
+
 /** Fetches uHunt's full problem list once and returns a uvaId -> DACU map. */
 export async function fetchUhuntDacu(): Promise<Map<number, number>> {
   const res = await fetch(UHUNT_PROBLEM_LIST_URL);

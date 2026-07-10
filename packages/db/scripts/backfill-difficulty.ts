@@ -4,7 +4,7 @@
  * thresholds come from. Safe to re-run any time the thresholds or uHunt's data change.
  */
 import { PrismaClient } from "@prisma/client";
-import { dacuToDifficulty, fetchUhuntDacu } from "./uhuntDifficulty.js";
+import { combinedDifficulty, fetchUhuntDacu } from "./uhuntDifficulty.js";
 
 const prisma = new PrismaClient();
 
@@ -15,7 +15,7 @@ async function main() {
 
   const problems = await prisma.problem.findMany({
     where: { uvaId: { not: null } },
-    select: { id: true, uvaId: true, slug: true, difficulty: true },
+    select: { id: true, uvaId: true, slug: true, difficulty: true, tags: { select: { tag: { select: { slug: true } } } } },
   });
   console.log(`Found ${problems.length} problems with a UVa id.`);
 
@@ -28,7 +28,8 @@ async function main() {
       counts[0]++;
       continue;
     }
-    const difficulty = dacuToDifficulty(dacu);
+    const topicSlugs = p.tags.map((t) => t.tag.slug);
+    const difficulty = combinedDifficulty(dacu, topicSlugs);
     counts[difficulty]++;
     if (difficulty !== p.difficulty) {
       await prisma.problem.update({ where: { id: p.id }, data: { difficulty } });
