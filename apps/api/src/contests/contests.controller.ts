@@ -14,6 +14,11 @@ export class ContestsController {
     return this.contests.list();
   }
 
+  @Get("me")
+  mine(@CurrentUser() user: RequestUser) {
+    return this.contests.myContests(user.id);
+  }
+
   @Roles("ADMIN")
   @Post()
   @HttpCode(201)

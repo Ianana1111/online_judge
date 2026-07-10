@@ -18,6 +18,54 @@ export class ContestsService {
     }));
   }
 
+  /** Contests this user has actually started — the contest catalog itself lives at /cpe (browse
+   * & start) so this list only ever grows when someone registers, instead of dumping every
+   * archived sitting on the page whether or not anyone's touched it. */
+  async myContests(userId: string) {
+    const participants = await prisma.contestParticipant.findMany({
+      where: { userId },
+      orderBy: { startedAt: "desc" },
+      include: { contest: { include: { problems: true } } },
+    });
+
+    const now = Date.now();
+    return Promise.all(
+      participants.map(async (p) => {
+        const submissions = await prisma.submission.findMany({
+          where: { contestId: p.contestId, userId },
+          orderBy: { createdAt: "asc" },
+        });
+
+        let solvedCount = 0;
+        let penalty = 0;
+        for (const cp of p.contest.problems) {
+          const subs = submissions.filter((s) => s.problemId === cp.problemId && s.verdict !== "PENDING" && s.verdict !== "JUDGING");
+          const firstAc = subs.find((s) => s.verdict === "AC");
+          if (firstAc) {
+            const wrongBefore = subs.filter((s) => s.verdict !== "AC" && s.createdAt < firstAc.createdAt).length;
+            const solveMin = Math.max(0, Math.round((firstAc.createdAt.getTime() - p.startedAt.getTime()) / 60_000));
+            solvedCount += 1;
+            penalty += solveMin + p.contest.penaltyMin * wrongBefore;
+          }
+        }
+
+        return {
+          id: p.contest.id,
+          title: p.contest.title,
+          slug: p.contest.slug,
+          kind: p.contest.kind,
+          durationMin: p.contest.durationMin,
+          totalProblems: p.contest.problems.length,
+          startedAt: p.startedAt,
+          endsAt: p.endsAt,
+          status: now < p.endsAt.getTime() ? "RUNNING" : "FINISHED",
+          solvedCount,
+          penalty,
+        };
+      }),
+    );
+  }
+
   async detail(id: string, requester: RequestUser | null) {
     const contest = await prisma.contest.findUnique({
       where: { id },

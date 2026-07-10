@@ -131,6 +131,20 @@ export interface ContestDetail extends ContestListItem {
   penaltyMin: number;
 }
 
+export interface MyContest {
+  id: string;
+  title: string;
+  slug: string;
+  kind: "CPE" | "VIRTUAL" | "PUBLIC";
+  durationMin: number;
+  totalProblems: number;
+  startedAt: string;
+  endsAt: string;
+  status: "RUNNING" | "FINISHED";
+  solvedCount: number;
+  penalty: number;
+}
+
 export interface ScoreboardRow {
   userId: string;
   handle: string;
