@@ -11,7 +11,9 @@ const LANGUAGES = ["cpp17", "c11", "python3", "java17"];
 const COOLDOWN_MS = 10_000;
 
 const STUB: Record<string, string> = {
-  cpp17: '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    \n    return 0;\n}\n',
+  // Standard <iostream>, not GCC's non-standard <bits/stdc++.h>: UVa's compiler rejects the latter
+  // with a Compile Error, so the default template must work on the judge we actually submit to.
+  cpp17: '#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    return 0;\n}\n',
   c11: '#include <stdio.h>\n\nint main(void) {\n    \n    return 0;\n}\n',
   python3: "import sys\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()\n",
   java17: 'import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        \n    }\n}\n',

@@ -105,6 +105,8 @@ export interface SubmissionDetail {
   score: number;
   compileError?: string | null;
   createdAt: string;
+  // Only present when the requester owns the submission (or is an admin) — see canSeeSource.
+  sourceCode?: string | null;
 }
 
 export interface SubmissionListItem {

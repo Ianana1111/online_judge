@@ -6,16 +6,21 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import VerdictBadge from "@/components/VerdictBadge";
+import SubmissionCodeModal from "@/components/SubmissionCodeModal";
 import { LANGUAGE_LABEL } from "@/lib/types";
 import type { SubmissionListItem, UserProfile } from "@/lib/types";
 
-function SubmissionRow({ s }: { s: SubmissionListItem }) {
+function SubmissionRow({ s, onOpen }: { s: SubmissionListItem; onOpen: (id: string) => void }) {
   return (
-    <tr>
+    <tr onClick={() => onOpen(s.id)} className="cursor-pointer transition-colors hover:bg-ink-800/50">
       <td className="font-mono text-xs text-ink-400">{new Date(s.createdAt).toLocaleString()}</td>
       <td>
         {s.problemSlug ? (
-          <Link href={`/problems/${s.problemSlug}`} className="text-ink-200 hover:text-brand">
+          <Link
+            href={`/problems/${s.problemSlug}`}
+            onClick={(e) => e.stopPropagation()}
+            className="text-ink-200 hover:text-brand"
+          >
             {s.problemTitle}
           </Link>
         ) : (
@@ -34,6 +39,7 @@ function SubmissionRow({ s }: { s: SubmissionListItem }) {
 export default function MySubmissionsPage() {
   const { user, status: authStatus } = useAuthStore();
   const [groupBy, setGroupBy] = useState<"time" | "topic">("time");
+  const [openId, setOpenId] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["submissions", "me", "all"],
@@ -114,7 +120,7 @@ export default function MySubmissionsPage() {
           </thead>
           <tbody>
             {data.items.map((s) => (
-              <SubmissionRow key={s.id} s={s} />
+              <SubmissionRow key={s.id} s={s} onOpen={setOpenId} />
             ))}
           </tbody>
         </table>
@@ -139,7 +145,7 @@ export default function MySubmissionsPage() {
                 </thead>
                 <tbody>
                   {items.map((s) => (
-                    <SubmissionRow key={s.id} s={s} />
+                    <SubmissionRow key={s.id} s={s} onOpen={setOpenId} />
                   ))}
                 </tbody>
               </table>
@@ -147,6 +153,8 @@ export default function MySubmissionsPage() {
           ))}
         </div>
       )}
+
+      {openId && <SubmissionCodeModal submissionId={openId} onClose={() => setOpenId(null)} />}
     </div>
   );
 }
