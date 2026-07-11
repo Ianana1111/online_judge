@@ -2,8 +2,63 @@
 
 import { useEffect, useState } from "react";
 import { apiFetch, ApiError } from "@/lib/api";
+import { useAuthStore } from "@/store/auth";
 
 const LANGUAGES = ["cpp17", "c11", "python3", "java17"];
+
+function ChangeHandleForm() {
+  const { user, setUser } = useAuthStore();
+  const [handle, setHandle] = useState(user?.handle ?? "");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setSuccess(false);
+    setSaving(true);
+    try {
+      const updated = await apiFetch<{ id: string; handle: string; email: string; role: string }>("/users/me/handle", {
+        method: "PATCH",
+        body: { handle },
+      });
+      if (user) setUser({ ...user, handle: updated.handle });
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : "Could not change name");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <form onSubmit={onSubmit} className="oj-card space-y-3 p-4">
+      <h2 className="text-sm font-semibold text-ink-200">Change display name</h2>
+      <div>
+        <label className="mb-1 block text-sm text-ink-300">Handle</label>
+        <input
+          className="oj-input"
+          value={handle}
+          onChange={(e) => setHandle(e.target.value)}
+          minLength={3}
+          maxLength={24}
+          pattern="[a-zA-Z0-9_]+"
+          title="Letters, numbers, and underscore only"
+          required
+        />
+        <p className="mt-1 text-xs text-ink-500">
+          Letters, numbers, and underscore only. This is also what you use to log in if you have a password set.
+        </p>
+      </div>
+      {error && <p className="text-sm text-verdict-wa">{error}</p>}
+      <button type="submit" disabled={saving || handle === user?.handle} className="oj-btn-primary">
+        {saving ? "Saving…" : success ? "Name changed ✓" : "Save name"}
+      </button>
+    </form>
+  );
+}
 
 function ChangePasswordForm() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -117,6 +172,7 @@ export default function SettingsPage() {
           {saved ? "Saved ✓" : "Save"}
         </button>
       </div>
+      <ChangeHandleForm />
       <ChangePasswordForm />
     </div>
   );

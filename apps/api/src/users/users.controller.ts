@@ -1,8 +1,10 @@
 import { Body, Controller, Get, HttpCode, Param, Patch, Post } from "@nestjs/common";
 import {
+  changeHandleSchema,
   changePasswordSchema,
   createUserSchema,
   setIsStudentSchema,
+  type ChangeHandleDto,
   type ChangePasswordDto,
   type CreateUserDto,
   type SetIsStudentDto,
@@ -28,6 +30,11 @@ export class UsersController {
     @CurrentUser() user: RequestUser,
   ) {
     return this.users.changePassword(user.id, body);
+  }
+
+  @Patch("me/handle")
+  changeHandle(@Body(new ZodValidationPipe(changeHandleSchema)) body: ChangeHandleDto, @CurrentUser() user: RequestUser) {
+    return this.users.changeHandle(user.id, body);
   }
 
   @Roles("ADMIN")

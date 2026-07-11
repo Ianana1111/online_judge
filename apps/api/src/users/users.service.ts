@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import argon2 from "argon2";
 import { prisma } from "@oj/db";
-import type { ChangePasswordDto, CreateUserDto } from "@oj/shared";
+import type { ChangeHandleDto, ChangePasswordDto, CreateUserDto } from "@oj/shared";
 
 const HEATMAP_DAYS = 365;
 
@@ -32,6 +32,14 @@ export class UsersService {
     const passwordHash = await argon2.hash(dto.newPassword, { type: argon2.argon2id });
     await prisma.user.update({ where: { id: userId }, data: { passwordHash } });
     return { ok: true };
+  }
+
+  async changeHandle(userId: string, dto: ChangeHandleDto) {
+    const existing = await prisma.user.findUnique({ where: { handle: dto.handle } });
+    if (existing && existing.id !== userId) throw new ConflictException("That handle is already taken");
+
+    const user = await prisma.user.update({ where: { id: userId }, data: { handle: dto.handle } });
+    return { id: user.id, handle: user.handle, email: user.email, role: user.role };
   }
 
   async listAll() {

@@ -54,6 +54,15 @@ export const changePasswordSchema = z.object({
 });
 export type ChangePasswordDto = z.infer<typeof changePasswordSchema>;
 
+export const changeHandleSchema = z.object({
+  handle: z
+    .string()
+    .min(3)
+    .max(24)
+    .regex(/^[a-zA-Z0-9_]+$/, "handle may only contain letters, numbers, underscore"),
+});
+export type ChangeHandleDto = z.infer<typeof changeHandleSchema>;
+
 export const setIsStudentSchema = z.object({
   isStudent: z.boolean(),
 });
