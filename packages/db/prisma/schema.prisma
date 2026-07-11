@@ -109,6 +109,9 @@ model Problem {
   timeLimitMs   Int           @default(1000)
   memoryLimitKb Int           @default(65536)
   difficulty    Int           @default(1)
+  // When true, difficulty came from a human-curated source (e.g. the CPE 必考49題 list, which is
+  // an official one-star selection) and derivation backfills must never overwrite it.
+  difficultyLocked Boolean    @default(false)
   source        ProblemSource @default(CUSTOM)
   checkerType   CheckerType   @default(IGNORE_TRAILING_WS)
   floatEps      Float?

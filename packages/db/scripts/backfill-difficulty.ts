@@ -13,11 +13,13 @@ async function main() {
   const dacuByUvaId = await fetchUhuntDacu();
   console.log(`Got DACU for ${dacuByUvaId.size} UVa problems.`);
 
+  // difficultyLocked rows carry a human-curated rating (e.g. the CPE 必考49題 one-star list),
+  // which always outranks this script's derived value — leave them alone.
   const problems = await prisma.problem.findMany({
-    where: { uvaId: { not: null } },
+    where: { uvaId: { not: null }, difficultyLocked: false },
     select: { id: true, uvaId: true, slug: true, difficulty: true, tags: { select: { tag: { select: { slug: true } } } } },
   });
-  console.log(`Found ${problems.length} problems with a UVa id.`);
+  console.log(`Found ${problems.length} unlocked problems with a UVa id.`);
 
   const counts = [0, 0, 0, 0, 0]; // index by difficulty 1-4, 0 = no data
   let updated = 0;

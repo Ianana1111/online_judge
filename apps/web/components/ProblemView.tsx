@@ -14,7 +14,7 @@ import type { ProblemDetail } from "@/lib/types";
 import { useExamTimerStore } from "@/store/examTimer";
 
 const DIFFICULTY_EXPLANATION =
-  "Based on how many people worldwide have solved this problem on UVa — more solvers means a more introductory problem. There's no official CPE difficulty rating, so this is the most objective signal available.";
+  "Curated ratings come first: problems from an officially-rated set (like the CPE 必考49題 one-star selection) keep that rating. Everything else is derived from how many people worldwide have solved it on UVa (more solvers = more introductory), with a minimum floor based on the algorithm topic — a DP or graph problem never rates below what its technique demands.";
 
 export default function ProblemView({ problem, contestId }: { problem: ProblemDetail; contestId?: string }) {
   const [tab, setTab] = useState<"statement" | "history" | "discussion" | "stats" | "notes">("statement");
