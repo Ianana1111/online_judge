@@ -277,6 +277,7 @@ export interface CollectionProblemItem {
   title: string;
   difficulty: number;
   source: "UVA" | "CPE" | "CUSTOM";
+  tags: string[];
   solvedByMe: boolean;
 }
 

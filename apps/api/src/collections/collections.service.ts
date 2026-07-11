@@ -24,7 +24,18 @@ export class CollectionsService {
       include: {
         problems: {
           orderBy: { ord: "asc" },
-          include: { problem: { select: { id: true, slug: true, title: true, difficulty: true, source: true } } },
+          include: {
+            problem: {
+              select: {
+                id: true,
+                slug: true,
+                title: true,
+                difficulty: true,
+                source: true,
+                tags: { select: { tag: { select: { slug: true } } } },
+              },
+            },
+          },
         },
       },
     });
@@ -55,6 +66,7 @@ export class CollectionsService {
         title: cp.problem.title,
         difficulty: cp.problem.difficulty,
         source: cp.problem.source,
+        tags: cp.problem.tags.map((t) => t.tag.slug),
         solvedByMe: solvedSet.has(cp.problem.id),
       })),
     };
