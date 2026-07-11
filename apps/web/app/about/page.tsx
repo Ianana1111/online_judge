@@ -41,7 +41,7 @@ export default function AboutPage() {
           <div>
             <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">學歷</h3>
             <ul className="space-y-1.5 text-sm text-ink-300">
-              <li>國立台灣大學 電機資訊學院資料科學碩士學位學程（準碩一）</li>
+              <li>國立台灣大學 電機資訊學院資料科學碩士學位學程 碩一</li>
               <li>國立台灣大學 資訊工程學系 畢業</li>
               <li>國立台灣師範大學附屬高級中學 畢業</li>
             </ul>
@@ -50,7 +50,7 @@ export default function AboutPage() {
           <div>
             <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">工作經歷</h3>
             <ul className="space-y-1.5 text-sm text-ink-300">
-              <li>中研院資訊科技創新研究中心 — BCI Lab - Research Assistant（2025.09 – 迄今）</li>
+              <li>中研院資訊科技創新研究中心 — BCI Lab - Research Assistant（2025.09 – now）</li>
               <li>中研院資訊科學研究所 — Summer Intern（2025.07 – 2025.08）</li>
             </ul>
           </div>
@@ -95,7 +95,7 @@ export default function AboutPage() {
             <div>
               <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-ink-500">收費方式</h3>
               <p className="text-sm text-ink-300">
-                NT$1,000 – 1,200 / 小時
+                NT$1,200 - NT$1,500 / 小時
                 <br />
                 <span className="text-ink-400">試教 NT$600</span>
               </p>

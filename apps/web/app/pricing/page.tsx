@@ -155,9 +155,9 @@ export default function PricingPage() {
             </p>
             {plans?.payee.bank || plans?.payee.account || plans?.payee.linePay ? (
               <ul className="space-y-1 font-mono text-xs">
-                {plans.payee.bank && <li>銀行：{plans.payee.bank}</li>}
+                {/* {plans.payee.bank && <li>銀行：{plans.payee.bank}</li>}
                 {plans.payee.account && <li>帳號：{plans.payee.account}</li>}
-                {plans.payee.name && <li>戶名：{plans.payee.name}</li>}
+                {plans.payee.name && <li>戶名：{plans.payee.name}</li>} */}
                 {plans.payee.linePay && <li>LINE Pay：{plans.payee.linePay}</li>}
                 {plans.payee.note && <li className="text-ink-400">{plans.payee.note}</li>}
               </ul>
