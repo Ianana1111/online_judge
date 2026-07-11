@@ -273,6 +273,7 @@ export interface CollectionListItem {
 
 export interface CollectionProblemItem {
   id: string;
+  uvaId: number | null;
   slug: string;
   title: string;
   difficulty: number;

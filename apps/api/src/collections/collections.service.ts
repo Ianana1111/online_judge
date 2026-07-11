@@ -28,6 +28,7 @@ export class CollectionsService {
             problem: {
               select: {
                 id: true,
+                uvaId: true,
                 slug: true,
                 title: true,
                 difficulty: true,
@@ -62,6 +63,7 @@ export class CollectionsService {
       description: collection.description,
       problems: collection.problems.map((cp) => ({
         id: cp.problem.id,
+        uvaId: cp.problem.uvaId,
         slug: cp.problem.slug,
         title: cp.problem.title,
         difficulty: cp.problem.difficulty,

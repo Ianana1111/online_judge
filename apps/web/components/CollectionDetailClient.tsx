@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import type { CollectionDetail, CollectionProblemItem } from "@/lib/types";
 
-type SortKey = "default" | "difficulty-asc" | "difficulty-desc" | "unsolved-first";
+type SortKey = "number" | "curated" | "difficulty-asc" | "difficulty-desc" | "unsolved-first";
 
 export default function CollectionDetailClient({ slug }: { slug: string }) {
   const { data, isLoading } = useQuery({
@@ -15,7 +15,7 @@ export default function CollectionDetailClient({ slug }: { slug: string }) {
   });
 
   const [tag, setTag] = useState("");
-  const [sort, setSort] = useState<SortKey>("default");
+  const [sort, setSort] = useState<SortKey>("number");
 
   const allTags = useMemo(() => {
     const set = new Set<string>();
@@ -27,6 +27,9 @@ export default function CollectionDetailClient({ slug }: { slug: string }) {
     let list = [...(data?.problems ?? [])];
     if (tag) list = list.filter((p) => p.tags.includes(tag));
     switch (sort) {
+      case "number":
+        list.sort((a, b) => (a.uvaId ?? Infinity) - (b.uvaId ?? Infinity));
+        break;
       case "difficulty-asc":
         list.sort((a, b) => a.difficulty - b.difficulty);
         break;
@@ -36,7 +39,7 @@ export default function CollectionDetailClient({ slug }: { slug: string }) {
       case "unsolved-first":
         list.sort((a, b) => Number(a.solvedByMe) - Number(b.solvedByMe));
         break;
-      // "default": keep the collection's curated order (already sorted by the API)
+      // "curated": keep the collection's curated order (already sorted by the API)
     }
     return list;
   }, [data, tag, sort]);
@@ -77,7 +80,8 @@ export default function CollectionDetailClient({ slug }: { slug: string }) {
           ))}
         </select>
         <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="oj-input max-w-[200px]">
-          <option value="default">Curated order</option>
+          <option value="number">Problem number ↑</option>
+          <option value="curated">Curated order</option>
           <option value="difficulty-asc">Difficulty: low → high</option>
           <option value="difficulty-desc">Difficulty: high → low</option>
           <option value="unsolved-first">Unsolved first</option>
@@ -96,6 +100,7 @@ export default function CollectionDetailClient({ slug }: { slug: string }) {
         <thead>
           <tr>
             <th></th>
+            <th>#</th>
             <th>Title</th>
             <th>Source</th>
             <th>Difficulty</th>
@@ -106,6 +111,7 @@ export default function CollectionDetailClient({ slug }: { slug: string }) {
           {visible.map((p: CollectionProblemItem) => (
             <tr key={p.id}>
               <td className="w-6 text-center">{p.solvedByMe && <span className="text-verdict-ac">✓</span>}</td>
+              <td className="font-mono text-xs text-ink-400">{p.uvaId ?? "—"}</td>
               <td>
                 <Link href={`/problems/${p.slug}`} className="font-medium text-ink-50 hover:text-brand">
                   {p.title}
@@ -131,7 +137,7 @@ export default function CollectionDetailClient({ slug }: { slug: string }) {
           ))}
           {visible.length === 0 && (
             <tr>
-              <td colSpan={5} className="py-6 text-center text-ink-400">
+              <td colSpan={6} className="py-6 text-center text-ink-400">
                 No problems match this filter.
               </td>
             </tr>
