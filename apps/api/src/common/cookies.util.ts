@@ -10,12 +10,18 @@ export interface SessionCookies {
 
 const isProd = () => process.env.NODE_ENV === "production";
 
-// In production the web app and API live on different domains (e.g. Vercel + Railway), so
-// cookies must be SameSite=None (which requires Secure) to be sent cross-site at all. In dev
-// they're same-site (different localhost ports), where Lax is fine and Secure would require
-// HTTPS we don't have locally.
+// SameSite=None cookies (needed when the web app and API are on unrelated domains, e.g. Vercel +
+// Railway) get silently dropped by Safari's ITP and an increasing share of Chrome/Firefox users'
+// third-party-cookie blocking — a browser policy, not something SameSite=None can work around. The
+// durable fix is putting the API on a subdomain of the same parent domain as the web app (e.g.
+// api.judge.tw alongside judge.tw) and setting Domain to that shared parent, so the browser treats
+// the cookie as same-site between them instead of third-party. COOKIE_DOMAIN opts into that once
+// the subdomain + DNS are actually in place; unset, cookies stay host-only exactly as before.
+const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN; // e.g. ".judge.tw" — note the leading dot
+
 function baseCookieOpts() {
-  return isProd() ? ({ secure: true, sameSite: "none" } as const) : ({ secure: false, sameSite: "lax" } as const);
+  if (!isProd()) return { secure: false, sameSite: "lax" as const };
+  return { secure: true, sameSite: "none" as const, ...(COOKIE_DOMAIN ? { domain: COOKIE_DOMAIN } : {}) };
 }
 
 export function setAuthCookies(res: Response, session: SessionCookies): void {
@@ -50,7 +56,10 @@ export function setCsrfCookie(res: Response, csrfToken: string, maxAge: number):
 }
 
 export function clearAuthCookies(res: Response): void {
+  // clearCookie must be called with the same Domain attribute the cookie was originally set with,
+  // or the browser won't recognize it as the same cookie and won't actually clear it.
+  const domainOpt = isProd() && COOKIE_DOMAIN ? { domain: COOKIE_DOMAIN } : {};
   for (const name of ["access_token", "refresh_token", "csrf_token"]) {
-    res.clearCookie(name, { path: "/" });
+    res.clearCookie(name, { path: "/", ...domainOpt });
   }
 }
