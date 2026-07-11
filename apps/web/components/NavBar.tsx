@@ -18,10 +18,7 @@ const PUBLIC_LINKS = [
 ];
 
 // Any logged-in user — registered visitors and students alike.
-const AUTH_LINKS = [
-  { href: "/submissions", label: "My Submissions" },
-  { href: "/pricing", label: "Pricing" },
-];
+const AUTH_LINKS = [{ href: "/submissions", label: "My Submissions" }];
 
 // Only for logged-in students (isStudent, set by an admin) — not admins, they get the console link.
 const STUDENT_LINKS = [{ href: "/classes", label: "My Classes" }];
@@ -100,6 +97,9 @@ export default function NavBar() {
 
   const showStudentLinks = !!user && user.isStudent;
   const isAdmin = user?.role === "ADMIN";
+  // Admins and students never have a billing problem — admins aren't capped, students are auto-Pro
+  // (see billing.service.isProActive) — so the upgrade page is only relevant to ordinary users.
+  const showPricing = !!user && !isAdmin && !user.isStudent;
 
   return (
     <header className="sticky top-0 z-40 border-b border-ink-800 bg-ink-950/90 backdrop-blur">
@@ -133,6 +133,16 @@ export default function NavBar() {
                   {l.label}
                 </Link>
               ))}
+            {showPricing && (
+              <Link
+                href="/pricing"
+                className={`text-sm font-medium transition-colors ${
+                  pathname?.startsWith("/pricing") ? "text-brand" : "text-ink-300 hover:text-ink-50"
+                }`}
+              >
+                Pricing
+              </Link>
+            )}
             {showStudentLinks &&
               STUDENT_LINKS.map((l) => (
                 <Link
