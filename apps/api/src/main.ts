@@ -8,8 +8,15 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.use(cookieParser());
+  // WEB_ORIGIN may list several allowed origins (comma-separated) — e.g. the custom domain plus the
+  // *.vercel.app fallback — since credentialed CORS must echo back the exact requesting origin, not
+  // a wildcard. Anything not on the list is simply not given CORS headers (browser blocks it).
+  const allowedOrigins = (process.env.WEB_ORIGIN ?? "http://localhost:3000")
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean);
   app.enableCors({
-    origin: process.env.WEB_ORIGIN ?? "http://localhost:3000",
+    origin: allowedOrigins,
     credentials: true,
   });
 
