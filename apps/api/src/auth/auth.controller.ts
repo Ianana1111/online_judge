@@ -105,7 +105,9 @@ export class AuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    const webOrigin = process.env.WEB_ORIGIN ?? "http://localhost:3000";
+    // WEB_ORIGIN may be a comma-separated allowlist (see main.ts CORS); redirects need one concrete
+    // URL, so use the first entry as the canonical site origin to land the user back on.
+    const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
     const cookieState = req.cookies?.google_oauth_state;
     res.clearCookie("google_oauth_state", { path: "/auth/google" });
 
