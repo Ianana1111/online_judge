@@ -6,7 +6,7 @@ import type { CreateClassSessionDto, UpdateClassSessionDto } from "@oj/shared";
 export class ClassesService {
   async createForStudent(teacherId: string, dto: CreateClassSessionDto) {
     const student = await prisma.user.findUnique({ where: { id: dto.studentId } });
-    if (!student) throw new NotFoundException("Student not found");
+    if (!student || !student.isStudent) throw new NotFoundException("Student not found");
 
     const last = await prisma.classSession.findFirst({
       where: { studentId: dto.studentId },
@@ -107,8 +107,11 @@ export class ClassesService {
   /** Admin dashboard: every student, which class they're currently on, and a breakdown of their
    * homework status (solved / wrong-or-error / pending / not started). */
   async overview() {
+    // Only accounts an admin has explicitly marked as students belong in the Classes dashboard —
+    // ordinary self-registered users (role USER but isStudent=false) are not being tutored and
+    // shouldn't clutter it.
     const students = await prisma.user.findMany({
-      where: { role: "USER" },
+      where: { role: "USER", isStudent: true },
       select: { id: true, handle: true },
       orderBy: { handle: "asc" },
     });
