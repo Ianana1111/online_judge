@@ -23,7 +23,7 @@ const TERMINAL_PUNCTUATION_RE = /[.!?"'’”)]$/;
 // render verbatim. The structural Markdown we add ourselves (### headings, "N." list markers) is
 // applied outside this function and is never passed through it.
 const INLINE_ESCAPE_RE = /[\\`*_{}[\]<>$~|]/g;
-function escapeInline(text: string): string {
+export function escapeInline(text: string): string {
   return text.replace(INLINE_ESCAPE_RE, (ch) => `\\${ch}`);
 }
 
