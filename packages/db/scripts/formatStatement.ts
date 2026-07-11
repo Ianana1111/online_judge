@@ -15,6 +15,18 @@ const SAMPLE_HEADERS = ["Sample Input and Output", "Sample Input", "Sample Outpu
 const LIST_ITEM_RE = /^\d+\.\s/;
 const TERMINAL_PUNCTUATION_RE = /[.!?"'’”)]$/;
 
+// PDF statements are plain prose, but they're rendered through a Markdown pipeline (see
+// StatementRenderer.tsx). Characters that are syntactically meaningful in Markdown/HTML —
+// backticks (inline code), backslashes (escapes), *_ (emphasis), [] (links), <tag>-like
+// sequences (e.g. the literal "<EOF>"/"<CR>" many UVa problems use), $ (math), | ~ — get eaten
+// or mangled even though they're really just literal text in the statement. Escape them so they
+// render verbatim. The structural Markdown we add ourselves (### headings, "N." list markers) is
+// applied outside this function and is never passed through it.
+const INLINE_ESCAPE_RE = /[\\`*_{}[\]<>$~|]/g;
+function escapeInline(text: string): string {
+  return text.replace(INLINE_ESCAPE_RE, (ch) => `\\${ch}`);
+}
+
 export function cleanPdfStatementText(raw: string, uvaId: number): string {
   const lines = raw.split("\n").map((l) => l.replace(/\s+$/, ""));
 
@@ -44,9 +56,12 @@ export function cleanPdfStatementText(raw: string, uvaId: number): string {
 
     if (LIST_ITEM_RE.test(line)) {
       // A numbered list item always starts fresh, on its own line, with a blank line before it
-      // so it can't get swallowed into whatever paragraph preceded it.
+      // so it can't get swallowed into whatever paragraph preceded it. The "N. " marker is
+      // Markdown structure we want to keep, so escape only the text after it (escapeInline never
+      // touches digits or ".", so escaping the whole line would leave the marker intact anyway —
+      // but being explicit keeps the intent clear).
       if (!inList && out.length > 0 && out[out.length - 1] !== "") out.push("");
-      out.push(lines[i]);
+      out.push(lines[i].replace(/^(\s*\d+\.\s)(.*)$/, (_, marker, rest) => marker + escapeInline(rest)));
       inList = true;
       continue;
     }
@@ -56,13 +71,13 @@ export function cleanPdfStatementText(raw: string, uvaId: number): string {
       // doesn't end on a sentence boundary, this line is its wrapped continuation, not a new
       // paragraph. Re-join them so the whole item stays associated with its "N." marker instead
       // of falling out of the list.
-      out[out.length - 1] = `${out[out.length - 1]} ${line}`;
+      out[out.length - 1] = `${out[out.length - 1]} ${escapeInline(line)}`;
       continue;
     }
 
     if (inList) out.push(""); // list item's sentence completed - blank line closes the list
     inList = false;
-    out.push(lines[i]);
+    out.push(escapeInline(lines[i]));
   }
 
   return out
