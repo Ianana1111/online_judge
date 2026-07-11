@@ -1,10 +1,12 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, Post, Query, Req, Res } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, HttpCode, Inject, Logger, Post, Query, Req, Res } from "@nestjs/common";
 import { randomBytes } from "node:crypto";
+import type Redis from "ioredis";
 import type { Request, Response } from "express";
 import { loginSchema, registerSchema, type LoginDto, type RegisterDto } from "@oj/shared";
 import { clearAuthCookies, setAuthCookies, setCsrfCookie } from "../common/cookies.util";
 import { CurrentUser, Public, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
+import { REDIS_CLIENT } from "../common/redis.providers";
 import { AuthService } from "./auth.service";
 
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -13,7 +15,12 @@ const GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
 
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  private readonly logger = new Logger(AuthController.name);
+
+  constructor(
+    private readonly authService: AuthService,
+    @Inject(REDIS_CLIENT) private readonly redis: Redis,
+  ) {}
 
   @Public()
   @HttpCode(201)
@@ -115,6 +122,20 @@ export class AuthController {
       return res.redirect(`${webOrigin}/login?error=google_state_mismatch`);
     }
 
+    // Some browsers (prefetch/preconnect, extensions, or a double navigation) fire this callback
+    // twice for the same redirect — both copies carry the same cookie, since a browser sends its
+    // request cookies before either response's Set-Cookie can be processed, so the check above
+    // alone doesn't catch it. Google's authorization `code` is single-use: whichever request wins
+    // the exchange succeeds (creating the account and setting cookies), and the loser would throw
+    // "invalid_grant" and land the user on an error page even though their account was already
+    // created — confusing and wrong. Claim `state` atomically first so only one request per login
+    // attempt ever calls Google; a losing duplicate just follows the winner to the same success
+    // redirect instead of failing.
+    const claimed = await this.redis.set(`oauth_state:${state}`, "1", "EX", 60, "NX");
+    if (!claimed) {
+      return res.redirect(webOrigin);
+    }
+
     try {
       const clientId = process.env.GOOGLE_CLIENT_ID!;
       const clientSecret = process.env.GOOGLE_CLIENT_SECRET!;
@@ -144,7 +165,10 @@ export class AuthController {
       const session = await this.authService.loginWithGoogle(profile.sub, profile.email, suggestedHandle);
       setAuthCookies(res, session);
       res.redirect(webOrigin);
-    } catch {
+    } catch (err) {
+      // Previously swallowed silently — every past "Google sign-in failed" report was
+      // undiagnosable because nothing was logged. Always log the real cause now.
+      this.logger.error(`Google OAuth callback failed: ${err instanceof Error ? err.message : String(err)}`);
       res.redirect(`${webOrigin}/login?error=google_failed`);
     }
   }
