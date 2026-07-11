@@ -66,6 +66,22 @@ enum ParticipantStatus {
   FINISHED
 }
 
+enum Plan {
+  FREE
+  PRO
+}
+
+enum BillingPeriod {
+  MONTHLY
+  YEARLY
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 // ---------------------------------------------------------------------------
 // Models
 // ---------------------------------------------------------------------------
@@ -81,6 +97,13 @@ model User {
   /// from role=USER, which now also covers anyone who self-registered out of general interest).
   /// Gates the "My Classes" nav link and Class-tracking features.
   isStudent    Boolean  @default(false)
+  /// Billing tier. FREE users are capped (submit quota + virtual-attempt count); PRO lifts both.
+  /// PRO is only "active" while planExpiresAt is in the future — past that the account behaves as
+  /// FREE again until another payment extends the date (see billing.service).
+  plan            Plan      @default(FREE)
+  planExpiresAt   DateTime?
+  /// Lifetime count of submissions made — the FREE tier's quota is enforced against this.
+  submitQuotaUsed Int       @default(0)
   settings     Json     @default("{}")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -93,8 +116,30 @@ model User {
   classSessions        ClassSession[]        @relation("ClassSessionStudent")
   createdClassSessions ClassSession[]        @relation("ClassSessionTeacher")
   notes                Note[]
+  payments             Payment[]
 
   @@map("users")
+}
+
+/// One upgrade payment. With manual bank/LINE Pay transfer, the user submits a claim (PENDING)
+/// with a reference note, an admin verifies the money arrived and APPROVES (which extends the
+/// user's planExpiresAt), or REJECTS. `method` leaves room for an automated gateway (e.g. ECPay)
+/// later without changing this table.
+model Payment {
+  id         String        @id @default(cuid())
+  userId     String
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  period     BillingPeriod
+  amountNtd  Int
+  status     PaymentStatus @default(PENDING)
+  method     String        @default("MANUAL")
+  reference  String        @default("")
+  createdAt  DateTime      @default(now())
+  reviewedAt DateTime?
+  reviewedBy String?
+
+  @@index([status, createdAt])
+  @@map("payments")
 }
 
 model Problem {

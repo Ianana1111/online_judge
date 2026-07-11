@@ -68,6 +68,14 @@ export const setIsStudentSchema = z.object({
 });
 export type SetIsStudentDto = z.infer<typeof setIsStudentSchema>;
 
+export const billingRequestSchema = z.object({
+  period: z.enum(["MONTHLY", "YEARLY"]),
+  // Free-text note the user gives to help you match their bank/LINE Pay transfer, e.g. the last 5
+  // digits of their account or a LINE Pay transaction id.
+  reference: z.string().max(200).default(""),
+});
+export type BillingRequestDto = z.infer<typeof billingRequestSchema>;
+
 export const noteSchema = z.object({
   content: z.string().max(20_000),
 });

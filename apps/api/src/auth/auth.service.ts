@@ -111,6 +111,7 @@ export class AuthService {
     email: string;
     role: string;
     isStudent: boolean;
+    plan: "FREE" | "PRO";
     csrfToken: string;
     csrfMaxAgeMs: number;
   }> {
@@ -119,12 +120,14 @@ export class AuthService {
     // Stateless token (see csrf.util.ts) — safe to mint a fresh one on every /auth/me call so
     // the web app always has a working value in memory, including right after a hard refresh
     // when it can no longer read the cookie itself cross-domain.
+    const proActive = user.plan === "PRO" && user.planExpiresAt != null && user.planExpiresAt.getTime() > Date.now();
     return {
       id: user.id,
       handle: user.handle,
       email: user.email,
       role: user.role,
       isStudent: user.isStudent,
+      plan: proActive ? "PRO" : "FREE",
       csrfToken: generateCsrfToken(),
       csrfMaxAgeMs: this.tokens.refreshTtlMs,
     };

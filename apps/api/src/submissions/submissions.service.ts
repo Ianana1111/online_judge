@@ -19,6 +19,7 @@ import {
 } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
 import { JUDGE_QUEUE, REDIS_CLIENT } from "../common/redis.providers";
+import { BillingService } from "../billing/billing.service";
 
 const PAGE_SIZE = 20;
 const COOLDOWN_MS = 10_000;
@@ -36,9 +37,13 @@ export class SubmissionsService {
   constructor(
     @Inject(JUDGE_QUEUE) private readonly queue: Queue,
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
+    private readonly billing: BillingService,
   ) {}
 
   async create(userId: string, dto: CreateSubmissionDto): Promise<{ id: string }> {
+    // Plan gate before anything else: FREE accounts have a lifetime submit quota.
+    await this.billing.assertCanSubmit(userId);
+
     const lastSubmission = await prisma.submission.findFirst({
       where: { userId },
       orderBy: { createdAt: "desc" },
@@ -72,6 +77,10 @@ export class SubmissionsService {
         verdict: "PENDING",
       },
     });
+
+    // Count this submission against the FREE quota. (PRO accounts also increment; it's harmless
+    // and means the counter stays accurate if they ever lapse back to FREE.)
+    await prisma.user.update({ where: { id: userId }, data: { submitQuotaUsed: { increment: 1 } } });
 
     // Default attempts (1) is intentional: silently re-running arbitrary user code on a
     // transient job failure is not safe, so we don't override BullMQ's retry behavior here.

@@ -2,9 +2,12 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { prisma } from "@oj/db";
 import type { CreateContestDto } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
+import { BillingService } from "../billing/billing.service";
 
 @Injectable()
 export class ContestsService {
+  constructor(private readonly billing: BillingService) {}
+
   async list() {
     const contests = await prisma.contest.findMany({ orderBy: { createdAt: "desc" } });
     return contests.map((c) => ({
@@ -132,6 +135,10 @@ export class ContestsService {
       where: { contestId_userId: { contestId: id, userId } },
     });
     if (existing) return existing;
+
+    // Starting a new virtual/self-run contest counts against the FREE plan's cap. Re-entering one
+    // already registered above doesn't (it returned early), so only genuinely-new attempts count.
+    await this.billing.assertCanStartVirtual(userId);
 
     const now = new Date();
     let startedAt: Date;

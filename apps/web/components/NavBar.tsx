@@ -18,7 +18,10 @@ const PUBLIC_LINKS = [
 ];
 
 // Any logged-in user — registered visitors and students alike.
-const AUTH_LINKS = [{ href: "/submissions", label: "My Submissions" }];
+const AUTH_LINKS = [
+  { href: "/submissions", label: "My Submissions" },
+  { href: "/pricing", label: "Pricing" },
+];
 
 // Only for logged-in students (isStudent, set by an admin) — not admins, they get the console link.
 const STUDENT_LINKS = [{ href: "/classes", label: "My Classes" }];

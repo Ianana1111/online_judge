@@ -40,6 +40,20 @@ export interface User {
   email: string;
   role: "USER" | "ADMIN";
   isStudent: boolean;
+  plan: "FREE" | "PRO";
+}
+
+export interface BillingStatus {
+  plan: "FREE" | "PRO";
+  planExpiresAt: string | null;
+  submits: { used: number; limit: number | null };
+  virtualContests: { used: number; limit: number | null };
+  pendingPayment: { id: string; period: "MONTHLY" | "YEARLY"; amountNtd: number; createdAt: string } | null;
+}
+
+export interface BillingPlans {
+  pricing: Record<"MONTHLY" | "YEARLY", { amountNtd: number; days: number; label: string }>;
+  payee: { bank: string; account: string; name: string; linePay: string; note: string };
 }
 
 // A single problem as shown in a filterable/sortable table. Shared by the Problems list and the
