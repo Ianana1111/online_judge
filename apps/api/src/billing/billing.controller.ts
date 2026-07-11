@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { billingRequestSchema, PLAN_PRICING, type BillingRequestDto } from "@oj/shared";
-import { CurrentUser, Roles, type RequestUser } from "../common/decorators";
+import { CurrentUser, Public, Roles, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { BillingService } from "./billing.service";
 
@@ -8,7 +8,9 @@ import { BillingService } from "./billing.service";
 export class BillingController {
   constructor(private readonly billing: BillingService) {}
 
-  /** Static pricing + the manual-transfer payee details (from env, so no account numbers in code). */
+  /** Static pricing + the manual-transfer payee details (from env, so no account numbers in code).
+   * Public so the pricing page renders for logged-out visitors too. */
+  @Public()
   @Get("plans")
   plans() {
     return {
