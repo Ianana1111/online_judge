@@ -5,7 +5,11 @@ import { judgeViaUva } from "./remote/uva.js";
 import { reportResult } from "./reportResult.js";
 
 const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
-const CONCURRENCY = parseInt(process.env.JUDGE_CONCURRENCY ?? "2", 10);
+// Default 1: every submission proxies through a single shared UVa bot account, and we identify our
+// verdict row by "smallest new submission id" (see remote/uva.ts) — which is only unambiguous if
+// submissions go out strictly one at a time. Parallel submits through one account would also raise
+// rate-limit/ban risk on a community-run judge for no real throughput gain.
+const CONCURRENCY = parseInt(process.env.JUDGE_CONCURRENCY ?? "1", 10);
 
 // Pass a plain options object rather than constructing our own `Redis` instance: bullmq bundles
 // its own ioredis internally, and a separately-installed ioredis copy (even the "same" version

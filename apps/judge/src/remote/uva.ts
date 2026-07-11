@@ -18,7 +18,10 @@ const LANGUAGE_HINTS: Record<string, string[]> = {
 };
 
 const MIN_GAP_MS = 8_000; // be a good citizen towards a community-run site; also lowers ban risk
-const POLL_TIMEOUT_MS = 120_000;
+// UVa's judge is community-run and can be genuinely slow/backlogged — a verdict sometimes takes a
+// couple of minutes to appear even when everything is working. Give it a generous window before
+// giving up so we don't spuriously report SE on a submission UVa is simply still judging.
+const POLL_TIMEOUT_MS = 240_000;
 const POLL_INTERVAL_MS = 5_000;
 
 let cachedSession: UvaSession | null = null;
@@ -62,9 +65,18 @@ export async function judgeViaUva(problem: Problem, languageKey: string, sourceC
   try {
     await throttle();
     const session = await getSession(username, password);
-    const { submittedAtUnix } = await submitSolution(session, problem.uvaId, hints, sourceCode);
 
-    return await pollMyStatus(session, submittedAtUnix);
+    // Record the newest existing submission id BEFORE submitting. UVa submission ids are
+    // monotonic and the bot account submits strictly serially (throttle + concurrency=1), so the
+    // row that appears with the smallest id greater than this is unambiguously ours — a far more
+    // robust match than comparing wall-clock timestamps, which broke whenever the judge
+    // container's clock drifted a few seconds from UVa's and excluded the real row.
+    const before = await fetchMyStatus(session);
+    const maxExistingId = before.reduce((max, r) => Math.max(max, r.submissionId), 0);
+
+    await submitSolution(session, problem.uvaId, hints, sourceCode);
+
+    return await pollForVerdict(session, maxExistingId);
   } catch (err) {
     // Most failure modes here (bad session, markup drift, stale localId) look the same from the
     // caller's side — drop the cached session so the next attempt starts clean instead of
@@ -76,24 +88,22 @@ export async function judgeViaUva(problem: Problem, languageKey: string, sourceC
 
 /**
  * Polls onlinejudge.org's own "My Submissions" status page (Itemid=9) rather than uHunt's
- * subs-user-last mirror. The status table has no stable problem-number column we can match on
- * (its `problem=` link parameter is an internal localid, not the public UVa number, and is
- * sometimes blank for problems the site's own title lookup doesn't resolve) — but since this bot
- * account only ever has one submission in flight at a time (see `throttle()`), the row with the
- * *oldest* timestamp that's still >= our own submit time is unambiguously ours, even if a later
- * submission's row has since landed above it.
+ * subs-user-last mirror (which was observed sitting stale for minutes-to-days behind a
+ * freshly-judged submission). We identify our row by submission id: the smallest id strictly
+ * greater than `afterId` (the newest id that already existed before we submitted) is the one this
+ * call created. Its verdict text maps to null while the submission is still queued/compiling/
+ * running, so we keep polling until it resolves to a terminal verdict.
  */
-async function pollMyStatus(session: UvaSession, submittedAfterUnix: number): Promise<JudgeOutcome> {
+async function pollForVerdict(session: UvaSession, afterId: number): Promise<JudgeOutcome> {
   const deadline = Date.now() + POLL_TIMEOUT_MS;
-  const afterMs = (submittedAfterUnix - 5) * 1000;
   while (Date.now() < deadline) {
     const rows = await fetchMyStatus(session);
-    const candidates = rows.filter((r) => r.submittedAt.getTime() >= afterMs);
-    const match = candidates[candidates.length - 1]; // rows are newest-first; oldest candidate = ours
-    if (match) {
-      const mapped = mapUvaVerdictText(match.verdictText);
+    const newer = rows.filter((r) => r.submissionId > afterId);
+    const mine = newer.length ? newer.reduce((a, b) => (a.submissionId < b.submissionId ? a : b)) : undefined;
+    if (mine) {
+      const mapped = mapUvaVerdictText(mine.verdictText);
       if (mapped) {
-        return { status: mapped as Verdict, timeMs: Math.round(match.runtimeSec * 1000) };
+        return { status: mapped as Verdict, timeMs: Math.round(mine.runtimeSec * 1000) };
       }
     }
     await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
