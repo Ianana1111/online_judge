@@ -45,11 +45,17 @@ export default function StatCharts({ stats }: { stats: UserStats }) {
     value: stats.languageBreakdown.find((l) => l.languageKey === key)?.count ?? 0,
   })).filter((d) => d.value > 0);
 
+  // Only verdicts the user has actually hit — with up to 10 possible types, a fixed-height axis
+  // label column crushed everything down until even AC's own label got clipped. A stacked bar +
+  // legend list (same pattern as language usage below) stays legible no matter how many show up.
   const verdictData = VERDICT_ORDER.map((v) => ({
     verdict: v,
     name: VERDICT_LABEL[v],
     count: stats.verdictBreakdown.find((x) => x.verdict === v)?.count ?? 0,
-  }));
+  }))
+    .filter((d) => d.count > 0)
+    .sort((a, b) => b.count - a.count);
+  const verdictTotal = verdictData.reduce((sum, d) => sum + d.count, 0);
 
   const difficultyData = [1, 2, 3, 4].map((d) => ({
     difficulty: `★`.repeat(d),
@@ -89,24 +95,30 @@ export default function StatCharts({ stats }: { stats: UserStats }) {
 
       <div className="oj-card p-4">
         <h3 className="mb-3 text-sm font-semibold text-ink-200">Verdict breakdown</h3>
-        <ResponsiveContainer width="100%" height={200}>
-          <BarChart data={verdictData} layout="vertical" margin={{ left: 8, right: 16 }}>
-            <XAxis type="number" tick={{ fill: "#6b7a8b", fontSize: 11 }} axisLine={{ stroke: "#2a3441" }} />
-            <YAxis
-              type="category"
-              dataKey="name"
-              width={110}
-              tick={{ fill: "#9aa8b5", fontSize: 11 }}
-              axisLine={{ stroke: "#2a3441" }}
-            />
-            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "#1c2530" }} />
-            <Bar dataKey="count" radius={[0, 4, 4, 0]}>
+        {verdictData.length === 0 ? (
+          <p className="text-sm text-ink-400">No submissions yet.</p>
+        ) : (
+          <>
+            <div className="flex h-3 w-full overflow-hidden rounded-full bg-ink-800">
               {verdictData.map((d) => (
-                <Cell key={d.verdict} fill={VERDICT_COLOR[d.verdict]} />
+                <div
+                  key={d.verdict}
+                  title={`${d.name}: ${d.count}`}
+                  style={{ width: `${(d.count / verdictTotal) * 100}%`, background: VERDICT_COLOR[d.verdict] }}
+                />
               ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+            </div>
+            <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+              {verdictData.map((d) => (
+                <li key={d.verdict} className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: VERDICT_COLOR[d.verdict] }} />
+                  <span className="flex-1 truncate text-ink-300">{d.name}</span>
+                  <span className="font-mono text-ink-500">{d.count}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
 
       <div className="oj-card p-4 sm:col-span-2">
