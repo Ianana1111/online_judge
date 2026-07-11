@@ -27,6 +27,9 @@ function isUnlimited(user: Pick<User, "plan" | "planExpiresAt" | "role" | "isStu
 // yyyy/MM/dd HH:mm:ss in Asia/Taipei, regardless of the server's own timezone (Railway runs UTC) —
 // ECPay is a Taiwan-only service and expects Taiwan local time in every timestamp field.
 function formatEcpayDate(d: Date): string {
+  // hourCycle: "h23" (not hour12: false) — with just hour12:false, Node/ICU represents midnight
+  // as "24:mm:ss" instead of "00:mm:ss" (a real bug this caught in testing: an order placed at
+  // midnight Taiwan time would ship an invalid hour and ECPay would silently reject it).
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Taipei",
     year: "numeric",
@@ -35,7 +38,7 @@ function formatEcpayDate(d: Date): string {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    hour12: false,
+    hourCycle: "h23",
   }).formatToParts(d);
   const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "00";
   return `${get("year")}/${get("month")}/${get("day")} ${get("hour")}:${get("minute")}:${get("second")}`;
