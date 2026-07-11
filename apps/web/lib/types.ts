@@ -42,8 +42,11 @@ export interface User {
   isStudent: boolean;
 }
 
-export interface ProblemListItem {
+// A single problem as shown in a filterable/sortable table. Shared by the Problems list and the
+// per-collection page (see ProblemFilterTable) so both render an identical row + controls.
+export interface ProblemRow {
   id: string;
+  uvaId: number | null;
   slug: string;
   title: string;
   difficulty: number;
@@ -51,6 +54,8 @@ export interface ProblemListItem {
   tags: string[];
   solvedByMe: boolean;
 }
+
+export type ProblemListItem = ProblemRow;
 
 export interface ProblemListResponse {
   items: ProblemListItem[];
@@ -271,16 +276,7 @@ export interface CollectionListItem {
   problemCount: number;
 }
 
-export interface CollectionProblemItem {
-  id: string;
-  uvaId: number | null;
-  slug: string;
-  title: string;
-  difficulty: number;
-  source: "UVA" | "CPE" | "CUSTOM";
-  tags: string[];
-  solvedByMe: boolean;
-}
+export type CollectionProblemItem = ProblemRow;
 
 export interface CollectionDetail {
   id: string;

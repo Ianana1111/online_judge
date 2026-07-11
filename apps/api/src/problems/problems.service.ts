@@ -10,13 +10,22 @@ export interface ListQuery {
   difficulty?: string;
   q?: string;
   page?: string;
+  pageSize?: string;
 }
+
+// Upper bound on a single page. The problems/collections UIs fetch the whole set (~350) and do
+// their own client-side filtering/sorting, so they pass a large pageSize; keep a cap so an
+// arbitrary client can't ask for an unbounded result set.
+const MAX_PAGE_SIZE = 1000;
 
 @Injectable()
 export class ProblemsService {
   async list(query: ListQuery, requester: RequestUser | null) {
     const isAdmin = requester?.role === "ADMIN";
     const page = Math.max(1, parseInt(query.page ?? "1", 10) || 1);
+    const pageSize = query.pageSize
+      ? Math.min(MAX_PAGE_SIZE, Math.max(1, parseInt(query.pageSize, 10) || PAGE_SIZE))
+      : PAGE_SIZE;
 
     const where: Record<string, unknown> = {};
     if (!isAdmin) where.visibility = true;
@@ -29,8 +38,8 @@ export class ProblemsService {
         where,
         include: { tags: { include: { tag: true } } },
         orderBy: [{ uvaId: { sort: "asc", nulls: "last" } }, { createdAt: "asc" }],
-        skip: (page - 1) * PAGE_SIZE,
-        take: PAGE_SIZE,
+        skip: (page - 1) * pageSize,
+        take: pageSize,
       }),
       prisma.problem.count({ where }),
     ]);
@@ -48,6 +57,7 @@ export class ProblemsService {
     return {
       items: rows.map((p) => ({
         id: p.id,
+        uvaId: p.uvaId,
         slug: p.slug,
         title: p.title,
         difficulty: p.difficulty,
