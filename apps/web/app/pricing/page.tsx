@@ -25,6 +25,8 @@ export default function PricingPage() {
   const [reference, setReference] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [ecpayError, setEcpayError] = useState<string | null>(null);
+  const [ecpayLoading, setEcpayLoading] = useState(false);
 
   const { data: plans } = useQuery({
     queryKey: ["billing", "plans"],
@@ -34,6 +36,9 @@ export default function PricingPage() {
     queryKey: ["billing", "me"],
     queryFn: () => apiFetch<BillingStatus>("/billing/me"),
     enabled: !!user,
+    // Payment status can change from a webhook we don't otherwise get notified of — poll gently
+    // while a payment is pending so "已付款" reflects automatically without a manual refresh.
+    refetchInterval: (query) => (query.state.data?.pendingPayment ? 5000 : false),
   });
 
   const isPro = status?.plan === "PRO";
@@ -53,6 +58,36 @@ export default function PricingPage() {
       setSubmitting(false);
     }
   }
+
+  async function startEcpay() {
+    setEcpayError(null);
+    setEcpayLoading(true);
+    try {
+      const res = await apiFetch<{ actionUrl: string; fields: Record<string, string | number>; sandbox: boolean }>(
+        "/billing/ecpay/create",
+        { method: "POST", body: { period } },
+      );
+      // ECPay's checkout is a hosted page, not a JSON API — the browser itself has to navigate
+      // there via a form POST carrying the signed order fields.
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = res.actionUrl;
+      for (const [k, v] of Object.entries(res.fields)) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = k;
+        input.value = String(v);
+        form.appendChild(input);
+      }
+      document.body.appendChild(form);
+      form.submit();
+    } catch (e) {
+      setEcpayError(e instanceof ApiError ? e.message : "無法建立訂單，請稍後再試");
+      setEcpayLoading(false);
+    }
+  }
+
+  const amount = plans?.pricing[period].amountNtd ?? (period === "MONTHLY" ? 100 : 1000);
 
   return (
     <div className="mx-auto max-w-3xl space-y-8 py-8">
@@ -96,7 +131,7 @@ export default function PricingPage() {
         <div className="oj-card border-brand/40 p-5">
           <h2 className="font-display text-lg font-semibold text-brand">Pro</h2>
           <p className="mt-1 text-2xl font-bold text-ink-50">
-            NT${plans?.pricing[period].amountNtd ?? (period === "MONTHLY" ? 100 : 1000)}
+            NT${amount}
             <span className="text-sm font-normal text-ink-400">/{period === "MONTHLY" ? "月" : "年"}</span>
           </p>
           <ul className="mt-4 space-y-2">
@@ -122,16 +157,40 @@ export default function PricingPage() {
         </div>
       ) : pending ? (
         <div className="oj-card border-verdict-tle/40 p-5 text-sm">
-          <p className="font-semibold text-verdict-tle">付款審核中</p>
-          <p className="mt-1 text-ink-300">
-            我們已收到你的 {pending.period === "MONTHLY" ? "月方案" : "年方案"}（NT${pending.amountNtd}）付款回報，
-            確認收到款項後會盡快幫你開通。
-          </p>
+          {pending.method === "ECPAY" && pending.vAccount ? (
+            <>
+              <p className="font-semibold text-verdict-tle">請完成 ATM 轉帳</p>
+              <div className="mt-3 space-y-1 rounded border border-ink-700 bg-ink-800/50 p-3 font-mono text-sm">
+                <p>
+                  銀行代碼：<span className="font-semibold text-ink-50">{pending.bankCode}</span>
+                </p>
+                <p>
+                  虛擬帳號：<span className="font-semibold text-ink-50">{pending.vAccount}</span>
+                </p>
+                {pending.expireDate && <p className="text-xs text-ink-400">繳費期限：{pending.expireDate}</p>}
+              </div>
+              <p className="mt-3 text-ink-300">
+                用 ATM／網路銀行／手機銀行 App 轉帳 NT${pending.amountNtd} 到以上帳號。付款完成後系統會
+                <span className="text-verdict-ac">自動</span>幫你開通 Pro，這個頁面會自動更新，不用等人工審核。
+              </p>
+            </>
+          ) : pending.method === "ECPAY" ? (
+            <>
+              <p className="font-semibold text-verdict-tle">正在產生付款資訊…</p>
+              <p className="mt-1 text-ink-300">請稍候，這個頁面會自動更新。</p>
+            </>
+          ) : (
+            <>
+              <p className="font-semibold text-verdict-tle">付款審核中</p>
+              <p className="mt-1 text-ink-300">
+                我們已收到你的 {pending.period === "MONTHLY" ? "月方案" : "年方案"}（NT${pending.amountNtd}
+                ）付款回報，確認收到款項後會盡快幫你開通。
+              </p>
+            </>
+          )}
         </div>
       ) : (
-        <form onSubmit={submitClaim} className="oj-card space-y-4 p-5">
-          <h2 className="font-display text-lg font-semibold text-ink-100">升級步驟</h2>
-
+        <div className="space-y-4">
           <div className="flex gap-2">
             <button
               type="button"
@@ -149,44 +208,56 @@ export default function PricingPage() {
             </button>
           </div>
 
-          <div className="rounded border border-ink-700 bg-ink-800/50 p-4 text-sm text-ink-300">
-            <p className="mb-2 font-semibold text-ink-200">
-              步驟 1：轉帳 NT${plans?.pricing[period].amountNtd ?? (period === "MONTHLY" ? 100 : 1000)} 到以下帳戶
+          <div className="oj-card space-y-3 p-5">
+            <h2 className="font-display text-lg font-semibold text-ink-100">ATM 轉帳（自動開通）</h2>
+            <p className="text-sm text-ink-400">
+              點下方按鈕會產生一組專屬的 ATM 虛擬帳號，轉帳完成後系統自動幫你開通 Pro，不用等待人工審核。
             </p>
-            {plans?.payee.bank || plans?.payee.account || plans?.payee.linePay ? (
-              <ul className="space-y-1 font-mono text-xs">
-                {/* {plans.payee.bank && <li>銀行：{plans.payee.bank}</li>}
-                {plans.payee.account && <li>帳號：{plans.payee.account}</li>}
-                {plans.payee.name && <li>戶名：{plans.payee.name}</li>} */}
-                {plans.payee.linePay && <li>LINE Pay：{plans.payee.linePay}</li>}
-                {plans.payee.note && <li className="text-ink-400">{plans.payee.note}</li>}
-              </ul>
-            ) : (
-              <p className="text-ink-500">（收款資訊尚未設定，請聯絡管理員）</p>
-            )}
+            {ecpayError && <p className="text-sm text-verdict-wa">{ecpayError}</p>}
+            <button onClick={startEcpay} disabled={ecpayLoading} className="oj-btn-primary w-full">
+              {ecpayLoading ? "跳轉中…" : `產生虛擬帳號並付款 NT$${amount}`}
+            </button>
           </div>
 
-          <div>
-            <label className="mb-1 block text-sm text-ink-300">
-              步驟 2：填入轉帳備註（例如帳號後五碼 / LINE Pay 交易序號），方便我們核對
-            </label>
-            <input
-              className="oj-input"
-              value={reference}
-              onChange={(e) => setReference(e.target.value)}
-              placeholder="帳號後五碼或轉帳序號"
-              maxLength={200}
-            />
-          </div>
+          <details className="oj-card p-5 text-sm">
+            <summary className="cursor-pointer font-semibold text-ink-200">或改用其他付款方式（人工審核）</summary>
+            <form onSubmit={submitClaim} className="mt-4 space-y-4">
+              <div className="rounded border border-ink-700 bg-ink-800/50 p-4 text-sm text-ink-300">
+                <p className="mb-2 font-semibold text-ink-200">步驟 1：轉帳 NT${amount} 到以下帳戶</p>
+                {plans?.payee.bank || plans?.payee.account || plans?.payee.linePay ? (
+                  <ul className="space-y-1 font-mono text-xs">
+                    {plans.payee.bank && <li>銀行：{plans.payee.bank}</li>}
+                    {plans.payee.account && <li>帳號：{plans.payee.account}</li>}
+                    {plans.payee.name && <li>戶名：{plans.payee.name}</li>}
+                    {plans.payee.linePay && <li>LINE Pay：{plans.payee.linePay}</li>}
+                    {plans.payee.note && <li className="text-ink-400">{plans.payee.note}</li>}
+                  </ul>
+                ) : (
+                  <p className="text-ink-500">（收款資訊尚未設定，請改用上方 ATM 自動開通）</p>
+                )}
+              </div>
 
-          {error && <p className="text-sm text-verdict-wa">{error}</p>}
-          <button type="submit" disabled={submitting} className="oj-btn-primary">
-            {submitting ? "送出中…" : "我已付款，送出審核"}
-          </button>
-          <p className="text-xs text-ink-500">
-            送出後我們會人工核對款項，確認後即為你開通 Pro（通常 24 小時內）。
-          </p>
-        </form>
+              <div>
+                <label className="mb-1 block text-sm text-ink-300">
+                  步驟 2：填入轉帳備註（例如帳號後五碼 / LINE Pay 交易序號），方便我們核對
+                </label>
+                <input
+                  className="oj-input"
+                  value={reference}
+                  onChange={(e) => setReference(e.target.value)}
+                  placeholder="帳號後五碼或轉帳序號"
+                  maxLength={200}
+                />
+              </div>
+
+              {error && <p className="text-sm text-verdict-wa">{error}</p>}
+              <button type="submit" disabled={submitting} className="oj-btn-primary">
+                {submitting ? "送出中…" : "我已付款，送出審核"}
+              </button>
+              <p className="text-xs text-ink-500">送出後我們會人工核對款項，確認後即為你開通 Pro（通常 24 小時內）。</p>
+            </form>
+          </details>
+        </div>
       )}
     </div>
   );

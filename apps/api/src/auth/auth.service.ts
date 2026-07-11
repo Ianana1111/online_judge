@@ -6,6 +6,7 @@ import { prisma } from "@oj/db";
 import type { LoginDto, RegisterDto } from "@oj/shared";
 import { generateCsrfToken } from "../common/csrf.util";
 import { REDIS_CLIENT } from "../common/redis.providers";
+import { isProActive } from "../billing/billing.service";
 import { TokenService } from "./token.service";
 
 export interface IssuedSession {
@@ -120,7 +121,7 @@ export class AuthService {
     // Stateless token (see csrf.util.ts) — safe to mint a fresh one on every /auth/me call so
     // the web app always has a working value in memory, including right after a hard refresh
     // when it can no longer read the cookie itself cross-domain.
-    const proActive = user.plan === "PRO" && user.planExpiresAt != null && user.planExpiresAt.getTime() > Date.now();
+    const proActive = isProActive(user);
     return {
       id: user.id,
       handle: user.handle,

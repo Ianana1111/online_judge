@@ -16,6 +16,10 @@ export class CsrfGuard implements CanActivate {
     if (!MUTATING_METHODS.has(req.method)) return true;
     // Service-to-service callback (apps/judge -> apps/api) uses x-internal-token, not cookies.
     if (typeof req.path === "string" && req.path.startsWith("/internal/")) return true;
+    // ECPay's webhooks are server-to-server POSTs from ECPay's own infrastructure — there's no
+    // browser session or CSRF token to present. Authenticity here comes from CheckMacValue
+    // verification inside the handler instead (see billing.service's handleEcpay* methods).
+    if (typeof req.path === "string" && req.path.startsWith("/billing/ecpay/")) return true;
     if (EXEMPT_PATHS.has(req.path)) return true;
 
     const cookieToken: string | undefined = req.cookies?.csrf_token;

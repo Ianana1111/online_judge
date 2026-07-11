@@ -76,6 +76,11 @@ export const billingRequestSchema = z.object({
 });
 export type BillingRequestDto = z.infer<typeof billingRequestSchema>;
 
+export const ecpayCreateSchema = z.object({
+  period: z.enum(["MONTHLY", "YEARLY"]),
+});
+export type EcpayCreateDto = z.infer<typeof ecpayCreateSchema>;
+
 export const noteSchema = z.object({
   content: z.string().max(20_000),
 });

@@ -137,6 +137,15 @@ model Payment {
   createdAt  DateTime      @default(now())
   reviewedAt DateTime?
   reviewedBy String?
+  /// ECPay's order id (MerchantTradeNo) — set only for method=ECPAY, used to correlate their
+  /// async webhooks back to this row. Unique because ECPay requires every order id we send them
+  /// to be unique in the first place.
+  merchantTradeNo String? @unique
+  /// ATM virtual-account details, filled in by the PaymentInfoURL webhook once ECPay issues the
+  /// account (separate from — and earlier than — actual payment confirmation via ReturnURL).
+  bankCode   String?
+  vAccount   String?
+  expireDate String?
 
   @@index([status, createdAt])
   @@map("payments")

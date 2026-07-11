@@ -48,7 +48,16 @@ export interface BillingStatus {
   planExpiresAt: string | null;
   submits: { used: number; limit: number | null };
   virtualContests: { used: number; limit: number | null };
-  pendingPayment: { id: string; period: "MONTHLY" | "YEARLY"; amountNtd: number; createdAt: string } | null;
+  pendingPayment: {
+    id: string;
+    period: "MONTHLY" | "YEARLY";
+    amountNtd: number;
+    createdAt: string;
+    method: string;
+    bankCode: string | null;
+    vAccount: string | null;
+    expireDate: string | null;
+  } | null;
 }
 
 export interface BillingPlans {
