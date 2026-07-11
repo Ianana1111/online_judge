@@ -73,7 +73,7 @@ export interface ProblemRow {
   slug: string;
   title: string;
   difficulty: number;
-  source: "UVA" | "CPE" | "CUSTOM";
+  source: "UVA" | "CPE" | "GPE" | "CUSTOM";
   tags: string[];
   solvedByMe: boolean;
 }
@@ -103,7 +103,7 @@ export interface ProblemDetail {
   timeLimitMs: number;
   memoryLimitKb: number;
   difficulty: number;
-  source: "UVA" | "CPE" | "CUSTOM";
+  source: "UVA" | "CPE" | "GPE" | "CUSTOM";
   tags: string[];
   samples: Sample[];
 }
@@ -154,7 +154,7 @@ export interface ContestListItem {
   id: string;
   title: string;
   slug: string;
-  kind: "CPE" | "VIRTUAL" | "PUBLIC";
+  kind: "CPE" | "GPE" | "VIRTUAL" | "PUBLIC";
   startAt: string | null;
   durationMin: number;
   isPublic: boolean;
@@ -183,7 +183,7 @@ export interface MyContest {
   id: string;
   title: string;
   slug: string;
-  kind: "CPE" | "VIRTUAL" | "PUBLIC";
+  kind: "CPE" | "GPE" | "VIRTUAL" | "PUBLIC";
   durationMin: number;
   totalProblems: number;
   startedAt: string;

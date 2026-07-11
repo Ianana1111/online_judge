@@ -84,7 +84,12 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
 
   if (isRunning && contest.myParticipant) {
     return (
-      <ExamModeShell contestId={contestId} title={contest.title} endsAtIso={contest.myParticipant.endsAt}>
+      <ExamModeShell
+        contestId={contestId}
+        title={contest.title}
+        endsAtIso={contest.myParticipant.endsAt}
+        homeHref={contest.kind === "GPE" ? "/gpe" : "/cpe"}
+      >
         {inner}
       </ExamModeShell>
     );

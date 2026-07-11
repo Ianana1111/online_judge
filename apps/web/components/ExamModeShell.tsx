@@ -8,11 +8,13 @@ export default function ExamModeShell({
   contestId,
   title,
   endsAtIso,
+  homeHref = "/cpe",
   children,
 }: {
   contestId: string;
   title: string;
   endsAtIso: string;
+  homeHref?: string;
   children: React.ReactNode;
 }) {
   const { setWindow, setActive, remainingMs } = useExamTimerStore();
@@ -37,7 +39,7 @@ export default function ExamModeShell({
     <div className="min-h-screen bg-ink-950">
       <header className="sticky top-0 z-50 flex items-center justify-between border-b border-ink-800 bg-ink-950/95 px-4 py-2.5 backdrop-blur">
         <div className="flex items-center gap-3">
-          <Link href="/cpe" className="font-display text-sm font-bold text-ink-50">
+          <Link href={homeHref} className="font-display text-sm font-bold text-ink-50">
             judge<span className="text-brand">.</span>
           </Link>
           <span className="text-sm text-ink-300">{title}</span>

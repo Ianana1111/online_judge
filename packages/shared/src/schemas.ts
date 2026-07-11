@@ -104,7 +104,7 @@ export type CreateAssignmentDto = z.infer<typeof createAssignmentSchema>;
 export const createContestSchema = z.object({
   title: z.string().min(1).max(200),
   slug: z.string().min(1).max(80),
-  kind: z.enum(["CPE", "VIRTUAL", "PUBLIC"]).default("PUBLIC"),
+  kind: z.enum(["CPE", "GPE", "VIRTUAL", "PUBLIC"]).default("PUBLIC"),
   startAt: z.string().datetime().optional(),
   durationMin: z.number().int().min(10).max(600).default(180),
   freezeMin: z.number().int().min(0).max(600).default(60),
@@ -127,7 +127,7 @@ export const createProblemSchema = z.object({
   timeLimitMs: z.number().int().min(100).max(30_000).default(1000),
   memoryLimitKb: z.number().int().min(1024).max(1_048_576).default(65536),
   difficulty: z.number().int().min(1).max(4).default(1),
-  source: z.enum(["UVA", "CPE", "CUSTOM"]).default("CUSTOM"),
+  source: z.enum(["UVA", "CPE", "GPE", "CUSTOM"]).default("CUSTOM"),
   checkerType: z.enum(["EXACT", "IGNORE_TRAILING_WS", "FLOAT", "SPECIAL"]).default("IGNORE_TRAILING_WS"),
   floatEps: z.number().positive().optional(),
   tagSlugs: z.array(z.string()).default([]),

@@ -78,3 +78,32 @@ export async function fetchUhuntDacu(): Promise<Map<number, number>> {
   }
   return dacuByUvaId;
 }
+
+/** Normalizes a problem title for fuzzy cross-catalog matching: lowercase, strip everything but
+ * letters/digits/spaces, collapse whitespace. Used to match a problem referenced by some other
+ * catalog's own numbering (e.g. GPE's now-defunct DOMjudge instance) back to its real UVa id when
+ * the two happen to share the same title but not the same number. */
+export function normalizeTitleForMatch(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Fetches uHunt's full problem list and returns a normalized-title -> uvaId index, for matching
+ * problems from other catalogs by title (see normalizeTitleForMatch). Titles aren't guaranteed
+ * unique across UVa's whole catalog; last-write-wins on collision, which is an acceptable amount
+ * of imprecision for a best-effort match onto a since-defunct source. */
+export async function fetchUhuntTitleIndex(): Promise<Map<string, number>> {
+  const res = await fetch(UHUNT_PROBLEM_LIST_URL);
+  if (!res.ok) throw new Error(`uHunt problem list fetch failed: HTTP ${res.status}`);
+  const rows = (await res.json()) as UhuntProblemRow[];
+
+  const index = new Map<string, number>();
+  for (const row of rows) {
+    const normalized = normalizeTitleForMatch(row[2]);
+    if (normalized) index.set(normalized, row[1]);
+  }
+  return index;
+}

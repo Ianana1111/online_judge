@@ -13,6 +13,7 @@ const PUBLIC_LINKS = [
   { href: "/collections", label: "Collections" },
   { href: "/contests", label: "Contests" },
   { href: "/cpe", label: "CPE" },
+  { href: "/gpe", label: "GPE" },
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/about", label: "About" },
 ];

@@ -19,6 +19,7 @@ enum Role {
 enum ProblemSource {
   UVA
   CPE
+  GPE
   CUSTOM
 }
 
@@ -51,6 +52,7 @@ enum JudgedOn {
 
 enum ContestKind {
   CPE
+  GPE
   VIRTUAL
   PUBLIC
 }
