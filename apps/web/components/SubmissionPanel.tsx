@@ -24,11 +24,16 @@ export default function SubmissionPanel({
   slug,
   contestId,
   locked = false,
+  judgeable = true,
 }: {
   problemId: string;
   slug: string;
   contestId?: string;
   locked?: boolean;
+  /** False for reference-only problems with no matching UVa id (some archived GPE problems) —
+   * submitting would just burn the user's quota/cooldown for a guaranteed system-error verdict,
+   * so block it client-side with an explanation instead of letting them find out the hard way. */
+  judgeable?: boolean;
 }) {
   const storageKey = `oj:draft:${slug}`;
   const [languageKey, setLanguageKey] = useState("cpp17");
@@ -69,7 +74,7 @@ export default function SubmissionPanel({
   useEffect(() => () => esRef.current?.close(), []);
 
   const cooldownRemaining = Math.max(0, cooldownUntil - now);
-  const canSubmit = !locked && !submitting && cooldownRemaining <= 0 && sourceCode.trim().length > 0;
+  const canSubmit = judgeable && !locked && !submitting && cooldownRemaining <= 0 && sourceCode.trim().length > 0;
 
   async function handleSubmit() {
     setError(null);
@@ -121,6 +126,12 @@ export default function SubmissionPanel({
 
   return (
     <div className="space-y-3">
+      {!judgeable && (
+        <p className="rounded border border-ink-700 bg-ink-800/60 px-3 py-2 text-xs text-ink-400">
+          This problem has no matching UVa judge, so it isn&apos;t gradeable here — reference-only. Use it for
+          reading/practice; submitting is disabled.
+        </p>
+      )}
       <div className="flex items-center justify-between">
         <select
           value={languageKey}
@@ -140,13 +151,15 @@ export default function SubmissionPanel({
           ))}
         </select>
         <button onClick={handleSubmit} disabled={!canSubmit} className="oj-btn-primary w-40">
-          {locked
-            ? "Locked"
-            : submitting
-              ? "Submitting…"
-              : cooldownRemaining > 0
-                ? `Wait ${Math.ceil(cooldownRemaining / 1000)}s`
-                : "Submit"}
+          {!judgeable
+            ? "Not gradeable"
+            : locked
+              ? "Locked"
+              : submitting
+                ? "Submitting…"
+                : cooldownRemaining > 0
+                  ? `Wait ${Math.ceil(cooldownRemaining / 1000)}s`
+                  : "Submit"}
         </button>
       </div>
 
