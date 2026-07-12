@@ -57,6 +57,17 @@ export async function judgeViaUva(problem: Problem, languageKey: string, sourceC
     };
   }
 
+  // UVa's submission form needs its own internal problem id ("pid"), which is unrelated to the
+  // public problem number everyone knows (uvaId) except by coincidence — submitting with uvaId
+  // silently judges against whatever unrelated problem happens to share that internal id. Refuse
+  // rather than risk a wrong-problem verdict; see the uvaPid field comment in schema.prisma.
+  if (!problem.uvaPid) {
+    return {
+      status: "SE",
+      compileError: `Problem ${problem.uvaId} is missing its UVa internal submission id (uvaPid) — cannot judge safely.`,
+    };
+  }
+
   const hints = LANGUAGE_HINTS[languageKey];
   if (!hints) {
     return { status: "SE", compileError: `Language "${languageKey}" has no known UVa equivalent for remote judging.` };
@@ -74,7 +85,7 @@ export async function judgeViaUva(problem: Problem, languageKey: string, sourceC
     const before = await fetchMyStatus(session);
     const maxExistingId = before.reduce((max, r) => Math.max(max, r.submissionId), 0);
 
-    await submitSolution(session, problem.uvaId, hints, sourceCode);
+    await submitSolution(session, problem.uvaPid, hints, sourceCode);
 
     return await pollForVerdict(session, maxExistingId);
   } catch (err) {
