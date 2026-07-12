@@ -18,6 +18,13 @@ export interface IssuedSession {
   csrfToken: string;
 }
 
+// A fixed, precomputed argon2id hash of an arbitrary string — not tied to any real account. When
+// the handle doesn't exist (or is a Google-only account with no password), login() still runs a
+// verify against this instead of short-circuiting, so both cases cost the same argon2 work and a
+// timing side-channel can't be used to enumerate which handles have a real password account.
+const DUMMY_PASSWORD_HASH =
+  "$argon2id$v=19$m=65536,t=3,p=4$Vyv5rJ7cZaZ7JWxzpshT/g$0a8GDprgON73CWFPJdJAMVt9iMWDOLv0oCy+IqYnFu8";
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -40,9 +47,12 @@ export class AuthService {
 
   async login(dto: LoginDto): Promise<IssuedSession> {
     const user = await prisma.user.findUnique({ where: { handle: dto.handle } });
-    if (!user || !user.passwordHash) throw new UnauthorizedException("Invalid handle or password");
-    const ok = await argon2.verify(user.passwordHash, dto.password);
-    if (!ok) throw new UnauthorizedException("Invalid handle or password");
+    // Always run an argon2 verify, even when there's no real hash to check against — a real user
+    // costs one verify either way, so a missing-handle or Google-only account can no longer be
+    // distinguished from a wrong password by response timing (argon2 is deliberately slow, which
+    // is exactly what makes the timing gap measurable if we skip it here).
+    const ok = await argon2.verify(user?.passwordHash ?? DUMMY_PASSWORD_HASH, dto.password);
+    if (!user || !user.passwordHash || !ok) throw new UnauthorizedException("Invalid handle or password");
     return this.issueSession(user.id, user.handle, user.email, user.role);
   }
 

@@ -1,4 +1,5 @@
 import { BadRequestException, Body, Controller, Get, HttpCode, Inject, Logger, Post, Query, Req, Res } from "@nestjs/common";
+import { Throttle } from "@nestjs/throttler";
 import { randomBytes } from "node:crypto";
 import type Redis from "ioredis";
 import type { Request, Response } from "express";
@@ -22,7 +23,10 @@ export class AuthController {
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
   ) {}
 
+  // Tighter than the global 120/min-per-IP default: registration is cheap to abuse (mass account
+  // creation) and doesn't need anywhere near the app's normal request rate.
   @Public()
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @HttpCode(201)
   @Post("register")
   async register(
@@ -34,7 +38,11 @@ export class AuthController {
     return { ...session.user, csrfToken: session.csrfToken };
   }
 
+  // Tighter than the global 120/min-per-IP default: without this, brute-forcing/credential-
+  // stuffing a handle+password only has the shared 120/min budget to work around, which is far
+  // too generous for guessing a single account's password.
   @Public()
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Post("login")
   async login(
