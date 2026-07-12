@@ -104,6 +104,7 @@ export interface ProblemDetail {
   memoryLimitKb: number;
   difficulty: number;
   source: "UVA" | "CPE" | "GPE" | "CUSTOM";
+  uvaId: number | null;
   tags: string[];
   samples: Sample[];
 }

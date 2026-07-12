@@ -94,6 +94,10 @@ export class ProblemsService {
       memoryLimitKb: problem.memoryLimitKb,
       difficulty: problem.difficulty,
       source: problem.source,
+      // null for reference-only problems with no matching UVa judge (some archived GPE problems)
+      // — the frontend uses this to disable submission instead of letting it burn quota for a
+      // guaranteed system-error verdict.
+      uvaId: problem.uvaId,
       tags: problem.tags.map((t) => t.tag.slug),
       samples: problem.samples.map((s) => ({ ord: s.ord, input: s.input, output: s.output })),
     };

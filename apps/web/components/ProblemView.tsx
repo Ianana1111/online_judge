@@ -118,7 +118,15 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
     </div>
   );
 
-  const right = <SubmissionPanel problemId={problem.id} slug={problem.slug} contestId={contestId} locked={locked} />;
+  const right = (
+    <SubmissionPanel
+      problemId={problem.id}
+      slug={problem.slug}
+      contestId={contestId}
+      locked={locked}
+      judgeable={problem.uvaId != null}
+    />
+  );
 
   return <SplitPane left={left} right={right} />;
 }
