@@ -16,6 +16,7 @@
   "dependencies": {
     "@oj/shared": "workspace:*",
     "@prisma/client": "^5.20.0",
+    "bullmq": "^5.34.0",
     "pdf-parse": "^2.4.5"
   },
   "devDependencies": {

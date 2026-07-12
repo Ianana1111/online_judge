@@ -202,6 +202,9 @@ importers:
       '@prisma/client':
         specifier: ^5.20.0
         version: 5.22.0(prisma@5.22.0)
+      bullmq:
+        specifier: ^5.34.0
+        version: 5.79.2
       pdf-parse:
         specifier: ^2.4.5
         version: 2.4.5
