@@ -28,6 +28,9 @@
       "msgpackr-extract",
       "prisma",
       "sharp"
-    ]
+    ],
+    "overrides": {
+      "multer": "^2.2.0"
+    }
   }
 }

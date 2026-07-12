@@ -41,18 +41,6 @@ export class SubmissionsService {
   ) {}
 
   async create(userId: string, dto: CreateSubmissionDto): Promise<{ id: string }> {
-    // Plan gate before anything else: FREE accounts have a lifetime submit quota.
-    await this.billing.assertCanSubmit(userId);
-
-    const lastSubmission = await prisma.submission.findFirst({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-      select: { createdAt: true },
-    });
-    if (lastSubmission && Date.now() - lastSubmission.createdAt.getTime() < COOLDOWN_MS) {
-      throw new HttpException("You are submitting too fast. Please wait a few seconds.", HttpStatus.TOO_MANY_REQUESTS);
-    }
-
     const problem = await prisma.problem.findUnique({ where: { id: dto.problemId } });
     if (!problem) throw new NotFoundException("Problem not found");
 
@@ -66,6 +54,19 @@ export class SubmissionsService {
       }
     }
 
+    // Atomic cooldown claim (Redis SET NX): a plain "read last submission, compare timestamp"
+    // check is a TOCTOU race — concurrent requests can all read "no recent submission" before
+    // any of them commits. SET NX makes only one concurrent request win the window.
+    const claimed = await this.redis.set(`submit_cooldown:${userId}`, "1", "PX", COOLDOWN_MS, "NX");
+    if (!claimed) {
+      throw new HttpException("You are submitting too fast. Please wait a few seconds.", HttpStatus.TOO_MANY_REQUESTS);
+    }
+
+    // Plan gate, checked (and consumed) after validation so a rejected submission never burns
+    // quota, but before the submission row exists so a bypassed gate can't ever queue a job.
+    // This is itself an atomic conditional UPDATE (see billing.service) — not check-then-write.
+    await this.billing.assertCanSubmit(userId);
+
     const submission = await prisma.submission.create({
       data: {
         userId,
@@ -77,10 +78,6 @@ export class SubmissionsService {
         verdict: "PENDING",
       },
     });
-
-    // Count this submission against the FREE quota. (PRO accounts also increment; it's harmless
-    // and means the counter stays accurate if they ever lapse back to FREE.)
-    await prisma.user.update({ where: { id: userId }, data: { submitQuotaUsed: { increment: 1 } } });
 
     // Default attempts (1) is intentional: silently re-running arbitrary user code on a
     // transient job failure is not safe, so we don't override BullMQ's retry behavior here.

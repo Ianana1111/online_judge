@@ -136,34 +136,49 @@ export class ContestsService {
     });
     if (existing) return existing;
 
-    // Starting a new virtual/self-run contest counts against the FREE plan's cap. Re-entering one
-    // already registered above doesn't (it returned early), so only genuinely-new attempts count.
-    await this.billing.assertCanStartVirtual(userId);
+    // The FREE-plan virtual-contest cap is enforced by counting existing ContestParticipant rows
+    // (assertCanStartVirtual), then this method creates a new one — a classic TOCTOU race: firing
+    // several register() calls for *different* contests in parallel lets each one read the same
+    // "count is still under the cap" snapshot before any of them commits its insert. A Postgres
+    // advisory lock scoped to this user serializes concurrent register() calls by the same user
+    // (it does not block other users), so the count-then-create is effectively atomic per user.
+    return prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${userId}))`;
 
-    const now = new Date();
-    let startedAt: Date;
-    let endsAt: Date;
-    let status: "REGISTERED" | "RUNNING";
+      // Re-check inside the lock: a concurrent duplicate registration for this same contest may
+      // have committed while we were waiting to acquire it.
+      const already = await tx.contestParticipant.findUnique({
+        where: { contestId_userId: { contestId: id, userId } },
+      });
+      if (already) return already;
 
-    if (contest.startAt) {
-      // Scheduled/group session: everyone shares the same clock, regardless of when each
-      // participant clicks "register" — that's what makes it a synchronized CPE sitting rather
-      // than a per-user virtual window.
-      startedAt = contest.startAt;
-      endsAt = new Date(contest.startAt.getTime() + contest.durationMin * 60_000);
-      if (now >= endsAt) {
-        throw new BadRequestException("This contest has already ended.");
+      await this.billing.assertCanStartVirtual(userId, tx);
+
+      const now = new Date();
+      let startedAt: Date;
+      let endsAt: Date;
+      let status: "REGISTERED" | "RUNNING";
+
+      if (contest.startAt) {
+        // Scheduled/group session: everyone shares the same clock, regardless of when each
+        // participant clicks "register" — that's what makes it a synchronized CPE sitting rather
+        // than a per-user virtual window.
+        startedAt = contest.startAt;
+        endsAt = new Date(contest.startAt.getTime() + contest.durationMin * 60_000);
+        if (now >= endsAt) {
+          throw new BadRequestException("This contest has already ended.");
+        }
+        status = now < contest.startAt ? "REGISTERED" : "RUNNING";
+      } else {
+        // Virtual/individual: personal window starting the moment they register.
+        startedAt = now;
+        endsAt = new Date(now.getTime() + contest.durationMin * 60_000);
+        status = "RUNNING";
       }
-      status = now < contest.startAt ? "REGISTERED" : "RUNNING";
-    } else {
-      // Virtual/individual: personal window starting the moment they register.
-      startedAt = now;
-      endsAt = new Date(now.getTime() + contest.durationMin * 60_000);
-      status = "RUNNING";
-    }
 
-    return prisma.contestParticipant.create({
-      data: { contestId: id, userId, startedAt, endsAt, status },
+      return tx.contestParticipant.create({
+        data: { contestId: id, userId, startedAt, endsAt, status },
+      });
     });
   }
 

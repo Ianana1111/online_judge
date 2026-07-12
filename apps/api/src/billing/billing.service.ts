@@ -259,24 +259,44 @@ export class BillingService {
 
   // --- Enforcement helpers, called from submissions / contests ---
 
-  /** Throws if a FREE user has exhausted their lifetime submit quota. PRO users pass freely. */
+  /**
+   * Atomically checks-and-consumes one unit of a FREE user's lifetime submit quota, then
+   * increments it — a single conditional UPDATE, not a separate read-then-write, so concurrent
+   * requests can't all read "quota available" before any of them commits (the race that let a
+   * user fire N parallel submissions to get N free submissions past the cap). PRO/admin/student
+   * accounts still get the counter bumped (for stats) but are never gated by it.
+   */
   async assertCanSubmit(userId: string): Promise<void> {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException("User not found");
-    if (isUnlimited(user)) return;
-    if (user.submitQuotaUsed >= FREE_SUBMIT_QUOTA) {
+
+    if (isUnlimited(user)) {
+      await prisma.user.update({ where: { id: userId }, data: { submitQuotaUsed: { increment: 1 } } });
+      return;
+    }
+
+    const result = await prisma.user.updateMany({
+      where: { id: userId, submitQuotaUsed: { lt: FREE_SUBMIT_QUOTA } },
+      data: { submitQuotaUsed: { increment: 1 } },
+    });
+    if (result.count === 0) {
       throw new ForbiddenException(
         `Free plan submit limit reached (${FREE_SUBMIT_QUOTA}). Upgrade to Pro for unlimited submissions.`,
       );
     }
   }
 
-  /** Throws if a FREE user has reached their virtual-contest cap. PRO users pass freely. */
-  async assertCanStartVirtual(userId: string): Promise<void> {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+  /**
+   * Throws if a FREE user has reached their virtual-contest cap. PRO users pass freely. Must be
+   * called from inside the same transaction/advisory-lock scope as the ContestParticipant insert
+   * (see contests.service.register) — otherwise this count-then-create is itself racy the same
+   * way the old submit-quota check was.
+   */
+  async assertCanStartVirtual(userId: string, tx: Prisma.TransactionClient = prisma): Promise<void> {
+    const user = await tx.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException("User not found");
     if (isUnlimited(user)) return;
-    const count = await prisma.contestParticipant.count({ where: { userId } });
+    const count = await tx.contestParticipant.count({ where: { userId } });
     if (count >= FREE_VIRTUAL_ATTEMPTS) {
       throw new ForbiddenException(
         `Free plan virtual-contest limit reached (${FREE_VIRTUAL_ATTEMPTS}). Upgrade to Pro for unlimited attempts.`,
