@@ -107,3 +107,24 @@ export async function fetchUhuntTitleIndex(): Promise<Map<string, number>> {
   }
   return index;
 }
+
+/**
+ * Fetches uHunt's full problem list and returns a public-number ("num", e.g. 100) -> internal
+ * UVa id ("pid") map. These two ids are unrelated except by coincidence: UVa's own submission
+ * form's `problemid` parameter needs the internal pid, not the number everyone knows the problem
+ * by — e.g. public number 100 ("The 3n + 1 problem") has internal pid 36, while UVa's own
+ * internal id "100" belongs to an entirely different problem ("164 - String Computer"). Every
+ * Problem row with `uvaId` set must also have the matching `uvaPid` from this map, or the remote
+ * judge will silently submit against the wrong problem's test data (see judgeViaUva).
+ */
+export async function fetchUhuntPidMap(): Promise<Map<number, number>> {
+  const res = await fetch(UHUNT_PROBLEM_LIST_URL);
+  if (!res.ok) throw new Error(`uHunt problem list fetch failed: HTTP ${res.status}`);
+  const rows = (await res.json()) as UhuntProblemRow[];
+
+  const pidByNum = new Map<number, number>();
+  for (const row of rows) {
+    pidByNum.set(row[1], row[0]);
+  }
+  return pidByNum;
+}

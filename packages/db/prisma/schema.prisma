@@ -155,7 +155,17 @@ model Payment {
 
 model Problem {
   id            String        @id @default(cuid())
+  // The public problem NUMBER everyone knows (e.g. "100" for "The 3n + 1 problem") — used for
+  // display, matching, and dedup. This is NOT the id UVa's own submission system expects.
   uvaId         Int?          @unique
+  // UVa's own internal problem id (uHunt calls it "pid"), required by the actual submission form.
+  // These two ids are unrelated except by coincidence — e.g. public number 100 has internal pid
+  // 36, while UVa's own internal id "100" belongs to a completely different problem ("164 -
+  // String Computer"). Submitting with uvaId instead of uvaPid silently judges against the wrong
+  // problem's test data (discovered via a real WA/AC discrepancy report — every problem in this
+  // table had uvaPid != uvaId). Nullable only for the moment right after uvaId is set and before
+  // the uHunt lookup backfills it; judgeViaUva refuses to submit without it.
+  uvaPid        Int?
   slug          String        @unique
   title         String
   statementMd   String

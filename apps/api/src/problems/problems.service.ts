@@ -13,6 +13,27 @@ export interface ListQuery {
   pageSize?: string;
 }
 
+/**
+ * UVa's own submission form needs its internal problem id ("pid" in uHunt's API), which is
+ * unrelated to the public problem number (uvaId) everyone knows the problem by except by
+ * coincidence — e.g. public number 100 has internal pid 36, while UVa's internal id "100" is a
+ * completely different problem. Submitting with uvaId instead of uvaPid silently judges against
+ * the wrong problem's test data. Returns null (rather than throwing) on any lookup failure so a
+ * transient uHunt outage doesn't block creating/editing a problem — judgeViaUva refuses to submit
+ * without a uvaPid rather than guess, so the worst case is "not remotely judgeable yet", not a
+ * wrong-problem verdict.
+ */
+async function resolveUvaPid(uvaId: number): Promise<number | null> {
+  try {
+    const res = await fetch(`https://uhunt.onlinejudge.org/api/p/num/${uvaId}`);
+    if (!res.ok) return null;
+    const data = (await res.json()) as { pid?: number };
+    return typeof data.pid === "number" ? data.pid : null;
+  } catch {
+    return null;
+  }
+}
+
 // Upper bound on a single page. The problems/collections UIs fetch the whole set (~350) and do
 // their own client-side filtering/sorting, so they pass a large pageSize; keep a cap so an
 // arbitrary client can't ask for an unbounded result set.
@@ -166,9 +187,11 @@ export class ProblemsService {
   }
 
   async create(dto: CreateProblemDto) {
+    const uvaPid = dto.uvaId != null ? await resolveUvaPid(dto.uvaId) : null;
     const problem = await prisma.problem.create({
       data: {
         uvaId: dto.uvaId,
+        uvaPid,
         slug: dto.slug,
         title: dto.title,
         statementMd: dto.statementMd,
@@ -193,7 +216,13 @@ export class ProblemsService {
     if (!existing) throw new NotFoundException("Problem not found");
 
     const { tagSlugs, ...rest } = dto;
-    const problem = await prisma.problem.update({ where: { id }, data: rest });
+    // Re-resolve uvaPid whenever uvaId actually changes — a stale uvaPid left over from the
+    // problem's old uvaId would silently judge against the wrong problem (see resolveUvaPid).
+    const data: typeof rest & { uvaPid?: number | null } = { ...rest };
+    if ("uvaId" in dto && dto.uvaId !== existing.uvaId) {
+      data.uvaPid = dto.uvaId != null ? await resolveUvaPid(dto.uvaId) : null;
+    }
+    const problem = await prisma.problem.update({ where: { id }, data });
     if (tagSlugs) {
       await this.setTags(id, tagSlugs);
     }
