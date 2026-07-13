@@ -12,7 +12,7 @@
 import { PrismaClient } from "@prisma/client";
 import { PDFParse } from "pdf-parse";
 import { cleanPdfStatementText, extractSampleFromPdfText } from "./formatStatement.js";
-import { dacuToDifficulty, fetchUhuntDacu } from "./uhuntDifficulty.js";
+import { dacuToDifficulty, fetchUhuntDacu, fetchUhuntPidMap } from "./uhuntDifficulty.js";
 
 const prisma = new PrismaClient();
 
@@ -113,6 +113,7 @@ async function fetchOfficialStatement(
 async function main() {
   console.log("Fetching uHunt DACU data (for difficulty)...");
   const uhuntDacu = await fetchUhuntDacu();
+  const uhuntPid = await fetchUhuntPidMap();
 
   const problemIds: string[] = [];
 
@@ -131,9 +132,15 @@ async function main() {
       const difficulty = dacu !== undefined ? dacuToDifficulty(dacu) : 1;
       const slug = `uva-${uvaId}-${slugifyTitle(title)}`;
 
+      const uvaPid = uhuntPid.get(uvaId);
+      if (uvaPid === undefined) {
+        console.warn(`  ! uva${uvaId}: no uHunt pid found — problem will be created without uvaPid (not remotely judgeable until backfilled)`);
+      }
+
       const problem = await prisma.problem.create({
         data: {
           uvaId,
+          uvaPid,
           slug,
           title: `${uvaId} - ${title}`,
           statementMd,
