@@ -148,3 +148,9 @@ export const updateClassSessionSchema = z.object({
   problemIds: z.array(z.string().cuid()).optional(),
 });
 export type UpdateClassSessionDto = z.infer<typeof updateClassSessionSchema>;
+
+export const recordPageviewSchema = z.object({
+  path: z.string().min(1).max(500),
+  referrer: z.string().max(500).optional(),
+});
+export type RecordPageviewDto = z.infer<typeof recordPageviewSchema>;

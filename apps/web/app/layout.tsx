@@ -5,6 +5,7 @@ import "katex/dist/katex.min.css";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import NavBar from "@/components/NavBar";
+import PageviewTracker from "@/components/PageviewTracker";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <Providers>
+          <PageviewTracker />
           <NavBar />
           <main className="mx-auto min-h-[calc(100vh-56px)] max-w-6xl px-4 py-6">{children}</main>
         </Providers>

@@ -119,8 +119,30 @@ model User {
   createdClassSessions ClassSession[]        @relation("ClassSessionTeacher")
   notes                Note[]
   payments             Payment[]
+  pageViews            PageView[]
 
   @@map("users")
+}
+
+/// A single page load, recorded by a lightweight client-side beacon (see PageviewTracker) for
+/// self-hosted traffic analytics. Bot/crawler user agents and known referrer-spam domains are
+/// filtered server-side before insertion (see analytics.service.ts recordPageview) — this table
+/// should already be clean, not raw unfiltered log data.
+model PageView {
+  id        String   @id @default(cuid())
+  path      String
+  /// External referrer only (document.referrer from the browser) — null for direct visits or
+  /// same-origin navigation. Already spam-filtered before insertion.
+  referrer  String?
+  userAgent String?
+  userId    String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([path])
+  @@map("page_views")
 }
 
 /// One upgrade payment. With manual bank/LINE Pay transfer, the user submits a claim (PENDING)
