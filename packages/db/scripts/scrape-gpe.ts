@@ -21,7 +21,7 @@
 import { prisma } from "@oj/db";
 import { PDFParse } from "pdf-parse";
 import { cleanPdfStatementText, escapeInline, extractSampleFromPdfText } from "./formatStatement.js";
-import { combinedDifficulty, fetchUhuntDacu, fetchUhuntTitleIndex, normalizeTitleForMatch } from "./uhuntDifficulty.js";
+import { combinedDifficulty, fetchUhuntDacu, fetchUhuntPidMap, fetchUhuntTitleIndex, normalizeTitleForMatch } from "./uhuntDifficulty.js";
 
 const EXAMS_URL = "https://raw.githubusercontent.com/setsal/GPE-Helper/master/frontend/public/exams.json";
 const SNAPSHOT_BASE =
@@ -221,8 +221,8 @@ async function main() {
   const exams = (await examsRes.json()) as Record<string, GpeExam>;
   console.log(`Found ${Object.keys(exams).length} exam sittings.`);
 
-  console.log("Fetching uHunt title index + DACU for UVa matching...");
-  const [titleIndex, dacuMap] = await Promise.all([fetchUhuntTitleIndex(), fetchUhuntDacu()]);
+  console.log("Fetching uHunt title index + DACU + pid map for UVa matching...");
+  const [titleIndex, dacuMap, pidMap] = await Promise.all([fetchUhuntTitleIndex(), fetchUhuntDacu(), fetchUhuntPidMap()]);
 
   const uniqueProblems = new Map<string, { pid: string; title: string; categories: Set<string> }>();
   for (const exam of Object.values(exams)) {
@@ -322,9 +322,15 @@ async function main() {
       sample = converted.sample;
     }
 
+    const uvaPid = uvaId !== null ? pidMap.get(uvaId) : undefined;
+    if (uvaId !== null && uvaPid === undefined) {
+      console.warn(`  ! uva${uvaId}: no uHunt pid found — problem will be created without uvaPid (not remotely judgeable until backfilled)`);
+    }
+
     const problem = await prisma.problem.create({
       data: {
         uvaId,
+        uvaPid,
         slug,
         title: info.title,
         statementMd: statementMd!,
