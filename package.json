@@ -30,7 +30,8 @@
       "sharp"
     ],
     "overrides": {
-      "multer": "^2.2.0"
+      "multer": "^2.2.0",
+      "dompurify": "^3.4.11"
     }
   }
 }
