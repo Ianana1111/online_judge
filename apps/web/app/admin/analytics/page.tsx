@@ -18,9 +18,13 @@ import { useAuthStore } from "@/store/auth";
 import type {
   AnswerRateByLabelRow,
   AvgCorrectPoint,
+  DailyTrafficPoint,
   RepeatProblem,
   TopicByLabelRow,
   TopicPerformance,
+  TopPageRow,
+  TopReferrerRow,
+  TrafficSummary,
 } from "@/lib/types";
 
 // Ordered easiest -> hardest (algorithmic sophistication required), not by frequency — so the
@@ -107,6 +111,28 @@ export default function AdminAnalyticsPage() {
     enabled: isAdmin,
   });
 
+  const TRAFFIC_DAYS = 30;
+  const { data: trafficSummary } = useQuery({
+    queryKey: ["analytics", "traffic-summary"],
+    queryFn: () => apiFetch<TrafficSummary>(`/analytics/traffic/summary?days=${TRAFFIC_DAYS}`),
+    enabled: isAdmin,
+  });
+  const { data: dailyTraffic } = useQuery({
+    queryKey: ["analytics", "traffic-daily"],
+    queryFn: () => apiFetch<DailyTrafficPoint[]>(`/analytics/traffic/daily?days=${TRAFFIC_DAYS}`),
+    enabled: isAdmin,
+  });
+  const { data: topPages } = useQuery({
+    queryKey: ["analytics", "traffic-top-pages"],
+    queryFn: () => apiFetch<TopPageRow[]>(`/analytics/traffic/top-pages?days=${TRAFFIC_DAYS}&limit=12`),
+    enabled: isAdmin,
+  });
+  const { data: topReferrers } = useQuery({
+    queryKey: ["analytics", "traffic-top-referrers"],
+    queryFn: () => apiFetch<TopReferrerRow[]>(`/analytics/traffic/top-referrers?days=${TRAFFIC_DAYS}&limit=12`),
+    enabled: isAdmin,
+  });
+
   if (status === "ready" && !isAdmin) {
     return <p className="text-sm text-verdict-wa">Admins only.</p>;
   }
@@ -121,11 +147,93 @@ export default function AdminAnalyticsPage() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="font-display text-2xl font-bold text-ink-50">Admin · CPE Analytics</h1>
+        <h1 className="font-display text-2xl font-bold text-ink-50">Admin · Analytics</h1>
         <p className="mt-1 text-sm text-ink-400">
-          Historical CPE exam difficulty/topic trends, alongside real usage stats from this platform.
+          Site traffic from our own self-hosted pageview beacon, plus historical CPE exam difficulty/topic
+          trends and real usage stats from this platform.
         </p>
       </div>
+
+      <section>
+        <div className="mb-3 flex items-baseline justify-between">
+          <h2 className="text-sm font-semibold text-ink-200">Site traffic (last {TRAFFIC_DAYS} days)</h2>
+          <p className="text-xs text-ink-500">Bot/crawler traffic and known referrer-spam domains filtered server-side.</p>
+        </div>
+        <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-2">
+          <div className="oj-card p-4">
+            <p className="text-xs text-ink-400">Pageviews</p>
+            <p className="mt-1 font-mono text-2xl text-ink-50">
+              {trafficSummary ? trafficSummary.totalViews.toLocaleString() : "—"}
+            </p>
+          </div>
+          <div className="oj-card p-4">
+            <p className="text-xs text-ink-400">Distinct pages viewed</p>
+            <p className="mt-1 font-mono text-2xl text-ink-50">
+              {trafficSummary ? trafficSummary.distinctPaths.toLocaleString() : "—"}
+            </p>
+          </div>
+        </div>
+        <div className="oj-card p-4">
+          {!dailyTraffic || dailyTraffic.length === 0 ? (
+            <p className="text-sm text-ink-400">No traffic data yet.</p>
+          ) : (
+            <ResponsiveContainer width="100%" height={220}>
+              <LineChart data={dailyTraffic} margin={{ left: 8, right: 16 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1c2530" />
+                <XAxis
+                  dataKey="date"
+                  tick={{ fill: "#6b7a8b", fontSize: 10 }}
+                  axisLine={{ stroke: "#2a3441" }}
+                  interval="preserveStartEnd"
+                />
+                <YAxis tick={{ fill: "#6b7a8b", fontSize: 11 }} axisLine={{ stroke: "#2a3441" }} allowDecimals={false} />
+                <Tooltip contentStyle={tooltipStyle} />
+                <Line type="monotone" dataKey="count" stroke="#5b8def" strokeWidth={2} dot={false} name="Pageviews" />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <div className="oj-card p-4">
+            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-400">Top pages</h3>
+            {!topPages || topPages.length === 0 ? (
+              <p className="text-sm text-ink-400">No data yet.</p>
+            ) : (
+              <table className="oj-table">
+                <tbody>
+                  {topPages.map((p) => (
+                    <tr key={p.path}>
+                      <td className="max-w-[220px] truncate font-mono text-xs" title={p.path}>
+                        {p.path}
+                      </td>
+                      <td className="w-16 text-right font-mono">{p.count.toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+          <div className="oj-card p-4">
+            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-400">Top external referrers</h3>
+            {!topReferrers || topReferrers.length === 0 ? (
+              <p className="text-sm text-ink-400">No external referrers yet.</p>
+            ) : (
+              <table className="oj-table">
+                <tbody>
+                  {topReferrers.map((r) => (
+                    <tr key={r.referrer}>
+                      <td className="max-w-[220px] truncate font-mono text-xs" title={r.referrer}>
+                        {r.referrer}
+                      </td>
+                      <td className="w-16 text-right font-mono">{r.count.toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </div>
+      </section>
 
       <section>
         <h2 className="mb-3 text-sm font-semibold text-ink-200">

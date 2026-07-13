@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { prisma } from "@oj/db";
+import type { RecordPageviewDto } from "@oj/shared";
+import { isBotUserAgent, isSpamReferrer } from "./pageview-filters";
 
 // Fixed taxonomy used to tag every scraped CPE problem's primary algorithmic topic (see
 // packages/db/scripts/apply-topic-tags.ts). Kept here so analytics queries know which tag slugs
@@ -157,5 +159,81 @@ export class AnalyticsService {
       distinctUsers: s.users.size,
       avgAttemptsPerUser: s.users.size > 0 ? s.submissions / s.users.size : null,
     }));
+  }
+
+  // --- Self-hosted pageview/referrer traffic analytics ---
+
+  /** Records one pageview beacon, or silently drops it if it looks like bot/crawler traffic or a
+   * forged referrer-spam hit (see pageview-filters.ts) — this table is meant to already be clean
+   * data, not a raw log a report layer has to re-filter every time it's queried. */
+  async recordPageview(dto: RecordPageviewDto, userAgent: string | undefined, userId: string | null) {
+    if (isBotUserAgent(userAgent)) return;
+    if (dto.referrer && isSpamReferrer(dto.referrer)) return;
+
+    // Only external referrers are interesting for acquisition tracking — same-origin navigation
+    // (clicking between our own pages) isn't a "referrer" in the sense this report cares about.
+    let referrer = dto.referrer || null;
+    if (referrer) {
+      const ownOrigins = (process.env.WEB_ORIGIN ?? "").split(",").map((o) => o.trim());
+      try {
+        const refOrigin = new URL(referrer).origin;
+        if (ownOrigins.includes(refOrigin)) referrer = null;
+      } catch {
+        referrer = null; // not a valid absolute URL — not useful as a referrer, drop it
+      }
+    }
+
+    await prisma.pageView.create({
+      data: { path: dto.path, referrer, userAgent: userAgent ?? null, userId },
+    });
+  }
+
+  async trafficSummary(days: number) {
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const [totalViews, distinctPaths] = await Promise.all([
+      prisma.pageView.count({ where: { createdAt: { gte: since } } }),
+      prisma.pageView.findMany({
+        where: { createdAt: { gte: since } },
+        distinct: ["path"],
+        select: { path: true },
+      }),
+    ]);
+    return { totalViews, distinctPaths: distinctPaths.length, days };
+  }
+
+  async dailyTraffic(days: number) {
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const rows = await prisma.$queryRaw<{ date: string; count: bigint }[]>`
+      SELECT to_char(date_trunc('day', "createdAt"), 'YYYY-MM-DD') AS date, COUNT(*)::bigint AS count
+      FROM "page_views"
+      WHERE "createdAt" >= ${since}
+      GROUP BY 1
+      ORDER BY 1 ASC
+    `;
+    return rows.map((r) => ({ date: r.date, count: Number(r.count) }));
+  }
+
+  async topPages(days: number, limit: number) {
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const rows = await prisma.pageView.groupBy({
+      by: ["path"],
+      where: { createdAt: { gte: since } },
+      _count: { path: true },
+      orderBy: { _count: { path: "desc" } },
+      take: limit,
+    });
+    return rows.map((r) => ({ path: r.path, count: r._count.path }));
+  }
+
+  async topReferrers(days: number, limit: number) {
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const rows = await prisma.pageView.groupBy({
+      by: ["referrer"],
+      where: { createdAt: { gte: since }, referrer: { not: null } },
+      _count: { referrer: true },
+      orderBy: { _count: { referrer: "desc" } },
+      take: limit,
+    });
+    return rows.map((r) => ({ referrer: r.referrer!, count: r._count.referrer }));
   }
 }

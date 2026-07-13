@@ -346,6 +346,27 @@ export interface TopicPerformance {
   avgAttemptsPerUser: number | null;
 }
 
+export interface TrafficSummary {
+  totalViews: number;
+  distinctPaths: number;
+  days: number;
+}
+
+export interface DailyTrafficPoint {
+  date: string;
+  count: number;
+}
+
+export interface TopPageRow {
+  path: string;
+  count: number;
+}
+
+export interface TopReferrerRow {
+  referrer: string;
+  count: number;
+}
+
 export interface UserStats {
   heatmap: { date: string; count: number }[];
   languageBreakdown: { languageKey: string; count: number }[];
