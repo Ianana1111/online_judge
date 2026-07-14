@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { prisma } from "@oj/db";
 import type { CreateContestDto } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
+import { AchievementsService } from "../achievements/achievements.service";
 import { BillingService } from "../billing/billing.service";
 import { CacheService } from "../common/cache.util";
 
@@ -20,6 +21,7 @@ export class ContestsService {
   constructor(
     private readonly billing: BillingService,
     private readonly cache: CacheService,
+    private readonly achievements: AchievementsService,
   ) {}
 
   async list() {
@@ -204,6 +206,12 @@ export class ContestsService {
       return tx.contestParticipant.create({
         data: { contestId: id, userId, startedAt, endsAt, status },
       });
+    }).then(async (participant) => {
+      // Outside the transaction: awarding an achievement doesn't need to be atomic with the
+      // registration itself, and awardDirect's own unique-constraint upsert already makes it
+      // safe to call even when `already` short-circuited above (re-registering isn't a new event).
+      await this.achievements.awardDirect(userId, "first_virtual_exam");
+      return participant;
     });
   }
 

@@ -2,9 +2,12 @@ import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/commo
 import { prisma } from "@oj/db";
 import type { CreateAssignmentDto } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
+import { NotificationsService } from "../notifications/notifications.service";
 
 @Injectable()
 export class AssignmentsService {
+  constructor(private readonly notifications: NotificationsService) {}
+
   async createByAdmin(dto: CreateAssignmentDto, createdById: string) {
     let assigneeUserIds = dto.assigneeUserIds;
     if (dto.assignToAll) {
@@ -12,7 +15,7 @@ export class AssignmentsService {
       assigneeUserIds = allUsers.map((u) => u.id);
     }
 
-    return prisma.assignment.create({
+    const assignment = await prisma.assignment.create({
       data: {
         title: dto.title,
         description: dto.description,
@@ -23,6 +26,15 @@ export class AssignmentsService {
       },
       include: { problems: true, assignees: true },
     });
+
+    await this.notifications.createMany(assigneeUserIds, {
+      type: "assignment",
+      title: `New assignment: ${dto.title}`,
+      body: dto.description || undefined,
+      link: "/assignments",
+    });
+
+    return assignment;
   }
 
   async listAllForAdmin() {

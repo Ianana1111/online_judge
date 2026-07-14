@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 import { useExamTimerStore } from "@/store/examTimer";
 import ThemeToggle from "@/components/ThemeToggle";
+import NotificationBell from "@/components/NotificationBell";
 
 // Visible to everyone, including logged-out visitors.
 const PUBLIC_LINKS = [
@@ -170,6 +171,7 @@ export default function NavBar() {
           </nav>
         </div>
         <div className="flex items-center gap-3">
+          {user && <NotificationBell />}
           <ThemeToggle />
           {user ? (
             <UserMenu

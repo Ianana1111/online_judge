@@ -417,3 +417,25 @@ export interface LeaderboardRow {
   streak: number;
   rank: number;
 }
+
+export interface Achievement {
+  code: string;
+  title: string;
+  description: string;
+  earnedAt: string;
+}
+
+export interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  body: string | null;
+  link: string | null;
+  readAt: string | null;
+  createdAt: string;
+}
+
+export interface NotificationList {
+  items: Notification[];
+  unreadCount: number;
+}

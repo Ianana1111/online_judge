@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+import { AchievementsModule } from "./achievements/achievements.module";
 import { AnalyticsModule } from "./analytics/analytics.module";
 import { AssignmentsModule } from "./assignments/assignments.module";
 import { AuthGuard } from "./auth/auth.guard";
@@ -12,6 +13,7 @@ import { ContestsModule } from "./contests/contests.module";
 import { CsrfGuard } from "./common/csrf.guard";
 import { DiscussionsModule } from "./discussions/discussions.module";
 import { LeaderboardModule } from "./leaderboard/leaderboard.module";
+import { NotificationsModule } from "./notifications/notifications.module";
 import { RedisModule } from "./common/redis.module";
 import { RolesGuard } from "./common/roles.guard";
 import { HealthController } from "./health.controller";
@@ -37,6 +39,8 @@ import { UsersModule } from "./users/users.module";
     CollectionsModule,
     LeaderboardModule,
     BillingModule,
+    NotificationsModule,
+    AchievementsModule,
   ],
   controllers: [HealthController],
   providers: [

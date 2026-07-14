@@ -20,6 +20,7 @@ import {
 import type { RequestUser } from "../common/decorators";
 import { JUDGE_QUEUE, REDIS_CLIENT } from "../common/redis.providers";
 import { BillingService } from "../billing/billing.service";
+import { AchievementsService } from "../achievements/achievements.service";
 
 const PAGE_SIZE = 20;
 const COOLDOWN_MS = 10_000;
@@ -38,6 +39,7 @@ export class SubmissionsService {
     @Inject(JUDGE_QUEUE) private readonly queue: Queue,
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
     private readonly billing: BillingService,
+    private readonly achievements: AchievementsService,
   ) {}
 
   async create(userId: string, dto: CreateSubmissionDto): Promise<{ id: string }> {
@@ -166,6 +168,13 @@ export class SubmissionsService {
     const updated = await this.findWithResults(submissionId);
     const publicDetail = this.toPublicDetail(updated!, false);
     await this.redis.publish(submissionResultChannel(submissionId), JSON.stringify(publicDetail));
+
+    // After publishing, so a slow achievement evaluation never delays the verdict reaching the
+    // live SSE stream — achievement/notification delivery is polled separately, not time-critical.
+    if (dto.status === "AC") {
+      await this.achievements.evaluateAfterAc(updated!.userId, updated!.problemId);
+    }
+
     return publicDetail;
   }
 
