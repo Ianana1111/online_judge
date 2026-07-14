@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import type { ProblemListResponse } from "@/lib/types";
 import ProblemFilterTable from "@/components/ProblemFilterTable";
+import { SkeletonList } from "@/components/Skeleton";
 
 export default function ProblemsBrowser() {
   // Client-side (authenticated) so the solved ✓ reflects the logged-in user. One request pulls the
@@ -13,7 +14,7 @@ export default function ProblemsBrowser() {
     queryFn: () => apiFetch<ProblemListResponse>("/problems?pageSize=1000"),
   });
 
-  if (isLoading && !data) return <p className="text-sm text-ink-400">Loading…</p>;
+  if (isLoading && !data) return <SkeletonList rows={10} />;
 
   return <ProblemFilterTable problems={data?.items ?? []} />;
 }

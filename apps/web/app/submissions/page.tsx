@@ -7,6 +7,7 @@ import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import VerdictBadge from "@/components/VerdictBadge";
 import SubmissionCodeModal from "@/components/SubmissionCodeModal";
+import { SkeletonList } from "@/components/Skeleton";
 import { LANGUAGE_LABEL } from "@/lib/types";
 import type { SubmissionListItem, UserProfile } from "@/lib/types";
 
@@ -104,8 +105,15 @@ export default function MySubmissionsPage() {
         </button>
       </div>
 
-      {isLoading && <p className="text-sm text-ink-400">Loading…</p>}
-      {data?.items.length === 0 && <p className="oj-card p-4 text-sm text-ink-400">No submissions yet.</p>}
+      {isLoading && <SkeletonList rows={8} />}
+      {data?.items.length === 0 && (
+        <div className="oj-card p-4 text-sm text-ink-400">
+          <p>No submissions yet.</p>
+          <Link href="/problems" className="mt-2 inline-block text-brand hover:underline">
+            Solve your first problem →
+          </Link>
+        </div>
+      )}
 
       {groupBy === "time" && data && data.items.length > 0 && (
         <table className="oj-table">

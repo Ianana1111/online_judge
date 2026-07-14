@@ -7,6 +7,7 @@ import type { SubmissionListItem } from "@/lib/types";
 import { LANGUAGE_LABEL } from "@/lib/types";
 import VerdictBadge from "@/components/VerdictBadge";
 import SubmissionCodeModal from "@/components/SubmissionCodeModal";
+import { SkeletonList } from "@/components/Skeleton";
 
 export default function SubmissionHistory({ problemId }: { problemId: string }) {
   const [openId, setOpenId] = useState<string | null>(null);
@@ -18,7 +19,7 @@ export default function SubmissionHistory({ problemId }: { problemId: string }) 
       ),
   });
 
-  if (isLoading) return <p className="text-sm text-ink-400">Loading history…</p>;
+  if (isLoading) return <SkeletonList rows={4} />;
   const items = data?.items ?? [];
   if (items.length === 0) return <p className="text-sm text-ink-400">No submissions yet for this problem.</p>;
 
