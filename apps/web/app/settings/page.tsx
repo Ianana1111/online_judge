@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
+import type { UserSettings } from "@/lib/types";
 
 const LANGUAGES = ["cpp17", "c11", "python3", "java17"];
 
@@ -138,17 +139,34 @@ function ChangePasswordForm() {
 }
 
 export default function SettingsPage() {
+  const { user, setUser } = useAuthStore();
   const [defaultLanguage, setDefaultLanguage] = useState("cpp17");
+  const [dailyGoal, setDailyGoal] = useState(1);
+  const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    setDefaultLanguage(localStorage.getItem("oj:settings:language") ?? "cpp17");
-  }, []);
+    // Falls back to the pre-4e localStorage value on a user's first load after this shipped, so
+    // nobody's existing choice silently resets to the default — server value wins once it exists.
+    const fallbackLang = localStorage.getItem("oj:settings:language") ?? "cpp17";
+    setDefaultLanguage(user?.settings.defaultLanguage ?? fallbackLang);
+    setDailyGoal(user?.settings.dailyGoal ?? 1);
+  }, [user]);
 
-  function save() {
-    localStorage.setItem("oj:settings:language", defaultLanguage);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 1500);
+  async function save() {
+    setSaving(true);
+    try {
+      const { settings } = await apiFetch<{ settings: UserSettings }>("/users/me/settings", {
+        method: "PATCH",
+        body: { defaultLanguage, dailyGoal },
+      });
+      localStorage.setItem("oj:settings:language", defaultLanguage);
+      if (user) setUser({ ...user, settings });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 1500);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -165,11 +183,23 @@ export default function SettingsPage() {
             ))}
           </select>
         </div>
+        <div>
+          <label className="mb-1 block text-sm text-ink-300">Daily goal</label>
+          <input
+            type="number"
+            min={1}
+            max={50}
+            className="oj-input"
+            value={dailyGoal}
+            onChange={(e) => setDailyGoal(Math.max(1, Math.min(50, parseInt(e.target.value, 10) || 1)))}
+          />
+          <p className="mt-1 text-xs text-ink-500">Problems to solve per day to keep your streak on track.</p>
+        </div>
         <p className="text-xs text-ink-500">
           Light/dark theme is in the top-right corner of the page, next to your account menu.
         </p>
-        <button onClick={save} className="oj-btn-primary">
-          {saved ? "Saved ✓" : "Save"}
+        <button onClick={save} disabled={saving} className="oj-btn-primary">
+          {saving ? "Saving…" : saved ? "Saved ✓" : "Save"}
         </button>
       </div>
       <ChangeHandleForm />
