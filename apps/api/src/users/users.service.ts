@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import argon2 from "argon2";
 import { prisma } from "@oj/db";
-import type { ChangeHandleDto, ChangePasswordDto, CreateUserDto } from "@oj/shared";
+import type { ChangeHandleDto, ChangePasswordDto, CreateUserDto, UpdateSettingsDto } from "@oj/shared";
 import { computeStreak } from "../leaderboard/leaderboard.service";
 
 const HEATMAP_DAYS = 365;
@@ -56,6 +56,18 @@ export class UsersService {
     if (!existing) throw new NotFoundException("User not found");
     const user = await prisma.user.update({ where: { id }, data: { isStudent } });
     return { id: user.id, handle: user.handle, isStudent: user.isStudent };
+  }
+
+  /** Merge-patches User.settings (default language, daily goal, onboarding dismissal, ...) rather
+   * than replacing it wholesale, so setting one key never clobbers another feature's key that
+   * happened not to be included in this particular PATCH body. */
+  async updateSettings(userId: string, patch: UpdateSettingsDto) {
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { settings: true } });
+    if (!user) throw new NotFoundException("User not found");
+    const current = (user.settings as Record<string, unknown>) ?? {};
+    const merged = { ...current, ...patch };
+    await prisma.user.update({ where: { id: userId }, data: { settings: merged } });
+    return { settings: merged };
   }
 
   /** Daily-habit signal for the personalized homepage: today's distinct-problems-solved count

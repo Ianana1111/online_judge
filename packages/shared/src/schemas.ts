@@ -159,3 +159,12 @@ export const markNotificationsReadSchema = z.object({
   ids: z.array(z.string().cuid()).optional(), // omitted = mark everything read
 });
 export type MarkNotificationsReadDto = z.infer<typeof markNotificationsReadSchema>;
+
+// Merge-patched into User.settings (Json) — only known keys are accepted so this stays a real
+// schema, not an arbitrary-blob passthrough, even though the storage itself is untyped Json.
+export const updateSettingsSchema = z.object({
+  defaultLanguage: z.enum(["cpp17", "c11", "python3", "java17"]).optional(),
+  dailyGoal: z.number().int().min(1).max(50).optional(),
+  onboardingDismissed: z.boolean().optional(),
+});
+export type UpdateSettingsDto = z.infer<typeof updateSettingsSchema>;

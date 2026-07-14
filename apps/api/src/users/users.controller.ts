@@ -4,10 +4,12 @@ import {
   changePasswordSchema,
   createUserSchema,
   setIsStudentSchema,
+  updateSettingsSchema,
   type ChangeHandleDto,
   type ChangePasswordDto,
   type CreateUserDto,
   type SetIsStudentDto,
+  type UpdateSettingsDto,
 } from "@oj/shared";
 import { CurrentUser, Public, Roles, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
@@ -40,6 +42,14 @@ export class UsersController {
   @Get("me/daily")
   daily(@CurrentUser() user: RequestUser) {
     return this.users.daily(user.id);
+  }
+
+  @Patch("me/settings")
+  updateSettings(
+    @Body(new ZodValidationPipe(updateSettingsSchema)) body: UpdateSettingsDto,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.users.updateSettings(user.id, body);
   }
 
   @Roles("ADMIN")

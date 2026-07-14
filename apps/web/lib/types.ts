@@ -34,6 +34,12 @@ export const LANGUAGE_LABEL: Record<string, string> = {
   java17: "Java 17",
 };
 
+export interface UserSettings {
+  defaultLanguage?: "cpp17" | "c11" | "python3" | "java17";
+  dailyGoal?: number;
+  onboardingDismissed?: boolean;
+}
+
 export interface User {
   id: string;
   handle: string;
@@ -41,6 +47,7 @@ export interface User {
   role: "USER" | "ADMIN";
   isStudent: boolean;
   plan: "FREE" | "PRO";
+  settings: UserSettings;
 }
 
 export interface BillingStatus {

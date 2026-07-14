@@ -123,6 +123,7 @@ export class AuthService {
     role: string;
     isStudent: boolean;
     plan: "FREE" | "PRO";
+    settings: Record<string, unknown>;
     csrfToken: string;
     csrfMaxAgeMs: number;
   }> {
@@ -139,6 +140,7 @@ export class AuthService {
       role: user.role,
       isStudent: user.isStudent,
       plan: proActive ? "PRO" : "FREE",
+      settings: (user.settings as Record<string, unknown>) ?? {},
       csrfToken: generateCsrfToken(),
       csrfMaxAgeMs: this.tokens.refreshTtlMs,
     };
