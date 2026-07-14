@@ -2,6 +2,7 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 import argon2 from "argon2";
 import { prisma } from "@oj/db";
 import type { ChangeHandleDto, ChangePasswordDto, CreateUserDto } from "@oj/shared";
+import { computeStreak } from "../leaderboard/leaderboard.service";
 
 const HEATMAP_DAYS = 365;
 
@@ -55,6 +56,37 @@ export class UsersService {
     if (!existing) throw new NotFoundException("User not found");
     const user = await prisma.user.update({ where: { id }, data: { isStudent } });
     return { id: user.id, handle: user.handle, isStudent: user.isStudent };
+  }
+
+  /** Daily-habit signal for the personalized homepage: today's distinct-problems-solved count
+   * against a goal (from User.settings.dailyGoal, default 1 until Phase 4e's settings endpoint
+   * lets a user change it), plus the same all-time streak definition used on the leaderboard
+   * (computeStreak — any AC day counts, not just first-solve days) and whether it's "at risk" of
+   * breaking today. */
+  async daily(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { settings: true } });
+    if (!user) throw new NotFoundException("User not found");
+    const settings = (user.settings as { dailyGoal?: number } | null) ?? {};
+    const goal = typeof settings.dailyGoal === "number" && settings.dailyGoal > 0 ? Math.floor(settings.dailyGoal) : 1;
+
+    const acSubs = await prisma.submission.findMany({
+      where: { userId, verdict: "AC" },
+      select: { createdAt: true, problemId: true },
+    });
+
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const acDates = new Set<string>();
+    const solvedTodaySet = new Set<string>();
+    for (const s of acSubs) {
+      const dateKey = s.createdAt.toISOString().slice(0, 10);
+      acDates.add(dateKey);
+      if (dateKey === todayKey) solvedTodaySet.add(s.problemId);
+    }
+
+    const currentStreak = computeStreak(acDates);
+    const solvedToday = solvedTodaySet.size;
+
+    return { goal, solvedToday, currentStreak, atRisk: currentStreak > 0 && solvedToday === 0 };
   }
 
   async profile(handle: string) {
