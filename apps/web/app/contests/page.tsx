@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
+import { SkeletonList } from "@/components/Skeleton";
 import type { MyContest } from "@/lib/types";
 
 function StatusBadge({ status }: { status: "RUNNING" | "FINISHED" }) {
@@ -51,7 +52,7 @@ export default function ContestsPage() {
         </div>
       )}
 
-      {isLoading && <p className="text-sm text-ink-400">Loading…</p>}
+      {isLoading && <SkeletonList rows={3} />}
 
       {user && mine?.length === 0 && (
         <div className="oj-card p-6 text-center">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
+import { SkeletonList } from "@/components/Skeleton";
 import type { LeaderboardRow } from "@/lib/types";
 
 const PERIODS: { key: "all" | "week" | "month"; label: string }[] = [
@@ -68,7 +69,7 @@ export default function LeaderboardPage() {
         )}
       </div>
 
-      {isLoading && <p className="text-sm text-ink-400">Loading…</p>}
+      {isLoading && <SkeletonList rows={8} />}
 
       <div className="space-y-1.5">
         {rows?.map((r) => {
@@ -94,9 +95,12 @@ export default function LeaderboardPage() {
           );
         })}
         {rows?.length === 0 && (
-          <p className="oj-card p-4 text-sm text-ink-400">
-            Nobody's solved anything {period === "all" ? "yet" : "in this period"} — be the first.
-          </p>
+          <div className="oj-card p-4 text-sm text-ink-400">
+            <p>Nobody's solved anything {period === "all" ? "yet" : "in this period"} — be the first.</p>
+            <Link href="/problems" className="mt-2 inline-block text-brand hover:underline">
+              Browse problems →
+            </Link>
+          </div>
         )}
       </div>
     </div>
