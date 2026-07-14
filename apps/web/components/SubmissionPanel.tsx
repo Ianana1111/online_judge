@@ -1,11 +1,19 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import CodeEditor from "@/components/CodeEditor";
+import dynamic from "next/dynamic";
 import VerdictBadge from "@/components/VerdictBadge";
 import { apiFetch, ApiError, openSubmissionStream } from "@/lib/api";
 import type { SubmissionDetail } from "@/lib/types";
 import { LANGUAGE_LABEL } from "@/lib/types";
+
+// Monaco is a large editor bundle unrelated to the rest of the problem page (statement, tabs,
+// discussion) — deferring it out of the initial page JS keeps that content interactive sooner.
+// ssr:false because Monaco reaches for `window`/`navigator` at import time.
+const CodeEditor = dynamic(() => import("@/components/CodeEditor"), {
+  ssr: false,
+  loading: () => <div className="oj-card h-[480px] animate-pulse bg-ink-900" />,
+});
 
 const LANGUAGES = ["cpp17", "c11", "python3", "java17"];
 const COOLDOWN_MS = 10_000;

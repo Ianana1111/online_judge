@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { prisma } from "@oj/db";
+import { CacheService } from "../common/cache.util";
 
 export type LeaderboardPeriod = "all" | "week" | "month";
 
@@ -31,7 +32,15 @@ function computeStreak(dates: Set<string>): number {
 
 @Injectable()
 export class LeaderboardService {
+  constructor(private readonly cache: CacheService) {}
+
   async get(period: LeaderboardPeriod) {
+    // Recomputing this is a full AC-history scan (see below) — cache it briefly. A 60s-stale
+    // leaderboard is an acceptable tradeoff for not re-scanning on every poll/page-load.
+    return this.cache.getOrSet(`leaderboard:${period}`, 60, () => this.compute(period));
+  }
+
+  private async compute(period: LeaderboardPeriod) {
     const since = periodStart(period);
 
     const [periodSubs, allTimeSubs, users] = await Promise.all([
