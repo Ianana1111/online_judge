@@ -120,8 +120,42 @@ model User {
   notes                Note[]
   payments             Payment[]
   pageViews            PageView[]
+  achievements         UserAchievement[]
+  notifications        Notification[]
 
   @@map("users")
+}
+
+/// One earned entry per (user, achievement code) — codes are a fixed catalog defined in code
+/// (apps/api/src/achievements/catalog.ts), not a DB table, since the set rarely changes and
+/// doesn't need admin editing. Evaluated after every AC (see achievements.service.ts).
+model UserAchievement {
+  id       String   @id @default(cuid())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  code     String
+  earnedAt DateTime @default(now())
+
+  @@unique([userId, code])
+  @@map("user_achievements")
+}
+
+/// In-app notification inbox. `type` distinguishes achievement/assignment/etc for icon/styling
+/// purposes without needing a DB enum migration to add a new kind. Email is deferred — this is
+/// the only delivery channel for now.
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  body      String?
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, createdAt])
+  @@map("notifications")
 }
 
 /// A single page load, recorded by a lightweight client-side beacon (see PageviewTracker) for

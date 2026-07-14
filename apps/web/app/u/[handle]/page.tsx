@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { serverFetch } from "@/lib/serverApi";
-import type { ProblemListResponse, UserProfile, UserStats } from "@/lib/types";
+import type { Achievement, ProblemListResponse, UserProfile, UserStats } from "@/lib/types";
 import Heatmap from "@/components/Heatmap";
 import StatChartsLoader from "@/components/StatChartsLoader";
 import SolvedRing from "@/components/SolvedRing";
@@ -9,10 +9,11 @@ const DIFFICULTY_TIERS = [1, 2, 3, 4];
 
 export default async function DashboardPage({ params }: { params: Promise<{ handle: string }> }) {
   const { handle } = await params;
-  const [profile, stats, problemList] = await Promise.all([
+  const [profile, stats, problemList, achievements] = await Promise.all([
     serverFetch<UserProfile>(`/users/${handle}`),
     serverFetch<UserStats>(`/users/${handle}/stats`),
     serverFetch<ProblemListResponse>(`/problems?pageSize=1`),
+    serverFetch<Achievement[]>(`/achievements/${handle}`),
   ]);
   if (!profile) notFound();
 
@@ -68,6 +69,27 @@ export default async function DashboardPage({ params }: { params: Promise<{ hand
         <h2 className="mb-3 text-sm font-semibold text-ink-200">Activity</h2>
         <Heatmap data={stats?.heatmap ?? []} />
       </div>
+
+      {achievements && achievements.length > 0 && (
+        <div className="oj-card p-4">
+          <h2 className="mb-3 text-sm font-semibold text-ink-200">Achievements</h2>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {achievements.map((a) => (
+              <div
+                key={a.code}
+                className="flex items-start gap-2 rounded border border-brand/30 bg-brand/5 px-3 py-2"
+                title={new Date(a.earnedAt).toLocaleDateString()}
+              >
+                <span className="text-lg">🏆</span>
+                <div>
+                  <p className="text-sm font-medium text-ink-50">{a.title}</p>
+                  <p className="text-xs text-ink-400">{a.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {stats && <StatChartsLoader stats={stats} />}
     </div>

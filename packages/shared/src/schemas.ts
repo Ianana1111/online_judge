@@ -154,3 +154,8 @@ export const recordPageviewSchema = z.object({
   referrer: z.string().max(500).optional(),
 });
 export type RecordPageviewDto = z.infer<typeof recordPageviewSchema>;
+
+export const markNotificationsReadSchema = z.object({
+  ids: z.array(z.string().cuid()).optional(), // omitted = mark everything read
+});
+export type MarkNotificationsReadDto = z.infer<typeof markNotificationsReadSchema>;
