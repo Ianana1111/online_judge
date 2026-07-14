@@ -14,6 +14,13 @@ export class ProblemsController {
     return this.problems.list(query, user);
   }
 
+  // Must be registered before the ":slug" wildcard route below, or "/problems/recommended" would
+  // be matched as slug="recommended" instead.
+  @Get("recommended")
+  recommended(@CurrentUser() user: RequestUser) {
+    return this.problems.recommendNext(user.id);
+  }
+
   @OptionalAuth()
   @Get(":slug")
   detail(@Param("slug") slug: string, @CurrentUser() user: RequestUser | null) {

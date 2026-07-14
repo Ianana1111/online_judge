@@ -91,6 +91,87 @@ export class ProblemsService {
     };
   }
 
+  /**
+   * Deterministic "what to solve next" heuristic — no ML, just: figure out the user's current
+   * difficulty tier (the highest tier they've solved at least 3 problems in, so a single lucky
+   * ★★★★ solve doesn't immediately bump them), then suggest a few more unsolved problems at that
+   * tier to consolidate plus one at the next tier up as a stretch goal. If their most recently
+   * solved problem belongs to a curated Collection, also surface the next unsolved problem in that
+   * same collection so working through a set (e.g. "CPE 必考49題") doesn't require manually
+   * tracking where you left off.
+   */
+  async recommendNext(userId: string) {
+    const acSubs = await prisma.submission.findMany({
+      where: { userId, verdict: "AC" },
+      select: { problemId: true, createdAt: true, problem: { select: { difficulty: true } } },
+      orderBy: { createdAt: "desc" },
+    });
+
+    const solvedIds = new Set<string>();
+    const countByDifficulty = new Map<number, number>();
+    let mostRecentProblemId: string | null = null;
+    for (const s of acSubs) {
+      if (solvedIds.has(s.problemId)) continue;
+      solvedIds.add(s.problemId);
+      countByDifficulty.set(s.problem.difficulty, (countByDifficulty.get(s.problem.difficulty) ?? 0) + 1);
+      mostRecentProblemId ??= s.problemId; // first-seen is most recent (createdAt desc, deduped)
+    }
+
+    let tier = 1;
+    for (let d = 4; d >= 1; d--) {
+      if ((countByDifficulty.get(d) ?? 0) >= 3) {
+        tier = d;
+        break;
+      }
+    }
+
+    const solvedIdList = [...solvedIds];
+    const recommendedSelect = { id: true, uvaId: true, slug: true, title: true, difficulty: true } as const;
+
+    const [consolidate, stretch, collectionNext] = await Promise.all([
+      prisma.problem.findMany({
+        where: { visibility: true, difficulty: tier, id: { notIn: solvedIdList } },
+        select: recommendedSelect,
+        orderBy: { uvaId: { sort: "asc", nulls: "last" } },
+        take: 3,
+      }),
+      tier < 4
+        ? prisma.problem.findMany({
+            where: { visibility: true, difficulty: tier + 1, id: { notIn: solvedIdList } },
+            select: recommendedSelect,
+            orderBy: { uvaId: { sort: "asc", nulls: "last" } },
+            take: 1,
+          })
+        : Promise.resolve([]),
+      this.nextInCollection(mostRecentProblemId, solvedIdList),
+    ]);
+
+    return { tier, consolidate, stretch: stretch[0] ?? null, collectionNext };
+  }
+
+  private async nextInCollection(mostRecentProblemId: string | null, solvedIdList: string[]) {
+    if (!mostRecentProblemId) return null;
+
+    const membership = await prisma.collectionProblem.findFirst({
+      where: { problemId: mostRecentProblemId },
+      select: { collectionId: true, ord: true, collection: { select: { title: true, slug: true } } },
+    });
+    if (!membership) return null;
+
+    const next = await prisma.collectionProblem.findFirst({
+      where: {
+        collectionId: membership.collectionId,
+        ord: { gt: membership.ord },
+        problemId: { notIn: solvedIdList },
+      },
+      orderBy: { ord: "asc" },
+      select: { problem: { select: { id: true, uvaId: true, slug: true, title: true, difficulty: true } } },
+    });
+    if (!next) return null;
+
+    return { ...next.problem, collectionTitle: membership.collection.title, collectionSlug: membership.collection.slug };
+  }
+
   async detail(slug: string, requester: RequestUser | null) {
     const isAdmin = requester?.role === "ADMIN";
     const problem = await prisma.problem.findUnique({

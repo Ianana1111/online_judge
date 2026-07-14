@@ -80,6 +80,33 @@ export interface ProblemRow {
 
 export type ProblemListItem = ProblemRow;
 
+export interface RecommendedProblem {
+  id: string;
+  uvaId: number | null;
+  slug: string;
+  title: string;
+  difficulty: number;
+}
+
+export interface RecommendedCollectionProblem extends RecommendedProblem {
+  collectionTitle: string;
+  collectionSlug: string;
+}
+
+export interface RecommendedProblems {
+  tier: number;
+  consolidate: RecommendedProblem[];
+  stretch: RecommendedProblem | null;
+  collectionNext: RecommendedCollectionProblem | null;
+}
+
+export interface DailyStats {
+  goal: number;
+  solvedToday: number;
+  currentStreak: number;
+  atRisk: boolean;
+}
+
 export interface ProblemListResponse {
   items: ProblemListItem[];
   total: number;

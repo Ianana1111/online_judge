@@ -37,6 +37,11 @@ export class UsersController {
     return this.users.changeHandle(user.id, body);
   }
 
+  @Get("me/daily")
+  daily(@CurrentUser() user: RequestUser) {
+    return this.users.daily(user.id);
+  }
+
   @Roles("ADMIN")
   @Get()
   list() {

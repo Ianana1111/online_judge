@@ -14,7 +14,7 @@ function periodStart(period: LeaderboardPeriod): Date | undefined {
 /** Consecutive-day streak ending today or yesterday (a still-open streak), from a set of AC
  * dates (YYYY-MM-DD, in whatever the DB timezone is). Solving nothing today doesn't break an
  * already-earned streak until tomorrow passes with still nothing solved. */
-function computeStreak(dates: Set<string>): number {
+export function computeStreak(dates: Set<string>): number {
   const toKey = (d: Date) => d.toISOString().slice(0, 10);
   const today = new Date();
   let cursor = new Date(today);
