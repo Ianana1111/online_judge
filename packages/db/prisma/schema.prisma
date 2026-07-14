@@ -300,7 +300,8 @@ model Submission {
 
   @@index([userId, createdAt])
   @@index([problemId, verdict])
-  @@index([contestId, userId])
+  @@index([contestId, userId, createdAt])
+  @@index([verdict, createdAt])
   @@map("submissions")
 }
 

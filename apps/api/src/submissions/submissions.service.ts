@@ -110,8 +110,16 @@ export class SubmissionsService {
     const [rows, total] = await Promise.all([
       prisma.submission.findMany({
         where,
-        include: {
-          problem: { select: { slug: true, title: true, tags: { include: { tag: true } } } },
+        select: {
+          id: true,
+          problemId: true,
+          languageKey: true,
+          status: true,
+          verdict: true,
+          timeMs: true,
+          memoryKb: true,
+          createdAt: true,
+          problem: { select: { slug: true, title: true, tags: { select: { tag: { select: { slug: true } } } } } },
         },
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * pageSize,

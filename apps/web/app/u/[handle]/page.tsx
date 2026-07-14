@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { serverFetch } from "@/lib/serverApi";
 import type { ProblemListResponse, UserProfile, UserStats } from "@/lib/types";
 import Heatmap from "@/components/Heatmap";
-import StatCharts from "@/components/StatCharts";
+import StatChartsLoader from "@/components/StatChartsLoader";
 import SolvedRing from "@/components/SolvedRing";
 
 const DIFFICULTY_TIERS = [1, 2, 3, 4];
@@ -69,7 +69,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ hand
         <Heatmap data={stats?.heatmap ?? []} />
       </div>
 
-      {stats && <StatCharts stats={stats} />}
+      {stats && <StatChartsLoader stats={stats} />}
     </div>
   );
 }

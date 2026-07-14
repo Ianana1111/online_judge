@@ -3,10 +3,24 @@ import { prisma } from "@oj/db";
 import type { CreateContestDto } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
 import { BillingService } from "../billing/billing.service";
+import { CacheService } from "../common/cache.util";
+
+// Fields actually needed for scoreboard/standings math — never sourceCode, which each of these
+// queries used to pull (and immediately discard) for every submission in the contest.
+const SCOREBOARD_SUBMISSION_SELECT = {
+  contestId: true,
+  userId: true,
+  problemId: true,
+  verdict: true,
+  createdAt: true,
+} as const;
 
 @Injectable()
 export class ContestsService {
-  constructor(private readonly billing: BillingService) {}
+  constructor(
+    private readonly billing: BillingService,
+    private readonly cache: CacheService,
+  ) {}
 
   async list() {
     const contests = await prisma.contest.findMany({ orderBy: { createdAt: "desc" } });
@@ -30,43 +44,54 @@ export class ContestsService {
       orderBy: { startedAt: "desc" },
       include: { contest: { include: { problems: true } } },
     });
+    if (participants.length === 0) return [];
+
+    // One query for every submission across every contest this user has ever entered, instead of
+    // one query per contest — grouped by contestId in JS below.
+    const submissions = await prisma.submission.findMany({
+      where: { userId, contestId: { in: participants.map((p) => p.contestId) } },
+      select: SCOREBOARD_SUBMISSION_SELECT,
+      orderBy: { createdAt: "asc" },
+    });
+    const submissionsByContest = new Map<string, typeof submissions>();
+    for (const s of submissions) {
+      const list = submissionsByContest.get(s.contestId!) ?? [];
+      list.push(s);
+      submissionsByContest.set(s.contestId!, list);
+    }
 
     const now = Date.now();
-    return Promise.all(
-      participants.map(async (p) => {
-        const submissions = await prisma.submission.findMany({
-          where: { contestId: p.contestId, userId },
-          orderBy: { createdAt: "asc" },
-        });
+    return participants.map((p) => {
+      const subs = submissionsByContest.get(p.contestId) ?? [];
+      const bySubs = subs.filter((s) => s.verdict !== "PENDING" && s.verdict !== "JUDGING");
 
-        let solvedCount = 0;
-        let penalty = 0;
-        for (const cp of p.contest.problems) {
-          const subs = submissions.filter((s) => s.problemId === cp.problemId && s.verdict !== "PENDING" && s.verdict !== "JUDGING");
-          const firstAc = subs.find((s) => s.verdict === "AC");
-          if (firstAc) {
-            const wrongBefore = subs.filter((s) => s.verdict !== "AC" && s.createdAt < firstAc.createdAt).length;
-            const solveMin = Math.max(0, Math.round((firstAc.createdAt.getTime() - p.startedAt.getTime()) / 60_000));
-            solvedCount += 1;
-            penalty += solveMin + p.contest.penaltyMin * wrongBefore;
-          }
+      let solvedCount = 0;
+      let penalty = 0;
+      for (const cp of p.contest.problems) {
+        const forProblem = bySubs.filter((s) => s.problemId === cp.problemId);
+        const firstAc = forProblem.find((s) => s.verdict === "AC");
+        if (firstAc) {
+          const wrongBefore = forProblem.filter((s) => s.verdict !== "AC" && s.createdAt < firstAc.createdAt).length;
+          const solveMin = Math.max(0, Math.round((firstAc.createdAt.getTime() - p.startedAt.getTime()) / 60_000));
+          solvedCount += 1;
+          penalty += solveMin + p.contest.penaltyMin * wrongBefore;
         }
+      }
 
-        return {
-          id: p.contest.id,
-          title: p.contest.title,
-          slug: p.contest.slug,
-          kind: p.contest.kind,
-          durationMin: p.contest.durationMin,
-          totalProblems: p.contest.problems.length,
-          startedAt: p.startedAt,
-          endsAt: p.endsAt,
-          status: now < p.endsAt.getTime() ? "RUNNING" : "FINISHED",
-          solvedCount,
-          penalty,
-        };
-      }),
-    );
+      return {
+        id: p.contest.id,
+        title: p.contest.title,
+        slug: p.contest.slug,
+        kind: p.contest.kind,
+        durationMin: p.contest.durationMin,
+        totalProblems: p.contest.problems.length,
+        startedAt: p.startedAt,
+        endsAt: p.endsAt,
+        status: now < p.endsAt.getTime() ? "RUNNING" : "FINISHED",
+        solvedCount,
+        penalty,
+      };
+    });
   }
 
   async detail(id: string, requester: RequestUser | null) {
@@ -203,6 +228,13 @@ export class ContestsService {
   }
 
   async scoreboard(id: string) {
+    // Frozen-standings status depends on wall-clock time (freezeCutoff vs "now"), so a short TTL
+    // keeps it close to real-time while still absorbing the bulk of a 12s-interval poll from every
+    // connected viewer — this endpoint used to run a full per-participant query set on every call.
+    return this.cache.getOrSet(`scoreboard:${id}`, 10, () => this.computeScoreboard(id));
+  }
+
+  private async computeScoreboard(id: string) {
     const contest = await prisma.contest.findUnique({
       where: { id },
       include: { problems: { orderBy: { ord: "asc" } } },
@@ -218,58 +250,65 @@ export class ContestsService {
       return { standings: [], frozen: false };
     }
 
+    // One query for every submission in the contest, instead of one query per participant.
+    const allSubmissions = await prisma.submission.findMany({
+      where: { contestId: id },
+      select: SCOREBOARD_SUBMISSION_SELECT,
+      orderBy: { createdAt: "asc" },
+    });
+    const submissionsByUser = new Map<string, typeof allSubmissions>();
+    for (const s of allSubmissions) {
+      const list = submissionsByUser.get(s.userId) ?? [];
+      list.push(s);
+      submissionsByUser.set(s.userId, list);
+    }
+
     const now = Date.now();
     let anyFrozen = false;
 
-    const rows = await Promise.all(
-      participants.map(async (p) => {
-        const freezeCutoff = p.endsAt.getTime() - contest.freezeMin * 60_000;
-        const stillRunning = now < p.endsAt.getTime();
-        const isFrozenForThisParticipant = stillRunning && now >= freezeCutoff;
-        if (isFrozenForThisParticipant) anyFrozen = true;
+    const rows = participants.map((p) => {
+      const freezeCutoff = p.endsAt.getTime() - contest.freezeMin * 60_000;
+      const stillRunning = now < p.endsAt.getTime();
+      const isFrozenForThisParticipant = stillRunning && now >= freezeCutoff;
+      if (isFrozenForThisParticipant) anyFrozen = true;
 
-        const submissions = await prisma.submission.findMany({
-          where: { contestId: id, userId: p.userId },
-          orderBy: { createdAt: "asc" },
-        });
+      const submissions = submissionsByUser.get(p.userId) ?? [];
+      const visibleSubmissions = isFrozenForThisParticipant
+        ? submissions.filter((s) => s.createdAt.getTime() <= freezeCutoff)
+        : submissions;
 
-        const visibleSubmissions = isFrozenForThisParticipant
-          ? submissions.filter((s) => s.createdAt.getTime() <= freezeCutoff)
-          : submissions;
+      const problemCells: Record<string, { solved: boolean; attempts: number; solveMin: number | null }> = {};
+      let solvedCount = 0;
+      let penalty = 0;
 
-        const problemCells: Record<string, { solved: boolean; attempts: number; solveMin: number | null }> = {};
-        let solvedCount = 0;
-        let penalty = 0;
+      for (const cp of contest.problems) {
+        const subsForProblem = visibleSubmissions.filter(
+          (s) => s.problemId === cp.problemId && isTerminal(s.verdict),
+        );
+        const firstAc = subsForProblem.find((s) => s.verdict === "AC");
 
-        for (const cp of contest.problems) {
-          const subsForProblem = visibleSubmissions.filter(
-            (s) => s.problemId === cp.problemId && isTerminal(s.verdict),
-          );
-          const firstAc = subsForProblem.find((s) => s.verdict === "AC");
-
-          if (firstAc) {
-            const wrongBefore = subsForProblem.filter(
-              (s) => s.verdict !== "AC" && s.createdAt.getTime() < firstAc.createdAt.getTime(),
-            ).length;
-            const solveMin = Math.max(0, Math.round((firstAc.createdAt.getTime() - p.startedAt.getTime()) / 60_000));
-            problemCells[cp.label] = { solved: true, attempts: wrongBefore + 1, solveMin };
-            solvedCount += 1;
-            penalty += solveMin + contest.penaltyMin * wrongBefore;
-          } else {
-            const wrongAttempts = subsForProblem.filter((s) => s.verdict !== "AC").length;
-            problemCells[cp.label] = { solved: false, attempts: wrongAttempts, solveMin: null };
-          }
+        if (firstAc) {
+          const wrongBefore = subsForProblem.filter(
+            (s) => s.verdict !== "AC" && s.createdAt.getTime() < firstAc.createdAt.getTime(),
+          ).length;
+          const solveMin = Math.max(0, Math.round((firstAc.createdAt.getTime() - p.startedAt.getTime()) / 60_000));
+          problemCells[cp.label] = { solved: true, attempts: wrongBefore + 1, solveMin };
+          solvedCount += 1;
+          penalty += solveMin + contest.penaltyMin * wrongBefore;
+        } else {
+          const wrongAttempts = subsForProblem.filter((s) => s.verdict !== "AC").length;
+          problemCells[cp.label] = { solved: false, attempts: wrongAttempts, solveMin: null };
         }
+      }
 
-        return {
-          userId: p.user.id,
-          handle: p.user.handle,
-          solvedCount,
-          penalty,
-          problems: problemCells,
-        };
-      }),
-    );
+      return {
+        userId: p.user.id,
+        handle: p.user.handle,
+        solvedCount,
+        penalty,
+        problems: problemCells,
+      };
+    });
 
     rows.sort((a, b) => (b.solvedCount - a.solvedCount) || (a.penalty - b.penalty));
 
