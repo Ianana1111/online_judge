@@ -3,6 +3,7 @@ import { prisma } from "@oj/db";
 import { CacheService } from "../common/cache.util";
 
 export type LeaderboardPeriod = "all" | "week" | "month";
+export type LeaderboardScope = "all" | "students";
 
 function periodStart(period: LeaderboardPeriod): Date | undefined {
   const now = new Date();
@@ -34,27 +35,33 @@ export function computeStreak(dates: Set<string>): number {
 export class LeaderboardService {
   constructor(private readonly cache: CacheService) {}
 
-  async get(period: LeaderboardPeriod) {
+  async get(period: LeaderboardPeriod, scope: LeaderboardScope = "all") {
     // Recomputing this is a full AC-history scan (see below) — cache it briefly. A 60s-stale
     // leaderboard is an acceptable tradeoff for not re-scanning on every poll/page-load.
-    return this.cache.getOrSet(`leaderboard:${period}`, 60, () => this.compute(period));
+    return this.cache.getOrSet(`leaderboard:${period}:${scope}`, 60, () => this.compute(period, scope));
   }
 
-  private async compute(period: LeaderboardPeriod) {
+  private async compute(period: LeaderboardPeriod, scope: LeaderboardScope) {
     const since = periodStart(period);
+    // scope=students narrows the ranked pool to a tutor's actual cohort (isStudent accounts) —
+    // ranking against classmates is a far stronger motivator than an all-time-stranger global
+    // board, and this site's real primary users are a tutor with named students.
+    const userWhere = scope === "students" ? { role: "USER" as const, isStudent: true } : { role: "USER" as const };
 
-    const [periodSubs, allTimeSubs, users] = await Promise.all([
+    const users = await prisma.user.findMany({ where: userWhere, select: { id: true, handle: true } });
+    const userIds = users.map((u) => u.id);
+
+    const [periodSubs, allTimeSubs] = await Promise.all([
       prisma.submission.findMany({
-        where: { verdict: "AC", ...(since ? { createdAt: { gte: since } } : {}) },
+        where: { verdict: "AC", userId: { in: userIds }, ...(since ? { createdAt: { gte: since } } : {}) },
         select: { userId: true, problemId: true, createdAt: true, problem: { select: { difficulty: true } } },
         orderBy: { createdAt: "asc" },
       }),
       // Streaks always reflect real all-time practice habit, independent of the period filter.
       prisma.submission.findMany({
-        where: { verdict: "AC" },
+        where: { verdict: "AC", userId: { in: userIds } },
         select: { userId: true, createdAt: true },
       }),
-      prisma.user.findMany({ where: { role: "USER" }, select: { id: true, handle: true } }),
     ]);
 
     const solvedByUser = new Map<string, Map<string, number>>(); // userId -> problemId -> difficulty (first AC only)
