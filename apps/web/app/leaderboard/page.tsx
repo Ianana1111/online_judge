@@ -21,11 +21,12 @@ const RANK_STYLE: Record<number, string> = {
 
 export default function LeaderboardPage() {
   const [period, setPeriod] = useState<"all" | "week" | "month">("week");
+  const [scope, setScope] = useState<"all" | "students">("all");
   const { user } = useAuthStore();
 
   const { data: rows, isLoading } = useQuery({
-    queryKey: ["leaderboard", period],
-    queryFn: () => apiFetch<LeaderboardRow[]>(`/leaderboard?period=${period}`),
+    queryKey: ["leaderboard", period, scope],
+    queryFn: () => apiFetch<LeaderboardRow[]>(`/leaderboard?period=${period}&scope=${scope}`),
   });
 
   return (
@@ -37,16 +38,34 @@ export default function LeaderboardPage() {
         </p>
       </div>
 
-      <div className="flex gap-2">
-        {PERIODS.map((p) => (
-          <button
-            key={p.key}
-            onClick={() => setPeriod(p.key)}
-            className={p.key === period ? "oj-btn-primary px-3 py-1.5 text-xs" : "oj-btn-secondary px-3 py-1.5 text-xs"}
-          >
-            {p.label}
-          </button>
-        ))}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex gap-2">
+          {PERIODS.map((p) => (
+            <button
+              key={p.key}
+              onClick={() => setPeriod(p.key)}
+              className={p.key === period ? "oj-btn-primary px-3 py-1.5 text-xs" : "oj-btn-secondary px-3 py-1.5 text-xs"}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+        {user?.isStudent && (
+          <div className="flex gap-2">
+            <button
+              onClick={() => setScope("all")}
+              className={scope === "all" ? "oj-btn-primary px-3 py-1.5 text-xs" : "oj-btn-secondary px-3 py-1.5 text-xs"}
+            >
+              Global
+            </button>
+            <button
+              onClick={() => setScope("students")}
+              className={scope === "students" ? "oj-btn-primary px-3 py-1.5 text-xs" : "oj-btn-secondary px-3 py-1.5 text-xs"}
+            >
+              My class
+            </button>
+          </div>
+        )}
       </div>
 
       {isLoading && <p className="text-sm text-ink-400">Loading…</p>}

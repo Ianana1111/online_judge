@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
+import AssignmentLeaderboard from "@/components/AssignmentLeaderboard";
 import type { MyAssignment } from "@/lib/types";
 
 export default function AssignmentsPage() {
@@ -62,6 +63,7 @@ export default function AssignmentsPage() {
                   </Link>
                 ))}
               </div>
+              <AssignmentLeaderboard assignmentId={a.id} />
             </div>
           );
         })}

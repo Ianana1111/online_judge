@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { prisma } from "@oj/db";
 import type { CreateAssignmentDto } from "@oj/shared";
+import type { RequestUser } from "../common/decorators";
 
 @Injectable()
 export class AssignmentsService {
@@ -94,6 +95,62 @@ export class AssignmentsService {
         completedCount: problems.filter((p) => p.completed).length,
         totalCount: problems.length,
       };
+    });
+  }
+
+  /** Per-assignment mini-leaderboard — ranks assignees by how many of the assignment's problems
+   * they've solved. Visible to any assignee (so classmates can see each other's progress on this
+   * specific set) or an admin; not to arbitrary logged-in users who weren't assigned it. */
+  async leaderboard(assignmentId: string, requester: RequestUser) {
+    const assignment = await prisma.assignment.findUnique({
+      where: { id: assignmentId },
+      include: {
+        problems: { select: { problemId: true } },
+        assignees: { select: { userId: true, user: { select: { handle: true } } } },
+      },
+    });
+    if (!assignment) throw new NotFoundException("Assignment not found");
+
+    const isAssignee = assignment.assignees.some((a) => a.userId === requester.id);
+    if (requester.role !== "ADMIN" && !isAssignee) {
+      throw new ForbiddenException("You are not assigned to this assignment.");
+    }
+
+    const problemIds = assignment.problems.map((p) => p.problemId);
+    const assigneeIds = assignment.assignees.map((a) => a.userId);
+
+    const acSubs =
+      problemIds.length > 0 && assigneeIds.length > 0
+        ? await prisma.submission.findMany({
+            where: { userId: { in: assigneeIds }, problemId: { in: problemIds }, verdict: "AC" },
+            select: { userId: true, problemId: true },
+            distinct: ["userId", "problemId"],
+          })
+        : [];
+
+    const solvedByUser = new Map<string, Set<string>>();
+    for (const s of acSubs) {
+      const set = solvedByUser.get(s.userId) ?? new Set<string>();
+      set.add(s.problemId);
+      solvedByUser.set(s.userId, set);
+    }
+
+    const rows = assignment.assignees.map((a) => ({
+      userId: a.userId,
+      handle: a.user.handle,
+      solvedCount: solvedByUser.get(a.userId)?.size ?? 0,
+      totalCount: problemIds.length,
+    }));
+    rows.sort((a, b) => b.solvedCount - a.solvedCount || a.handle.localeCompare(b.handle));
+
+    let rank = 0;
+    let lastCount = -1;
+    return rows.map((row, i) => {
+      if (row.solvedCount !== lastCount) {
+        rank = i + 1;
+        lastCount = row.solvedCount;
+      }
+      return { ...row, rank };
     });
   }
 }

@@ -277,6 +277,14 @@ export interface MyAssignment {
   totalCount: number;
 }
 
+export interface AssignmentLeaderboardRow {
+  userId: string;
+  handle: string;
+  solvedCount: number;
+  totalCount: number;
+  rank: number;
+}
+
 export interface AdminAssignment {
   id: string;
   title: string;

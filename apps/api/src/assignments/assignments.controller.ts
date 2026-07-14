@@ -34,4 +34,9 @@ export class AssignmentsController {
   listMine(@CurrentUser() user: RequestUser) {
     return this.assignments.listForUser(user.id);
   }
+
+  @Get(":id/leaderboard")
+  leaderboard(@Param("id") id: string, @CurrentUser() user: RequestUser) {
+    return this.assignments.leaderboard(id, user);
+  }
 }
