@@ -6,6 +6,7 @@ import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import DailyGoalRing from "@/components/DailyGoalRing";
 import VerdictBadge from "@/components/VerdictBadge";
+import OnboardingChecklist from "@/components/OnboardingChecklist";
 import type { DailyStats, RecommendedProblems, SubmissionListItem } from "@/lib/types";
 
 const DIFFICULTY_STARS = (d: number) => "★".repeat(d);
@@ -40,53 +41,56 @@ export default function HomeDashboard() {
   ].slice(0, 4);
 
   return (
-    <section className="grid gap-4 py-6 sm:grid-cols-[auto_1fr]">
-      <div className="oj-card flex items-center gap-4 p-5">
-        <DailyGoalRing solvedToday={daily?.solvedToday ?? 0} goal={daily?.goal ?? 1} />
-        <div>
-          <h1 className="font-display text-xl font-bold text-ink-50">Welcome back, {user.handle}</h1>
-          {daily && daily.currentStreak > 0 ? (
-            <p className={`mt-1 font-mono text-xs ${daily.atRisk ? "text-verdict-tle" : "text-ink-400"}`}>
-              🔥 {daily.currentStreak}d streak{daily.atRisk ? " — solve one today to keep it alive" : ""}
+    <div className="py-6">
+      <OnboardingChecklist />
+      <section className="grid gap-4 sm:grid-cols-[auto_1fr]">
+        <div className="oj-card flex items-center gap-4 p-5">
+          <DailyGoalRing solvedToday={daily?.solvedToday ?? 0} goal={daily?.goal ?? 1} />
+          <div>
+            <h1 className="font-display text-xl font-bold text-ink-50">Welcome back, {user.handle}</h1>
+            {daily && daily.currentStreak > 0 ? (
+              <p className={`mt-1 font-mono text-xs ${daily.atRisk ? "text-verdict-tle" : "text-ink-400"}`}>
+                🔥 {daily.currentStreak}d streak{daily.atRisk ? " — solve one today to keep it alive" : ""}
+              </p>
+            ) : (
+              <p className="mt-1 text-xs text-ink-400">Solve today to start a streak.</p>
+            )}
+            {recent && recent.items.length > 0 && (
+              <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                <span className="text-xs text-ink-500">Recent:</span>
+                {recent.items.slice(0, 5).map((s) => (
+                  <VerdictBadge key={s.id} verdict={s.verdict} size="sm" />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="oj-card p-5">
+          <h2 className="mb-3 text-sm font-semibold text-ink-200">Recommended for you</h2>
+          {suggestions.length === 0 ? (
+            <p className="text-sm text-ink-400">
+              No new recommendations yet —{" "}
+              <Link href="/problems" className="text-brand hover:underline">
+                browse the problem list
+              </Link>{" "}
+              to get started.
             </p>
           ) : (
-            <p className="mt-1 text-xs text-ink-400">Solve today to start a streak.</p>
-          )}
-          {recent && recent.items.length > 0 && (
-            <div className="mt-3 flex flex-wrap items-center gap-1.5">
-              <span className="text-xs text-ink-500">Recent:</span>
-              {recent.items.slice(0, 5).map((s) => (
-                <VerdictBadge key={s.id} verdict={s.verdict} size="sm" />
+            <div className="grid gap-2 sm:grid-cols-2">
+              {suggestions.map((p) => (
+                <Link key={p.id} href={`/problems/${p.slug}`} className="oj-card p-3 transition-colors hover:border-brand">
+                  <div className="mb-1 flex items-center justify-between">
+                    <span className="font-mono text-xs text-ink-500">{p.reason}</span>
+                    <span className="font-mono text-xs text-brand">{DIFFICULTY_STARS(p.difficulty)}</span>
+                  </div>
+                  <h3 className="text-sm font-medium text-ink-50">{p.title}</h3>
+                </Link>
               ))}
             </div>
           )}
         </div>
-      </div>
-
-      <div className="oj-card p-5">
-        <h2 className="mb-3 text-sm font-semibold text-ink-200">Recommended for you</h2>
-        {suggestions.length === 0 ? (
-          <p className="text-sm text-ink-400">
-            No new recommendations yet —{" "}
-            <Link href="/problems" className="text-brand hover:underline">
-              browse the problem list
-            </Link>{" "}
-            to get started.
-          </p>
-        ) : (
-          <div className="grid gap-2 sm:grid-cols-2">
-            {suggestions.map((p) => (
-              <Link key={p.id} href={`/problems/${p.slug}`} className="oj-card p-3 transition-colors hover:border-brand">
-                <div className="mb-1 flex items-center justify-between">
-                  <span className="font-mono text-xs text-ink-500">{p.reason}</span>
-                  <span className="font-mono text-xs text-brand">{DIFFICULTY_STARS(p.difficulty)}</span>
-                </div>
-                <h3 className="text-sm font-medium text-ink-50">{p.title}</h3>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
