@@ -242,6 +242,7 @@ model Problem {
   updatedAt     DateTime      @updatedAt
 
   samples          Sample[]
+  testCases        TestCase[]
   tags             ProblemTag[]
   submissions      Submission[]
   contestProblems  ContestProblem[]
@@ -290,6 +291,23 @@ model Sample {
 
   @@index([problemId])
   @@map("samples")
+}
+
+// Hidden judging data for the local (Vercel Sandbox) judge — distinct from Sample, which is only
+// ever shown to users on the problem page. A problem is judged locally instead of relayed to UVa
+// the moment it has at least one row here (see ProblemsService.recommendNext-style derivation in
+// the judge dispatch, not a separate boolean flag — avoids the flag and the actual data ever
+// silently drifting apart).
+model TestCase {
+  id        String  @id @default(cuid())
+  problemId String
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  ord       Int
+  input     String
+  output    String
+
+  @@unique([problemId, ord])
+  @@map("test_cases")
 }
 
 model Tag {

@@ -1,6 +1,7 @@
-# Judge worker image: plain Node runtime. All judging happens by proxying submissions to the
-# real UVa Online Judge (see apps/judge/src/remote) — no local sandbox, no compiler toolchain, no
-# elevated container privileges needed here anymore.
+# Judge worker image: plain Node runtime, no compiler toolchain and no elevated privileges needed
+# in THIS container — a problem either relays to the real UVa Online Judge (apps/judge/src/remote)
+# or judges via the Vercel Sandbox API (apps/judge/src/local), which runs the untrusted compile/run
+# step in its own ephemeral microVM on Vercel's infrastructure, not here.
 
 FROM node:20-bookworm-slim
 
