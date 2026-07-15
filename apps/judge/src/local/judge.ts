@@ -110,9 +110,20 @@ export async function judgeLocally(
     return { status: "SE" as Verdict, compileError: "This problem has no local test cases configured." };
   }
 
+  // The SDK only auto-detects credentials from VERCEL_OIDC_TOKEN (short-lived, Vercel-hosted-only)
+  // — a plain access token needs its {token, teamId, projectId} passed explicitly, or the SDK
+  // throws trying to reach for an OIDC context that doesn't exist here (this worker runs on
+  // Railway, not Vercel). Falls through to plain env-based OIDC detection when these are unset,
+  // which is what local dev (`vercel env pull`) relies on.
+  const credentials =
+    process.env.VERCEL_TOKEN && process.env.VERCEL_TEAM_ID && process.env.VERCEL_PROJECT_ID
+      ? { token: process.env.VERCEL_TOKEN, teamId: process.env.VERCEL_TEAM_ID, projectId: process.env.VERCEL_PROJECT_ID }
+      : {};
+
   let sandbox: Sandbox | undefined;
   try {
     sandbox = await Sandbox.create({
+      ...credentials,
       source: { type: "snapshot", snapshotId },
       persistent: false,
       resources: { vcpus: 1 },
