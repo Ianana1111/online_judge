@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
@@ -25,6 +26,16 @@ function DifficultyStars({ d }: { d: number }) {
       <span className="text-brand">{"★".repeat(d)}</span>
       <span className="text-ink-700">{"★".repeat(Math.max(0, 4 - d))}</span>
     </span>
+  );
+}
+
+/** One cell of the hero's stat strip — big tabular number, small uppercase label underneath. */
+function StatCell({ value, label, valueClassName = "text-ink-50" }: { value: ReactNode; label: string; valueClassName?: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1 bg-ink-900/60 px-3 py-3.5 text-center">
+      <span className={`font-display text-xl font-bold tabular-nums ${valueClassName}`}>{value}</span>
+      <span className="text-[10px] uppercase tracking-wide text-ink-500">{label}</span>
+    </div>
   );
 }
 
@@ -88,58 +99,43 @@ export default function HomeDashboard() {
           <DailyGoalRing solvedToday={daily?.solvedToday ?? 0} goal={daily?.goal ?? 1} />
           <div className="min-w-0 flex-1">
             <h1 className="font-display text-2xl font-bold text-ink-50">{greeting(user.handle)}</h1>
-
-            <div className="mt-3 flex flex-wrap gap-2">
-              {daily && daily.currentStreak > 0 ? (
-                <span
-                  className={`inline-flex items-center gap-1.5 rounded border px-2.5 py-1 font-mono text-xs ${
-                    daily.atRisk
-                      ? "animate-pulse-soft border-verdict-wa/40 bg-verdict-wa/10 text-verdict-wa"
-                      : "border-verdict-tle/40 bg-verdict-tle/10 text-verdict-tle"
-                  }`}
-                >
-                  🔥 {daily.currentStreak}d streak{daily.atRisk ? " — solve today" : ""}
-                </span>
-              ) : (
-                <span className="rounded border border-ink-700 bg-ink-800/60 px-2.5 py-1 font-mono text-xs text-ink-400">
-                  Solve today to start a streak
-                </span>
-              )}
-              {recommended && (
-                <span className="inline-flex items-center gap-1.5 rounded border border-ink-700 bg-ink-800/60 px-2.5 py-1 font-mono text-xs text-ink-300">
-                  <DifficultyStars d={recommended.tier} />
-                  <span className="text-ink-500">current tier</span>
-                </span>
-              )}
-              {profile && (
-                <span className="rounded border border-ink-700 bg-ink-800/60 px-2.5 py-1 font-mono text-xs text-ink-300">
-                  <span className="font-semibold text-ink-50">{profile.solvedCount}</span>{" "}
-                  <span className="text-ink-500">solved</span>
-                </span>
-              )}
-              {latestAchievement && (
-                <Link
-                  href={`/u/${user.handle}`}
-                  className="inline-flex items-center gap-1.5 rounded border border-brand/30 bg-brand/5 px-2.5 py-1 font-mono text-xs text-brand transition-colors hover:bg-brand/10"
-                >
-                  🏆 {latestAchievement.title}
-                </Link>
-              )}
-            </div>
-
-            {recent && recent.items.length > 0 && (
-              <div className="mt-4 flex flex-wrap items-center gap-1.5">
-                <span className="text-xs text-ink-500">Recent:</span>
-                {recent.items.slice(0, 5).map((s) => (
-                  <VerdictBadge key={s.id} verdict={s.verdict} size="sm" />
-                ))}
-                <Link href="/submissions" className="ml-1 text-xs text-ink-500 hover:text-brand">
-                  view all →
-                </Link>
-              </div>
+            {latestAchievement ? (
+              <Link href={`/u/${user.handle}`} className="mt-1 inline-flex items-center gap-1 text-xs text-brand hover:underline">
+                🏆 Latest: {latestAchievement.title}
+              </Link>
+            ) : (
+              <p className="mt-1 text-xs text-ink-500">Ready to pick up where you left off?</p>
             )}
           </div>
         </div>
+
+        <div className="relative mt-5 grid grid-cols-3 divide-x divide-ink-800 overflow-hidden rounded border border-ink-800">
+          <StatCell
+            value={daily && daily.currentStreak > 0 ? `🔥 ${daily.currentStreak}` : "–"}
+            label={daily?.atRisk ? "at risk today" : "day streak"}
+            valueClassName={
+              daily?.atRisk
+                ? "text-verdict-wa animate-pulse-soft"
+                : daily && daily.currentStreak > 0
+                  ? "text-verdict-tle"
+                  : "text-ink-600"
+            }
+          />
+          <StatCell value={<DifficultyStars d={recommended?.tier ?? 1} />} label="current tier" />
+          <StatCell value={profile ? profile.solvedCount : "–"} label="solved" />
+        </div>
+
+        {recent && recent.items.length > 0 && (
+          <div className="relative mt-4 flex flex-wrap items-center gap-1.5">
+            <span className="text-xs text-ink-500">Recent:</span>
+            {recent.items.slice(0, 5).map((s) => (
+              <VerdictBadge key={s.id} verdict={s.verdict} size="sm" />
+            ))}
+            <Link href="/submissions" className="ml-1 text-xs text-ink-500 hover:text-brand">
+              view all →
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="oj-card p-5">
@@ -165,13 +161,13 @@ export default function HomeDashboard() {
                 href={`/problems/${p.slug}`}
                 className="group oj-card p-4 transition-all hover:-translate-y-0.5 hover:border-brand hover:bg-ink-800/40"
               >
-                <div className="mb-2 flex items-center justify-between gap-2">
-                  <span className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wide text-ink-500">
-                    <span>{REASON_ICON[p.kind]}</span>
-                    {p.reason}
-                  </span>
+                <div className="mb-3 flex items-center justify-between gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/10 text-sm text-brand">
+                    {REASON_ICON[p.kind]}
+                  </div>
                   <DifficultyStars d={p.difficulty} />
                 </div>
+                <p className="mb-1 font-mono text-[11px] uppercase tracking-wide text-ink-500">{p.reason}</p>
                 <h3 className="text-sm font-medium text-ink-50 group-hover:text-brand">{p.title}</h3>
               </Link>
             ))}
