@@ -17,58 +17,32 @@
  * trail. Safe to re-run: replaces this problem's TestCase rows each time.
  */
 import { prisma } from "@oj/db";
-
-interface Boundary {
-  input: string;
-  output: string;
-}
-
-async function seedFromSample(slug: string, boundary: Boundary) {
-  const problem = await prisma.problem.findUniqueOrThrow({ where: { slug } });
-  const samples = await prisma.sample.findMany({ where: { problemId: problem.id }, orderBy: { ord: "asc" } });
-
-  // Scraped Sample rows sometimes carry a stray leading/trailing blank-line artifact (a lone
-  // leading "\r\n" before the real content was observed on uva-10035) — clean it here so it's
-  // never in judged data at all, not just tolerated by the checker's own normalization.
-  const clean = (s: string) => s.replace(/^\s*\n/, "").replace(/\s+$/, "\n");
-
-  await prisma.testCase.deleteMany({ where: { problemId: problem.id } });
-  const rows = [
-    ...samples.map((s, i) => ({ problemId: problem.id, ord: i + 1, input: clean(s.input), output: clean(s.output) })),
-    { problemId: problem.id, ord: samples.length + 1, input: clean(boundary.input), output: clean(boundary.output) },
-  ];
-  await prisma.testCase.createMany({ data: rows });
-  console.log(`${slug}: seeded ${rows.length} test cases (${samples.length} from Sample + 1 boundary)`);
-}
+import { seedFromSample } from "./testcase-seed-helper.js";
 
 const NINES_998 = "9".repeat(998); // even count -> alternating sum cancels to 0 -> multiple of 11
 const NINES_999 = "9".repeat(999); // odd count -> alternating sum leaves one unpaired 9 -> not a multiple
 
 async function main() {
-  await seedFromSample("uva-100-the-3n-1-problem", {
-    input: "1 1\n10 1\n1 9999\n",
-    output: "1 1 1\n10 1 20\n1 9999 262\n",
-  });
+  await seedFromSample("uva-100-the-3n-1-problem", [
+    { input: "1 1\n10 1\n1 9999\n", output: "1 1 1\n10 1 20\n1 9999 262\n" },
+  ]);
 
-  await seedFromSample("uva-10041-vito-s-family", {
-    input: "4\n1 500\n4 100 100 100 100\n2 1 29999\n5 1 3 6 9 11\n",
-    output: "0\n0\n29998\n16\n",
-  });
+  await seedFromSample("uva-10041-vito-s-family", [
+    { input: "4\n1 500\n4 100 100 100 100\n2 1 29999\n5 1 3 6 9 11\n", output: "0\n0\n29998\n16\n" },
+  ]);
 
-  await seedFromSample("uva-10055-hashmat", {
-    input: "5 5\n4294967295 0\n0 4294967295\n1 0\n",
-    output: "0\n4294967295\n4294967295\n1\n",
-  });
+  await seedFromSample("uva-10055-hashmat", [
+    { input: "5 5\n4294967295 0\n0 4294967295\n1 0\n", output: "0\n4294967295\n4294967295\n1\n" },
+  ]);
 
-  await seedFromSample("uva-10035-primary-arithmetic", {
-    input: "0 0\n",
-    output: "",
-  });
+  await seedFromSample("uva-10035-primary-arithmetic", [{ input: "0 0\n", output: "" }]);
 
-  await seedFromSample("uva-10929-you-can-say-11", {
-    input: `11\n99\n${NINES_998}\n${NINES_999}\n0\n`,
-    output: `11 is a multiple of 11.\n99 is a multiple of 11.\n${NINES_998} is a multiple of 11.\n${NINES_999} is not a multiple of 11.\n`,
-  });
+  await seedFromSample("uva-10929-you-can-say-11", [
+    {
+      input: `11\n99\n${NINES_998}\n${NINES_999}\n0\n`,
+      output: `11 is a multiple of 11.\n99 is a multiple of 11.\n${NINES_998} is a multiple of 11.\n${NINES_999} is not a multiple of 11.\n`,
+    },
+  ]);
 }
 
 main()
