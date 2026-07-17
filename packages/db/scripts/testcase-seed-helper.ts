@@ -35,7 +35,6 @@ export async function seedFromSample(slug: string, boundaries: Boundary[], sampl
   // exactly the class of bug already hit once in judge.ts's exit-code parsing.
   const samples = sampleLimit === undefined ? allSamples : allSamples.slice(0, sampleLimit);
 
-  await prisma.testCase.deleteMany({ where: { problemId: problem.id } });
   const rows = [
     ...samples.map((s, i) => ({ problemId: problem.id, ord: i + 1, input: clean(s.input), output: clean(s.output) })),
     ...boundaries.map((b, i) => ({
@@ -48,6 +47,15 @@ export async function seedFromSample(slug: string, boundaries: Boundary[], sampl
       output: b.output.replace(/\r\n/g, "\n").replace(/\s+$/, "\n"),
     })),
   ];
-  await prisma.testCase.createMany({ data: rows });
+  // deleteMany + createMany must commit together: worker.ts routes a problem to the real UVa
+  // relay the instant its TestCase count reads 0 (see worker.ts's `testCases.length > 0` check),
+  // so a crash between two standalone calls would silently flip that problem back to the UVa path
+  // until the next successful re-run, with no error surfaced anywhere. $transaction makes the
+  // pair atomic: on any failure the deleteMany itself rolls back, so the DB always holds either
+  // the full old row set or the full new one, never a gap.
+  await prisma.$transaction([
+    prisma.testCase.deleteMany({ where: { problemId: problem.id } }),
+    prisma.testCase.createMany({ data: rows }),
+  ]);
   console.log(`${slug}: seeded ${rows.length} test cases (${samples.length} from Sample + ${boundaries.length} boundary)`);
 }
