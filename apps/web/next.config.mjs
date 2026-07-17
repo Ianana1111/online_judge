@@ -1,13 +1,11 @@
 const API_ORIGIN = process.env.NEXT_PUBLIC_API_URL || "https://api.judge.tw";
 
-// Shipped as Content-Security-Policy-Report-Only, not the enforcing header — deliberately. This
-// site's known requirements (Monaco's worker-src blob: tokenizer, KaTeX's inline styles, Next's
-// own inline hydration scripts, Google OAuth's full-page redirect, ECPay's auto-submitted hosted-
-// checkout form) make it easy to get one directive subtly wrong; Report-Only never blocks
-// anything; it only makes the browser console log what *would* have been blocked. Once someone
-// has actually used the site end-to-end (editor, math rendering, Google login, an upgrade
-// checkout) with devtools open and seen zero unexpected violations, flip the header name below to
-// the enforcing one.
+// Verified end-to-end live on judge.tw with devtools open (2026-07-17): editor + Monaco worker
+// init, KaTeX CSS/font loading (loaded globally via app/layout.tsx on every page), the Google
+// OAuth redirect (landed on real accounts.google.com with the correct callback URL), and the ECPay
+// ATM checkout (auto-submitted hosted-checkout form reached payment-stage.ecpay.com.tw) — zero CSP
+// violations logged across all four. Enforcing from here on; see git history for the prior
+// Report-Only rationale if a future directive change needs to go through this process again.
 const CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://accounts.google.com",
@@ -35,7 +33,7 @@ const nextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
-          { key: "Content-Security-Policy-Report-Only", value: CSP },
+          { key: "Content-Security-Policy", value: CSP },
         ],
       },
     ];
