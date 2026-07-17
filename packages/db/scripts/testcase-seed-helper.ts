@@ -29,7 +29,11 @@ function clean(s: string): string {
 export async function seedFromSample(slug: string, boundaries: Boundary[], sampleLimit?: number): Promise<void> {
   const problem = await prisma.problem.findUniqueOrThrow({ where: { slug } });
   const allSamples = await prisma.sample.findMany({ where: { problemId: problem.id }, orderBy: { ord: "asc" } });
-  const samples = sampleLimit ? allSamples.slice(0, sampleLimit) : allSamples;
+  // `sampleLimit ? ... : ...` would be wrong here: 0 is a legitimate, meaningful value (a problem
+  // whose entire scraped Sample is untrustworthy and should be skipped, e.g. uva-11005) but is
+  // falsy in JS, so that ternary would silently fall through to "use every sample" instead —
+  // exactly the class of bug already hit once in judge.ts's exit-code parsing.
+  const samples = sampleLimit === undefined ? allSamples : allSamples.slice(0, sampleLimit);
 
   await prisma.testCase.deleteMany({ where: { problemId: problem.id } });
   const rows = [
