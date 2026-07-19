@@ -11,12 +11,10 @@
  *   here would fail every other equally-valid correct submission. Left alone, it keeps relaying to
  *   the real UVA judge (which does special-judge this correctly) until local special-judge support
  *   exists.
- * - uva-10405-jolly-jumpers has two unrelated data bugs worth flagging, discovered while verifying:
- *   (1) its title/slug say "Jolly Jumpers" (that's actually UVA 10038, a different problem) but its
- *   statementMd is genuinely "Longest Common Subsequence" (the real UVA 10405) — a scraping
- *   mismatch that doesn't block seeding correct test data (judging goes by TestCase content, not the
- *   slug string) but should get its title/slug corrected separately.
- *   (2) the scraped Sample itself is corrupted: it claims LCS("abcdgh","aedfhr") = 4, which
+ * - uva-10405-longest-common-subsequence (slug/title fixed in this batch — was previously stored as
+ *   "uva-10405-jolly-jumpers", a scraping mismatch: UVA 10038 is the real Jolly Jumpers, and 10405's
+ *   statementMd was genuinely "Longest Common Subsequence" all along) had a second, unrelated bug:
+ *   the scraped Sample itself is corrupted. It claims LCS("abcdgh","aedfhr") = 4, which
  *   contradicts the problem statement's own worked example (explicitly says that LCS is "adh",
  *   length 3) — confirmed via two independent from-scratch LCS DP implementations, both giving 3,
  *   not 4. So the scraped Sample is discarded outright (sampleLimit: 0, matching the precedent this
@@ -80,7 +78,11 @@ async function main() {
     },
   ]);
 
-  await seedFromSample("uva-10405-jolly-jumpers", [{ input: "abcdgh\naedfhr\nhello\nhello\nabc\nxyz\n", output: "3\n5\n0\n" }], 0);
+  await seedFromSample(
+    "uva-10405-longest-common-subsequence",
+    [{ input: "abcdgh\naedfhr\nhello\nhello\nabc\nxyz\n", output: "3\n5\n0\n" }],
+    0,
+  );
 
   await seedFromSample("gpe-24931-extend-to-palindromes", [{ input: "a\nAa\nAbA\n", output: "a\nAaA\nAbA\n" }]);
 
