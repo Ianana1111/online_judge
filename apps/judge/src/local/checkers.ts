@@ -7,12 +7,17 @@ import type { CheckerType } from "@oj/db";
  * on uva-10035), which a trailing-only trim would leave as a spurious blank first line and fail
  * every comparison against that sample. */
 function normalizeIgnoreTrailingWs(s: string): string {
-  return s
+  const trimmed = s
     .split("\n")
     .map((line) => line.replace(/[ \t\r]+$/, ""))
     .join("\n")
     .replace(/^\n+/, "")
-    .replace(/\n+$/, "\n");
+    .replace(/\n+$/, "");
+  // A trailing-newline *replace* only fires when there's at least one "\n" to match — output that
+  // ends in a non-whitespace character (no trailing newline at all) would otherwise stay without
+  // one here, while a real submission's stdout almost always has one (println), causing a false
+  // mismatch. Trim unconditionally, then add exactly one "\n" back unless the whole thing is empty.
+  return trimmed === "" ? "" : trimmed + "\n";
 }
 
 function tokenize(s: string): string[] {
