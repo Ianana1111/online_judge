@@ -7,7 +7,7 @@ export interface Boundary {
   output: string;
 }
 
-/** Scraped Sample rows carry two recurring artifacts this project has actually hit:
+/** Scraped Sample rows carry recurring artifacts this project has actually hit:
  *  - a stray leading blank line before the real content (uva-10035)
  *  - CRLF line endings (uva-10035, uva-10420, ...) — harmless for pure `cin >>` parsing, but a
  *    silent trap for the extremely common `cin >> n; cin.ignore(); getline(...)` idiom: ignore()
@@ -18,12 +18,20 @@ export interface Boundary {
  *    just tolerated by the checker's whitespace normalization (which only fixes *output*
  *    comparison, not *input* parsing). Applied to hand-authored boundary text too — harmless no-op
  *    there since that text is already LF-only, but keeps every TestCase row uniform.
+ *  - a bare '\r' with no following '\n' (uva-10382): a dropped-newline scraping artifact that
+ *    silently glues two real lines into one, shifting every token after it. `\r\n?` (not `\r\n`)
+ *    catches this too, since the `\n?` matches even when there's nothing there to match.
  */
 function clean(s: string): string {
-  return s
-    .replace(/\r\n/g, "\n")
-    .replace(/^\s*\n/, "")
-    .replace(/\s+$/, "\n");
+  // A trailing-whitespace *replace* only fires when there's some trailing whitespace to match —
+  // scraped Sample.output occasionally has none at all (e.g. uva-10369's last line has no newline
+  // after it), which used to leave the stored expected output missing its final "\n" entirely. A
+  // real correct submission's stdout almost always ends with one (println), so that mismatch would
+  // fail every correct submission against that test case. Trim unconditionally, then add exactly
+  // one "\n" back — except when the result is empty, since a genuinely empty expected output (e.g.
+  // uva-10035's "0 0" terminator with no data) must stay empty, not become a spurious blank line.
+  const trimmed = s.replace(/\r\n?/g, "\n").replace(/^\s*\n/, "").replace(/\s+$/, "");
+  return trimmed === "" ? "" : trimmed + "\n";
 }
 
 export async function seedFromSample(slug: string, boundaries: Boundary[], sampleLimit?: number): Promise<void> {
@@ -43,8 +51,12 @@ export async function seedFromSample(slug: string, boundaries: Boundary[], sampl
       input: clean(b.input),
       // Boundary output may intentionally start with a blank line (e.g. "no characters in
       // common" producing an empty first line) — only trim trailing whitespace, never a leading
-      // blank line, for hand-authored content.
-      output: b.output.replace(/\r\n/g, "\n").replace(/\s+$/, "\n"),
+      // blank line, for hand-authored content. Same unconditional-trailing-newline fix as clean()
+      // above: always end in exactly one "\n" unless the whole output is genuinely empty.
+      output: (() => {
+        const t = b.output.replace(/\r\n?/g, "\n").replace(/\s+$/, "");
+        return t === "" ? "" : t + "\n";
+      })(),
     })),
   ];
   // deleteMany + createMany must commit together: worker.ts routes a problem to the real UVa
