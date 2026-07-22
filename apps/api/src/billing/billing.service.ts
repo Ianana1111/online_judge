@@ -165,11 +165,16 @@ export class BillingService {
     return { ok: true };
   }
 
-  // --- ECPay (綠界) automated ATM virtual-account flow ---
+  // --- ECPay (綠界) automated checkout flow (ATM virtual account + credit card) ---
 
   /** User starts an automated upgrade: creates a PENDING Payment tied to a fresh ECPay order and
    * returns the auto-submit form ECPay's AioCheckOut endpoint expects (form POST, not a JSON API —
-   * this is how every ECPay integration works: the browser navigates to their hosted checkout). */
+   * this is how every ECPay integration works: the browser navigates to their hosted checkout).
+   * ChoosePayment "ALL" lets the customer pick ATM or Credit on ECPay's own hosted page — both
+   * confirm via the same ReturnURL webhook (RtnCode "1" = paid), so handleEcpayReturn below needs
+   * no method-specific branching. Only ATM issues a virtual account number, which arrives via the
+   * separate PaymentInfoURL webhook (handleEcpayPaymentInfo) — that webhook simply never fires for
+   * a credit-card checkout, since there's no virtual account to report. */
   async createEcpayOrder(userId: string, period: BillingPeriod) {
     const existingPending = await prisma.payment.findFirst({ where: { userId, status: "PENDING" } });
     if (existingPending) {
@@ -199,7 +204,7 @@ export class BillingService {
       ReturnURL: `${apiPublicUrl}/billing/ecpay/return`,
       PaymentInfoURL: `${apiPublicUrl}/billing/ecpay/payment-info`,
       ClientBackURL: `${webOrigin}/pricing`,
-      ChoosePayment: "ATM",
+      ChoosePayment: "ALL",
       EncryptType: 1,
     };
     const CheckMacValue = await computeCheckMacValue(params, config);
