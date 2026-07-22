@@ -209,13 +209,13 @@ export default function PricingPage() {
           </div>
 
           <div className="oj-card space-y-3 p-5">
-            <h2 className="font-display text-lg font-semibold text-ink-100">ATM 轉帳（自動開通）</h2>
+            <h2 className="font-display text-lg font-semibold text-ink-100">信用卡／ATM 轉帳（自動開通）</h2>
             <p className="text-sm text-ink-400">
-              點下方按鈕會產生一組專屬的 ATM 虛擬帳號，轉帳完成後系統自動幫你開通 Pro，不用等待人工審核。
+              點下方按鈕會前往付款頁面，可選擇信用卡或 ATM 轉帳；付款完成後系統自動幫你開通 Pro，不用等待人工審核。
             </p>
             {ecpayError && <p className="text-sm text-verdict-wa">{ecpayError}</p>}
             <button onClick={startEcpay} disabled={ecpayLoading} className="oj-btn-primary w-full">
-              {ecpayLoading ? "跳轉中…" : `產生虛擬帳號並付款 NT$${amount}`}
+              {ecpayLoading ? "跳轉中…" : `前往付款 NT$${amount}`}
             </button>
           </div>
 
@@ -233,7 +233,7 @@ export default function PricingPage() {
                     {plans.payee.note && <li className="text-ink-400">{plans.payee.note}</li>}
                   </ul>
                 ) : (
-                  <p className="text-ink-500">（收款資訊尚未設定，請改用上方 ATM 自動開通）</p>
+                  <p className="text-ink-500">（收款資訊尚未設定，請改用上方信用卡／ATM 自動開通）</p>
                 )}
               </div>
 
