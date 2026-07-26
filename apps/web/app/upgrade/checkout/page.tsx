@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import BackButton from "@/components/BackButton";
@@ -13,12 +13,8 @@ type Method = "CREDIT" | "ATM";
 
 export default function CheckoutPage() {
   const { user, status: authStatus } = useAuthStore();
-  const qc = useQueryClient();
   const [period, setPeriod] = useState<Period>("MONTHLY");
   const [method, setMethod] = useState<Method>("CREDIT");
-  const [reference, setReference] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
   const [ecpayError, setEcpayError] = useState<string | null>(null);
   const [ecpayLoading, setEcpayLoading] = useState(false);
 
@@ -40,21 +36,6 @@ export default function CheckoutPage() {
   const isPro = status?.plan === "PRO";
   const pending = status?.pendingPayment;
   const amount = plans?.pricing[period].amountNtd ?? (period === "MONTHLY" ? 200 : 2000);
-
-  async function submitClaim(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setSubmitting(true);
-    try {
-      await apiFetch("/billing/request", { method: "POST", body: { period, reference } });
-      await qc.invalidateQueries({ queryKey: ["billing", "me"] });
-      setReference("");
-    } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not submit. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
-  }
 
   async function startEcpay() {
     setEcpayError(null);
@@ -207,45 +188,6 @@ export default function CheckoutPage() {
                   {ecpayLoading ? "Redirecting…" : `Pay NT$${amount}`}
                 </button>
               </div>
-
-              <details className="oj-card p-5 text-sm">
-                <summary className="cursor-pointer font-semibold text-ink-200">Or pay by bank transfer / LINE Pay (manual review)</summary>
-                <form onSubmit={submitClaim} className="mt-4 space-y-4">
-                  <div className="rounded border border-ink-700 bg-ink-800/50 p-4 text-sm text-ink-300">
-                    <p className="mb-2 font-semibold text-ink-200">Step 1: transfer NT${amount} to</p>
-                    {plans?.payee.bank || plans?.payee.account || plans?.payee.linePay ? (
-                      <ul className="space-y-1 font-mono text-xs">
-                        {plans.payee.bank && <li>Bank: {plans.payee.bank}</li>}
-                        {plans.payee.account && <li>Account: {plans.payee.account}</li>}
-                        {plans.payee.name && <li>Name: {plans.payee.name}</li>}
-                        {plans.payee.linePay && <li>LINE Pay: {plans.payee.linePay}</li>}
-                        {plans.payee.note && <li className="text-ink-400">{plans.payee.note}</li>}
-                      </ul>
-                    ) : (
-                      <p className="text-ink-500">(Payee details not configured — please use credit card / ATM above instead.)</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-sm text-ink-300">
-                      Step 2: enter a reference (e.g. last 5 digits of your account, or LINE Pay transaction id) so we can match it
-                    </label>
-                    <input
-                      className="oj-input"
-                      value={reference}
-                      onChange={(e) => setReference(e.target.value)}
-                      placeholder="Reference"
-                      maxLength={200}
-                    />
-                  </div>
-
-                  {error && <p className="text-sm text-verdict-wa">{error}</p>}
-                  <button type="submit" disabled={submitting} className="oj-btn-primary">
-                    {submitting ? "Submitting…" : "I've paid, submit for review"}
-                  </button>
-                  <p className="text-xs text-ink-500">We manually verify the transfer and unlock Pro once confirmed (usually within 24h).</p>
-                </form>
-              </details>
             </div>
           )}
         </div>
