@@ -1,6 +1,14 @@
 import { Body, Controller, Get, Param, Post, Req, Res } from "@nestjs/common";
 import type { Request, Response } from "express";
-import { billingRequestSchema, ecpayCreateSchema, PLAN_PRICING, type BillingRequestDto, type EcpayCreateDto } from "@oj/shared";
+import {
+  adminGrantPlanSchema,
+  billingRequestSchema,
+  ecpayCreateSchema,
+  PLAN_PRICING,
+  type AdminGrantPlanDto,
+  type BillingRequestDto,
+  type EcpayCreateDto,
+} from "@oj/shared";
 import { CurrentUser, Public, Roles, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { BillingService } from "./billing.service";
@@ -57,6 +65,25 @@ export class BillingController {
   @Post("admin/:id/reject")
   reject(@Param("id") id: string, @CurrentUser() user: RequestUser) {
     return this.billing.reject(id, user.id);
+  }
+
+  /** Support tool: a user reports paying but never got upgraded — grant Pro directly without
+   * requiring a Payment claim to exist first. */
+  @Roles("ADMIN")
+  @Post("admin/:userId/grant")
+  grant(
+    @Param("userId") userId: string,
+    @Body(new ZodValidationPipe(adminGrantPlanSchema)) body: AdminGrantPlanDto,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.billing.adminGrant(userId, user.id, body.period);
+  }
+
+  /** Support tool: undo a grant made in error. */
+  @Roles("ADMIN")
+  @Post("admin/:userId/revoke")
+  revoke(@Param("userId") userId: string) {
+    return this.billing.adminRevoke(userId);
   }
 
   // --- ECPay (綠界) automated ATM virtual-account flow ---
