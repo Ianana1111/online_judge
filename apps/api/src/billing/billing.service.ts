@@ -175,6 +175,48 @@ export class BillingService {
     return { ok: true, planExpiresAt };
   }
 
+  /** Admin support tool: directly grant Pro without a Payment claim on file — for when someone
+   * really did pay (e.g. a real bank transfer, or a webhook that failed to fire) but nothing in
+   * our own records reflects it yet. Still leaves a Payment row (status APPROVED, method
+   * ADMIN_GRANT, reviewedBy/reviewedAt set) so the grant has the same audit trail as a normal
+   * approval, just without a preceding PENDING claim. Extends from the later of now or their
+   * existing expiry, exactly like a real purchase would. */
+  async adminGrant(userId: string, adminId: string, period: BillingPeriod) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException("User not found");
+    const pricing = PLAN_PRICING[period];
+
+    const planExpiresAt = await prisma.$transaction(async (tx) => {
+      await tx.payment.create({
+        data: {
+          userId,
+          period,
+          amountNtd: pricing.amountNtd,
+          status: "APPROVED",
+          method: "ADMIN_GRANT",
+          reference: "Manually granted by admin",
+          reviewedAt: new Date(),
+          reviewedBy: adminId,
+        },
+      });
+      return this.extendPlan(tx, userId, period);
+    });
+    return { plan: "PRO", planExpiresAt };
+  }
+
+  /** Admin support tool: the inverse — immediately drop someone back to Free (e.g. a grant made in
+   * error). No Payment row: this isn't reversing a specific purchase, just correcting the user's
+   * current state. */
+  async adminRevoke(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException("User not found");
+    await prisma.user.update({
+      where: { id: userId },
+      data: { plan: "FREE", planExpiresAt: null, planCancelRequested: false },
+    });
+    return { plan: "FREE", planExpiresAt: null };
+  }
+
   async reject(paymentId: string, adminId: string) {
     const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
     if (!payment) throw new NotFoundException("Payment not found");

@@ -15,6 +15,8 @@ export default function AdminUsersPage() {
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<{ handle: string; password: string } | null>(null);
   const [saving, setSaving] = useState(false);
+  const [actingId, setActingId] = useState<string | null>(null);
+  const [planError, setPlanError] = useState<string | null>(null);
 
   const { data } = useQuery({
     queryKey: ["users", "admin"],
@@ -48,6 +50,33 @@ export default function AdminUsersPage() {
       await qc.invalidateQueries({ queryKey: ["users", "admin"] });
     } catch {
       /* best-effort */
+    }
+  }
+
+  async function grantPlan(id: string, period: "MONTHLY" | "YEARLY") {
+    setPlanError(null);
+    setActingId(id);
+    try {
+      await apiFetch(`/billing/admin/${id}/grant`, { method: "POST", body: { period } });
+      await qc.invalidateQueries({ queryKey: ["users", "admin"] });
+    } catch (e) {
+      setPlanError(e instanceof ApiError ? e.message : "Could not grant Pro");
+    } finally {
+      setActingId(null);
+    }
+  }
+
+  async function revokePlan(id: string) {
+    if (!confirm("Revoke this user's Pro plan and drop them back to Free immediately?")) return;
+    setPlanError(null);
+    setActingId(id);
+    try {
+      await apiFetch(`/billing/admin/${id}/revoke`, { method: "POST" });
+      await qc.invalidateQueries({ queryKey: ["users", "admin"] });
+    } catch (e) {
+      setPlanError(e instanceof ApiError ? e.message : "Could not revoke Pro");
+    } finally {
+      setActingId(null);
     }
   }
 
@@ -121,6 +150,10 @@ export default function AdminUsersPage() {
 
       <div>
         <h2 className="mb-2 text-sm font-semibold text-ink-200">All accounts</h2>
+        <p className="mb-2 text-xs text-ink-500">
+          Use Grant if someone paid but wasn't upgraded — extends from their current expiry, same as a real purchase.
+        </p>
+        {planError && <p className="mb-2 text-sm text-verdict-wa">{planError}</p>}
         <table className="oj-table">
           <thead>
             <tr>
@@ -133,38 +166,77 @@ export default function AdminUsersPage() {
             </tr>
           </thead>
           <tbody>
-            {data?.map((u) => (
-              <tr key={u.id}>
-                <td>{u.handle}</td>
-                <td className="text-xs text-ink-400">{u.email}</td>
-                <td className="text-xs text-ink-400">{u.role}</td>
-                <td className="text-xs">
-                  {u.plan === "PRO" ? (
-                    <span className="inline-flex items-center gap-1 rounded border border-brand/40 bg-brand/10 px-1.5 py-0.5 font-semibold text-brand">
-                      Pro
-                    </span>
-                  ) : (
-                    <span className="text-ink-500">Free</span>
-                  )}
-                  {u.plan === "PRO" && u.planExpiresAt && (
-                    <span className="ml-1.5 text-ink-500">until {new Date(u.planExpiresAt).toLocaleDateString()}</span>
-                  )}
-                </td>
-                <td>
-                  {u.role === "USER" && (
-                    <label className="flex items-center gap-2 text-xs text-ink-300">
-                      <input
-                        type="checkbox"
-                        checked={u.isStudent}
-                        onChange={(e) => toggleStudent(u.id, e.target.checked)}
-                      />
-                      {u.isStudent ? "Student" : "—"}
-                    </label>
-                  )}
-                </td>
-                <td className="font-mono text-xs text-ink-500">{new Date(u.createdAt).toLocaleDateString()}</td>
-              </tr>
-            ))}
+            {data?.map((u) => {
+              // Admins are never capped and students are auto-Pro regardless of the plan field
+              // (see billing.service isUnlimited/isProActive) — granting/revoking here wouldn't
+              // change what they actually see, so don't offer controls that couldn't do anything.
+              const canManagePlan = u.role === "USER" && !u.isStudent;
+              const acting = actingId === u.id;
+              return (
+                <tr key={u.id}>
+                  <td>{u.handle}</td>
+                  <td className="text-xs text-ink-400">{u.email}</td>
+                  <td className="text-xs text-ink-400">{u.role}</td>
+                  <td className="text-xs">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {u.plan === "PRO" ? (
+                        <span className="inline-flex items-center gap-1 rounded border border-brand/40 bg-brand/10 px-1.5 py-0.5 font-semibold text-brand">
+                          Pro
+                        </span>
+                      ) : (
+                        <span className="text-ink-500">Free</span>
+                      )}
+                      {u.plan === "PRO" && u.planExpiresAt && (
+                        <span className="text-ink-500">until {new Date(u.planExpiresAt).toLocaleDateString()}</span>
+                      )}
+                    </div>
+                    {canManagePlan && (
+                      <div className="mt-1 flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => grantPlan(u.id, "MONTHLY")}
+                          disabled={acting}
+                          className="text-[11px] text-brand hover:underline disabled:opacity-50"
+                        >
+                          +1mo
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => grantPlan(u.id, "YEARLY")}
+                          disabled={acting}
+                          className="text-[11px] text-brand hover:underline disabled:opacity-50"
+                        >
+                          +1yr
+                        </button>
+                        {u.plan === "PRO" && (
+                          <button
+                            type="button"
+                            onClick={() => revokePlan(u.id)}
+                            disabled={acting}
+                            className="text-[11px] text-ink-500 hover:text-verdict-wa disabled:opacity-50"
+                          >
+                            Revoke
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </td>
+                  <td>
+                    {u.role === "USER" && (
+                      <label className="flex items-center gap-2 text-xs text-ink-300">
+                        <input
+                          type="checkbox"
+                          checked={u.isStudent}
+                          onChange={(e) => toggleStudent(u.id, e.target.checked)}
+                        />
+                        {u.isStudent ? "Student" : "—"}
+                      </label>
+                    )}
+                  </td>
+                  <td className="font-mono text-xs text-ink-500">{new Date(u.createdAt).toLocaleDateString()}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

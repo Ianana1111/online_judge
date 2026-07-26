@@ -76,6 +76,11 @@ export const billingRequestSchema = z.object({
 });
 export type BillingRequestDto = z.infer<typeof billingRequestSchema>;
 
+export const adminGrantPlanSchema = z.object({
+  period: z.enum(["MONTHLY", "YEARLY"]),
+});
+export type AdminGrantPlanDto = z.infer<typeof adminGrantPlanSchema>;
+
 export const ecpayCreateSchema = z.object({
   period: z.enum(["MONTHLY", "YEARLY"]),
   // Which channel the user picked on our own checkout page — sent straight through to ECPay's
