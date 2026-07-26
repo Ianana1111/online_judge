@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { AdminUser, ClassSessionItem, ProblemListResponse } from "@/lib/types";
-import HomeworkStatusBadge from "@/components/HomeworkStatusBadge";
+import { previewText } from "@/lib/textPreview";
 import StatementRenderer from "@/components/StatementRenderer";
 
 interface ProblemPick {
@@ -205,12 +206,18 @@ export default function AdminStudentClassesClient({ studentId }: { studentId: st
             <EditClassForm key={c.id} studentId={studentId} cls={c} onDone={() => setEditingId(null)} />
           ) : (
             <div key={c.id} className="oj-card p-4">
-              <div className="mb-2 flex items-center justify-between gap-3">
-                <h2 className="font-display text-base font-semibold text-ink-50">
-                  Class {c.number}
-                  {c.title && <span className="ml-2 text-sm font-normal text-ink-300">— {c.title}</span>}
-                </h2>
-                <div className="flex gap-2 text-xs">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h2 className="font-display text-base font-semibold text-ink-50">
+                    Class {c.number}
+                    {c.title && <span className="ml-2 text-sm font-normal text-ink-300">— {c.title}</span>}
+                  </h2>
+                  {c.contentMd && <p className="mt-1 truncate text-sm text-ink-400">{previewText(c.contentMd)}</p>}
+                </div>
+                <div className="flex shrink-0 gap-2 text-xs">
+                  <Link href={`/admin/classes/${studentId}/${c.id}`} className="text-brand hover:underline">
+                    View &amp; reply
+                  </Link>
                   <button onClick={() => setEditingId(c.id)} className="text-ink-400 hover:text-brand">
                     Edit
                   </button>
@@ -219,21 +226,13 @@ export default function AdminStudentClassesClient({ studentId }: { studentId: st
                   </button>
                 </div>
               </div>
-              {c.contentMd && (
-                <div className="mb-3">
-                  <StatementRenderer content={c.contentMd} />
-                </div>
-              )}
               {c.homework.length > 0 && (
-                <div className="space-y-1.5">
+                <div className="mt-2 flex flex-wrap gap-1.5">
                   {c.homework.map((hw) => (
-                    <div key={hw.id} className="flex items-center justify-between gap-3 rounded border border-ink-800 px-3 py-1.5">
-                      <span className="text-sm text-ink-200">
-                        {hw.uvaId ? `UVa ${hw.uvaId} — ` : ""}
-                        {hw.title}
-                      </span>
-                      <HomeworkStatusBadge status={hw.status} />
-                    </div>
+                    <span key={hw.id} className="rounded border border-ink-800 px-2 py-1 text-xs text-ink-300">
+                      {hw.uvaId ? `UVa ${hw.uvaId} — ` : ""}
+                      {hw.title}
+                    </span>
                   ))}
                 </div>
               )}

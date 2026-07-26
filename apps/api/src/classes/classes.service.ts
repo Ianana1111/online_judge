@@ -1,9 +1,12 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { prisma } from "@oj/db";
 import type { CreateClassSessionDto, UpdateClassSessionDto } from "@oj/shared";
+import { NotificationsService } from "../notifications/notifications.service";
+import type { RequestUser } from "../common/decorators";
 
 @Injectable()
 export class ClassesService {
+  constructor(private readonly notifications: NotificationsService) {}
   async createForStudent(teacherId: string, dto: CreateClassSessionDto) {
     const student = await prisma.user.findUnique({ where: { id: dto.studentId } });
     if (!student || !student.isStudent) throw new NotFoundException("Student not found");
@@ -86,6 +89,94 @@ export class ClassesService {
         status: statusByProblem.get(h.problemId) ?? "NOT_STARTED",
       })),
     }));
+  }
+
+  /** The owning student or any admin can view a class's full detail (content + comment thread) —
+   * everyone else gets 403, since a class session can name another student's real progress. */
+  private async assertCanAccess(classId: string, requester: RequestUser) {
+    const cls = await prisma.classSession.findUnique({ where: { id: classId } });
+    if (!cls) throw new NotFoundException("Class not found");
+    if (requester.role !== "ADMIN" && requester.id !== cls.studentId) {
+      throw new ForbiddenException("You don't have access to this class.");
+    }
+    return cls;
+  }
+
+  async getById(classId: string, requester: RequestUser) {
+    const cls = await this.assertCanAccess(classId, requester);
+    const [student, teacher, homework, comments] = await Promise.all([
+      prisma.user.findUnique({ where: { id: cls.studentId }, select: { handle: true } }),
+      prisma.user.findUnique({ where: { id: cls.teacherId }, select: { handle: true } }),
+      prisma.classHomework.findMany({
+        where: { classId },
+        orderBy: { ord: "asc" },
+        include: { problem: { select: { id: true, slug: true, title: true, uvaId: true } } },
+      }),
+      prisma.classComment.findMany({
+        where: { classId },
+        orderBy: { createdAt: "asc" },
+        include: { author: { select: { handle: true, role: true } } },
+      }),
+    ]);
+
+    const statusByProblem = await this.latestStatusByProblem(
+      cls.studentId,
+      homework.map((h) => h.problemId),
+    );
+
+    return {
+      id: cls.id,
+      number: cls.number,
+      title: cls.title,
+      contentMd: cls.contentMd,
+      createdAt: cls.createdAt,
+      studentId: cls.studentId,
+      studentHandle: student?.handle ?? "",
+      teacherHandle: teacher?.handle ?? "",
+      homework: homework.map((h) => ({
+        id: h.problem.id,
+        slug: h.problem.slug,
+        title: h.problem.title,
+        uvaId: h.problem.uvaId,
+        status: statusByProblem.get(h.problemId) ?? "NOT_STARTED",
+      })),
+      comments: comments.map((c) => ({
+        id: c.id,
+        body: c.body,
+        createdAt: c.createdAt,
+        authorHandle: c.author.handle,
+        isAdmin: c.author.role === "ADMIN",
+      })),
+    };
+  }
+
+  async addComment(classId: string, requester: RequestUser, body: string) {
+    const cls = await this.assertCanAccess(classId, requester);
+    const comment = await prisma.classComment.create({
+      data: { classId, authorId: requester.id, body },
+      include: { author: { select: { handle: true, role: true } } },
+    });
+
+    // Notify whichever side didn't write the comment — a student asking should reach their
+    // teacher, and a teacher/admin reply should reach the student, regardless of which admin
+    // account originally recorded the class.
+    const notifyUserId = requester.id === cls.studentId ? cls.teacherId : cls.studentId;
+    if (notifyUserId !== requester.id) {
+      await this.notifications.create(notifyUserId, {
+        type: "class_comment",
+        title: `New message on Class ${cls.number}${cls.title ? `: ${cls.title}` : ""}`,
+        body,
+        link: requester.id === cls.studentId ? `/admin/classes/${cls.studentId}/${cls.id}` : `/classes/${cls.id}`,
+      });
+    }
+
+    return {
+      id: comment.id,
+      body: comment.body,
+      createdAt: comment.createdAt,
+      authorHandle: comment.author.handle,
+      isAdmin: comment.author.role === "ADMIN",
+    };
   }
 
   /** Latest submission verdict per problem for a student — "NOT_STARTED" if they've never

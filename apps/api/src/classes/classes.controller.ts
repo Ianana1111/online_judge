@@ -1,5 +1,12 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from "@nestjs/common";
-import { createClassSessionSchema, updateClassSessionSchema, type CreateClassSessionDto, type UpdateClassSessionDto } from "@oj/shared";
+import {
+  createClassCommentSchema,
+  createClassSessionSchema,
+  updateClassSessionSchema,
+  type CreateClassCommentDto,
+  type CreateClassSessionDto,
+  type UpdateClassSessionDto,
+} from "@oj/shared";
 import { CurrentUser, Roles, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { ClassesService } from "./classes.service";
@@ -45,5 +52,28 @@ export class ClassesController {
   @Get("student/:studentId")
   forStudent(@Param("studentId") studentId: string) {
     return this.classes.listForStudent(studentId);
+  }
+
+  /** Full detail (content + comment thread) for one class session — the owning student or any
+   * admin. Not @Roles-gated: authorization is per-resource (see ClassesService.assertCanAccess),
+   * since a student must be able to fetch their own class here too. */
+  @Get(":id")
+  getById(@Param("id") id: string, @CurrentUser() user: RequestUser) {
+    return this.classes.getById(id, user);
+  }
+
+  @Get(":id/comments")
+  async comments(@Param("id") id: string, @CurrentUser() user: RequestUser) {
+    const cls = await this.classes.getById(id, user);
+    return cls.comments;
+  }
+
+  @Post(":id/comments")
+  addComment(
+    @Param("id") id: string,
+    @Body(new ZodValidationPipe(createClassCommentSchema)) body: CreateClassCommentDto,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.classes.addComment(id, user, body.body);
   }
 }

@@ -123,6 +123,7 @@ model User {
   assignments          AssignmentAssignee[]  @relation("AssignmentAssigneeUser")
   classSessions        ClassSession[]        @relation("ClassSessionStudent")
   createdClassSessions ClassSession[]        @relation("ClassSessionTeacher")
+  classComments        ClassComment[]
   notes                Note[]
   payments             Payment[]
   pageViews            PageView[]
@@ -490,9 +491,26 @@ model ClassSession {
   updatedAt DateTime @updatedAt
 
   homework ClassHomework[]
+  comments ClassComment[]
 
   @@unique([studentId, number])
   @@map("class_sessions")
+}
+
+/// Q&A thread on a class session — the student can ask about that lesson, the teacher/any admin
+/// can reply, all in one flat, timestamped list (no nested threading — a class session's comment
+/// count is small enough that a simple chronological thread reads fine).
+model ClassComment {
+  id        String       @id @default(cuid())
+  classId   String
+  class     ClassSession @relation(fields: [classId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  body      String
+  createdAt DateTime     @default(now())
+
+  @@index([classId, createdAt])
+  @@map("class_comments")
 }
 
 model ClassHomework {

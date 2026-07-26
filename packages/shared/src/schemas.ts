@@ -153,6 +153,11 @@ export const updateClassSessionSchema = z.object({
 });
 export type UpdateClassSessionDto = z.infer<typeof updateClassSessionSchema>;
 
+export const createClassCommentSchema = z.object({
+  body: z.string().min(1).max(4000),
+});
+export type CreateClassCommentDto = z.infer<typeof createClassCommentSchema>;
+
 export const recordPageviewSchema = z.object({
   path: z.string().min(1).max(500),
   referrer: z.string().max(500).optional(),
