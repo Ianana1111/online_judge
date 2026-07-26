@@ -42,7 +42,14 @@ export default async function DashboardPage({ params }: { params: Promise<{ hand
         <div className="relative flex flex-wrap items-center gap-6">
           <SolvedRing solved={profile.solvedCount} total={totalProblems} />
           <div className="flex-1">
-            <h1 className="font-display text-3xl font-bold text-ink-50">{profile.handle}</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="font-display text-3xl font-bold text-ink-50">{profile.handle}</h1>
+              {profile.plan === "PRO" && (
+                <span className="rounded border border-brand/40 bg-brand/10 px-1.5 py-0.5 text-xs font-semibold text-brand">
+                  Pro
+                </span>
+              )}
+            </div>
             <p className="mt-1 text-sm text-ink-400">Joined {new Date(profile.createdAt).toLocaleDateString()}</p>
 
             <div className="mt-4 flex flex-wrap gap-2">

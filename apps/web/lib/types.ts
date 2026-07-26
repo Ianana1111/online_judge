@@ -247,6 +247,7 @@ export interface UserProfile {
   handle: string;
   createdAt: string;
   solvedCount: number;
+  plan: "FREE" | "PRO";
 }
 
 export interface Discussion {
