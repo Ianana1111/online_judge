@@ -25,7 +25,17 @@ const AUTH_LINKS = [{ href: "/submissions", label: "My Submissions" }];
 // Only for logged-in students (isStudent, set by an admin) — not admins, they get the console link.
 const STUDENT_LINKS = [{ href: "/classes", label: "My Classes" }];
 
-function UserMenu({ handle, isAdmin, onLogout }: { handle: string; isAdmin: boolean; onLogout: () => void }) {
+function UserMenu({
+  handle,
+  isAdmin,
+  plan,
+  onLogout,
+}: {
+  handle: string;
+  isAdmin: boolean;
+  plan: "FREE" | "PRO";
+  onLogout: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -56,6 +66,16 @@ function UserMenu({ handle, isAdmin, onLogout }: { handle: string; isAdmin: bool
       </button>
       {open && (
         <div className="oj-card absolute right-0 top-full mt-2 w-44 overflow-hidden p-1">
+          <Link
+            href="/upgrade"
+            onClick={() => setOpen(false)}
+            className={`block rounded px-3 py-2 text-xs font-semibold hover:bg-ink-800 ${
+              plan === "PRO" ? "text-brand hover:text-brand" : "text-ink-500 hover:text-brand"
+            }`}
+          >
+            {plan === "PRO" ? "Pro Plan" : "Free Plan"}
+          </Link>
+          <div className="my-1 border-t border-ink-800" />
           <Link
             href={`/u/${handle}`}
             onClick={() => setOpen(false)}
@@ -183,6 +203,7 @@ export default function NavBar() {
             <UserMenu
               handle={user.handle}
               isAdmin={user.role === "ADMIN"}
+              plan={user.plan}
               onLogout={async () => {
                 await logout();
                 router.push("/");
