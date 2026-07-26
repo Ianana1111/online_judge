@@ -330,6 +330,21 @@ export interface ClassSessionItem {
   homework: ClassHomeworkItem[];
 }
 
+export interface ClassComment {
+  id: string;
+  body: string;
+  createdAt: string;
+  authorHandle: string;
+  isAdmin: boolean;
+}
+
+export interface ClassSessionDetail extends ClassSessionItem {
+  studentId: string;
+  studentHandle: string;
+  teacherHandle: string;
+  comments: ClassComment[];
+}
+
 export interface ClassOverviewRow {
   studentId: string;
   handle: string;
