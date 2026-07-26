@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -22,6 +23,11 @@ function Check({ children }: { children: React.ReactNode }) {
 export default function UpgradePlanPage() {
   const router = useRouter();
   const { user, status: authStatus } = useAuthStore();
+  // There's no auto-renewal in this system — every ECPay/manual payment is a one-time purchase
+  // that extends planExpiresAt, never a recurring charge — so "downgrading" needs no backend call
+  // at all: Pro already lapses back to Free on its own once planExpiresAt passes. This just gives
+  // the user a clear, explicit acknowledgment of that instead of leaving them to wonder.
+  const [downgradeAcked, setDowngradeAcked] = useState(false);
 
   const { data: status, isLoading } = useQuery({
     queryKey: ["billing", "me"],
@@ -31,6 +37,7 @@ export default function UpgradePlanPage() {
 
   const isAdmin = user?.role === "ADMIN";
   const isPro = status?.plan === "PRO";
+  const expiresLabel = status?.planExpiresAt ? new Date(status.planExpiresAt).toLocaleDateString() : null;
   // Admins aren't capped at all, and students are auto-Pro (see billing.service.isProActive) —
   // neither of them has anything to upgrade, so don't offer a purchase flow that can't apply to
   // them (mirrors NavBar's showUpgrade condition, since this page is reachable by direct URL too).
@@ -67,15 +74,7 @@ export default function UpgradePlanPage() {
             </div>
           )}
 
-          {user && !notApplicable && isPro && (
-            <div className="oj-card border-verdict-ac/40 p-5 text-center text-sm text-ink-200">
-              You're already on Pro 🎉{" "}
-              {status?.planExpiresAt && <>Renews/expires {new Date(status.planExpiresAt).toLocaleDateString()}.</>} Come back here
-              to extend it any time.
-            </div>
-          )}
-
-          {(!user || (user && !notApplicable && !isLoading && !isPro)) && (
+          {(!user || (user && !notApplicable && !isLoading)) && (
             <div className="grid gap-5 sm:grid-cols-2">
               <div className="oj-card flex flex-col p-6">
                 <h2 className="font-display text-lg font-semibold text-ink-100">Free</h2>
@@ -91,21 +90,45 @@ export default function UpgradePlanPage() {
                   </Check>
                   <Check>Full access to discussions &amp; leaderboard</Check>
                 </ul>
-                <button
-                  type="button"
-                  onClick={() => router.push("/")}
-                  className="oj-btn-secondary mt-6 w-full"
-                  disabled={!user}
-                >
-                  Stay on Free Plan
-                </button>
+                {isPro ? (
+                  downgradeAcked ? (
+                    <p className="mt-6 rounded border border-ink-700 bg-ink-800/50 px-3 py-2 text-center text-xs text-ink-300">
+                      ✓ Noted — you'll move to Free {expiresLabel ? `on ${expiresLabel}` : "when your Pro period ends"}.
+                    </p>
+                  ) : (
+                    <>
+                      <button type="button" onClick={() => setDowngradeAcked(true)} className="oj-btn-secondary mt-6 w-full">
+                        Downgrade to Free Plan
+                      </button>
+                      <p className="mt-2 text-center text-xs text-ink-500">
+                        You'll keep Pro {expiresLabel ? `until ${expiresLabel}` : "until your paid period ends"}, then switch to
+                        Free automatically — nothing else to do.
+                      </p>
+                    </>
+                  )
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => router.push("/")}
+                    className="oj-btn-secondary mt-6 w-full"
+                    disabled={!user}
+                  >
+                    Stay on Free Plan
+                  </button>
+                )}
               </div>
 
               <div className="oj-card flex flex-col border-brand/50 p-6">
                 <h2 className="font-display text-lg font-semibold text-brand">Pro</h2>
-                <p className="mt-2 text-3xl font-bold text-ink-50">
-                  NT$200<span className="text-sm font-normal text-ink-400"> / month</span>
-                </p>
+                {isPro ? (
+                  <p className="mt-2 text-lg font-semibold text-ink-50">
+                    Active{expiresLabel ? <span className="block text-sm font-normal text-ink-400">until {expiresLabel}</span> : null}
+                  </p>
+                ) : (
+                  <p className="mt-2 text-3xl font-bold text-ink-50">
+                    NT$200<span className="text-sm font-normal text-ink-400"> / month</span>
+                  </p>
+                )}
                 <ul className="mt-6 flex-1 space-y-2.5">
                   <Check>Unlimited submissions</Check>
                   <Check>Unlimited self-run virtual CPE contests</Check>
@@ -118,7 +141,7 @@ export default function UpgradePlanPage() {
                   className="oj-btn-primary mt-6 w-full"
                   disabled={!user}
                 >
-                  Get Pro Plan
+                  {isPro ? "Extend Pro Plan" : "Get Pro Plan"}
                 </button>
               </div>
             </div>
