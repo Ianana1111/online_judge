@@ -7,6 +7,8 @@ export const FREE_VIRTUAL_ATTEMPTS = 2; // lifetime virtual/self-run CPE contest
 export type BillingPeriod = "MONTHLY" | "YEARLY";
 
 export const PLAN_PRICING: Record<BillingPeriod, { amountNtd: number; days: number; label: string }> = {
-  MONTHLY: { amountNtd: 100, days: 30, label: "月方案" },
-  YEARLY: { amountNtd: 1000, days: 365, label: "年方案" },
+  MONTHLY: { amountNtd: 200, days: 30, label: "月方案" },
+  YEARLY: { amountNtd: 2000, days: 365, label: "年方案" },
 };
+
+export type EcpayMethod = "CREDIT" | "ATM";

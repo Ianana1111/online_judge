@@ -97,11 +97,17 @@ export default function NavBar() {
     return null; // ExamModeShell supplies its own minimal header while a timed window is running
   }
 
+  // The upgrade flow (/upgrade, /upgrade/checkout) is a deliberately focused, full-screen
+  // experience with its own back-arrow navigation — no site chrome to distract from it.
+  if (pathname?.startsWith("/upgrade")) {
+    return null;
+  }
+
   const showStudentLinks = !!user && user.isStudent;
   const isAdmin = user?.role === "ADMIN";
   // Admins and students never have a billing problem — admins aren't capped, students are auto-Pro
   // (see billing.service.isProActive) — so the upgrade page is only relevant to ordinary users.
-  const showPricing = !!user && !isAdmin && !user.isStudent;
+  const showUpgrade = !!user && !isAdmin && !user.isStudent;
 
   return (
     <header className="sticky top-0 z-40 border-b border-ink-800 bg-ink-950/90 backdrop-blur">
@@ -135,14 +141,14 @@ export default function NavBar() {
                   {l.label}
                 </Link>
               ))}
-            {showPricing && (
+            {showUpgrade && (
               <Link
-                href="/pricing"
+                href="/upgrade"
                 className={`text-sm font-medium transition-colors ${
-                  pathname?.startsWith("/pricing") ? "text-brand" : "text-ink-300 hover:text-ink-50"
+                  pathname?.startsWith("/upgrade") ? "text-brand" : "text-ink-300 hover:text-ink-50"
                 }`}
               >
-                Pricing
+                Upgrade Plan
               </Link>
             )}
             {showStudentLinks &&

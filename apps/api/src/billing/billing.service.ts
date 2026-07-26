@@ -7,6 +7,7 @@ import {
   PLAN_PRICING,
   type BillingPeriod,
   type BillingRequestDto,
+  type EcpayMethod,
 } from "@oj/shared";
 import { computeCheckMacValue, ecpayConfig, verifyCheckMacValue } from "./ecpay.util";
 
@@ -92,6 +93,7 @@ export class BillingService {
             amountNtd: pending.amountNtd,
             createdAt: pending.createdAt,
             method: pending.method,
+            ecpayMethod: pending.ecpayMethod,
             bankCode: pending.bankCode,
             vAccount: pending.vAccount,
             expireDate: pending.expireDate,
@@ -170,21 +172,34 @@ export class BillingService {
   /** User starts an automated upgrade: creates a PENDING Payment tied to a fresh ECPay order and
    * returns the auto-submit form ECPay's AioCheckOut endpoint expects (form POST, not a JSON API —
    * this is how every ECPay integration works: the browser navigates to their hosted checkout).
-   * ChoosePayment "ALL" lets the customer pick ATM or Credit on ECPay's own hosted page — both
-   * confirm via the same ReturnURL webhook (RtnCode "1" = paid), so handleEcpayReturn below needs
-   * no method-specific branching. Only ATM issues a virtual account number, which arrives via the
-   * separate PaymentInfoURL webhook (handleEcpayPaymentInfo) — that webhook simply never fires for
-   * a credit-card checkout, since there's no virtual account to report. */
-  async createEcpayOrder(userId: string, period: BillingPeriod) {
+   * `method` (validated to exactly "CREDIT" | "ATM" by ecpayCreateSchema before this is ever
+   * called — never a raw string from the client) maps to ECPay's own ChoosePayment values, so
+   * their hosted checkout opens directly on the channel the user picked on OUR page instead of
+   * making them pick again on ECPay's. Both channels confirm via the same ReturnURL webhook
+   * (RtnCode "1" = paid), so handleEcpayReturn below needs no method-specific branching. Only ATM
+   * issues a virtual account number, which arrives via the separate PaymentInfoURL webhook
+   * (handleEcpayPaymentInfo) — that webhook simply never fires for a credit-card checkout, since
+   * there's no virtual account to report. */
+  async createEcpayOrder(userId: string, period: BillingPeriod, method: EcpayMethod) {
     const existingPending = await prisma.payment.findFirst({ where: { userId, status: "PENDING" } });
     if (existingPending) {
       throw new BadRequestException("You already have a payment awaiting review.");
     }
 
+    // The amount that actually gets charged is always derived server-side from PLAN_PRICING,
+    // never trusted from the client — the client only chooses which of these two fixed plans.
     const pricing = PLAN_PRICING[period];
     const merchantTradeNo = generateMerchantTradeNo();
     await prisma.payment.create({
-      data: { userId, period, amountNtd: pricing.amountNtd, method: "ECPAY", status: "PENDING", merchantTradeNo },
+      data: {
+        userId,
+        period,
+        amountNtd: pricing.amountNtd,
+        method: "ECPAY",
+        ecpayMethod: method,
+        status: "PENDING",
+        merchantTradeNo,
+      },
     });
 
     const config = ecpayConfig();
@@ -203,8 +218,8 @@ export class BillingService {
       ItemName: `judge.tw Pro (${pricing.label})`,
       ReturnURL: `${apiPublicUrl}/billing/ecpay/return`,
       PaymentInfoURL: `${apiPublicUrl}/billing/ecpay/payment-info`,
-      ClientBackURL: `${webOrigin}/pricing`,
-      ChoosePayment: "ALL",
+      ClientBackURL: `${webOrigin}/upgrade/checkout`,
+      ChoosePayment: method === "CREDIT" ? "Credit" : "ATM",
       EncryptType: 1,
     };
     const CheckMacValue = await computeCheckMacValue(params, config);

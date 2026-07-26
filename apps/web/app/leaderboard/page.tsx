@@ -21,7 +21,7 @@ const RANK_STYLE: Record<number, string> = {
 };
 
 export default function LeaderboardPage() {
-  const [period, setPeriod] = useState<"all" | "week" | "month">("week");
+  const [period, setPeriod] = useState<"all" | "week" | "month">("all");
   const [scope, setScope] = useState<"all" | "students">("all");
   const { user } = useAuthStore();
 

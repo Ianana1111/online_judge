@@ -195,6 +195,10 @@ model Payment {
   createdAt  DateTime      @default(now())
   reviewedAt DateTime?
   reviewedBy String?
+  /// The ECPay ChoosePayment channel the user picked on our checkout page ("Credit" | "ATM"),
+  /// set only for method=ECPAY. Lets the pending-payment UI show the right message (bank
+  /// transfer details vs. "confirming your card") instead of guessing from vAccount presence.
+  ecpayMethod String?
   /// ECPay's order id (MerchantTradeNo) — set only for method=ECPAY, used to correlate their
   /// async webhooks back to this row. Unique because ECPay requires every order id we send them
   /// to be unique in the first place.

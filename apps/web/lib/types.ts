@@ -61,6 +61,7 @@ export interface BillingStatus {
     amountNtd: number;
     createdAt: string;
     method: string;
+    ecpayMethod: "CREDIT" | "ATM" | null;
     bankCode: string | null;
     vAccount: string | null;
     expireDate: string | null;
