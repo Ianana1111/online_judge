@@ -2,9 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import VerdictBadge from "@/components/VerdictBadge";
 import { apiFetch, ApiError, openSubmissionStream } from "@/lib/api";
-import type { SubmissionDetail } from "@/lib/types";
+import { useAuthStore } from "@/store/auth";
+import type { BillingStatus, SubmissionDetail } from "@/lib/types";
 import { LANGUAGE_LABEL } from "@/lib/types";
 
 // Monaco is a large editor bundle unrelated to the rest of the problem page (statement, tabs,
@@ -53,6 +56,18 @@ export default function SubmissionPanel({
   const [detail, setDetail] = useState<SubmissionDetail | null>(null);
   const [flash, setFlash] = useState(false);
   const esRef = useRef<EventSource | null>(null);
+  const { user } = useAuthStore();
+  const qc = useQueryClient();
+
+  // FREE-plan submit quota, shown proactively so a user finds out they're capped before they hit
+  // the wall instead of only from a rejected submission. PRO/admin/student accounts have no cap
+  // (see billing.service.isProActive), so this stays hidden for them (limit === null).
+  const { data: billing } = useQuery({
+    queryKey: ["billing", "me"],
+    queryFn: () => apiFetch<BillingStatus>("/billing/me"),
+    enabled: !!user,
+    staleTime: 30_000,
+  });
 
   useEffect(() => {
     const raw = localStorage.getItem(storageKey);
@@ -104,6 +119,10 @@ export default function SubmissionPanel({
         score: 0,
         createdAt: new Date().toISOString(),
       });
+      // A successful submission just consumed one unit of a FREE user's quota server-side —
+      // refetch so the indicator below reflects it immediately instead of going stale until the
+      // next unrelated billing fetch.
+      qc.invalidateQueries({ queryKey: ["billing", "me"] });
       esRef.current?.close();
       const es = openSubmissionStream(id);
       esRef.current = es;
@@ -121,8 +140,12 @@ export default function SubmissionPanel({
       };
     } catch (e) {
       if (e instanceof ApiError) {
+        // 403 covers two distinct causes here — a closed/not-yet-started contest window, and a
+        // FREE-plan submit quota exceeded — and the backend already returns the right specific
+        // message for whichever one actually happened, so just surface it rather than guessing
+        // with a single hardcoded string (that used to always say "contest window closed," even
+        // when the real reason was the submit cap).
         if (e.status === 429) setError("You're submitting too fast — wait a few seconds and try again.");
-        else if (e.status === 403) setError("This contest window is closed or you haven't started it yet.");
         else setError(e.message);
       } else {
         setError("Something went wrong submitting your code.");
@@ -170,6 +193,32 @@ export default function SubmissionPanel({
                   : "Submit"}
         </button>
       </div>
+
+      {billing && billing.submits.limit != null && (
+        <p className="text-right text-xs text-ink-500">
+          {billing.submits.used >= billing.submits.limit ? (
+            <span className="text-verdict-wa">
+              You've used all {billing.submits.limit} free submissions —{" "}
+              <Link href="/upgrade" className="underline hover:text-brand">
+                upgrade to Pro
+              </Link>{" "}
+              for unlimited.
+            </span>
+          ) : (
+            <>
+              {billing.submits.used}/{billing.submits.limit} free submissions used
+              {billing.submits.limit - billing.submits.used <= 3 && (
+                <>
+                  {" · "}
+                  <Link href="/upgrade" className="underline hover:text-brand">
+                    upgrade to Pro
+                  </Link>
+                </>
+              )}
+            </>
+          )}
+        </p>
+      )}
 
       <CodeEditor languageKey={languageKey} value={sourceCode} onChange={setSourceCode} />
 
