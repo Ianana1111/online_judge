@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
@@ -156,6 +156,7 @@ function EditClassForm({
 }
 
 export default function AdminStudentClassesClient({ studentId }: { studentId: string }) {
+  const router = useRouter();
   const { user, status } = useAuthStore();
   const qc = useQueryClient();
   const isAdmin = user?.role === "ADMIN";
@@ -205,7 +206,16 @@ export default function AdminStudentClassesClient({ studentId }: { studentId: st
           editingId === c.id ? (
             <EditClassForm key={c.id} studentId={studentId} cls={c} onDone={() => setEditingId(null)} />
           ) : (
-            <div key={c.id} className="oj-card p-4">
+            <div
+              key={c.id}
+              role="link"
+              tabIndex={0}
+              onClick={() => router.push(`/admin/classes/${studentId}/${c.id}`)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") router.push(`/admin/classes/${studentId}/${c.id}`);
+              }}
+              className="oj-card cursor-pointer p-4 transition-colors hover:border-brand/40"
+            >
               <div className="mb-2 flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <h2 className="font-display text-base font-semibold text-ink-50">
@@ -215,13 +225,22 @@ export default function AdminStudentClassesClient({ studentId }: { studentId: st
                   {c.contentMd && <p className="mt-1 truncate text-sm text-ink-400">{previewText(c.contentMd)}</p>}
                 </div>
                 <div className="flex shrink-0 gap-2 text-xs">
-                  <Link href={`/admin/classes/${studentId}/${c.id}`} className="text-brand hover:underline">
-                    View &amp; reply
-                  </Link>
-                  <button onClick={() => setEditingId(c.id)} className="text-ink-400 hover:text-brand">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingId(c.id);
+                    }}
+                    className="text-ink-400 hover:text-brand"
+                  >
                     Edit
                   </button>
-                  <button onClick={() => removeClass(c.id)} className="text-ink-500 hover:text-verdict-wa">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeClass(c.id);
+                    }}
+                    className="text-ink-500 hover:text-verdict-wa"
+                  >
                     Delete
                   </button>
                 </div>
