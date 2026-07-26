@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import InfoTooltip from "@/components/InfoTooltip";
+import { stripProblemNumber } from "@/lib/problemTitle";
 import type { ProblemRow } from "@/lib/types";
 
 const DIFFICULTY_EXPLANATION =
@@ -132,7 +133,7 @@ export default function ProblemFilterTable({ problems }: { problems: ProblemRow[
               <td className="font-mono text-xs text-ink-400">{p.uvaId ?? "—"}</td>
               <td>
                 <Link href={`/problems/${p.slug}`} className="font-medium text-ink-50 hover:text-brand">
-                  {p.title}
+                  {stripProblemNumber(p.title, p.uvaId)}
                 </Link>
               </td>
               <td className="font-mono text-xs text-ink-400">{p.source}</td>

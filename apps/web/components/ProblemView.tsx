@@ -12,6 +12,7 @@ import CopyButton from "@/components/CopyButton";
 import SplitPane from "@/components/SplitPane";
 import type { ProblemDetail } from "@/lib/types";
 import { useExamTimerStore } from "@/store/examTimer";
+import { stripProblemNumber } from "@/lib/problemTitle";
 
 const DIFFICULTY_EXPLANATION =
   "Curated ratings come first: problems from an officially-rated set (like the CPE 必考49題 one-star selection) keep that rating. Everything else is derived from how many people worldwide have solved it on UVa (more solvers = more introductory), with a minimum floor based on the algorithm topic — a DP or graph problem never rates below what its technique demands.";
@@ -26,12 +27,15 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
     <div>
       <div className="mb-4 flex items-center justify-between">
         <h1 className="font-display text-3xl font-bold text-ink-50">
+          {problem.uvaId != null && (
+            <span className="mr-2 align-middle font-mono text-lg font-normal text-ink-500">#{problem.uvaId}</span>
+          )}
           {problem.sourceUrl ? (
             <a href={problem.sourceUrl} target="_blank" rel="noopener noreferrer" className="hover:text-brand">
-              {problem.title}
+              {stripProblemNumber(problem.title, problem.uvaId)}
             </a>
           ) : (
-            problem.title
+            stripProblemNumber(problem.title, problem.uvaId)
           )}
         </h1>
         <span className="flex items-center gap-1.5 font-mono text-base text-brand">
