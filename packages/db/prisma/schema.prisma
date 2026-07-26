@@ -215,6 +215,13 @@ model Payment {
   bankCode   String?
   vAccount   String?
   expireDate String?
+  /// Set when the user dismisses their own still-PENDING order from the checkout page (e.g. they
+  /// backed out of an ATM transfer they no longer want). Deliberately NOT a status change: ECPay's
+  /// webhook (handleEcpayReturn) only ever checks status === PENDING, so a dismissed order can
+  /// still auto-approve normally if the user goes ahead and pays it anyway — dismissing only hides
+  /// it from the checkout UI and lets them start a fresh order, it never risks silently discarding
+  /// a real payment.
+  dismissedByUser Boolean @default(false)
 
   @@index([status, createdAt])
   @@map("payments")
