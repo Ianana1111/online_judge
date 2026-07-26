@@ -78,6 +78,10 @@ export type BillingRequestDto = z.infer<typeof billingRequestSchema>;
 
 export const ecpayCreateSchema = z.object({
   period: z.enum(["MONTHLY", "YEARLY"]),
+  // Which channel the user picked on our own checkout page — sent straight through to ECPay's
+  // ChoosePayment field (whitelisted here, never a raw pass-through of client text) so their
+  // hosted checkout opens directly on the right form instead of showing its own picker again.
+  method: z.enum(["CREDIT", "ATM"]),
 });
 export type EcpayCreateDto = z.infer<typeof ecpayCreateSchema>;
 

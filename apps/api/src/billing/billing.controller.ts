@@ -61,7 +61,7 @@ export class BillingController {
    * JSON API call: the browser itself must navigate there). */
   @Post("ecpay/create")
   createEcpayOrder(@Body(new ZodValidationPipe(ecpayCreateSchema)) body: EcpayCreateDto, @CurrentUser() user: RequestUser) {
-    return this.billing.createEcpayOrder(user.id, body.period);
+    return this.billing.createEcpayOrder(user.id, body.period, body.method);
   }
 
   /** Webhook — ECPay POSTs here (form-urlencoded, not JSON) once it has issued an ATM virtual
