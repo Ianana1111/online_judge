@@ -116,12 +116,12 @@ export default function NavBar() {
           <Link href="/" className="font-display text-lg font-bold tracking-tight text-ink-50">
             judge<span className="text-brand">.</span>
           </Link>
-          <nav className="hidden gap-4 sm:flex">
+          <nav className="hidden items-center gap-4 sm:flex">
             {PUBLIC_LINKS.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className={`text-sm font-medium transition-colors ${
+                className={`text-sm font-medium leading-none transition-colors ${
                   pathname?.startsWith(l.href) ? "text-brand" : "text-ink-300 hover:text-ink-50"
                 }`}
               >
@@ -134,7 +134,7 @@ export default function NavBar() {
                 <Link
                   key={l.href}
                   href={l.href}
-                  className={`text-sm font-medium transition-colors ${
+                  className={`text-sm font-medium leading-none transition-colors ${
                     pathname?.startsWith(l.href) ? "text-brand" : "text-ink-300 hover:text-ink-50"
                   }`}
                 >
@@ -144,7 +144,7 @@ export default function NavBar() {
             {showUpgrade && (
               <Link
                 href="/upgrade"
-                className={`text-sm font-medium transition-colors ${
+                className={`text-sm font-medium leading-none transition-colors ${
                   pathname?.startsWith("/upgrade") ? "text-brand" : "text-ink-300 hover:text-ink-50"
                 }`}
               >
@@ -156,7 +156,7 @@ export default function NavBar() {
                 <Link
                   key={l.href}
                   href={l.href}
-                  className={`text-sm font-medium transition-colors ${
+                  className={`text-sm font-medium leading-none transition-colors ${
                     pathname?.startsWith(l.href) ? "text-brand" : "text-ink-300 hover:text-ink-50"
                   }`}
                 >
@@ -167,7 +167,7 @@ export default function NavBar() {
             {isAdmin && (
               <Link
                 href="/admin"
-                className={`text-sm font-medium transition-colors ${
+                className={`text-sm font-medium leading-none transition-colors ${
                   pathname?.startsWith("/admin") ? "text-brand" : "text-ink-300 hover:text-ink-50"
                 }`}
               >
