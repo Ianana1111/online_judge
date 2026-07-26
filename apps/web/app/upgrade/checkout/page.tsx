@@ -138,48 +138,50 @@ export default function CheckoutPage() {
               extends it further.
             </div>
           ) : pending ? (
-            <div className="oj-card border-verdict-tle/40 p-5 text-sm">
-              {pending.method === "ECPAY" && pending.ecpayMethod === "ATM" && pending.vAccount ? (
-                <>
-                  <p className="font-semibold text-verdict-tle">Complete your ATM transfer</p>
-                  <div className="mt-3 space-y-1 rounded border border-ink-700 bg-ink-800/50 p-3 font-mono text-sm">
-                    <p>
-                      Bank code: <span className="font-semibold text-ink-50">{pending.bankCode}</span>
+            <div className="space-y-3">
+              <div className="oj-card border-verdict-tle/40 p-5 text-sm">
+                {pending.method === "ECPAY" && pending.ecpayMethod === "ATM" && pending.vAccount ? (
+                  <>
+                    <p className="font-semibold text-verdict-tle">Complete your ATM transfer</p>
+                    <div className="mt-3 space-y-1 rounded border border-ink-700 bg-ink-800/50 p-3 font-mono text-sm">
+                      <p>
+                        Bank code: <span className="font-semibold text-ink-50">{pending.bankCode}</span>
+                      </p>
+                      <p>
+                        Virtual account: <span className="font-semibold text-ink-50">{pending.vAccount}</span>
+                      </p>
+                      {pending.expireDate && <p className="text-xs text-ink-400">Pay by: {pending.expireDate}</p>}
+                    </div>
+                    <p className="mt-3 text-ink-300">
+                      Transfer NT${pending.amountNtd} to the account above via ATM / online / mobile banking. Pro unlocks{" "}
+                      <span className="text-verdict-ac">automatically</span> once it's received — this page updates on its own.
                     </p>
-                    <p>
-                      Virtual account: <span className="font-semibold text-ink-50">{pending.vAccount}</span>
+                  </>
+                ) : pending.method === "ECPAY" && pending.ecpayMethod === "ATM" ? (
+                  <>
+                    <p className="font-semibold text-verdict-tle">Generating your virtual account…</p>
+                    <p className="mt-1 text-ink-300">One moment — this page updates automatically.</p>
+                  </>
+                ) : pending.method === "ECPAY" ? (
+                  <>
+                    <p className="font-semibold text-verdict-tle">Confirming your card payment…</p>
+                    <p className="mt-1 text-ink-300">This is usually instant. This page updates automatically once it clears.</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="font-semibold text-verdict-tle">Payment under review</p>
+                    <p className="mt-1 text-ink-300">
+                      We've received your {pending.period === "MONTHLY" ? "monthly" : "yearly"} plan (NT${pending.amountNtd})
+                      payment claim — Pro unlocks as soon as we confirm the transfer.
                     </p>
-                    {pending.expireDate && <p className="text-xs text-ink-400">Pay by: {pending.expireDate}</p>}
-                  </div>
-                  <p className="mt-3 text-ink-300">
-                    Transfer NT${pending.amountNtd} to the account above via ATM / online / mobile banking. Pro unlocks{" "}
-                    <span className="text-verdict-ac">automatically</span> once it's received — this page updates on its own.
-                  </p>
-                </>
-              ) : pending.method === "ECPAY" && pending.ecpayMethod === "ATM" ? (
-                <>
-                  <p className="font-semibold text-verdict-tle">Generating your virtual account…</p>
-                  <p className="mt-1 text-ink-300">One moment — this page updates automatically.</p>
-                </>
-              ) : pending.method === "ECPAY" ? (
-                <>
-                  <p className="font-semibold text-verdict-tle">Confirming your card payment…</p>
-                  <p className="mt-1 text-ink-300">This is usually instant. This page updates automatically once it clears.</p>
-                </>
-              ) : (
-                <>
-                  <p className="font-semibold text-verdict-tle">Payment under review</p>
-                  <p className="mt-1 text-ink-300">
-                    We've received your {pending.period === "MONTHLY" ? "monthly" : "yearly"} plan (NT${pending.amountNtd}) payment
-                    claim — Pro unlocks as soon as we confirm the transfer.
-                  </p>
-                </>
-              )}
+                  </>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={dismissPending}
                 disabled={dismissing}
-                className="mt-4 text-xs text-ink-500 hover:text-verdict-wa disabled:opacity-50"
+                className="oj-btn-secondary w-full py-2.5 text-sm disabled:opacity-50"
               >
                 {dismissing ? "Cancelling…" : "Not now — cancel and choose again"}
               </button>
