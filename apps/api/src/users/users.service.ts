@@ -2,6 +2,7 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 import argon2 from "argon2";
 import { prisma } from "@oj/db";
 import type { ChangeHandleDto, ChangePasswordDto, CreateUserDto, UpdateSettingsDto } from "@oj/shared";
+import { isProActive } from "../billing/billing.service";
 import { computeStreak } from "../leaderboard/leaderboard.service";
 
 const HEATMAP_DAYS = 365;
@@ -46,9 +47,25 @@ export class UsersService {
   async listAll() {
     const users = await prisma.user.findMany({
       orderBy: { createdAt: "desc" },
-      select: { id: true, handle: true, email: true, role: true, isStudent: true, createdAt: true },
+      select: {
+        id: true,
+        handle: true,
+        email: true,
+        role: true,
+        isStudent: true,
+        plan: true,
+        planExpiresAt: true,
+        createdAt: true,
+      },
     });
-    return users;
+    // Same effective-plan computation as billing.service.status() — a lapsed planExpiresAt or a
+    // raw plan="PRO" alone isn't enough on its own, and isStudent is auto-Pro without ever having
+    // a real payment, so an admin scanning this list needs the SAME answer a user would get from
+    // "am I Pro right now," not the raw, occasionally-stale DB column.
+    return users.map(({ plan, planExpiresAt, ...rest }) => {
+      const pro = isProActive({ plan, planExpiresAt, isStudent: rest.isStudent });
+      return { ...rest, plan: pro ? ("PRO" as const) : ("FREE" as const), planExpiresAt: pro ? planExpiresAt : null };
+    });
   }
 
   async setIsStudent(id: string, isStudent: boolean) {

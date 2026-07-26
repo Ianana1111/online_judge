@@ -127,6 +127,7 @@ export default function AdminUsersPage() {
               <th>Handle</th>
               <th>Email</th>
               <th>Role</th>
+              <th>Plan</th>
               <th>My student</th>
               <th>Created</th>
             </tr>
@@ -137,6 +138,18 @@ export default function AdminUsersPage() {
                 <td>{u.handle}</td>
                 <td className="text-xs text-ink-400">{u.email}</td>
                 <td className="text-xs text-ink-400">{u.role}</td>
+                <td className="text-xs">
+                  {u.plan === "PRO" ? (
+                    <span className="inline-flex items-center gap-1 rounded border border-brand/40 bg-brand/10 px-1.5 py-0.5 font-semibold text-brand">
+                      Pro
+                    </span>
+                  ) : (
+                    <span className="text-ink-500">Free</span>
+                  )}
+                  {u.plan === "PRO" && u.planExpiresAt && (
+                    <span className="ml-1.5 text-ink-500">until {new Date(u.planExpiresAt).toLocaleDateString()}</span>
+                  )}
+                </td>
                 <td>
                   {u.role === "USER" && (
                     <label className="flex items-center gap-2 text-xs text-ink-300">
