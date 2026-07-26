@@ -236,7 +236,13 @@ export class BillingService {
   async handleEcpayPaymentInfo(body: Record<string, string>): Promise<void> {
     const config = ecpayConfig();
     if (!(await verifyCheckMacValue(body, config))) {
-      this.logger.warn(`ECPay payment-info webhook: invalid CheckMacValue for ${body.MerchantTradeNo}`);
+      // Full body + our recomputed value, logged only on failure — without this we have zero
+      // visibility into why a real ECPay webhook's signature didn't match ours. Nothing logged
+      // here is secret (HashKey/HashIV are never included, only the fields ECPay itself sent).
+      this.logger.warn(
+        `ECPay payment-info webhook: invalid CheckMacValue for ${body.MerchantTradeNo}. ` +
+          `received=${JSON.stringify(body)} expected=${await computeCheckMacValue(body, config)}`,
+      );
       return;
     }
     const payment = await prisma.payment.findUnique({ where: { merchantTradeNo: body.MerchantTradeNo } });
@@ -256,7 +262,10 @@ export class BillingService {
   async handleEcpayReturn(body: Record<string, string>): Promise<void> {
     const config = ecpayConfig();
     if (!(await verifyCheckMacValue(body, config))) {
-      this.logger.warn(`ECPay return webhook: invalid CheckMacValue for ${body.MerchantTradeNo}`);
+      this.logger.warn(
+        `ECPay return webhook: invalid CheckMacValue for ${body.MerchantTradeNo}. ` +
+          `received=${JSON.stringify(body)} expected=${await computeCheckMacValue(body, config)}`,
+      );
       return;
     }
     if (body.RtnCode !== "1") {
