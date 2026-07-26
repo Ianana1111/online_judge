@@ -83,8 +83,12 @@ export default function UpgradePlanPage() {
                   NT$0<span className="text-sm font-normal text-ink-400"> forever</span>
                 </p>
                 <ul className="mt-6 flex-1 space-y-2.5">
-                  <Check>20 submissions total</Check>
-                  <Check>2 self-run virtual CPE contests</Check>
+                  <Check>{status ? `${status.submits.used}/${status.submits.limit} submissions used` : "20 submissions total"}</Check>
+                  <Check>
+                    {status
+                      ? `${status.virtualContests.used}/${status.virtualContests.limit} self-run virtual CPE contests used`
+                      : "2 self-run virtual CPE contests"}
+                  </Check>
                   <Check>Full access to discussions &amp; leaderboard</Check>
                 </ul>
                 <button
