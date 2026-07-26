@@ -68,7 +68,10 @@ export class BillingService {
     const days = PLAN_PRICING[period].days;
     const base = user.planExpiresAt && user.planExpiresAt.getTime() > Date.now() ? user.planExpiresAt : new Date();
     const newExpiry = new Date(base.getTime() + days * 24 * 60 * 60 * 1000);
-    await tx.user.update({ where: { id: userId }, data: { plan: "PRO", planExpiresAt: newExpiry } });
+    await tx.user.update({
+      where: { id: userId },
+      data: { plan: "PRO", planExpiresAt: newExpiry, planCancelRequested: false },
+    });
     return newExpiry;
   }
 
@@ -87,6 +90,7 @@ export class BillingService {
     return {
       plan: pro ? "PRO" : "FREE",
       planExpiresAt: pro ? user.planExpiresAt : null,
+      planCancelRequested: pro && user.planCancelRequested,
       submits: { used: user.submitQuotaUsed, limit: pro ? null : FREE_SUBMIT_QUOTA },
       virtualContests: { used: virtualUsed, limit: pro ? null : FREE_VIRTUAL_ATTEMPTS },
       pendingPayment: pending
@@ -103,6 +107,18 @@ export class BillingService {
           }
         : null,
     };
+  }
+
+  /** User chooses to downgrade back to Free. Since every payment is one-time (no auto-renewal
+   * exists to cancel), this doesn't touch plan/planExpiresAt at all — access already lapses to
+   * Free on its own once planExpiresAt passes. It only flags the choice so the UI can keep showing
+   * "you're downgrading" across reloads instead of re-offering the same button every visit. */
+  async cancelPlan(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException("User not found");
+    if (!isProActive(user)) throw new BadRequestException("You're not currently on Pro.");
+    await prisma.user.update({ where: { id: userId }, data: { planCancelRequested: true } });
+    return { ok: true };
   }
 
   /** User submits a manual-payment claim. Creates a PENDING record for an admin to verify. */

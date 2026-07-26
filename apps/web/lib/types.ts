@@ -53,6 +53,7 @@ export interface User {
 export interface BillingStatus {
   plan: "FREE" | "PRO";
   planExpiresAt: string | null;
+  planCancelRequested: boolean;
   submits: { used: number; limit: number | null };
   virtualContests: { used: number; limit: number | null };
   pendingPayment: {

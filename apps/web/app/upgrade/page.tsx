@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { apiFetch } from "@/lib/api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import BackButton from "@/components/BackButton";
 import type { BillingStatus } from "@/lib/types";
@@ -20,14 +20,66 @@ function Check({ children }: { children: React.ReactNode }) {
   );
 }
 
+function DowngradeConfirmDialog({
+  expiresLabel,
+  submitting,
+  error,
+  onCancel,
+  onConfirm,
+}: {
+  expiresLabel: string | null;
+  submitting: boolean;
+  error: string | null;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onCancel();
+    }
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onCancel]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      role="dialog"
+      aria-modal="true"
+      onClick={onCancel}
+    >
+      <div className="oj-card w-full max-w-sm p-5" onClick={(e) => e.stopPropagation()}>
+        <h2 className="font-display text-base font-semibold text-ink-50">Downgrade to Free Plan?</h2>
+        <p className="mt-2 text-sm text-ink-300">
+          You'll keep full Pro access {expiresLabel ? `until ${expiresLabel}` : "until your paid period ends"} — nothing changes
+          right away. After that date, your account switches to Free automatically.
+        </p>
+        {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={onCancel} className="oj-btn-secondary px-4 py-2 text-sm" disabled={submitting}>
+            Keep Pro
+          </button>
+          <button type="button" onClick={onConfirm} className="oj-btn-primary px-4 py-2 text-sm" disabled={submitting}>
+            {submitting ? "Confirming…" : "Confirm Downgrade"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function UpgradePlanPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { user, status: authStatus } = useAuthStore();
-  // There's no auto-renewal in this system — every ECPay/manual payment is a one-time purchase
-  // that extends planExpiresAt, never a recurring charge — so "downgrading" needs no backend call
-  // at all: Pro already lapses back to Free on its own once planExpiresAt passes. This just gives
-  // the user a clear, explicit acknowledgment of that instead of leaving them to wonder.
-  const [downgradeAcked, setDowngradeAcked] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState<string | null>(null);
 
   const { data: status, isLoading } = useQuery({
     queryKey: ["billing", "me"],
@@ -38,6 +90,24 @@ export default function UpgradePlanPage() {
   const isAdmin = user?.role === "ADMIN";
   const isPro = status?.plan === "PRO";
   const expiresLabel = status?.planExpiresAt ? new Date(status.planExpiresAt).toLocaleDateString() : null;
+
+  // There's no auto-renewal in this system — every ECPay/manual payment is a one-time purchase
+  // that extends planExpiresAt, never a recurring charge — so confirming doesn't touch plan/expiry
+  // at all; Pro already lapses back to Free on its own once planExpiresAt passes. The call only
+  // persists the user's choice so the UI keeps reflecting it across reloads.
+  async function confirmCancel() {
+    setCancelling(true);
+    setCancelError(null);
+    try {
+      await apiFetch("/billing/cancel", { method: "POST" });
+      await queryClient.invalidateQueries({ queryKey: ["billing", "me"] });
+      setShowCancelConfirm(false);
+    } catch (e) {
+      setCancelError(e instanceof ApiError ? e.message : "無法送出，請稍後再試");
+    } finally {
+      setCancelling(false);
+    }
+  }
   // Admins aren't capped at all, and students are auto-Pro (see billing.service.isProActive) —
   // neither of them has anything to upgrade, so don't offer a purchase flow that can't apply to
   // them (mirrors NavBar's showUpgrade condition, since this page is reachable by direct URL too).
@@ -91,13 +161,21 @@ export default function UpgradePlanPage() {
                   <Check>Full access to discussions &amp; leaderboard</Check>
                 </ul>
                 {isPro ? (
-                  downgradeAcked ? (
+                  status?.planCancelRequested ? (
                     <p className="mt-6 rounded border border-ink-700 bg-ink-800/50 px-3 py-2 text-center text-xs text-ink-300">
-                      ✓ Noted — you'll move to Free {expiresLabel ? `on ${expiresLabel}` : "when your Pro period ends"}.
+                      ✓ Downgrade confirmed — you'll move to Free{" "}
+                      {expiresLabel ? `on ${expiresLabel}` : "when your Pro period ends"}.
                     </p>
                   ) : (
                     <>
-                      <button type="button" onClick={() => setDowngradeAcked(true)} className="oj-btn-secondary mt-6 w-full">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCancelError(null);
+                          setShowCancelConfirm(true);
+                        }}
+                        className="oj-btn-secondary mt-6 w-full"
+                      >
                         Downgrade to Free Plan
                       </button>
                       <p className="mt-2 text-center text-xs text-ink-500">
@@ -148,6 +226,16 @@ export default function UpgradePlanPage() {
           )}
         </div>
       </div>
+
+      {showCancelConfirm && (
+        <DowngradeConfirmDialog
+          expiresLabel={expiresLabel}
+          submitting={cancelling}
+          error={cancelError}
+          onCancel={() => setShowCancelConfirm(false)}
+          onConfirm={confirmCancel}
+        />
+      )}
     </div>
   );
 }

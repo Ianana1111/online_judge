@@ -36,6 +36,11 @@ export class BillingController {
     return this.billing.requestUpgrade(user.id, body);
   }
 
+  @Post("cancel")
+  cancel(@CurrentUser() user: RequestUser) {
+    return this.billing.cancelPlan(user.id);
+  }
+
   @Roles("ADMIN")
   @Get("admin/pending")
   pending() {

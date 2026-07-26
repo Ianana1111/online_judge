@@ -104,6 +104,12 @@ model User {
   /// FREE again until another payment extends the date (see billing.service).
   plan            Plan      @default(FREE)
   planExpiresAt   DateTime?
+  /// Set when a PRO user asks to downgrade. Purely informational — there's no auto-renewal in
+  /// this system (every payment is a one-time planExpiresAt extension), so it doesn't change
+  /// enforcement at all; it only lets the UI keep showing "you chose to downgrade" after a reload
+  /// instead of forgetting on refresh. Cleared automatically the next time extendPlan runs (buying
+  /// more Pro is an unambiguous signal they no longer want to downgrade).
+  planCancelRequested Boolean @default(false)
   /// Lifetime count of submissions made — the FREE tier's quota is enforced against this.
   submitQuotaUsed Int       @default(0)
   settings     Json     @default("{}")
