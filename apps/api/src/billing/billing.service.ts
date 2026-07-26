@@ -83,7 +83,7 @@ export class BillingService {
     const pro = isProActive(user);
     const virtualUsed = await prisma.contestParticipant.count({ where: { userId } });
     const pending = await prisma.payment.findFirst({
-      where: { userId, status: "PENDING" },
+      where: { userId, status: "PENDING", dismissedByUser: false },
       orderBy: { createdAt: "desc" },
     });
 
@@ -118,6 +118,21 @@ export class BillingService {
     if (!user) throw new NotFoundException("User not found");
     if (!isProActive(user)) throw new BadRequestException("You're not currently on Pro.");
     await prisma.user.update({ where: { id: userId }, data: { planCancelRequested: true } });
+    return { ok: true };
+  }
+
+  /** User backs out of their own still-open order (e.g. an ATM transfer they no longer want) so
+   * the checkout page stops showing it and they can start a fresh one. Idempotent/best-effort —
+   * no-op if there's nothing pending. Deliberately doesn't touch `status`: if they go ahead and pay
+   * the old virtual account anyway, the webhook still approves it normally (see the field's doc
+   * comment on the Payment model). */
+  async dismissPending(userId: string) {
+    const pending = await prisma.payment.findFirst({
+      where: { userId, status: "PENDING", dismissedByUser: false },
+      orderBy: { createdAt: "desc" },
+    });
+    if (!pending) return { ok: true };
+    await prisma.payment.update({ where: { id: pending.id }, data: { dismissedByUser: true } });
     return { ok: true };
   }
 
@@ -242,7 +257,9 @@ export class BillingService {
    * (handleEcpayPaymentInfo) — that webhook simply never fires for a credit-card checkout, since
    * there's no virtual account to report. */
   async createEcpayOrder(userId: string, period: BillingPeriod, method: EcpayMethod) {
-    const existingPending = await prisma.payment.findFirst({ where: { userId, status: "PENDING" } });
+    const existingPending = await prisma.payment.findFirst({
+      where: { userId, status: "PENDING", dismissedByUser: false },
+    });
     if (existingPending) {
       throw new BadRequestException("You already have a payment awaiting review.");
     }

@@ -49,6 +49,13 @@ export class BillingController {
     return this.billing.cancelPlan(user.id);
   }
 
+  /** User backs out of their own pending order (e.g. an ATM transfer they no longer want) so the
+   * checkout page stops showing it and they can pick a different plan/period/method. */
+  @Post("dismiss-pending")
+  dismissPending(@CurrentUser() user: RequestUser) {
+    return this.billing.dismissPending(user.id);
+  }
+
   @Roles("ADMIN")
   @Get("admin/pending")
   pending() {

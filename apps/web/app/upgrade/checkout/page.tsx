@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import BackButton from "@/components/BackButton";
@@ -14,11 +14,13 @@ type Method = "CREDIT" | "ATM";
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const qc = useQueryClient();
   const { user, status: authStatus } = useAuthStore();
   const [period, setPeriod] = useState<Period>("MONTHLY");
   const [method, setMethod] = useState<Method>("CREDIT");
   const [ecpayError, setEcpayError] = useState<string | null>(null);
   const [ecpayLoading, setEcpayLoading] = useState(false);
+  const [dismissing, setDismissing] = useState(false);
 
   // Paying with ECPay does a real <form method="POST"> navigation off-site to their hosted
   // checkout (see startEcpay below) — that's a genuine browser history entry on ECPay's own
@@ -85,6 +87,22 @@ export default function CheckoutPage() {
     } catch (e) {
       setEcpayError(e instanceof ApiError ? e.message : "無法建立訂單，請稍後再試");
       setEcpayLoading(false);
+    }
+  }
+
+  // Doesn't cancel the order with ECPay itself (not possible — an ATM virtual account stays valid
+  // on their end regardless) and doesn't touch its PENDING status either, so if the user goes
+  // ahead and pays it anyway, the webhook still approves it normally. This only hides it from this
+  // page so they can pick a different plan/period/method instead of being stuck looking at it.
+  async function dismissPending() {
+    setDismissing(true);
+    try {
+      await apiFetch("/billing/dismiss-pending", { method: "POST" });
+      await qc.invalidateQueries({ queryKey: ["billing", "me"] });
+    } catch {
+      /* best-effort */
+    } finally {
+      setDismissing(false);
     }
   }
 
@@ -157,6 +175,14 @@ export default function CheckoutPage() {
                   </p>
                 </>
               )}
+              <button
+                type="button"
+                onClick={dismissPending}
+                disabled={dismissing}
+                className="mt-4 text-xs text-ink-500 hover:text-verdict-wa disabled:opacity-50"
+              >
+                {dismissing ? "Cancelling…" : "Not now — cancel and choose again"}
+              </button>
             </div>
           ) : (
             <div className="space-y-5">
