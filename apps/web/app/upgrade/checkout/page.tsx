@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
@@ -12,11 +13,33 @@ type Period = "MONTHLY" | "YEARLY";
 type Method = "CREDIT" | "ATM";
 
 export default function CheckoutPage() {
+  const router = useRouter();
   const { user, status: authStatus } = useAuthStore();
   const [period, setPeriod] = useState<Period>("MONTHLY");
   const [method, setMethod] = useState<Method>("CREDIT");
   const [ecpayError, setEcpayError] = useState<string | null>(null);
   const [ecpayLoading, setEcpayLoading] = useState(false);
+
+  // Paying with ECPay does a real <form method="POST"> navigation off-site to their hosted
+  // checkout (see startEcpay below) — that's a genuine browser history entry on ECPay's own
+  // origin, and their multi-step checkout is itself POST-chained internally. Once ECPay redirects
+  // back here (ClientBackURL), pressing the browser's native Back button walks straight back into
+  // that POST chain, which Chrome/etc. can only handle by prompting "confirm form resubmission" —
+  // there's no cross-origin API to clean up or rewrite entries created on ecpay.com.tw's own
+  // domain, so preventing the prompt itself isn't possible. What IS in our control: trap Back
+  // *from this page* so it never actually walks into that chain — push a guard entry and, on any
+  // popstate (back/forward), immediately send them to the homepage instead. The page already has
+  // its own explicit BackButton for intentional navigation, so losing the native gesture here
+  // costs nothing.
+  useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+    function onPopState() {
+      window.history.pushState(null, "", window.location.href);
+      router.push("/");
+    }
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [router]);
 
   const { data: plans } = useQuery({
     queryKey: ["billing", "plans"],
