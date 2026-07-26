@@ -263,6 +263,10 @@ export interface AdminUser {
   email: string;
   role: "USER" | "ADMIN";
   isStudent: boolean;
+  // Effective plan (already accounts for a lapsed planExpiresAt and isStudent auto-Pro) — same
+  // computation backing /billing/me, not the raw DB column.
+  plan: "FREE" | "PRO";
+  planExpiresAt: string | null;
   createdAt: string;
 }
 
