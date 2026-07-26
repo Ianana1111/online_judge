@@ -51,13 +51,19 @@ function ecpayUrlEncode(str: string): string {
 /** Computes CheckMacValue for a param set per ECPay's documented algorithm:
  * sort A-Z by key -> wrap with HashKey=...&...&HashIV=... -> URL-encode (.NET-style) -> lowercase
  * -> SHA256 -> uppercase. Excludes any existing CheckMacValue field from the input, and any key
- * with an empty/undefined value (ECPay omits those from the signed string). */
+ * with an undefined value (never actually sent), but NOT empty-string values — confirmed against
+ * two real production ECPay webhooks (2026-07-26) that ECPay's own signature is computed WITH
+ * empty fields like StoreID/CustomField1-4 included (e.g. "...&storeid=&..."), not omitted. This
+ * had been silently breaking every incoming webhook's CheckMacValue verification (the outgoing,
+ * order-creation direction never included empty fields to begin with, so that side always looked
+ * fine) until caught by comparing our computed value against ECPay's actual sent value for a real
+ * failed webhook. */
 export async function computeCheckMacValue(
   params: Record<string, string | number | undefined>,
   { hashKey, hashIv }: { hashKey: string; hashIv: string },
 ): Promise<string> {
   const entries = Object.entries(params).filter(
-    ([k, v]) => k !== "CheckMacValue" && v !== undefined && v !== "",
+    ([k, v]) => k !== "CheckMacValue" && v !== undefined,
   ) as [string, string | number][];
   entries.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
 
