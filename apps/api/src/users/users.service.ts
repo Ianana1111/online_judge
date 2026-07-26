@@ -2,7 +2,7 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 import argon2 from "argon2";
 import { prisma } from "@oj/db";
 import type { ChangeHandleDto, ChangePasswordDto, CreateUserDto, UpdateSettingsDto } from "@oj/shared";
-import { isProActive } from "../billing/billing.service";
+import { isUnlimited } from "../billing/billing.service";
 import { computeStreak } from "../leaderboard/leaderboard.service";
 
 const HEATMAP_DAYS = 365;
@@ -58,13 +58,15 @@ export class UsersService {
         createdAt: true,
       },
     });
-    // Same effective-plan computation as billing.service.status() — a lapsed planExpiresAt or a
-    // raw plan="PRO" alone isn't enough on its own, and isStudent is auto-Pro without ever having
-    // a real payment, so an admin scanning this list needs the SAME answer a user would get from
-    // "am I Pro right now," not the raw, occasionally-stale DB column.
+    // isUnlimited (not just isProActive): a lapsed planExpiresAt or a raw plan="PRO" alone isn't
+    // enough on its own, isStudent is auto-Pro without ever having a real payment, and — unlike
+    // /billing/me, which only ever answers for the logged-in caller and never needs to describe an
+    // admin's own status — this table is admin-facing and must show admins as unrestricted too,
+    // the same as what actually gates their submissions, instead of "Free" just because they've
+    // never had a real payment on file.
     return users.map(({ plan, planExpiresAt, ...rest }) => {
-      const pro = isProActive({ plan, planExpiresAt, isStudent: rest.isStudent });
-      return { ...rest, plan: pro ? ("PRO" as const) : ("FREE" as const), planExpiresAt: pro ? planExpiresAt : null };
+      const unlimited = isUnlimited({ plan, planExpiresAt, role: rest.role, isStudent: rest.isStudent });
+      return { ...rest, plan: unlimited ? ("PRO" as const) : ("FREE" as const), planExpiresAt: unlimited ? planExpiresAt : null };
     });
   }
 

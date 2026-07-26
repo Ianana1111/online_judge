@@ -20,8 +20,11 @@ export function isProActive(user: Pick<User, "plan" | "planExpiresAt" | "isStude
   return user.plan === "PRO" && user.planExpiresAt != null && user.planExpiresAt.getTime() > Date.now();
 }
 
-/** Admins are never subject to the free-tier caps, regardless of plan. */
-function isUnlimited(user: Pick<User, "plan" | "planExpiresAt" | "role" | "isStudent">): boolean {
+/** Admins are never subject to the free-tier caps, regardless of plan. Exported (not just
+ * isProActive) so anywhere displaying "is this account effectively Pro" — e.g. the admin users
+ * table — agrees with what actually gates submissions, instead of showing an admin as "Free"
+ * just because they've never had a real payment on file. */
+export function isUnlimited(user: Pick<User, "plan" | "planExpiresAt" | "role" | "isStudent">): boolean {
   return user.role === "ADMIN" || isProActive(user);
 }
 
