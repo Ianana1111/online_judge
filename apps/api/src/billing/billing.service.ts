@@ -116,7 +116,10 @@ export class BillingService {
     });
 
     return {
-      plan: pro ? "PRO" : "FREE",
+      // "plan" drives every Pro-gated UI check, so ADMIN reports "PRO" here too (see isUnlimited)
+      // even though planExpiresAt/planCancelRequested below stay tied to a REAL subscription
+      // (`pro`, not `unlimited`) — an admin never had one to expire or cancel.
+      plan: unlimited ? "PRO" : "FREE",
       planExpiresAt: pro ? user.planExpiresAt : null,
       planCancelRequested: pro && user.planCancelRequested,
       submits: { used: unlimited ? user.submitQuotaUsed : submitsUsedThisMonth, limit: unlimited ? null : FREE_SUBMIT_QUOTA },

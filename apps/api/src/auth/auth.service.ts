@@ -7,7 +7,7 @@ import type { LoginDto, RegisterDto } from "@oj/shared";
 import { isLaunchPromoActive, LAUNCH_PROMO } from "@oj/shared";
 import { generateCsrfToken } from "../common/csrf.util";
 import { REDIS_CLIENT } from "../common/redis.providers";
-import { isProActive } from "../billing/billing.service";
+import { isUnlimited } from "../billing/billing.service";
 import { NotificationsService } from "../notifications/notifications.service";
 import { TokenService } from "./token.service";
 
@@ -150,14 +150,17 @@ export class AuthService {
     // Stateless token (see csrf.util.ts) — safe to mint a fresh one on every /auth/me call so
     // the web app always has a working value in memory, including right after a hard refresh
     // when it can no longer read the cookie itself cross-domain.
-    const proActive = isProActive(user);
+    // ADMIN accounts report "PRO" here too — every Pro-gated frontend check reads this field
+    // (NavBar's plan badge, ProblemFilterTable's CPE-appearance teaser, etc.), and admins should
+    // never be blocked by a paywall they can already bypass server-side (see isUnlimited).
+    const unlimited = isUnlimited(user);
     return {
       id: user.id,
       handle: user.handle,
       email: user.email,
       role: user.role,
       isStudent: user.isStudent,
-      plan: proActive ? "PRO" : "FREE",
+      plan: unlimited ? "PRO" : "FREE",
       settings: (user.settings as Record<string, unknown>) ?? {},
       csrfToken: generateCsrfToken(),
       csrfMaxAgeMs: this.tokens.refreshTtlMs,
