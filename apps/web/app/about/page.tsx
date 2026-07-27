@@ -6,7 +6,7 @@ export default function AboutPage() {
         <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-wide text-brand">About this site</p>
         <h1 className="font-display text-3xl font-bold leading-tight text-ink-50">為台灣資工人打造的 CPE 練習平台</h1>
         <p className="mt-4 text-base leading-relaxed text-ink-300">
-          這裡收錄了歷屆 CPE（大學程式能力檢定）考古題，串接真正的 UVa Online Judge 判題，讓你送出的每一份程式碼都拿到跟正式考試一樣真實的結果——不是自己猜對錯，而是貨真價實的
+          這裡收錄了歷屆 CPE（大學程式能力檢定）考古題，每一份程式碼都會經過嚴謹的自動化判題，讓你拿到跟正式考試一樣真實的結果——不是自己猜對錯，而是貨真價實的
           Accepted 或 Wrong Answer。你可以按主題、難度挑題練習，也能直接開一場限時的模擬考，練習抓緊考試節奏。
         </p>
         <p className="mt-4 text-base leading-relaxed text-ink-300">

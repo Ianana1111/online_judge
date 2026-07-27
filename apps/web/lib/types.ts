@@ -71,6 +71,10 @@ export interface BillingStatus {
 
 export interface BillingPlans {
   pricing: Record<"MONTHLY" | "YEARLY", { amountNtd: number; days: number; label: string }>;
+  // The real amount a purchase charges right now (reflects the launch promo while active) —
+  // always display/expect to pay THIS, never pricing[period].amountNtd directly.
+  effectivePricing: Record<"MONTHLY" | "YEARLY", number>;
+  promo: { discountPct: number; period: "MONTHLY" | "YEARLY"; endsAt: string } | null;
   payee: { bank: string; account: string; name: string; linePay: string; note: string };
 }
 
@@ -85,6 +89,8 @@ export interface ProblemRow {
   source: "UVA" | "CPE" | "GPE" | "CUSTOM";
   tags: string[];
   solvedByMe: boolean;
+  // Pro-only: how many past CPE sittings this problem has appeared in. null for non-Pro users.
+  cpeAppearances: number | null;
 }
 
 export type ProblemListItem = ProblemRow;
@@ -141,6 +147,9 @@ export interface ProblemDetail {
   difficulty: number;
   source: "UVA" | "CPE" | "GPE" | "CUSTOM";
   uvaId: number | null;
+  // Pro-only: how many past CPE sittings this problem has appeared in. null for non-Pro users
+  // (never 0 — 0 means "Pro user, genuinely never appeared").
+  cpeAppearances: number | null;
   tags: string[];
   samples: Sample[];
 }

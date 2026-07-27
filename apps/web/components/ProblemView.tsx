@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import StatementRenderer from "@/components/StatementRenderer";
 import SubmissionPanel from "@/components/SubmissionPanel";
 import SubmissionHistory from "@/components/SubmissionHistory";
@@ -113,6 +114,31 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
               </div>
             </div>
           ))}
+
+          <div className="mt-6 oj-card p-4">
+            {problem.cpeAppearances !== null ? (
+              <p className="text-sm text-ink-200">
+                📜{" "}
+                {problem.cpeAppearances > 0 ? (
+                  <>
+                    Appeared in <span className="font-semibold text-brand">{problem.cpeAppearances}</span> past CPE exam
+                    {problem.cpeAppearances === 1 ? "" : "s"}.
+                  </>
+                ) : (
+                  "Hasn't appeared in a past CPE exam yet."
+                )}
+              </p>
+            ) : (
+              <p className="text-sm text-ink-400">
+                🔒 <span className="text-ink-300">Pro feature:</span> see how many times this problem has appeared in past
+                CPE exams —{" "}
+                <Link href="/upgrade" className="text-brand hover:underline">
+                  upgrade to unlock
+                </Link>
+                .
+              </p>
+            )}
+          </div>
         </div>
       )}
       {tab === "history" && <SubmissionHistory problemId={problem.id} />}

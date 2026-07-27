@@ -4,10 +4,25 @@ import { randomUUID } from "node:crypto";
 import type Redis from "ioredis";
 import { prisma } from "@oj/db";
 import type { LoginDto, RegisterDto } from "@oj/shared";
+import { isLaunchPromoActive, LAUNCH_PROMO } from "@oj/shared";
 import { generateCsrfToken } from "../common/csrf.util";
 import { REDIS_CLIENT } from "../common/redis.providers";
 import { isProActive } from "../billing/billing.service";
+import { NotificationsService } from "../notifications/notifications.service";
 import { TokenService } from "./token.service";
+
+/** Shared by both signup paths (password register + first-time Google login) so a brand new
+ * account always sees the same launch-promo nudge in their notification bell, regardless of how
+ * they signed up. No-ops once the promo window closes — never even shown after that. */
+async function notifyNewUserOfLaunchPromo(notifications: NotificationsService, userId: string): Promise<void> {
+  if (!isLaunchPromoActive()) return;
+  await notifications.create(userId, {
+    type: "promo",
+    title: `🎉 Launch month: ${LAUNCH_PROMO.discountPct}% off Pro`,
+    body: "judge.tw just launched — get Pro at half price for a limited time.",
+    link: "/upgrade",
+  });
+}
 
 export interface IssuedSession {
   user: { id: string; handle: string; email: string; role: string };
@@ -29,6 +44,7 @@ const DUMMY_PASSWORD_HASH =
 export class AuthService {
   constructor(
     private readonly tokens: TokenService,
+    private readonly notifications: NotificationsService,
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
   ) {}
 
@@ -42,6 +58,7 @@ export class AuthService {
     const user = await prisma.user.create({
       data: { handle: dto.handle, email: dto.email, passwordHash, role: "USER" },
     });
+    await notifyNewUserOfLaunchPromo(this.notifications, user.id);
     return this.issueSession(user.id, user.handle, user.email, user.role);
   }
 
@@ -67,6 +84,7 @@ export class AuthService {
       } else {
         const handle = await this.uniqueHandleFrom(suggestedHandle);
         user = await prisma.user.create({ data: { handle, email, googleId, role: "USER" } });
+        await notifyNewUserOfLaunchPromo(this.notifications, user.id);
       }
     }
     return this.issueSession(user.id, user.handle, user.email, user.role);

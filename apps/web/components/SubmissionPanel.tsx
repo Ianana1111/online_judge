@@ -246,7 +246,6 @@ export default function SubmissionPanel({
               {detail.compileError}
             </pre>
           )}
-          <p className="text-xs text-ink-500">Judged by the real UVa Online Judge — this is their verdict.</p>
         </div>
       )}
     </div>

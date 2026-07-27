@@ -2,6 +2,7 @@ import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundEx
 import { prisma, Prisma } from "@oj/db";
 import type { User } from "@oj/db";
 import {
+  effectivePriceNtd,
   FREE_SUBMIT_QUOTA,
   FREE_VIRTUAL_ATTEMPTS,
   PLAN_PRICING,
@@ -54,6 +55,24 @@ function generateMerchantTradeNo(): string {
   return `JT${Date.now().toString(36).toUpperCase()}${rand}`.slice(0, 20);
 }
 
+// "YYYY-MM" in Asia/Taipei — the FREE tier's submit quota resets on this boundary, not UTC
+// midnight, so a submission just after midnight Taiwan time (but still "yesterday" in UTC) rolls
+// over correctly instead of a day early/late.
+function currentMonthKey(d: Date = new Date()): string {
+  const parts = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Taipei", year: "numeric", month: "2-digit" }).formatToParts(d);
+  const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "00";
+  return `${get("year")}-${get("month")}`;
+}
+
+// The instant Asia/Taipei local midnight on the 1st of the current month occurred, expressed as a
+// real UTC Date — used to scope the virtual-contest count to "this month" via a plain >= filter.
+function currentMonthStart(d: Date = new Date()): Date {
+  const parts = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Taipei", year: "numeric", month: "2-digit" }).formatToParts(d);
+  const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "00";
+  // Asia/Taipei is a fixed UTC+8 with no DST, so this offset is always exactly correct.
+  return new Date(`${get("year")}-${get("month")}-01T00:00:00+08:00`);
+}
+
 @Injectable()
 export class BillingService {
   private readonly logger = new Logger(BillingService.name);
@@ -81,7 +100,12 @@ export class BillingService {
     if (!user) throw new NotFoundException("User not found");
 
     const pro = isProActive(user);
-    const virtualUsed = await prisma.contestParticipant.count({ where: { userId } });
+    // A user who hasn't submitted/started anything yet THIS month still has last month's leftover
+    // submitQuotaMonth/submitQuotaUsed sitting in the row (the reset only happens lazily, inside
+    // assertCanSubmit, on their next actual submission) — so displayed "used" must independently
+    // check the month key rather than trusting the stored counter at rest.
+    const submitsUsedThisMonth = user.submitQuotaMonth === currentMonthKey() ? user.submitQuotaUsed : 0;
+    const virtualUsed = await prisma.contestParticipant.count({ where: { userId, startedAt: { gte: currentMonthStart() } } });
     const pending = await prisma.payment.findFirst({
       where: { userId, status: "PENDING", dismissedByUser: false },
       orderBy: { createdAt: "desc" },
@@ -91,7 +115,7 @@ export class BillingService {
       plan: pro ? "PRO" : "FREE",
       planExpiresAt: pro ? user.planExpiresAt : null,
       planCancelRequested: pro && user.planCancelRequested,
-      submits: { used: user.submitQuotaUsed, limit: pro ? null : FREE_SUBMIT_QUOTA },
+      submits: { used: pro ? user.submitQuotaUsed : submitsUsedThisMonth, limit: pro ? null : FREE_SUBMIT_QUOTA },
       virtualContests: { used: virtualUsed, limit: pro ? null : FREE_VIRTUAL_ATTEMPTS },
       pendingPayment: pending
         ? {
@@ -138,7 +162,6 @@ export class BillingService {
 
   /** User submits a manual-payment claim. Creates a PENDING record for an admin to verify. */
   async requestUpgrade(userId: string, dto: BillingRequestDto) {
-    const pricing = PLAN_PRICING[dto.period];
     const existingPending = await prisma.payment.findFirst({ where: { userId, status: "PENDING" } });
     if (existingPending) {
       throw new BadRequestException("You already have a payment awaiting review.");
@@ -147,7 +170,7 @@ export class BillingService {
       data: {
         userId,
         period: dto.period,
-        amountNtd: pricing.amountNtd,
+        amountNtd: effectivePriceNtd(dto.period),
         reference: dto.reference,
         method: "MANUAL",
         status: "PENDING",
@@ -199,14 +222,13 @@ export class BillingService {
   async adminGrant(userId: string, adminId: string, period: BillingPeriod) {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException("User not found");
-    const pricing = PLAN_PRICING[period];
 
     const planExpiresAt = await prisma.$transaction(async (tx) => {
       await tx.payment.create({
         data: {
           userId,
           period,
-          amountNtd: pricing.amountNtd,
+          amountNtd: effectivePriceNtd(period),
           status: "APPROVED",
           method: "ADMIN_GRANT",
           reference: "Manually granted by admin",
@@ -264,15 +286,17 @@ export class BillingService {
       throw new BadRequestException("You already have a payment awaiting review.");
     }
 
-    // The amount that actually gets charged is always derived server-side from PLAN_PRICING,
-    // never trusted from the client — the client only chooses which of these two fixed plans.
+    // The amount that actually gets charged is always derived server-side (PLAN_PRICING plus
+    // any active launch promo via effectivePriceNtd), never trusted from the client — the client
+    // only chooses which of these two fixed plans.
     const pricing = PLAN_PRICING[period];
+    const amountNtd = effectivePriceNtd(period);
     const merchantTradeNo = generateMerchantTradeNo();
     await prisma.payment.create({
       data: {
         userId,
         period,
-        amountNtd: pricing.amountNtd,
+        amountNtd,
         method: "ECPAY",
         ecpayMethod: method,
         status: "PENDING",
@@ -291,7 +315,7 @@ export class BillingService {
       MerchantTradeNo: merchantTradeNo,
       MerchantTradeDate: formatEcpayDate(new Date()),
       PaymentType: "aio",
-      TotalAmount: pricing.amountNtd,
+      TotalAmount: amountNtd,
       TradeDesc: "judge.tw Pro upgrade",
       ItemName: `judge.tw Pro (${pricing.label})`,
       ReturnURL: `${apiPublicUrl}/billing/ecpay/return`,
@@ -367,11 +391,15 @@ export class BillingService {
   // --- Enforcement helpers, called from submissions / contests ---
 
   /**
-   * Atomically checks-and-consumes one unit of a FREE user's lifetime submit quota, then
-   * increments it — a single conditional UPDATE, not a separate read-then-write, so concurrent
-   * requests can't all read "quota available" before any of them commits (the race that let a
-   * user fire N parallel submissions to get N free submissions past the cap). PRO/admin/student
-   * accounts still get the counter bumped (for stats) but are never gated by it.
+   * Atomically checks-and-consumes one unit of a FREE user's THIS-CALENDAR-MONTH submit quota
+   * (Asia/Taipei, since this is a Taiwan-only service), then increments it — a single conditional
+   * UPDATE, not a separate read-then-write, so concurrent requests can't all read "quota
+   * available" before any of them commits (the race that let a user fire N parallel submissions
+   * to get N free submissions past the cap). The CASE/WHERE together also handle the month
+   * rollover atomically: a submit in a new month resets the counter to 1 in the same statement
+   * that would otherwise have been a plain increment, so there's no separate reset job to run (or
+   * to forget to run) at the start of each month. PRO/admin/student accounts still get the
+   * counter bumped (for stats) but are never gated by it.
    */
   async assertCanSubmit(userId: string): Promise<void> {
     const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -382,31 +410,36 @@ export class BillingService {
       return;
     }
 
-    const result = await prisma.user.updateMany({
-      where: { id: userId, submitQuotaUsed: { lt: FREE_SUBMIT_QUOTA } },
-      data: { submitQuotaUsed: { increment: 1 } },
-    });
-    if (result.count === 0) {
+    const monthKey = currentMonthKey();
+    const rows = await prisma.$executeRaw`
+      UPDATE users
+      SET "submitQuotaUsed" = CASE WHEN "submitQuotaMonth" = ${monthKey} THEN "submitQuotaUsed" + 1 ELSE 1 END,
+          "submitQuotaMonth" = ${monthKey}
+      WHERE id = ${userId}
+        AND ("submitQuotaMonth" IS DISTINCT FROM ${monthKey} OR "submitQuotaUsed" < ${FREE_SUBMIT_QUOTA})
+    `;
+    if (rows === 0) {
       throw new ForbiddenException(
-        `Free plan submit limit reached (${FREE_SUBMIT_QUOTA}). Upgrade to Pro for unlimited submissions.`,
+        `Free plan submit limit reached (${FREE_SUBMIT_QUOTA}/month). Upgrade to Pro for unlimited submissions.`,
       );
     }
   }
 
   /**
-   * Throws if a FREE user has reached their virtual-contest cap. PRO users pass freely. Must be
-   * called from inside the same transaction/advisory-lock scope as the ContestParticipant insert
-   * (see contests.service.register) — otherwise this count-then-create is itself racy the same
-   * way the old submit-quota check was.
+   * Throws if a FREE user has reached their THIS-CALENDAR-MONTH virtual-contest cap. PRO users
+   * pass freely. Must be called from inside the same transaction/advisory-lock scope as the
+   * ContestParticipant insert (see contests.service.register) — otherwise this count-then-create
+   * is itself racy the same way the old submit-quota check was.
    */
   async assertCanStartVirtual(userId: string, tx: Prisma.TransactionClient = prisma): Promise<void> {
     const user = await tx.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException("User not found");
     if (isUnlimited(user)) return;
-    const count = await tx.contestParticipant.count({ where: { userId } });
+    const monthStart = currentMonthStart();
+    const count = await tx.contestParticipant.count({ where: { userId, startedAt: { gte: monthStart } } });
     if (count >= FREE_VIRTUAL_ATTEMPTS) {
       throw new ForbiddenException(
-        `Free plan virtual-contest limit reached (${FREE_VIRTUAL_ATTEMPTS}). Upgrade to Pro for unlimited attempts.`,
+        `Free plan virtual-contest limit reached (${FREE_VIRTUAL_ATTEMPTS}/month). Upgrade to Pro for unlimited attempts.`,
       );
     }
   }

@@ -110,8 +110,11 @@ model User {
   /// instead of forgetting on refresh. Cleared automatically the next time extendPlan runs (buying
   /// more Pro is an unambiguous signal they no longer want to downgrade).
   planCancelRequested Boolean @default(false)
-  /// Lifetime count of submissions made — the FREE tier's quota is enforced against this.
-  submitQuotaUsed Int       @default(0)
+  /// FREE tier's submit quota resets every calendar month — submitQuotaUsed counts submissions
+  /// made in submitQuotaMonth (a "YYYY-MM" key); assertCanSubmit resets both atomically the first
+  /// time a user submits in a new month, so there's no separate cron/reset job to keep in sync.
+  submitQuotaUsed  Int     @default(0)
+  submitQuotaMonth String?
   settings     Json     @default("{}")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
