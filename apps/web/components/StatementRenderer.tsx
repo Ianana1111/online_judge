@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
+import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import rehypeKatex from "rehype-katex";
@@ -15,7 +16,7 @@ export default function StatementRenderer({ content }: { content: string }) {
   return (
     <div className="prose-statement">
       <ReactMarkdown
-        remarkPlugins={[remarkMath]}
+        remarkPlugins={[remarkMath, remarkGfm]}
         rehypePlugins={[rehypeRaw, [rehypeSanitize, statementSanitizeSchema], rehypeKatex]}
         components={{
           // Statements link out to original source PDFs (e.g. UVa/CPE) — open in a new tab so
