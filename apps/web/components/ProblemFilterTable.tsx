@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import InfoTooltip from "@/components/InfoTooltip";
 import { stripProblemNumber } from "@/lib/problemTitle";
 import { useAuthStore } from "@/store/auth";
@@ -28,6 +29,7 @@ const PRO_SORT_OPTION: { key: SortKey; label: string } = { key: "cpe-appearances
  */
 export default function ProblemFilterTable({ problems }: { problems: ProblemRow[] }) {
   const isPro = useAuthStore((s) => s.user?.plan === "PRO");
+  const router = useRouter();
   const [q, setQ] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [tag, setTag] = useState("");
@@ -61,8 +63,9 @@ export default function ProblemFilterTable({ problems }: { problems: ProblemRow[
         list.sort((a, b) => Number(a.solvedByMe) - Number(b.solvedByMe));
         break;
       case "cpe-appearances":
-        // Only ever reachable with real numbers when isPro — the field is null for everyone else,
-        // and the option itself isn't even rendered in that case (see the <select> below).
+        // Only ever reachable with real numbers when isPro — non-Pro users are redirected to
+        // /upgrade before `sort` ever gets set to this value (see the <select> below), so this
+        // never silently runs a no-op sort against everyone's cpeAppearances: null.
         list.sort((a, b) => (b.cpeAppearances ?? 0) - (a.cpeAppearances ?? 0));
         break;
     }
@@ -95,13 +98,27 @@ export default function ProblemFilterTable({ problems }: { problems: ProblemRow[
             </option>
           ))}
         </select>
-        <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="oj-input max-w-[220px]">
+        <select
+          value={sort}
+          onChange={(e) => {
+            const next = e.target.value as SortKey;
+            // Visible to everyone (it's the tease), but selecting it without Pro sends them
+            // straight to the upgrade page instead of applying the sort — `sort` state never
+            // changes, so the <select> (a controlled input) snaps back to the current value.
+            if (next === "cpe-appearances" && !isPro) {
+              router.push("/upgrade");
+              return;
+            }
+            setSort(next);
+          }}
+          className="oj-input max-w-[220px]"
+        >
           {SORT_OPTIONS.map((o) => (
             <option key={o.key} value={o.key}>
               {o.label}
             </option>
           ))}
-          {isPro && <option value={PRO_SORT_OPTION.key}>{PRO_SORT_OPTION.label}</option>}
+          <option value={PRO_SORT_OPTION.key}>{PRO_SORT_OPTION.label}</option>
         </select>
         {filtersActive && (
           <button
@@ -134,14 +151,12 @@ export default function ProblemFilterTable({ problems }: { problems: ProblemRow[
               </span>
             </th>
             <th>Tags</th>
-            {isPro && (
-              <th>
-                <span className="inline-flex items-center gap-1 text-brand">
-                  Past CPE
-                  <InfoTooltip text="Pro perk: how many past CPE sittings this problem has appeared in." />
-                </span>
-              </th>
-            )}
+            <th>
+              <span className="inline-flex items-center gap-1 text-brand">
+                Past CPE
+                <InfoTooltip text="Pro perk: how many past CPE sittings this problem has appeared in." />
+              </span>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -170,20 +185,28 @@ export default function ProblemFilterTable({ problems }: { problems: ProblemRow[
                   ))}
                 </div>
               </td>
-              {isPro && (
-                <td className="text-center font-mono text-xs">
-                  {p.cpeAppearances ? (
+              <td className="text-center font-mono text-xs">
+                {isPro ? (
+                  p.cpeAppearances ? (
                     <span className="text-brand">×{p.cpeAppearances}</span>
                   ) : (
                     <span className="text-ink-700">—</span>
-                  )}
-                </td>
-              )}
+                  )
+                ) : (
+                  <Link
+                    href="/upgrade"
+                    title="Pro feature — upgrade to see how many past CPE exams this problem appeared in"
+                    className="text-ink-600 hover:text-brand"
+                  >
+                    🔒
+                  </Link>
+                )}
+              </td>
             </tr>
           ))}
           {visible.length === 0 && (
             <tr>
-              <td colSpan={isPro ? 7 : 6} className="py-6 text-center text-ink-400">
+              <td colSpan={7} className="py-6 text-center text-ink-400">
                 No problems match these filters.
               </td>
             </tr>
