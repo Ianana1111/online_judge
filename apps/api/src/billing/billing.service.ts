@@ -100,6 +100,10 @@ export class BillingService {
     if (!user) throw new NotFoundException("User not found");
 
     const pro = isProActive(user);
+    // ADMIN accounts aren't necessarily on plan "PRO" but assertCanSubmit/assertCanStartVirtual
+    // already treat them as unlimited (see isUnlimited) — this display must agree, or an admin
+    // sees a FREE-tier quota banner for a cap that can never actually stop them.
+    const unlimited = isUnlimited(user);
     // A user who hasn't submitted/started anything yet THIS month still has last month's leftover
     // submitQuotaMonth/submitQuotaUsed sitting in the row (the reset only happens lazily, inside
     // assertCanSubmit, on their next actual submission) — so displayed "used" must independently
@@ -115,8 +119,8 @@ export class BillingService {
       plan: pro ? "PRO" : "FREE",
       planExpiresAt: pro ? user.planExpiresAt : null,
       planCancelRequested: pro && user.planCancelRequested,
-      submits: { used: pro ? user.submitQuotaUsed : submitsUsedThisMonth, limit: pro ? null : FREE_SUBMIT_QUOTA },
-      virtualContests: { used: virtualUsed, limit: pro ? null : FREE_VIRTUAL_ATTEMPTS },
+      submits: { used: unlimited ? user.submitQuotaUsed : submitsUsedThisMonth, limit: unlimited ? null : FREE_SUBMIT_QUOTA },
+      virtualContests: { used: virtualUsed, limit: unlimited ? null : FREE_VIRTUAL_ATTEMPTS },
       pendingPayment: pending
         ? {
             id: pending.id,
