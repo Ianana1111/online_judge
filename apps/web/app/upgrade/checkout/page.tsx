@@ -60,7 +60,10 @@ export default function CheckoutPage() {
   const notApplicable = isAdmin || user?.isStudent;
   const isPro = status?.plan === "PRO";
   const pending = status?.pendingPayment;
-  const amount = plans?.pricing[period].amountNtd ?? (period === "MONTHLY" ? 200 : 2000);
+  const amount = plans?.effectivePricing[period] ?? (period === "MONTHLY" ? 500 : 2000);
+  const monthlyListPrice = plans?.pricing.MONTHLY.amountNtd ?? 500;
+  const monthlyNowPrice = plans?.effectivePricing.MONTHLY ?? monthlyListPrice;
+  const promo = plans?.promo;
 
   async function startEcpay() {
     setEcpayError(null);
@@ -196,7 +199,13 @@ export default function CheckoutPage() {
                     onClick={() => setPeriod("MONTHLY")}
                     className={period === "MONTHLY" ? "oj-btn-primary py-3 text-sm" : "oj-btn-secondary py-3 text-sm"}
                   >
-                    Monthly — NT${plans?.pricing.MONTHLY.amountNtd ?? 200}/mo
+                    {promo ? (
+                      <>
+                        Monthly — <span className="line-through opacity-70">NT${monthlyListPrice}</span> NT${monthlyNowPrice}/mo
+                      </>
+                    ) : (
+                      `Monthly — NT$${monthlyNowPrice}/mo`
+                    )}
                   </button>
                   <button
                     type="button"

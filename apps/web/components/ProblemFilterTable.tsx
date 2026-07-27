@@ -4,12 +4,13 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import InfoTooltip from "@/components/InfoTooltip";
 import { stripProblemNumber } from "@/lib/problemTitle";
+import { useAuthStore } from "@/store/auth";
 import type { ProblemRow } from "@/lib/types";
 
 const DIFFICULTY_EXPLANATION =
   "Curated ratings come first: problems from an officially-rated set (like the CPE 必考49題 one-star selection) keep that rating. Everything else is derived from how many people worldwide have solved it on UVa (more solvers = more introductory), with a minimum floor based on the algorithm topic — a DP or graph problem never rates below what its technique demands.";
 
-type SortKey = "number" | "difficulty-asc" | "difficulty-desc" | "unsolved-first";
+type SortKey = "number" | "difficulty-asc" | "difficulty-desc" | "unsolved-first" | "cpe-appearances";
 
 const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: "number", label: "Problem number ↑" },
@@ -18,12 +19,15 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: "unsolved-first", label: "Unsolved first" },
 ];
 
+const PRO_SORT_OPTION: { key: SortKey; label: string } = { key: "cpe-appearances", label: "🔒 Times in past CPE exams ↓" };
+
 /**
  * The single filter+sort+table used by both the Problems list and each collection page, so the two
  * behave identically. The caller fetches the full problem set and hands it in; all filtering and
  * sorting happens client-side here.
  */
 export default function ProblemFilterTable({ problems }: { problems: ProblemRow[] }) {
+  const isPro = useAuthStore((s) => s.user?.plan === "PRO");
   const [q, setQ] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [tag, setTag] = useState("");
@@ -56,6 +60,11 @@ export default function ProblemFilterTable({ problems }: { problems: ProblemRow[
       case "unsolved-first":
         list.sort((a, b) => Number(a.solvedByMe) - Number(b.solvedByMe));
         break;
+      case "cpe-appearances":
+        // Only ever reachable with real numbers when isPro — the field is null for everyone else,
+        // and the option itself isn't even rendered in that case (see the <select> below).
+        list.sort((a, b) => (b.cpeAppearances ?? 0) - (a.cpeAppearances ?? 0));
+        break;
     }
     return list;
   }, [problems, q, difficulty, tag, sort]);
@@ -86,12 +95,13 @@ export default function ProblemFilterTable({ problems }: { problems: ProblemRow[
             </option>
           ))}
         </select>
-        <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="oj-input max-w-[200px]">
+        <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="oj-input max-w-[220px]">
           {SORT_OPTIONS.map((o) => (
             <option key={o.key} value={o.key}>
               {o.label}
             </option>
           ))}
+          {isPro && <option value={PRO_SORT_OPTION.key}>{PRO_SORT_OPTION.label}</option>}
         </select>
         {filtersActive && (
           <button
@@ -124,6 +134,14 @@ export default function ProblemFilterTable({ problems }: { problems: ProblemRow[
               </span>
             </th>
             <th>Tags</th>
+            {isPro && (
+              <th>
+                <span className="inline-flex items-center gap-1 text-brand">
+                  Past CPE
+                  <InfoTooltip text="Pro perk: how many past CPE sittings this problem has appeared in." />
+                </span>
+              </th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -152,11 +170,20 @@ export default function ProblemFilterTable({ problems }: { problems: ProblemRow[
                   ))}
                 </div>
               </td>
+              {isPro && (
+                <td className="text-center font-mono text-xs">
+                  {p.cpeAppearances ? (
+                    <span className="text-brand">×{p.cpeAppearances}</span>
+                  ) : (
+                    <span className="text-ink-700">—</span>
+                  )}
+                </td>
+              )}
             </tr>
           ))}
           {visible.length === 0 && (
             <tr>
-              <td colSpan={6} className="py-6 text-center text-ink-400">
+              <td colSpan={isPro ? 7 : 6} className="py-6 text-center text-ink-400">
                 No problems match these filters.
               </td>
             </tr>

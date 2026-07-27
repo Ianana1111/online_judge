@@ -4,6 +4,9 @@ import {
   adminGrantPlanSchema,
   billingRequestSchema,
   ecpayCreateSchema,
+  effectivePriceNtd,
+  isLaunchPromoActive,
+  LAUNCH_PROMO,
   PLAN_PRICING,
   type AdminGrantPlanDto,
   type BillingRequestDto,
@@ -22,8 +25,17 @@ export class BillingController {
   @Public()
   @Get("plans")
   plans() {
+    const promoActive = isLaunchPromoActive();
     return {
       pricing: PLAN_PRICING,
+      // The actual amount today's purchase charges per period (reflects the launch promo on
+      // MONTHLY while it's active) — the frontend should always display/charge THIS, never
+      // pricing[period].amountNtd directly, so a promo can never silently drift out of sync.
+      effectivePricing: {
+        MONTHLY: effectivePriceNtd("MONTHLY"),
+        YEARLY: effectivePriceNtd("YEARLY"),
+      },
+      promo: promoActive ? { discountPct: LAUNCH_PROMO.discountPct, period: LAUNCH_PROMO.period, endsAt: LAUNCH_PROMO.endsAt } : null,
       payee: {
         bank: process.env.PAYEE_BANK ?? "",
         account: process.env.PAYEE_ACCOUNT ?? "",

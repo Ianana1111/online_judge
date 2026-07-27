@@ -5,7 +5,7 @@
  * ECPAY_ENV=production on Railway once it is, no code changes needed.
  * Docs: https://developers.ecpay.com.tw/
  */
-import { webcrypto } from "node:crypto";
+import { webcrypto, createCipheriv, createDecipheriv } from "node:crypto";
 
 const SANDBOX = {
   merchantId: "3002607",
@@ -86,4 +86,99 @@ export async function verifyCheckMacValue(
   if (typeof provided !== "string" || !provided) return false;
   const expected = await computeCheckMacValue(params, config);
   return expected === provided.toUpperCase();
+}
+
+// --- AES-encrypted APIs (Credit/DoAction, CreditDetail/QueryTrade) ---
+// A completely separate encryption scheme from CheckMacValue above: these newer "1.0.0" APIs wrap
+// their payload as AES-128-CBC(PKCS7), key=HashKey and iv=HashIV used directly (both always
+// exactly 16 ASCII chars, i.e. 16 bytes -> a valid AES-128 key/iv with no derivation step), over
+// the URL-encoded JSON body, output as Base64 — per developers.ecpay.com.tw's "參數加密方式說明".
+
+function ecpayAesEncrypt(payload: unknown, hashKey: string, hashIv: string): string {
+  const urlEncoded = encodeURIComponent(JSON.stringify(payload));
+  const cipher = createCipheriv("aes-128-cbc", Buffer.from(hashKey, "utf8"), Buffer.from(hashIv, "utf8"));
+  const encrypted = Buffer.concat([cipher.update(urlEncoded, "utf8"), cipher.final()]);
+  return encrypted.toString("base64");
+}
+
+function ecpayAesDecrypt<T>(encryptedBase64: string, hashKey: string, hashIv: string): T {
+  const decipher = createDecipheriv("aes-128-cbc", Buffer.from(hashKey, "utf8"), Buffer.from(hashIv, "utf8"));
+  const decrypted = Buffer.concat([decipher.update(Buffer.from(encryptedBase64, "base64")), decipher.final()]);
+  return JSON.parse(decodeURIComponent(decrypted.toString("utf8"))) as T;
+}
+
+interface EcpayApiConfig {
+  merchantId: string;
+  hashKey: string;
+  hashIv: string;
+  isSandbox: boolean;
+}
+
+async function callEcpayAesApi<TResponseData>(
+  path: string,
+  data: Record<string, unknown>,
+  config: EcpayApiConfig,
+): Promise<TResponseData> {
+  // Both endpoints only exist in production per ECPay's own docs (the DoAction test environment
+  // has "no real authorization capability") — nothing meaningful to call in sandbox mode.
+  const base = config.isSandbox ? "https://ecpayment-stage.ecpay.com.tw" : "https://ecpayment.ecpay.com.tw";
+  const body = {
+    MerchantID: config.merchantId,
+    RqHeader: { Timestamp: Math.floor(Date.now() / 1000) },
+    Data: ecpayAesEncrypt({ MerchantID: config.merchantId, ...data }, config.hashKey, config.hashIv),
+  };
+  const res = await fetch(`${base}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const json = (await res.json()) as { TransCode?: number; TransMsg?: string; Data?: string };
+  if (json.TransCode !== 1 || !json.Data) {
+    throw new Error(`ECPay API ${path} transport failure: ${json.TransMsg ?? "unknown"}`);
+  }
+  return ecpayAesDecrypt<TResponseData>(json.Data, config.hashKey, config.hashIv);
+}
+
+export interface EcpayCreditQueryResult {
+  RtnMsg: string;
+  TradeID?: string;
+  Amount?: number;
+  ClsAmt?: number;
+  /** "Authorized" | "To be captured" | "Captured" | "Canceled" (ECPay's own English enum values). */
+  Status?: string;
+}
+
+/** Looks up a credit-card order's real-time authorization/capture state by our own MerchantTradeNo
+ * — no need to have captured its ECPay-assigned TradeNo from an earlier webhook, since none fires
+ * until capture completes anyway (the entire reason this polling path exists). */
+export async function queryEcpayCreditTrade(merchantTradeNo: string, config: EcpayApiConfig): Promise<EcpayCreditQueryResult> {
+  return callEcpayAesApi<EcpayCreditQueryResult>(
+    "/1.0.0/CreditDetail/QueryTrade",
+    { MerchantTradeNo: merchantTradeNo },
+    config,
+  );
+}
+
+export interface EcpayDoActionResult {
+  RtnCode: number;
+  RtnMsg: string;
+  MerchantTradeNo: string;
+  TradeNo: string;
+}
+
+/** Triggers immediate settlement ("關帳/請款") of an already-authorized credit-card order right
+ * now, instead of waiting for the merchant account's once-daily auto-settlement batch. RtnCode 1
+ * means it succeeded; the existing ReturnURL webhook then fires normally within moments, so
+ * nothing downstream of that (the actual Pro grant) needs to know this path exists at all. */
+export async function captureEcpayCredit(
+  merchantTradeNo: string,
+  tradeNo: string,
+  totalAmount: number,
+  config: EcpayApiConfig,
+): Promise<EcpayDoActionResult> {
+  return callEcpayAesApi<EcpayDoActionResult>(
+    "/1.0.0/Credit/DoAction",
+    { MerchantTradeNo: merchantTradeNo, TradeNo: tradeNo, Action: "C", TotalAmount: totalAmount },
+    config,
+  );
 }
