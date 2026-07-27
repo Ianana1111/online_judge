@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import type { CreateProblemDto } from "@oj/shared";
 import { prisma } from "@oj/db";
 import type { RequestUser } from "../common/decorators";
-import { isProActive } from "../billing/billing.service";
+import { cpeAppearancesFor, isRequesterPro } from "../billing/pro-gate.util";
 
 const PAGE_SIZE = 20;
 
@@ -79,8 +79,8 @@ export class ProblemsService {
     // "Appeared in N past CPE sittings" is a Pro perk (see billing.service isProActive) — never
     // computed-and-hidden client-side only, since that would let anyone read it straight off the
     // network response. Cheap either way: at most ~350 problems total, one groupBy for the page.
-    const isPro = requester ? await this.isRequesterPro(requester) : false;
-    const appearancesById = isPro ? await this.cpeAppearances(rows.map((r) => r.id)) : new Map<string, number>();
+    const isPro = requester ? await isRequesterPro(requester) : false;
+    const appearancesById = isPro ? await cpeAppearancesFor(rows.map((r) => r.id)) : new Map<string, number>();
 
     return {
       items: rows.map((p) => ({
@@ -192,8 +192,8 @@ export class ProblemsService {
     if (!problem || (!problem.visibility && !isAdmin)) {
       throw new NotFoundException("Problem not found");
     }
-    const isPro = requester ? await this.isRequesterPro(requester) : false;
-    const cpeAppearances = isPro ? (await this.cpeAppearances([problem.id])).get(problem.id) ?? 0 : null;
+    const isPro = requester ? await isRequesterPro(requester) : false;
+    const cpeAppearances = isPro ? (await cpeAppearancesFor([problem.id])).get(problem.id) ?? 0 : null;
     return {
       id: problem.id,
       slug: problem.slug,
@@ -343,27 +343,6 @@ export class ProblemsService {
     return prisma.sample.create({
       data: { problemId, ord, input: body.input, output: body.output },
     });
-  }
-
-  private async isRequesterPro(requester: RequestUser): Promise<boolean> {
-    if (requester.role === "ADMIN") return true;
-    const user = await prisma.user.findUnique({
-      where: { id: requester.id },
-      select: { plan: true, planExpiresAt: true, isStudent: true },
-    });
-    return !!user && isProActive(user);
-  }
-
-  /** How many distinct past CPE sittings (Contest rows with kind=CPE) each of these problems has
-   * appeared in, via ContestProblem — the raw "歷屆出過幾次" count Pro users get to see. */
-  private async cpeAppearances(problemIds: string[]): Promise<Map<string, number>> {
-    if (problemIds.length === 0) return new Map();
-    const rows = await prisma.contestProblem.groupBy({
-      by: ["problemId"],
-      where: { problemId: { in: problemIds }, contest: { kind: "CPE" } },
-      _count: true,
-    });
-    return new Map(rows.map((r) => [r.problemId, r._count]));
   }
 
   private async setTags(problemId: string, tagSlugs: string[]) {

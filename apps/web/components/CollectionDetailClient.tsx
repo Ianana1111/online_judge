@@ -4,10 +4,15 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import type { CollectionDetail } from "@/lib/types";
 import ProblemFilterTable from "@/components/ProblemFilterTable";
+import { useAuthStore } from "@/store/auth";
 
 export default function CollectionDetailClient({ slug }: { slug: string }) {
+  // See ProblemsBrowser: this response's cpeAppearances field depends on the requester's Pro
+  // status, so `plan` must be part of the query key or a user who just upgraded keeps seeing the
+  // FREE-tier snapshot cached from before their purchase.
+  const plan = useAuthStore((s) => s.user?.plan);
   const { data, isLoading } = useQuery({
-    queryKey: ["collections", slug],
+    queryKey: ["collections", slug, plan],
     queryFn: () => apiFetch<CollectionDetail>(`/collections/${slug}`),
   });
 
