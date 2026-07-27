@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
+import { SparklesIcon } from "@/components/icons";
 import type { BillingPlans } from "@/lib/types";
 
 function dismissKey(endsAt: string): string {
@@ -39,8 +40,9 @@ export default function PromoBanner() {
 
   return (
     <div className="relative flex items-center justify-center gap-2 bg-gradient-to-r from-brand/90 to-verdict-wa/90 px-4 py-2 text-center text-xs font-medium text-onbrand sm:text-sm">
-      <span>
-        🎉 We just launched! Get Pro at <span className="font-bold">{plans.promo.discountPct}% off</span> through {endsLabel}.
+      <span className="inline-flex items-center gap-1.5">
+        <SparklesIcon className="h-4 w-4 shrink-0" />
+        We just launched! Get Pro at <span className="font-bold">{plans.promo.discountPct}% off</span> through {endsLabel}.
       </span>
       <Link href="/upgrade" className="whitespace-nowrap rounded bg-onbrand/15 px-2 py-0.5 font-semibold hover:bg-onbrand/25">
         Claim discount →

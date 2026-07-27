@@ -9,6 +9,19 @@ import DailyGoalRing from "@/components/DailyGoalRing";
 import VerdictBadge from "@/components/VerdictBadge";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
 import { stripProblemNumber } from "@/lib/problemTitle";
+import {
+  ACHIEVEMENT_ICONS,
+  BookOpenIcon,
+  CloudSunIcon,
+  FlameIcon,
+  LayersIcon,
+  MedalIcon,
+  MoonIcon,
+  RocketIcon,
+  SunIcon,
+  SunsetIcon,
+  TrophyIcon,
+} from "@/components/icons";
 import type {
   Achievement,
   DailyStats,
@@ -19,32 +32,20 @@ import type {
   UserStats,
 } from "@/lib/types";
 
-const REASON_ICON = { collection: "📚", consolidate: "🎯", stretch: "🚀" } as const;
+const REASON_ICON = { collection: BookOpenIcon, consolidate: LayersIcon, stretch: RocketIcon } as const;
 const REASON_ACCENT = {
   collection: "border-l-sky-400/70",
   consolidate: "border-l-brand/70",
   stretch: "border-l-verdict-wa/70",
 } as const;
 
-const ACHIEVEMENT_ICON: Record<string, string> = {
-  first_ac: "🎯",
-  solved_10: "🌱",
-  solved_50: "🌿",
-  solved_100: "🌳",
-  first_4star: "💎",
-  streak_7: "🔥",
-  streak_30: "⚡",
-  collection_cleared: "🏆",
-  first_virtual_exam: "📝",
-};
-
-const RANK_MEDAL: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
+const RANK_MEDAL_CLASS: Record<number, string> = { 1: "text-yellow-400", 2: "text-slate-300", 3: "text-amber-600" };
 
 function greeting(handle: string) {
   const hour = new Date().getHours();
   const part = hour < 5 ? "Still up" : hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-  const emoji = hour < 5 ? "🌙" : hour < 12 ? "☀️" : hour < 18 ? "🌤️" : "🌆";
-  return { text: `${part}, ${handle}`, emoji };
+  const Icon = hour < 5 ? MoonIcon : hour < 12 ? SunIcon : hour < 18 ? CloudSunIcon : SunsetIcon;
+  return { text: `${part}, ${handle}`, Icon };
 }
 
 function timeAgo(iso: string): string {
@@ -82,20 +83,20 @@ function StatCell({ value, label, valueClassName = "text-ink-50" }: { value: Rea
 
 /** The streak's visual size/intensity grows with its length — a small ember for a fresh streak, a
  * full blaze past a month — so "keep it alive" reads as a stake worth protecting, not just a
- * number next to a fire emoji. */
+ * number next to a flame icon. */
 function StreakFlame({ streak, atRisk }: { streak: number; atRisk: boolean }) {
   if (streak <= 0) {
     return (
       <div className="flex flex-col items-center gap-1">
-        <span className="text-2xl grayscale opacity-40">🔥</span>
+        <FlameIcon className="h-6 w-6 text-ink-700" />
         <span className="text-[10px] uppercase tracking-wide text-ink-600">no streak yet</span>
       </div>
     );
   }
-  const size = streak >= 30 ? "text-4xl" : streak >= 7 ? "text-3xl" : "text-2xl";
+  const size = streak >= 30 ? "h-10 w-10" : streak >= 7 ? "h-8 w-8" : "h-6 w-6";
   return (
     <div className="flex flex-col items-center gap-1">
-      <span className={`${size} ${atRisk ? "animate-pulse-soft" : ""}`}>🔥</span>
+      <FlameIcon className={`${size} text-verdict-tle ${atRisk ? "animate-pulse-soft" : ""}`} />
       <span className={`font-display font-bold tabular-nums ${atRisk ? "text-verdict-wa" : "text-verdict-tle"}`}>{streak}</span>
       <span className="text-[10px] uppercase tracking-wide text-ink-500">{atRisk ? "at risk today" : "day streak"}</span>
     </div>
@@ -211,7 +212,7 @@ export default function HomeDashboard() {
     ...(recommended?.stretch ? [{ ...recommended.stretch, kind: "stretch" as const, reason: "Stretch — one tier up" }] : []),
   ].slice(0, 4);
 
-  const { text: greetText, emoji: greetEmoji } = greeting(user.handle);
+  const { text: greetText, Icon: GreetIcon } = greeting(user.handle);
 
   return (
     <div className="space-y-6 py-6">
@@ -230,12 +231,12 @@ export default function HomeDashboard() {
         <div className="relative flex flex-wrap items-center gap-6">
           <DailyGoalRing solvedToday={daily?.solvedToday ?? 0} goal={daily?.goal ?? 1} />
           <div className="flex min-w-0 flex-1 flex-col items-start">
-            <h1 className="font-display text-2xl font-bold text-ink-50">
-              {greetText} <span className="align-middle">{greetEmoji}</span>
+            <h1 className="flex items-center gap-2 font-display text-2xl font-bold text-ink-50">
+              {greetText} <GreetIcon className="h-5 w-5 text-brand" />
             </h1>
             {latestAchievement ? (
               <Link href={`/u/${user.handle}`} className="mt-1 inline-flex items-center gap-1 text-xs text-brand hover:underline">
-                🏆 Latest: {latestAchievement.title}
+                <TrophyIcon className="h-3.5 w-3.5" /> Latest: {latestAchievement.title}
               </Link>
             ) : (
               <p className="mt-1 text-xs text-ink-500">Ready to pick up where you left off?</p>
@@ -255,7 +256,15 @@ export default function HomeDashboard() {
         <div className="relative mt-5 grid grid-cols-2 divide-x divide-ink-800 overflow-hidden rounded border border-ink-800 sm:grid-cols-4">
           <div className="sm:hidden">
             <StatCell
-              value={daily && daily.currentStreak > 0 ? `🔥 ${daily.currentStreak}` : "–"}
+              value={
+                daily && daily.currentStreak > 0 ? (
+                  <span className="inline-flex items-center gap-1">
+                    <FlameIcon className="h-4 w-4" /> {daily.currentStreak}
+                  </span>
+                ) : (
+                  "–"
+                )
+              }
               label={daily?.atRisk ? "at risk today" : "day streak"}
               valueClassName={daily?.atRisk ? "text-verdict-wa animate-pulse-soft" : daily && daily.currentStreak > 0 ? "text-verdict-tle" : "text-ink-600"}
             />
@@ -263,7 +272,15 @@ export default function HomeDashboard() {
           <StatCell value={<DifficultyStars d={recommended?.tier ?? 1} />} label="current tier" />
           <StatCell value={profile ? profile.solvedCount : "–"} label="solved" />
           <StatCell
-            value={myRank ? <span>{RANK_MEDAL[myRank] ?? "🏅"} #{myRank}</span> : "–"}
+            value={
+              myRank ? (
+                <span className="inline-flex items-center gap-1">
+                  <MedalIcon className={`h-4 w-4 ${RANK_MEDAL_CLASS[myRank] ?? "text-ink-500"}`} /> #{myRank}
+                </span>
+              ) : (
+                "–"
+              )
+            }
             label="rank this week"
             valueClassName={myRank && myRank <= 3 ? "text-verdict-tle" : "text-ink-50"}
           />
@@ -341,8 +358,11 @@ export default function HomeDashboard() {
                 className={`group oj-card border-l-2 p-4 transition-all hover:-translate-y-0.5 hover:border-brand hover:bg-ink-800/40 ${REASON_ACCENT[p.kind]}`}
               >
                 <div className="mb-3 flex items-center justify-between gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/10 text-sm text-brand">
-                    {REASON_ICON[p.kind]}
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/10 text-brand">
+                    {(() => {
+                      const ReasonIcon = REASON_ICON[p.kind];
+                      return <ReasonIcon className="h-4 w-4" />;
+                    })()}
                   </div>
                   <DifficultyStars d={p.difficulty} />
                 </div>
@@ -369,8 +389,11 @@ export default function HomeDashboard() {
                 title={`${a.title} — ${a.description} (${new Date(a.earnedAt).toLocaleDateString()})`}
                 className="flex items-center gap-2 rounded-full border border-brand/30 bg-brand/5 py-1.5 pl-1.5 pr-3"
               >
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink-900 text-base">
-                  {ACHIEVEMENT_ICON[a.code] ?? "🏆"}
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink-900 text-brand">
+                  {(() => {
+                    const AchievementIcon = ACHIEVEMENT_ICONS[a.code] ?? TrophyIcon;
+                    return <AchievementIcon className="h-4 w-4" />;
+                  })()}
                 </span>
                 <span className="text-xs font-medium text-ink-100">{a.title}</span>
               </div>
