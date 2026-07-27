@@ -229,7 +229,7 @@ export default function HomeDashboard() {
 
         <div className="relative flex flex-wrap items-center gap-6">
           <DailyGoalRing solvedToday={daily?.solvedToday ?? 0} goal={daily?.goal ?? 1} />
-          <div className="min-w-0 flex-1">
+          <div className="flex min-w-0 flex-1 flex-col items-start">
             <h1 className="font-display text-2xl font-bold text-ink-50">
               {greetText} <span className="align-middle">{greetEmoji}</span>
             </h1>
