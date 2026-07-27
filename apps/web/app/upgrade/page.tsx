@@ -238,6 +238,7 @@ export default function UpgradePlanPage() {
                 <ul className="mt-3 flex-1 space-y-1.5 sm:mt-4 sm:space-y-2">
                   <Check>Unlimited submissions</Check>
                   <Check>Unlimited self-run virtual CPE contests</Check>
+                  <Check>See &amp; sort by past-CPE-exam appearance count</Check>
                   <Check>Full access to discussions &amp; leaderboard</Check>
                   <Check>Priority support</Check>
                 </ul>
