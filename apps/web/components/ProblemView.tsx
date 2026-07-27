@@ -10,6 +10,7 @@ import ProblemStatsPanel from "@/components/ProblemStatsPanel";
 import ProblemNotePanel from "@/components/ProblemNotePanel";
 import InfoTooltip from "@/components/InfoTooltip";
 import CopyButton from "@/components/CopyButton";
+import LockIcon from "@/components/LockIcon";
 import SplitPane from "@/components/SplitPane";
 import type { ProblemDetail } from "@/lib/types";
 import { useExamTimerStore } from "@/store/examTimer";
@@ -129,13 +130,16 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
                 )}
               </p>
             ) : (
-              <p className="text-sm text-ink-400">
-                🔒 <span className="text-ink-300">Pro feature:</span> see how many times this problem has appeared in past
-                CPE exams —{" "}
-                <Link href="/upgrade" className="text-brand hover:underline">
-                  upgrade to unlock
-                </Link>
-                .
+              <p className="flex items-start gap-1.5 text-sm text-ink-400">
+                <LockIcon className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                <span>
+                  <span className="text-ink-300">Pro feature:</span> see how many times this problem has appeared in past
+                  CPE exams —{" "}
+                  <Link href="/upgrade" className="text-brand hover:underline">
+                    upgrade to unlock
+                  </Link>
+                  .
+                </span>
               </p>
             )}
           </div>
