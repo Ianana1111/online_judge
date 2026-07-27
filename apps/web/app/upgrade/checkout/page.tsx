@@ -136,7 +136,7 @@ export default function CheckoutPage() {
             </div>
           ) : isPro ? (
             <div className="oj-card border-verdict-ac/40 p-5 text-sm text-ink-200">
-              You're already on Pro 🎉{" "}
+              ✓ You're already on Pro.{" "}
               {status?.planExpiresAt && <>Renews/expires {new Date(status.planExpiresAt).toLocaleDateString()}.</>} Buying again
               extends it further.
             </div>

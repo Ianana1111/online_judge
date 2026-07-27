@@ -11,6 +11,7 @@ import ProblemNotePanel from "@/components/ProblemNotePanel";
 import InfoTooltip from "@/components/InfoTooltip";
 import CopyButton from "@/components/CopyButton";
 import LockIcon from "@/components/LockIcon";
+import { ArchiveIcon } from "@/components/icons";
 import SplitPane from "@/components/SplitPane";
 import type { ProblemDetail } from "@/lib/types";
 import { useExamTimerStore } from "@/store/examTimer";
@@ -118,8 +119,8 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
 
           <div className="mt-6 oj-card p-4">
             {problem.cpeAppearances !== null ? (
-              <p className="text-sm text-ink-200">
-                📜{" "}
+              <p className="flex items-start gap-1.5 text-sm text-ink-200">
+                <ArchiveIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand" />
                 {problem.cpeAppearances > 0 ? (
                   <>
                     Appeared in <span className="font-semibold text-brand">{problem.cpeAppearances}</span> past CPE exam

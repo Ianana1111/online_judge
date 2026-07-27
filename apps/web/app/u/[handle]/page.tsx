@@ -4,6 +4,7 @@ import type { Achievement, ProblemListResponse, UserProfile, UserStats } from "@
 import Heatmap from "@/components/Heatmap";
 import StatChartsLoader from "@/components/StatChartsLoader";
 import SolvedRing from "@/components/SolvedRing";
+import { ACHIEVEMENT_ICONS, FlameIcon, TrophyIcon } from "@/components/icons";
 
 const DIFFICULTY_TIERS = [1, 2, 3, 4];
 
@@ -64,7 +65,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ hand
               ))}
               {maxStreak > 0 && (
                 <span className="flex items-center gap-1.5 rounded border border-verdict-tle/40 bg-verdict-tle/10 px-2.5 py-1 font-mono text-xs text-verdict-tle">
-                  🔥 {maxStreak}d best streak
+                  <FlameIcon className="h-3.5 w-3.5" /> {maxStreak}d best streak
                 </span>
               )}
             </div>
@@ -87,7 +88,12 @@ export default async function DashboardPage({ params }: { params: Promise<{ hand
                 className="flex items-start gap-2 rounded border border-brand/30 bg-brand/5 px-3 py-2"
                 title={new Date(a.earnedAt).toLocaleDateString()}
               >
-                <span className="text-lg">🏆</span>
+                <span className="text-brand">
+                  {(() => {
+                    const AchievementIcon = ACHIEVEMENT_ICONS[a.code] ?? TrophyIcon;
+                    return <AchievementIcon className="h-5 w-5" />;
+                  })()}
+                </span>
                 <div>
                   <p className="text-sm font-medium text-ink-50">{a.title}</p>
                   <p className="text-xs text-ink-400">{a.description}</p>

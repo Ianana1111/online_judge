@@ -5,26 +5,27 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
+import { FileTextIcon, FlagIcon, FlameIcon } from "@/components/icons";
 import type { Achievement } from "@/lib/types";
 
 const ITEMS = [
   {
     key: "first_ac",
-    icon: "🎯",
+    icon: FlagIcon,
     label: "Solve your first problem",
     desc: "Pick anything from the problem list and land an AC.",
     href: "/problems",
   },
   {
     key: "first_virtual_exam",
-    icon: "📝",
+    icon: FileTextIcon,
     label: "Take a virtual CPE exam",
     desc: "Run a timed sitting under real exam conditions.",
     href: "/cpe",
   },
   {
     key: "daily_goal",
-    icon: "🔥",
+    icon: FlameIcon,
     label: "Set your daily goal",
     desc: "Decide how many problems a day keeps your streak alive.",
     href: "/settings",
@@ -89,11 +90,11 @@ export default function OnboardingChecklist() {
           const body = (
             <>
               <div
-                className={`mb-3 flex h-9 w-9 items-center justify-center rounded-full text-base ${
+                className={`mb-3 flex h-9 w-9 items-center justify-center rounded-full ${
                   isDone ? "bg-verdict-ac/15 text-verdict-ac" : "bg-brand/10 text-brand"
                 }`}
               >
-                {isDone ? "✓" : item.icon}
+                {isDone ? <span className="text-base">✓</span> : <item.icon className="h-4 w-4" />}
               </div>
               <h3
                 className={`text-sm font-medium ${
