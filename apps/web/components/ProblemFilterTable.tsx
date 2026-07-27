@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import InfoTooltip from "@/components/InfoTooltip";
+import LockIcon from "@/components/LockIcon";
 import { stripProblemNumber } from "@/lib/problemTitle";
 import { useAuthStore } from "@/store/auth";
 import type { ProblemRow } from "@/lib/types";
@@ -20,7 +21,9 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: "unsolved-first", label: "Unsolved first" },
 ];
 
-const PRO_SORT_OPTION: { key: SortKey; label: string } = { key: "cpe-appearances", label: "🔒 Times in past CPE exams ↓" };
+// <option> elements can't render an icon, so the Pro-only nature is spelled out in words here
+// instead of the lock glyph used everywhere else this stat appears.
+const PRO_SORT_OPTION: { key: SortKey; label: string } = { key: "cpe-appearances", label: "Times in past CPE exams (Pro) ↓" };
 
 /**
  * The single filter+sort+table used by both the Problems list and each collection page, so the two
@@ -196,9 +199,9 @@ export default function ProblemFilterTable({ problems }: { problems: ProblemRow[
                   <Link
                     href="/upgrade"
                     title="Pro feature — upgrade to see how many past CPE exams this problem appeared in"
-                    className="text-ink-600 hover:text-brand"
+                    className="inline-flex text-ink-600 hover:text-brand"
                   >
-                    🔒
+                    <LockIcon />
                   </Link>
                 )}
               </td>
