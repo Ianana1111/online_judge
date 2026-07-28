@@ -88,7 +88,7 @@ function UserMenu({
             onClick={() => setOpen(false)}
             className="block rounded px-3 py-2 text-sm text-ink-200 hover:bg-ink-800"
           >
-            Language &amp; settings
+            Settings
           </Link>
           <div className="my-1 border-t border-ink-800" />
           <button

@@ -142,6 +142,8 @@ export class AuthService {
     isStudent: boolean;
     plan: "FREE" | "PRO";
     settings: Record<string, unknown>;
+    bio: string;
+    avatarUrl: string | null;
     csrfToken: string;
     csrfMaxAgeMs: number;
   }> {
@@ -162,6 +164,8 @@ export class AuthService {
       isStudent: user.isStudent,
       plan: unlimited ? "PRO" : "FREE",
       settings: (user.settings as Record<string, unknown>) ?? {},
+      bio: user.bio,
+      avatarUrl: user.avatarUrl,
       csrfToken: generateCsrfToken(),
       csrfMaxAgeMs: this.tokens.refreshTtlMs,
     };

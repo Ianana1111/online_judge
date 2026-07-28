@@ -4,11 +4,13 @@ import {
   changePasswordSchema,
   createUserSchema,
   setIsStudentSchema,
+  updateProfileSchema,
   updateSettingsSchema,
   type ChangeHandleDto,
   type ChangePasswordDto,
   type CreateUserDto,
   type SetIsStudentDto,
+  type UpdateProfileDto,
   type UpdateSettingsDto,
 } from "@oj/shared";
 import { CurrentUser, Public, Roles, type RequestUser } from "../common/decorators";
@@ -50,6 +52,14 @@ export class UsersController {
     @CurrentUser() user: RequestUser,
   ) {
     return this.users.updateSettings(user.id, body);
+  }
+
+  @Patch("me/profile")
+  updateProfile(
+    @Body(new ZodValidationPipe(updateProfileSchema)) body: UpdateProfileDto,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.users.updateProfile(user.id, body);
   }
 
   @Roles("ADMIN")

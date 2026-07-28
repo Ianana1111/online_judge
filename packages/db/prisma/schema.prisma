@@ -115,6 +115,12 @@ model User {
   /// time a user submits in a new month, so there's no separate cron/reset job to keep in sync.
   submitQuotaUsed  Int     @default(0)
   submitQuotaMonth String?
+  /// Free-text motto/座右銘 shown on the public profile.
+  bio       String  @default("")
+  /// Data-URL (base64) avatar image — kept small by client-side resizing/compression before
+  /// upload, so no external file storage is needed at this scale. Null shows a generic
+  /// initial-letter avatar instead.
+  avatarUrl String?
   settings     Json     @default("{}")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
