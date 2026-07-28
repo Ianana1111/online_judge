@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { AssignmentLeaderboardRow } from "@/lib/types";
+import { Skeleton } from "@/components/Skeleton";
 
 /** Collapsed by default so a short assignment list doesn't turn into a wall of names — classmates
  * are exactly the audience for "who's ahead on this one," not a headline stat. */
@@ -22,7 +23,7 @@ export default function AssignmentLeaderboard({ assignmentId }: { assignmentId: 
     <details className="mt-3" open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>
       <summary className="cursor-pointer text-xs font-medium text-brand hover:underline">Class progress</summary>
       <div className="mt-2 space-y-1">
-        {isLoading && <p className="text-xs text-ink-400">Loading…</p>}
+        {isLoading && <Skeleton className="h-16 w-full" />}
         {data?.map((row) => (
           <div
             key={row.userId}

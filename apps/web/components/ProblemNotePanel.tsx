@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
+import { Skeleton } from "@/components/Skeleton";
 import type { ProblemNote } from "@/lib/types";
 
 export default function ProblemNotePanel({ slug }: { slug: string }) {
@@ -26,7 +27,7 @@ export default function ProblemNotePanel({ slug }: { slug: string }) {
   if (!user) {
     return <p className="text-sm text-ink-400">Log in to keep your own private notes on this problem.</p>;
   }
-  if (isLoading) return <p className="text-sm text-ink-400">Loading…</p>;
+  if (isLoading) return <Skeleton className="h-32 w-full" />;
 
   async function save() {
     setSaving(true);

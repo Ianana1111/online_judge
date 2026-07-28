@@ -7,6 +7,7 @@ import type { SubmissionDetail } from "@/lib/types";
 import { LANGUAGE_LABEL } from "@/lib/types";
 import VerdictBadge from "@/components/VerdictBadge";
 import CopyButton from "@/components/CopyButton";
+import { Skeleton } from "@/components/Skeleton";
 
 export default function SubmissionCodeModal({
   submissionId,
@@ -69,7 +70,7 @@ export default function SubmissionCodeModal({
         </div>
 
         <div className="min-h-0 flex-1 overflow-auto p-4">
-          {isLoading && <p className="text-sm text-ink-400">Loading…</p>}
+          {isLoading && <Skeleton className="h-48 w-full" />}
           {error && <p className="text-sm text-verdict-wa">Could not load this submission.</p>}
 
           {data?.compileError && (

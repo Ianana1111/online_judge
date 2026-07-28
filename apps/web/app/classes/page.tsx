@@ -7,6 +7,7 @@ import { useAuthStore } from "@/store/auth";
 import type { ClassSessionItem } from "@/lib/types";
 import { previewText } from "@/lib/textPreview";
 import HomeworkStatusBadge from "@/components/HomeworkStatusBadge";
+import { SkeletonList } from "@/components/Skeleton";
 
 function ClassSessionRow({ c }: { c: ClassSessionItem }) {
   return (
@@ -64,7 +65,7 @@ export default function MyClassesPage() {
         </p>
       </div>
 
-      {isLoading && <p className="text-sm text-ink-400">Loading…</p>}
+      {isLoading && <SkeletonList rows={4} />}
       {classes?.length === 0 && (
         <p className="oj-card p-4 text-sm text-ink-400">No classes have been recorded for you yet.</p>
       )}

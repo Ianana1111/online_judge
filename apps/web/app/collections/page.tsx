@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import type { CollectionListItem } from "@/lib/types";
+import { SkeletonCard } from "@/components/Skeleton";
 
 export default function CollectionsPage() {
   const { data: collections, isLoading } = useQuery({
@@ -18,7 +19,12 @@ export default function CollectionsPage() {
         <p className="mt-1 text-sm text-ink-400">Curated problem sets to work through at your own pace.</p>
       </div>
 
-      {isLoading && <p className="text-sm text-ink-400">Loading…</p>}
+      {isLoading && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         {collections?.map((c) => (
