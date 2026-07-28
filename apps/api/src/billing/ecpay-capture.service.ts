@@ -2,7 +2,7 @@ import { Injectable, Logger, type OnModuleDestroy, type OnModuleInit } from "@ne
 import { prisma } from "@oj/db";
 import { captureEcpayCredit, ecpayConfig, queryEcpayCreditTrade } from "./ecpay.util";
 
-const POLL_INTERVAL_MS = 30_000;
+const POLL_INTERVAL_MS = 10_000;
 // Don't bother querying/capturing orders older than this — an abandoned checkout that never got
 // authorized this long ago isn't coming back, and ECPay's own settlement query window is capped
 // at 3 months anyway.
@@ -96,6 +96,7 @@ export class EcpayCaptureService implements OnModuleInit, OnModuleDestroy {
     config: ReturnType<typeof ecpayConfig>,
   ): Promise<void> {
     const query = await queryEcpayCreditTrade(merchantTradeNo, config);
+    this.logger.log(`ECPay poll ${merchantTradeNo}: TradeID=${query.TradeID ?? "none"} Status=${query.Status ?? "none"}`);
     if (!query.TradeID || (query.Status !== "Authorized" && query.Status !== "To be captured")) {
       return; // not authorized yet (or already captured/canceled) — nothing to do this cycle
     }

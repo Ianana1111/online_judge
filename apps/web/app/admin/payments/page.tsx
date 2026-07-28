@@ -51,7 +51,8 @@ export default function AdminPaymentsPage() {
       <div>
         <h1 className="font-display text-2xl font-bold text-ink-50">Admin · Payments</h1>
         <p className="mt-1 text-sm text-ink-400">
-          待審核的升級付款。確認款項真的到帳後再按「核准」——核准會立刻延長對方的 Pro 期限。
+          僅列出手動轉帳的待審核申請。信用卡 / ATM 付款全部由綠界 webhook 自動核准，不會出現在這裡，也不需要你操作。
+          確認款項真的到帳後再按「核准」——核准會立刻延長對方的 Pro 期限。
         </p>
       </div>
 

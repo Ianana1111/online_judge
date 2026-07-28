@@ -186,10 +186,15 @@ export class BillingService {
     return { id: payment.id, status: payment.status };
   }
 
-  /** Admin: every payment awaiting verification, newest first, with who it's from. */
+  /** Admin: every MANUAL (bank-transfer claim) payment awaiting human verification, oldest first.
+   * Deliberately excludes ECPay orders — those resolve entirely on their own via handleEcpayReturn
+   * (see ECPAY_AUTO below) or EcpayCaptureService, and a PENDING ECPay row just means "still
+   * waiting on the card network/webhook," not "needs a human to check a bank account." Showing
+   * them here would both be confusing noise and a real hazard: approving one manually would grant
+   * Pro without ever confirming the card actually got charged. */
   async listPending() {
     const rows = await prisma.payment.findMany({
-      where: { status: "PENDING" },
+      where: { status: "PENDING", method: "MANUAL" },
       orderBy: { createdAt: "asc" },
       include: { user: { select: { handle: true, email: true } } },
     });
@@ -204,11 +209,16 @@ export class BillingService {
     }));
   }
 
-  /** Admin: confirm the money arrived → mark APPROVED and extend the buyer's PRO window. */
+  /** Admin: confirm the money arrived → mark APPROVED and extend the buyer's PRO window. MANUAL
+   * claims only — an ECPay order must confirm itself via the real webhook (handleEcpayReturn), so
+   * this refuses to be used as a shortcut that grants Pro before a card has actually been charged. */
   async approve(paymentId: string, adminId: string) {
     const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
     if (!payment) throw new NotFoundException("Payment not found");
     if (payment.status !== "PENDING") throw new BadRequestException("This payment is not pending.");
+    if (payment.method !== "MANUAL") {
+      throw new BadRequestException("Only manual bank-transfer claims can be approved this way — ECPay orders confirm automatically.");
+    }
 
     const planExpiresAt = await prisma.$transaction(async (tx) => {
       await tx.payment.update({
