@@ -5,6 +5,7 @@ import { apiFetch } from "@/lib/api";
 import type { CollectionDetail } from "@/lib/types";
 import ProblemFilterTable from "@/components/ProblemFilterTable";
 import { useAuthStore } from "@/store/auth";
+import { Skeleton, SkeletonList } from "@/components/Skeleton";
 
 export default function CollectionDetailClient({ slug }: { slug: string }) {
   // See ProblemsBrowser: this response's cpeAppearances field depends on the requester's Pro
@@ -16,7 +17,18 @@ export default function CollectionDetailClient({ slug }: { slug: string }) {
     queryFn: () => apiFetch<CollectionDetail>(`/collections/${slug}`),
   });
 
-  if (isLoading) return <p className="text-sm text-ink-400">Loading…</p>;
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-64" />
+          <Skeleton className="h-4 w-96" />
+        </div>
+        <Skeleton className="h-16 w-full" />
+        <SkeletonList rows={8} />
+      </div>
+    );
+  }
   if (!data) return <p className="text-sm text-verdict-wa">Collection not found.</p>;
 
   const total = data.problems.length;

@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
+import { Skeleton } from "@/components/Skeleton";
 import type { ProblemStats } from "@/lib/types";
 
 // recharts is a large charting bundle — deferring it out of the problem page's initial JS (see
@@ -19,7 +20,14 @@ export default function ProblemStatsPanel({ slug }: { slug: string }) {
     queryFn: () => apiFetch<ProblemStats>(`/problems/${slug}/stats`),
   });
 
-  if (isLoading) return <p className="text-sm text-ink-400">Loading…</p>;
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <Skeleton className="h-16 w-full" />
+        <Skeleton className="h-32 w-full" />
+      </div>
+    );
+  }
   if (!data || data.solvedCount === 0) {
     return <p className="text-sm text-ink-400">Nobody's solved this one yet — be the first, and these stats fill in.</p>;
   }

@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/auth";
 import type { AdminUser, ClassSessionItem, ProblemListResponse } from "@/lib/types";
 import { previewText } from "@/lib/textPreview";
 import StatementRenderer from "@/components/StatementRenderer";
+import { SkeletonList } from "@/components/Skeleton";
 
 interface ProblemPick {
   id: string;
@@ -199,7 +200,7 @@ export default function AdminStudentClassesClient({ studentId }: { studentId: st
         </h1>
       </div>
 
-      {isLoading && <p className="text-sm text-ink-400">Loading…</p>}
+      {isLoading && <SkeletonList rows={3} />}
 
       <div className="space-y-3">
         {classes?.map((c) =>

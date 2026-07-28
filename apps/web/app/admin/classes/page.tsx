@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { ClassOverviewRow } from "@/lib/types";
+import { SkeletonList } from "@/components/Skeleton";
 
 export default function AdminClassesOverviewPage() {
   const { user, status } = useAuthStore();
@@ -29,7 +30,7 @@ export default function AdminClassesOverviewPage() {
         </p>
       </div>
 
-      {isLoading && <p className="text-sm text-ink-400">Loading…</p>}
+      {isLoading && <SkeletonList rows={5} />}
 
       <table className="oj-table">
         <thead>

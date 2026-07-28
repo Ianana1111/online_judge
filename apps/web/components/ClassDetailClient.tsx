@@ -9,6 +9,7 @@ import BackButton from "@/components/BackButton";
 import StatementRenderer from "@/components/StatementRenderer";
 import HomeworkStatusBadge from "@/components/HomeworkStatusBadge";
 import ClassCommentThread from "@/components/ClassCommentThread";
+import { Skeleton } from "@/components/Skeleton";
 
 export default function ClassDetailClient({ classId, backHref }: { classId: string; backHref: string }) {
   const { user, status: authStatus } = useAuthStore();
@@ -29,7 +30,12 @@ export default function ClassDetailClient({ classId, backHref }: { classId: stri
     <div className="space-y-6">
       <BackButton fallbackHref={backHref} />
 
-      {isLoading && <p className="text-sm text-ink-400">Loading…</p>}
+      {isLoading && (
+        <div className="space-y-3">
+          <Skeleton className="h-7 w-64" />
+          <Skeleton className="h-40 w-full" />
+        </div>
+      )}
       {error && <p className="oj-card p-4 text-sm text-verdict-wa">You don't have access to this class.</p>}
 
       {cls && (
