@@ -230,7 +230,7 @@ export default function SubmissionPanel({
 
       {detail && (
         <div className="oj-card p-4">
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-3 flex items-center gap-2">
             <span className="text-sm font-medium text-ink-300">Verdict</span>
             <VerdictBadge verdict={detail.verdict} flash={flash} />
           </div>
