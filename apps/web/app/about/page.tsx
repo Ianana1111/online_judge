@@ -30,7 +30,7 @@ export default function AboutPage() {
       <hr className="border-ink-800" />
 
       {/* ---- About the author ---- */}
-      <section>
+      {/* <section>
         <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-wide text-brand">About the author</p>
         <h2 className="font-display text-2xl font-bold text-ink-50">關於架站的人</h2>
         <p className="mt-2 text-sm text-ink-400">
@@ -72,10 +72,10 @@ export default function AboutPage() {
             </ul>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ---- Tutoring CTA ---- */}
-      <section className="oj-card border-brand/30 p-6">
+      {/* <section className="oj-card border-brand/30 p-6">
         <h2 className="font-display text-xl font-bold text-ink-50">程式家教</h2>
 
         <div className="mt-4 grid gap-6 sm:grid-cols-2">
@@ -127,7 +127,7 @@ export default function AboutPage() {
             </a>
           </span>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }
