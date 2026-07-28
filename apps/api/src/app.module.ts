@@ -14,6 +14,7 @@ import { CsrfGuard } from "./common/csrf.guard";
 import { DiscussionsModule } from "./discussions/discussions.module";
 import { LeaderboardModule } from "./leaderboard/leaderboard.module";
 import { NotificationsModule } from "./notifications/notifications.module";
+import { PostsModule } from "./posts/posts.module";
 import { RedisModule } from "./common/redis.module";
 import { RolesGuard } from "./common/roles.guard";
 import { HealthController } from "./health.controller";
@@ -41,6 +42,7 @@ import { UsersModule } from "./users/users.module";
     BillingModule,
     NotificationsModule,
     AchievementsModule,
+    PostsModule,
   ],
   controllers: [HealthController],
   providers: [

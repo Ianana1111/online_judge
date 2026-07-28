@@ -13,9 +13,9 @@ const PUBLIC_LINKS = [
   { href: "/problems", label: "Problems" },
   { href: "/collections", label: "Collections" },
   { href: "/contests", label: "Contests" },
-  { href: "/cpe", label: "CPE" },
-  { href: "/gpe", label: "GPE" },
   { href: "/leaderboard", label: "Leaderboard" },
+  { href: "/discussion", label: "Discussion" },
+  { href: "/faq", label: "FAQ" },
   { href: "/about", label: "About" },
 ];
 

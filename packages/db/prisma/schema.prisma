@@ -122,6 +122,7 @@ model User {
   submissions          Submission[]
   contestParticipants  ContestParticipant[]
   discussions          Discussion[]
+  posts                Post[]
   createdAssignments   Assignment[]          @relation("AssignmentCreator")
   assignments          AssignmentAssignee[]  @relation("AssignmentAssigneeUser")
   classSessions        ClassSession[]        @relation("ClassSessionStudent")
@@ -447,6 +448,23 @@ model Discussion {
 
   @@index([problemId, createdAt])
   @@map("discussions")
+}
+
+/// Site-wide news/discussion feed (nav "Discussion") — distinct from the per-problem Discussion
+/// model above. Currently admin-authored only (see posts.service); isOfficial drives the "[官方]"
+/// badge so readers can tell platform announcements apart from anything opened up to users later.
+model Post {
+  id         String   @id @default(cuid())
+  title      String
+  bodyMd     String
+  authorId   String
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  isOfficial Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([createdAt])
+  @@map("posts")
 }
 
 model Assignment {

@@ -284,6 +284,24 @@ export interface Discussion {
   userRole: "USER" | "ADMIN";
 }
 
+export interface PostListItem {
+  id: string;
+  title: string;
+  excerpt: string;
+  authorHandle: string;
+  isOfficial: boolean;
+  createdAt: string;
+}
+
+export interface PostDetail {
+  id: string;
+  title: string;
+  bodyMd: string;
+  authorHandle: string;
+  isOfficial: boolean;
+  createdAt: string;
+}
+
 export interface AdminUser {
   id: string;
   handle: string;

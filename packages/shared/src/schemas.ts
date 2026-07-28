@@ -92,6 +92,13 @@ export const createDiscussionSchema = z.object({
 });
 export type CreateDiscussionDto = z.infer<typeof createDiscussionSchema>;
 
+export const createPostSchema = z.object({
+  title: z.string().min(1).max(200),
+  bodyMd: z.string().min(1).max(50_000),
+  isOfficial: z.boolean().default(false),
+});
+export type CreatePostDto = z.infer<typeof createPostSchema>;
+
 export const createAssignmentSchema = z.object({
   title: z.string().min(1).max(200),
   description: z.string().max(5000).default(""),
