@@ -154,11 +154,28 @@ export interface ProblemDetail {
   samples: Sample[];
 }
 
+export interface HistogramBucket {
+  count: number;
+  languageCounts: Record<string, number>;
+}
+export interface TimeHistogramBucket extends HistogramBucket {
+  minMs: number;
+  maxMs: number;
+}
+export interface MemoryHistogramBucket extends HistogramBucket {
+  minKb: number;
+  maxKb: number;
+}
+
 export interface ProblemStats {
   solvedCount: number;
   time: { minMs: number; medianMs: number; maxMs: number } | null;
   memoryAvailable: boolean;
   yourBest: { timeMs: number; beatsPct: number | null } | null;
+  timeHistogram: TimeHistogramBucket[];
+  memoryHistogram: MemoryHistogramBucket[] | null;
+  yourTimeBucketIndex: number | null;
+  yourMemoryBucketIndex: number | null;
 }
 
 export interface ProblemNote {

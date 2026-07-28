@@ -14,6 +14,47 @@ export interface ListQuery {
   pageSize?: string;
 }
 
+interface HistogramBucket {
+  minValue: number;
+  maxValue: number;
+  count: number;
+  languageCounts: Record<string, number>;
+}
+
+/** Equal-width histogram over one best-submission value per user (runtime ms or memory KB), capped
+ * at 10 buckets (or fewer distinct values) so a problem with only a handful of solvers doesn't get
+ * a mostly-empty 10-bar chart. Returns which bucket each userId landed in alongside the buckets
+ * themselves, so the caller can mark "you are here" without a second pass over the same data. Only
+ * aggregate counts (and a per-bucket language breakdown) are ever returned — never which specific
+ * user or submission a bucket's count came from, so this can't be used to single out one person's
+ * code by process of elimination. */
+function buildHistogram(
+  points: { userId: string; value: number; languageKey: string }[],
+): { buckets: HistogramBucket[]; bucketIndexByUserId: Map<string, number> } {
+  const values = points.map((p) => p.value);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const bucketCount = Math.max(1, Math.min(10, new Set(values).size));
+  const width = max > min ? (max - min) / bucketCount : 1;
+
+  const buckets: HistogramBucket[] = Array.from({ length: bucketCount }, (_, i) => ({
+    minValue: min + i * width,
+    maxValue: i === bucketCount - 1 ? max : min + (i + 1) * width,
+    count: 0,
+    languageCounts: {},
+  }));
+
+  const bucketIndexByUserId = new Map<string, number>();
+  for (const p of points) {
+    let idx = width > 0 ? Math.floor((p.value - min) / width) : 0;
+    if (idx >= bucketCount) idx = bucketCount - 1; // the max value falls exactly on the top edge
+    buckets[idx].count += 1;
+    buckets[idx].languageCounts[p.languageKey] = (buckets[idx].languageCounts[p.languageKey] ?? 0) + 1;
+    bucketIndexByUserId.set(p.userId, idx);
+  }
+  return { buckets, bucketIndexByUserId };
+}
+
 /**
  * UVa's own submission form needs its internal problem id ("pid" in uHunt's API), which is
  * unrelated to the public problem number (uvaId) everyone knows the problem by except by
@@ -218,25 +259,29 @@ export class ProblemsService {
     };
   }
 
-  /** Community runtime stats for this problem, LeetCode-style. Memory is never available -
-   * onlinejudge.org's own status page doesn't publish it (that column is literally commented out
-   * in their markup), so every submission judged through the remote adapter has memoryKb=null. */
+  /** Community runtime stats for this problem, LeetCode-style. Memory histogram only appears when
+   * at least one AC submission actually has a memoryKb reading — onlinejudge.org's own status page
+   * doesn't publish memory (that column is literally commented out in their markup), so every
+   * submission judged through the remote adapter has memoryKb=null; only locally-judged problems
+   * ever have real memory data to chart. */
   async stats(slug: string, requester: RequestUser | null) {
     const problem = await prisma.problem.findUnique({ where: { slug }, select: { id: true } });
     if (!problem) throw new NotFoundException("Problem not found");
 
     const acSubs = await prisma.submission.findMany({
       where: { problemId: problem.id, verdict: "AC", timeMs: { not: null } },
-      select: { userId: true, timeMs: true },
+      select: { userId: true, timeMs: true, memoryKb: true, languageKey: true },
     });
 
-    const bestByUser = new Map<string, number>();
+    const bestByUser = new Map<string, { timeMs: number; memoryKb: number | null; languageKey: string }>();
     for (const s of acSubs) {
-      const t = s.timeMs!;
       const prev = bestByUser.get(s.userId);
-      if (prev === undefined || t < prev) bestByUser.set(s.userId, t);
+      if (!prev || s.timeMs! < prev.timeMs) {
+        bestByUser.set(s.userId, { timeMs: s.timeMs!, memoryKb: s.memoryKb, languageKey: s.languageKey });
+      }
     }
-    const times = [...bestByUser.values()].sort((a, b) => a - b);
+    const entries = [...bestByUser.entries()];
+    const times = entries.map(([, v]) => v.timeMs).sort((a, b) => a - b);
 
     const percentileOf = (t: number) => {
       if (times.length === 0) return null;
@@ -247,8 +292,16 @@ export class ProblemsService {
     let yourBest: { timeMs: number; beatsPct: number | null } | null = null;
     if (requester) {
       const mine = bestByUser.get(requester.id);
-      if (mine !== undefined) yourBest = { timeMs: mine, beatsPct: percentileOf(mine) };
+      if (mine !== undefined) yourBest = { timeMs: mine.timeMs, beatsPct: percentileOf(mine.timeMs) };
     }
+
+    const timePoints = entries.map(([userId, v]) => ({ userId, value: v.timeMs, languageKey: v.languageKey }));
+    const timeHist = buildHistogram(timePoints);
+
+    const memPoints = entries
+      .filter(([, v]) => v.memoryKb !== null)
+      .map(([userId, v]) => ({ userId, value: v.memoryKb!, languageKey: v.languageKey }));
+    const memHist = memPoints.length > 0 ? buildHistogram(memPoints) : null;
 
     return {
       solvedCount: times.length,
@@ -256,8 +309,14 @@ export class ProblemsService {
         times.length > 0
           ? { minMs: times[0], medianMs: times[Math.floor(times.length / 2)], maxMs: times[times.length - 1] }
           : null,
-      memoryAvailable: false,
+      memoryAvailable: memHist !== null,
       yourBest,
+      timeHistogram: timeHist.buckets.map((b) => ({ minMs: b.minValue, maxMs: b.maxValue, count: b.count, languageCounts: b.languageCounts })),
+      memoryHistogram: memHist
+        ? memHist.buckets.map((b) => ({ minKb: b.minValue, maxKb: b.maxValue, count: b.count, languageCounts: b.languageCounts }))
+        : null,
+      yourTimeBucketIndex: requester ? (timeHist.bucketIndexByUserId.get(requester.id) ?? null) : null,
+      yourMemoryBucketIndex: requester && memHist ? (memHist.bucketIndexByUserId.get(requester.id) ?? null) : null,
     };
   }
 

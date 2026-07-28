@@ -1,8 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import type { ProblemStats } from "@/lib/types";
+
+// recharts is a large charting bundle — deferring it out of the problem page's initial JS (see
+// StatChartsLoader for the same pattern) since these stats only render once the Stats tab is
+// actually opened, not on first paint of the problem page.
+const DistributionChart = dynamic(() => import("@/components/DistributionChart"), {
+  ssr: false,
+  loading: () => <div className="h-[140px] animate-pulse rounded bg-ink-900" />,
+}) as typeof import("@/components/DistributionChart").default;
 
 export default function ProblemStatsPanel({ slug }: { slug: string }) {
   const { data, isLoading } = useQuery({
@@ -33,7 +42,7 @@ export default function ProblemStatsPanel({ slug }: { slug: string }) {
           Runtime — {data.solvedCount} solver{data.solvedCount === 1 ? "" : "s"}
         </p>
         {data.time && (
-          <div className="grid grid-cols-3 gap-3 text-center">
+          <div className="mb-3 grid grid-cols-3 gap-3 text-center">
             <div>
               <p className="font-mono text-lg text-ink-50">{data.time.minMs} ms</p>
               <p className="text-xs text-ink-500">fastest</p>
@@ -48,12 +57,36 @@ export default function ProblemStatsPanel({ slug }: { slug: string }) {
             </div>
           </div>
         )}
+        {data.timeHistogram.length > 0 && (
+          <DistributionChart
+            buckets={data.timeHistogram}
+            yourBucketIndex={data.yourTimeBucketIndex}
+            unit="runtime"
+            formatRange={(b) => (b.minMs === b.maxMs ? `${Math.round(b.minMs)} ms` : `${Math.round(b.minMs)}–${Math.round(b.maxMs)} ms`)}
+          />
+        )}
       </div>
 
-      <p className="text-xs text-ink-500">
-        Memory usage isn't shown here — onlinejudge.org's own results page doesn't publish it, so there's no
-        real data to display instead of making something up.
-      </p>
+      {data.memoryAvailable && data.memoryHistogram ? (
+        <div className="oj-card p-4">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Memory</p>
+          <DistributionChart
+            buckets={data.memoryHistogram}
+            yourBucketIndex={data.yourMemoryBucketIndex}
+            unit="memory"
+            formatRange={(b) =>
+              b.minKb === b.maxKb
+                ? `${Math.round(b.minKb / 1024)} MB`
+                : `${Math.round(b.minKb / 1024)}–${Math.round(b.maxKb / 1024)} MB`
+            }
+          />
+        </div>
+      ) : (
+        <p className="text-xs text-ink-500">
+          Memory usage isn't shown here — onlinejudge.org's own results page doesn't publish it, so there's no
+          real data to display instead of making something up.
+        </p>
+      )}
     </div>
   );
 }
