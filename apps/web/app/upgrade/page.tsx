@@ -120,7 +120,6 @@ export default function UpgradePlanPage() {
   const listPrice = plans?.pricing.MONTHLY.amountNtd ?? 500;
   const nowPrice = plans?.effectivePricing.MONTHLY ?? listPrice;
   const promo = plans?.promo;
-  const promoEndsLabel = promo ? new Date(promo.endsAt).toLocaleDateString() : null;
 
   return (
     <div className="mx-auto flex h-screen max-w-4xl flex-col overflow-y-auto px-6 py-4">
@@ -231,9 +230,6 @@ export default function UpgradePlanPage() {
                     NT${nowPrice}
                     <span className="text-xs font-normal text-ink-400 sm:text-sm"> / month</span>
                   </p>
-                )}
-                {!isPro && promo && promoEndsLabel && (
-                  <p className="text-[11px] text-verdict-wa">Ends {promoEndsLabel} — then back to NT${listPrice}/mo</p>
                 )}
                 <ul className="mt-3 flex-1 space-y-1.5 sm:mt-4 sm:space-y-2">
                   <Check>Unlimited submissions</Check>
