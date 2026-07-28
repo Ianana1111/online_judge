@@ -10,7 +10,7 @@ const SECTIONS: { title: string; items: { q: string; a: React.ReactNode }[] }[] 
           <>
             信用卡與 ATM 付款都是全自動核准的：完成刷卡後系統會在數十秒到幾分鐘內自動偵測並升級，不需要任何人工審核。如果付款成功超過
             10 分鐘帳號仍顯示 Free，請先重新整理頁面確認不是快取問題；如果還是沒有更新，請透過
-            <span className="text-brand"> ian52759@gmail.com </span>
+            <span className="text-brand"> judges0801@gmail.com </span>
             聯絡我們，並附上付款當下的時間與（如果有的話）ATM 轉帳帳號末五碼，我們會直接為你補上 Pro。
           </>
         ),
@@ -36,7 +36,7 @@ const SECTIONS: { title: string; items: { q: string; a: React.ReactNode }[] }[] 
         a: (
           <>
             目前還沒有自助重設密碼的功能——如果你的帳號是用 Google 登入建立的，直接用「使用 Google 登入」即可繞過密碼；如果是帳密註冊的帳號忘記密碼，請寄信到
-            <span className="text-brand"> ian52759@gmail.com </span>
+            <span className="text-brand"> judges0801@gmail.com </span>
             告訴我們你的帳號 handle，我們會協助你重設。
           </>
         ),
@@ -120,7 +120,7 @@ export default function FaqPage() {
       <div>
         <h1 className="font-display text-2xl font-bold text-ink-50">FAQ</h1>
         <p className="mt-1 text-sm text-ink-400">
-          常見問題整理。找不到答案的話，歡迎寄信到 <span className="text-brand">ian52759@gmail.com</span>。
+          常見問題整理。找不到答案的話，歡迎寄信到 <span className="text-brand">judges0801@gmail.com</span>。
         </p>
       </div>
 
