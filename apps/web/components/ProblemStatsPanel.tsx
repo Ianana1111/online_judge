@@ -67,7 +67,7 @@ export default function ProblemStatsPanel({ slug }: { slug: string }) {
         )}
       </div>
 
-      {data.memoryAvailable && data.memoryHistogram ? (
+      {data.memoryAvailable && data.memoryHistogram && (
         <div className="oj-card p-4">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Memory</p>
           <DistributionChart
@@ -81,11 +81,6 @@ export default function ProblemStatsPanel({ slug }: { slug: string }) {
             }
           />
         </div>
-      ) : (
-        <p className="text-xs text-ink-500">
-          Memory usage isn't shown here — onlinejudge.org's own results page doesn't publish it, so there's no
-          real data to display instead of making something up.
-        </p>
       )}
     </div>
   );
