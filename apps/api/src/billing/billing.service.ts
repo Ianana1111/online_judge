@@ -7,7 +7,6 @@ import {
   FREE_VIRTUAL_ATTEMPTS,
   PLAN_PRICING,
   type BillingPeriod,
-  type BillingRequestDto,
   type EcpayMethod,
 } from "@oj/shared";
 import { computeCheckMacValue, ecpayConfig, verifyCheckMacValue } from "./ecpay.util";
@@ -167,69 +166,6 @@ export class BillingService {
     return { ok: true };
   }
 
-  /** User submits a manual-payment claim. Creates a PENDING record for an admin to verify. */
-  async requestUpgrade(userId: string, dto: BillingRequestDto) {
-    const existingPending = await prisma.payment.findFirst({ where: { userId, status: "PENDING" } });
-    if (existingPending) {
-      throw new BadRequestException("You already have a payment awaiting review.");
-    }
-    const payment = await prisma.payment.create({
-      data: {
-        userId,
-        period: dto.period,
-        amountNtd: effectivePriceNtd(dto.period),
-        reference: dto.reference,
-        method: "MANUAL",
-        status: "PENDING",
-      },
-    });
-    return { id: payment.id, status: payment.status };
-  }
-
-  /** Admin: every MANUAL (bank-transfer claim) payment awaiting human verification, oldest first.
-   * Deliberately excludes ECPay orders — those resolve entirely on their own via handleEcpayReturn
-   * (see ECPAY_AUTO below) or EcpayCaptureService, and a PENDING ECPay row just means "still
-   * waiting on the card network/webhook," not "needs a human to check a bank account." Showing
-   * them here would both be confusing noise and a real hazard: approving one manually would grant
-   * Pro without ever confirming the card actually got charged. */
-  async listPending() {
-    const rows = await prisma.payment.findMany({
-      where: { status: "PENDING", method: "MANUAL" },
-      orderBy: { createdAt: "asc" },
-      include: { user: { select: { handle: true, email: true } } },
-    });
-    return rows.map((p) => ({
-      id: p.id,
-      handle: p.user.handle,
-      email: p.user.email,
-      period: p.period,
-      amountNtd: p.amountNtd,
-      reference: p.reference,
-      createdAt: p.createdAt,
-    }));
-  }
-
-  /** Admin: confirm the money arrived → mark APPROVED and extend the buyer's PRO window. MANUAL
-   * claims only — an ECPay order must confirm itself via the real webhook (handleEcpayReturn), so
-   * this refuses to be used as a shortcut that grants Pro before a card has actually been charged. */
-  async approve(paymentId: string, adminId: string) {
-    const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
-    if (!payment) throw new NotFoundException("Payment not found");
-    if (payment.status !== "PENDING") throw new BadRequestException("This payment is not pending.");
-    if (payment.method !== "MANUAL") {
-      throw new BadRequestException("Only manual bank-transfer claims can be approved this way — ECPay orders confirm automatically.");
-    }
-
-    const planExpiresAt = await prisma.$transaction(async (tx) => {
-      await tx.payment.update({
-        where: { id: paymentId },
-        data: { status: "APPROVED", reviewedAt: new Date(), reviewedBy: adminId },
-      });
-      return this.extendPlan(tx, payment.userId, payment.period);
-    });
-    return { ok: true, planExpiresAt };
-  }
-
   /** Admin support tool: directly grant Pro without a Payment claim on file — for when someone
    * really did pay (e.g. a real bank transfer, or a webhook that failed to fire) but nothing in
    * our own records reflects it yet. Still leaves a Payment row (status APPROVED, method
@@ -269,17 +205,6 @@ export class BillingService {
       data: { plan: "FREE", planExpiresAt: null, planCancelRequested: false },
     });
     return { plan: "FREE", planExpiresAt: null };
-  }
-
-  async reject(paymentId: string, adminId: string) {
-    const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
-    if (!payment) throw new NotFoundException("Payment not found");
-    if (payment.status !== "PENDING") throw new BadRequestException("This payment is not pending.");
-    await prisma.payment.update({
-      where: { id: paymentId },
-      data: { status: "REJECTED", reviewedAt: new Date(), reviewedBy: adminId },
-    });
-    return { ok: true };
   }
 
   // --- ECPay (綠界) automated checkout flow (ATM virtual account + credit card) ---

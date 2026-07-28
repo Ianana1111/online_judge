@@ -75,7 +75,6 @@ export interface BillingPlans {
   // always display/expect to pay THIS, never pricing[period].amountNtd directly.
   effectivePricing: Record<"MONTHLY" | "YEARLY", number>;
   promo: { discountPct: number; period: "MONTHLY" | "YEARLY"; endsAt: string } | null;
-  payee: { bank: string; account: string; name: string; linePay: string; note: string };
 }
 
 // A single problem as shown in a filterable/sortable table. Shared by the Problems list and the
