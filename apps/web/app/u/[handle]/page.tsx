@@ -4,6 +4,7 @@ import type { Achievement, ProblemListResponse, UserProfile, UserStats } from "@
 import Heatmap from "@/components/Heatmap";
 import StatChartsLoader from "@/components/StatChartsLoader";
 import SolvedRing from "@/components/SolvedRing";
+import Avatar from "@/components/Avatar";
 import { ACHIEVEMENT_ICONS, FlameIcon, TrophyIcon } from "@/components/icons";
 
 const DIFFICULTY_TIERS = [1, 2, 3, 4];
@@ -43,15 +44,21 @@ export default async function DashboardPage({ params }: { params: Promise<{ hand
         <div className="relative flex flex-wrap items-center gap-6">
           <SolvedRing solved={profile.solvedCount} total={totalProblems} />
           <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <h1 className="font-display text-3xl font-bold text-ink-50">{profile.handle}</h1>
-              {profile.plan === "PRO" && (
-                <span className="rounded border border-brand/40 bg-brand/10 px-1.5 py-0.5 text-xs font-semibold text-brand">
-                  Pro
-                </span>
-              )}
+            <div className="flex items-center gap-3">
+              <Avatar avatarUrl={profile.avatarUrl} handle={profile.handle} size={56} />
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="font-display text-3xl font-bold text-ink-50">{profile.handle}</h1>
+                  {profile.plan === "PRO" && (
+                    <span className="rounded border border-brand/40 bg-brand/10 px-1.5 py-0.5 text-xs font-semibold text-brand">
+                      Pro
+                    </span>
+                  )}
+                </div>
+                <p className="mt-1 text-sm text-ink-400">Joined {new Date(profile.createdAt).toLocaleDateString()}</p>
+              </div>
             </div>
-            <p className="mt-1 text-sm text-ink-400">Joined {new Date(profile.createdAt).toLocaleDateString()}</p>
+            {profile.bio && <p className="mt-3 max-w-xl text-sm italic text-ink-300">"{profile.bio}"</p>}
 
             <div className="mt-4 flex flex-wrap gap-2">
               {DIFFICULTY_TIERS.map((d) => (

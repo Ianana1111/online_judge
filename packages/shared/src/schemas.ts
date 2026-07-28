@@ -63,6 +63,17 @@ export const changeHandleSchema = z.object({
 });
 export type ChangeHandleDto = z.infer<typeof changeHandleSchema>;
 
+export const updateProfileSchema = z.object({
+  bio: z.string().max(200).optional(),
+  // Data-URL only (e.g. "data:image/jpeg;base64,...") — the client resizes/compresses before
+  // sending, so 300KB comfortably covers a small avatar while still capping DB row growth.
+  // null clears the avatar back to the generic initial-letter placeholder.
+  avatarUrl: z
+    .union([z.string().max(300_000).startsWith("data:image/"), z.null()])
+    .optional(),
+});
+export type UpdateProfileDto = z.infer<typeof updateProfileSchema>;
+
 export const setIsStudentSchema = z.object({
   isStudent: z.boolean(),
 });

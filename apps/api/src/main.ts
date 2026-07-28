@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import type { NestExpressApplication } from "@nestjs/platform-express";
 import cookieParser from "cookie-parser";
+import { json, urlencoded } from "express";
 import helmet from "helmet";
 import { AppModule } from "./app.module";
 
@@ -25,7 +26,12 @@ function assertProdSecretsConfigured(): void {
 
 async function bootstrap() {
   assertProdSecretsConfigured();
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bodyParser: false });
+  // Default Express/Nest body limit is 100kb — too small for a base64 avatar upload (see
+  // users.service updateProfile). ECPay's webhooks (urlencoded) stay far under this too, so
+  // raising it is strictly safer for them, never a regression.
+  app.use(json({ limit: "1mb" }));
+  app.use(urlencoded({ extended: true, limit: "1mb" }));
 
   app.use(
     helmet({

@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import argon2 from "argon2";
 import { prisma } from "@oj/db";
-import type { ChangeHandleDto, ChangePasswordDto, CreateUserDto, UpdateSettingsDto } from "@oj/shared";
+import type { ChangeHandleDto, ChangePasswordDto, CreateUserDto, UpdateProfileDto, UpdateSettingsDto } from "@oj/shared";
 import { isProActive, isUnlimited } from "../billing/billing.service";
 import { computeStreak } from "../leaderboard/leaderboard.service";
 
@@ -134,12 +134,24 @@ export class UsersService {
       handle: user.handle,
       createdAt: user.createdAt,
       solvedCount: solved.length,
+      bio: user.bio,
+      avatarUrl: user.avatarUrl,
       // isProActive (not isUnlimited): this is a PUBLIC profile, so it shows the same "am I Pro"
       // answer a user gets about themselves from /billing/me (students count, same as everywhere
       // else) rather than the admin-users-table's operational "is this account ever capped" view —
       // an admin browsing their own profile doesn't need a vanity Pro badge.
       plan: isProActive(user) ? ("PRO" as const) : ("FREE" as const),
     };
+  }
+
+  /** Public-facing profile fields only (bio/avatar) — never handle/password/plan, those go through
+   * their own dedicated endpoints. */
+  async updateProfile(userId: string, patch: UpdateProfileDto) {
+    const data: { bio?: string; avatarUrl?: string | null } = {};
+    if (patch.bio !== undefined) data.bio = patch.bio;
+    if (patch.avatarUrl !== undefined) data.avatarUrl = patch.avatarUrl;
+    const user = await prisma.user.update({ where: { id: userId }, data, select: { bio: true, avatarUrl: true } });
+    return user;
   }
 
   async stats(handle: string) {

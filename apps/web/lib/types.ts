@@ -48,6 +48,8 @@ export interface User {
   isStudent: boolean;
   plan: "FREE" | "PRO";
   settings: UserSettings;
+  bio: string;
+  avatarUrl: string | null;
 }
 
 export interface BillingStatus {
@@ -274,6 +276,8 @@ export interface UserProfile {
   createdAt: string;
   solvedCount: number;
   plan: "FREE" | "PRO";
+  bio: string;
+  avatarUrl: string | null;
 }
 
 export interface Discussion {
