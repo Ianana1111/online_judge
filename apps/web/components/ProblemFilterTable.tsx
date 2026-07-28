@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import InfoTooltip from "@/components/InfoTooltip";
 import LockIcon from "@/components/LockIcon";
 import { stripProblemNumber } from "@/lib/problemTitle";
@@ -13,6 +13,7 @@ const DIFFICULTY_EXPLANATION =
   "Curated ratings come first: problems from an officially-rated set (like the CPE 必考49題 one-star selection) keep that rating. Everything else is derived from how many people worldwide have solved it on UVa (more solvers = more introductory), with a minimum floor based on the algorithm topic — a DP or graph problem never rates below what its technique demands.";
 
 type SortKey = "number" | "difficulty-asc" | "difficulty-desc" | "unsolved-first" | "cpe-appearances";
+const SORT_KEYS: SortKey[] = ["number", "difficulty-asc", "difficulty-desc", "unsolved-first", "cpe-appearances"];
 
 const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: "number", label: "Problem number ↑" },
@@ -33,10 +34,33 @@ const PRO_SORT_OPTION: { key: SortKey; label: string } = { key: "cpe-appearances
 export default function ProblemFilterTable({ problems }: { problems: ProblemRow[] }) {
   const isPro = useAuthStore((s) => s.user?.plan === "PRO");
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [q, setQ] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [tag, setTag] = useState("");
-  const [sort, setSort] = useState<SortKey>("number");
+  // Kept in the URL (not just component state) so it survives navigating to a problem and coming
+  // back — a fresh mount reads it straight back out of the address bar instead of resetting to
+  // the default. Only sort round-trips through the URL for now (that was the specific ask);
+  // search/difficulty/tag still reset, same as before.
+  const initialSort = searchParams.get("sort");
+  const [sort, setSortState] = useState<SortKey>(
+    initialSort && SORT_KEYS.includes(initialSort as SortKey) ? (initialSort as SortKey) : "number",
+  );
+
+  function setSort(next: SortKey) {
+    setSortState(next);
+    const params = new URLSearchParams(searchParams.toString());
+    if (next === "number") {
+      params.delete("sort"); // the default — no need to clutter the URL with it
+    } else {
+      params.set("sort", next);
+    }
+    const qs = params.toString();
+    // replace (not push): switching sort shouldn't pile up its own back-button history — only the
+    // navigation to/from a problem page should do that.
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  }
 
   const allTags = useMemo(() => {
     const set = new Set<string>();
