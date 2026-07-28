@@ -395,6 +395,20 @@ export class BillingService {
     }
     if (payment.status !== "PENDING") return; // already processed — idempotent no-op
 
+    // Belt-and-suspenders: TradeAmt is itself covered by the CheckMacValue signature above, so a
+    // forged amount would already have failed verification — this only catches an internal bug
+    // (e.g. a promo-price race between order creation and payment) where OUR OWN two numbers
+    // disagree. Never auto-approves a mismatch; left PENDING for manual investigation rather than
+    // silently granting Pro for the wrong price or silently discarding a real payment.
+    const paidAmount = Number(body.TradeAmt);
+    if (!Number.isFinite(paidAmount) || paidAmount !== payment.amountNtd) {
+      this.logger.error(
+        `ECPay return webhook: amount mismatch for ${body.MerchantTradeNo} — expected ${payment.amountNtd}, ` +
+          `TradeAmt was ${body.TradeAmt}. Payment left PENDING, NOT approved.`,
+      );
+      return;
+    }
+
     await prisma.$transaction(async (tx) => {
       await tx.payment.update({
         where: { id: payment.id },
