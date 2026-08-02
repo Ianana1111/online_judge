@@ -5,6 +5,7 @@ import type { RequestUser } from "../common/decorators";
 import { AchievementsService } from "../achievements/achievements.service";
 import { BillingService } from "../billing/billing.service";
 import { CacheService } from "../common/cache.util";
+import { cpeAppearancesFor, isRequesterPro } from "../billing/pro-gate.util";
 
 // Fields actually needed for scoreboard/standings math — never sourceCode, which each of these
 // queries used to pull (and immediately discard) for every submission in the contest.
@@ -122,6 +123,14 @@ export class ContestsService {
       }
     }
 
+    // Same uvaId/sourceUrl/cpeAppearances fields the standalone /problems/:slug endpoint returns —
+    // ProblemView renders identically whether it got its problem from there or from here, so a
+    // problem opened inside a running exam must carry the same fields or it silently loses its
+    // "judgeable" status (uvaId is what SubmissionPanel checks to allow submitting at all).
+    const isPro = requester ? await isRequesterPro(requester) : false;
+    const problemIds = contest.problems.map((cp) => cp.problem.id);
+    const appearancesById = isPro ? await cpeAppearancesFor(problemIds) : new Map<string, number>();
+
     return {
       id: contest.id,
       title: contest.title,
@@ -141,12 +150,15 @@ export class ContestsService {
           slug: cp.problem.slug,
           title: cp.problem.title,
           statementMd: cp.problem.statementMd,
+          sourceUrl: cp.problem.sourceUrl,
           inputSpecMd: cp.problem.inputSpecMd,
           outputSpecMd: cp.problem.outputSpecMd,
           timeLimitMs: cp.problem.timeLimitMs,
           memoryLimitKb: cp.problem.memoryLimitKb,
           difficulty: cp.problem.difficulty,
           source: cp.problem.source,
+          uvaId: cp.problem.uvaId,
+          cpeAppearances: isPro ? (appearancesById.get(cp.problem.id) ?? 0) : null,
           tags: cp.problem.tags.map((t) => t.tag.slug),
           samples: cp.problem.samples.map((s) => ({ ord: s.ord, input: s.input, output: s.output })),
         },
