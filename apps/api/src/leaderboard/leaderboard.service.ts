@@ -51,7 +51,7 @@ export class LeaderboardService {
     const users = await prisma.user.findMany({ where: userWhere, select: { id: true, handle: true } });
     const userIds = users.map((u) => u.id);
 
-    const [periodSubs, allTimeSubs] = await Promise.all([
+    const [periodSubs, allTimeSubs, freezeDays] = await Promise.all([
       prisma.submission.findMany({
         where: { verdict: "AC", userId: { in: userIds }, ...(since ? { createdAt: { gte: since } } : {}) },
         select: { userId: true, problemId: true, createdAt: true, problem: { select: { difficulty: true } } },
@@ -62,6 +62,9 @@ export class LeaderboardService {
         where: { verdict: "AC", userId: { in: userIds } },
         select: { userId: true, createdAt: true },
       }),
+      // A streak-freeze day counts the same as a real AC day here too — otherwise this board would
+      // disagree with the personal dashboard's own streak the moment someone uses one.
+      prisma.streakFreezeDay.findMany({ where: { userId: { in: userIds } }, select: { userId: true, date: true } }),
     ]);
 
     const solvedByUser = new Map<string, Map<string, number>>(); // userId -> problemId -> difficulty (first AC only)
@@ -77,13 +80,20 @@ export class LeaderboardService {
       set.add(s.createdAt.toISOString().slice(0, 10));
       acDatesByUser.set(s.userId, set);
     }
+    for (const f of freezeDays) {
+      const set = acDatesByUser.get(f.userId) ?? new Set<string>();
+      set.add(f.date);
+      acDatesByUser.set(f.userId, set);
+    }
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const frozenTodayUserIds = new Set(freezeDays.filter((f) => f.date === todayKey).map((f) => f.userId));
 
     const POINTS_PER_STAR = 10;
     const rows = users.map((u) => {
       const solved = solvedByUser.get(u.id) ?? new Map<string, number>();
       const score = [...solved.values()].reduce((sum, difficulty) => sum + difficulty * POINTS_PER_STAR, 0);
       const streak = computeStreak(acDatesByUser.get(u.id) ?? new Set());
-      return { userId: u.id, handle: u.handle, score, solved: solved.size, streak };
+      return { userId: u.id, handle: u.handle, score, solved: solved.size, streak, frozenToday: frozenTodayUserIds.has(u.id) };
     });
 
     rows.sort((a, b) => b.score - a.score || b.solved - a.solved || a.handle.localeCompare(b.handle));
