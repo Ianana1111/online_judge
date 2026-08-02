@@ -121,6 +121,17 @@ model User {
   /// upload, so no external file storage is needed at this scale. Null shows a generic
   /// initial-letter avatar instead.
   avatarUrl String?
+  /// Streak-freeze inventory — see users.service.ts's applyMonthlyFreezeGrant. Granted lazily (1
+  /// per calendar month, capped) the same way submitQuotaUsed/submitQuotaMonth reset lazily above,
+  /// rather than via a separate cron job.
+  streakFreezeCount      Int     @default(0)
+  streakFreezeGrantMonth String?
+  /// Daily check-in streak — distinct from the solve-based day streak above: this counts
+  /// consecutive calendar days the user has simply visited (see users.service.ts's daily(),
+  /// which records it lazily the same way it does everything else here), not days they solved
+  /// something. Every 7-day milestone grants a bonus streak-freeze.
+  loginStreak   Int     @default(0)
+  lastLoginDate String?
   settings     Json     @default("{}")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -139,8 +150,24 @@ model User {
   pageViews            PageView[]
   achievements         UserAchievement[]
   notifications        Notification[]
+  streakFreezeDays      StreakFreezeDay[]
 
   @@map("users")
+}
+
+/// One row per calendar day a user spent a streak-freeze on — that day then counts as "solved" for
+/// streak purposes (see users.service.ts's daily()/useStreakFreeze and computeStreak in
+/// leaderboard.service.ts) even with zero real AC submissions. date is a UTC "YYYY-MM-DD" key, the
+/// same convention computeStreak already uses for real AC dates, so the two sets merge directly.
+model StreakFreezeDay {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, date])
+  @@map("streak_freeze_days")
 }
 
 /// One earned entry per (user, achievement code) — codes are a fixed catalog defined in code

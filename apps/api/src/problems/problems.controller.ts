@@ -21,6 +21,13 @@ export class ProblemsController {
     return this.problems.recommendNext(user.id);
   }
 
+  // Same ordering requirement as "recommended" above — must come before ":slug".
+  @OptionalAuth()
+  @Get("daily")
+  daily(@CurrentUser() user: RequestUser | null) {
+    return this.problems.dailyPick(user);
+  }
+
   @OptionalAuth()
   @Get(":slug")
   detail(@Param("slug") slug: string, @CurrentUser() user: RequestUser | null) {

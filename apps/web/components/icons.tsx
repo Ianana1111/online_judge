@@ -155,6 +155,30 @@ export const ArchiveIcon = makeIcon(
   </>,
 );
 
+/** Daily check-in streak — a calendar with a check, distinct from the flame (solve streak) so the
+ * two "streak" concepts never look like the same metric at a glance. */
+export const CalendarCheckIcon = makeIcon(
+  <>
+    <rect x="3" y="4" width="18" height="18" rx="2" />
+    <line x1="16" y1="2" x2="16" y2="6" />
+    <line x1="8" y1="2" x2="8" y2="6" />
+    <line x1="3" y1="10" x2="21" y2="10" />
+    <path d="M9 16l2 2 4-4" />
+  </>,
+);
+
+/** Streak-freeze — a snowflake, so "protect today's streak" reads as a distinct cool-toned action
+ * from the flame's warm "keep it burning" one. */
+export const SnowflakeIcon = makeIcon(
+  <>
+    <line x1="12" y1="2" x2="12" y2="22" />
+    <line x1="2" y1="12" x2="22" y2="12" />
+    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+    <line x1="19.07" y1="4.93" x2="4.93" y2="19.07" />
+    <path d="M12 2l-2 2m2-2l2 2M12 22l-2-2m2 2l2-2M2 12l2-2m-2 2l2 2M22 12l-2-2m2 2l-2 2" />
+  </>,
+);
+
 /** Per-achievement-code icon, shared by HomeDashboard's trophy case and the public profile page so
  * both surfaces agree on what each achievement looks like instead of one falling back to a generic
  * trophy for everything. */
