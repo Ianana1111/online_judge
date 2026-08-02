@@ -121,6 +121,21 @@ export interface DailyStats {
   solvedToday: number;
   currentStreak: number;
   atRisk: boolean;
+  streakFreezeCount: number;
+  frozenToday: boolean;
+  loginStreak: number;
+  loginMilestoneHit: boolean;
+}
+
+export interface DailyProblem {
+  id: string;
+  uvaId: number | null;
+  slug: string;
+  title: string;
+  difficulty: number;
+  source: "UVA" | "CPE" | "GPE" | "CUSTOM";
+  tags: string[];
+  solvedByMe: boolean;
 }
 
 export interface ProblemListResponse {
@@ -292,7 +307,9 @@ export interface PostListItem {
   id: string;
   title: string;
   excerpt: string;
+  bodyLength: number;
   authorHandle: string;
+  authorAvatarUrl: string | null;
   isOfficial: boolean;
   createdAt: string;
 }
@@ -302,6 +319,7 @@ export interface PostDetail {
   title: string;
   bodyMd: string;
   authorHandle: string;
+  authorAvatarUrl: string | null;
   isOfficial: boolean;
   createdAt: string;
 }
@@ -491,6 +509,7 @@ export interface LeaderboardRow {
   score: number;
   solved: number;
   streak: number;
+  frozenToday: boolean;
   rank: number;
 }
 

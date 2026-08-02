@@ -46,6 +46,11 @@ export class UsersController {
     return this.users.daily(user.id);
   }
 
+  @Post("me/streak-freeze")
+  useStreakFreeze(@CurrentUser() user: RequestUser) {
+    return this.users.useStreakFreeze(user.id);
+  }
+
   @Patch("me/settings")
   updateSettings(
     @Body(new ZodValidationPipe(updateSettingsSchema)) body: UpdateSettingsDto,

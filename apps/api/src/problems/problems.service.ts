@@ -221,6 +221,45 @@ export class ProblemsService {
     return { ...next.problem, collectionTitle: membership.collection.title, collectionSlug: membership.collection.slug };
   }
 
+  /**
+   * Today's featured problem — the same one for everyone, all day, so it works as a shared "did
+   * you do today's?" reference point rather than a private recommendation. Picked deterministically
+   * from today's UTC date (no state to store or a cron to rotate it): hash the date string, index
+   * into the full visible problem set ordered by id for a stable, arbitrary-but-fixed sequence.
+   * Every visible problem is eligible — there's no difficulty floor — so some days it's a ★ and
+   * some days a ★★★★, the same variety a real exam would throw at you.
+   */
+  async dailyPick(requester: RequestUser | null) {
+    const problems = await prisma.problem.findMany({
+      where: { visibility: true },
+      select: { id: true, uvaId: true, slug: true, title: true, difficulty: true, source: true, tags: { select: { tag: { select: { slug: true } } } } },
+      orderBy: { id: "asc" },
+    });
+    if (problems.length === 0) return null;
+
+    const todayKey = new Date().toISOString().slice(0, 10);
+    let hash = 0;
+    for (let i = 0; i < todayKey.length; i++) hash = (hash * 31 + todayKey.charCodeAt(i)) >>> 0;
+    const picked = problems[hash % problems.length];
+
+    let solvedByMe = false;
+    if (requester) {
+      const ac = await prisma.submission.findFirst({ where: { userId: requester.id, problemId: picked.id, verdict: "AC" } });
+      solvedByMe = !!ac;
+    }
+
+    return {
+      id: picked.id,
+      uvaId: picked.uvaId,
+      slug: picked.slug,
+      title: picked.title,
+      difficulty: picked.difficulty,
+      source: picked.source,
+      tags: picked.tags.map((t) => t.tag.slug),
+      solvedByMe,
+    };
+  }
+
   async detail(slug: string, requester: RequestUser | null) {
     const isAdmin = requester?.role === "ADMIN";
     const problem = await prisma.problem.findUnique({

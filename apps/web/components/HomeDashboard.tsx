@@ -1,9 +1,9 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { apiFetch } from "@/lib/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import DailyGoalRing from "@/components/DailyGoalRing";
 import VerdictBadge from "@/components/VerdictBadge";
@@ -12,18 +12,22 @@ import { stripProblemNumber } from "@/lib/problemTitle";
 import {
   ACHIEVEMENT_ICONS,
   BookOpenIcon,
+  CalendarCheckIcon,
   CloudSunIcon,
   FlameIcon,
   LayersIcon,
   MedalIcon,
   MoonIcon,
   RocketIcon,
+  SnowflakeIcon,
+  SparklesIcon,
   SunIcon,
   SunsetIcon,
   TrophyIcon,
 } from "@/components/icons";
 import type {
   Achievement,
+  DailyProblem,
   DailyStats,
   LeaderboardRow,
   RecommendedProblems,
@@ -83,8 +87,9 @@ function StatCell({ value, label, valueClassName = "text-ink-50" }: { value: Rea
 
 /** The streak's visual size/intensity grows with its length — a small ember for a fresh streak, a
  * full blaze past a month — so "keep it alive" reads as a stake worth protecting, not just a
- * number next to a flame icon. */
-function StreakFlame({ streak, atRisk }: { streak: number; atRisk: boolean }) {
+ * number next to a flame icon. A frozen day shows as a cool-toned snowflake instead of the warm
+ * "at risk" red, since it's already protected — nothing left to worry about today. */
+function StreakFlame({ streak, atRisk, frozenToday }: { streak: number; atRisk: boolean; frozenToday: boolean }) {
   if (streak <= 0) {
     return (
       <div className="flex flex-col items-center gap-1">
@@ -94,11 +99,95 @@ function StreakFlame({ streak, atRisk }: { streak: number; atRisk: boolean }) {
     );
   }
   const size = streak >= 30 ? "h-10 w-10" : streak >= 7 ? "h-8 w-8" : "h-6 w-6";
+  if (frozenToday) {
+    return (
+      <div className="flex flex-col items-center gap-1">
+        <SnowflakeIcon className={`${size} text-sky-400`} />
+        <span className="font-display font-bold tabular-nums text-sky-400">{streak}</span>
+        <span className="text-[10px] uppercase tracking-wide text-ink-500">protected today</span>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col items-center gap-1">
       <FlameIcon className={`${size} text-verdict-tle ${atRisk ? "animate-pulse-soft" : ""}`} />
       <span className={`font-display font-bold tabular-nums ${atRisk ? "text-verdict-wa" : "text-verdict-tle"}`}>{streak}</span>
       <span className="text-[10px] uppercase tracking-wide text-ink-500">{atRisk ? "at risk today" : "day streak"}</span>
+    </div>
+  );
+}
+
+/** Offered only when there's actually something to protect (atRisk) and the user has one in
+ * stock — spends it via POST /users/me/streak-freeze and refetches daily() so the flame/ring
+ * above flip to the "protected today" state immediately. */
+function StreakFreezeButton({ freezeCount }: { freezeCount: number }) {
+  const qc = useQueryClient();
+  const [error, setError] = useState<string | null>(null);
+
+  const mutation = useMutation({
+    mutationFn: () => apiFetch("/users/me/streak-freeze", { method: "POST" }),
+    onSuccess: () => {
+      setError(null);
+      qc.invalidateQueries({ queryKey: ["daily"] });
+    },
+    onError: (e) => setError(e instanceof ApiError ? e.message : "Couldn't use a freeze — try again."),
+  });
+
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <button
+        type="button"
+        onClick={() => mutation.mutate()}
+        disabled={mutation.isPending}
+        title="Life gets busy — spend one to keep your streak alive today without solving anything."
+        className="inline-flex items-center gap-1.5 rounded border border-sky-400/40 bg-sky-400/10 px-2.5 py-1.5 text-xs font-medium text-sky-300 transition-colors hover:bg-sky-400/20 disabled:opacity-50"
+      >
+        <SnowflakeIcon className="h-3.5 w-3.5" />
+        {mutation.isPending ? "Using…" : `Use a freeze (${freezeCount} left)`}
+      </button>
+      {error && <p className="max-w-[160px] text-center text-[10px] text-verdict-wa">{error}</p>}
+    </div>
+  );
+}
+
+/** The same problem for every visitor, all day (see problems.service.dailyPick) — a shared "did you
+ * do today's?" reference point rather than a personal recommendation, which is what the separate
+ * "Recommended for you" section below is already for. */
+function DailyProblemCard({ problem }: { problem: DailyProblem }) {
+  return (
+    <div className="oj-card relative overflow-hidden p-5">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.07]"
+        style={{ background: "radial-gradient(circle at 90% 10%, rgb(var(--brand)) 0%, transparent 55%)" }}
+      />
+      <div className="relative flex items-center justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-brand">
+            <SparklesIcon className="h-3.5 w-3.5" /> Today's problem
+          </div>
+          <Link href={`/problems/${problem.slug}`} className="mt-1.5 block truncate font-display text-lg font-bold text-ink-50 hover:text-brand">
+            {problem.uvaId != null && <span className="mr-1.5 font-mono text-sm font-normal text-ink-500">#{problem.uvaId}</span>}
+            {stripProblemNumber(problem.title, problem.uvaId)}
+          </Link>
+          <div className="mt-1.5 flex items-center gap-2">
+            <DifficultyStars d={problem.difficulty} />
+            {problem.tags.slice(0, 2).map((t) => (
+              <span key={t} className="rounded border border-ink-700 bg-ink-800/60 px-1.5 py-0.5 text-[11px] text-ink-400">
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
+        {problem.solvedByMe ? (
+          <span className="flex shrink-0 items-center gap-1.5 rounded border border-verdict-ac/40 bg-verdict-ac/10 px-3 py-1.5 text-xs font-medium text-verdict-ac">
+            ✓ Solved
+          </span>
+        ) : (
+          <Link href={`/problems/${problem.slug}`} className="oj-btn-primary shrink-0 px-3 py-1.5 text-xs">
+            Solve it →
+          </Link>
+        )}
+      </div>
     </div>
   );
 }
@@ -167,6 +256,14 @@ export default function HomeDashboard() {
     queryKey: ["recommended"],
     queryFn: () => apiFetch<RecommendedProblems>("/problems/recommended"),
     enabled: !!user,
+  });
+  // Public endpoint (same problem for everyone), but only worth fetching once there's a
+  // logged-in dashboard to show it on.
+  const { data: dailyProblem } = useQuery({
+    queryKey: ["daily-problem"],
+    queryFn: () => apiFetch<DailyProblem>("/problems/daily"),
+    enabled: !!user,
+    staleTime: 5 * 60_000,
   });
   const { data: recent } = useQuery({
     queryKey: ["recent-submissions"],
@@ -241,6 +338,13 @@ export default function HomeDashboard() {
             ) : (
               <p className="mt-1 text-xs text-ink-500">Ready to pick up where you left off?</p>
             )}
+            {daily && daily.loginStreak > 1 && (
+              <p className="mt-1 flex items-center gap-1 text-xs text-ink-500">
+                <CalendarCheckIcon className="h-3.5 w-3.5 text-sky-400" />
+                {daily.loginStreak} days in a row you've shown up
+                {daily.loginMilestoneHit && " — bonus streak-freeze earned!"}
+              </p>
+            )}
             <Link
               href={suggestions[0] ? `/problems/${suggestions[0].slug}` : "/problems"}
               className="oj-btn-primary mt-3 inline-flex items-center gap-1.5 px-4 py-2 text-sm"
@@ -248,8 +352,9 @@ export default function HomeDashboard() {
               Continue solving <span aria-hidden>→</span>
             </Link>
           </div>
-          <div className="hidden sm:block">
-            <StreakFlame streak={daily?.currentStreak ?? 0} atRisk={!!daily?.atRisk} />
+          <div className="hidden flex-col items-center gap-2 sm:flex">
+            <StreakFlame streak={daily?.currentStreak ?? 0} atRisk={!!daily?.atRisk} frozenToday={!!daily?.frozenToday} />
+            {daily?.atRisk && daily.streakFreezeCount > 0 && <StreakFreezeButton freezeCount={daily.streakFreezeCount} />}
           </div>
         </div>
 
@@ -259,14 +364,22 @@ export default function HomeDashboard() {
               value={
                 daily && daily.currentStreak > 0 ? (
                   <span className="inline-flex items-center gap-1">
-                    <FlameIcon className="h-4 w-4" /> {daily.currentStreak}
+                    {daily.frozenToday ? <SnowflakeIcon className="h-4 w-4" /> : <FlameIcon className="h-4 w-4" />} {daily.currentStreak}
                   </span>
                 ) : (
                   "–"
                 )
               }
-              label={daily?.atRisk ? "at risk today" : "day streak"}
-              valueClassName={daily?.atRisk ? "text-verdict-wa animate-pulse-soft" : daily && daily.currentStreak > 0 ? "text-verdict-tle" : "text-ink-600"}
+              label={daily?.frozenToday ? "protected today" : daily?.atRisk ? "at risk today" : "day streak"}
+              valueClassName={
+                daily?.frozenToday
+                  ? "text-sky-400"
+                  : daily?.atRisk
+                    ? "text-verdict-wa animate-pulse-soft"
+                    : daily && daily.currentStreak > 0
+                      ? "text-verdict-tle"
+                      : "text-ink-600"
+              }
             />
           </div>
           <StatCell value={<DifficultyStars d={recommended?.tier ?? 1} />} label="current tier" />
@@ -293,6 +406,8 @@ export default function HomeDashboard() {
           </div>
         </div>
       </div>
+
+      {dailyProblem && <DailyProblemCard problem={dailyProblem} />}
 
       <div className="oj-card p-5">
         <div className="mb-4 flex items-center justify-between">

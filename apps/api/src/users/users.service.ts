@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import argon2 from "argon2";
 import { prisma } from "@oj/db";
 import type { ChangeHandleDto, ChangePasswordDto, CreateUserDto, UpdateProfileDto, UpdateSettingsDto } from "@oj/shared";
@@ -6,6 +6,55 @@ import { isProActive, isUnlimited } from "../billing/billing.service";
 import { computeStreak } from "../leaderboard/leaderboard.service";
 
 const HEATMAP_DAYS = 365;
+
+// Held inventory is capped so a long-dormant account can't stockpile a year of freezes and coast
+// through it indefinitely — this is meant to smooth over the occasional missed day, not replace
+// actually practicing regularly.
+const MAX_STREAK_FREEZES = 2;
+
+/** Grants at most one streak-freeze per calendar month (UTC — same naive-date convention
+ * computeStreak already uses throughout this file, not the Asia/Taipei one billing.service uses
+ * for its own quota month), lazily the same way submitQuotaUsed/submitQuotaMonth reset lazily
+ * above: whichever request happens to notice the month rolled over pays the (trivial) cost of
+ * granting it, instead of a separate cron job that has to run reliably every month. */
+function applyMonthlyFreezeGrant(user: {
+  streakFreezeCount: number;
+  streakFreezeGrantMonth: string | null;
+}): { streakFreezeCount: number; streakFreezeGrantMonth: string } {
+  const monthKey = new Date().toISOString().slice(0, 7);
+  if (user.streakFreezeGrantMonth === monthKey) {
+    return { streakFreezeCount: user.streakFreezeCount, streakFreezeGrantMonth: monthKey };
+  }
+  return { streakFreezeCount: Math.min(MAX_STREAK_FREEZES, user.streakFreezeCount + 1), streakFreezeGrantMonth: monthKey };
+}
+
+// Every 7-day check-in milestone tops up the freeze inventory a little faster than the monthly
+// grant alone — a small nudge to open the site even on days there's no time to actually solve
+// anything, on top of (not instead of) the habit the solve-streak already rewards.
+const LOGIN_STREAK_FREEZE_MILESTONE = 7;
+
+/** Records "visited today" — distinct from computeStreak's solve-based streak, this counts
+ * consecutive calendar days the user showed up at all, tracked lazily the same way the monthly
+ * freeze grant is: whichever request happens to be the first one today pays the (trivial) cost of
+ * updating it, no cron involved. Takes the freeze count/month *after* applyMonthlyFreezeGrant has
+ * already run so a 7-day milestone landing on the same day as a fresh monthly grant stacks
+ * correctly instead of one clobbering the other. */
+function applyDailyCheckIn(
+  user: { loginStreak: number; lastLoginDate: string | null },
+  freezeState: { streakFreezeCount: number; streakFreezeGrantMonth: string },
+): { loginStreak: number; lastLoginDate: string; streakFreezeCount: number; streakFreezeGrantMonth: string; milestoneHit: boolean } {
+  const todayKey = new Date().toISOString().slice(0, 10);
+  if (user.lastLoginDate === todayKey) {
+    return { loginStreak: user.loginStreak, lastLoginDate: todayKey, ...freezeState, milestoneHit: false };
+  }
+  const yesterdayKey = new Date(Date.now() - 24 * 3600 * 1000).toISOString().slice(0, 10);
+  const loginStreak = user.lastLoginDate === yesterdayKey ? user.loginStreak + 1 : 1;
+  const milestoneHit = loginStreak % LOGIN_STREAK_FREEZE_MILESTONE === 0;
+  const streakFreezeCount = milestoneHit
+    ? Math.min(MAX_STREAK_FREEZES, freezeState.streakFreezeCount + 1)
+    : freezeState.streakFreezeCount;
+  return { loginStreak, lastLoginDate: todayKey, streakFreezeCount, streakFreezeGrantMonth: freezeState.streakFreezeGrantMonth, milestoneHit };
+}
 
 @Injectable()
 export class UsersService {
@@ -93,17 +142,63 @@ export class UsersService {
    * against a goal (from User.settings.dailyGoal, default 1 until Phase 4e's settings endpoint
    * lets a user change it), plus the same all-time streak definition used on the leaderboard
    * (computeStreak — any AC day counts, not just first-solve days) and whether it's "at risk" of
-   * breaking today. */
+   * breaking today. A day spent on a streak-freeze (StreakFreezeDay) counts the same as a real AC
+   * day for streak purposes, so this also lazily applies the monthly freeze grant. */
   async daily(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId }, select: { settings: true } });
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        settings: true,
+        streakFreezeCount: true,
+        streakFreezeGrantMonth: true,
+        loginStreak: true,
+        lastLoginDate: true,
+      },
+    });
     if (!user) throw new NotFoundException("User not found");
     const settings = (user.settings as { dailyGoal?: number } | null) ?? {};
     const goal = typeof settings.dailyGoal === "number" && settings.dailyGoal > 0 ? Math.floor(settings.dailyGoal) : 1;
 
-    const acSubs = await prisma.submission.findMany({
-      where: { userId, verdict: "AC" },
-      select: { createdAt: true, problemId: true },
-    });
+    const monthlyGranted = applyMonthlyFreezeGrant(user);
+    const checkIn = applyDailyCheckIn(user, monthlyGranted);
+    if (
+      checkIn.loginStreak !== user.loginStreak ||
+      checkIn.lastLoginDate !== user.lastLoginDate ||
+      checkIn.streakFreezeCount !== user.streakFreezeCount ||
+      checkIn.streakFreezeGrantMonth !== user.streakFreezeGrantMonth
+    ) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          loginStreak: checkIn.loginStreak,
+          lastLoginDate: checkIn.lastLoginDate,
+          streakFreezeCount: checkIn.streakFreezeCount,
+          streakFreezeGrantMonth: checkIn.streakFreezeGrantMonth,
+        },
+      });
+    }
+
+    const { currentStreak, solvedToday, frozenToday } = await this.computeStreakState(userId);
+
+    return {
+      goal,
+      solvedToday,
+      currentStreak,
+      atRisk: currentStreak > 0 && solvedToday === 0 && !frozenToday,
+      streakFreezeCount: checkIn.streakFreezeCount,
+      frozenToday,
+      loginStreak: checkIn.loginStreak,
+      loginMilestoneHit: checkIn.milestoneHit,
+    };
+  }
+
+  /** Shared by daily() and useStreakFreeze() — real AC dates unioned with any StreakFreezeDay
+   * entries, since a frozen day counts exactly like a solved one for streak continuity. */
+  private async computeStreakState(userId: string) {
+    const [acSubs, freezeDays] = await Promise.all([
+      prisma.submission.findMany({ where: { userId, verdict: "AC" }, select: { createdAt: true, problemId: true } }),
+      prisma.streakFreezeDay.findMany({ where: { userId }, select: { date: true } }),
+    ]);
 
     const todayKey = new Date().toISOString().slice(0, 10);
     const acDates = new Set<string>();
@@ -113,11 +208,44 @@ export class UsersService {
       acDates.add(dateKey);
       if (dateKey === todayKey) solvedTodaySet.add(s.problemId);
     }
+    for (const f of freezeDays) acDates.add(f.date);
 
-    const currentStreak = computeStreak(acDates);
-    const solvedToday = solvedTodaySet.size;
+    return {
+      currentStreak: computeStreak(acDates),
+      solvedToday: solvedTodaySet.size,
+      frozenToday: freezeDays.some((f) => f.date === todayKey),
+    };
+  }
 
-    return { goal, solvedToday, currentStreak, atRisk: currentStreak > 0 && solvedToday === 0 };
+  /** Spends one streak-freeze to cover today, when the user hasn't solved anything yet but has a
+   * real streak alive through yesterday worth protecting. Deliberately manual (a button the user
+   * clicks) rather than an automatic end-of-day job — there's no cron/scheduler elsewhere in this
+   * codebase (see the monthly quota reset this mirrors), and a visible "protected today" action is
+   * more legible than streaks silently patching themselves overnight. */
+  async useStreakFreeze(userId: string) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { streakFreezeCount: true, streakFreezeGrantMonth: true },
+    });
+    if (!user) throw new NotFoundException("User not found");
+    const granted = applyMonthlyFreezeGrant(user);
+
+    const { currentStreak, solvedToday, frozenToday } = await this.computeStreakState(userId);
+    if (solvedToday > 0) throw new BadRequestException("You've already solved something today — no freeze needed.");
+    if (frozenToday) throw new BadRequestException("Today's already protected by a freeze.");
+    if (currentStreak <= 0) throw new BadRequestException("There's no active streak to protect right now.");
+    if (granted.streakFreezeCount <= 0) throw new BadRequestException("No streak freezes available.");
+
+    const todayKey = new Date().toISOString().slice(0, 10);
+    await prisma.$transaction([
+      prisma.streakFreezeDay.upsert({ where: { userId_date: { userId, date: todayKey } }, create: { userId, date: todayKey }, update: {} }),
+      prisma.user.update({
+        where: { id: userId },
+        data: { streakFreezeCount: granted.streakFreezeCount - 1, streakFreezeGrantMonth: granted.streakFreezeGrantMonth },
+      }),
+    ]);
+
+    return this.daily(userId);
   }
 
   async profile(handle: string) {
