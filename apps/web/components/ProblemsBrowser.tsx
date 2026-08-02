@@ -22,5 +22,5 @@ export default function ProblemsBrowser() {
 
   if (isLoading && !data) return <SkeletonList rows={10} />;
 
-  return <ProblemFilterTable problems={data?.items ?? []} />;
+  return <ProblemFilterTable problems={data?.items ?? []} listContext={{ type: "problems" }} />;
 }

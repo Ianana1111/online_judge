@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import StatementRenderer from "@/components/StatementRenderer";
 import SubmissionPanel from "@/components/SubmissionPanel";
@@ -13,6 +13,7 @@ import CopyButton from "@/components/CopyButton";
 import LockIcon from "@/components/LockIcon";
 import { ArchiveIcon } from "@/components/icons";
 import SplitPane from "@/components/SplitPane";
+import ProblemPrevNext from "@/components/ProblemPrevNext";
 import type { ProblemDetail } from "@/lib/types";
 import { useExamTimerStore } from "@/store/examTimer";
 import { stripProblemNumber } from "@/lib/problemTitle";
@@ -23,11 +24,26 @@ const DIFFICULTY_EXPLANATION =
 export default function ProblemView({ problem, contestId }: { problem: ProblemDetail; contestId?: string }) {
   const [tab, setTab] = useState<"statement" | "history" | "discussion" | "stats" | "notes">("statement");
   const examActive = useExamTimerStore((s) => s.active);
-  const remaining = useExamTimerStore((s) => s.remainingMs());
+  // endsAt is a plain epoch-ms number in the store — a stable, idempotent selector. Computing
+  // "remaining" from it requires the current time, which must live in local state instead of
+  // being read (via Date.now()) inside the selector itself: a zustand/useSyncExternalStore
+  // selector must return the same value for the same store state on every call, and one that
+  // doesn't (like calling remainingMs() here used to) makes React retry the render forever and
+  // crash with "Maximum update depth exceeded" — exactly what happened opening any problem
+  // during a running exam.
+  const endsAt = useExamTimerStore((s) => s.endsAt);
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!examActive) return;
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [examActive]);
+  const remaining = endsAt ? Math.max(0, endsAt - now) : 0;
   const locked = examActive && remaining <= 0;
 
   const left = (
     <div>
+      <ProblemPrevNext slug={problem.slug} />
       <div className="mb-4 flex items-center justify-between">
         <h1 className="font-display text-3xl font-bold text-ink-50">
           {problem.uvaId != null && (

@@ -54,7 +54,7 @@ export default function CollectionDetailClient({ slug }: { slug: string }) {
         </div>
       </div>
 
-      <ProblemFilterTable problems={data.problems} />
+      <ProblemFilterTable problems={data.problems} listContext={{ type: "collection", slug }} />
     </div>
   );
 }
