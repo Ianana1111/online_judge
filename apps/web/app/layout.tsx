@@ -7,6 +7,7 @@ import Providers from "@/components/Providers";
 import NavBar from "@/components/NavBar";
 import PageviewTracker from "@/components/PageviewTracker";
 import PromoBanner from "@/components/PromoBanner";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -26,9 +27,42 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
+const DEFAULT_TITLE = "judge. — online judge for CPE & UVa practice";
+const DEFAULT_DESCRIPTION =
+  "Solve UVa problems, take timed CPE/GPE virtual exams, and track your progress — 430+ curated problems with per-exam appearance stats.";
+
 export const metadata: Metadata = {
-  title: "judge. — online judge for CPE & UVa practice",
-  description: "Solve UVa problems, take timed CPE virtual exams, track your progress.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: DEFAULT_TITLE, template: `%s | ${SITE_NAME}` },
+  description: DEFAULT_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    url: SITE_URL,
+    locale: "zh_TW",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+  },
+};
+
+const ORGANIZATION_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: `${SITE_URL}/icon.svg`,
+};
+
+const WEBSITE_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
 };
 
 // Runs before paint so a stored theme choice applies immediately — otherwise the page would
@@ -47,6 +81,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSON_LD) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSON_LD) }} />
       </head>
       <body>
         <Providers>
