@@ -80,6 +80,10 @@ enum BillingPeriod {
 
 enum PaymentStatus {
   PENDING
+  /// Credit-card order only: ECPay confirmed the card authorization succeeded (hold placed, not
+  /// yet captured). Pro is already granted at this point — see billing.service.markCreditAuthorized
+  /// — capture is done manually later via ECPay's own merchant backend, at the operator's pace.
+  AUTHORIZED
   APPROVED
   REJECTED
 }

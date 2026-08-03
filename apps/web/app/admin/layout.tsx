@@ -10,6 +10,7 @@ const SIDEBAR_LINKS = [
   { href: "/admin/contests", label: "Contests" },
   { href: "/admin/classes", label: "Classes" },
   { href: "/admin/users", label: "Users" },
+  { href: "/admin/billing", label: "Billing" },
   { href: "/admin/analytics", label: "Analytics" },
 ];
 

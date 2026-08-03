@@ -159,26 +159,3 @@ export async function queryEcpayCreditTrade(merchantTradeNo: string, config: Ecp
   );
 }
 
-export interface EcpayDoActionResult {
-  RtnCode: number;
-  RtnMsg: string;
-  MerchantTradeNo: string;
-  TradeNo: string;
-}
-
-/** Triggers immediate settlement ("關帳/請款") of an already-authorized credit-card order right
- * now, instead of waiting for the merchant account's once-daily auto-settlement batch. RtnCode 1
- * means it succeeded; the existing ReturnURL webhook then fires normally within moments, so
- * nothing downstream of that (the actual Pro grant) needs to know this path exists at all. */
-export async function captureEcpayCredit(
-  merchantTradeNo: string,
-  tradeNo: string,
-  totalAmount: number,
-  config: EcpayApiConfig,
-): Promise<EcpayDoActionResult> {
-  return callEcpayAesApi<EcpayDoActionResult>(
-    "/1.0.0/Credit/DoAction",
-    { MerchantTradeNo: merchantTradeNo, TradeNo: tradeNo, Action: "C", TotalAmount: totalAmount },
-    config,
-  );
-}
