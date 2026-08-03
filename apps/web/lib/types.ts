@@ -337,6 +337,20 @@ export interface AdminUser {
   createdAt: string;
 }
 
+// A credit-card order where Pro was already granted on ECPay authorization but the capture
+// (a manual step via ECPay's own merchant backend) hasn't been confirmed yet.
+export interface AdminAuthorizedPayment {
+  id: string;
+  userId: string;
+  handle: string;
+  email: string;
+  period: "MONTHLY" | "YEARLY";
+  amountNtd: number;
+  merchantTradeNo: string | null;
+  reference: string;
+  createdAt: string;
+}
+
 export interface AssignmentProblemRef {
   id: string;
   slug: string;

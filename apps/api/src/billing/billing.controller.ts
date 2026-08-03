@@ -72,6 +72,14 @@ export class BillingController {
     return this.billing.adminRevoke(userId);
   }
 
+  /** Credit-card orders where Pro was already granted on authorization but the capture (now a
+   * manual step via ECPay's merchant backend) hasn't been confirmed yet — the "still owed" queue. */
+  @Roles("ADMIN")
+  @Get("admin/authorized-pending")
+  authorizedPending() {
+    return this.billing.listAuthorizedPending();
+  }
+
   // --- ECPay (綠界) automated ATM virtual-account flow ---
 
   /** Starts an automated upgrade. Returns a form-post target + fields — the frontend auto-submits

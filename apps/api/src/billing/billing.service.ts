@@ -215,9 +215,11 @@ export class BillingService {
    * `method` (validated to exactly "CREDIT" | "ATM" by ecpayCreateSchema before this is ever
    * called — never a raw string from the client) maps to ECPay's own ChoosePayment values, so
    * their hosted checkout opens directly on the channel the user picked on OUR page instead of
-   * making them pick again on ECPay's. Both channels confirm via the same ReturnURL webhook
-   * (RtnCode "1" = paid), so handleEcpayReturn below needs no method-specific branching. Only ATM
-   * issues a virtual account number, which arrives via the separate PaymentInfoURL webhook
+   * making them pick again on ECPay's. Both channels eventually confirm via the same ReturnURL
+   * webhook (RtnCode "1" = paid), so handleEcpayReturn below needs no method-specific branching for
+   * the final APPROVED transition — CREDIT just also passes through an AUTHORIZED stage first (see
+   * markCreditAuthorized/EcpayAuthPollService), which grants Pro before that webhook ever arrives.
+   * Only ATM issues a virtual account number, which arrives via the separate PaymentInfoURL webhook
    * (handleEcpayPaymentInfo) — that webhook simply never fires for a credit-card checkout, since
    * there's no virtual account to report. */
   async createEcpayOrder(userId: string, period: BillingPeriod, method: EcpayMethod) {
@@ -318,22 +320,38 @@ export class BillingService {
       this.logger.warn(`ECPay return webhook: unknown MerchantTradeNo ${body.MerchantTradeNo}`);
       return;
     }
-    if (payment.status !== "PENDING") return; // already processed — idempotent no-op
+    if (payment.status === "APPROVED" || payment.status === "REJECTED") return; // already finalized — idempotent no-op
 
     // Belt-and-suspenders: TradeAmt is itself covered by the CheckMacValue signature above, so a
     // forged amount would already have failed verification — this only catches an internal bug
     // (e.g. a promo-price race between order creation and payment) where OUR OWN two numbers
-    // disagree. Never auto-approves a mismatch; left PENDING for manual investigation rather than
-    // silently granting Pro for the wrong price or silently discarding a real payment.
+    // disagree. Never auto-approves a mismatch; left as-is for manual investigation rather than
+    // silently discarding or double-crediting a real payment.
     const paidAmount = Number(body.TradeAmt);
     if (!Number.isFinite(paidAmount) || paidAmount !== payment.amountNtd) {
       this.logger.error(
         `ECPay return webhook: amount mismatch for ${body.MerchantTradeNo} — expected ${payment.amountNtd}, ` +
-          `TradeAmt was ${body.TradeAmt}. Payment left PENDING, NOT approved.`,
+          `TradeAmt was ${body.TradeAmt}. Payment left ${payment.status}, NOT approved.`,
       );
       return;
     }
 
+    if (payment.status === "AUTHORIZED") {
+      // Credit-card order: Pro was already granted the moment the authorization was detected (see
+      // markCreditAuthorized) — this webhook only fires once the operator's manual capture (via
+      // ECPay's own merchant backend) actually settles, so there's nothing left to grant, just the
+      // record to reconcile off the "still owed" admin queue.
+      await prisma.payment.update({
+        where: { id: payment.id },
+        data: { status: "APPROVED", reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO" },
+      });
+      this.logger.log(`ECPay return webhook: capture confirmed for already-authorized payment ${payment.id}`);
+      return;
+    }
+
+    // payment.status === "PENDING" here — an ATM transfer (no authorization step exists), or the
+    // rare race where a credit-card capture webhook arrived before our authorization poll caught
+    // up. Grant Pro now, exactly as if this were the only step.
     await prisma.$transaction(async (tx) => {
       await tx.payment.update({
         where: { id: payment.id },
@@ -342,6 +360,54 @@ export class BillingService {
       await this.extendPlan(tx, payment.userId, payment.period);
     });
     this.logger.log(`ECPay return webhook: approved payment ${payment.id} for user ${payment.userId}`);
+  }
+
+  /** Called by EcpayAuthPollService the moment ECPay confirms a credit-card order's authorization
+   * succeeded (card hold placed, not yet captured). Grants Pro right away instead of waiting for
+   * capture — capture is now done manually via ECPay's own merchant backend, at whatever pace the
+   * operator chooses (see listAuthorizedPending for the queue this creates). Idempotent: a payment
+   * no longer PENDING (already AUTHORIZED, or a race where the real capture webhook got there
+   * first) is a silent no-op. */
+  async markCreditAuthorized(merchantTradeNo: string, tradeId: string): Promise<void> {
+    const payment = await prisma.payment.findUnique({ where: { merchantTradeNo } });
+    if (!payment || payment.status !== "PENDING") return;
+
+    await prisma.$transaction(async (tx) => {
+      await tx.payment.update({
+        where: { id: payment.id },
+        data: {
+          status: "AUTHORIZED",
+          reviewedAt: new Date(),
+          reviewedBy: "ECPAY_AUTO_AUTH",
+          reference: `ECPay TradeID: ${tradeId}`,
+        },
+      });
+      await this.extendPlan(tx, payment.userId, payment.period);
+    });
+    this.logger.log(`ECPay auth poll: granted Pro on authorization for payment ${payment.id} (user ${payment.userId})`);
+  }
+
+  /** Admin queue: credit-card orders where Pro was already granted on authorization but the actual
+   * capture hasn't been confirmed yet — since capture is now a manual step in ECPay's own merchant
+   * backend, this is what keeps one from silently getting forgotten (Pro granted, money never
+   * collected). Oldest first, since those are the most urgent to go capture. */
+  async listAuthorizedPending() {
+    const payments = await prisma.payment.findMany({
+      where: { status: "AUTHORIZED" },
+      orderBy: { createdAt: "asc" },
+      include: { user: { select: { handle: true, email: true } } },
+    });
+    return payments.map((p) => ({
+      id: p.id,
+      userId: p.userId,
+      handle: p.user.handle,
+      email: p.user.email,
+      period: p.period,
+      amountNtd: p.amountNtd,
+      merchantTradeNo: p.merchantTradeNo,
+      reference: p.reference,
+      createdAt: p.createdAt,
+    }));
   }
 
   // --- Enforcement helpers, called from submissions / contests ---
