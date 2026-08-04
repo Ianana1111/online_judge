@@ -70,6 +70,11 @@ export class EcpayAuthPollService implements OnModuleInit, OnModuleDestroy {
           method: "ECPAY",
           ecpayMethod: "CREDIT",
           status: "PENDING",
+          // Recurring (定期定額) orders auto-authorize AND auto-capture every cycle on ECPay's own
+          // side — that's the entire point of a subscription — so they never need this manual
+          // "detect authorization, grant early" path. They just wait for the regular ReturnURL
+          // webhook like ATM orders always have.
+          isRecurring: false,
           createdAt: { gte: new Date(now.getTime() - MAX_ORDER_AGE_MS) },
           merchantTradeNo: { not: null },
         },

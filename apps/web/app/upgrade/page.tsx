@@ -73,6 +73,56 @@ function DowngradeConfirmDialog({
   );
 }
 
+function UnsubscribeConfirmDialog({
+  submitting,
+  error,
+  onCancel,
+  onConfirm,
+}: {
+  submitting: boolean;
+  error: string | null;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onCancel();
+    }
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onCancel]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      role="dialog"
+      aria-modal="true"
+      onClick={onCancel}
+    >
+      <div className="oj-card w-full max-w-sm p-5" onClick={(e) => e.stopPropagation()}>
+        <h2 className="font-display text-base font-semibold text-ink-50">Unsubscribe from Pro?</h2>
+        <p className="mt-2 text-sm text-ink-300">
+          This takes effect immediately — you'll switch back to Free right now, and your card won't be charged again.
+        </p>
+        {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={onCancel} className="oj-btn-secondary px-4 py-2 text-sm" disabled={submitting}>
+            Keep Pro
+          </button>
+          <button type="button" onClick={onConfirm} className="oj-btn-primary px-4 py-2 text-sm" disabled={submitting}>
+            {submitting ? "Unsubscribing…" : "Unsubscribe now"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function UpgradePlanPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -80,6 +130,9 @@ export default function UpgradePlanPage() {
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
+  const [showUnsubscribeConfirm, setShowUnsubscribeConfirm] = useState(false);
+  const [unsubscribing, setUnsubscribing] = useState(false);
+  const [unsubscribeError, setUnsubscribeError] = useState<string | null>(null);
 
   const { data: status, isLoading } = useQuery({
     queryKey: ["billing", "me"],
@@ -110,6 +163,23 @@ export default function UpgradePlanPage() {
       setCancelError(e instanceof ApiError ? e.message : "無法送出，請稍後再試");
     } finally {
       setCancelling(false);
+    }
+  }
+
+  // Distinct from confirmCancel above: an active Subscription auto-charges again next period, so
+  // cancelling it stops that future charge and drops the user to Free right away — there's no
+  // already-paid time being cut short, unlike the one-time-purchase soft-cancel.
+  async function confirmUnsubscribe() {
+    setUnsubscribing(true);
+    setUnsubscribeError(null);
+    try {
+      await apiFetch("/billing/subscription/cancel", { method: "POST" });
+      await queryClient.invalidateQueries({ queryKey: ["billing", "me"] });
+      setShowUnsubscribeConfirm(false);
+    } catch (e) {
+      setUnsubscribeError(e instanceof ApiError ? e.message : "無法取消訂閱，請稍後再試");
+    } finally {
+      setUnsubscribing(false);
     }
   }
   // Admins aren't capped at all, and students are auto-Pro (see billing.service.isProActive) —
@@ -170,7 +240,11 @@ export default function UpgradePlanPage() {
                   </Check>
                   <Check>Full access to discussions &amp; leaderboard</Check>
                 </ul>
-                {isPro ? (
+                {isPro && status?.subscription ? (
+                  <p className="mt-4 text-center text-[11px] text-ink-500">
+                    Manage your subscription from the Pro card →
+                  </p>
+                ) : isPro ? (
                   status?.planCancelRequested ? (
                     <p className="mt-4 rounded border border-ink-700 bg-ink-800/50 px-3 py-2 text-center text-xs text-ink-300">
                       ✓ Downgrade confirmed — you'll move to Free{" "}
@@ -213,7 +287,23 @@ export default function UpgradePlanPage() {
                   </span>
                 )}
                 <h2 className="font-display text-base font-semibold text-brand sm:text-lg">Pro</h2>
-                {isPro ? (
+                {isPro && status?.subscription ? (
+                  <>
+                    <p className="mt-1 text-2xl font-bold text-ink-50 sm:text-3xl">
+                      NT${status.subscription.amountNtd}
+                      <span className="text-xs font-normal text-ink-400 sm:text-sm">
+                        {" "}
+                        / {status.subscription.period === "MONTHLY" ? "month" : "year"}
+                      </span>
+                    </p>
+                    <p className="mt-1 flex items-center gap-1.5 text-xs text-verdict-ac sm:text-sm">
+                      <svg width="12" height="12" viewBox="0 0 16 16" className="shrink-0" fill="none">
+                        <circle cx="8" cy="8" r="6" fill="currentColor" />
+                      </svg>
+                      Subscribed — renews {expiresLabel ? `on ${expiresLabel}` : "automatically"}
+                    </p>
+                  </>
+                ) : isPro ? (
                   <p className="mt-1 text-base font-semibold text-ink-50 sm:text-lg">
                     Active{expiresLabel ? <span className="block text-xs font-normal text-ink-400 sm:text-sm">until {expiresLabel}</span> : null}
                   </p>
@@ -238,14 +328,32 @@ export default function UpgradePlanPage() {
                   <Check>Full access to discussions &amp; leaderboard</Check>
                   <Check>Priority support</Check>
                 </ul>
-                <button
-                  type="button"
-                  onClick={() => router.push("/upgrade/checkout")}
-                  className="oj-btn-primary mt-4 w-full py-2 text-sm"
-                  disabled={!user}
-                >
-                  {isPro ? "Extend Pro Plan" : "Get Pro Plan"}
-                </button>
+                {isPro && status?.subscription ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setUnsubscribeError(null);
+                        setShowUnsubscribeConfirm(true);
+                      }}
+                      className="oj-btn-secondary mt-4 w-full py-2 text-sm"
+                    >
+                      Unsubscribe
+                    </button>
+                    <p className="mt-1.5 text-center text-[11px] text-ink-500">
+                      Cancels immediately — you'll switch to Free right away and won't be charged again.
+                    </p>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => router.push("/upgrade/checkout")}
+                    className="oj-btn-primary mt-4 w-full py-2 text-sm"
+                    disabled={!user}
+                  >
+                    {isPro ? "Extend Pro Plan" : "Get Pro Plan"}
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -259,6 +367,14 @@ export default function UpgradePlanPage() {
           error={cancelError}
           onCancel={() => setShowCancelConfirm(false)}
           onConfirm={confirmCancel}
+        />
+      )}
+      {showUnsubscribeConfirm && (
+        <UnsubscribeConfirmDialog
+          submitting={unsubscribing}
+          error={unsubscribeError}
+          onCancel={() => setShowUnsubscribeConfirm(false)}
+          onConfirm={confirmUnsubscribe}
         />
       )}
     </div>

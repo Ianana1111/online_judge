@@ -159,3 +159,22 @@ export async function queryEcpayCreditTrade(merchantTradeNo: string, config: Ecp
   );
 }
 
+export interface EcpayPeriodActionResult {
+  RtnCode: number;
+  RtnMsg: string;
+  MerchantID: string;
+  MerchantTradeNo: string;
+}
+
+/** Stops all future auto-charges on a recurring (定期定額) order. Per ECPay's own docs this can't be
+ * undone — a "reactivated" subscription is really a brand new order — which is why
+ * billing.service.cancelSubscription only ever marks our own Subscription row CANCELLED after this
+ * call actually succeeds, never before. */
+export async function cancelEcpayPeriod(merchantTradeNo: string, config: EcpayApiConfig): Promise<EcpayPeriodActionResult> {
+  return callEcpayAesApi<EcpayPeriodActionResult>(
+    "/1.0.0/Cashier/CreditCardPeriodAction",
+    { MerchantTradeNo: merchantTradeNo, Action: "Cancel" },
+    config,
+  );
+}
+
