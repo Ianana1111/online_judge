@@ -8,16 +8,19 @@ export const FREE_VIRTUAL_ATTEMPTS = 1; // virtual/self-run CPE contests a FREE 
 
 export type BillingPeriod = "MONTHLY" | "YEARLY";
 
+// TEMP: monthly dropped to 50 NTD for a live ECPay checkout test — restore to 500 afterward.
 export const PLAN_PRICING: Record<BillingPeriod, { amountNtd: number; days: number; label: string }> = {
-  MONTHLY: { amountNtd: 500, days: 30, label: "月方案" },
+  MONTHLY: { amountNtd: 50, days: 30, label: "月方案" },
   YEARLY: { amountNtd: 2000, days: 365, label: "年方案" },
 };
 
 /** Launch promo: 50% off the monthly plan for judge.tw's first month of real operation. A fixed
  * end date (not "30 days from whenever the server happens to restart") so the discount doesn't
- * silently extend itself on every deploy. */
+ * silently extend itself on every deploy.
+ * TEMP: disabled while PLAN_PRICING.MONTHLY is set to the 50 NTD test price above — otherwise
+ * this would still cut the test charge to 25. Re-enable together with restoring the price. */
 export const LAUNCH_PROMO = {
-  active: true,
+  active: false,
   period: "MONTHLY" as const,
   discountPct: 50,
   endsAt: "2026-08-26T00:00:00+08:00",
