@@ -9,7 +9,13 @@ import {
   type BillingPeriod,
   type EcpayMethod,
 } from "@oj/shared";
-import { computeCheckMacValue, ecpayConfig, verifyCheckMacValue } from "./ecpay.util";
+import { cancelEcpayPeriod, computeCheckMacValue, ecpayConfig, verifyCheckMacValue } from "./ecpay.util";
+
+// ECPay has no "forever" recurring option — ExecTimes must be finite. These are the max values
+// ECPay allows for each PeriodType (999 for day/month, 99 for year), which is functionally
+// indefinite for any real subscriber; billing.service.cancelSubscription is how it actually ends.
+const RECURRING_EXEC_TIMES: Record<BillingPeriod, number> = { MONTHLY: 999, YEARLY: 99 };
+const RECURRING_PERIOD_TYPE: Record<BillingPeriod, "M" | "Y"> = { MONTHLY: "M", YEARLY: "Y" };
 
 /** PRO is only meaningful while it hasn't expired — a lapsed PRO account behaves as FREE until a
  * new payment extends it. Centralised so every enforcement point agrees on "is this user PRO now".
@@ -113,6 +119,7 @@ export class BillingService {
       where: { userId, status: "PENDING", dismissedByUser: false },
       orderBy: { createdAt: "desc" },
     });
+    const subscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
 
     return {
       // "plan" drives every Pro-gated UI check, so ADMIN reports "PRO" here too (see isUnlimited)
@@ -121,6 +128,10 @@ export class BillingService {
       plan: unlimited ? "PRO" : "FREE",
       planExpiresAt: pro ? user.planExpiresAt : null,
       planCancelRequested: pro && user.planCancelRequested,
+      // planExpiresAt doubles as "renews on" for an active subscription — ECPay's periodic webhook
+      // never hands us an explicit next-charge date, but the paid-through date already means the
+      // same thing while a Subscription auto-extends it every cycle.
+      subscription: pro && subscription ? { period: subscription.period, amountNtd: subscription.amountNtd } : null,
       submits: { used: unlimited ? user.submitQuotaUsed : submitsUsedThisMonth, limit: unlimited ? null : FREE_SUBMIT_QUOTA },
       virtualContests: { used: virtualUsed, limit: unlimited ? null : FREE_VIRTUAL_ATTEMPTS },
       pendingPayment: pending
@@ -215,19 +226,29 @@ export class BillingService {
    * `method` (validated to exactly "CREDIT" | "ATM" by ecpayCreateSchema before this is ever
    * called — never a raw string from the client) maps to ECPay's own ChoosePayment values, so
    * their hosted checkout opens directly on the channel the user picked on OUR page instead of
-   * making them pick again on ECPay's. Both channels eventually confirm via the same ReturnURL
-   * webhook (RtnCode "1" = paid), so handleEcpayReturn below needs no method-specific branching for
-   * the final APPROVED transition — CREDIT just also passes through an AUTHORIZED stage first (see
-   * markCreditAuthorized/EcpayAuthPollService), which grants Pro before that webhook ever arrives.
-   * Only ATM issues a virtual account number, which arrives via the separate PaymentInfoURL webhook
-   * (handleEcpayPaymentInfo) — that webhook simply never fires for a credit-card checkout, since
-   * there's no virtual account to report. */
+   * making them pick again on ECPay's.
+   *
+   * CREDIT orders are always ECPay recurring (定期定額) orders now — PeriodAmount/PeriodType/
+   * Frequency/ExecTimes below turn this into a real subscription that ECPay auto-charges every
+   * period on its own, not a one-time purchase. ATM has no such thing (a bank transfer can't be
+   * auto-charged) and stays exactly the one-time flow it always was. Both still confirm this FIRST
+   * charge via the same ReturnURL webhook (RtnCode "1" = paid); handleEcpayReturn spins up the
+   * Subscription row there for recurring orders. Only ATM issues a virtual account number, which
+   * arrives via the separate PaymentInfoURL webhook (handleEcpayPaymentInfo) — that webhook simply
+   * never fires for a credit-card checkout, since there's no virtual account to report. */
   async createEcpayOrder(userId: string, period: BillingPeriod, method: EcpayMethod) {
     const existingPending = await prisma.payment.findFirst({
       where: { userId, status: "PENDING", dismissedByUser: false },
     });
     if (existingPending) {
       throw new BadRequestException("You already have a payment awaiting review.");
+    }
+
+    if (method === "CREDIT") {
+      const existingSubscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
+      if (existingSubscription) {
+        throw new BadRequestException("You already have an active subscription.");
+      }
     }
 
     // The amount that actually gets charged is always derived server-side (PLAN_PRICING plus
@@ -245,6 +266,7 @@ export class BillingService {
         ecpayMethod: method,
         status: "PENDING",
         merchantTradeNo,
+        isRecurring: method === "CREDIT",
       },
     });
 
@@ -268,6 +290,13 @@ export class BillingService {
       ChoosePayment: method === "CREDIT" ? "Credit" : "ATM",
       EncryptType: 1,
     };
+    if (method === "CREDIT") {
+      params.PeriodAmount = amountNtd;
+      params.PeriodType = RECURRING_PERIOD_TYPE[period];
+      params.Frequency = 1;
+      params.ExecTimes = RECURRING_EXEC_TIMES[period];
+      params.PeriodReturnURL = `${apiPublicUrl}/billing/ecpay/period-return`;
+    }
     const CheckMacValue = await computeCheckMacValue(params, config);
 
     return { actionUrl: config.checkoutUrl, fields: { ...params, CheckMacValue }, sandbox: config.isSandbox };
@@ -349,17 +378,118 @@ export class BillingService {
       return;
     }
 
-    // payment.status === "PENDING" here — an ATM transfer (no authorization step exists), or the
-    // rare race where a credit-card capture webhook arrived before our authorization poll caught
-    // up. Grant Pro now, exactly as if this were the only step.
+    // payment.status === "PENDING" here — an ATM transfer (no authorization step exists), a
+    // recurring credit-card order (excluded from the auth-poll/manual-capture path entirely, since
+    // ECPay auto-captures those itself every cycle), or the rare race where a one-time capture
+    // webhook arrived before our authorization poll caught up. Grant Pro now.
     await prisma.$transaction(async (tx) => {
       await tx.payment.update({
         where: { id: payment.id },
         data: { status: "APPROVED", reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO" },
       });
       await this.extendPlan(tx, payment.userId, payment.period);
+
+      if (payment.isRecurring) {
+        // First successful charge of a recurring order — spin up the Subscription row that
+        // handleEcpayPeriodReturn will extend on every future auto-charge, and that
+        // cancelSubscription calls ECPay's Cancel action against. Guard on the unique
+        // merchantTradeNo rather than an existence check first: idempotent even if ECPay somehow
+        // redelivers this notification after a retry raced the transaction.
+        await tx.subscription.upsert({
+          where: { merchantTradeNo: payment.merchantTradeNo! },
+          create: {
+            userId: payment.userId,
+            period: payment.period,
+            amountNtd: payment.amountNtd,
+            merchantTradeNo: payment.merchantTradeNo!,
+            status: "ACTIVE",
+            totalSuccessTimes: 1,
+          },
+          update: {},
+        });
+      }
     });
     this.logger.log(`ECPay return webhook: approved payment ${payment.id} for user ${payment.userId}`);
+  }
+
+  /** Webhook: ECPay confirms a recurring order's Nth (N>=2) auto-charge succeeded or failed — the
+   * first charge is confirmed via the regular ReturnURL/handleEcpayReturn above, which is also what
+   * creates the Subscription row this correlates against. Idempotent the same way the docs require:
+   * ECPay's only progress marker is TotalSuccessTimes (cumulative successful-charge count), so a
+   * notification is only acted on when it's strictly greater than what we've already recorded. */
+  async handleEcpayPeriodReturn(body: Record<string, string>): Promise<void> {
+    const config = ecpayConfig();
+    if (!(await verifyCheckMacValue(body, config))) {
+      this.logger.warn(
+        `ECPay period-return webhook: invalid CheckMacValue for ${body.MerchantTradeNo}. ` +
+          `received=${JSON.stringify(body)} expected=${await computeCheckMacValue(body, config)}`,
+      );
+      return;
+    }
+    const subscription = await prisma.subscription.findUnique({ where: { merchantTradeNo: body.MerchantTradeNo } });
+    if (!subscription) {
+      this.logger.warn(`ECPay period-return webhook: unknown MerchantTradeNo ${body.MerchantTradeNo}`);
+      return;
+    }
+    if (body.RtnCode !== "1") {
+      // ECPay retries on its own and auto-cancels the recurring order after 6 consecutive
+      // failures — nothing for us to actively do here beyond a record of it.
+      this.logger.log(`ECPay period-return webhook: non-success RtnCode ${body.RtnCode} for ${body.MerchantTradeNo}`);
+      return;
+    }
+    const totalSuccessTimes = Number(body.TotalSuccessTimes);
+    if (!Number.isFinite(totalSuccessTimes) || totalSuccessTimes <= subscription.totalSuccessTimes) {
+      return; // already processed this cycle — idempotent no-op
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.subscription.update({ where: { id: subscription.id }, data: { totalSuccessTimes } });
+      await tx.payment.create({
+        data: {
+          userId: subscription.userId,
+          period: subscription.period,
+          amountNtd: subscription.amountNtd,
+          status: "APPROVED",
+          method: "ECPAY",
+          ecpayMethod: "CREDIT",
+          reference: `Recurring renewal #${totalSuccessTimes}`,
+          reviewedAt: new Date(),
+          reviewedBy: "ECPAY_AUTO",
+          subscriptionId: subscription.id,
+        },
+      });
+      await this.extendPlan(tx, subscription.userId, subscription.period);
+    });
+    this.logger.log(
+      `ECPay period-return webhook: renewal #${totalSuccessTimes} approved for subscription ${subscription.id} (user ${subscription.userId})`,
+    );
+  }
+
+  /** User-initiated immediate cancellation of their active Subscription — stops future ECPay
+   * auto-charges AND drops them back to Free right now (not "at the end of the paid period" like
+   * cancelPlan below): cancelling before the next charge means they haven't paid for any time past
+   * today, unlike a one-time purchase where the period is already fully paid for. Calls ECPay's
+   * Cancel action FIRST and only touches our own records if that actually succeeds — never
+   * downgrade a user while ECPay might still go on to auto-charge them. */
+  async cancelSubscription(userId: string): Promise<{ plan: "FREE"; planExpiresAt: null }> {
+    const subscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
+    if (!subscription) throw new NotFoundException("No active subscription found.");
+
+    const config = ecpayConfig();
+    const result = await cancelEcpayPeriod(subscription.merchantTradeNo, config);
+    if (result.RtnCode !== 1) {
+      throw new BadRequestException(`Could not cancel with ECPay: ${result.RtnMsg}`);
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.subscription.update({
+        where: { id: subscription.id },
+        data: { status: "CANCELLED", cancelledAt: new Date() },
+      });
+      await tx.user.update({ where: { id: userId }, data: { plan: "FREE", planExpiresAt: null, planCancelRequested: false } });
+    });
+    this.logger.log(`Subscription ${subscription.id} cancelled by user ${userId} — downgraded to Free immediately.`);
+    return { plan: "FREE", planExpiresAt: null };
   }
 
   /** Called by EcpayAuthPollService the moment ECPay confirms a credit-card order's authorization

@@ -108,11 +108,13 @@ model User {
   /// FREE again until another payment extends the date (see billing.service).
   plan            Plan      @default(FREE)
   planExpiresAt   DateTime?
-  /// Set when a PRO user asks to downgrade. Purely informational — there's no auto-renewal in
-  /// this system (every payment is a one-time planExpiresAt extension), so it doesn't change
+  /// Set when a PRO user without an active Subscription (a one-time ATM/admin-granted period) asks
+  /// to downgrade. Purely informational — that Pro time is already paid for, so this doesn't change
   /// enforcement at all; it only lets the UI keep showing "you chose to downgrade" after a reload
   /// instead of forgetting on refresh. Cleared automatically the next time extendPlan runs (buying
-  /// more Pro is an unambiguous signal they no longer want to downgrade).
+  /// more Pro is an unambiguous signal they no longer want to downgrade). A user WITH an active
+  /// Subscription cancels through that model instead (billing.service.cancelSubscription), which
+  /// downgrades immediately rather than waiting out the paid period — see Subscription.status.
   planCancelRequested Boolean @default(false)
   /// FREE tier's submit quota resets every calendar month — submitQuotaUsed counts submissions
   /// made in submitQuotaMonth (a "YYYY-MM" key); assertCanSubmit resets both atomically the first
@@ -151,6 +153,7 @@ model User {
   classComments        ClassComment[]
   notes                Note[]
   payments             Payment[]
+  subscriptions        Subscription[]
   pageViews            PageView[]
   achievements         UserAchievement[]
   notifications        Notification[]
@@ -263,9 +266,52 @@ model Payment {
   /// it from the checkout UI and lets them start a fresh order, it never risks silently discarding
   /// a real payment.
   dismissedByUser Boolean @default(false)
+  /// Set at order-creation time for ECPay credit-card orders that were submitted with recurring
+  /// (定期定額) parameters — tells handleEcpayReturn to spin up a Subscription row once this first
+  /// charge is confirmed, instead of treating it as a one-off purchase.
+  isRecurring Boolean @default(false)
+  /// Set only on the periodic renewal charges themselves (handleEcpayPeriodReturn), not on the
+  /// original subscribe order — links each auto-charge back to the subscription for the admin
+  /// billing page's audit trail.
+  subscriptionId String?
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
 
   @@index([status, createdAt])
   @@map("payments")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+}
+
+/// A recurring ECPay credit-card subscription (信用卡定期定額) — auto-charges `amountNtd` every
+/// `period` until cancelled. Distinct from Payment: a Payment row is created for every individual
+/// charge (subscribe + each renewal), while this row tracks the subscription itself so it can be
+/// looked up by merchantTradeNo when ECPay's periodic webhook or our own cancel call needs it.
+model Subscription {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  period BillingPeriod
+  /// The amount charged each cycle, locked in at subscribe time — a later price change should
+  /// never silently reprice an existing subscriber.
+  amountNtd Int
+  /// The MerchantTradeNo of the original subscribe order. Required to correlate PeriodReturnURL
+  /// renewal webhooks back to this row, and to call ECPay's CreditCardPeriodAction Cancel API.
+  merchantTradeNo String             @unique
+  status          SubscriptionStatus @default(ACTIVE)
+  /// Last-seen ECPay TotalSuccessTimes (cumulative successful-charge count) — ECPay's periodic
+  /// webhook gives no other progress marker, so a renewal notification is only processed when its
+  /// TotalSuccessTimes is strictly greater than this, making the handler idempotent against retries.
+  totalSuccessTimes Int       @default(0)
+  createdAt         DateTime  @default(now())
+  cancelledAt       DateTime?
+
+  payments Payment[]
+
+  @@index([userId, status])
+  @@map("subscriptions")
 }
 
 model Problem {

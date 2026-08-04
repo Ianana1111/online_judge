@@ -46,6 +46,13 @@ export class BillingController {
     return this.billing.cancelPlan(user.id);
   }
 
+  /** Immediate cancellation for an active recurring Subscription — distinct from /cancel above,
+   * which only marks intent for a one-time-purchase period that's already fully paid for. */
+  @Post("subscription/cancel")
+  cancelSubscription(@CurrentUser() user: RequestUser) {
+    return this.billing.cancelSubscription(user.id);
+  }
+
   /** User backs out of their own pending order (e.g. an ATM transfer they no longer want) so the
    * checkout page stops showing it and they can pick a different plan/period/method. */
   @Post("dismiss-pending")
@@ -107,6 +114,15 @@ export class BillingController {
   @Post("ecpay/return")
   async ecpayReturn(@Req() req: Request, @Res() res: Response) {
     await this.billing.handleEcpayReturn(req.body as Record<string, string>);
+    res.type("text/plain").send("1|OK");
+  }
+
+  /** Webhook — ECPay POSTs here after every recurring (定期定額) auto-charge from the 2nd cycle
+   * onward; the 1st charge is confirmed via ecpay/return above. Same auth model as the others. */
+  @Public()
+  @Post("ecpay/period-return")
+  async ecpayPeriodReturn(@Req() req: Request, @Res() res: Response) {
+    await this.billing.handleEcpayPeriodReturn(req.body as Record<string, string>);
     res.type("text/plain").send("1|OK");
   }
 }

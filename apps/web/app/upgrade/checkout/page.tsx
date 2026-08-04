@@ -12,6 +12,8 @@ import type { BillingPlans, BillingStatus } from "@/lib/types";
 type Period = "MONTHLY" | "YEARLY";
 type Method = "CREDIT" | "ATM";
 
+const PERIOD_LABEL: Record<Period, string> = { MONTHLY: "month", YEARLY: "year" };
+
 export default function CheckoutPage() {
   const router = useRouter();
   const qc = useQueryClient();
@@ -59,11 +61,20 @@ export default function CheckoutPage() {
   const isAdmin = user?.role === "ADMIN";
   const notApplicable = isAdmin || user?.isStudent;
   const isPro = status?.plan === "PRO";
+  // A subscribed user already auto-renews — there's genuinely nothing to buy. A Pro user who
+  // *isn't* subscribed (one-time ATM purchase, or an admin grant) can still extend, so they still
+  // reach the picker below instead of being dead-ended here.
+  const isSubscribed = !!status?.subscription;
   const pending = status?.pendingPayment;
+
   const amount = plans?.effectivePricing[period] ?? (period === "MONTHLY" ? 500 : 2000);
   const monthlyListPrice = plans?.pricing.MONTHLY.amountNtd ?? 500;
   const monthlyNowPrice = plans?.effectivePricing.MONTHLY ?? monthlyListPrice;
+  const yearlyPrice = plans?.pricing.YEARLY.amountNtd ?? 2000;
   const promo = plans?.promo;
+  // "Save X%" badge on the yearly card, measured against the real ongoing monthly sticker price
+  // (not a temporary promo/test price) so it stays meaningful once pricing settles back down.
+  const yearlySavingsPct = Math.round((1 - yearlyPrice / (monthlyListPrice * 12)) * 100);
 
   async function startEcpay() {
     setEcpayError(null);
@@ -87,6 +98,8 @@ export default function CheckoutPage() {
       }
       document.body.appendChild(form);
       form.submit();
+      // Deliberately leave ecpayLoading true — the page is about to navigate away entirely, so
+      // there's no "done loading" moment to show; the spinner just stays up through the redirect.
     } catch (e) {
       setEcpayError(e instanceof ApiError ? e.message : "無法建立訂單，請稍後再試");
       setEcpayLoading(false);
@@ -110,7 +123,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-2xl flex-col px-6 py-8">
+    <div className="mx-auto flex min-h-screen max-w-4xl flex-col px-6 py-8">
       <div>
         <BackButton fallbackHref="/upgrade" />
       </div>
@@ -118,7 +131,7 @@ export default function CheckoutPage() {
       <div className="flex flex-1 flex-col justify-center py-10">
         <div className="w-full space-y-6">
           <div>
-            <h1 className="font-display text-2xl font-bold text-ink-50">Get Pro Plan</h1>
+            <h1 className="font-display text-2xl font-bold text-ink-50 sm:text-3xl">Subscribe to Pro</h1>
             <p className="mt-1 text-sm text-ink-400">Unlimited submissions and virtual contests, billed however suits you.</p>
           </div>
 
@@ -134,11 +147,16 @@ export default function CheckoutPage() {
             <div className="oj-card p-5 text-sm text-ink-300">
               {isAdmin ? "Admin accounts already have no submit or contest limits." : "Student accounts are already Pro — no need to upgrade."}
             </div>
-          ) : isPro ? (
+          ) : isSubscribed ? (
             <div className="oj-card border-verdict-ac/40 p-5 text-sm text-ink-200">
-              ✓ You're already on Pro.{" "}
-              {status?.planExpiresAt && <>Renews/expires {new Date(status.planExpiresAt).toLocaleDateString()}.</>} Buying again
-              extends it further.
+              <p>
+                ✓ You're already subscribed to Pro — NT${status.subscription!.amountNtd} /{" "}
+                {status.subscription!.period === "MONTHLY" ? "month" : "year"}, renews automatically
+                {status?.planExpiresAt && <> on {new Date(status.planExpiresAt).toLocaleDateString()}</>}.
+              </p>
+              <Link href="/upgrade" className="mt-2 inline-block text-brand hover:underline">
+                Manage your subscription →
+              </Link>
             </div>
           ) : pending ? (
             <div className="space-y-3">
@@ -190,63 +208,128 @@ export default function CheckoutPage() {
               </button>
             </div>
           ) : (
-            <div className="space-y-5">
-              <div>
-                <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-400">Billing period</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setPeriod("MONTHLY")}
-                    className={period === "MONTHLY" ? "oj-btn-primary py-3 text-sm" : "oj-btn-secondary py-3 text-sm"}
-                  >
-                    {promo ? (
-                      <>
-                        Monthly — <span className="line-through opacity-70">NT${monthlyListPrice}</span> NT${monthlyNowPrice}/mo
-                      </>
+            <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-8">
+              <div className="space-y-6 sm:col-span-3">
+                {isPro && (
+                  <div className="oj-card border-verdict-ac/40 p-3 text-xs text-ink-300 sm:text-sm">
+                    ✓ You're already on Pro
+                    {status?.planExpiresAt && <> until {new Date(status.planExpiresAt).toLocaleDateString()}</>}. Subscribing now
+                    extends it further.
+                  </div>
+                )}
+
+                <div>
+                  <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-400">Billing period</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setPeriod("MONTHLY")}
+                      className={`oj-card p-3 text-left transition-colors ${period === "MONTHLY" ? "border-brand" : "hover:border-ink-500"}`}
+                    >
+                      <p className="text-sm font-semibold text-ink-50">Monthly</p>
+                      {promo ? (
+                        <p className="mt-0.5 text-xs text-ink-400">
+                          <span className="line-through opacity-70">NT${monthlyListPrice}</span> NT${monthlyNowPrice} / mo
+                        </p>
+                      ) : (
+                        <p className="mt-0.5 text-xs text-ink-400">NT${monthlyNowPrice} / mo</p>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPeriod("YEARLY")}
+                      className={`oj-card relative p-3 text-left transition-colors ${period === "YEARLY" ? "border-brand" : "hover:border-ink-500"}`}
+                    >
+                      {yearlySavingsPct > 0 && (
+                        <span className="absolute -top-2 right-2 rounded-full bg-verdict-ac px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-onbrand">
+                          Save {yearlySavingsPct}%
+                        </span>
+                      )}
+                      <p className="text-sm font-semibold text-ink-50">Yearly</p>
+                      <p className="mt-0.5 text-xs text-ink-400">NT${yearlyPrice} / yr</p>
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-400">Payment method</p>
+                  <div className="space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => setMethod("CREDIT")}
+                      className={`oj-card flex w-full items-start gap-3 p-3 text-left transition-colors ${method === "CREDIT" ? "border-brand" : "hover:border-ink-500"}`}
+                    >
+                      <span className="mt-0.5 text-lg leading-none">💳</span>
+                      <span>
+                        <span className="block text-sm font-semibold text-ink-50">Credit / Debit Card</span>
+                        <span className="block text-xs text-ink-400">
+                          Subscribe — we auto-renew your card every {PERIOD_LABEL[period]} until you cancel.
+                        </span>
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMethod("ATM")}
+                      className={`oj-card flex w-full items-start gap-3 p-3 text-left transition-colors ${method === "ATM" ? "border-brand" : "hover:border-ink-500"}`}
+                    >
+                      <span className="mt-0.5 text-lg leading-none">🏦</span>
+                      <span>
+                        <span className="block text-sm font-semibold text-ink-50">ATM Transfer</span>
+                        <span className="block text-xs text-ink-400">One-time payment — transfer again manually whenever you want to renew.</span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 sm:sticky sm:top-8 sm:col-span-2 sm:mt-0">
+                <div className="oj-card space-y-4 p-5">
+                  <div>
+                    <p className="font-display text-sm font-semibold text-ink-50">Order summary</p>
+                    <div className="mt-3 flex items-baseline justify-between text-sm">
+                      <span className="text-ink-300">judge. Pro ({period === "MONTHLY" ? "Monthly" : "Yearly"})</span>
+                      <span className="text-ink-100">NT${amount}</span>
+                    </div>
+                    {promo && period === "MONTHLY" && (
+                      <div className="mt-1 flex items-baseline justify-between text-sm">
+                        <span className="text-verdict-ac">Launch promo ({promo.discountPct}% off)</span>
+                        <span className="text-verdict-ac">−NT${monthlyListPrice - monthlyNowPrice}</span>
+                      </div>
+                    )}
+                    <div className="mt-2 flex items-baseline justify-between border-t border-ink-700 pt-2 text-sm font-semibold">
+                      <span className="text-ink-50">Total due today</span>
+                      <span className="text-ink-50">NT${amount}</span>
+                    </div>
+                  </div>
+
+                  <p className="rounded border border-ink-700 bg-ink-800/50 px-2.5 py-2 text-xs text-ink-400">
+                    {method === "CREDIT"
+                      ? `Billed every ${PERIOD_LABEL[period]} · renews automatically until you cancel from your account.`
+                      : `One-time payment, valid for ${period === "MONTHLY" ? "30" : "365"} days · renew again manually anytime.`}
+                  </p>
+
+                  {ecpayError && <p className="text-sm text-verdict-wa">{ecpayError}</p>}
+
+                  <button onClick={startEcpay} disabled={ecpayLoading} className="oj-btn-primary w-full py-3">
+                    {ecpayLoading ? (
+                      <span className="inline-flex items-center gap-2">
+                        <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                        </svg>
+                        Redirecting to ECPay…
+                      </span>
+                    ) : method === "CREDIT" ? (
+                      `Subscribe — NT$${amount}/${PERIOD_LABEL[period]}`
                     ) : (
-                      `Monthly — NT$${monthlyNowPrice}/mo`
+                      `Pay NT$${amount}`
                     )}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setPeriod("YEARLY")}
-                    className={period === "YEARLY" ? "oj-btn-primary py-3 text-sm" : "oj-btn-secondary py-3 text-sm"}
-                  >
-                    Yearly — NT${plans?.pricing.YEARLY.amountNtd ?? 2000}/yr
-                  </button>
-                </div>
-              </div>
 
-              <div>
-                <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-400">Payment method</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setMethod("CREDIT")}
-                    className={method === "CREDIT" ? "oj-btn-primary py-3 text-sm" : "oj-btn-secondary py-3 text-sm"}
-                  >
-                    Credit card
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setMethod("ATM")}
-                    className={method === "ATM" ? "oj-btn-primary py-3 text-sm" : "oj-btn-secondary py-3 text-sm"}
-                  >
-                    Virtual account (ATM)
-                  </button>
+                  <p className="flex items-center justify-center gap-1 text-center text-[11px] text-ink-500">
+                    🔒 Secure checkout via ECPay — Taiwan's leading payment gateway
+                  </p>
                 </div>
-              </div>
-
-              <div className="oj-card space-y-3 p-5">
-                <p className="text-sm text-ink-400">
-                  {method === "CREDIT"
-                    ? "You'll be taken to ECPay's secure checkout to enter your card details. Pro unlocks automatically the moment payment clears."
-                    : "You'll receive a virtual account number to transfer to. Pro unlocks automatically once the transfer is received — no manual review."}
-                </p>
-                {ecpayError && <p className="text-sm text-verdict-wa">{ecpayError}</p>}
-                <button onClick={startEcpay} disabled={ecpayLoading} className="oj-btn-primary w-full py-3">
-                  {ecpayLoading ? "Redirecting…" : `Pay NT$${amount}`}
-                </button>
               </div>
             </div>
           )}

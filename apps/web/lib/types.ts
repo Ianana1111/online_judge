@@ -56,6 +56,9 @@ export interface BillingStatus {
   plan: "FREE" | "PRO";
   planExpiresAt: string | null;
   planCancelRequested: boolean;
+  // Present only while an ECPay recurring (定期定額) subscription is ACTIVE — planExpiresAt
+  // doubles as "renews on" for this case, since it auto-extends every successful auto-charge.
+  subscription: { period: "MONTHLY" | "YEARLY"; amountNtd: number } | null;
   submits: { used: number; limit: number | null };
   virtualContests: { used: number; limit: number | null };
   pendingPayment: {
