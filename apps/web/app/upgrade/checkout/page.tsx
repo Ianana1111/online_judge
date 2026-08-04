@@ -123,16 +123,16 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-4xl flex-col px-6 py-8">
-      <div>
+    <div className="mx-auto flex h-screen max-w-4xl flex-col overflow-y-auto px-6 py-4">
+      <div className="shrink-0">
         <BackButton fallbackHref="/upgrade" />
       </div>
 
-      <div className="flex flex-1 flex-col justify-center py-10">
-        <div className="w-full space-y-6">
+      <div className="flex flex-1 flex-col justify-center py-4">
+        <div className="w-full space-y-4">
           <div>
-            <h1 className="font-display text-2xl font-bold text-ink-50 sm:text-3xl">Subscribe to Pro</h1>
-            <p className="mt-1 text-sm text-ink-400">Unlimited submissions and virtual contests, billed however suits you.</p>
+            <h1 className="font-display text-xl font-bold text-ink-50 sm:text-2xl">Subscribe to Pro</h1>
+            <p className="mt-1 text-xs text-ink-400 sm:text-sm">Unlimited submissions and virtual contests, billed however suits you.</p>
           </div>
 
           {authStatus === "ready" && !user ? (
@@ -208,10 +208,10 @@ export default function CheckoutPage() {
               </button>
             </div>
           ) : (
-            <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-8">
-              <div className="space-y-6 sm:col-span-3">
+            <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-6">
+              <div className="space-y-4 sm:col-span-3">
                 {isPro && (
-                  <div className="oj-card border-verdict-ac/40 p-3 text-xs text-ink-300 sm:text-sm">
+                  <div className="oj-card border-verdict-ac/40 p-2.5 text-xs text-ink-300">
                     ✓ You're already on Pro
                     {status?.planExpiresAt && <> until {new Date(status.planExpiresAt).toLocaleDateString()}</>}. Subscribing now
                     extends it further.
@@ -219,12 +219,12 @@ export default function CheckoutPage() {
                 )}
 
                 <div>
-                  <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-400">Billing period</p>
-                  <div className="grid grid-cols-2 gap-3">
+                  <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-ink-400">Billing period</p>
+                  <div className="grid grid-cols-2 gap-2.5">
                     <button
                       type="button"
                       onClick={() => setPeriod("MONTHLY")}
-                      className={`oj-card p-3 text-left transition-colors ${period === "MONTHLY" ? "border-brand" : "hover:border-ink-500"}`}
+                      className={`oj-card p-2.5 text-left transition-colors ${period === "MONTHLY" ? "border-brand" : "hover:border-ink-500"}`}
                     >
                       <p className="text-sm font-semibold text-ink-50">Monthly</p>
                       {promo ? (
@@ -238,7 +238,7 @@ export default function CheckoutPage() {
                     <button
                       type="button"
                       onClick={() => setPeriod("YEARLY")}
-                      className={`oj-card relative p-3 text-left transition-colors ${period === "YEARLY" ? "border-brand" : "hover:border-ink-500"}`}
+                      className={`oj-card relative p-2.5 text-left transition-colors ${period === "YEARLY" ? "border-brand" : "hover:border-ink-500"}`}
                     >
                       {yearlySavingsPct > 0 && (
                         <span className="absolute -top-2 right-2 rounded-full bg-verdict-ac px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-onbrand">
@@ -252,12 +252,12 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-400">Payment method</p>
-                  <div className="space-y-2">
+                  <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-ink-400">Payment method</p>
+                  <div className="space-y-1.5">
                     <button
                       type="button"
                       onClick={() => setMethod("CREDIT")}
-                      className={`oj-card flex w-full items-start gap-3 p-3 text-left transition-colors ${method === "CREDIT" ? "border-brand" : "hover:border-ink-500"}`}
+                      className={`oj-card flex w-full items-start gap-2.5 p-2.5 text-left transition-colors ${method === "CREDIT" ? "border-brand" : "hover:border-ink-500"}`}
                     >
                       <span className="mt-0.5 text-lg leading-none">💳</span>
                       <span>
@@ -270,7 +270,7 @@ export default function CheckoutPage() {
                     <button
                       type="button"
                       onClick={() => setMethod("ATM")}
-                      className={`oj-card flex w-full items-start gap-3 p-3 text-left transition-colors ${method === "ATM" ? "border-brand" : "hover:border-ink-500"}`}
+                      className={`oj-card flex w-full items-start gap-2.5 p-2.5 text-left transition-colors ${method === "ATM" ? "border-brand" : "hover:border-ink-500"}`}
                     >
                       <span className="mt-0.5 text-lg leading-none">🏦</span>
                       <span>
@@ -282,11 +282,11 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <div className="mt-6 sm:sticky sm:top-8 sm:col-span-2 sm:mt-0">
-                <div className="oj-card space-y-4 p-5">
+              <div className="mt-4 sm:col-span-2 sm:mt-0">
+                <div className="oj-card space-y-3 p-4">
                   <div>
                     <p className="font-display text-sm font-semibold text-ink-50">Order summary</p>
-                    <div className="mt-3 flex items-baseline justify-between text-sm">
+                    <div className="mt-2 flex items-baseline justify-between text-sm">
                       <span className="text-ink-300">judge. Pro ({period === "MONTHLY" ? "Monthly" : "Yearly"})</span>
                       <span className="text-ink-100">NT${amount}</span>
                     </div>
@@ -296,13 +296,13 @@ export default function CheckoutPage() {
                         <span className="text-verdict-ac">−NT${monthlyListPrice - monthlyNowPrice}</span>
                       </div>
                     )}
-                    <div className="mt-2 flex items-baseline justify-between border-t border-ink-700 pt-2 text-sm font-semibold">
+                    <div className="mt-1.5 flex items-baseline justify-between border-t border-ink-700 pt-1.5 text-sm font-semibold">
                       <span className="text-ink-50">Total due today</span>
                       <span className="text-ink-50">NT${amount}</span>
                     </div>
                   </div>
 
-                  <p className="rounded border border-ink-700 bg-ink-800/50 px-2.5 py-2 text-xs text-ink-400">
+                  <p className="rounded border border-ink-700 bg-ink-800/50 px-2.5 py-1.5 text-xs text-ink-400">
                     {method === "CREDIT"
                       ? `Billed every ${PERIOD_LABEL[period]} · renews automatically until you cancel from your account.`
                       : `One-time payment, valid for ${period === "MONTHLY" ? "30" : "365"} days · renew again manually anytime.`}
@@ -310,7 +310,7 @@ export default function CheckoutPage() {
 
                   {ecpayError && <p className="text-sm text-verdict-wa">{ecpayError}</p>}
 
-                  <button onClick={startEcpay} disabled={ecpayLoading} className="oj-btn-primary w-full py-3">
+                  <button onClick={startEcpay} disabled={ecpayLoading} className="oj-btn-primary w-full py-2.5">
                     {ecpayLoading ? (
                       <span className="inline-flex items-center gap-2">
                         <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
