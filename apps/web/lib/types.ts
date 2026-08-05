@@ -443,6 +443,7 @@ export interface CollectionListItem {
   slug: string;
   title: string;
   description: string;
+  category: string;
   problemCount: number;
 }
 

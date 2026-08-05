@@ -368,6 +368,9 @@ model Collection {
   slug        String   @unique
   title       String
   description String   @default("")
+  // Section header the collections page groups this under (e.g. "考試歷屆", "演算法主題"). Free-text
+  // rather than an enum since new groupings will be added ad-hoc as more collections are curated.
+  category    String   @default("")
   createdAt   DateTime @default(now())
 
   problems CollectionProblem[]

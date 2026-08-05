@@ -15,6 +15,7 @@ export class CollectionsService {
       slug: c.slug,
       title: c.title,
       description: c.description,
+      category: c.category,
       problemCount: c._count.problems,
     }));
   }
