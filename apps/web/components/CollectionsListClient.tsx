@@ -6,14 +6,48 @@ import { apiFetch } from "@/lib/api";
 import type { CollectionListItem } from "@/lib/types";
 import { SkeletonCard } from "@/components/Skeleton";
 
+// Fixed display order for known groupings; any category not listed here (or the "" fallback for
+// uncategorized rows) sorts after these, alphabetically among themselves.
+const CATEGORY_ORDER = ["考試歷屆", "演算法主題"];
+const UNCATEGORIZED = "其他";
+
+function groupByCategory(items: CollectionListItem[]): [string, CollectionListItem[]][] {
+  const groups = new Map<string, CollectionListItem[]>();
+  for (const item of items) {
+    const key = item.category || UNCATEGORIZED;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(item);
+  }
+  return [...groups.entries()].sort(([a], [b]) => {
+    const ai = CATEGORY_ORDER.indexOf(a);
+    const bi = CATEGORY_ORDER.indexOf(b);
+    if (ai === -1 && bi === -1) return a.localeCompare(b);
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
+}
+
+function CollectionCard({ c }: { c: CollectionListItem }) {
+  return (
+    <Link href={`/collections/${c.slug}`} className="oj-card block p-4 transition-colors hover:border-brand">
+      <h3 className="font-display text-lg font-semibold text-ink-50">{c.title}</h3>
+      {c.description && <p className="mt-1 text-sm text-ink-400">{c.description}</p>}
+      <p className="mt-3 font-mono text-xs text-ink-500">{c.problemCount} problems</p>
+    </Link>
+  );
+}
+
 export default function CollectionsListClient() {
   const { data: collections, isLoading } = useQuery({
     queryKey: ["collections"],
     queryFn: () => apiFetch<CollectionListItem[]>("/collections"),
   });
 
+  const groups = collections ? groupByCategory(collections) : [];
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       <div>
         <h1 className="font-display text-2xl font-bold text-ink-50">Collections</h1>
         <p className="mt-1 text-sm text-ink-400">Curated problem sets to work through at your own pace.</p>
@@ -26,16 +60,22 @@ export default function CollectionsListClient() {
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {collections?.map((c) => (
-          <Link key={c.id} href={`/collections/${c.slug}`} className="oj-card block p-4 transition-colors hover:border-brand">
-            <h2 className="font-display text-lg font-semibold text-ink-50">{c.title}</h2>
-            {c.description && <p className="mt-1 text-sm text-ink-400">{c.description}</p>}
-            <p className="mt-3 font-mono text-xs text-ink-500">{c.problemCount} problems</p>
-          </Link>
+      {!isLoading &&
+        groups.map(([category, items]) => (
+          <section key={category}>
+            <div className="mb-4 flex items-baseline justify-between border-b border-ink-800 pb-2">
+              <h2 className="font-display text-xl font-bold text-ink-50">{category}</h2>
+              <span className="font-mono text-xs text-ink-500">{items.length} collections</span>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {items.map((c) => (
+                <CollectionCard key={c.id} c={c} />
+              ))}
+            </div>
+          </section>
         ))}
-      </div>
-      {collections?.length === 0 && <p className="text-sm text-ink-400">No collections yet.</p>}
+
+      {!isLoading && collections?.length === 0 && <p className="text-sm text-ink-400">No collections yet.</p>}
     </div>
   );
 }
