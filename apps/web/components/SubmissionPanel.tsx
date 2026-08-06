@@ -46,7 +46,12 @@ export default function SubmissionPanel({
    * so block it client-side with an explanation instead of letting them find out the hard way. */
   judgeable?: boolean;
 }) {
-  const storageKey = `oj:draft:${slug}`;
+  const { user, status: authStatus } = useAuthStore();
+  // Scoped per-account (not just per-problem): an unscoped key meant any browser session — logged
+  // out, or logged into a different account — would read back whatever the last signed-in user on
+  // this device had typed, which is both a privacy leak on shared/public machines and confusing on
+  // your own. null while logged out so no draft is ever read or written for an anonymous session.
+  const storageKey = user ? `oj:draft:${user.id}:${slug}` : null;
   const [languageKey, setLanguageKey] = useState("cpp17");
   const [sourceCode, setSourceCode] = useState(STUB.cpp17);
   const [submitting, setSubmitting] = useState(false);
@@ -56,7 +61,6 @@ export default function SubmissionPanel({
   const [detail, setDetail] = useState<SubmissionDetail | null>(null);
   const [flash, setFlash] = useState(false);
   const esRef = useRef<EventSource | null>(null);
-  const { user } = useAuthStore();
   const qc = useQueryClient();
 
   // FREE-plan submit quota, shown proactively so a user finds out they're capped before they hit
@@ -70,6 +74,7 @@ export default function SubmissionPanel({
   });
 
   useEffect(() => {
+    if (!storageKey) return;
     const raw = localStorage.getItem(storageKey);
     if (raw) {
       try {
@@ -86,6 +91,7 @@ export default function SubmissionPanel({
   }, [storageKey]);
 
   useEffect(() => {
+    if (!storageKey) return;
     localStorage.setItem(storageKey, JSON.stringify({ languageKey, sourceCode }));
   }, [storageKey, languageKey, sourceCode]);
 
@@ -155,6 +161,24 @@ export default function SubmissionPanel({
     }
   }
 
+  // Nothing to key a draft or a submission to without an account — and showing the editor here
+  // used to mean whatever the last signed-in user on this device typed leaked into an anonymous
+  // session (see the storageKey comment above). Loading state first so this doesn't flash before
+  // hydrate() resolves.
+  if (authStatus !== "ready") {
+    return <div className="oj-card h-[480px] animate-pulse bg-ink-900" />;
+  }
+  if (!user) {
+    return (
+      <div className="oj-card flex h-[480px] flex-col items-center justify-center gap-3 p-6 text-center">
+        <p className="text-sm text-ink-300">Log in to write and submit code for this problem.</p>
+        <Link href="/login" className="oj-btn-primary px-4 py-2 text-sm">
+          Log in
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
       {!judgeable && (
@@ -169,7 +193,7 @@ export default function SubmissionPanel({
           onChange={(e) => {
             const next = e.target.value;
             setLanguageKey(next);
-            const raw = localStorage.getItem(storageKey);
+            const raw = storageKey ? localStorage.getItem(storageKey) : null;
             const hasDraftForLang = raw && JSON.parse(raw).languageKey === next;
             if (!hasDraftForLang) setSourceCode(STUB[next] ?? "");
           }}
