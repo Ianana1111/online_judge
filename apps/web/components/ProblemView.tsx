@@ -176,6 +176,7 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
       contestId={contestId}
       locked={locked}
       judgeable={problem.uvaId != null}
+      samples={problem.samples}
     />
   );
 

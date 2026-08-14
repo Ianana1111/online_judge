@@ -19,6 +19,7 @@ import { RedisModule } from "./common/redis.module";
 import { RolesGuard } from "./common/roles.guard";
 import { HealthController } from "./health.controller";
 import { ProblemsModule } from "./problems/problems.module";
+import { RunsModule } from "./runs/runs.module";
 import { SubmissionsModule } from "./submissions/submissions.module";
 import { UsersModule } from "./users/users.module";
 
@@ -31,6 +32,7 @@ import { UsersModule } from "./users/users.module";
     AuthModule,
     ProblemsModule,
     SubmissionsModule,
+    RunsModule,
     ContestsModule,
     UsersModule,
     DiscussionsModule,

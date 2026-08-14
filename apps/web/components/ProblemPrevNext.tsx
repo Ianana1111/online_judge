@@ -24,7 +24,7 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
   const listSource = searchParams.get("listSource");
   const listId = searchParams.get("listId");
   const sortParam = searchParams.get("sort");
-  const sort: SortKey = sortParam && SORT_KEYS.includes(sortParam as SortKey) ? (sortParam as SortKey) : "number";
+  const sort: SortKey | null = sortParam && SORT_KEYS.includes(sortParam as SortKey) ? (sortParam as SortKey) : null;
   const difficulty = searchParams.get("difficulty") ?? "";
   const tag = searchParams.get("tag") ?? "";
 

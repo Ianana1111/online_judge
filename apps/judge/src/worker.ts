@@ -1,9 +1,10 @@
 import { Worker, type Job } from "bullmq";
 import { prisma } from "@oj/db";
-import { JUDGE_QUEUE_NAME, type JudgeJobData } from "@oj/shared";
+import { JUDGE_QUEUE_NAME, TEST_RUN_QUEUE_NAME, type JudgeJobData, type TestRunJobData } from "@oj/shared";
 import { judgeViaUva } from "./remote/uva.js";
 import { judgeLocally } from "./local/judge.js";
-import { reportResult } from "./reportResult.js";
+import { runTestCases } from "./local/testRun.js";
+import { reportResult, reportTestRunResult } from "./reportResult.js";
 
 const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 // Default 1: every submission proxies through a single shared UVa bot account, and we identify our
@@ -11,6 +12,9 @@ const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 // submissions go out strictly one at a time. Parallel submits through one account would also raise
 // rate-limit/ban risk on a community-run judge for no real throughput gain.
 const CONCURRENCY = parseInt(process.env.JUDGE_CONCURRENCY ?? "1", 10);
+// The "Run" feature has no such constraint — each run gets its own disposable sandbox and never
+// touches UVa — so it can afford more headroom to stay snappy under concurrent site usage.
+const TEST_RUN_CONCURRENCY = parseInt(process.env.TEST_RUN_CONCURRENCY ?? "3", 10);
 
 // Pass a plain options object rather than constructing our own `Redis` instance: bullmq bundles
 // its own ioredis internally, and a separately-installed ioredis copy (even the "same" version
@@ -69,11 +73,44 @@ const worker = new Worker<JudgeJobData>(
 worker.on("completed", (job) => console.log(`Judged submission ${job.data.submissionId}`));
 worker.on("failed", (job, err) => console.error(`Judge failed for job ${job?.id}:`, err.message));
 
+// "Run" jobs (apps/judge/src/local/testRun.ts) — compile+run against sample/custom input for the
+// site's in-browser test feature. No Submission row, no verdict, nothing persisted; the result
+// just gets POSTed back and cached in Redis (see RunsService).
+async function processTestRunJob(job: Job<TestRunJobData>): Promise<void> {
+  const { runId, problemId, languageKey, sourceCode, cases } = job.data;
+  const outcome = await runTestCases(runId, problemId, languageKey, sourceCode, cases);
+  await reportTestRunResult(outcome);
+}
+
+const testRunWorker = new Worker<TestRunJobData>(
+  TEST_RUN_QUEUE_NAME,
+  async (job) => {
+    try {
+      await processTestRunJob(job);
+    } catch (err) {
+      console.error(`Test-run job ${job.id} (run ${job.data.runId}) failed:`, err);
+      await reportTestRunResult({
+        runId: job.data.runId,
+        status: "ERROR",
+        compileError: err instanceof Error ? err.message : String(err),
+      }).catch((reportErr) => {
+        console.error("Additionally failed to report test-run error:", reportErr);
+      });
+      throw err;
+    }
+  },
+  { connection, concurrency: TEST_RUN_CONCURRENCY },
+);
+
+testRunWorker.on("completed", (job) => console.log(`Ran test cases for run ${job.data.runId}`));
+testRunWorker.on("failed", (job, err) => console.error(`Test run failed for job ${job?.id}:`, err.message));
+
 console.log(`Judge worker started (concurrency=${CONCURRENCY}), listening on queue "${JUDGE_QUEUE_NAME}"`);
+console.log(`Test-run worker started (concurrency=${TEST_RUN_CONCURRENCY}), listening on queue "${TEST_RUN_QUEUE_NAME}"`);
 
 async function shutdown() {
   console.log("Shutting down judge worker...");
-  await worker.close();
+  await Promise.all([worker.close(), testRunWorker.close()]);
   await prisma.$disconnect();
   process.exit(0);
 }

@@ -173,6 +173,28 @@ export interface ProblemDetail {
   samples: Sample[];
 }
 
+// The "Run" feature (test code against sample/custom input without submitting) — see
+// TestPanel.tsx / apps/api/src/runs. Deliberately not a Verdict: there's no AC/WA here, just raw
+// output the caller compares against an expected value itself (samples) or just reads (custom
+// cases).
+export type RunStatus = "RUNNING" | "DONE" | "COMPILE_ERROR" | "ERROR";
+
+export interface RunCaseResult {
+  id: string;
+  stdout: string;
+  stderr: string;
+  timeMs: number;
+  timedOut: boolean;
+  exitCode: number;
+}
+
+export interface RunResult {
+  runId: string;
+  status: RunStatus;
+  compileError?: string;
+  cases?: RunCaseResult[];
+}
+
 export interface HistogramBucket {
   count: number;
   languageCounts: Record<string, number>;

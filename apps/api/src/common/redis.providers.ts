@@ -1,11 +1,12 @@
 import { Queue } from "bullmq";
 import Redis from "ioredis";
-import { JUDGE_QUEUE_NAME } from "@oj/shared";
+import { JUDGE_QUEUE_NAME, TEST_RUN_QUEUE_NAME } from "@oj/shared";
 
 export const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 
 export const REDIS_CLIENT = "REDIS_CLIENT";
 export const JUDGE_QUEUE = "JUDGE_QUEUE";
+export const TEST_RUN_QUEUE = "TEST_RUN_QUEUE";
 
 /**
  * Dedicated connection factory for the SSE endpoint's Redis pub/sub subscriber. Each open
@@ -31,4 +32,9 @@ export const judgeQueueProvider = {
   // node_modules layout, which then fails BullMQ's ConnectionOptions type/behavior checks.
   // Letting BullMQ build its client internally sidesteps that (matches apps/judge's approach).
   useFactory: (): Queue => new Queue(JUDGE_QUEUE_NAME, { connection: { url: REDIS_URL, maxRetriesPerRequest: null } }),
+};
+
+export const testRunQueueProvider = {
+  provide: TEST_RUN_QUEUE,
+  useFactory: (): Queue => new Queue(TEST_RUN_QUEUE_NAME, { connection: { url: REDIS_URL, maxRetriesPerRequest: null } }),
 };

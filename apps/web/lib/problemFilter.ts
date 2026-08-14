@@ -1,12 +1,33 @@
 import type { ProblemRow } from "./types";
 
-export type SortKey = "number" | "difficulty-asc" | "difficulty-desc" | "unsolved-first" | "cpe-appearances";
-export const SORT_KEYS: SortKey[] = ["number", "difficulty-asc", "difficulty-desc", "unsolved-first", "cpe-appearances"];
+// Each sortable column cycles through exactly three states on repeated clicks: its "descending"
+// key, then its "ascending" key, then back to no sort at all (represented by `null`, not a key) —
+// see ProblemFilterTable's per-header click handler. "solved-first"/"unsolved-first" aren't a
+// literal desc/asc pair, but they occupy the same two cycle slots for the one boolean column.
+export type SortKey =
+  | "number-desc"
+  | "number-asc"
+  | "difficulty-desc"
+  | "difficulty-asc"
+  | "cpe-desc"
+  | "cpe-asc"
+  | "solved-first"
+  | "unsolved-first";
+export const SORT_KEYS: SortKey[] = [
+  "number-desc",
+  "number-asc",
+  "difficulty-desc",
+  "difficulty-asc",
+  "cpe-desc",
+  "cpe-asc",
+  "solved-first",
+  "unsolved-first",
+];
 
 export interface ProblemFilters {
   difficulty?: string; // "" | "1".."4", same string the <select> uses directly
   tag?: string;
-  sort?: SortKey;
+  sort?: SortKey | null;
 }
 
 /**
@@ -24,12 +45,12 @@ export function buildProblemNavHref(
   slug: string,
   listSource: "problems" | "collection",
   listId: string | null,
-  filters: { sort: SortKey; difficulty: string; tag: string },
+  filters: { sort: SortKey | null; difficulty: string; tag: string },
 ): string {
   const params = new URLSearchParams();
   params.set("listSource", listSource);
   if (listSource === "collection" && listId) params.set("listId", listId);
-  if (filters.sort !== "number") params.set("sort", filters.sort);
+  if (filters.sort) params.set("sort", filters.sort);
   if (filters.difficulty) params.set("difficulty", filters.difficulty);
   if (filters.tag) params.set("tag", filters.tag);
   return `/problems/${slug}?${params.toString()}`;
@@ -41,21 +62,31 @@ export function filterAndSortProblems(problems: ProblemRow[], { difficulty, tag,
     if (tag && !p.tags.includes(tag)) return false;
     return true;
   });
-  switch (sort ?? "number") {
-    case "number":
-      list.sort((a, b) => (a.uvaId ?? Infinity) - (b.uvaId ?? Infinity));
-      break;
-    case "difficulty-asc":
-      list.sort((a, b) => a.difficulty - b.difficulty);
+  switch (sort ?? null) {
+    case "number-desc":
+      list.sort((a, b) => (b.uvaId ?? -Infinity) - (a.uvaId ?? -Infinity));
       break;
     case "difficulty-desc":
       list.sort((a, b) => b.difficulty - a.difficulty);
       break;
+    case "difficulty-asc":
+      list.sort((a, b) => a.difficulty - b.difficulty);
+      break;
+    case "cpe-desc":
+      list.sort((a, b) => (b.cpeAppearances ?? 0) - (a.cpeAppearances ?? 0));
+      break;
+    case "cpe-asc":
+      list.sort((a, b) => (a.cpeAppearances ?? 0) - (b.cpeAppearances ?? 0));
+      break;
+    case "solved-first":
+      list.sort((a, b) => Number(b.solvedByMe) - Number(a.solvedByMe));
+      break;
     case "unsolved-first":
       list.sort((a, b) => Number(a.solvedByMe) - Number(b.solvedByMe));
       break;
-    case "cpe-appearances":
-      list.sort((a, b) => (b.cpeAppearances ?? 0) - (a.cpeAppearances ?? 0));
+    case "number-asc":
+    default:
+      list.sort((a, b) => (a.uvaId ?? Infinity) - (b.uvaId ?? Infinity));
       break;
   }
   return list;
