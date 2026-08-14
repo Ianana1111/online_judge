@@ -162,6 +162,11 @@
 
   code, pre, kbd, .font-tabular {
     @apply font-mono;
+    /* JetBrains Mono ships with programming ligatures on by default (e.g. "!=" merges into a
+       single ≠-shaped glyph) — fine in an editor, misleading anywhere we render code/verdicts as
+       plain text the user might copy or compare by eye. */
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0, "calt" 0;
   }
 
   :focus-visible {

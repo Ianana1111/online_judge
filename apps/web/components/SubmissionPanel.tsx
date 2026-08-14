@@ -5,9 +5,10 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import VerdictBadge from "@/components/VerdictBadge";
+import TestPanel from "@/components/TestPanel";
 import { apiFetch, ApiError, openSubmissionStream } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
-import type { BillingStatus, SubmissionDetail } from "@/lib/types";
+import type { BillingStatus, Sample, SubmissionDetail } from "@/lib/types";
 import { LANGUAGE_LABEL } from "@/lib/types";
 
 // Monaco is a large editor bundle unrelated to the rest of the problem page (statement, tabs,
@@ -36,6 +37,7 @@ export default function SubmissionPanel({
   contestId,
   locked = false,
   judgeable = true,
+  samples = [],
 }: {
   problemId: string;
   slug: string;
@@ -45,6 +47,8 @@ export default function SubmissionPanel({
    * submitting would just burn the user's quota/cooldown for a guaranteed system-error verdict,
    * so block it client-side with an explanation instead of letting them find out the hard way. */
   judgeable?: boolean;
+  /** This problem's sample input/output pairs — seeds the Run panel's default test cases. */
+  samples?: Sample[];
 }) {
   const { user, status: authStatus } = useAuthStore();
   // Scoped per-account (not just per-problem): an unscoped key meant any browser session — logged
@@ -244,8 +248,6 @@ export default function SubmissionPanel({
         </p>
       )}
 
-      <CodeEditor languageKey={languageKey} value={sourceCode} onChange={setSourceCode} />
-
       {error && (
         <p className="rounded border border-verdict-wa/40 bg-verdict-wa/10 px-3 py-2 text-sm text-verdict-wa">
           {error}
@@ -272,6 +274,17 @@ export default function SubmissionPanel({
           )}
         </div>
       )}
+
+      <CodeEditor languageKey={languageKey} value={sourceCode} onChange={setSourceCode} />
+
+      <TestPanel
+        problemId={problemId}
+        slug={slug}
+        userId={user.id}
+        languageKey={languageKey}
+        sourceCode={sourceCode}
+        samples={samples}
+      />
     </div>
   );
 }

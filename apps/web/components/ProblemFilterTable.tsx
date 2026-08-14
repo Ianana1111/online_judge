@@ -13,16 +13,35 @@ import type { ProblemRow } from "@/lib/types";
 const DIFFICULTY_EXPLANATION =
   "Curated ratings come first: problems from an officially-rated set (like the CPE 必考49題 one-star selection) keep that rating. Everything else is derived from how many people worldwide have solved it on UVa (more solvers = more introductory), with a minimum floor based on the algorithm topic — a DP or graph problem never rates below what its technique demands.";
 
-const SORT_OPTIONS: { key: SortKey; label: string }[] = [
-  { key: "number", label: "Problem number ↑" },
-  { key: "difficulty-asc", label: "Difficulty: low → high" },
-  { key: "difficulty-desc", label: "Difficulty: high → low" },
-  { key: "unsolved-first", label: "Unsolved first" },
-];
+const SOLVED_EXPLANATION = "Pro perk: sort by whether you've solved a problem yet, to hunt down what's left.";
+const CPE_EXPLANATION = "Pro perk: how many past CPE sittings this problem has appeared in.";
 
-// The dropdown is free-form (not <option> elements), so the Pro-only nature could carry a lock
-// icon instead — kept as plain text for now to match the rest of this row's option labels.
-const PRO_SORT_OPTION: { key: SortKey; label: string } = { key: "cpe-appearances", label: "Times in past CPE exams (Pro) ↓" };
+/** Each sortable column cycles through exactly three states on repeated clicks: `desc`, then
+ * `asc`, then back to no sort at all (`null`) — see `cycleSort`. `pair` is [descKey, ascKey]; for
+ * the solved column those slots hold "solved-first"/"unsolved-first" instead of a literal
+ * desc/asc pair, but the cycle mechanics are identical. */
+function cycleSort(current: SortKey | null, pair: [SortKey, SortKey]): SortKey | null {
+  if (current === pair[0]) return pair[1];
+  if (current === pair[1]) return null;
+  return pair[0];
+}
+
+function sortDirectionOf(current: SortKey | null, pair: [SortKey, SortKey]): "desc" | "asc" | null {
+  if (current === pair[0]) return "desc";
+  if (current === pair[1]) return "asc";
+  return null;
+}
+
+/** Small ▲/▼ indicator for a sortable column header — filled brand color when this column is the
+ * active sort, dim outline otherwise so the header still visibly invites a click. */
+function SortArrows({ direction }: { direction: "desc" | "asc" | null }) {
+  return (
+    <span className="inline-flex flex-col leading-none">
+      <span className={`text-[9px] ${direction === "asc" ? "text-brand" : "text-ink-700"}`}>▲</span>
+      <span className={`-mt-1 text-[9px] ${direction === "desc" ? "text-brand" : "text-ink-700"}`}>▼</span>
+    </span>
+  );
+}
 
 const DIFFICULTY_OPTIONS: DropdownOption[] = [
   { value: "", label: "All difficulties" },
@@ -40,7 +59,7 @@ export type ListContext = { type: "problems" } | { type: "collection"; slug: str
 function buildProblemHref(
   slug: string,
   ctx: ListContext,
-  filters: { sort: SortKey; difficulty: string; tag: string },
+  filters: { sort: SortKey | null; difficulty: string; tag: string },
 ): string {
   return buildProblemNavHref(slug, ctx.type, ctx.type === "collection" ? ctx.slug : null, filters);
 }
@@ -152,17 +171,17 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
   // page's Previous/Next can read the exact same three values back out of the link it was given.
   // Free-text search deliberately doesn't — see filterAndSortProblems's doc comment.
   const initialSort = searchParams.get("sort");
-  const [sort, setSortState] = useState<SortKey>(
-    initialSort && SORT_KEYS.includes(initialSort as SortKey) ? (initialSort as SortKey) : "number",
+  const [sort, setSortState] = useState<SortKey | null>(
+    initialSort && SORT_KEYS.includes(initialSort as SortKey) ? (initialSort as SortKey) : null,
   );
   const [difficulty, setDifficultyState] = useState(searchParams.get("difficulty") ?? "");
   const [tag, setTagState] = useState(searchParams.get("tag") ?? "");
 
-  function syncUrl(next: { sort?: SortKey; difficulty?: string; tag?: string }) {
+  function syncUrl(next: { sort?: SortKey | null; difficulty?: string; tag?: string }) {
     const params = new URLSearchParams(searchParams.toString());
     const merged = { sort, difficulty, tag, ...next };
-    if (merged.sort === "number") params.delete("sort");
-    else params.set("sort", merged.sort);
+    if (merged.sort) params.set("sort", merged.sort);
+    else params.delete("sort");
     if (merged.difficulty) params.set("difficulty", merged.difficulty);
     else params.delete("difficulty");
     if (merged.tag) params.set("tag", merged.tag);
@@ -173,9 +192,18 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   }
 
-  function setSort(next: SortKey) {
+  function setSort(next: SortKey | null) {
     setSortState(next);
     syncUrl({ sort: next });
+  }
+  /** Click handler shared by every sortable column header: cycles desc → asc → none, redirecting
+   * to /upgrade instead of applying anything when the column is Pro-gated and the viewer isn't. */
+  function handleHeaderClick(pair: [SortKey, SortKey], proGated: boolean) {
+    if (proGated && !isPro) {
+      router.push("/upgrade");
+      return;
+    }
+    setSort(cycleSort(sort, pair));
   }
   function setDifficulty(next: string) {
     setDifficultyState(next);
@@ -195,11 +223,6 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
     () => [{ value: "", label: "All tags" }, ...allTags.map((t) => ({ value: t, label: t }))],
     [allTags],
   );
-  const sortOptions: DropdownOption[] = useMemo(
-    () => [...SORT_OPTIONS.map((o) => ({ value: o.key, label: o.label })), { value: PRO_SORT_OPTION.key, label: PRO_SORT_OPTION.label }],
-    [],
-  );
-
   const filteredSorted = useMemo(
     () => filterAndSortProblems(problems, { difficulty, tag, sort }),
     [problems, difficulty, tag, sort],
@@ -222,21 +245,6 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
         />
         <Dropdown value={difficulty} onChange={setDifficulty} options={DIFFICULTY_OPTIONS} className="w-[150px]" />
         <Dropdown value={tag} onChange={setTag} options={tagOptions} className="w-[180px]" />
-        <Dropdown
-          value={sort}
-          onChange={(next) => {
-            // Visible to everyone (it's the tease), but selecting it without Pro sends them
-            // straight to the upgrade page instead of applying the sort — `sort` state never
-            // changes, so the dropdown's displayed value snaps back on its own next render.
-            if (next === "cpe-appearances" && !isPro) {
-              router.push("/upgrade");
-              return;
-            }
-            setSort(next as SortKey);
-          }}
-          options={sortOptions}
-          className="w-[220px]"
-        />
         {filtersActive && (
           <button
             onClick={() => {
@@ -257,21 +265,61 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
       <table className="oj-table">
         <thead>
           <tr>
-            <th></th>
-            <th>#</th>
+            <th className="w-10">
+              <span className="inline-flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => handleHeaderClick(["solved-first", "unsolved-first"], true)}
+                  title={isPro ? "Sort by solved" : undefined}
+                  className={`inline-flex items-center gap-1 ${isPro ? "text-verdict-ac hover:text-brand" : "text-ink-600 hover:text-brand"}`}
+                >
+                  ✓
+                  {isPro ? (
+                    <SortArrows direction={sortDirectionOf(sort, ["solved-first", "unsolved-first"])} />
+                  ) : (
+                    <LockIcon />
+                  )}
+                </button>
+                <InfoTooltip text={SOLVED_EXPLANATION} />
+              </span>
+            </th>
+            <th>
+              <button
+                type="button"
+                onClick={() => handleHeaderClick(["number-desc", "number-asc"], false)}
+                className="inline-flex items-center gap-1 hover:text-brand"
+              >
+                #<SortArrows direction={sortDirectionOf(sort, ["number-desc", "number-asc"])} />
+              </button>
+            </th>
             <th>Title</th>
             <th>Source</th>
             <th>
               <span className="inline-flex items-center gap-1">
-                Difficulty
+                <button
+                  type="button"
+                  onClick={() => handleHeaderClick(["difficulty-desc", "difficulty-asc"], false)}
+                  className="inline-flex items-center gap-1 hover:text-brand"
+                >
+                  Difficulty
+                  <SortArrows direction={sortDirectionOf(sort, ["difficulty-desc", "difficulty-asc"])} />
+                </button>
                 <InfoTooltip text={DIFFICULTY_EXPLANATION} />
               </span>
             </th>
             <th>Tags</th>
             <th>
-              <span className="inline-flex items-center gap-1 text-brand">
-                Past CPE
-                <InfoTooltip text="Pro perk: how many past CPE sittings this problem has appeared in." />
+              <span className="inline-flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => handleHeaderClick(["cpe-desc", "cpe-asc"], true)}
+                  title={isPro ? "Sort by past CPE appearances" : undefined}
+                  className={`inline-flex items-center gap-1 ${isPro ? "text-brand hover:text-brand/80" : "text-ink-400 hover:text-brand"}`}
+                >
+                  Past CPE
+                  {isPro ? <SortArrows direction={sortDirectionOf(sort, ["cpe-desc", "cpe-asc"])} /> : <LockIcon />}
+                </button>
+                <InfoTooltip text={CPE_EXPLANATION} />
               </span>
             </th>
           </tr>

@@ -105,3 +105,7 @@ export function apiUrl(path: string): string {
 export function openSubmissionStream(submissionId: string): EventSource {
   return new EventSource(apiUrl(`/submissions/${submissionId}/stream`), { withCredentials: true });
 }
+
+export function openRunStream(runId: string): EventSource {
+  return new EventSource(apiUrl(`/runs/${runId}/stream`), { withCredentials: true });
+}

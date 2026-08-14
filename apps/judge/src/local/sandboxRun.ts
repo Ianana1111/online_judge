@@ -1,0 +1,120 @@
+import { Sandbox } from "@vercel/sandbox";
+import type { LanguageSpec } from "./languages.js";
+
+export const WORKDIR = "/vercel/sandbox";
+export const OUTPUT_CAP_BYTES = 8 * 1024 * 1024; // 8MB — well above any sane CP answer; guards
+// against a runaway-output submission ballooning memory in this worker process while we read its
+// output back.
+const COMPILE_TIMEOUT_SEC = 20;
+
+export interface RunResult {
+  exitCode: number;
+  stdout: string;
+  stderr: string;
+  timeMs: number;
+  memoryKb: number | null;
+  timedOut: boolean;
+}
+
+/** Parses GNU `time -v` output for the two fields judging cares about. Missing on parse failure
+ * (rather than throwing) — a malformed time.log should degrade to "unknown timing," not abort an
+ * otherwise-valid verdict. */
+function parseTimeLog(log: string): { cpuMs: number | null; memoryKb: number | null } {
+  const userMatch = log.match(/User time \(seconds\):\s*([\d.]+)/);
+  const sysMatch = log.match(/System time \(seconds\):\s*([\d.]+)/);
+  const memMatch = log.match(/Maximum resident set size \(kbytes\):\s*(\d+)/);
+  const cpuMs =
+    userMatch && sysMatch ? Math.round((parseFloat(userMatch[1]) + parseFloat(sysMatch[1])) * 1000) : null;
+  const memoryKb = memMatch ? parseInt(memMatch[1], 10) : null;
+  return { cpuMs, memoryKb };
+}
+
+export async function runOneCase(
+  sandbox: Sandbox,
+  runCmd: { cmd: string; args: string[] },
+  input: string,
+  timeLimitMs: number,
+  memoryLimitKb: number,
+  ulimitMemory: boolean,
+): Promise<RunResult> {
+  await sandbox.writeFiles([{ path: `${WORKDIR}/in.txt`, content: Buffer.from(input) }]);
+
+  const timeLimitSec = Math.max(1, Math.ceil(timeLimitMs / 1000));
+  const ulimitPrefix = ulimitMemory ? `ulimit -v ${memoryLimitKb}; ` : "";
+  const fullCmd = [runCmd.cmd, ...runCmd.args].join(" ");
+  const script = `${ulimitPrefix}/usr/bin/time -v -o time.log timeout ${timeLimitSec}s ${fullCmd} < in.txt > out.txt 2> err.txt; echo $? > exit.txt`;
+
+  await sandbox.runCommand({ cmd: "bash", args: ["-c", script], cwd: WORKDIR });
+
+  const [exitBuf, outBuf, errBuf, timeBuf] = await Promise.all([
+    sandbox.readFileToBuffer({ path: `${WORKDIR}/exit.txt` }),
+    sandbox.readFileToBuffer({ path: `${WORKDIR}/out.txt` }),
+    sandbox.readFileToBuffer({ path: `${WORKDIR}/err.txt` }),
+    sandbox.readFileToBuffer({ path: `${WORKDIR}/time.log` }),
+  ]);
+
+  // `parseInt(...) || 1` would be wrong here: a legitimate exit code of 0 is falsy in JS and would
+  // get silently clobbered to 1 (misreported as RE on every accepted run) — NaN needs an explicit check.
+  const parsedExit = parseInt(exitBuf?.toString().trim() ?? "", 10);
+  const exitCode = Number.isNaN(parsedExit) ? 1 : parsedExit;
+  const stdout = (outBuf ?? Buffer.alloc(0)).subarray(0, OUTPUT_CAP_BYTES).toString();
+  const stderr = (errBuf ?? Buffer.alloc(0)).toString();
+  const { cpuMs, memoryKb } = parseTimeLog(timeBuf?.toString() ?? "");
+
+  return {
+    exitCode,
+    stdout,
+    stderr,
+    timeMs: cpuMs ?? timeLimitMs,
+    memoryKb,
+    timedOut: exitCode === 124,
+  };
+}
+
+/** The SDK only auto-detects credentials from VERCEL_OIDC_TOKEN (short-lived, Vercel-hosted-only)
+ * — a plain access token needs its {token, teamId, projectId} passed explicitly, or the SDK
+ * throws trying to reach for an OIDC context that doesn't exist here (this worker runs on
+ * Railway, not Vercel). Falls through to plain env-based OIDC detection when these are unset,
+ * which is what local dev (`vercel env pull`) relies on. */
+function resolveSandboxCredentials() {
+  return process.env.VERCEL_TOKEN && process.env.VERCEL_TEAM_ID && process.env.VERCEL_PROJECT_ID
+    ? { token: process.env.VERCEL_TOKEN, teamId: process.env.VERCEL_TEAM_ID, projectId: process.env.VERCEL_PROJECT_ID }
+    : {};
+}
+
+/** Boots a fresh, network-isolated, disposable microVM from the pre-baked judge snapshot (see
+ * scripts/build-snapshot.ts) — shared by both the real judge (judge.ts) and the ad-hoc "Run"
+ * feature (testRun.ts) so a sandbox is always created the exact same way. */
+export async function createJudgeSandbox(snapshotId: string, timeoutMs: number): Promise<Sandbox> {
+  return Sandbox.create({
+    ...resolveSandboxCredentials(),
+    source: { type: "snapshot", snapshotId },
+    persistent: false,
+    resources: { vcpus: 1 },
+    timeout: timeoutMs,
+    networkPolicy: "deny-all",
+  });
+}
+
+/** Writes the source file and compiles it (no-op for interpreted languages). Returns the compiler
+ * stderr on failure so the caller can report a CE-style result without needing to know anything
+ * else about the sandbox. */
+export async function compileInSandbox(
+  sandbox: Sandbox,
+  lang: LanguageSpec,
+  sourceCode: string,
+): Promise<{ ok: true } | { ok: false; compileError: string }> {
+  await sandbox.writeFiles([{ path: `${WORKDIR}/${lang.sourceFileName}`, content: Buffer.from(sourceCode) }]);
+
+  if (!lang.compile) return { ok: true };
+
+  const compile = await sandbox.runCommand({
+    cmd: "bash",
+    args: ["-c", `timeout ${COMPILE_TIMEOUT_SEC}s ${lang.compile.cmd} ${lang.compile.args.join(" ")}`],
+    cwd: WORKDIR,
+  });
+  if (compile.exitCode !== 0) {
+    return { ok: false, compileError: (await compile.stderr()).slice(0, 8000) };
+  }
+  return { ok: true };
+}
