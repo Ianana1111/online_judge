@@ -1,7 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import remarkGfm from "remark-gfm";
-import remarkBreaks from "remark-breaks";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import rehypeKatex from "rehype-katex";
@@ -13,19 +12,18 @@ import { statementSanitizeSchema } from "@/lib/sanitizeSchema";
  * sanitize (strip scripts/handlers/unknown tags) -> THEN expand math, so
  * KaTeX's own trusted output never has to pass through the sanitizer.
  *
- * remarkBreaks turns a single "\n" inside a paragraph into a real line break, instead of
- * CommonMark's default of collapsing it to a space. Problem statements routinely embed literal
- * multi-line content (ASCII-art grids, "print exactly this" examples) inline in prose without a
- * blank-line paragraph break, so without this every one of those silently squishes onto one line.
- * This is a global fix — it means source content never needs a fenced ``` code block just to
- * preserve line structure, which would otherwise render as a heavy bordered card that looks out
- * of place in the middle of ordinary prose.
+ * Deliberately NOT using remark-breaks (single "\n" -> hard break) here: most statements were
+ * PDF-extracted with a real newline at every original page line-wrap, not at real paragraph
+ * boundaries, so turning every one of those into a visible break makes ordinary prose look
+ * choppy/fragmented. The rare case that genuinely needs a preserved line break (an ASCII-art grid,
+ * a "print exactly this" example) gets one explicit <br> per break in the source content instead
+ * (rehypeRaw parses it) — scoped to just that span, not a global behavior change.
  */
 export default function StatementRenderer({ content }: { content: string }) {
   return (
     <div className="prose-statement">
       <ReactMarkdown
-        remarkPlugins={[remarkMath, remarkGfm, remarkBreaks]}
+        remarkPlugins={[remarkMath, remarkGfm]}
         rehypePlugins={[rehypeRaw, [rehypeSanitize, statementSanitizeSchema], rehypeKatex]}
         components={{
           // Statements link out to original source PDFs (e.g. UVa/CPE) — open in a new tab so
