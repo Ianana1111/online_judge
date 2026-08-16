@@ -5,6 +5,7 @@ import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import Avatar from "@/components/Avatar";
 import type { UserSettings } from "@/lib/types";
+import { useLocale, useT } from "@/lib/i18n/LocaleContext";
 
 const LANGUAGES = ["cpp17", "c11", "python3", "java17"];
 const AVATAR_MAX_DIMENSION = 200;
@@ -44,6 +45,7 @@ function resizeImageToDataUrl(file: File): Promise<string> {
 }
 
 function ProfileSettingsForm() {
+  const t = useT();
   const { user, setUser } = useAuthStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [bio, setBio] = useState(user?.bio ?? "");
@@ -67,7 +69,7 @@ function ProfileSettingsForm() {
     try {
       const dataUrl = await resizeImageToDataUrl(file);
       if (dataUrl.length > AVATAR_MAX_DATA_URL_BYTES) {
-        setError("Image is too large even after compression — try a smaller or simpler picture.");
+        setError(t("Image is too large even after compression — try a smaller or simpler picture."));
         return;
       }
       setAvatarPreview(dataUrl);
@@ -77,7 +79,7 @@ function ProfileSettingsForm() {
       });
       if (user) setUser({ ...user, avatarUrl });
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not upload avatar");
+      setError(e instanceof ApiError ? e.message : t("Could not upload avatar"));
     } finally {
       setUploading(false);
     }
@@ -94,7 +96,7 @@ function ProfileSettingsForm() {
       setAvatarPreview(avatarUrl);
       if (user) setUser({ ...user, avatarUrl });
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not remove avatar");
+      setError(e instanceof ApiError ? e.message : t("Could not remove avatar"));
     } finally {
       setUploading(false);
     }
@@ -112,7 +114,7 @@ function ProfileSettingsForm() {
       setSaved(true);
       setTimeout(() => setSaved(false), 1500);
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not save motto");
+      setError(e instanceof ApiError ? e.message : t("Could not save motto"));
     } finally {
       setSaving(false);
     }
@@ -122,10 +124,10 @@ function ProfileSettingsForm() {
 
   return (
     <div className="oj-card space-y-5 p-4">
-      <h2 className="text-sm font-semibold text-ink-200">Profile</h2>
+      <h2 className="text-sm font-semibold text-ink-200">{t("Profile")}</h2>
 
       <div>
-        <label className="mb-2 block text-sm text-ink-300">Avatar</label>
+        <label className="mb-2 block text-sm text-ink-300">{t("Avatar")}</label>
         <div className="flex items-center gap-4">
           <Avatar avatarUrl={avatarPreview} handle={user.handle} size={72} />
           <div className="flex flex-col gap-2">
@@ -136,7 +138,7 @@ function ProfileSettingsForm() {
               disabled={uploading}
               className="oj-btn-secondary px-3 py-1.5 text-xs"
             >
-              {uploading ? "Uploading…" : "Change photo"}
+              {uploading ? t("Uploading…") : t("Change photo")}
             </button>
             {avatarPreview && (
               <button
@@ -145,7 +147,7 @@ function ProfileSettingsForm() {
                 disabled={uploading}
                 className="text-xs text-ink-500 hover:text-verdict-wa"
               >
-                Remove photo
+                {t("Remove photo")}
               </button>
             )}
           </div>
@@ -153,26 +155,27 @@ function ProfileSettingsForm() {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm text-ink-300">Motto</label>
+        <label className="mb-1 block text-sm text-ink-300">{t("Motto")}</label>
         <input
           className="oj-input"
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           maxLength={200}
-          placeholder="A line about yourself, shown on your public profile"
+          placeholder={t("A line about yourself, shown on your public profile")}
         />
         <p className="mt-1 text-xs text-ink-500">{bio.length}/200</p>
       </div>
 
       {error && <p className="text-sm text-verdict-wa">{error}</p>}
       <button onClick={saveBio} disabled={saving || bio === (user.bio ?? "")} className="oj-btn-primary">
-        {saving ? "Saving…" : saved ? "Saved ✓" : "Save"}
+        {saving ? t("Saving…") : saved ? t("Saved ✓") : t("Save")}
       </button>
     </div>
   );
 }
 
 function ChangeHandleForm() {
+  const t = useT();
   const { user, setUser } = useAuthStore();
   const [handle, setHandle] = useState(user?.handle ?? "");
   const [error, setError] = useState<string | null>(null);
@@ -193,7 +196,7 @@ function ChangeHandleForm() {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not change name");
+      setError(e instanceof ApiError ? e.message : t("Could not change name"));
     } finally {
       setSaving(false);
     }
@@ -201,9 +204,9 @@ function ChangeHandleForm() {
 
   return (
     <form onSubmit={onSubmit} className="oj-card space-y-3 p-4">
-      <h2 className="text-sm font-semibold text-ink-200">Change display name</h2>
+      <h2 className="text-sm font-semibold text-ink-200">{t("Change display name")}</h2>
       <div>
-        <label className="mb-1 block text-sm text-ink-300">Handle</label>
+        <label className="mb-1 block text-sm text-ink-300">{t("Handle")}</label>
         <input
           className="oj-input"
           value={handle}
@@ -211,22 +214,23 @@ function ChangeHandleForm() {
           minLength={3}
           maxLength={24}
           pattern="[a-zA-Z0-9_]+"
-          title="Letters, numbers, and underscore only"
+          title={t("Letters, numbers, and underscore only")}
           required
         />
         <p className="mt-1 text-xs text-ink-500">
-          Letters, numbers, and underscore only. This is also what you use to log in if you have a password set.
+          {t("Letters, numbers, and underscore only. This is also what you use to log in if you have a password set.")}
         </p>
       </div>
       {error && <p className="text-sm text-verdict-wa">{error}</p>}
       <button type="submit" disabled={saving || handle === user?.handle} className="oj-btn-primary">
-        {saving ? "Saving…" : success ? "Name changed ✓" : "Save name"}
+        {saving ? t("Saving…") : success ? t("Name changed ✓") : t("Save name")}
       </button>
     </form>
   );
 }
 
 function ChangePasswordForm() {
+  const t = useT();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -239,7 +243,7 @@ function ChangePasswordForm() {
     setError(null);
     setSuccess(false);
     if (newPassword !== confirmPassword) {
-      setError("New password and confirmation don't match");
+      setError(t("New password and confirmation don't match"));
       return;
     }
     setSaving(true);
@@ -254,7 +258,7 @@ function ChangePasswordForm() {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not change password");
+      setError(e instanceof ApiError ? e.message : t("Could not change password"));
     } finally {
       setSaving(false);
     }
@@ -262,9 +266,9 @@ function ChangePasswordForm() {
 
   return (
     <form onSubmit={onSubmit} className="oj-card space-y-3 p-4">
-      <h2 className="text-sm font-semibold text-ink-200">Change password</h2>
+      <h2 className="text-sm font-semibold text-ink-200">{t("Change password")}</h2>
       <div>
-        <label className="mb-1 block text-sm text-ink-300">Current password</label>
+        <label className="mb-1 block text-sm text-ink-300">{t("Current password")}</label>
         <input
           type="password"
           className="oj-input"
@@ -274,7 +278,7 @@ function ChangePasswordForm() {
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm text-ink-300">New password</label>
+        <label className="mb-1 block text-sm text-ink-300">{t("New password")}</label>
         <input
           type="password"
           className="oj-input"
@@ -285,7 +289,7 @@ function ChangePasswordForm() {
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm text-ink-300">Confirm new password</label>
+        <label className="mb-1 block text-sm text-ink-300">{t("Confirm new password")}</label>
         <input
           type="password"
           className="oj-input"
@@ -297,13 +301,45 @@ function ChangePasswordForm() {
       </div>
       {error && <p className="text-sm text-verdict-wa">{error}</p>}
       <button type="submit" disabled={saving} className="oj-btn-primary">
-        {saving ? "Saving…" : success ? "Password changed ✓" : "Change password"}
+        {saving ? t("Saving…") : success ? t("Password changed ✓") : t("Change password")}
       </button>
     </form>
   );
 }
 
+function LanguageToggle() {
+  const t = useT();
+  const { locale, setLocale } = useLocale();
+
+  return (
+    <div>
+      <label className="mb-1.5 block text-sm text-ink-300">{t("Display language")}</label>
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={() => setLocale("zh-TW")}
+          className={`oj-card p-2 text-sm font-medium transition-colors ${
+            locale === "zh-TW" ? "border-brand text-brand" : "text-ink-300 hover:border-ink-500"
+          }`}
+        >
+          繁體中文
+        </button>
+        <button
+          type="button"
+          onClick={() => setLocale("en")}
+          className={`oj-card p-2 text-sm font-medium transition-colors ${
+            locale === "en" ? "border-brand text-brand" : "text-ink-300 hover:border-ink-500"
+          }`}
+        >
+          English
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function PreferencesForm() {
+  const t = useT();
   const { user, setUser } = useAuthStore();
   const [defaultLanguage, setDefaultLanguage] = useState("cpp17");
   const [dailyGoal, setDailyGoal] = useState(1);
@@ -336,9 +372,10 @@ function PreferencesForm() {
 
   return (
     <div className="oj-card space-y-4 p-4">
-      <h2 className="text-sm font-semibold text-ink-200">Preferences</h2>
+      <h2 className="text-sm font-semibold text-ink-200">{t("Preferences")}</h2>
+      <LanguageToggle />
       <div>
-        <label className="mb-1 block text-sm text-ink-300">Default language</label>
+        <label className="mb-1 block text-sm text-ink-300">{t("Default language")}</label>
         <select value={defaultLanguage} onChange={(e) => setDefaultLanguage(e.target.value)} className="oj-input">
           {LANGUAGES.map((l) => (
             <option key={l} value={l}>
@@ -348,7 +385,7 @@ function PreferencesForm() {
         </select>
       </div>
       <div>
-        <label className="mb-1 block text-sm text-ink-300">Daily goal</label>
+        <label className="mb-1 block text-sm text-ink-300">{t("Daily goal")}</label>
         <input
           type="number"
           min={1}
@@ -357,11 +394,13 @@ function PreferencesForm() {
           value={dailyGoal}
           onChange={(e) => setDailyGoal(Math.max(1, Math.min(50, parseInt(e.target.value, 10) || 1)))}
         />
-        <p className="mt-1 text-xs text-ink-500">Problems to solve per day to keep your streak on track.</p>
+        <p className="mt-1 text-xs text-ink-500">{t("Problems to solve per day to keep your streak on track.")}</p>
       </div>
-      <p className="text-xs text-ink-500">Light/dark theme is in the top-right corner of the page, next to your account menu.</p>
+      <p className="text-xs text-ink-500">
+        {t("Light/dark theme is in the top-right corner of the page, next to your account menu.")}
+      </p>
       <button onClick={save} disabled={saving} className="oj-btn-primary">
-        {saving ? "Saving…" : saved ? "Saved ✓" : "Save"}
+        {saving ? t("Saving…") : saved ? t("Saved ✓") : t("Save")}
       </button>
     </div>
   );
@@ -375,12 +414,13 @@ const SECTIONS = [
 ] as const;
 
 export default function SettingsPage() {
+  const t = useT();
   const [active, setActive] = useState<(typeof SECTIONS)[number]["key"]>("profile");
   const activeSection = SECTIONS.find((s) => s.key === active) ?? SECTIONS[0];
 
   return (
     <div className="mx-auto max-w-3xl py-8">
-      <h1 className="mb-6 font-display text-2xl font-bold text-ink-50">Settings</h1>
+      <h1 className="mb-6 font-display text-2xl font-bold text-ink-50">{t("Settings")}</h1>
       <div className="flex gap-8">
         <aside className="w-40 shrink-0">
           <nav className="flex flex-col gap-1">
@@ -392,7 +432,7 @@ export default function SettingsPage() {
                   active === s.key ? "bg-brand/10 text-brand" : "text-ink-300 hover:bg-ink-800 hover:text-ink-50"
                 }`}
               >
-                {s.label}
+                {t(s.label)}
               </button>
             ))}
           </nav>

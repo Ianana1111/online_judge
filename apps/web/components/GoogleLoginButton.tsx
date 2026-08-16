@@ -1,6 +1,8 @@
 import { apiUrl } from "@/lib/api";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function GoogleLoginButton() {
+  const t = useT();
   return (
     <a href={apiUrl("/auth/google")} className="oj-btn-secondary flex w-full items-center justify-center gap-2">
       <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
@@ -21,7 +23,7 @@ export default function GoogleLoginButton() {
           d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.5 5.5C41.4 36 44 30.5 44 24c0-1.3-.1-2.7-.4-3.5z"
         />
       </svg>
-      Continue with Google
+      {t("Continue with Google")}
     </a>
   );
 }

@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { AdminAuthorizedPayment } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 // Authorization holds aren't guaranteed to stay valid forever — the issuing bank, not ECPay,
 // decides how long one lasts. Past a week un-captured is worth flagging visually so it doesn't
@@ -15,6 +16,7 @@ function daysSince(iso: string): number {
 }
 
 export default function AdminBillingPage() {
+  const t = useT();
   const { user, status } = useAuthStore();
 
   const { data } = useQuery({
@@ -25,33 +27,32 @@ export default function AdminBillingPage() {
   });
 
   if (status === "ready" && user?.role !== "ADMIN") {
-    return <p className="text-sm text-verdict-wa">Admins only.</p>;
+    return <p className="text-sm text-verdict-wa">{t("Admins only.")}</p>;
   }
 
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="font-display text-2xl font-bold text-ink-50">Admin · Billing</h1>
+        <h1 className="font-display text-2xl font-bold text-ink-50">{t("Admin · Billing")}</h1>
         <p className="mt-1 text-sm text-ink-400">
-          Credit-card orders where Pro was granted the moment ECPay authorized the card — capture is a manual
-          step in ECPay's own merchant backend, not automatic. This is the queue of orders still owed a
-          capture; each one drops off automatically once ECPay's return webhook confirms the capture went
-          through.
+          {t(
+            "Credit-card orders where Pro was granted the moment ECPay authorized the card — capture is a manual step in ECPay's own merchant backend, not automatic. This is the queue of orders still owed a capture; each one drops off automatically once ECPay's return webhook confirms the capture went through.",
+          )}
         </p>
       </div>
 
-      {data && data.length === 0 && <p className="text-sm text-ink-500">Nothing pending — all caught up.</p>}
+      {data && data.length === 0 && <p className="text-sm text-ink-500">{t("Nothing pending — all caught up.")}</p>}
 
       {data && data.length > 0 && (
         <table className="oj-table">
           <thead>
             <tr>
-              <th>Handle</th>
-              <th>Email</th>
-              <th>Period</th>
-              <th>Amount</th>
+              <th>{t("Handle")}</th>
+              <th>{t("Email")}</th>
+              <th>{t("Period")}</th>
+              <th>{t("Amount")}</th>
               <th>MerchantTradeNo</th>
-              <th>Authorized</th>
+              <th>{t("Authorized")}</th>
             </tr>
           </thead>
           <tbody>

@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useTheme } from "@/lib/useTheme";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function ThemeToggle() {
+  const t = useT();
   const theme = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -24,8 +26,8 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-      title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")}
+      title={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")}
       className="flex h-7 w-7 items-center justify-center rounded text-ink-400 transition-colors hover:bg-ink-800 hover:text-ink-50"
     >
       {theme === "dark" ? (

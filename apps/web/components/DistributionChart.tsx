@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Bar, BarChart, Cell, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { LANGUAGE_LABEL } from "@/lib/types";
 import type { HistogramBucket } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const LANGUAGE_COLOR: Record<string, string> = {
   cpp17: "#5B8DEF",
@@ -29,6 +30,7 @@ export default function DistributionChart<T extends HistogramBucket>({
   formatRange: (b: T) => string;
   unit: string;
 }) {
+  const t = useT();
   const [selected, setSelected] = useState<number | null>(yourBucketIndex);
 
   const data = buckets.map((b, i) => ({ index: i, count: b.count, label: formatRange(b) }));
@@ -59,8 +61,8 @@ export default function DistributionChart<T extends HistogramBucket>({
           <div className="flex items-center justify-between">
             <span className="font-mono text-ink-200">{formatRange(selectedBucket)}</span>
             <span className="text-ink-400">
-              {selectedBucket.count} solver{selectedBucket.count === 1 ? "" : "s"}
-              {selected === yourBucketIndex && <span className="ml-1.5 text-brand">— you're here</span>}
+              {selectedBucket.count === 1 ? t("{n} solver", { n: selectedBucket.count }) : t("{n} solvers", { n: selectedBucket.count })}
+              {selected === yourBucketIndex && <span className="ml-1.5 text-brand">— {t("you're here")}</span>}
             </span>
           </div>
           {selectedLanguages.length > 0 && (
@@ -68,14 +70,14 @@ export default function DistributionChart<T extends HistogramBucket>({
               {selectedLanguages.map(([lang, count]) => (
                 <li key={lang} className="flex items-center gap-1.5">
                   <span className="h-2 w-2 rounded-sm" style={{ background: LANGUAGE_COLOR[lang] ?? "#6b7a8b" }} />
-                  <span className="text-ink-300">{LANGUAGE_LABEL[lang] ?? lang}</span>
+                  <span className="text-ink-300">{t(LANGUAGE_LABEL[lang] ?? lang)}</span>
                   <span className="font-mono text-ink-500">{count}</span>
                 </li>
               ))}
             </ul>
           )}
           <p className="mt-2 text-[11px] text-ink-500">
-            Aggregate only — {unit} bucket counts, not anyone's actual code.
+            {t("Aggregate only — {unit} bucket counts, not anyone's actual code.", { unit: t(unit) })}
           </p>
         </div>
       )}

@@ -26,6 +26,7 @@ import type {
   TopReferrerRow,
   TrafficSummary,
 } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 // Ordered easiest -> hardest (algorithmic sophistication required), not by frequency — so the
 // stacked bars and legend read as "simple techniques first, advanced ones stacking on top".
@@ -82,6 +83,7 @@ const tooltipStyle = {
 };
 
 export default function AdminAnalyticsPage() {
+  const t = useT();
   const { user, status } = useAuthStore();
   const isAdmin = user?.role === "ADMIN";
 
@@ -134,7 +136,7 @@ export default function AdminAnalyticsPage() {
   });
 
   if (status === "ready" && !isAdmin) {
-    return <p className="text-sm text-verdict-wa">Admins only.</p>;
+    return <p className="text-sm text-verdict-wa">{t("Admins only.")}</p>;
   }
 
   const labelChartData = LABEL_ORDER.map((label) => {
@@ -147,27 +149,28 @@ export default function AdminAnalyticsPage() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="font-display text-2xl font-bold text-ink-50">Admin · Analytics</h1>
+        <h1 className="font-display text-2xl font-bold text-ink-50">{t("Admin · Analytics")}</h1>
         <p className="mt-1 text-sm text-ink-400">
-          Site traffic from our own self-hosted pageview beacon, plus historical CPE exam difficulty/topic
-          trends and real usage stats from this platform.
+          {t(
+            "Site traffic from our own self-hosted pageview beacon, plus historical CPE exam difficulty/topic trends and real usage stats from this platform.",
+          )}
         </p>
       </div>
 
       <section>
         <div className="mb-3 flex items-baseline justify-between">
-          <h2 className="text-sm font-semibold text-ink-200">Site traffic (last {TRAFFIC_DAYS} days)</h2>
-          <p className="text-xs text-ink-500">Bot/crawler traffic and known referrer-spam domains filtered server-side.</p>
+          <h2 className="text-sm font-semibold text-ink-200">{t("Site traffic (last {n} days)", { n: TRAFFIC_DAYS })}</h2>
+          <p className="text-xs text-ink-500">{t("Bot/crawler traffic and known referrer-spam domains filtered server-side.")}</p>
         </div>
         <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-2">
           <div className="oj-card p-4">
-            <p className="text-xs text-ink-400">Pageviews</p>
+            <p className="text-xs text-ink-400">{t("Pageviews")}</p>
             <p className="mt-1 font-mono text-2xl text-ink-50">
               {trafficSummary ? trafficSummary.totalViews.toLocaleString() : "—"}
             </p>
           </div>
           <div className="oj-card p-4">
-            <p className="text-xs text-ink-400">Distinct pages viewed</p>
+            <p className="text-xs text-ink-400">{t("Distinct pages viewed")}</p>
             <p className="mt-1 font-mono text-2xl text-ink-50">
               {trafficSummary ? trafficSummary.distinctPaths.toLocaleString() : "—"}
             </p>
@@ -175,7 +178,7 @@ export default function AdminAnalyticsPage() {
         </div>
         <div className="oj-card p-4">
           {!dailyTraffic || dailyTraffic.length === 0 ? (
-            <p className="text-sm text-ink-400">No traffic data yet.</p>
+            <p className="text-sm text-ink-400">{t("No traffic data yet.")}</p>
           ) : (
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={dailyTraffic} margin={{ left: 8, right: 16 }}>
@@ -188,16 +191,16 @@ export default function AdminAnalyticsPage() {
                 />
                 <YAxis tick={{ fill: "#6b7a8b", fontSize: 11 }} axisLine={{ stroke: "#2a3441" }} allowDecimals={false} />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Line type="monotone" dataKey="count" stroke="#5b8def" strokeWidth={2} dot={false} name="Pageviews" />
+                <Line type="monotone" dataKey="count" stroke="#5b8def" strokeWidth={2} dot={false} name={t("Pageviews")} />
               </LineChart>
             </ResponsiveContainer>
           )}
         </div>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <div className="oj-card p-4">
-            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-400">Top pages</h3>
+            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-400">{t("Top pages")}</h3>
             {!topPages || topPages.length === 0 ? (
-              <p className="text-sm text-ink-400">No data yet.</p>
+              <p className="text-sm text-ink-400">{t("No data yet.")}</p>
             ) : (
               <table className="oj-table">
                 <tbody>
@@ -214,9 +217,9 @@ export default function AdminAnalyticsPage() {
             )}
           </div>
           <div className="oj-card p-4">
-            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-400">Top external referrers</h3>
+            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-400">{t("Top external referrers")}</h3>
             {!topReferrers || topReferrers.length === 0 ? (
-              <p className="text-sm text-ink-400">No external referrers yet.</p>
+              <p className="text-sm text-ink-400">{t("No external referrers yet.")}</p>
             ) : (
               <table className="oj-table">
                 <tbody>
@@ -237,11 +240,11 @@ export default function AdminAnalyticsPage() {
 
       <section>
         <h2 className="mb-3 text-sm font-semibold text-ink-200">
-          Average correct count per sitting (published by CPE)
+          {t("Average correct count per sitting (published by CPE)")}
         </h2>
         <div className="oj-card p-4">
           {!avgTrend || avgTrend.length === 0 ? (
-            <p className="text-sm text-ink-400">No data yet.</p>
+            <p className="text-sm text-ink-400">{t("No data yet.")}</p>
           ) : (
             <ResponsiveContainer width="100%" height={260}>
               <LineChart data={avgTrend} margin={{ left: 8, right: 16 }}>
@@ -256,7 +259,7 @@ export default function AdminAnalyticsPage() {
                   domain={[0, 7]}
                   tick={{ fill: "#6b7a8b", fontSize: 11 }}
                   axisLine={{ stroke: "#2a3441" }}
-                  label={{ value: "avg correct / 7", angle: -90, fill: "#6b7a8b", fontSize: 11 }}
+                  label={{ value: t("avg correct / 7"), angle: -90, fill: "#6b7a8b", fontSize: 11 }}
                 />
                 <Tooltip contentStyle={tooltipStyle} />
                 <Line type="monotone" dataKey="avgCorrectCount" stroke="#e8a33d" strokeWidth={2} dot={false} />
@@ -268,11 +271,11 @@ export default function AdminAnalyticsPage() {
 
       <section>
         <h2 className="mb-3 text-sm font-semibold text-ink-200">
-          Real exam-taker answer rate by problem position (A–G)
+          {t("Real exam-taker answer rate by problem position (A–G)")}
         </h2>
         <div className="oj-card p-4">
           {!answerRate || answerRate.length === 0 ? (
-            <p className="text-sm text-ink-400">No data yet.</p>
+            <p className="text-sm text-ink-400">{t("No data yet.")}</p>
           ) : (
             <>
               <ResponsiveContainer width="100%" height={280}>
@@ -282,19 +285,19 @@ export default function AdminAnalyticsPage() {
                   <YAxis tick={{ fill: "#6b7a8b", fontSize: 11 }} axisLine={{ stroke: "#2a3441" }} allowDecimals={false} />
                   <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "#1c2530" }} />
                   <Legend wrapperStyle={{ fontSize: 11, color: "#9aa8b5" }} />
-                  <Bar dataKey="correct" stackId="ans" fill="#2fae5e" name="Correct" />
-                  <Bar dataKey="incorrect" stackId="ans" fill="#d9534f" name="Incorrect (attempted, not solved)" />
+                  <Bar dataKey="correct" stackId="ans" fill="#2fae5e" name={t("Correct")} />
+                  <Bar dataKey="incorrect" stackId="ans" fill="#d9534f" name={t("Incorrect (attempted, not solved)")} />
                 </BarChart>
               </ResponsiveContainer>
               <div className="mt-3 overflow-x-auto">
                 <table className="oj-table">
                   <thead>
                     <tr>
-                      <th>Label</th>
-                      <th>Attempted</th>
-                      <th>Correct</th>
-                      <th>Incorrect</th>
-                      <th>Correct rate</th>
+                      <th>{t("Label")}</th>
+                      <th>{t("Attempted")}</th>
+                      <th>{t("Correct")}</th>
+                      <th>{t("Incorrect")}</th>
+                      <th>{t("Correct rate")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -313,8 +316,9 @@ export default function AdminAnalyticsPage() {
                 </table>
               </div>
               <p className="mt-2 text-xs text-ink-500">
-                Real CPE exam-taker outcomes (not this platform's users) — "Incorrect" means attempted but never
-                solved, aggregated across all 47 sittings' published per-problem stats.
+                {t(
+                  "Real CPE exam-taker outcomes (not this platform's users) — \"Incorrect\" means attempted but never solved, aggregated across all 47 sittings' published per-problem stats.",
+                )}
               </p>
             </>
           )}
@@ -322,11 +326,13 @@ export default function AdminAnalyticsPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 text-sm font-semibold text-ink-200">Topic distribution by problem position (A–G)</h2>
+        <h2 className="mb-3 text-sm font-semibold text-ink-200">{t("Topic distribution by problem position (A–G)")}</h2>
         <p className="mb-2 text-xs text-ink-500">
-          Legend and stacking order run <b>easiest → hardest</b> (ad-hoc/array/math/string/simulation/geometry →
-          sorting/greedy/recursion → data structure/graph/<b>DP, hardest</b>) — read straight off how many problems
-          at each position are fundamentally simple vs. advanced.
+          {t("Legend and stacking order run")} <b>{t("easiest → hardest")}</b>{" "}
+          {t(
+            "(ad-hoc/array/math/string/simulation/geometry → sorting/greedy/recursion → data structure/graph/{dp}) — read straight off how many problems at each position are fundamentally simple vs. advanced.",
+            { dp: t("DP, hardest") },
+          )}
         </p>
         <div className="oj-card p-4">
           <ResponsiveContainer width="100%" height={340}>
@@ -337,31 +343,30 @@ export default function AdminAnalyticsPage() {
               <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "#1c2530" }} />
               <Legend wrapperStyle={{ fontSize: 11, color: "#9aa8b5" }} />
               {TOPIC_ORDER.map((topic) => (
-                <Bar key={topic} dataKey={topic} stackId="topics" fill={TOPIC_COLOR[topic]} name={TOPIC_LABEL[topic]} />
+                <Bar key={topic} dataKey={topic} stackId="topics" fill={TOPIC_COLOR[topic]} name={t(TOPIC_LABEL[topic])} />
               ))}
             </BarChart>
           </ResponsiveContainer>
           <p className="mt-2 text-xs text-ink-500">
-            A = first/easiest problem in each sitting, G = last/hardest. Watch where DP and Graph first become
-            common.
+            {t("A = first/easiest problem in each sitting, G = last/hardest. Watch where DP and Graph first become common.")}
           </p>
         </div>
       </section>
 
       <section>
-        <h2 className="mb-3 text-sm font-semibold text-ink-200">Repeated problems across sittings</h2>
+        <h2 className="mb-3 text-sm font-semibold text-ink-200">{t("Repeated problems across sittings")}</h2>
         <div className="oj-card overflow-x-auto p-4">
           {!repeatProblems || repeatProblems.length === 0 ? (
-            <p className="text-sm text-ink-400">No repeats found.</p>
+            <p className="text-sm text-ink-400">{t("No repeats found.")}</p>
           ) : (
             <table className="oj-table">
               <thead>
                 <tr>
-                  <th>Problem</th>
-                  <th>Topic</th>
-                  <th>Label(s)</th>
-                  <th>Times used</th>
-                  <th>Sittings (date @ label)</th>
+                  <th>{t("Problem")}</th>
+                  <th>{t("Topic")}</th>
+                  <th>{t("Label(s)")}</th>
+                  <th>{t("Times used")}</th>
+                  <th>{t("Sittings (date @ label)")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -378,7 +383,7 @@ export default function AdminAnalyticsPage() {
                         {p.topic ? (
                           <span className="inline-flex items-center gap-1.5">
                             <span className="h-2.5 w-2.5 rounded-sm" style={{ background: TOPIC_COLOR[p.topic] }} />
-                            {TOPIC_LABEL[p.topic] ?? p.topic}
+                            {t(TOPIC_LABEL[p.topic] ?? p.topic)}
                           </span>
                         ) : (
                           "—"
@@ -400,40 +405,40 @@ export default function AdminAnalyticsPage() {
 
       <section>
         <h2 className="mb-3 text-sm font-semibold text-ink-200">
-          Real AC rate / avg attempts by topic (this platform's own usage)
+          {t("Real AC rate / avg attempts by topic (this platform's own usage)")}
         </h2>
         <div className="oj-card overflow-x-auto p-4">
           {!topicPerf || topicPerf.length === 0 ? (
             <p className="text-sm text-ink-400">
-              No submissions against CPE-sourced problems yet — this fills in as students use the platform.
+              {t("No submissions against CPE-sourced problems yet — this fills in as students use the platform.")}
             </p>
           ) : (
             <table className="oj-table">
               <thead>
                 <tr>
-                  <th>Topic</th>
-                  <th>Submissions</th>
-                  <th>Distinct users</th>
-                  <th>AC rate</th>
-                  <th>Avg attempts / user</th>
+                  <th>{t("Topic")}</th>
+                  <th>{t("Submissions")}</th>
+                  <th>{t("Distinct users")}</th>
+                  <th>{t("AC rate")}</th>
+                  <th>{t("Avg attempts / user")}</th>
                 </tr>
               </thead>
               <tbody>
                 {topicPerf
                   .slice()
                   .sort((a, b) => b.submissions - a.submissions)
-                  .map((t) => (
-                    <tr key={t.topic}>
+                  .map((row) => (
+                    <tr key={row.topic}>
                       <td>
                         <span className="inline-flex items-center gap-1.5">
-                          <span className="h-2.5 w-2.5 rounded-sm" style={{ background: TOPIC_COLOR[t.topic] }} />
-                          {TOPIC_LABEL[t.topic] ?? t.topic}
+                          <span className="h-2.5 w-2.5 rounded-sm" style={{ background: TOPIC_COLOR[row.topic] }} />
+                          {t(TOPIC_LABEL[row.topic] ?? row.topic)}
                         </span>
                       </td>
-                      <td className="font-mono">{t.submissions}</td>
-                      <td className="font-mono">{t.distinctUsers}</td>
-                      <td className="font-mono">{t.acRate != null ? `${Math.round(t.acRate * 100)}%` : "—"}</td>
-                      <td className="font-mono">{t.avgAttemptsPerUser?.toFixed(1) ?? "—"}</td>
+                      <td className="font-mono">{row.submissions}</td>
+                      <td className="font-mono">{row.distinctUsers}</td>
+                      <td className="font-mono">{row.acRate != null ? `${Math.round(row.acRate * 100)}%` : "—"}</td>
+                      <td className="font-mono">{row.avgAttemptsPerUser?.toFixed(1) ?? "—"}</td>
                     </tr>
                   ))}
               </tbody>

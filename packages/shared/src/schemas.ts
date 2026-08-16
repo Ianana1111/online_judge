@@ -224,5 +224,6 @@ export const updateSettingsSchema = z.object({
   defaultLanguage: z.enum(["cpp17", "c11", "python3", "java17"]).optional(),
   dailyGoal: z.number().int().min(1).max(50).optional(),
   onboardingDismissed: z.boolean().optional(),
+  uiLocale: z.enum(["zh-TW", "en"]).optional(),
 });
 export type UpdateSettingsDto = z.infer<typeof updateSettingsSchema>;

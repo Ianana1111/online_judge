@@ -8,6 +8,7 @@ import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import { SkeletonList } from "@/components/Skeleton";
 import type { ContestListItem, MyContest } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 // CPE/GPE sittings are virtual (no fixed startAt) but their slugs always embed the real exam
 // date (e.g. "cpe-2026-05-26", "gpe-2018-01-03-9781") — the one reliable way to sort/label them
@@ -21,6 +22,7 @@ function sittingDate(slug: string): Date | null {
 }
 
 function StatusBadge({ status }: { status: "RUNNING" | "FINISHED" }) {
+  const t = useT();
   return (
     <span
       className={`rounded border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
@@ -29,12 +31,13 @@ function StatusBadge({ status }: { status: "RUNNING" | "FINISHED" }) {
           : "border-ink-600 bg-ink-800 text-ink-400"
       }`}
     >
-      {status === "RUNNING" ? "In progress" : "Finished"}
+      {status === "RUNNING" ? t("In progress") : t("Finished")}
     </span>
   );
 }
 
 function SittingCard({ contest, dateLabel }: { contest: ContestListItem; dateLabel: string | null }) {
+  const t = useT();
   return (
     <Link
       href={`/contests/${contest.id}`}
@@ -51,7 +54,7 @@ function SittingCard({ contest, dateLabel }: { contest: ContestListItem; dateLab
         {dateLabel && <span className="font-mono text-[11px] text-ink-500">{dateLabel}</span>}
       </div>
       <h3 className="text-sm font-medium text-ink-50 group-hover:text-brand">{contest.title}</h3>
-      <p className="mt-auto pt-2 font-mono text-xs text-ink-500">{contest.durationMin} min virtual exam</p>
+      <p className="mt-auto pt-2 font-mono text-xs text-ink-500">{t("{n} min virtual exam", { n: contest.durationMin })}</p>
     </Link>
   );
 }
@@ -72,6 +75,7 @@ function ArchiveRow({ contest, dateLabel }: { contest: ContestListItem; dateLabe
 }
 
 export default function ContestsPage() {
+  const t = useT();
   const { user, status: authStatus } = useAuthStore();
   const searchParams = useSearchParams();
   const initialTab = searchParams.get("tab")?.toUpperCase() === "GPE" ? "GPE" : "CPE";
@@ -103,18 +107,19 @@ export default function ContestsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-2xl font-bold text-ink-50">Contests</h1>
+        <h1 className="font-display text-2xl font-bold text-ink-50">{t("Contests")}</h1>
         <p className="mt-1 text-sm text-ink-400">
-          Every past CPE and GPE sitting, packaged as a timed virtual exam — start one whenever you're ready and it
-          runs its own private countdown, exactly like the real thing.
+          {t(
+            "Every past CPE and GPE sitting, packaged as a timed virtual exam — start one whenever you're ready and it runs its own private countdown, exactly like the real thing.",
+          )}
         </p>
       </div>
 
       {authStatus === "ready" && !user && (
         <div className="oj-card p-6 text-center">
-          <p className="text-sm text-ink-300">Log in to start a virtual exam and track your attempts here.</p>
+          <p className="text-sm text-ink-300">{t("Log in to start a virtual exam and track your attempts here.")}</p>
           <Link href="/login" className="oj-btn-primary mt-3 inline-block px-4 py-2 text-sm">
-            Log in
+            {t("Log in")}
           </Link>
         </div>
       )}
@@ -123,7 +128,7 @@ export default function ContestsPage() {
 
       {user && running.length > 0 && (
         <div>
-          <h2 className="mb-3 text-sm font-semibold text-ink-200">Continue where you left off</h2>
+          <h2 className="mb-3 text-sm font-semibold text-ink-200">{t("Continue where you left off")}</h2>
           <div className="space-y-2">
             {running.map((c) => (
               <Link key={c.id} href={`/contests/${c.id}`} className="oj-card block p-4 transition-colors hover:border-brand">
@@ -137,9 +142,9 @@ export default function ContestsPage() {
                   </div>
                   <div className="text-right">
                     <p className="font-mono text-sm text-brand">
-                      {c.solvedCount} / {c.totalProblems} solved
+                      {t("{solved} / {total} solved", { solved: c.solvedCount, total: c.totalProblems })}
                     </p>
-                    <p className="mt-0.5 font-mono text-xs text-ink-500">resume before it ends</p>
+                    <p className="mt-0.5 font-mono text-xs text-ink-500">{t("resume before it ends")}</p>
                   </div>
                 </div>
               </Link>
@@ -154,26 +159,26 @@ export default function ContestsPage() {
         <div className="grid gap-6 sm:grid-cols-2">
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-ink-200">Latest CPE sittings</h2>
-              <span className="text-xs text-ink-500">{cpeSorted.length} total</span>
+              <h2 className="text-sm font-semibold text-ink-200">{t("Latest CPE sittings")}</h2>
+              <span className="text-xs text-ink-500">{t("{n} total", { n: cpeSorted.length })}</span>
             </div>
             <div className="grid gap-3">
               {cpeSorted.slice(0, 3).map(({ c, d }) => (
                 <SittingCard key={c.id} contest={c} dateLabel={dateLabel(d)} />
               ))}
-              {cpeSorted.length === 0 && <p className="text-sm text-ink-400">No CPE sittings loaded yet.</p>}
+              {cpeSorted.length === 0 && <p className="text-sm text-ink-400">{t("No CPE sittings loaded yet.")}</p>}
             </div>
           </div>
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-ink-200">Latest GPE sittings</h2>
-              <span className="text-xs text-ink-500">{gpeSorted.length} total</span>
+              <h2 className="text-sm font-semibold text-ink-200">{t("Latest GPE sittings")}</h2>
+              <span className="text-xs text-ink-500">{t("{n} total", { n: gpeSorted.length })}</span>
             </div>
             <div className="grid gap-3">
               {gpeSorted.slice(0, 3).map(({ c, d }) => (
                 <SittingCard key={c.id} contest={c} dateLabel={dateLabel(d)} />
               ))}
-              {gpeSorted.length === 0 && <p className="text-sm text-ink-400">No GPE sittings loaded yet.</p>}
+              {gpeSorted.length === 0 && <p className="text-sm text-ink-400">{t("No GPE sittings loaded yet.")}</p>}
             </div>
           </div>
         </div>
@@ -181,7 +186,7 @@ export default function ContestsPage() {
 
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-ink-200">Full archive</h2>
+          <h2 className="text-sm font-semibold text-ink-200">{t("Full archive")}</h2>
           <div className="flex rounded border border-ink-700 p-0.5">
             {(["CPE", "GPE"] as const).map((k) => (
               <button
@@ -200,7 +205,7 @@ export default function ContestsPage() {
           {activeArchive.map(({ c, d }) => (
             <ArchiveRow key={c.id} contest={c} dateLabel={dateLabel(d)} />
           ))}
-          {activeArchive.length === 0 && <p className="p-4 text-center text-sm text-ink-400">Nothing here yet.</p>}
+          {activeArchive.length === 0 && <p className="p-4 text-center text-sm text-ink-400">{t("Nothing here yet.")}</p>}
         </div>
       </div>
     </div>

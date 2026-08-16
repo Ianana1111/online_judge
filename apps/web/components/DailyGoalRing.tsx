@@ -1,3 +1,5 @@
+import { useT } from "@/lib/i18n/LocaleContext";
+
 const SIZE = 96;
 const STROKE = 8;
 const RADIUS = (SIZE - STROKE) / 2;
@@ -7,6 +9,7 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
  * goal instead of lifetime solved-toward-catalog — different enough framing that reusing SolvedRing
  * directly would mean fighting its hardcoded "/ {total} solved" label. */
 export default function DailyGoalRing({ solvedToday, goal }: { solvedToday: number; goal: number }) {
+  const t = useT();
   const pct = goal > 0 ? Math.min(1, solvedToday / goal) : 0;
   const offset = CIRCUMFERENCE * (1 - pct);
   const met = solvedToday >= goal;
@@ -30,7 +33,7 @@ export default function DailyGoalRing({ solvedToday, goal }: { solvedToday: numb
       </svg>
       <div className="absolute flex flex-col items-center">
         <span className="font-display text-xl font-bold text-ink-50">{solvedToday}</span>
-        <span className="text-[10px] text-ink-500">/ {goal} today</span>
+        <span className="text-[10px] text-ink-500">{t("/ {goal} today", { goal })}</span>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { useAuthStore } from "@/store/auth";
 import { useExamTimerStore } from "@/store/examTimer";
 import ThemeToggle from "@/components/ThemeToggle";
 import NotificationBell from "@/components/NotificationBell";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 // Visible to everyone, including logged-out visitors.
 const PUBLIC_LINKS = [
@@ -36,6 +37,7 @@ function UserMenu({
   plan: "FREE" | "PRO";
   onLogout: () => void;
 }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -56,7 +58,7 @@ function UserMenu({
       >
         {isAdmin && (
           <span className="rounded border border-brand/40 bg-brand/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-brand">
-            Admin
+            {t("Admin")}
           </span>
         )}
         {handle}
@@ -73,7 +75,7 @@ function UserMenu({
               plan === "PRO" ? "text-brand hover:text-brand" : "text-ink-500 hover:text-brand"
             }`}
           >
-            {plan === "PRO" ? "Pro Plan" : "Free Plan"}
+            {plan === "PRO" ? t("Pro Plan") : t("Free Plan")}
           </Link>
           <div className="my-1 border-t border-ink-800" />
           <Link
@@ -81,14 +83,14 @@ function UserMenu({
             onClick={() => setOpen(false)}
             className="block rounded px-3 py-2 text-sm text-ink-200 hover:bg-ink-800"
           >
-            Activity
+            {t("Activity")}
           </Link>
           <Link
             href="/settings"
             onClick={() => setOpen(false)}
             className="block rounded px-3 py-2 text-sm text-ink-200 hover:bg-ink-800"
           >
-            Settings
+            {t("Settings")}
           </Link>
           <div className="my-1 border-t border-ink-800" />
           <button
@@ -99,7 +101,7 @@ function UserMenu({
             }}
             className="block w-full rounded px-3 py-2 text-left text-sm text-ink-400 hover:bg-ink-800 hover:text-verdict-wa"
           >
-            Log out
+            {t("Log out")}
           </button>
         </div>
       )}
@@ -108,6 +110,7 @@ function UserMenu({
 }
 
 export default function NavBar() {
+  const t = useT();
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuthStore();
@@ -145,7 +148,7 @@ export default function NavBar() {
                   pathname?.startsWith(l.href) ? "text-brand" : "text-ink-300 hover:text-ink-50"
                 }`}
               >
-                {l.label}
+                {t(l.label)}
               </Link>
             ))}
             {!!user && <span className="mx-1 text-ink-700">|</span>}
@@ -158,7 +161,7 @@ export default function NavBar() {
                     pathname?.startsWith(l.href) ? "text-brand" : "text-ink-300 hover:text-ink-50"
                   }`}
                 >
-                  {l.label}
+                  {t(l.label)}
                 </Link>
               ))}
             {showUpgrade && (
@@ -168,7 +171,7 @@ export default function NavBar() {
                   pathname?.startsWith("/upgrade") ? "text-brand" : "text-ink-300 hover:text-ink-50"
                 }`}
               >
-                Upgrade Plan
+                {t("Upgrade Plan")}
               </Link>
             )}
             {showStudentLinks &&
@@ -180,7 +183,7 @@ export default function NavBar() {
                     pathname?.startsWith(l.href) ? "text-brand" : "text-ink-300 hover:text-ink-50"
                   }`}
                 >
-                  {l.label}
+                  {t(l.label)}
                 </Link>
               ))}
             {isAdmin && <span className="mx-1 text-ink-700">|</span>}
@@ -191,7 +194,7 @@ export default function NavBar() {
                   pathname?.startsWith("/admin") ? "text-brand" : "text-ink-300 hover:text-ink-50"
                 }`}
               >
-                Console
+                {t("Console")}
               </Link>
             )}
           </nav>
@@ -211,7 +214,7 @@ export default function NavBar() {
             />
           ) : (
             <Link href="/login" className="oj-btn-primary px-3 py-1.5 text-xs">
-              Log in
+              {t("Log in")}
             </Link>
           )}
         </div>

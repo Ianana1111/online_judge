@@ -10,6 +10,7 @@ import { apiFetch, ApiError, openSubmissionStream } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { BillingStatus, Sample, SubmissionDetail } from "@/lib/types";
 import { LANGUAGE_LABEL } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 // Monaco is a large editor bundle unrelated to the rest of the problem page (statement, tabs,
 // discussion) — deferring it out of the initial page JS keeps that content interactive sooner.
@@ -50,6 +51,7 @@ export default function SubmissionPanel({
   /** This problem's sample input/output pairs — seeds the Run panel's default test cases. */
   samples?: Sample[];
 }) {
+  const t = useT();
   const { user, status: authStatus } = useAuthStore();
   // Scoped per-account (not just per-problem): an unscoped key meant any browser session — logged
   // out, or logged into a different account — would read back whatever the last signed-in user on
@@ -155,10 +157,10 @@ export default function SubmissionPanel({
         // message for whichever one actually happened, so just surface it rather than guessing
         // with a single hardcoded string (that used to always say "contest window closed," even
         // when the real reason was the submit cap).
-        if (e.status === 429) setError("You're submitting too fast — wait a few seconds and try again.");
+        if (e.status === 429) setError(t("You're submitting too fast — wait a few seconds and try again."));
         else setError(e.message);
       } else {
-        setError("Something went wrong submitting your code.");
+        setError(t("Something went wrong submitting your code."));
       }
     } finally {
       setSubmitting(false);
@@ -175,9 +177,9 @@ export default function SubmissionPanel({
   if (!user) {
     return (
       <div className="oj-card flex h-[480px] flex-col items-center justify-center gap-3 p-6 text-center">
-        <p className="text-sm text-ink-300">Log in to write and submit code for this problem.</p>
+        <p className="text-sm text-ink-300">{t("Log in to write and submit code for this problem.")}</p>
         <Link href="/login" className="oj-btn-primary px-4 py-2 text-sm">
-          Log in
+          {t("Log in")}
         </Link>
       </div>
     );
@@ -187,8 +189,7 @@ export default function SubmissionPanel({
     <div className="space-y-3">
       {!judgeable && (
         <p className="rounded border border-ink-700 bg-ink-800/60 px-3 py-2 text-xs text-ink-400">
-          This problem has no matching UVa judge, so it isn&apos;t gradeable here — reference-only. Use it for
-          reading/practice; submitting is disabled.
+          {t("This problem has no matching UVa judge, so it isn't gradeable here — reference-only. Use it for reading/practice; submitting is disabled.")}
         </p>
       )}
       <div className="flex items-center justify-between">
@@ -205,20 +206,20 @@ export default function SubmissionPanel({
         >
           {LANGUAGES.map((l) => (
             <option key={l} value={l}>
-              {LANGUAGE_LABEL[l]}
+              {t(LANGUAGE_LABEL[l])}
             </option>
           ))}
         </select>
         <button onClick={handleSubmit} disabled={!canSubmit} className="oj-btn-primary w-40">
           {!judgeable
-            ? "Not gradeable"
+            ? t("Not gradeable")
             : locked
-              ? "Locked"
+              ? t("Locked")
               : submitting
-                ? "Submitting…"
+                ? t("Submitting…")
                 : cooldownRemaining > 0
-                  ? `Wait ${Math.ceil(cooldownRemaining / 1000)}s`
-                  : "Submit"}
+                  ? t("Wait {n}s", { n: Math.ceil(cooldownRemaining / 1000) })
+                  : t("Submit")}
         </button>
       </div>
 
@@ -226,20 +227,20 @@ export default function SubmissionPanel({
         <p className="text-right text-xs text-ink-500">
           {billing.submits.used >= billing.submits.limit ? (
             <span className="text-verdict-wa">
-              You've used all {billing.submits.limit} free submissions —{" "}
+              {t("You've used all {limit} free submissions —", { limit: billing.submits.limit })}{" "}
               <Link href="/upgrade" className="underline hover:text-brand">
-                upgrade to Pro
+                {t("upgrade to Pro")}
               </Link>{" "}
-              for unlimited.
+              {t("for unlimited.")}
             </span>
           ) : (
             <>
-              {billing.submits.used}/{billing.submits.limit} free submissions used
+              {t("{used}/{limit} free submissions used", { used: billing.submits.used, limit: billing.submits.limit })}
               {billing.submits.limit - billing.submits.used <= 3 && (
                 <>
                   {" · "}
                   <Link href="/upgrade" className="underline hover:text-brand">
-                    upgrade to Pro
+                    {t("upgrade to Pro")}
                   </Link>
                 </>
               )}
@@ -257,7 +258,7 @@ export default function SubmissionPanel({
       {detail && (
         <div className="oj-card p-4">
           <div className="mb-3 flex items-center gap-2">
-            <span className="text-sm font-medium text-ink-300">Verdict</span>
+            <span className="text-sm font-medium text-ink-300">{t("Verdict")}</span>
             <VerdictBadge verdict={detail.verdict} flash={flash} />
           </div>
           {(detail.timeMs !== undefined || detail.memoryKb !== undefined) && (

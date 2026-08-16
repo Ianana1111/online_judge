@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 /** Top-left "go back" affordance for full-screen pages that intentionally have no NavBar (see
  * NavBar's /upgrade early-return) — those pages need their own way back since the site logo/nav
@@ -8,6 +9,7 @@ import { useRouter } from "next/navigation";
  * (e.g. the user landed here directly from an external link), so it never leaves the visitor
  * stranded on a dead end. */
 export default function BackButton({ fallbackHref = "/" }: { fallbackHref?: string }) {
+  const t = useT();
   const router = useRouter();
 
   function handleClick() {
@@ -25,13 +27,13 @@ export default function BackButton({ fallbackHref = "/" }: { fallbackHref?: stri
     <button
       type="button"
       onClick={handleClick}
-      aria-label="Go back"
+      aria-label={t("Go back")}
       className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-300 transition-colors hover:text-ink-50"
     >
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
         <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      Back
+      {t("Back")}
     </button>
   );
 }

@@ -7,6 +7,7 @@ import { SkeletonList } from "@/components/Skeleton";
 import Avatar from "@/components/Avatar";
 import { estimateReadMinutesFromLength } from "@/lib/readTime";
 import type { PostListItem } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 function Byline({ post, size = 20 }: { post: PostListItem; size?: number }) {
   return (
@@ -34,6 +35,7 @@ function OfficialBadge({ large = false }: { large?: boolean }) {
 }
 
 export default function DiscussionListClient() {
+  const t = useT();
   const { data, isLoading } = useQuery({
     queryKey: ["posts"],
     queryFn: () => apiFetch<PostListItem[]>("/posts"),
@@ -44,13 +46,13 @@ export default function DiscussionListClient() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-2xl font-bold text-ink-50">Discussion</h1>
-        <p className="mt-1 text-sm text-ink-400">News, analysis, and announcements from the judge.tw team.</p>
+        <h1 className="font-display text-2xl font-bold text-ink-50">{t("Discussion")}</h1>
+        <p className="mt-1 text-sm text-ink-400">{t("News, analysis, and announcements from the judge.tw team.")}</p>
       </div>
 
       {isLoading && <SkeletonList rows={4} />}
 
-      {!isLoading && !hero && <p className="oj-card p-6 text-center text-sm text-ink-400">Nothing posted yet.</p>}
+      {!isLoading && !hero && <p className="oj-card p-6 text-center text-sm text-ink-400">{t("Nothing posted yet.")}</p>}
 
       {hero && (
         <Link href={`/discussion/${hero.id}`} className="group block">
@@ -75,10 +77,10 @@ export default function DiscussionListClient() {
 
       {hero && (
         <div>
-          <h2 className="mb-1 text-sm font-semibold uppercase tracking-wide text-ink-500">More stories</h2>
+          <h2 className="mb-1 text-sm font-semibold uppercase tracking-wide text-ink-500">{t("More stories")}</h2>
           {rest.length === 0 ? (
             <p className="border-t border-ink-800 py-6 text-sm text-ink-500">
-              More analysis and announcements land here as they're published — check back soon.
+              {t("More analysis and announcements land here as they're published — check back soon.")}
             </p>
           ) : (
             <div className="divide-y divide-ink-800 border-t border-ink-800">

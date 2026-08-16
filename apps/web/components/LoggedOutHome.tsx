@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { useAuthStore } from "@/store/auth";
 import type { ProblemListItem } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 /** The original marketing homepage (hero + recent problems), self-gated to hide once a session is
  * confirmed — HomeDashboard takes over for logged-in visitors. Both pieces render from the server
  * component and toggle client-side on the same auth check NavBar already uses, so there's no
  * server/client branching needed in the page itself. */
 export default function LoggedOutHome({ items }: { items: ProblemListItem[] }) {
+  const t = useT();
   const { user, status } = useAuthStore();
   if (status === "ready" && user) return null;
 
@@ -18,20 +20,21 @@ export default function LoggedOutHome({ items }: { items: ProblemListItem[] }) {
         <div>
           <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-brand">accepted / wrong answer / tle</p>
           <h1 className="font-display text-4xl font-bold leading-tight text-ink-50 sm:text-5xl">
-            Practice UVa.
+            {t("Practice UVa.")}
             <br />
-            Sit CPE for real.
+            {t("Sit CPE for real.")}
           </h1>
           <p className="mt-4 max-w-md text-ink-300">
-            A judge built around the 3-hour, 7-problem CPE format — solve at your own pace, or start a
-            timed virtual exam with a real scoreboard and ICPC-style penalties.
+            {t(
+              "A judge built around the 3-hour, 7-problem CPE format — solve at your own pace, or start a timed virtual exam with a real scoreboard and ICPC-style penalties.",
+            )}
           </p>
           <div className="mt-6 flex gap-3">
             <Link href="/problems" className="oj-btn-primary px-5 py-2.5">
-              Browse problems
+              {t("Browse problems")}
             </Link>
             <Link href="/cpe" className="oj-btn-secondary px-5 py-2.5">
-              Start a CPE exam
+              {t("Start a CPE exam")}
             </Link>
           </div>
         </div>
@@ -54,13 +57,13 @@ verdict: ACCEPTED`}</pre>
 
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-ink-50">Recent problems</h2>
+          <h2 className="text-lg font-semibold text-ink-50">{t("Recent problems")}</h2>
           <Link href="/problems" className="text-sm text-brand hover:underline">
-            View all →
+            {t("View all →")}
           </Link>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {items.length === 0 && <p className="text-sm text-ink-400">No problems yet — check back soon.</p>}
+          {items.length === 0 && <p className="text-sm text-ink-400">{t("No problems yet — check back soon.")}</p>}
           {items.map((p) => (
             <Link key={p.id} href={`/problems/${p.slug}`} className="oj-card p-4 transition-colors hover:border-brand">
               <div className="mb-1 flex items-center justify-between">

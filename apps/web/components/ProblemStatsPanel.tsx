@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { Skeleton } from "@/components/Skeleton";
 import type { ProblemStats } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 // recharts is a large charting bundle — deferring it out of the problem page's initial JS (see
 // StatChartsLoader for the same pattern) since these stats only render once the Stats tab is
@@ -15,6 +16,7 @@ const DistributionChart = dynamic(() => import("@/components/DistributionChart")
 }) as typeof import("@/components/DistributionChart").default;
 
 export default function ProblemStatsPanel({ slug }: { slug: string }) {
+  const t = useT();
   const { data, isLoading } = useQuery({
     queryKey: ["problem-stats", slug],
     queryFn: () => apiFetch<ProblemStats>(`/problems/${slug}/stats`),
@@ -29,7 +31,7 @@ export default function ProblemStatsPanel({ slug }: { slug: string }) {
     );
   }
   if (!data || data.solvedCount === 0) {
-    return <p className="text-sm text-ink-400">Nobody's solved this one yet — be the first, and these stats fill in.</p>;
+    return <p className="text-sm text-ink-400">{t("Nobody's solved this one yet — be the first, and these stats fill in.")}</p>;
   }
 
   return (
@@ -37,9 +39,9 @@ export default function ProblemStatsPanel({ slug }: { slug: string }) {
       {data.yourBest && (
         <div className="oj-card border-brand/30 p-4">
           <p className="text-sm text-ink-300">
-            Your best: <span className="font-mono text-brand">{data.yourBest.timeMs} ms</span>
+            {t("Your best:")} <span className="font-mono text-brand">{data.yourBest.timeMs} ms</span>
             {data.yourBest.beatsPct !== null && (
-              <span className="ml-2 text-ink-400">— beats {data.yourBest.beatsPct}% of solvers</span>
+              <span className="ml-2 text-ink-400">— {t("beats {pct}% of solvers", { pct: data.yourBest.beatsPct })}</span>
             )}
           </p>
         </div>
@@ -47,21 +49,23 @@ export default function ProblemStatsPanel({ slug }: { slug: string }) {
 
       <div className="oj-card p-4">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">
-          Runtime — {data.solvedCount} solver{data.solvedCount === 1 ? "" : "s"}
+          {data.solvedCount === 1
+            ? t("Runtime — {n} solver", { n: data.solvedCount })
+            : t("Runtime — {n} solvers", { n: data.solvedCount })}
         </p>
         {data.time && (
           <div className="mb-3 grid grid-cols-3 gap-3 text-center">
             <div>
               <p className="font-mono text-lg text-ink-50">{data.time.minMs} ms</p>
-              <p className="text-xs text-ink-500">fastest</p>
+              <p className="text-xs text-ink-500">{t("fastest")}</p>
             </div>
             <div>
               <p className="font-mono text-lg text-ink-50">{data.time.medianMs} ms</p>
-              <p className="text-xs text-ink-500">median</p>
+              <p className="text-xs text-ink-500">{t("median")}</p>
             </div>
             <div>
               <p className="font-mono text-lg text-ink-50">{data.time.maxMs} ms</p>
-              <p className="text-xs text-ink-500">slowest</p>
+              <p className="text-xs text-ink-500">{t("slowest")}</p>
             </div>
           </div>
         )}
@@ -77,7 +81,7 @@ export default function ProblemStatsPanel({ slug }: { slug: string }) {
 
       {data.memoryAvailable && data.memoryHistogram && (
         <div className="oj-card p-4">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Memory</p>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">{t("Memory")}</p>
           <DistributionChart
             buckets={data.memoryHistogram}
             yourBucketIndex={data.yourMemoryBucketIndex}

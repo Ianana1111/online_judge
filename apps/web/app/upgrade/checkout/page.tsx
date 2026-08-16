@@ -8,13 +8,13 @@ import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import BackButton from "@/components/BackButton";
 import type { BillingPlans, BillingStatus } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 type Period = "MONTHLY" | "YEARLY";
 type Method = "CREDIT" | "ATM";
 
-const PERIOD_LABEL: Record<Period, string> = { MONTHLY: "month", YEARLY: "year" };
-
 export default function CheckoutPage() {
+  const t = useT();
   const router = useRouter();
   const qc = useQueryClient();
   const { user, status: authStatus } = useAuthStore();
@@ -134,31 +134,38 @@ export default function CheckoutPage() {
       <div className="flex flex-1 flex-col justify-center py-4">
         <div className="w-full space-y-4">
           <div>
-            <h1 className="font-display text-xl font-bold text-ink-50 sm:text-2xl">Subscribe to Pro</h1>
-            <p className="mt-1 text-xs text-ink-400 sm:text-sm">Unlimited submissions and virtual contests, billed however suits you.</p>
+            <h1 className="font-display text-xl font-bold text-ink-50 sm:text-2xl">{t("Subscribe to Pro")}</h1>
+            <p className="mt-1 text-xs text-ink-400 sm:text-sm">{t("Unlimited submissions and virtual contests, billed however suits you.")}</p>
           </div>
 
           {authStatus === "ready" && !user ? (
             <div className="oj-card p-5 text-sm text-ink-300">
-              Please{" "}
+              {t("Please")}{" "}
               <Link href="/login" className="text-brand hover:underline">
-                log in
+                {t("log in")}
               </Link>{" "}
-              to upgrade.
+              {t("to upgrade.")}
             </div>
           ) : notApplicable ? (
             <div className="oj-card p-5 text-sm text-ink-300">
-              {isAdmin ? "Admin accounts already have no submit or contest limits." : "Student accounts are already Pro — no need to upgrade."}
+              {isAdmin ? t("Admin accounts already have no submit or contest limits.") : t("Student accounts are already Pro — no need to upgrade.")}
             </div>
           ) : isSubscribed ? (
             <div className="oj-card border-verdict-ac/40 p-5 text-sm text-ink-200">
               <p>
-                ✓ You're already subscribed to Pro — NT${status.subscription!.amountNtd} /{" "}
-                {status.subscription!.period === "MONTHLY" ? "month" : "year"}, renews automatically
-                {status?.planExpiresAt && <> on {new Date(status.planExpiresAt).toLocaleDateString()}</>}.
+                {status?.planExpiresAt
+                  ? t("✓ You're already subscribed to Pro — NT${amount} / {period}, renews automatically on {date}.", {
+                      amount: status.subscription!.amountNtd,
+                      period: status.subscription!.period === "MONTHLY" ? t("month") : t("year"),
+                      date: new Date(status.planExpiresAt).toLocaleDateString(),
+                    })
+                  : t("✓ You're already subscribed to Pro — NT${amount} / {period}, renews automatically.", {
+                      amount: status.subscription!.amountNtd,
+                      period: status.subscription!.period === "MONTHLY" ? t("month") : t("year"),
+                    })}
               </p>
               <Link href="/upgrade" className="mt-2 inline-block text-brand hover:underline">
-                Manage your subscription →
+                {t("Manage your subscription →")}
               </Link>
             </div>
           ) : pending ? (
@@ -166,37 +173,41 @@ export default function CheckoutPage() {
               <div className="oj-card border-verdict-tle/40 p-5 text-sm">
                 {pending.method === "ECPAY" && pending.ecpayMethod === "ATM" && pending.vAccount ? (
                   <>
-                    <p className="font-semibold text-verdict-tle">Complete your ATM transfer</p>
+                    <p className="font-semibold text-verdict-tle">{t("Complete your ATM transfer")}</p>
                     <div className="mt-3 space-y-1 rounded border border-ink-700 bg-ink-800/50 p-3 font-mono text-sm">
                       <p>
-                        Bank code: <span className="font-semibold text-ink-50">{pending.bankCode}</span>
+                        {t("Bank code:")} <span className="font-semibold text-ink-50">{pending.bankCode}</span>
                       </p>
                       <p>
-                        Virtual account: <span className="font-semibold text-ink-50">{pending.vAccount}</span>
+                        {t("Virtual account:")} <span className="font-semibold text-ink-50">{pending.vAccount}</span>
                       </p>
-                      {pending.expireDate && <p className="text-xs text-ink-400">Pay by: {pending.expireDate}</p>}
+                      {pending.expireDate && <p className="text-xs text-ink-400">{t("Pay by: {date}", { date: pending.expireDate })}</p>}
                     </div>
                     <p className="mt-3 text-ink-300">
-                      Transfer NT${pending.amountNtd} to the account above via ATM / online / mobile banking. Pro unlocks{" "}
-                      <span className="text-verdict-ac">automatically</span> once it's received — this page updates on its own.
+                      {t("Transfer NT${amount} to the account above via ATM / online / mobile banking. Pro unlocks", {
+                        amount: pending.amountNtd,
+                      })}{" "}
+                      <span className="text-verdict-ac">{t("automatically")}</span> {t("once it's received — this page updates on its own.")}
                     </p>
                   </>
                 ) : pending.method === "ECPAY" && pending.ecpayMethod === "ATM" ? (
                   <>
-                    <p className="font-semibold text-verdict-tle">Generating your virtual account…</p>
-                    <p className="mt-1 text-ink-300">One moment — this page updates automatically.</p>
+                    <p className="font-semibold text-verdict-tle">{t("Generating your virtual account…")}</p>
+                    <p className="mt-1 text-ink-300">{t("One moment — this page updates automatically.")}</p>
                   </>
                 ) : pending.method === "ECPAY" ? (
                   <>
-                    <p className="font-semibold text-verdict-tle">Confirming your card payment…</p>
-                    <p className="mt-1 text-ink-300">This is usually instant. This page updates automatically once it clears.</p>
+                    <p className="font-semibold text-verdict-tle">{t("Confirming your card payment…")}</p>
+                    <p className="mt-1 text-ink-300">{t("This is usually instant. This page updates automatically once it clears.")}</p>
                   </>
                 ) : (
                   <>
-                    <p className="font-semibold text-verdict-tle">Payment under review</p>
+                    <p className="font-semibold text-verdict-tle">{t("Payment under review")}</p>
                     <p className="mt-1 text-ink-300">
-                      We've received your {pending.period === "MONTHLY" ? "monthly" : "yearly"} plan (NT${pending.amountNtd})
-                      payment claim — Pro unlocks as soon as we confirm the transfer.
+                      {t("We've received your {period} plan (NT${amount}) payment claim — Pro unlocks as soon as we confirm the transfer.", {
+                        period: pending.period === "MONTHLY" ? t("monthly") : t("yearly"),
+                        amount: pending.amountNtd,
+                      })}
                     </p>
                   </>
                 )}
@@ -207,7 +218,7 @@ export default function CheckoutPage() {
                 disabled={dismissing}
                 className="oj-btn-secondary w-full py-2.5 text-sm disabled:opacity-50"
               >
-                {dismissing ? "Cancelling…" : "Not now — cancel and choose again"}
+                {dismissing ? t("Cancelling…") : t("Not now — cancel and choose again")}
               </button>
             </div>
           ) : (
@@ -215,27 +226,29 @@ export default function CheckoutPage() {
               <div className="space-y-4 sm:col-span-3">
                 {isPro && (
                   <div className="oj-card border-verdict-ac/40 p-2.5 text-xs text-ink-300">
-                    ✓ You're already on Pro
-                    {status?.planExpiresAt && <> until {new Date(status.planExpiresAt).toLocaleDateString()}</>}. Subscribing now
-                    extends it further.
+                    {status?.planExpiresAt
+                      ? t("✓ You're already on Pro until {date}. Subscribing now extends it further.", {
+                          date: new Date(status.planExpiresAt).toLocaleDateString(),
+                        })
+                      : t("✓ You're already on Pro. Subscribing now extends it further.")}
                   </div>
                 )}
 
                 <div>
-                  <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-ink-400">Billing period</p>
+                  <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-ink-400">{t("Billing period")}</p>
                   <div className="grid grid-cols-2 gap-2.5">
                     <button
                       type="button"
                       onClick={() => setPeriod("MONTHLY")}
                       className={`oj-card p-2.5 text-left transition-colors ${period === "MONTHLY" ? "border-brand" : "hover:border-ink-500"}`}
                     >
-                      <p className="text-sm font-semibold text-ink-50">Monthly</p>
+                      <p className="text-sm font-semibold text-ink-50">{t("Monthly")}</p>
                       {promo ? (
                         <p className="mt-0.5 text-xs text-ink-400">
-                          <span className="line-through opacity-70">NT${monthlyListPrice}</span> NT${monthlyNowPrice} / mo
+                          <span className="line-through opacity-70">NT${monthlyListPrice}</span> {t("NT${amount} / mo", { amount: monthlyNowPrice })}
                         </p>
                       ) : (
-                        <p className="mt-0.5 text-xs text-ink-400">NT${monthlyNowPrice} / mo</p>
+                        <p className="mt-0.5 text-xs text-ink-400">{t("NT${amount} / mo", { amount: monthlyNowPrice })}</p>
                       )}
                     </button>
                     <button
@@ -245,17 +258,17 @@ export default function CheckoutPage() {
                     >
                       {yearlySavingsPct > 0 && (
                         <span className="absolute -top-2 right-2 rounded-full bg-verdict-ac px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-onbrand">
-                          Save {yearlySavingsPct}%
+                          {t("Save {pct}%", { pct: yearlySavingsPct })}
                         </span>
                       )}
-                      <p className="text-sm font-semibold text-ink-50">Yearly</p>
-                      <p className="mt-0.5 text-xs text-ink-400">NT${yearlyPrice} / yr</p>
+                      <p className="text-sm font-semibold text-ink-50">{t("Yearly")}</p>
+                      <p className="mt-0.5 text-xs text-ink-400">{t("NT${amount} / yr", { amount: yearlyPrice })}</p>
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-ink-400">Payment method</p>
+                  <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-ink-400">{t("Payment method")}</p>
                   <div className="space-y-1.5">
                     <button
                       type="button"
@@ -264,9 +277,11 @@ export default function CheckoutPage() {
                     >
                       <span className="mt-0.5 text-lg leading-none">💳</span>
                       <span>
-                        <span className="block text-sm font-semibold text-ink-50">Credit / Debit Card</span>
+                        <span className="block text-sm font-semibold text-ink-50">{t("Credit / Debit Card")}</span>
                         <span className="block text-xs text-ink-400">
-                          Subscribe — we auto-renew your card every {PERIOD_LABEL[period]} until you cancel.
+                          {t("Subscribe — we auto-renew your card every {period} until you cancel.", {
+                            period: period === "MONTHLY" ? t("month") : t("year"),
+                          })}
                         </span>
                       </span>
                     </button>
@@ -277,8 +292,8 @@ export default function CheckoutPage() {
                     >
                       <span className="mt-0.5 text-lg leading-none">🏦</span>
                       <span>
-                        <span className="block text-sm font-semibold text-ink-50">ATM Transfer</span>
-                        <span className="block text-xs text-ink-400">One-time payment — transfer again manually whenever you want to renew.</span>
+                        <span className="block text-sm font-semibold text-ink-50">{t("ATM Transfer")}</span>
+                        <span className="block text-xs text-ink-400">{t("One-time payment — transfer again manually whenever you want to renew.")}</span>
                       </span>
                     </button>
                   </div>
@@ -288,27 +303,31 @@ export default function CheckoutPage() {
               <div className="mt-4 sm:col-span-2 sm:mt-0">
                 <div className="oj-card space-y-3 p-4">
                   <div>
-                    <p className="font-display text-sm font-semibold text-ink-50">Order summary</p>
+                    <p className="font-display text-sm font-semibold text-ink-50">{t("Order summary")}</p>
                     <div className="mt-2 flex items-baseline justify-between text-sm">
-                      <span className="text-ink-300">judge. Pro ({period === "MONTHLY" ? "Monthly" : "Yearly"})</span>
+                      <span className="text-ink-300">{t("judge. Pro ({period})", { period: period === "MONTHLY" ? t("Monthly") : t("Yearly") })}</span>
                       <span className="text-ink-100">NT${amount}</span>
                     </div>
                     {promo && period === "MONTHLY" && (
                       <div className="mt-1 flex items-baseline justify-between text-sm">
-                        <span className="text-verdict-ac">Launch promo ({promo.discountPct}% off)</span>
+                        <span className="text-verdict-ac">{t("Launch promo ({pct}% off)", { pct: promo.discountPct })}</span>
                         <span className="text-verdict-ac">−NT${monthlyListPrice - monthlyNowPrice}</span>
                       </div>
                     )}
                     <div className="mt-1.5 flex items-baseline justify-between border-t border-ink-700 pt-1.5 text-sm font-semibold">
-                      <span className="text-ink-50">Total due today</span>
+                      <span className="text-ink-50">{t("Total due today")}</span>
                       <span className="text-ink-50">NT${amount}</span>
                     </div>
                   </div>
 
                   <p className="rounded border border-ink-700 bg-ink-800/50 px-2.5 py-1.5 text-xs text-ink-400">
                     {method === "CREDIT"
-                      ? `Billed every ${PERIOD_LABEL[period]} · renews automatically until you cancel from your account.`
-                      : `One-time payment, valid for ${period === "MONTHLY" ? "30" : "365"} days · renew again manually anytime.`}
+                      ? t("Billed every {period} · renews automatically until you cancel from your account.", {
+                          period: period === "MONTHLY" ? t("month") : t("year"),
+                        })
+                      : t("One-time payment, valid for {days} days · renew again manually anytime.", {
+                          days: period === "MONTHLY" ? "30" : "365",
+                        })}
                   </p>
 
                   {ecpayError && <p className="text-sm text-verdict-wa">{ecpayError}</p>}
@@ -320,17 +339,17 @@ export default function CheckoutPage() {
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                         </svg>
-                        Redirecting to ECPay…
+                        {t("Redirecting to ECPay…")}
                       </span>
                     ) : method === "CREDIT" ? (
-                      `Subscribe — NT$${amount}/${PERIOD_LABEL[period]}`
+                      t("Subscribe — NT${amount}/{period}", { amount, period: period === "MONTHLY" ? t("month") : t("year") })
                     ) : (
-                      `Pay NT$${amount}`
+                      t("Pay NT${amount}", { amount })
                     )}
                   </button>
 
                   <p className="flex items-center justify-center gap-1 text-center text-[11px] text-ink-500">
-                    🔒 Secure checkout via ECPay — Taiwan's leading payment gateway
+                    🔒 {t("Secure checkout via ECPay — Taiwan's leading payment gateway")}
                   </p>
                 </div>
               </div>

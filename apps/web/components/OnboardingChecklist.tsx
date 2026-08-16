@@ -7,6 +7,7 @@ import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import { FileTextIcon, FlagIcon, FlameIcon } from "@/components/icons";
 import type { Achievement } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const ITEMS = [
   {
@@ -35,6 +36,7 @@ const ITEMS = [
 /** Auto-dismisses (persisted to User.settings) once every item is done, so a returning user who
  * completed everything organically never sees a stale checklist — no action required from them. */
 export default function OnboardingChecklist() {
+  const t = useT();
   const { user, setUser } = useAuthStore();
 
   const { data: achievements } = useQuery({
@@ -74,13 +76,11 @@ export default function OnboardingChecklist() {
     <div className="oj-card p-5">
       <div className="mb-4 flex items-end justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-ink-100">Getting started</h2>
-          <p className="mt-0.5 text-xs text-ink-500">
-            {doneCount} of {ITEMS.length} done
-          </p>
+          <h2 className="text-sm font-semibold text-ink-100">{t("Getting started")}</h2>
+          <p className="mt-0.5 text-xs text-ink-500">{t("{done} of {total} done", { done: doneCount, total: ITEMS.length })}</p>
         </div>
         <button onClick={dismiss} className="text-xs text-ink-500 hover:text-ink-300">
-          Skip
+          {t("Skip")}
         </button>
       </div>
 
@@ -101,9 +101,9 @@ export default function OnboardingChecklist() {
                   isDone ? "text-ink-500 line-through" : "text-ink-50 group-hover:text-brand"
                 }`}
               >
-                {item.label}
+                {t(item.label)}
               </h3>
-              <p className="mt-1 text-xs leading-relaxed text-ink-500">{item.desc}</p>
+              <p className="mt-1 text-xs leading-relaxed text-ink-500">{t(item.desc)}</p>
             </>
           );
 

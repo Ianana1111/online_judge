@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useExamTimerStore, formatDuration } from "@/store/examTimer";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function ExamModeShell({
   contestId,
@@ -17,6 +18,7 @@ export default function ExamModeShell({
   homeHref?: string;
   children: React.ReactNode;
 }) {
+  const t = useT();
   const { setWindow, setActive, remainingMs } = useExamTimerStore();
   const [now, setNow] = useState(Date.now());
 
@@ -49,15 +51,15 @@ export default function ExamModeShell({
             isOver ? "text-ink-500" : urgent ? "text-verdict-wa animate-pulse-soft" : "text-brand"
           }`}
         >
-          {isOver ? "Time's up" : formatDuration(remaining)}
+          {isOver ? t("Time's up") : formatDuration(remaining)}
         </div>
       </header>
 
       {isOver && (
         <div className="border-b border-verdict-wa/40 bg-verdict-wa/10 px-4 py-2 text-center text-sm text-verdict-wa">
-          Your exam window has ended. Submissions are locked —{" "}
+          {t("Your exam window has ended. Submissions are locked —")}{" "}
           <Link href={`/contests/${contestId}`} className="underline">
-            view the final scoreboard
+            {t("view the final scoreboard")}
           </Link>
           .
         </div>

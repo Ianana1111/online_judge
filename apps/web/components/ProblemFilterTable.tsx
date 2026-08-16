@@ -9,6 +9,7 @@ import { stripProblemNumber } from "@/lib/problemTitle";
 import { buildProblemNavHref, filterAndSortProblems, SORT_KEYS, type SortKey } from "@/lib/problemFilter";
 import { useAuthStore } from "@/store/auth";
 import type { ProblemRow } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const DIFFICULTY_EXPLANATION =
   "Curated ratings come first: problems from an officially-rated set (like the CPE 必考49題 one-star selection) keep that rating. Everything else is derived from how many people worldwide have solved it on UVa (more solvers = more introductory), with a minimum floor based on the algorithm topic — a DP or graph problem never rates below what its technique demands.";
@@ -42,14 +43,6 @@ function SortArrows({ direction }: { direction: "desc" | "asc" | null }) {
     </span>
   );
 }
-
-const DIFFICULTY_OPTIONS: DropdownOption[] = [
-  { value: "", label: "All difficulties" },
-  { value: "1", label: "★" },
-  { value: "2", label: "★★" },
-  { value: "3", label: "★★★" },
-  { value: "4", label: "★★★★" },
-];
 
 /** Where this table's problem set came from — threaded into each row's link (see
  * buildProblemHref) so the detail page's Previous/Next can fetch the exact same set and re-apply
@@ -160,6 +153,7 @@ function Dropdown({
  * so each row's link can tell the problem detail page what set + filters to rebuild for Previous/Next.
  */
 export default function ProblemFilterTable({ problems, listContext }: { problems: ProblemRow[]; listContext: ListContext }) {
+  const t = useT();
   const isPro = useAuthStore((s) => s.user?.plan === "PRO");
   const router = useRouter();
   const pathname = usePathname();
@@ -214,14 +208,24 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
     syncUrl({ tag: next });
   }
 
+  const DIFFICULTY_OPTIONS: DropdownOption[] = useMemo(
+    () => [
+      { value: "", label: t("All difficulties") },
+      { value: "1", label: "★" },
+      { value: "2", label: "★★" },
+      { value: "3", label: "★★★" },
+      { value: "4", label: "★★★★" },
+    ],
+    [t],
+  );
   const allTags = useMemo(() => {
     const set = new Set<string>();
-    for (const p of problems) for (const t of p.tags) set.add(t);
+    for (const p of problems) for (const tag of p.tags) set.add(tag);
     return [...set].sort();
   }, [problems]);
   const tagOptions: DropdownOption[] = useMemo(
-    () => [{ value: "", label: "All tags" }, ...allTags.map((t) => ({ value: t, label: t }))],
-    [allTags],
+    () => [{ value: "", label: t("All tags") }, ...allTags.map((tag) => ({ value: tag, label: tag }))],
+    [allTags, t],
   );
   const filteredSorted = useMemo(
     () => filterAndSortProblems(problems, { difficulty, tag, sort }),
@@ -240,7 +244,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search title…"
+          placeholder={t("Search title…")}
           className="oj-input max-w-xs"
         />
         <Dropdown value={difficulty} onChange={setDifficulty} options={DIFFICULTY_OPTIONS} className="w-[150px]" />
@@ -254,11 +258,11 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
             }}
             className="text-xs text-ink-400 hover:text-brand"
           >
-            Clear filters
+            {t("Clear filters")}
           </button>
         )}
         <span className="ml-auto text-xs text-ink-500">
-          {visible.length} of {problems.length} shown
+          {t("{visible} of {total} shown", { visible: visible.length, total: problems.length })}
         </span>
       </div>
 
@@ -270,7 +274,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
                 <button
                   type="button"
                   onClick={() => handleHeaderClick(["solved-first", "unsolved-first"], true)}
-                  title={isPro ? "Sort by solved" : undefined}
+                  title={isPro ? t("Sort by solved") : undefined}
                   className={`inline-flex items-center gap-1 ${isPro ? "text-verdict-ac hover:text-brand" : "text-ink-600 hover:text-brand"}`}
                 >
                   ✓
@@ -280,7 +284,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
                     <LockIcon />
                   )}
                 </button>
-                <InfoTooltip text={SOLVED_EXPLANATION} />
+                <InfoTooltip text={t(SOLVED_EXPLANATION)} />
               </span>
             </th>
             <th>
@@ -292,8 +296,8 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
                 #<SortArrows direction={sortDirectionOf(sort, ["number-desc", "number-asc"])} />
               </button>
             </th>
-            <th>Title</th>
-            <th>Source</th>
+            <th>{t("Title")}</th>
+            <th>{t("Source")}</th>
             <th>
               <span className="inline-flex items-center gap-1">
                 <button
@@ -301,25 +305,25 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
                   onClick={() => handleHeaderClick(["difficulty-desc", "difficulty-asc"], false)}
                   className="inline-flex items-center gap-1 hover:text-brand"
                 >
-                  Difficulty
+                  {t("Difficulty")}
                   <SortArrows direction={sortDirectionOf(sort, ["difficulty-desc", "difficulty-asc"])} />
                 </button>
-                <InfoTooltip text={DIFFICULTY_EXPLANATION} />
+                <InfoTooltip text={t(DIFFICULTY_EXPLANATION)} />
               </span>
             </th>
-            <th>Tags</th>
+            <th>{t("Tags")}</th>
             <th>
               <span className="inline-flex items-center gap-1">
                 <button
                   type="button"
                   onClick={() => handleHeaderClick(["cpe-desc", "cpe-asc"], true)}
-                  title={isPro ? "Sort by past CPE appearances" : undefined}
+                  title={isPro ? t("Sort by past CPE appearances") : undefined}
                   className={`inline-flex items-center gap-1 ${isPro ? "text-brand hover:text-brand/80" : "text-ink-400 hover:text-brand"}`}
                 >
-                  Past CPE
+                  {t("Past CPE")}
                   {isPro ? <SortArrows direction={sortDirectionOf(sort, ["cpe-desc", "cpe-asc"])} /> : <LockIcon />}
                 </button>
-                <InfoTooltip text={CPE_EXPLANATION} />
+                <InfoTooltip text={t(CPE_EXPLANATION)} />
               </span>
             </th>
           </tr>
@@ -341,14 +345,14 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
               <td className="font-mono text-xs text-brand">{"★".repeat(p.difficulty)}</td>
               <td>
                 <div className="flex flex-wrap gap-1">
-                  {p.tags.map((t) => (
+                  {p.tags.map((tag) => (
                     <button
-                      key={t}
-                      onClick={() => setTag(t)}
-                      title={`Filter by ${t}`}
+                      key={tag}
+                      onClick={() => setTag(tag)}
+                      title={t("Filter by {tag}", { tag })}
                       className="rounded border border-ink-700 bg-ink-800/60 px-1.5 py-0.5 text-[11px] text-ink-300 transition-colors hover:border-brand/40 hover:text-brand"
                     >
-                      {t}
+                      {tag}
                     </button>
                   ))}
                 </div>
@@ -363,7 +367,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
                 ) : (
                   <Link
                     href="/upgrade"
-                    title="Pro feature — upgrade to see how many past CPE exams this problem appeared in"
+                    title={t("Pro feature — upgrade to see how many past CPE exams this problem appeared in")}
                     className="inline-flex text-ink-600 hover:text-brand"
                   >
                     <LockIcon />
@@ -375,7 +379,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
           {visible.length === 0 && (
             <tr>
               <td colSpan={7} className="py-6 text-center text-ink-400">
-                No problems match these filters.
+                {t("No problems match these filters.")}
               </td>
             </tr>
           )}

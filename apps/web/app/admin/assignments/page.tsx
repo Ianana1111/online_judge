@@ -5,8 +5,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { AdminAssignment, AdminUser, ProblemListResponse } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function AdminAssignmentsPage() {
+  const t = useT();
   const { user, status } = useAuthStore();
   const qc = useQueryClient();
 
@@ -41,7 +43,7 @@ export default function AdminAssignmentsPage() {
   });
 
   if (status === "ready" && !isAdmin) {
-    return <p className="text-sm text-verdict-wa">Admins only.</p>;
+    return <p className="text-sm text-verdict-wa">{t("Admins only.")}</p>;
   }
 
   function addProblem(p: { id: string; title: string }) {
@@ -57,7 +59,7 @@ export default function AdminAssignmentsPage() {
     e.preventDefault();
     setError(null);
     if (selectedProblems.length === 0) {
-      setError("Pick at least one problem");
+      setError(t("Pick at least one problem"));
       return;
     }
     setSaving(true);
@@ -80,7 +82,7 @@ export default function AdminAssignmentsPage() {
       setSelectedUserIds([]);
       await qc.invalidateQueries({ queryKey: ["assignments", "admin"] });
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not create assignment");
+      setError(e instanceof ApiError ? e.message : t("Could not create assignment"));
     } finally {
       setSaving(false);
     }
@@ -97,16 +99,16 @@ export default function AdminAssignmentsPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="font-display text-2xl font-bold text-ink-50">Admin · Assignments</h1>
+      <h1 className="font-display text-2xl font-bold text-ink-50">{t("Admin · Assignments")}</h1>
 
       <form onSubmit={createAssignment} className="oj-card space-y-4 p-4">
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm text-ink-300">Title</label>
+            <label className="mb-1 block text-sm text-ink-300">{t("Title")}</label>
             <input className="oj-input" value={title} onChange={(e) => setTitle(e.target.value)} required />
           </div>
           <div>
-            <label className="mb-1 block text-sm text-ink-300">Due date (optional)</label>
+            <label className="mb-1 block text-sm text-ink-300">{t("Due date (optional)")}</label>
             <input
               type="datetime-local"
               className="oj-input"
@@ -115,7 +117,7 @@ export default function AdminAssignmentsPage() {
             />
           </div>
           <div className="sm:col-span-2">
-            <label className="mb-1 block text-sm text-ink-300">Description (optional)</label>
+            <label className="mb-1 block text-sm text-ink-300">{t("Description (optional)")}</label>
             <textarea
               className="oj-input h-20 text-sm"
               value={description}
@@ -125,10 +127,10 @@ export default function AdminAssignmentsPage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm text-ink-300">Problems</label>
+          <label className="mb-1 block text-sm text-ink-300">{t("Problems")}</label>
           <input
             className="oj-input"
-            placeholder="Search problems by title…"
+            placeholder={t("Search problems by title…")}
             value={problemQuery}
             onChange={(e) => setProblemQuery(e.target.value)}
           />
@@ -163,7 +165,7 @@ export default function AdminAssignmentsPage() {
         <div>
           <label className="flex items-center gap-2 text-sm text-ink-300">
             <input type="checkbox" checked={assignToAll} onChange={(e) => setAssignToAll(e.target.checked)} />
-            Assign to all students
+            {t("Assign to all students")}
           </label>
           {!assignToAll && (
             <div className="oj-card mt-2 max-h-40 overflow-y-auto p-2">
@@ -189,31 +191,33 @@ export default function AdminAssignmentsPage() {
 
         {error && <p className="text-sm text-verdict-wa">{error}</p>}
         <button type="submit" disabled={saving} className="oj-btn-primary">
-          {saving ? "Creating…" : "Create assignment"}
+          {saving ? t("Creating…") : t("Create assignment")}
         </button>
       </form>
 
       <div>
-        <h2 className="mb-2 text-sm font-semibold text-ink-200">Existing assignments</h2>
+        <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Existing assignments")}</h2>
         <div className="space-y-2">
           {assignments?.map((a) => (
             <div key={a.id} className="oj-card p-3">
               <div className="mb-1 flex items-center justify-between">
                 <h3 className="font-medium text-ink-50">{a.title}</h3>
                 <button onClick={() => remove(a.id)} className="text-xs text-ink-500 hover:text-verdict-wa">
-                  Delete
+                  {t("Delete")}
                 </button>
               </div>
               {a.dueAt && (
-                <p className="mb-1 font-mono text-xs text-ink-400">Due {new Date(a.dueAt).toLocaleString()}</p>
+                <p className="mb-1 font-mono text-xs text-ink-400">
+                  {t("Due {date}", { date: new Date(a.dueAt).toLocaleString() })}
+                </p>
               )}
               <p className="text-xs text-ink-400">
-                {a.problemCount} problems · {a.assigneeCount} students
+                {t("{count} problems · {students} students", { count: a.problemCount, students: a.assigneeCount })}
               </p>
               <p className="mt-1 text-xs text-ink-500">{a.problems.map((p) => p.title).join(", ")}</p>
             </div>
           ))}
-          {assignments?.length === 0 && <p className="text-sm text-ink-400">No assignments yet.</p>}
+          {assignments?.length === 0 && <p className="text-sm text-ink-400">{t("No assignments yet.")}</p>}
         </div>
       </div>
     </div>

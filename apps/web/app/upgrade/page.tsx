@@ -8,6 +8,7 @@ import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import BackButton from "@/components/BackButton";
 import type { BillingPlans, BillingStatus } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 function Check({ children }: { children: React.ReactNode }) {
   return (
@@ -33,6 +34,7 @@ function DowngradeConfirmDialog({
   onCancel: () => void;
   onConfirm: () => void;
 }) {
+  const t = useT();
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onCancel();
@@ -54,18 +56,19 @@ function DowngradeConfirmDialog({
       onClick={onCancel}
     >
       <div className="oj-card w-full max-w-sm p-5" onClick={(e) => e.stopPropagation()}>
-        <h2 className="font-display text-base font-semibold text-ink-50">Downgrade to Free Plan?</h2>
+        <h2 className="font-display text-base font-semibold text-ink-50">{t("Downgrade to Free Plan?")}</h2>
         <p className="mt-2 text-sm text-ink-300">
-          You'll keep full Pro access {expiresLabel ? `until ${expiresLabel}` : "until your paid period ends"} — nothing changes
-          right away. After that date, your account switches to Free automatically.
+          {expiresLabel
+            ? t("You'll keep full Pro access until {date} — nothing changes right away. After that date, your account switches to Free automatically.", { date: expiresLabel })
+            : t("You'll keep full Pro access until your paid period ends — nothing changes right away. After that date, your account switches to Free automatically.")}
         </p>
         {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
         <div className="mt-5 flex justify-end gap-2">
           <button type="button" onClick={onCancel} className="oj-btn-secondary px-4 py-2 text-sm" disabled={submitting}>
-            Keep Pro
+            {t("Keep Pro")}
           </button>
           <button type="button" onClick={onConfirm} className="oj-btn-primary px-4 py-2 text-sm" disabled={submitting}>
-            {submitting ? "Confirming…" : "Confirm Downgrade"}
+            {submitting ? t("Confirming…") : t("Confirm Downgrade")}
           </button>
         </div>
       </div>
@@ -84,6 +87,7 @@ function UnsubscribeConfirmDialog({
   onCancel: () => void;
   onConfirm: () => void;
 }) {
+  const t = useT();
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onCancel();
@@ -105,17 +109,17 @@ function UnsubscribeConfirmDialog({
       onClick={onCancel}
     >
       <div className="oj-card w-full max-w-sm p-5" onClick={(e) => e.stopPropagation()}>
-        <h2 className="font-display text-base font-semibold text-ink-50">Unsubscribe from Pro?</h2>
+        <h2 className="font-display text-base font-semibold text-ink-50">{t("Unsubscribe from Pro?")}</h2>
         <p className="mt-2 text-sm text-ink-300">
-          This takes effect immediately — you'll switch back to Free right now, and your card won't be charged again.
+          {t("This takes effect immediately — you'll switch back to Free right now, and your card won't be charged again.")}
         </p>
         {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
         <div className="mt-5 flex justify-end gap-2">
           <button type="button" onClick={onCancel} className="oj-btn-secondary px-4 py-2 text-sm" disabled={submitting}>
-            Keep Pro
+            {t("Keep Pro")}
           </button>
           <button type="button" onClick={onConfirm} className="oj-btn-primary px-4 py-2 text-sm" disabled={submitting}>
-            {submitting ? "Unsubscribing…" : "Unsubscribe now"}
+            {submitting ? t("Unsubscribing…") : t("Unsubscribe now")}
           </button>
         </div>
       </div>
@@ -124,6 +128,7 @@ function UnsubscribeConfirmDialog({
 }
 
 export default function UpgradePlanPage() {
+  const t = useT();
   const router = useRouter();
   const queryClient = useQueryClient();
   const { user, status: authStatus } = useAuthStore();
@@ -200,55 +205,61 @@ export default function UpgradePlanPage() {
       <div className="flex flex-1 flex-col items-center justify-center py-2">
         <div className="w-full max-w-3xl space-y-4">
           <div className="text-center">
-            <h1 className="font-display text-xl font-bold text-ink-50 sm:text-2xl">Upgrade your plan</h1>
+            <h1 className="font-display text-xl font-bold text-ink-50 sm:text-2xl">{t("Upgrade your plan")}</h1>
             <p className="mt-1 text-xs text-ink-400 sm:text-sm">
-              Score is difficulty-weighted and Pro removes every cap — pick the plan that fits how you practice.
+              {t("Score is difficulty-weighted and Pro removes every cap — pick the plan that fits how you practice.")}
             </p>
           </div>
 
           {authStatus === "ready" && !user && (
             <div className="oj-card p-4 text-center text-sm text-ink-300">
-              Please{" "}
+              {t("Please")}{" "}
               <Link href="/login" className="text-brand hover:underline">
-                log in
+                {t("log in")}
               </Link>{" "}
-              to upgrade.
+              {t("to upgrade.")}
             </div>
           )}
 
           {user && notApplicable && (
             <div className="oj-card p-4 text-center text-sm text-ink-300">
-              {isAdmin ? "Admin accounts already have no submit or contest limits." : "Student accounts are already Pro — no need to upgrade."}
+              {isAdmin ? t("Admin accounts already have no submit or contest limits.") : t("Student accounts are already Pro — no need to upgrade.")}
             </div>
           )}
 
           {(!user || (user && !notApplicable && !isLoading)) && (
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="oj-card flex flex-col p-4 sm:p-5">
-                <h2 className="font-display text-base font-semibold text-ink-100 sm:text-lg">Free</h2>
+                <h2 className="font-display text-base font-semibold text-ink-100 sm:text-lg">{t("Free")}</h2>
                 <p className="mt-1 text-2xl font-bold text-ink-50 sm:text-3xl">
-                  NT$0<span className="text-xs font-normal text-ink-400 sm:text-sm"> forever</span>
+                  NT$0<span className="text-xs font-normal text-ink-400 sm:text-sm"> {t("forever")}</span>
                 </p>
                 <ul className="mt-3 flex-1 space-y-1.5 sm:mt-4 sm:space-y-2">
                   <Check>
-                    {status ? `${status.submits.used}/${status.submits.limit} submissions this month` : "10 submissions / month"}
+                    {status
+                      ? t("{used}/{limit} submissions this month", { used: status.submits.used, limit: status.submits.limit ?? 0 })
+                      : t("10 submissions / month")}
                   </Check>
                   <Check>
                     {status
-                      ? `${status.virtualContests.used}/${status.virtualContests.limit} virtual CPE contests this month`
-                      : "1 self-run virtual CPE contest / month"}
+                      ? t("{used}/{limit} virtual CPE contests this month", {
+                          used: status.virtualContests.used,
+                          limit: status.virtualContests.limit ?? 0,
+                        })
+                      : t("1 self-run virtual CPE contest / month")}
                   </Check>
-                  <Check>Full access to discussions &amp; leaderboard</Check>
+                  <Check>{t("Full access to discussions & leaderboard")}</Check>
                 </ul>
                 {isPro && status?.subscription ? (
                   <p className="mt-4 text-center text-[11px] text-ink-500">
-                    Manage your subscription from the Pro card →
+                    {t("Manage your subscription from the Pro card →")}
                   </p>
                 ) : isPro ? (
                   status?.planCancelRequested ? (
                     <p className="mt-4 rounded border border-ink-700 bg-ink-800/50 px-3 py-2 text-center text-xs text-ink-300">
-                      ✓ Downgrade confirmed — you'll move to Free{" "}
-                      {expiresLabel ? `on ${expiresLabel}` : "when your Pro period ends"}.
+                      {expiresLabel
+                        ? t("✓ Downgrade confirmed — you'll move to Free on {date}.", { date: expiresLabel })
+                        : t("✓ Downgrade confirmed — you'll move to Free when your Pro period ends.")}
                     </p>
                   ) : (
                     <>
@@ -260,11 +271,12 @@ export default function UpgradePlanPage() {
                         }}
                         className="oj-btn-secondary mt-4 w-full py-2 text-sm"
                       >
-                        Downgrade to Free Plan
+                        {t("Downgrade to Free Plan")}
                       </button>
                       <p className="mt-1.5 text-center text-[11px] text-ink-500">
-                        You'll keep Pro {expiresLabel ? `until ${expiresLabel}` : "until your paid period ends"}, then switch to
-                        Free automatically — nothing else to do.
+                        {expiresLabel
+                          ? t("You'll keep Pro until {date}, then switch to Free automatically — nothing else to do.", { date: expiresLabel })
+                          : t("You'll keep Pro until your paid period ends, then switch to Free automatically — nothing else to do.")}
                       </p>
                     </>
                   )
@@ -275,7 +287,7 @@ export default function UpgradePlanPage() {
                     className="oj-btn-secondary mt-4 w-full py-2 text-sm"
                     disabled={!user}
                   >
-                    Stay on Free Plan
+                    {t("Stay on Free Plan")}
                   </button>
                 )}
               </div>
@@ -283,7 +295,7 @@ export default function UpgradePlanPage() {
               <div className="oj-card relative flex flex-col border-brand/50 p-4 sm:p-5">
                 {!isPro && promo && (
                   <span className="absolute -top-2.5 right-4 rounded-full bg-verdict-wa px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-onbrand">
-                    {promo.discountPct}% off — first month
+                    {t("{pct}% off — first month", { pct: promo.discountPct })}
                   </span>
                 )}
                 <h2 className="font-display text-base font-semibold text-brand sm:text-lg">Pro</h2>
@@ -293,40 +305,45 @@ export default function UpgradePlanPage() {
                       NT${status.subscription.amountNtd}
                       <span className="text-xs font-normal text-ink-400 sm:text-sm">
                         {" "}
-                        / {status.subscription.period === "MONTHLY" ? "month" : "year"}
+                        / {status.subscription.period === "MONTHLY" ? t("month") : t("year")}
                       </span>
                     </p>
                     <p className="mt-1 flex items-center gap-1.5 text-xs text-verdict-ac sm:text-sm">
                       <svg width="12" height="12" viewBox="0 0 16 16" className="shrink-0" fill="none">
                         <circle cx="8" cy="8" r="6" fill="currentColor" />
                       </svg>
-                      Subscribed — renews {expiresLabel ? `on ${expiresLabel}` : "automatically"}
+                      {expiresLabel
+                        ? t("Subscribed — renews on {date}", { date: expiresLabel })
+                        : t("Subscribed — renews automatically")}
                     </p>
                   </>
                 ) : isPro ? (
                   <p className="mt-1 text-base font-semibold text-ink-50 sm:text-lg">
-                    Active{expiresLabel ? <span className="block text-xs font-normal text-ink-400 sm:text-sm">until {expiresLabel}</span> : null}
+                    {t("Active")}
+                    {expiresLabel ? (
+                      <span className="block text-xs font-normal text-ink-400 sm:text-sm">{t("until {date}", { date: expiresLabel })}</span>
+                    ) : null}
                   </p>
                 ) : promo ? (
                   <p className="mt-1 flex items-baseline gap-2">
                     <span className="text-sm font-normal text-ink-500 line-through">NT${listPrice}</span>
                     <span className="text-2xl font-bold text-ink-50 sm:text-3xl">
                       NT${nowPrice}
-                      <span className="text-xs font-normal text-ink-400 sm:text-sm"> / month</span>
+                      <span className="text-xs font-normal text-ink-400 sm:text-sm"> / {t("month")}</span>
                     </span>
                   </p>
                 ) : (
                   <p className="mt-1 text-2xl font-bold text-ink-50 sm:text-3xl">
                     NT${nowPrice}
-                    <span className="text-xs font-normal text-ink-400 sm:text-sm"> / month</span>
+                    <span className="text-xs font-normal text-ink-400 sm:text-sm"> / {t("month")}</span>
                   </p>
                 )}
                 <ul className="mt-3 flex-1 space-y-1.5 sm:mt-4 sm:space-y-2">
-                  <Check>Unlimited submissions</Check>
-                  <Check>Unlimited self-run virtual CPE contests</Check>
-                  <Check>See &amp; sort by past-CPE-exam appearance count</Check>
-                  <Check>Full access to discussions &amp; leaderboard</Check>
-                  <Check>Priority support</Check>
+                  <Check>{t("Unlimited submissions")}</Check>
+                  <Check>{t("Unlimited self-run virtual CPE contests")}</Check>
+                  <Check>{t("See & sort by past-CPE-exam appearance count")}</Check>
+                  <Check>{t("Full access to discussions & leaderboard")}</Check>
+                  <Check>{t("Priority support")}</Check>
                 </ul>
                 {isPro && status?.subscription ? (
                   <>
@@ -338,10 +355,10 @@ export default function UpgradePlanPage() {
                       }}
                       className="oj-btn-secondary mt-4 w-full py-2 text-sm"
                     >
-                      Unsubscribe
+                      {t("Unsubscribe")}
                     </button>
                     <p className="mt-1.5 text-center text-[11px] text-ink-500">
-                      Cancels immediately — you'll switch to Free right away and won't be charged again.
+                      {t("Cancels immediately — you'll switch to Free right away and won't be charged again.")}
                     </p>
                   </>
                 ) : (
@@ -351,7 +368,7 @@ export default function UpgradePlanPage() {
                     className="oj-btn-primary mt-4 w-full py-2 text-sm"
                     disabled={!user}
                   >
-                    {isPro ? "Extend Pro Plan" : "Get Pro Plan"}
+                    {isPro ? t("Extend Pro Plan") : t("Get Pro Plan")}
                   </button>
                 )}
               </div>

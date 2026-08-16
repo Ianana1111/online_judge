@@ -5,10 +5,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { AdminUser } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const EMPTY_FORM = { handle: "", email: "", password: "", role: "USER" as "USER" | "ADMIN" };
 
 export default function AdminUsersPage() {
+  const t = useT();
   const { user, status } = useAuthStore();
   const qc = useQueryClient();
   const [form, setForm] = useState(EMPTY_FORM);
@@ -25,7 +27,7 @@ export default function AdminUsersPage() {
   });
 
   if (status === "ready" && user?.role !== "ADMIN") {
-    return <p className="text-sm text-verdict-wa">Admins only.</p>;
+    return <p className="text-sm text-verdict-wa">{t("Admins only.")}</p>;
   }
 
   async function createUser(e: React.FormEvent) {
@@ -38,7 +40,7 @@ export default function AdminUsersPage() {
       setForm(EMPTY_FORM);
       await qc.invalidateQueries({ queryKey: ["users", "admin"] });
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not create account");
+      setError(e instanceof ApiError ? e.message : t("Could not create account"));
     } finally {
       setSaving(false);
     }
@@ -60,21 +62,21 @@ export default function AdminUsersPage() {
       await apiFetch(`/billing/admin/${id}/grant`, { method: "POST", body: { period } });
       await qc.invalidateQueries({ queryKey: ["users", "admin"] });
     } catch (e) {
-      setPlanError(e instanceof ApiError ? e.message : "Could not grant Pro");
+      setPlanError(e instanceof ApiError ? e.message : t("Could not grant Pro"));
     } finally {
       setActingId(null);
     }
   }
 
   async function revokePlan(id: string) {
-    if (!confirm("Revoke this user's Pro plan and drop them back to Free immediately?")) return;
+    if (!confirm(t("Revoke this user's Pro plan and drop them back to Free immediately?"))) return;
     setPlanError(null);
     setActingId(id);
     try {
       await apiFetch(`/billing/admin/${id}/revoke`, { method: "POST" });
       await qc.invalidateQueries({ queryKey: ["users", "admin"] });
     } catch (e) {
-      setPlanError(e instanceof ApiError ? e.message : "Could not revoke Pro");
+      setPlanError(e instanceof ApiError ? e.message : t("Could not revoke Pro"));
     } finally {
       setActingId(null);
     }
@@ -82,16 +84,16 @@ export default function AdminUsersPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="font-display text-2xl font-bold text-ink-50">Admin · Students &amp; Users</h1>
+      <h1 className="font-display text-2xl font-bold text-ink-50">{t("Admin · Students & Users")}</h1>
       <p className="text-sm text-ink-400">
-        Anyone can create their own account now — use the toggle below to mark someone as your actual
-        tutoring student, which is what gives them the Class-tracking features. You can still provision an
-        account directly here too.
+        {t(
+          "Anyone can create their own account now — use the toggle below to mark someone as your actual tutoring student, which is what gives them the Class-tracking features. You can still provision an account directly here too.",
+        )}
       </p>
 
       <form onSubmit={createUser} className="oj-card grid gap-3 p-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-sm text-ink-300">Handle</label>
+          <label className="mb-1 block text-sm text-ink-300">{t("Handle")}</label>
           <input
             className="oj-input"
             value={form.handle}
@@ -103,7 +105,7 @@ export default function AdminUsersPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-ink-300">Email</label>
+          <label className="mb-1 block text-sm text-ink-300">{t("Email")}</label>
           <input
             type="email"
             className="oj-input"
@@ -113,7 +115,7 @@ export default function AdminUsersPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-ink-300">Initial password</label>
+          <label className="mb-1 block text-sm text-ink-300">{t("Initial password")}</label>
           <input
             type="text"
             className="oj-input"
@@ -124,45 +126,45 @@ export default function AdminUsersPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-ink-300">Role</label>
+          <label className="mb-1 block text-sm text-ink-300">{t("Role")}</label>
           <select
             className="oj-input"
             value={form.role}
             onChange={(e) => setForm((f) => ({ ...f, role: e.target.value as "USER" | "ADMIN" }))}
           >
-            <option value="USER">Student</option>
-            <option value="ADMIN">Admin</option>
+            <option value="USER">{t("Student")}</option>
+            <option value="ADMIN">{t("Admin")}</option>
           </select>
         </div>
         {error && <p className="text-sm text-verdict-wa sm:col-span-2">{error}</p>}
         <button type="submit" disabled={saving} className="oj-btn-primary sm:col-span-2">
-          {saving ? "Creating…" : "Create account"}
+          {saving ? t("Creating…") : t("Create account")}
         </button>
       </form>
 
       {created && (
         <p className="oj-card p-3 text-sm text-ink-200">
-          Created <span className="font-mono text-brand">{created.handle}</span> / password{" "}
-          <span className="font-mono text-brand">{created.password}</span> — share these with the student now,
-          they won't be shown again here.
+          {t("Created")} <span className="font-mono text-brand">{created.handle}</span> / {t("password")}{" "}
+          <span className="font-mono text-brand">{created.password}</span> —{" "}
+          {t("share these with the student now, they won't be shown again here.")}
         </p>
       )}
 
       <div>
-        <h2 className="mb-2 text-sm font-semibold text-ink-200">All accounts</h2>
+        <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("All accounts")}</h2>
         <p className="mb-2 text-xs text-ink-500">
-          Use Grant if someone paid but wasn't upgraded — extends from their current expiry, same as a real purchase.
+          {t("Use Grant if someone paid but wasn't upgraded — extends from their current expiry, same as a real purchase.")}
         </p>
         {planError && <p className="mb-2 text-sm text-verdict-wa">{planError}</p>}
         <table className="oj-table">
           <thead>
             <tr>
-              <th>Handle</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Plan</th>
-              <th>My student</th>
-              <th>Created</th>
+              <th>{t("Handle")}</th>
+              <th>{t("Email")}</th>
+              <th>{t("Role")}</th>
+              <th>{t("Plan")}</th>
+              <th>{t("My student")}</th>
+              <th>{t("Created")}</th>
             </tr>
           </thead>
           <tbody>
@@ -184,10 +186,12 @@ export default function AdminUsersPage() {
                           Pro
                         </span>
                       ) : (
-                        <span className="text-ink-500">Free</span>
+                        <span className="text-ink-500">{t("Free")}</span>
                       )}
                       {u.plan === "PRO" && u.planExpiresAt && (
-                        <span className="text-ink-500">until {new Date(u.planExpiresAt).toLocaleDateString()}</span>
+                        <span className="text-ink-500">
+                          {t("until {date}", { date: new Date(u.planExpiresAt).toLocaleDateString() })}
+                        </span>
                       )}
                     </div>
                     {canManagePlan && (
@@ -198,7 +202,7 @@ export default function AdminUsersPage() {
                           disabled={acting}
                           className="text-[11px] text-brand hover:underline disabled:opacity-50"
                         >
-                          +1mo
+                          {t("+1mo")}
                         </button>
                         <button
                           type="button"
@@ -206,7 +210,7 @@ export default function AdminUsersPage() {
                           disabled={acting}
                           className="text-[11px] text-brand hover:underline disabled:opacity-50"
                         >
-                          +1yr
+                          {t("+1yr")}
                         </button>
                         {u.plan === "PRO" && (
                           <button
@@ -215,7 +219,7 @@ export default function AdminUsersPage() {
                             disabled={acting}
                             className="text-[11px] text-ink-500 hover:text-verdict-wa disabled:opacity-50"
                           >
-                            Revoke
+                            {t("Revoke")}
                           </button>
                         )}
                       </div>
@@ -229,7 +233,7 @@ export default function AdminUsersPage() {
                           checked={u.isStudent}
                           onChange={(e) => toggleStudent(u.id, e.target.checked)}
                         />
-                        {u.isStudent ? "Student" : "—"}
+                        {u.isStudent ? t("Student") : "—"}
                       </label>
                     )}
                   </td>

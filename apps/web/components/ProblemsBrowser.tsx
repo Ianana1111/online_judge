@@ -6,8 +6,10 @@ import type { ProblemListResponse } from "@/lib/types";
 import ProblemFilterTable from "@/components/ProblemFilterTable";
 import { SkeletonList } from "@/components/Skeleton";
 import { useAuthStore } from "@/store/auth";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function ProblemsBrowser() {
+  const t = useT();
   // Client-side (authenticated) so the solved ✓ reflects the logged-in user. One request pulls the
   // whole set; ProblemFilterTable filters/sorts it client-side, identical to the collection pages.
   // The response's cpeAppearances field depends on the requester's Pro status (see
@@ -20,7 +22,14 @@ export default function ProblemsBrowser() {
     queryFn: () => apiFetch<ProblemListResponse>("/problems?pageSize=1000"),
   });
 
-  if (isLoading && !data) return <SkeletonList rows={10} />;
-
-  return <ProblemFilterTable problems={data?.items ?? []} listContext={{ type: "problems" }} />;
+  return (
+    <div>
+      <h1 className="mb-6 font-display text-2xl font-bold text-ink-50">{t("Problems")}</h1>
+      {isLoading && !data ? (
+        <SkeletonList rows={10} />
+      ) : (
+        <ProblemFilterTable problems={data?.items ?? []} listContext={{ type: "problems" }} />
+      )}
+    </div>
+  );
 }

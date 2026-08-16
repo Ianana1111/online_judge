@@ -3,32 +3,34 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import type { ContestProblemRef, Scoreboard as ScoreboardT } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function Scoreboard({ contestId, problems }: { contestId: string; problems: ContestProblemRef[] }) {
+  const t = useT();
   const { data, isLoading } = useQuery({
     queryKey: ["scoreboard", contestId],
     queryFn: () => apiFetch<ScoreboardT>(`/contests/${contestId}/scoreboard`),
     refetchInterval: 12_000,
   });
 
-  if (isLoading) return <p className="text-sm text-ink-400">Loading scoreboard…</p>;
+  if (isLoading) return <p className="text-sm text-ink-400">{t("Loading scoreboard…")}</p>;
   if (!data || data.standings.length === 0)
-    return <p className="text-sm text-ink-400">No submissions yet — the board fills in as people solve problems.</p>;
+    return <p className="text-sm text-ink-400">{t("No submissions yet — the board fills in as people solve problems.")}</p>;
 
   return (
     <div className="oj-card overflow-x-auto">
       {data.frozen && (
         <div className="border-b border-ink-700 bg-verdict-pe/10 px-3 py-1.5 text-xs text-verdict-pe">
-          Scoreboard frozen — standings for the last stretch are hidden until the contest ends.
+          {t("Scoreboard frozen — standings for the last stretch are hidden until the contest ends.")}
         </div>
       )}
       <table className="oj-table">
         <thead>
           <tr>
             <th>#</th>
-            <th>Handle</th>
-            <th>Solved</th>
-            <th>Penalty</th>
+            <th>{t("Handle")}</th>
+            <th>{t("Solved count")}</th>
+            <th>{t("Penalty")}</th>
             {problems.map((p) => (
               <th key={p.label} className="text-center">
                 {p.label}

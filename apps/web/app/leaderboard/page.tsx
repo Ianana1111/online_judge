@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/auth";
 import { SkeletonList } from "@/components/Skeleton";
 import { FlameIcon, SnowflakeIcon } from "@/components/icons";
 import type { LeaderboardRow } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const PERIODS: { key: "all" | "week" | "month"; label: string }[] = [
   { key: "week", label: "This week" },
@@ -27,6 +28,7 @@ const RANK_STYLE: Record<number, string> = {
 };
 
 export default function LeaderboardPage() {
+  const t = useT();
   const [period, setPeriod] = useState<"all" | "week" | "month">("all");
   const [scope, setScope] = useState<"all" | "students">("all");
   const [ranking, setRanking] = useState<"score" | "streak">("score");
@@ -52,11 +54,11 @@ export default function LeaderboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-ink-50">Leaderboard</h1>
+        <h1 className="font-display text-2xl font-bold text-ink-50">{t("Leaderboard")}</h1>
         <p className="mt-1 text-sm text-ink-400">
           {ranking === "score"
-            ? "Score is difficulty-weighted (harder problems are worth more) — grinding easy ones only gets you so far."
-            : "Ranked by current consecutive-day streak — a day covered by a streak-freeze counts the same as a real solve."}
+            ? t("Score is difficulty-weighted (harder problems are worth more) — grinding easy ones only gets you so far.")
+            : t("Ranked by current consecutive-day streak — a day covered by a streak-freeze counts the same as a real solve.")}
         </p>
       </div>
 
@@ -70,7 +72,7 @@ export default function LeaderboardPage() {
                 className={`inline-flex items-center gap-1.5 ${r.key === ranking ? "oj-btn-primary px-3 py-1.5 text-xs" : "oj-btn-secondary px-3 py-1.5 text-xs"}`}
               >
                 {r.key === "streak" && <FlameIcon className="h-3.5 w-3.5" />}
-                {r.label}
+                {t(r.label)}
               </button>
             ))}
           </div>
@@ -82,7 +84,7 @@ export default function LeaderboardPage() {
                   onClick={() => setPeriod(p.key)}
                   className={p.key === period ? "oj-btn-primary px-3 py-1.5 text-xs" : "oj-btn-secondary px-3 py-1.5 text-xs"}
                 >
-                  {p.label}
+                  {t(p.label)}
                 </button>
               ))}
             </div>
@@ -94,13 +96,13 @@ export default function LeaderboardPage() {
               onClick={() => setScope("all")}
               className={scope === "all" ? "oj-btn-primary px-3 py-1.5 text-xs" : "oj-btn-secondary px-3 py-1.5 text-xs"}
             >
-              Global
+              {t("Global")}
             </button>
             <button
               onClick={() => setScope("students")}
               className={scope === "students" ? "oj-btn-primary px-3 py-1.5 text-xs" : "oj-btn-secondary px-3 py-1.5 text-xs"}
             >
-              My class
+              {t("My class")}
             </button>
           </div>
         )}
@@ -119,18 +121,18 @@ export default function LeaderboardPage() {
               <span className="w-8 text-center font-display text-lg font-bold text-ink-400">{r.rank}</span>
               <Link href={`/u/${r.handle}`} className="flex-1 text-sm font-medium text-ink-50 hover:text-brand">
                 {r.handle}
-                {isMe && <span className="ml-2 text-xs font-normal text-brand">(you)</span>}
+                {isMe && <span className="ml-2 text-xs font-normal text-brand">{t("(you)")}</span>}
               </Link>
               {r.streak > 0 && (
                 <span
                   className={`inline-flex items-center gap-1 font-mono text-xs ${r.frozenToday ? "text-sky-400" : "text-verdict-tle"}`}
-                  title={r.frozenToday ? "Protected today by a streak-freeze" : "Consecutive days with an AC"}
+                  title={r.frozenToday ? t("Protected today by a streak-freeze") : t("Consecutive days with an AC")}
                 >
                   {r.frozenToday ? <SnowflakeIcon className="h-3.5 w-3.5" /> : null}
-                  {r.streak}d streak
+                  {t("{n}d streak", { n: r.streak })}
                 </span>
               )}
-              {ranking === "score" && <span className="font-mono text-xs text-ink-400">{r.solved} solved</span>}
+              {ranking === "score" && <span className="font-mono text-xs text-ink-400">{t("{n} solved", { n: r.solved })}</span>}
               <span className="w-16 text-right font-mono text-sm font-semibold text-brand">
                 {ranking === "score" ? r.score : `${r.streak}d`}
               </span>
@@ -140,12 +142,16 @@ export default function LeaderboardPage() {
         {displayRows?.length === 0 && (
           <div className="oj-card p-4 text-sm text-ink-400">
             {ranking === "streak" ? (
-              <p>Nobody has an active streak right now — solve something today to start one.</p>
+              <p>{t("Nobody has an active streak right now — solve something today to start one.")}</p>
             ) : (
               <>
-                <p>Nobody's solved anything {period === "all" ? "yet" : "in this period"} — be the first.</p>
+                <p>
+                  {period === "all"
+                    ? t("Nobody's solved anything yet — be the first.")
+                    : t("Nobody's solved anything in this period — be the first.")}
+                </p>
                 <Link href="/problems" className="mt-2 inline-block text-brand hover:underline">
-                  Browse problems →
+                  {t("Browse problems →")}
                 </Link>
               </>
             )}

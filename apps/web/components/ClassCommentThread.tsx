@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import type { ClassComment, ClassSessionDetail } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 function timeLabel(iso: string): string {
   return new Date(iso).toLocaleString(undefined, {
@@ -15,6 +16,7 @@ function timeLabel(iso: string): string {
 }
 
 export default function ClassCommentThread({ classId, comments }: { classId: string; comments: ClassComment[] }) {
+  const t = useT();
   const qc = useQueryClient();
   const [body, setBody] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +38,7 @@ export default function ClassCommentThread({ classId, comments }: { classId: str
       );
       setBody("");
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not send your message");
+      setError(e instanceof ApiError ? e.message : t("Could not send your message"));
     } finally {
       setSending(false);
     }
@@ -44,10 +46,10 @@ export default function ClassCommentThread({ classId, comments }: { classId: str
 
   return (
     <div>
-      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Questions &amp; discussion</h3>
+      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">{t("Questions & discussion")}</h3>
 
       <div className="space-y-3">
-        {comments.length === 0 && <p className="text-sm text-ink-500">No messages yet — ask a question below.</p>}
+        {comments.length === 0 && <p className="text-sm text-ink-500">{t("No messages yet — ask a question below.")}</p>}
         {comments.map((c) => (
           <div
             key={c.id}
@@ -59,7 +61,7 @@ export default function ClassCommentThread({ classId, comments }: { classId: str
               <span className={`text-sm font-semibold ${c.isAdmin ? "text-brand" : "text-ink-100"}`}>{c.authorHandle}</span>
               {c.isAdmin && (
                 <span className="rounded border border-brand/40 bg-brand/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-brand">
-                  Teacher
+                  {t("Teacher")}
                 </span>
               )}
               <span className="font-mono text-xs text-ink-500">{timeLabel(c.createdAt)}</span>
@@ -74,12 +76,12 @@ export default function ClassCommentThread({ classId, comments }: { classId: str
           className="oj-input h-24 text-sm"
           value={body}
           onChange={(e) => setBody(e.target.value)}
-          placeholder="Ask a question about this class…"
+          placeholder={t("Ask a question about this class…")}
           maxLength={4000}
         />
         {error && <p className="text-sm text-verdict-wa">{error}</p>}
         <button type="submit" disabled={sending || !body.trim()} className="oj-btn-primary text-sm">
-          {sending ? "Sending…" : "Send"}
+          {sending ? t("Sending…") : t("Send")}
         </button>
       </form>
     </div>
