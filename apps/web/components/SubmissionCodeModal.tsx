@@ -8,6 +8,7 @@ import { LANGUAGE_LABEL } from "@/lib/types";
 import VerdictBadge from "@/components/VerdictBadge";
 import CopyButton from "@/components/CopyButton";
 import { Skeleton } from "@/components/Skeleton";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function SubmissionCodeModal({
   submissionId,
@@ -16,6 +17,7 @@ export default function SubmissionCodeModal({
   submissionId: string;
   onClose: () => void;
 }) {
+  const t = useT();
   const { data, isLoading, error } = useQuery({
     queryKey: ["submission", submissionId],
     queryFn: () => apiFetch<SubmissionDetail>(`/submissions/${submissionId}`),
@@ -48,7 +50,7 @@ export default function SubmissionCodeModal({
       >
         <div className="flex items-center justify-between border-b border-ink-800 px-4 py-3">
           <div className="flex flex-wrap items-center gap-3">
-            <h2 className="font-display text-sm font-semibold text-ink-100">Submission</h2>
+            <h2 className="font-display text-sm font-semibold text-ink-100">{t("Submission")}</h2>
             {data && (
               <>
                 <VerdictBadge verdict={data.verdict} size="sm" />
@@ -60,7 +62,7 @@ export default function SubmissionCodeModal({
           </div>
           <button
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("Close")}
             className="rounded p-1 text-ink-400 transition-colors hover:bg-ink-800 hover:text-ink-50"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -71,11 +73,11 @@ export default function SubmissionCodeModal({
 
         <div className="min-h-0 flex-1 overflow-auto p-4">
           {isLoading && <Skeleton className="h-48 w-full" />}
-          {error && <p className="text-sm text-verdict-wa">Could not load this submission.</p>}
+          {error && <p className="text-sm text-verdict-wa">{t("Could not load this submission.")}</p>}
 
           {data?.compileError && (
             <div className="mb-4">
-              <p className="mb-1 text-xs font-medium text-verdict-ce">Compiler / judge message</p>
+              <p className="mb-1 text-xs font-medium text-verdict-ce">{t("Compiler / judge message")}</p>
               <pre className="oj-card overflow-x-auto p-3 font-mono text-xs text-verdict-wa">{data.compileError}</pre>
             </div>
           )}
@@ -83,7 +85,7 @@ export default function SubmissionCodeModal({
           {data && (data.sourceCode ? (
             <div>
               <div className="mb-1 flex items-center justify-between">
-                <p className="text-xs font-medium text-ink-400">Source code</p>
+                <p className="text-xs font-medium text-ink-400">{t("Source code")}</p>
                 <CopyButton text={data.sourceCode} />
               </div>
               <pre className="oj-card overflow-x-auto p-3 font-mono text-xs leading-relaxed text-ink-100">
@@ -91,7 +93,7 @@ export default function SubmissionCodeModal({
               </pre>
             </div>
           ) : (
-            <p className="text-sm text-ink-400">Source code is only visible to the person who wrote it.</p>
+            <p className="text-sm text-ink-400">{t("Source code is only visible to the person who wrote it.")}</p>
           ))}
         </div>
       </div>

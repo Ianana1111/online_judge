@@ -6,8 +6,10 @@ import type { CollectionDetail } from "@/lib/types";
 import ProblemFilterTable from "@/components/ProblemFilterTable";
 import { useAuthStore } from "@/store/auth";
 import { Skeleton, SkeletonList } from "@/components/Skeleton";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function CollectionDetailClient({ slug }: { slug: string }) {
+  const t = useT();
   // See ProblemsBrowser: this response's cpeAppearances field depends on the requester's Pro
   // status, so `plan` must be part of the query key or a user who just upgraded keeps seeing the
   // FREE-tier snapshot cached from before their purchase.
@@ -29,7 +31,7 @@ export default function CollectionDetailClient({ slug }: { slug: string }) {
       </div>
     );
   }
-  if (!data) return <p className="text-sm text-verdict-wa">Collection not found.</p>;
+  if (!data) return <p className="text-sm text-verdict-wa">{t("Collection not found.")}</p>;
 
   const total = data.problems.length;
   const solved = data.problems.filter((p) => p.solvedByMe).length;
@@ -44,10 +46,8 @@ export default function CollectionDetailClient({ slug }: { slug: string }) {
 
       <div className="oj-card p-4">
         <div className="mb-2 flex items-center justify-between text-sm">
-          <span className="text-ink-300">Progress</span>
-          <span className="font-mono text-ink-200">
-            {solved} / {total} solved
-          </span>
+          <span className="text-ink-300">{t("Progress")}</span>
+          <span className="font-mono text-ink-200">{t("{solved} / {total} solved", { solved, total })}</span>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-ink-800">
           <div className="h-full rounded-full bg-verdict-ac transition-all" style={{ width: `${pct}%` }} />

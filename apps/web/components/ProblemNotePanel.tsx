@@ -6,8 +6,10 @@ import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import { Skeleton } from "@/components/Skeleton";
 import type { ProblemNote } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function ProblemNotePanel({ slug }: { slug: string }) {
+  const t = useT();
   const { user } = useAuthStore();
   const qc = useQueryClient();
   const [content, setContent] = useState("");
@@ -25,7 +27,7 @@ export default function ProblemNotePanel({ slug }: { slug: string }) {
   }, [data]);
 
   if (!user) {
-    return <p className="text-sm text-ink-400">Log in to keep your own private notes on this problem.</p>;
+    return <p className="text-sm text-ink-400">{t("Log in to keep your own private notes on this problem.")}</p>;
   }
   if (isLoading) return <Skeleton className="h-32 w-full" />;
 
@@ -44,15 +46,15 @@ export default function ProblemNotePanel({ slug }: { slug: string }) {
 
   return (
     <div className="space-y-2">
-      <p className="text-xs text-ink-500">Private — only you can see this.</p>
+      <p className="text-xs text-ink-500">{t("Private — only you can see this.")}</p>
       <textarea
         className="oj-input h-48 font-mono text-sm"
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder="Your approach, gotchas, things to remember next time…"
+        placeholder={t("Your approach, gotchas, things to remember next time…")}
       />
       <button onClick={save} disabled={saving} className="oj-btn-primary">
-        {saving ? "Saving…" : saved ? "Saved ✓" : "Save note"}
+        {saving ? t("Saving…") : saved ? t("Saved ✓") : t("Save note")}
       </button>
     </div>
   );

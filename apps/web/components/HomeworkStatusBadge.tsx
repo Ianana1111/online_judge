@@ -1,7 +1,11 @@
+"use client";
+
 import type { HomeworkStatus } from "@/lib/types";
 import VerdictBadge from "./VerdictBadge";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function HomeworkStatusBadge({ status, size = "sm" }: { status: HomeworkStatus; size?: "sm" | "md" }) {
+  const t = useT();
   if (status === "NOT_STARTED") {
     return (
       <span
@@ -10,7 +14,7 @@ export default function HomeworkStatusBadge({ status, size = "sm" }: { status: H
           size === "sm" ? "px-1.5 py-0.5 text-[10px]" : "px-2.5 py-1 text-xs",
         ].join(" ")}
       >
-        Not started
+        {t("Not started")}
       </span>
     );
   }

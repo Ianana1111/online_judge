@@ -35,6 +35,7 @@ import type {
   UserProfile,
   UserStats,
 } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const REASON_ICON = { collection: BookOpenIcon, consolidate: LayersIcon, stretch: RocketIcon } as const;
 const REASON_ACCENT = {
@@ -45,22 +46,25 @@ const REASON_ACCENT = {
 
 const RANK_MEDAL_CLASS: Record<number, string> = { 1: "text-yellow-400", 2: "text-slate-300", 3: "text-amber-600" };
 
-function greeting(handle: string) {
+type Translate = ReturnType<typeof useT>;
+
+function greeting(handle: string, t: Translate) {
   const hour = new Date().getHours();
-  const part = hour < 5 ? "Still up" : hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  const part =
+    hour < 5 ? t("Still up") : hour < 12 ? t("Good morning") : hour < 18 ? t("Good afternoon") : t("Good evening");
   const Icon = hour < 5 ? MoonIcon : hour < 12 ? SunIcon : hour < 18 ? CloudSunIcon : SunsetIcon;
   return { text: `${part}, ${handle}`, Icon };
 }
 
-function timeAgo(iso: string): string {
+function timeAgo(iso: string, t: Translate): string {
   const ms = Date.now() - new Date(iso).getTime();
   const min = Math.floor(ms / 60_000);
-  if (min < 1) return "just now";
-  if (min < 60) return `${min}m ago`;
+  if (min < 1) return t("just now");
+  if (min < 60) return t("{n}m ago", { n: min });
   const hr = Math.floor(min / 60);
-  if (hr < 24) return `${hr}h ago`;
+  if (hr < 24) return t("{n}h ago", { n: hr });
   const day = Math.floor(hr / 24);
-  if (day < 30) return `${day}d ago`;
+  if (day < 30) return t("{n}d ago", { n: day });
   return new Date(iso).toLocaleDateString();
 }
 
@@ -90,11 +94,12 @@ function StatCell({ value, label, valueClassName = "text-ink-50" }: { value: Rea
  * number next to a flame icon. A frozen day shows as a cool-toned snowflake instead of the warm
  * "at risk" red, since it's already protected — nothing left to worry about today. */
 function StreakFlame({ streak, atRisk, frozenToday }: { streak: number; atRisk: boolean; frozenToday: boolean }) {
+  const t = useT();
   if (streak <= 0) {
     return (
       <div className="flex flex-col items-center gap-1">
         <FlameIcon className="h-6 w-6 text-ink-700" />
-        <span className="text-[10px] uppercase tracking-wide text-ink-600">no streak yet</span>
+        <span className="text-[10px] uppercase tracking-wide text-ink-600">{t("no streak yet")}</span>
       </div>
     );
   }
@@ -104,7 +109,7 @@ function StreakFlame({ streak, atRisk, frozenToday }: { streak: number; atRisk: 
       <div className="flex flex-col items-center gap-1">
         <SnowflakeIcon className={`${size} text-sky-400`} />
         <span className="font-display font-bold tabular-nums text-sky-400">{streak}</span>
-        <span className="text-[10px] uppercase tracking-wide text-ink-500">protected today</span>
+        <span className="text-[10px] uppercase tracking-wide text-ink-500">{t("protected today")}</span>
       </div>
     );
   }
@@ -112,7 +117,7 @@ function StreakFlame({ streak, atRisk, frozenToday }: { streak: number; atRisk: 
     <div className="flex flex-col items-center gap-1">
       <FlameIcon className={`${size} text-verdict-tle ${atRisk ? "animate-pulse-soft" : ""}`} />
       <span className={`font-display font-bold tabular-nums ${atRisk ? "text-verdict-wa" : "text-verdict-tle"}`}>{streak}</span>
-      <span className="text-[10px] uppercase tracking-wide text-ink-500">{atRisk ? "at risk today" : "day streak"}</span>
+      <span className="text-[10px] uppercase tracking-wide text-ink-500">{atRisk ? t("at risk today") : t("day streak")}</span>
     </div>
   );
 }
@@ -121,6 +126,7 @@ function StreakFlame({ streak, atRisk, frozenToday }: { streak: number; atRisk: 
  * stock — spends it via POST /users/me/streak-freeze and refetches daily() so the flame/ring
  * above flip to the "protected today" state immediately. */
 function StreakFreezeButton({ freezeCount }: { freezeCount: number }) {
+  const t = useT();
   const qc = useQueryClient();
   const [error, setError] = useState<string | null>(null);
 
@@ -130,7 +136,7 @@ function StreakFreezeButton({ freezeCount }: { freezeCount: number }) {
       setError(null);
       qc.invalidateQueries({ queryKey: ["daily"] });
     },
-    onError: (e) => setError(e instanceof ApiError ? e.message : "Couldn't use a freeze — try again."),
+    onError: (e) => setError(e instanceof ApiError ? e.message : t("Couldn't use a freeze — try again.")),
   });
 
   return (
@@ -139,11 +145,11 @@ function StreakFreezeButton({ freezeCount }: { freezeCount: number }) {
         type="button"
         onClick={() => mutation.mutate()}
         disabled={mutation.isPending}
-        title="Life gets busy — spend one to keep your streak alive today without solving anything."
+        title={t("Life gets busy — spend one to keep your streak alive today without solving anything.")}
         className="inline-flex items-center gap-1.5 rounded border border-sky-400/40 bg-sky-400/10 px-2.5 py-1.5 text-xs font-medium text-sky-300 transition-colors hover:bg-sky-400/20 disabled:opacity-50"
       >
         <SnowflakeIcon className="h-3.5 w-3.5" />
-        {mutation.isPending ? "Using…" : `Use a freeze (${freezeCount} left)`}
+        {mutation.isPending ? t("Using…") : t("Use a freeze ({n} left)", { n: freezeCount })}
       </button>
       {error && <p className="max-w-[160px] text-center text-[10px] text-verdict-wa">{error}</p>}
     </div>
@@ -154,6 +160,7 @@ function StreakFreezeButton({ freezeCount }: { freezeCount: number }) {
  * do today's?" reference point rather than a personal recommendation, which is what the separate
  * "Recommended for you" section below is already for. */
 function DailyProblemCard({ problem }: { problem: DailyProblem }) {
+  const t = useT();
   return (
     <div className="oj-card relative overflow-hidden p-5">
       <div
@@ -163,7 +170,7 @@ function DailyProblemCard({ problem }: { problem: DailyProblem }) {
       <div className="relative flex items-center justify-between gap-4">
         <div className="min-w-0">
           <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-brand">
-            <SparklesIcon className="h-3.5 w-3.5" /> Today's problem
+            <SparklesIcon className="h-3.5 w-3.5" /> {t("Today's problem")}
           </div>
           <Link href={`/problems/${problem.slug}`} className="mt-1.5 block truncate font-display text-lg font-bold text-ink-50 hover:text-brand">
             {problem.uvaId != null && <span className="mr-1.5 font-mono text-sm font-normal text-ink-500">#{problem.uvaId}</span>}
@@ -180,11 +187,11 @@ function DailyProblemCard({ problem }: { problem: DailyProblem }) {
         </div>
         {problem.solvedByMe ? (
           <span className="flex shrink-0 items-center gap-1.5 rounded border border-verdict-ac/40 bg-verdict-ac/10 px-3 py-1.5 text-xs font-medium text-verdict-ac">
-            ✓ Solved
+            ✓ {t("Solved")}
           </span>
         ) : (
           <Link href={`/problems/${problem.slug}`} className="oj-btn-primary shrink-0 px-3 py-1.5 text-xs">
-            Solve it →
+            {t("Solve it →")}
           </Link>
         )}
       </div>
@@ -195,6 +202,7 @@ function DailyProblemCard({ problem }: { problem: DailyProblem }) {
 /** Compact GitHub-style heatmap scoped to the last ~10 weeks (the full-year version on the profile
  * page is the right call there, but would dwarf everything else crammed onto the homepage). */
 function MiniHeatmap({ data }: { data: { date: string; count: number }[] }) {
+  const t = useT();
   const WEEKS = 10;
   const byDate = new Map(data.map((d) => [d.date, d.count]));
   const today = new Date();
@@ -229,7 +237,7 @@ function MiniHeatmap({ data }: { data: { date: string; count: number }[] }) {
             day ? (
               <div
                 key={di}
-                title={`${day.date}: ${day.count} submission${day.count === 1 ? "" : "s"}`}
+                title={t("{date}: {count} submissions", { date: day.date, count: day.count })}
                 className={`h-[11px] w-[11px] rounded-sm ${level(day.count)}`}
               />
             ) : (
@@ -245,6 +253,7 @@ function MiniHeatmap({ data }: { data: { date: string; count: number }[] }) {
 /** Shown instead of the logged-out hero once a session is confirmed — the homepage's job for a
  * returning user is "get me back into solving," not re-pitching what the site is. */
 export default function HomeDashboard() {
+  const t = useT();
   const { user } = useAuthStore();
 
   const { data: daily } = useQuery({
@@ -303,13 +312,19 @@ export default function HomeDashboard() {
 
   const suggestions = [
     ...(recommended?.collectionNext
-      ? [{ ...recommended.collectionNext, kind: "collection" as const, reason: `Next in ${recommended.collectionNext.collectionTitle}` }]
+      ? [
+          {
+            ...recommended.collectionNext,
+            kind: "collection" as const,
+            reason: t("Next in {collection}", { collection: recommended.collectionNext.collectionTitle }),
+          },
+        ]
       : []),
-    ...(recommended?.consolidate ?? []).map((p) => ({ ...p, kind: "consolidate" as const, reason: "Build your tier" })),
-    ...(recommended?.stretch ? [{ ...recommended.stretch, kind: "stretch" as const, reason: "Stretch — one tier up" }] : []),
+    ...(recommended?.consolidate ?? []).map((p) => ({ ...p, kind: "consolidate" as const, reason: t("Build your tier") })),
+    ...(recommended?.stretch ? [{ ...recommended.stretch, kind: "stretch" as const, reason: t("Stretch — one tier up") }] : []),
   ].slice(0, 4);
 
-  const { text: greetText, Icon: GreetIcon } = greeting(user.handle);
+  const { text: greetText, Icon: GreetIcon } = greeting(user.handle, t);
 
   return (
     <div className="space-y-6 py-6">
@@ -333,23 +348,23 @@ export default function HomeDashboard() {
             </h1>
             {latestAchievement ? (
               <Link href={`/u/${user.handle}`} className="mt-1 inline-flex items-center gap-1 text-xs text-brand hover:underline">
-                <TrophyIcon className="h-3.5 w-3.5" /> Latest: {latestAchievement.title}
+                <TrophyIcon className="h-3.5 w-3.5" /> {t("Latest: {title}", { title: latestAchievement.title })}
               </Link>
             ) : (
-              <p className="mt-1 text-xs text-ink-500">Ready to pick up where you left off?</p>
+              <p className="mt-1 text-xs text-ink-500">{t("Ready to pick up where you left off?")}</p>
             )}
             {daily && daily.loginStreak > 1 && (
               <p className="mt-1 flex items-center gap-1 text-xs text-ink-500">
                 <CalendarCheckIcon className="h-3.5 w-3.5 text-sky-400" />
-                {daily.loginStreak} days in a row you've shown up
-                {daily.loginMilestoneHit && " — bonus streak-freeze earned!"}
+                {t("{n} days in a row you've shown up", { n: daily.loginStreak })}
+                {daily.loginMilestoneHit && t(" — bonus streak-freeze earned!")}
               </p>
             )}
             <Link
               href={suggestions[0] ? `/problems/${suggestions[0].slug}` : "/problems"}
               className="oj-btn-primary mt-3 inline-flex items-center gap-1.5 px-4 py-2 text-sm"
             >
-              Continue solving <span aria-hidden>→</span>
+              {t("Continue solving")} <span aria-hidden>→</span>
             </Link>
           </div>
           <div className="hidden flex-col items-center gap-2 sm:flex">
@@ -370,7 +385,7 @@ export default function HomeDashboard() {
                   "–"
                 )
               }
-              label={daily?.frozenToday ? "protected today" : daily?.atRisk ? "at risk today" : "day streak"}
+              label={daily?.frozenToday ? t("protected today") : daily?.atRisk ? t("at risk today") : t("day streak")}
               valueClassName={
                 daily?.frozenToday
                   ? "text-sky-400"
@@ -382,8 +397,8 @@ export default function HomeDashboard() {
               }
             />
           </div>
-          <StatCell value={<DifficultyStars d={recommended?.tier ?? 1} />} label="current tier" />
-          <StatCell value={profile ? profile.solvedCount : "–"} label="solved" />
+          <StatCell value={<DifficultyStars d={recommended?.tier ?? 1} />} label={t("current tier")} />
+          <StatCell value={profile ? profile.solvedCount : "–"} label={t("solved")} />
           <StatCell
             value={
               myRank ? (
@@ -394,13 +409,13 @@ export default function HomeDashboard() {
                 "–"
               )
             }
-            label="rank this week"
+            label={t("rank this week")}
             valueClassName={myRank && myRank <= 3 ? "text-verdict-tle" : "text-ink-50"}
           />
           <div className="hidden sm:block">
             <StatCell
               value={achievements ? achievements.length : "–"}
-              label="achievements"
+              label={t("achievements")}
               valueClassName="text-brand"
             />
           </div>
@@ -411,9 +426,9 @@ export default function HomeDashboard() {
 
       <div className="oj-card p-5">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-ink-200">Recent activity</h2>
+          <h2 className="text-sm font-semibold text-ink-200">{t("Recent activity")}</h2>
           <Link href="/submissions" className="text-xs text-ink-500 hover:text-brand">
-            view all →
+            {t("view all →")}
           </Link>
         </div>
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
@@ -423,7 +438,7 @@ export default function HomeDashboard() {
             ) : (
               <div className="h-[95px] w-[123px] animate-pulse rounded bg-ink-800/60" />
             )}
-            <p className="mt-2 text-[11px] text-ink-500">last 10 weeks</p>
+            <p className="mt-2 text-[11px] text-ink-500">{t("last 10 weeks")}</p>
           </div>
           <div className="min-w-0 flex-1 space-y-1.5">
             {recent && recent.items.length > 0 ? (
@@ -434,16 +449,18 @@ export default function HomeDashboard() {
                   className="flex items-center justify-between gap-3 rounded px-2 py-1.5 transition-colors hover:bg-ink-800/50"
                 >
                   <span className="min-w-0 truncate text-sm text-ink-200">
-                    {s.problemTitle ? stripProblemNumber(s.problemTitle) : "Submission"}
+                    {s.problemTitle ? stripProblemNumber(s.problemTitle) : t("Submission")}
                   </span>
                   <span className="flex shrink-0 items-center gap-2">
-                    <span className="font-mono text-[10px] text-ink-500">{timeAgo(s.createdAt)}</span>
+                    <span className="font-mono text-[10px] text-ink-500">{timeAgo(s.createdAt, t)}</span>
                     <VerdictBadge verdict={s.verdict} size="sm" />
                   </span>
                 </Link>
               ))
             ) : (
-              <p className="px-2 py-1.5 text-sm text-ink-400">No submissions yet — solve something to light up your heatmap.</p>
+              <p className="px-2 py-1.5 text-sm text-ink-400">
+                {t("No submissions yet — solve something to light up your heatmap.")}
+              </p>
             )}
           </div>
         </div>
@@ -451,18 +468,18 @@ export default function HomeDashboard() {
 
       <div className="oj-card p-5">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-ink-200">Recommended for you</h2>
+          <h2 className="text-sm font-semibold text-ink-200">{t("Recommended for you")}</h2>
           <Link href="/problems" className="text-xs text-ink-500 hover:text-brand">
-            browse all →
+            {t("browse all →")}
           </Link>
         </div>
         {suggestions.length === 0 ? (
           <p className="text-sm text-ink-400">
-            No new recommendations yet —{" "}
+            {t("No new recommendations yet —")}{" "}
             <Link href="/problems" className="text-brand hover:underline">
-              browse the problem list
+              {t("browse the problem list")}
             </Link>{" "}
-            to get started.
+            {t("to get started.")}
           </p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
@@ -492,16 +509,20 @@ export default function HomeDashboard() {
       {achievements && achievements.length > 0 && (
         <div className="oj-card p-5">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-ink-200">Trophy case</h2>
+            <h2 className="text-sm font-semibold text-ink-200">{t("Trophy case")}</h2>
             <Link href={`/u/${user.handle}`} className="text-xs text-ink-500 hover:text-brand">
-              view profile →
+              {t("view profile →")}
             </Link>
           </div>
           <div className="flex flex-wrap gap-2">
             {achievements.map((a) => (
               <div
                 key={a.code}
-                title={`${a.title} — ${a.description} (${new Date(a.earnedAt).toLocaleDateString()})`}
+                title={t("{title} — {description} ({date})", {
+                  title: a.title,
+                  description: a.description,
+                  date: new Date(a.earnedAt).toLocaleDateString(),
+                })}
                 className="flex items-center gap-2 rounded-full border border-brand/30 bg-brand/5 py-1.5 pl-1.5 pr-3"
               >
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink-900 text-brand">

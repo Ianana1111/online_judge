@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { apiFetch, ApiError, openRunStream } from "@/lib/api";
 import type { RunCaseResult, RunResult, Sample } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const MAX_CASES = 8; // mirrors the API's createRunSchema cap
 const MAX_INPUT_CHARS = 4096;
@@ -46,6 +47,7 @@ export default function TestPanel({
   sourceCode: string;
   samples: Sample[];
 }) {
+  const t = useT();
   const storageKey = `oj:testcases:${userId}:${slug}`;
   const sampleCases: Case[] = useMemo(
     () =>
@@ -164,24 +166,24 @@ export default function TestPanel({
           setResults(byId);
           setStatus("done");
         } else if (payload.status === "COMPILE_ERROR") {
-          setCompileError(payload.compileError ?? "Compile error");
+          setCompileError(payload.compileError ?? t("Compile error"));
           setStatus("compile_error");
         } else {
-          setRunError(payload.compileError ?? "Something went wrong running your code.");
+          setRunError(payload.compileError ?? t("Something went wrong running your code."));
           setStatus("error");
         }
         es.close();
       });
       es.onerror = () => {
         es.close();
-        setRunError((prev) => prev ?? "Lost connection while running.");
+        setRunError((prev) => prev ?? t("Lost connection while running."));
         setStatus((prev) => (prev === "running" ? "error" : prev));
       };
     } catch (e) {
       if (e instanceof ApiError) {
-        setRunError(e.status === 429 ? "You're running tests too fast — wait a moment and try again." : e.message);
+        setRunError(e.status === 429 ? t("You're running tests too fast — wait a moment and try again.") : e.message);
       } else {
-        setRunError("Something went wrong running your code.");
+        setRunError(t("Something went wrong running your code."));
       }
       setStatus("error");
     }
@@ -226,7 +228,7 @@ export default function TestPanel({
                     removeCase(c.id);
                   }}
                   className="ml-1.5 text-ink-500 hover:text-verdict-wa"
-                  aria-label="Remove test case"
+                  aria-label={t("Remove test case")}
                 >
                   ×
                 </span>
@@ -237,10 +239,10 @@ export default function TestPanel({
             <button
               type="button"
               onClick={addCase}
-              title="Add your own test case"
+              title={t("Add your own test case")}
               className="rounded border border-dashed border-ink-700 px-2 py-1 text-xs text-ink-400 transition-colors hover:border-brand hover:text-brand"
             >
-              + Add case
+              {t("+ Add case")}
             </button>
           )}
         </div>
@@ -250,14 +252,14 @@ export default function TestPanel({
           disabled={status === "running" || cases.length === 0 || sourceCode.trim().length === 0}
           className="oj-btn-secondary shrink-0 px-3 py-1.5 text-xs"
         >
-          {status === "running" ? "Running…" : "▶ Run"}
+          {status === "running" ? t("Running…") : t("▶ Run")}
         </button>
       </div>
 
       {active ? (
         <div className="space-y-2.5">
           <div>
-            <p className="mb-1 text-xs font-medium text-ink-400">Input</p>
+            <p className="mb-1 text-xs font-medium text-ink-400">{t("Input")}</p>
             <textarea
               value={activeInput}
               onChange={(e) => setInputFor(active.id, e.target.value)}
@@ -269,7 +271,7 @@ export default function TestPanel({
 
           {active.isSample && (
             <div>
-              <p className="mb-1 text-xs font-medium text-ink-400">Expected output</p>
+              <p className="mb-1 text-xs font-medium text-ink-400">{t("Expected output")}</p>
               <pre className="oj-card overflow-x-auto p-2 font-mono text-xs">{active.expectedOutput}</pre>
             </div>
           )}
@@ -277,13 +279,13 @@ export default function TestPanel({
           {activeResult && (
             <div>
               <div className="mb-1 flex items-center gap-2">
-                <p className="text-xs font-medium text-ink-400">Output</p>
-                {activeMatch === true && <span className="text-xs font-medium text-verdict-ac">Matches expected</span>}
-                {activeMatch === false && <span className="text-xs font-medium text-verdict-wa">Doesn&apos;t match</span>}
-                {activeResult.timedOut && <span className="text-xs font-medium text-verdict-tle">Timed out</span>}
+                <p className="text-xs font-medium text-ink-400">{t("Output")}</p>
+                {activeMatch === true && <span className="text-xs font-medium text-verdict-ac">{t("Matches expected")}</span>}
+                {activeMatch === false && <span className="text-xs font-medium text-verdict-wa">{t("Doesn't match")}</span>}
+                {activeResult.timedOut && <span className="text-xs font-medium text-verdict-tle">{t("Timed out")}</span>}
                 <span className="ml-auto font-mono text-[11px] text-ink-500">{activeResult.timeMs} ms</span>
               </div>
-              <pre className="oj-card overflow-x-auto p-2 font-mono text-xs">{activeResult.stdout || "(no output)"}</pre>
+              <pre className="oj-card overflow-x-auto p-2 font-mono text-xs">{activeResult.stdout || t("(no output)")}</pre>
               {activeResult.stderr && (
                 <pre className="mt-1.5 overflow-x-auto rounded bg-ink-800 p-2 font-mono text-xs text-verdict-re">
                   {activeResult.stderr}
@@ -293,12 +295,12 @@ export default function TestPanel({
           )}
         </div>
       ) : (
-        <p className="text-xs text-ink-500">No test cases yet — add one to try your code.</p>
+        <p className="text-xs text-ink-500">{t("No test cases yet — add one to try your code.")}</p>
       )}
 
       {compileError && (
         <div className="mt-2.5">
-          <p className="mb-1 text-xs font-medium text-verdict-ce">Compile error</p>
+          <p className="mb-1 text-xs font-medium text-verdict-ce">{t("Compile error")}</p>
           <pre className="oj-card overflow-x-auto p-2 font-mono text-xs text-verdict-ce">{compileError}</pre>
         </div>
       )}

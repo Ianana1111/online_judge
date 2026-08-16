@@ -6,6 +6,7 @@ import Link from "next/link";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function LoginPage() {
   return (
@@ -16,6 +17,7 @@ export default function LoginPage() {
 }
 
 function LoginForm() {
+  const t = useT();
   const router = useRouter();
   const searchParams = useSearchParams();
   const hydrate = useAuthStore((s) => s.hydrate);
@@ -23,7 +25,7 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(
     searchParams.get("error") === "google_failed" || searchParams.get("error") === "google_state_mismatch"
-      ? "Google sign-in didn't work — try again, or use your handle and password."
+      ? t("Google sign-in didn't work — try again, or use your handle and password.")
       : null,
   );
   const [loading, setLoading] = useState(false);
@@ -37,7 +39,7 @@ function LoginForm() {
       await hydrate();
       router.push("/");
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Log in failed");
+      setError(e instanceof ApiError ? e.message : t("Log in failed"));
     } finally {
       setLoading(false);
     }
@@ -45,17 +47,17 @@ function LoginForm() {
 
   return (
     <div className="mx-auto max-w-sm py-12">
-      <h1 className="mb-6 font-display text-2xl font-bold text-ink-50">Log in</h1>
+      <h1 className="mb-6 font-display text-2xl font-bold text-ink-50">{t("Log in")}</h1>
       <form onSubmit={onSubmit} className="space-y-4">
         <div>
           <label htmlFor="handle" className="mb-1 block text-sm text-ink-300">
-            Handle
+            {t("Handle")}
           </label>
           <input id="handle" className="oj-input" value={handle} onChange={(e) => setHandle(e.target.value)} required />
         </div>
         <div>
           <label htmlFor="password" className="mb-1 block text-sm text-ink-300">
-            Password
+            {t("Password")}
           </label>
           <input
             id="password"
@@ -68,20 +70,20 @@ function LoginForm() {
         </div>
         {error && <p className="text-sm text-verdict-wa">{error}</p>}
         <button type="submit" disabled={loading} className="oj-btn-primary w-full">
-          {loading ? "Logging in…" : "Log in"}
+          {loading ? t("Logging in…") : t("Log in")}
         </button>
       </form>
 
       <div className="my-4 flex items-center gap-3">
         <div className="h-px flex-1 bg-ink-800" />
-        <span className="text-xs text-ink-500">or</span>
+        <span className="text-xs text-ink-500">{t("or")}</span>
         <div className="h-px flex-1 bg-ink-800" />
       </div>
       <GoogleLoginButton />
       <p className="mt-4 text-sm text-ink-400">
-        No account yet?{" "}
+        {t("No account yet?")}{" "}
         <Link href="/register" className="text-brand hover:underline">
-          Register
+          {t("Register")}
         </Link>
       </p>
     </div>

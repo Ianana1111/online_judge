@@ -1,5 +1,8 @@
+"use client";
+
 import type { Verdict } from "@/lib/types";
 import { VERDICT_LABEL } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const VERDICT_STYLE: Record<Verdict, string> = {
   AC: "bg-verdict-ac/15 text-verdict-ac border-verdict-ac/40",
@@ -25,6 +28,7 @@ export default function VerdictBadge({
   flash?: boolean;
   size?: "sm" | "md";
 }) {
+  const t = useT();
   const pulsing = verdict === "PENDING" || verdict === "JUDGING";
   return (
     <span
@@ -36,7 +40,7 @@ export default function VerdictBadge({
         pulsing ? "animate-pulse-soft" : "",
       ].join(" ")}
     >
-      {VERDICT_LABEL[verdict]}
+      {t(VERDICT_LABEL[verdict])}
     </span>
   );
 }

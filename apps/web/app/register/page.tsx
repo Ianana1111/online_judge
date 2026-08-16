@@ -6,8 +6,10 @@ import Link from "next/link";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function RegisterPage() {
+  const t = useT();
   const router = useRouter();
   const hydrate = useAuthStore((s) => s.hydrate);
   const [handle, setHandle] = useState("");
@@ -25,7 +27,7 @@ export default function RegisterPage() {
       await hydrate();
       router.push("/");
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not create account");
+      setError(e instanceof ApiError ? e.message : t("Could not create account"));
     } finally {
       setLoading(false);
     }
@@ -33,11 +35,11 @@ export default function RegisterPage() {
 
   return (
     <div className="mx-auto max-w-sm py-12">
-      <h1 className="mb-6 font-display text-2xl font-bold text-ink-50">Create an account</h1>
+      <h1 className="mb-6 font-display text-2xl font-bold text-ink-50">{t("Create an account")}</h1>
       <form onSubmit={onSubmit} className="space-y-4">
         <div>
           <label htmlFor="handle" className="mb-1 block text-sm text-ink-300">
-            Handle
+            {t("Handle")}
           </label>
           <input
             id="handle"
@@ -52,7 +54,7 @@ export default function RegisterPage() {
         </div>
         <div>
           <label htmlFor="email" className="mb-1 block text-sm text-ink-300">
-            Email
+            {t("Email")}
           </label>
           <input
             id="email"
@@ -65,7 +67,7 @@ export default function RegisterPage() {
         </div>
         <div>
           <label htmlFor="password" className="mb-1 block text-sm text-ink-300">
-            Password
+            {t("Password")}
           </label>
           <input
             id="password"
@@ -79,21 +81,21 @@ export default function RegisterPage() {
         </div>
         {error && <p className="text-sm text-verdict-wa">{error}</p>}
         <button type="submit" disabled={loading} className="oj-btn-primary w-full">
-          {loading ? "Creating account…" : "Create account"}
+          {loading ? t("Creating account…") : t("Create account")}
         </button>
       </form>
 
       <div className="my-4 flex items-center gap-3">
         <div className="h-px flex-1 bg-ink-800" />
-        <span className="text-xs text-ink-500">or</span>
+        <span className="text-xs text-ink-500">{t("or")}</span>
         <div className="h-px flex-1 bg-ink-800" />
       </div>
       <GoogleLoginButton />
 
       <p className="mt-4 text-sm text-ink-400">
-        Already have an account?{" "}
+        {t("Already have an account?")}{" "}
         <Link href="/login" className="text-brand hover:underline">
-          Log in
+          {t("Log in")}
         </Link>
       </p>
     </div>

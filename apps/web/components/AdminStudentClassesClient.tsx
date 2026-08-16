@@ -9,6 +9,7 @@ import type { AdminUser, ClassSessionItem, ProblemListResponse } from "@/lib/typ
 import { previewText } from "@/lib/textPreview";
 import StatementRenderer from "@/components/StatementRenderer";
 import { SkeletonList } from "@/components/Skeleton";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 interface ProblemPick {
   id: string;
@@ -24,6 +25,7 @@ function ProblemPicker({
   onAdd: (p: ProblemPick) => void;
   onRemove: (id: string) => void;
 }) {
+  const t = useT();
   const [query, setQuery] = useState("");
   const { data: results } = useQuery({
     queryKey: ["problems", "picker", query],
@@ -33,10 +35,10 @@ function ProblemPicker({
 
   return (
     <div>
-      <label className="mb-1 block text-sm text-ink-300">Homework problems</label>
+      <label className="mb-1 block text-sm text-ink-300">{t("Homework problems")}</label>
       <input
         className="oj-input"
-        placeholder="Search problems by title…"
+        placeholder={t("Search problems by title…")}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
@@ -79,6 +81,7 @@ function EditClassForm({
   cls: ClassSessionItem | null;
   onDone: () => void;
 }) {
+  const t = useT();
   const qc = useQueryClient();
   const [title, setTitle] = useState(cls?.title ?? "");
   const [contentMd, setContentMd] = useState(cls?.contentMd ?? "");
@@ -107,7 +110,7 @@ function EditClassForm({
       await qc.invalidateQueries({ queryKey: ["classes", "student", studentId] });
       onDone();
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not save class");
+      setError(e instanceof ApiError ? e.message : t("Could not save class"));
     } finally {
       setSaving(false);
     }
@@ -116,20 +119,27 @@ function EditClassForm({
   return (
     <form onSubmit={save} className="oj-card space-y-3 p-4">
       <div>
-        <label className="mb-1 block text-sm text-ink-300">Title (optional)</label>
-        <input className="oj-input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Greedy warm-up" />
+        <label className="mb-1 block text-sm text-ink-300">{t("Title (optional)")}</label>
+        <input
+          className="oj-input"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder={t("e.g. Greedy warm-up")}
+        />
       </div>
       <div>
-        <label className="mb-1 block text-sm text-ink-300">What was taught today</label>
+        <label className="mb-1 block text-sm text-ink-300">{t("What was taught today")}</label>
         <textarea
           className="oj-input h-48 font-mono text-sm"
           value={contentMd}
           onChange={(e) => setContentMd(e.target.value)}
-          placeholder={"Markdown — headings, links, and code blocks all render on the student's page:\n\n## Today\nCovered greedy algorithms.\n\n```cpp\n#include <bits/stdc++.h>\n...\n```"}
+          placeholder={t(
+            "Markdown — headings, links, and code blocks all render on the student's page:\n\n## Today\nCovered greedy algorithms.\n\n```cpp\n#include <bits/stdc++.h>\n...\n```",
+          )}
         />
         {contentMd && (
           <div className="mt-2">
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-500">Preview</p>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-500">{t("Preview")}</p>
             <div className="oj-card p-3">
               <StatementRenderer content={contentMd} />
             </div>
@@ -144,11 +154,11 @@ function EditClassForm({
       {error && <p className="text-sm text-verdict-wa">{error}</p>}
       <div className="flex gap-2">
         <button type="submit" disabled={saving} className="oj-btn-primary">
-          {saving ? "Saving…" : cls ? "Save changes" : "Create class"}
+          {saving ? t("Saving…") : cls ? t("Save changes") : t("Create class")}
         </button>
         {cls && (
           <button type="button" onClick={onDone} className="oj-btn-secondary">
-            Cancel
+            {t("Cancel")}
           </button>
         )}
       </div>
@@ -157,6 +167,7 @@ function EditClassForm({
 }
 
 export default function AdminStudentClassesClient({ studentId }: { studentId: string }) {
+  const t = useT();
   const router = useRouter();
   const { user, status } = useAuthStore();
   const qc = useQueryClient();
@@ -178,11 +189,11 @@ export default function AdminStudentClassesClient({ studentId }: { studentId: st
   });
 
   if (status === "ready" && !isAdmin) {
-    return <p className="text-sm text-verdict-wa">Admins only.</p>;
+    return <p className="text-sm text-verdict-wa">{t("Admins only.")}</p>;
   }
 
   async function removeClass(id: string) {
-    if (!confirm("Delete this class and its homework list? This cannot be undone.")) return;
+    if (!confirm(t("Delete this class and its homework list? This cannot be undone."))) return;
     try {
       await apiFetch(`/classes/${id}`, { method: "DELETE" });
       await qc.invalidateQueries({ queryKey: ["classes", "student", studentId] });
@@ -195,8 +206,8 @@ export default function AdminStudentClassesClient({ studentId }: { studentId: st
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-2xl font-bold text-ink-50">
-          {student ? student.handle : "Student"}
-          <span className="ml-2 text-base font-normal text-ink-400">— class history</span>
+          {student ? student.handle : t("Student")}
+          <span className="ml-2 text-base font-normal text-ink-400">— {t("class history")}</span>
         </h1>
       </div>
 
@@ -220,7 +231,7 @@ export default function AdminStudentClassesClient({ studentId }: { studentId: st
               <div className="mb-2 flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <h2 className="font-display text-base font-semibold text-ink-50">
-                    Class {c.number}
+                    {t("Class {n}", { n: c.number })}
                     {c.title && <span className="ml-2 text-sm font-normal text-ink-300">— {c.title}</span>}
                   </h2>
                   {c.contentMd && <p className="mt-1 truncate text-sm text-ink-400">{previewText(c.contentMd)}</p>}
@@ -233,7 +244,7 @@ export default function AdminStudentClassesClient({ studentId }: { studentId: st
                     }}
                     className="text-ink-400 hover:text-brand"
                   >
-                    Edit
+                    {t("Edit")}
                   </button>
                   <button
                     onClick={(e) => {
@@ -242,7 +253,7 @@ export default function AdminStudentClassesClient({ studentId }: { studentId: st
                     }}
                     className="text-ink-500 hover:text-verdict-wa"
                   >
-                    Delete
+                    {t("Delete")}
                   </button>
                 </div>
               </div>
@@ -265,7 +276,7 @@ export default function AdminStudentClassesClient({ studentId }: { studentId: st
         <EditClassForm studentId={studentId} cls={null} onDone={() => setCreating(false)} />
       ) : (
         <button onClick={() => setCreating(true)} className="oj-btn-primary">
-          + Record new class
+          {t("+ Record new class")}
         </button>
       )}
     </div>

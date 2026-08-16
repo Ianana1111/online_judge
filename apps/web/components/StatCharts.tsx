@@ -3,6 +3,7 @@
 import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { UserStats, Verdict } from "@/lib/types";
 import { LANGUAGE_LABEL, VERDICT_LABEL } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 // Fixed categorical order/hues — never reassigned based on which languages appear in the data.
 const LANGUAGE_ORDER = ["cpp17", "c11", "python3", "java17"];
@@ -39,9 +40,10 @@ const tooltipStyle = {
 };
 
 export default function StatCharts({ stats }: { stats: UserStats }) {
+  const t = useT();
   const langData = LANGUAGE_ORDER.map((key) => ({
     key,
-    name: LANGUAGE_LABEL[key] ?? key,
+    name: t(LANGUAGE_LABEL[key] ?? key),
     value: stats.languageBreakdown.find((l) => l.languageKey === key)?.count ?? 0,
   })).filter((d) => d.value > 0);
 
@@ -50,7 +52,7 @@ export default function StatCharts({ stats }: { stats: UserStats }) {
   // legend list (same pattern as language usage below) stays legible no matter how many show up.
   const verdictData = VERDICT_ORDER.map((v) => ({
     verdict: v,
-    name: VERDICT_LABEL[v],
+    name: t(VERDICT_LABEL[v]),
     count: stats.verdictBreakdown.find((x) => x.verdict === v)?.count ?? 0,
   }))
     .filter((d) => d.count > 0)
@@ -65,9 +67,9 @@ export default function StatCharts({ stats }: { stats: UserStats }) {
   return (
     <div className="grid gap-6 sm:grid-cols-2">
       <div className="oj-card p-4">
-        <h3 className="mb-3 text-sm font-semibold text-ink-200">Language usage</h3>
+        <h3 className="mb-3 text-sm font-semibold text-ink-200">{t("Language usage")}</h3>
         {langData.length === 0 ? (
-          <p className="text-sm text-ink-400">No accepted submissions yet.</p>
+          <p className="text-sm text-ink-400">{t("No accepted submissions yet.")}</p>
         ) : (
           <div className="flex items-center gap-4">
             <ResponsiveContainer width="50%" height={160}>
@@ -94,9 +96,9 @@ export default function StatCharts({ stats }: { stats: UserStats }) {
       </div>
 
       <div className="oj-card p-4">
-        <h3 className="mb-3 text-sm font-semibold text-ink-200">Verdict breakdown</h3>
+        <h3 className="mb-3 text-sm font-semibold text-ink-200">{t("Verdict breakdown")}</h3>
         {verdictData.length === 0 ? (
-          <p className="text-sm text-ink-400">No submissions yet.</p>
+          <p className="text-sm text-ink-400">{t("No submissions yet.")}</p>
         ) : (
           <>
             <div className="flex h-3 w-full overflow-hidden rounded-full bg-ink-800">
@@ -122,7 +124,7 @@ export default function StatCharts({ stats }: { stats: UserStats }) {
       </div>
 
       <div className="oj-card p-4 sm:col-span-2">
-        <h3 className="mb-3 text-sm font-semibold text-ink-200">Solved by difficulty</h3>
+        <h3 className="mb-3 text-sm font-semibold text-ink-200">{t("Solved by difficulty")}</h3>
         <ResponsiveContainer width="100%" height={160}>
           <BarChart data={difficultyData} margin={{ left: 8, right: 16 }}>
             <XAxis dataKey="difficulty" tick={{ fill: "#9aa8b5", fontSize: 12 }} axisLine={{ stroke: "#2a3441" }} />

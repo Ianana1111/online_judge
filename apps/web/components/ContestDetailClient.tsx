@@ -8,8 +8,10 @@ import type { ContestDetail } from "@/lib/types";
 import Scoreboard from "@/components/Scoreboard";
 import ExamModeShell from "@/components/ExamModeShell";
 import ProblemView from "@/components/ProblemView";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function ContestDetailClient({ contestId }: { contestId: string }) {
+  const t = useT();
   const qc = useQueryClient();
   const [registering, setRegistering] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,13 +36,13 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
       await apiFetch(`/contests/${contestId}/register`, { method: "POST" });
       await qc.invalidateQueries({ queryKey: ["contest", contestId] });
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not join the contest");
+      setError(e instanceof ApiError ? e.message : t("Could not join the contest"));
     } finally {
       setRegistering(false);
     }
   }
 
-  if (isLoading || !contest) return <p className="text-sm text-ink-400">Loading contest…</p>;
+  if (isLoading || !contest) return <p className="text-sm text-ink-400">{t("Loading contest…")}</p>;
 
   const scheduledNotStarted = !!contest.startAt && new Date(contest.startAt).getTime() > now;
   const isRunning =
@@ -52,14 +54,14 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
   const inner = activeProblem ? (
     <div>
       <button onClick={() => setActiveProblemSlug(null)} className="mb-4 text-sm text-brand hover:underline">
-        ← Back to problem set
+        {t("← Back to problem set")}
       </button>
       <ProblemView problem={activeProblem} contestId={contestId} />
     </div>
   ) : (
     <div className="space-y-6">
       <div>
-        <h2 className="mb-2 text-sm font-semibold text-ink-200">Problems</h2>
+        <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Problems")}</h2>
         <div className="grid gap-2 sm:grid-cols-2">
           {contest.problems.map((cp) => (
             <button
@@ -76,7 +78,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
         </div>
       </div>
       <div>
-        <h2 className="mb-2 text-sm font-semibold text-ink-200">Scoreboard</h2>
+        <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Scoreboard")}</h2>
         <Scoreboard contestId={contestId} problems={contest.problems} />
       </div>
     </div>
@@ -98,12 +100,12 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
   return (
     <div className="space-y-6">
       <Link href="/contests" className="inline-block text-sm text-ink-400 hover:text-brand">
-        ← All contests
+        {t("← All contests")}
       </Link>
       <div>
         <h1 className="mb-1 font-display text-2xl font-bold text-ink-50">{contest.title}</h1>
         <p className="font-mono text-xs text-ink-400">
-          {contest.kind} · {contest.durationMin} min · penalty {contest.penaltyMin}m/wrong
+          {contest.kind} · {t("{n} min", { n: contest.durationMin })} · {t("penalty {n}m/wrong", { n: contest.penaltyMin })}
         </p>
       </div>
 
@@ -112,33 +114,33 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
           <p className="mb-3 text-sm text-ink-300">
             {contest.startAt ? (
               <>
-                This is a scheduled group session — everyone who registers shares one clock, starting at{" "}
-                <span className="font-mono text-ink-100">{new Date(contest.startAt).toLocaleString()}</span> and
-                ending {contest.durationMin} minutes later, whether you register early or join right at the
-                start.
+                {t("This is a scheduled group session — everyone who registers shares one clock, starting at")}{" "}
+                <span className="font-mono text-ink-100">{new Date(contest.startAt).toLocaleString()}</span>{" "}
+                {t("and ending {n} minutes later, whether you register early or join right at the start.", {
+                  n: contest.durationMin,
+                })}
               </>
             ) : (
-              <>
-                Starting begins your personal {contest.durationMin}-minute window right now — the clock does
-                not stop if you leave.
-              </>
+              t("Starting begins your personal {n}-minute window right now — the clock does not stop if you leave.", {
+                n: contest.durationMin,
+              })
             )}
           </p>
           {error && <p className="mb-2 text-sm text-verdict-wa">{error}</p>}
           <button onClick={register} disabled={registering} className="oj-btn-primary">
-            {registering ? "Joining…" : contest.startAt ? "Register" : "Start exam"}
+            {registering ? t("Joining…") : contest.startAt ? t("Register for contest") : t("Start exam")}
           </button>
         </div>
       )}
 
       {contest.myParticipant && scheduledNotStarted && (
         <div className="oj-card p-4">
-          <p className="mb-1 text-sm text-ink-200">You're registered. This contest hasn't started yet.</p>
+          <p className="mb-1 text-sm text-ink-200">{t("You're registered. This contest hasn't started yet.")}</p>
           <p className="font-mono text-lg font-semibold text-brand">
-            Starts at {new Date(contest.startAt!).toLocaleString()}
+            {t("Starts at {when}", { when: new Date(contest.startAt!).toLocaleString() })}
           </p>
           <p className="mt-1 text-xs text-ink-500">
-            This page refreshes automatically — come back here once the start time arrives.
+            {t("This page refreshes automatically — come back here once the start time arrives.")}
           </p>
         </div>
       )}

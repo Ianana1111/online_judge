@@ -6,8 +6,10 @@ import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import AssignmentLeaderboard from "@/components/AssignmentLeaderboard";
 import type { MyAssignment } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function AssignmentsPage() {
+  const t = useT();
   const { user, status } = useAuthStore();
 
   const { data, isLoading } = useQuery({
@@ -17,17 +19,17 @@ export default function AssignmentsPage() {
   });
 
   if (status === "ready" && !user) {
-    return <p className="text-sm text-ink-400">Log in to see your assignments.</p>;
+    return <p className="text-sm text-ink-400">{t("Log in to see your assignments.")}</p>;
   }
-  if (isLoading) return <p className="text-sm text-ink-400">Loading assignments…</p>;
+  if (isLoading) return <p className="text-sm text-ink-400">{t("Loading assignments…")}</p>;
 
   const items = data ?? [];
   const now = Date.now();
 
   return (
     <div className="space-y-6">
-      <h1 className="font-display text-2xl font-bold text-ink-50">My assignments</h1>
-      {items.length === 0 && <p className="text-sm text-ink-400">Nothing assigned to you yet.</p>}
+      <h1 className="font-display text-2xl font-bold text-ink-50">{t("My assignments")}</h1>
+      {items.length === 0 && <p className="text-sm text-ink-400">{t("Nothing assigned to you yet.")}</p>}
       <div className="space-y-3">
         {items.map((a) => {
           const overdue = a.dueAt && new Date(a.dueAt).getTime() < now && a.completedCount < a.totalCount;
@@ -39,14 +41,14 @@ export default function AssignmentsPage() {
                 <span
                   className={`font-mono text-xs ${allDone ? "text-verdict-ac" : overdue ? "text-verdict-wa" : "text-ink-400"}`}
                 >
-                  {a.completedCount}/{a.totalCount} done
+                  {t("{done}/{total} done", { done: a.completedCount, total: a.totalCount })}
                 </span>
               </div>
               {a.description && <p className="mb-2 text-sm text-ink-300">{a.description}</p>}
               {a.dueAt && (
                 <p className={`mb-3 font-mono text-xs ${overdue ? "text-verdict-wa" : "text-ink-500"}`}>
-                  Due {new Date(a.dueAt).toLocaleString()}
-                  {overdue ? " — overdue" : ""}
+                  {t("Due {date}", { date: new Date(a.dueAt).toLocaleString() })}
+                  {overdue ? t(" — overdue") : ""}
                 </p>
               )}
               <div className="grid gap-2 sm:grid-cols-2">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const LEVELS = [
   "bg-ink-800", // 0
@@ -18,6 +19,7 @@ function levelFor(count: number, max: number): number {
 }
 
 export default function Heatmap({ data }: { data: { date: string; count: number }[] }) {
+  const t = useT();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // The 52-week grid is wider than most viewports, and renders oldest-first (left) to today
@@ -55,7 +57,7 @@ export default function Heatmap({ data }: { data: { date: string; count: number 
               day ? (
                 <div
                   key={di}
-                  title={`${day.date}: ${day.count} submission${day.count === 1 ? "" : "s"}`}
+                  title={t("{date}: {count} submissions", { date: day.date, count: day.count })}
                   className={`h-3 w-3 rounded-sm ${LEVELS[levelFor(day.count, max)]}`}
                 />
               ) : (
@@ -66,11 +68,11 @@ export default function Heatmap({ data }: { data: { date: string; count: number 
         ))}
       </div>
       <div className="mt-2 flex items-center gap-1 text-xs text-ink-400">
-        <span>Less</span>
+        <span>{t("Less")}</span>
         {LEVELS.map((l, i) => (
           <div key={i} className={`h-3 w-3 rounded-sm ${l}`} />
         ))}
-        <span>More</span>
+        <span>{t("More")}</span>
       </div>
     </div>
   );

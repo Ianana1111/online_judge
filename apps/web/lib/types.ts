@@ -38,6 +38,7 @@ export interface UserSettings {
   defaultLanguage?: "cpp17" | "c11" | "python3" | "java17";
   dailyGoal?: number;
   onboardingDismissed?: boolean;
+  uiLocale?: "zh-TW" | "en";
 }
 
 export interface User {

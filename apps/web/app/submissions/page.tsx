@@ -10,8 +10,10 @@ import SubmissionCodeModal from "@/components/SubmissionCodeModal";
 import { SkeletonList } from "@/components/Skeleton";
 import { LANGUAGE_LABEL } from "@/lib/types";
 import type { SubmissionListItem, UserProfile } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 function SubmissionRow({ s, onOpen }: { s: SubmissionListItem; onOpen: (id: string) => void }) {
+  const t = useT();
   return (
     <tr onClick={() => onOpen(s.id)} className="cursor-pointer transition-colors hover:bg-ink-800/50">
       <td className="font-mono text-xs text-ink-400">{new Date(s.createdAt).toLocaleString()}</td>
@@ -28,7 +30,7 @@ function SubmissionRow({ s, onOpen }: { s: SubmissionListItem; onOpen: (id: stri
           s.problemTitle
         )}
       </td>
-      <td className="text-xs text-ink-400">{LANGUAGE_LABEL[s.languageKey] ?? s.languageKey}</td>
+      <td className="text-xs text-ink-400">{t(LANGUAGE_LABEL[s.languageKey] ?? s.languageKey)}</td>
       <td>
         <VerdictBadge verdict={s.verdict} size="sm" />
       </td>
@@ -38,6 +40,7 @@ function SubmissionRow({ s, onOpen }: { s: SubmissionListItem; onOpen: (id: stri
 }
 
 export default function MySubmissionsPage() {
+  const t = useT();
   const { user, status: authStatus } = useAuthStore();
   const [groupBy, setGroupBy] = useState<"time" | "topic">("time");
   const [openId, setOpenId] = useState<string | null>(null);
@@ -66,25 +69,25 @@ export default function MySubmissionsPage() {
   }, [data]);
 
   if (authStatus === "ready" && !user) {
-    return <p className="text-sm text-verdict-wa">Log in to see your submission history.</p>;
+    return <p className="text-sm text-verdict-wa">{t("Log in to see your submission history.")}</p>;
   }
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl font-bold text-ink-50">My Submissions</h1>
+          <h1 className="font-display text-2xl font-bold text-ink-50">{t("My Submissions")}</h1>
           <p className="mt-1 text-sm text-ink-400">
-            {data ? `${data.total} submission${data.total === 1 ? "" : "s"} total` : "Loading…"}
+            {data ? t("{n} submissions total", { n: data.total }) : t("Loading…")}
           </p>
         </div>
         {profile && (
           <Link href={`/u/${profile.handle}`} className="oj-card flex items-center gap-3 px-4 py-2 hover:border-brand/40">
             <span className="font-display text-2xl font-bold text-brand">{profile.solvedCount}</span>
             <span className="text-sm text-ink-400">
-              problem{profile.solvedCount === 1 ? "" : "s"} solved
+              {t("problems solved", { n: profile.solvedCount })}
               <br />
-              <span className="text-xs text-ink-500">view full activity →</span>
+              <span className="text-xs text-ink-500">{t("view full activity →")}</span>
             </span>
           </Link>
         )}
@@ -95,22 +98,22 @@ export default function MySubmissionsPage() {
           onClick={() => setGroupBy("time")}
           className={groupBy === "time" ? "oj-btn-primary px-3 py-1.5 text-xs" : "oj-btn-secondary px-3 py-1.5 text-xs"}
         >
-          By time
+          {t("By time")}
         </button>
         <button
           onClick={() => setGroupBy("topic")}
           className={groupBy === "topic" ? "oj-btn-primary px-3 py-1.5 text-xs" : "oj-btn-secondary px-3 py-1.5 text-xs"}
         >
-          By topic
+          {t("By topic")}
         </button>
       </div>
 
       {isLoading && <SkeletonList rows={8} />}
       {data?.items.length === 0 && (
         <div className="oj-card p-4 text-sm text-ink-400">
-          <p>No submissions yet.</p>
+          <p>{t("No submissions yet.")}</p>
           <Link href="/problems" className="mt-2 inline-block text-brand hover:underline">
-            Solve your first problem →
+            {t("Solve your first problem →")}
           </Link>
         </div>
       )}
@@ -119,11 +122,11 @@ export default function MySubmissionsPage() {
         <table className="oj-table">
           <thead>
             <tr>
-              <th>When</th>
-              <th>Problem</th>
-              <th>Language</th>
-              <th>Verdict</th>
-              <th>Time</th>
+              <th>{t("When")}</th>
+              <th>{t("Problem")}</th>
+              <th>{t("Language")}</th>
+              <th>{t("Verdict")}</th>
+              <th>{t("Time")}</th>
             </tr>
           </thead>
           <tbody>
@@ -144,11 +147,11 @@ export default function MySubmissionsPage() {
               <table className="oj-table">
                 <thead>
                   <tr>
-                    <th>When</th>
-                    <th>Problem</th>
-                    <th>Language</th>
-                    <th>Verdict</th>
-                    <th>Time</th>
+                    <th>{t("When")}</th>
+                    <th>{t("Problem")}</th>
+                    <th>{t("Language")}</th>
+                    <th>{t("Verdict")}</th>
+                    <th>{t("Time")}</th>
                   </tr>
                 </thead>
                 <tbody>

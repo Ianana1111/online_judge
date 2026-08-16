@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/auth";
 import { buildProblemNavHref, filterAndSortProblems, SORT_KEYS, type SortKey } from "@/lib/problemFilter";
 import { stripProblemNumber } from "@/lib/problemTitle";
 import type { CollectionDetail, ProblemListResponse } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 /**
  * Previous/Next across whatever filtered, sorted list of problems the user actually browsed here
@@ -18,6 +19,7 @@ import type { CollectionDetail, ProblemListResponse } from "@/lib/types";
  * walk, so there's nothing to compute Previous/Next from — that's a feature, not a fallback to hide.
  */
 export default function ProblemPrevNext({ slug }: { slug: string }) {
+  const t = useT();
   const searchParams = useSearchParams();
   const plan = useAuthStore((s) => s.user?.plan);
 
@@ -56,7 +58,7 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
 
   const prev = index > 0 ? ordered[index - 1] : null;
   const next = index < ordered.length - 1 ? ordered[index + 1] : null;
-  const contextLabel = listSource === "collection" ? collection?.title ?? "collection" : "Problems";
+  const contextLabel = listSource === "collection" ? (collection?.title ?? t("collection")) : t("Problems");
 
   return (
     <div className="oj-card mb-4 flex items-center justify-between gap-3 px-3 py-2">
@@ -71,11 +73,11 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
           <span className="truncate">{stripProblemNumber(prev.title, prev.uvaId)}</span>
         </Link>
       ) : (
-        <span className="flex-1 text-sm text-ink-700">← Start of list</span>
+        <span className="flex-1 text-sm text-ink-700">{t("← Start of list")}</span>
       )}
 
       <span className="shrink-0 font-mono text-xs text-ink-500">
-        {index + 1} / {ordered.length} · {contextLabel}
+        {t("{n} / {total} · {context}", { n: index + 1, total: ordered.length, context: contextLabel })}
       </span>
 
       {next ? (
@@ -89,7 +91,7 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
           </span>
         </Link>
       ) : (
-        <span className="flex-1 text-right text-sm text-ink-700">End of list →</span>
+        <span className="flex-1 text-right text-sm text-ink-700">{t("End of list →")}</span>
       )}
     </div>
   );

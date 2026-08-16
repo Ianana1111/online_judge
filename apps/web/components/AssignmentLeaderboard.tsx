@@ -6,10 +6,12 @@ import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { AssignmentLeaderboardRow } from "@/lib/types";
 import { Skeleton } from "@/components/Skeleton";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 /** Collapsed by default so a short assignment list doesn't turn into a wall of names — classmates
  * are exactly the audience for "who's ahead on this one," not a headline stat. */
 export default function AssignmentLeaderboard({ assignmentId }: { assignmentId: string }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const { user } = useAuthStore();
 
@@ -21,7 +23,7 @@ export default function AssignmentLeaderboard({ assignmentId }: { assignmentId: 
 
   return (
     <details className="mt-3" open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>
-      <summary className="cursor-pointer text-xs font-medium text-brand hover:underline">Class progress</summary>
+      <summary className="cursor-pointer text-xs font-medium text-brand hover:underline">{t("Class progress")}</summary>
       <div className="mt-2 space-y-1">
         {isLoading && <Skeleton className="h-16 w-full" />}
         {data?.map((row) => (

@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { SparklesIcon } from "@/components/icons";
 import type { BillingPlans } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 function dismissKey(endsAt: string): string {
   return `promo-dismissed:${endsAt}`;
@@ -18,6 +19,7 @@ function dismissKey(endsAt: string): string {
  * is keyed by the promo's own endsAt, so a *future* promo (different endsAt) shows again instead
  * of staying hidden forever because of a stale localStorage flag from this one. */
 export default function PromoBanner() {
+  const t = useT();
   const pathname = usePathname();
   const [dismissed, setDismissed] = useState(true); // default hidden until localStorage is checked, to avoid a flash
 
@@ -42,14 +44,15 @@ export default function PromoBanner() {
     <div className="relative flex items-center justify-center gap-2 bg-gradient-to-r from-brand/90 to-verdict-wa/90 px-4 py-2 text-center text-xs font-medium text-onbrand sm:text-sm">
       <span className="inline-flex items-center gap-1.5">
         <SparklesIcon className="h-4 w-4 shrink-0" />
-        We just launched! Get Pro at <span className="font-bold">{plans.promo.discountPct}% off</span> through {endsLabel}.
+        {t("We just launched! Get Pro at")} <span className="font-bold">{t("{pct}% off", { pct: plans.promo.discountPct })}</span>{" "}
+        {t("through {date}.", { date: endsLabel })}
       </span>
       <Link href="/upgrade" className="whitespace-nowrap rounded bg-onbrand/15 px-2 py-0.5 font-semibold hover:bg-onbrand/25">
-        Claim discount →
+        {t("Claim discount →")}
       </Link>
       <button
         type="button"
-        aria-label="Dismiss"
+        aria-label={t("Dismiss")}
         onClick={() => {
           localStorage.setItem(dismissKey(plans.promo!.endsAt), "1");
           setDismissed(true);

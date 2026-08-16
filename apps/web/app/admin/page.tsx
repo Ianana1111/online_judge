@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const SECTIONS = [
   { href: "/admin/problems", title: "Problems", description: "Add, edit, and manage visibility of the problem set." },
@@ -9,18 +12,19 @@ const SECTIONS = [
 ];
 
 export default function AdminConsolePage() {
+  const t = useT();
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-ink-50">Console</h1>
-        <p className="mt-1 text-sm text-ink-400">Pick a section from the sidebar, or jump in below.</p>
+        <h1 className="font-display text-2xl font-bold text-ink-50">{t("Console")}</h1>
+        <p className="mt-1 text-sm text-ink-400">{t("Pick a section from the sidebar, or jump in below.")}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         {SECTIONS.map((s) => (
           <Link key={s.href} href={s.href} className="oj-card block p-4 transition-colors hover:border-brand">
-            <h2 className="font-display text-lg font-semibold text-ink-50">{s.title}</h2>
-            <p className="mt-1 text-sm text-ink-400">{s.description}</p>
+            <h2 className="font-display text-lg font-semibold text-ink-50">{t(s.title)}</h2>
+            <p className="mt-1 text-sm text-ink-400">{t(s.description)}</p>
           </Link>
         ))}
       </div>

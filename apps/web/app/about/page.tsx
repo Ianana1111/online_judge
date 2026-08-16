@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/site";
+import Eyebrow from "@/components/Eyebrow";
 
 export const metadata: Metadata = {
   title: "About",
@@ -12,7 +13,7 @@ export default function AboutPage() {
     <div className="mx-auto max-w-2xl space-y-14 py-8">
       {/* ---- About the site ---- */}
       <section>
-        <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-wide text-brand">About this site</p>
+        <Eyebrow text="About this site" />
         <h1 className="font-display text-3xl font-bold leading-tight text-ink-50">為台灣資工人打造的 CPE 練習平台</h1>
         <p className="mt-4 text-base leading-relaxed text-ink-300">
           這裡收錄了歷屆 CPE（大學程式能力檢定）考古題，每一份程式碼都會經過嚴謹的自動化判題，讓你拿到跟正式考試一樣真實的結果——不是自己猜對錯，而是貨真價實的

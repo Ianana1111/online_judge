@@ -8,8 +8,10 @@ import { Skeleton } from "@/components/Skeleton";
 import Avatar from "@/components/Avatar";
 import { estimateReadMinutes } from "@/lib/readTime";
 import type { PostDetail } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function PostDetailClient({ id }: { id: string }) {
+  const t = useT();
   const { data, isLoading } = useQuery({
     queryKey: ["posts", id],
     queryFn: () => apiFetch<PostDetail>(`/posts/${id}`),
@@ -25,12 +27,12 @@ export default function PostDetailClient({ id }: { id: string }) {
     );
   }
 
-  if (!data) return <p className="text-sm text-verdict-wa">Post not found.</p>;
+  if (!data) return <p className="text-sm text-verdict-wa">{t("Post not found.")}</p>;
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       <Link href="/discussion" className="text-xs text-ink-500 hover:text-brand">
-        ← back to Discussion
+        {t("← back to Discussion")}
       </Link>
 
       <div>

@@ -5,10 +5,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { ContestListItem, ProblemListResponse } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const LABELS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
 export default function AdminContestsPage() {
+  const t = useT();
   const { user, status } = useAuthStore();
   const qc = useQueryClient();
 
@@ -38,7 +40,7 @@ export default function AdminContestsPage() {
   });
 
   if (status === "ready" && !isAdmin) {
-    return <p className="text-sm text-verdict-wa">Admins only.</p>;
+    return <p className="text-sm text-verdict-wa">{t("Admins only.")}</p>;
   }
 
   function addProblem(p: { id: string; title: string }) {
@@ -55,11 +57,11 @@ export default function AdminContestsPage() {
     e.preventDefault();
     setError(null);
     if (selectedProblems.length === 0) {
-      setError("Pick at least one problem");
+      setError(t("Pick at least one problem"));
       return;
     }
     if (scheduled && !startAt) {
-      setError("Pick a start time for a scheduled/group session");
+      setError(t("Pick a start time for a scheduled/group session"));
       return;
     }
     setSaving(true);
@@ -81,7 +83,7 @@ export default function AdminContestsPage() {
       setSelectedProblems([]);
       await qc.invalidateQueries({ queryKey: ["contests"] });
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not create contest");
+      setError(e instanceof ApiError ? e.message : t("Could not create contest"));
     } finally {
       setSaving(false);
     }
@@ -89,28 +91,28 @@ export default function AdminContestsPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="font-display text-2xl font-bold text-ink-50">Admin · Contests</h1>
+      <h1 className="font-display text-2xl font-bold text-ink-50">{t("Admin · Contests")}</h1>
 
       <form onSubmit={createContest} className="oj-card space-y-4 p-4">
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm text-ink-300">Title</label>
+            <label className="mb-1 block text-sm text-ink-300">{t("Title")}</label>
             <input className="oj-input" value={title} onChange={(e) => setTitle(e.target.value)} required />
           </div>
           <div>
-            <label className="mb-1 block text-sm text-ink-300">Slug</label>
+            <label className="mb-1 block text-sm text-ink-300">{t("Slug")}</label>
             <input className="oj-input" value={slug} onChange={(e) => setSlug(e.target.value)} required />
           </div>
           <div>
-            <label className="mb-1 block text-sm text-ink-300">Kind</label>
+            <label className="mb-1 block text-sm text-ink-300">{t("Kind")}</label>
             <select className="oj-input" value={kind} onChange={(e) => setKind(e.target.value as typeof kind)}>
-              <option value="PUBLIC">Public</option>
+              <option value="PUBLIC">{t("Public")}</option>
               <option value="CPE">CPE</option>
-              <option value="VIRTUAL">Virtual</option>
+              <option value="VIRTUAL">{t("Virtual")}</option>
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm text-ink-300">Duration (minutes)</label>
+            <label className="mb-1 block text-sm text-ink-300">{t("Duration (minutes)")}</label>
             <input
               type="number"
               className="oj-input"
@@ -125,11 +127,11 @@ export default function AdminContestsPage() {
         <div>
           <label className="flex items-center gap-2 text-sm text-ink-300">
             <input type="checkbox" checked={scheduled} onChange={(e) => setScheduled(e.target.checked)} />
-            Scheduled group session (everyone shares one clock — start it live for multiple students at once)
+            {t("Scheduled group session (everyone shares one clock — start it live for multiple students at once)")}
           </label>
           {scheduled ? (
             <div className="mt-2">
-              <label className="mb-1 block text-sm text-ink-300">Start time</label>
+              <label className="mb-1 block text-sm text-ink-300">{t("Start time")}</label>
               <input
                 type="datetime-local"
                 className="oj-input max-w-xs"
@@ -139,17 +141,18 @@ export default function AdminContestsPage() {
             </div>
           ) : (
             <p className="mt-1 text-xs text-ink-500">
-              Unscheduled = virtual mode: each student gets their own personal {durationMin}-minute window
-              whenever they click "start".
+              {t("Unscheduled = virtual mode: each student gets their own personal {min}-minute window whenever they click \"start\".", {
+                min: durationMin,
+              })}
             </p>
           )}
         </div>
 
         <div>
-          <label className="mb-1 block text-sm text-ink-300">Problems (labeled A, B, C… in the order added)</label>
+          <label className="mb-1 block text-sm text-ink-300">{t("Problems (labeled A, B, C… in the order added)")}</label>
           <input
             className="oj-input"
-            placeholder="Search problems by title…"
+            placeholder={t("Search problems by title…")}
             value={problemQuery}
             onChange={(e) => setProblemQuery(e.target.value)}
           />
@@ -183,19 +186,19 @@ export default function AdminContestsPage() {
 
         {error && <p className="text-sm text-verdict-wa">{error}</p>}
         <button type="submit" disabled={saving} className="oj-btn-primary">
-          {saving ? "Creating…" : "Create contest"}
+          {saving ? t("Creating…") : t("Create contest")}
         </button>
       </form>
 
       <div>
-        <h2 className="mb-2 text-sm font-semibold text-ink-200">Existing contests</h2>
+        <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Existing contests")}</h2>
         <table className="oj-table">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Kind</th>
-              <th>Start</th>
-              <th>Duration</th>
+              <th>{t("Title")}</th>
+              <th>{t("Kind")}</th>
+              <th>{t("Start")}</th>
+              <th>{t("Duration")}</th>
             </tr>
           </thead>
           <tbody>
@@ -204,7 +207,7 @@ export default function AdminContestsPage() {
                 <td>{c.title}</td>
                 <td className="text-xs text-ink-400">{c.kind}</td>
                 <td className="font-mono text-xs text-ink-400">
-                  {c.startAt ? new Date(c.startAt).toLocaleString() : "virtual (per-user)"}
+                  {c.startAt ? new Date(c.startAt).toLocaleString() : t("virtual (per-user)")}
                 </td>
                 <td className="font-mono text-xs text-ink-400">{c.durationMin}m</td>
               </tr>

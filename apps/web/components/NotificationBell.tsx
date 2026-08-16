@@ -5,18 +5,20 @@ import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import type { NotificationList } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
-function timeAgo(iso: string): string {
+function timeAgo(iso: string, t: ReturnType<typeof useT>): string {
   const ms = Date.now() - new Date(iso).getTime();
   const min = Math.floor(ms / 60_000);
-  if (min < 1) return "just now";
-  if (min < 60) return `${min}m ago`;
+  if (min < 1) return t("just now");
+  if (min < 60) return t("{n}m ago", { n: min });
   const hr = Math.floor(min / 60);
-  if (hr < 24) return `${hr}h ago`;
-  return `${Math.floor(hr / 24)}d ago`;
+  if (hr < 24) return t("{n}h ago", { n: hr });
+  return t("{n}d ago", { n: Math.floor(hr / 24) });
 }
 
 export default function NotificationBell() {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const qc = useQueryClient();
@@ -54,7 +56,7 @@ export default function NotificationBell() {
       <button
         type="button"
         onClick={handleOpen}
-        aria-label="Notifications"
+        aria-label={t("Notifications")}
         className="relative flex h-8 w-8 items-center justify-center rounded text-ink-300 hover:text-brand"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -70,13 +72,13 @@ export default function NotificationBell() {
       {open && (
         <div className="oj-card absolute right-0 top-full mt-2 w-80 overflow-hidden p-1">
           <div className="max-h-96 overflow-y-auto">
-            {items.length === 0 && <p className="p-4 text-center text-sm text-ink-400">No notifications yet.</p>}
+            {items.length === 0 && <p className="p-4 text-center text-sm text-ink-400">{t("No notifications yet.")}</p>}
             {items.map((n) => {
               const content = (
                 <div className="rounded px-3 py-2 hover:bg-ink-800">
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-sm font-medium text-ink-100">{n.title}</p>
-                    <span className="shrink-0 font-mono text-[10px] text-ink-500">{timeAgo(n.createdAt)}</span>
+                    <span className="shrink-0 font-mono text-[10px] text-ink-500">{timeAgo(n.createdAt, t)}</span>
                   </div>
                   {n.body && <p className="mt-0.5 text-xs text-ink-400">{n.body}</p>}
                 </div>

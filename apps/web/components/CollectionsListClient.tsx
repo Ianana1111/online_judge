@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import type { CollectionListItem } from "@/lib/types";
 import { SkeletonCard } from "@/components/Skeleton";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 // Fixed display order for known groupings; any category not listed here (or the "" fallback for
 // uncategorized rows) sorts after these, alphabetically among themselves.
@@ -29,16 +30,18 @@ function groupByCategory(items: CollectionListItem[]): [string, CollectionListIt
 }
 
 function CollectionCard({ c }: { c: CollectionListItem }) {
+  const t = useT();
   return (
     <Link href={`/collections/${c.slug}`} className="oj-card block p-4 transition-colors hover:border-brand">
       <h3 className="font-display text-lg font-semibold text-ink-50">{c.title}</h3>
       {c.description && <p className="mt-1 text-sm text-ink-400">{c.description}</p>}
-      <p className="mt-3 font-mono text-xs text-ink-500">{c.problemCount} problems</p>
+      <p className="mt-3 font-mono text-xs text-ink-500">{t("{n} problems", { n: c.problemCount })}</p>
     </Link>
   );
 }
 
 export default function CollectionsListClient() {
+  const t = useT();
   const { data: collections, isLoading } = useQuery({
     queryKey: ["collections"],
     queryFn: () => apiFetch<CollectionListItem[]>("/collections"),
@@ -49,8 +52,8 @@ export default function CollectionsListClient() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="font-display text-2xl font-bold text-ink-50">Collections</h1>
-        <p className="mt-1 text-sm text-ink-400">Curated problem sets to work through at your own pace.</p>
+        <h1 className="font-display text-2xl font-bold text-ink-50">{t("Collections")}</h1>
+        <p className="mt-1 text-sm text-ink-400">{t("Curated problem sets to work through at your own pace.")}</p>
       </div>
 
       {isLoading && (
@@ -65,7 +68,7 @@ export default function CollectionsListClient() {
           <section key={category}>
             <div className="mb-4 flex items-baseline justify-between border-b border-ink-800 pb-2">
               <h2 className="font-display text-xl font-bold text-ink-50">{category}</h2>
-              <span className="font-mono text-xs text-ink-500">{items.length} collections</span>
+              <span className="font-mono text-xs text-ink-500">{t("{n} collections", { n: items.length })}</span>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {items.map((c) => (
@@ -75,7 +78,7 @@ export default function CollectionsListClient() {
           </section>
         ))}
 
-      {!isLoading && collections?.length === 0 && <p className="text-sm text-ink-400">No collections yet.</p>}
+      {!isLoading && collections?.length === 0 && <p className="text-sm text-ink-400">{t("No collections yet.")}</p>}
     </div>
   );
 }

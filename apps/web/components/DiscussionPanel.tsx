@@ -6,8 +6,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { Discussion } from "@/lib/types";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function DiscussionPanel({ problemId }: { problemId: string }) {
+  const t = useT();
   const { user } = useAuthStore();
   const qc = useQueryClient();
   const [body, setBody] = useState("");
@@ -29,7 +31,7 @@ export default function DiscussionPanel({ problemId }: { problemId: string }) {
       setBody("");
       await qc.invalidateQueries({ queryKey: ["discussions", problemId] });
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not post");
+      setError(e instanceof ApiError ? e.message : t("Could not post"));
     } finally {
       setPosting(false);
     }
@@ -44,7 +46,7 @@ export default function DiscussionPanel({ problemId }: { problemId: string }) {
     }
   }
 
-  if (isLoading) return <p className="text-sm text-ink-400">Loading discussion…</p>;
+  if (isLoading) return <p className="text-sm text-ink-400">{t("Loading discussion…")}</p>;
   const items = data ?? [];
 
   return (
@@ -53,26 +55,26 @@ export default function DiscussionPanel({ problemId }: { problemId: string }) {
         <form onSubmit={post} className="space-y-2">
           <textarea
             className="oj-input h-24 text-sm"
-            placeholder="Ask a question or share a hint…"
+            placeholder={t("Ask a question or share a hint…")}
             value={body}
             onChange={(e) => setBody(e.target.value)}
             maxLength={4000}
           />
           {error && <p className="text-sm text-verdict-wa">{error}</p>}
           <button type="submit" disabled={posting || !body.trim()} className="oj-btn-primary text-sm">
-            {posting ? "Posting…" : "Post"}
+            {posting ? t("Posting…") : t("Post")}
           </button>
         </form>
       ) : (
         <p className="oj-card p-3 text-sm text-ink-400">
           <Link href="/login" className="text-brand hover:underline">
-            Log in
+            {t("Log in")}
           </Link>{" "}
-          to join the discussion.
+          {t("to join the discussion.")}
         </p>
       )}
 
-      {items.length === 0 && <p className="text-sm text-ink-400">No discussion yet — be the first to post.</p>}
+      {items.length === 0 && <p className="text-sm text-ink-400">{t("No discussion yet — be the first to post.")}</p>}
 
       <div className="space-y-3">
         {items.map((d) => (
@@ -84,14 +86,14 @@ export default function DiscussionPanel({ problemId }: { problemId: string }) {
                 </Link>
                 {d.userRole === "ADMIN" && (
                   <span className="rounded bg-brand/20 px-1.5 py-0.5 text-[10px] font-semibold text-brand">
-                    ADMIN
+                    {t("ADMIN")}
                   </span>
                 )}
                 <span className="font-mono text-xs text-ink-500">{new Date(d.createdAt).toLocaleString()}</span>
               </div>
               {(user?.handle === d.userHandle || user?.role === "ADMIN") && (
                 <button onClick={() => remove(d.id)} className="text-xs text-ink-500 hover:text-verdict-wa">
-                  Delete
+                  {t("Delete")}
                 </button>
               )}
             </div>

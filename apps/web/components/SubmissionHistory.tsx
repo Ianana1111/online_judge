@@ -8,8 +8,10 @@ import { LANGUAGE_LABEL } from "@/lib/types";
 import VerdictBadge from "@/components/VerdictBadge";
 import SubmissionCodeModal from "@/components/SubmissionCodeModal";
 import { SkeletonList } from "@/components/Skeleton";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 export default function SubmissionHistory({ problemId }: { problemId: string }) {
+  const t = useT();
   const [openId, setOpenId] = useState<string | null>(null);
   const { data, isLoading } = useQuery({
     queryKey: ["submissions", "mine", problemId],
@@ -21,25 +23,25 @@ export default function SubmissionHistory({ problemId }: { problemId: string }) 
 
   if (isLoading) return <SkeletonList rows={4} />;
   const items = data?.items ?? [];
-  if (items.length === 0) return <p className="text-sm text-ink-400">No submissions yet for this problem.</p>;
+  if (items.length === 0) return <p className="text-sm text-ink-400">{t("No submissions yet for this problem.")}</p>;
 
   return (
     <>
       <table className="oj-table">
         <thead>
           <tr>
-            <th>When</th>
-            <th>Language</th>
-            <th>Verdict</th>
-            <th>Time</th>
-            <th>Memory</th>
+            <th>{t("When")}</th>
+            <th>{t("Language")}</th>
+            <th>{t("Verdict")}</th>
+            <th>{t("Time")}</th>
+            <th>{t("Memory")}</th>
           </tr>
         </thead>
         <tbody>
           {items.map((s) => (
             <tr key={s.id} onClick={() => setOpenId(s.id)} className="cursor-pointer transition-colors hover:bg-ink-800/50">
               <td className="font-mono text-xs text-ink-400">{new Date(s.createdAt).toLocaleString()}</td>
-              <td>{LANGUAGE_LABEL[s.languageKey] ?? s.languageKey}</td>
+              <td>{t(LANGUAGE_LABEL[s.languageKey] ?? s.languageKey)}</td>
               <td>
                 <VerdictBadge verdict={s.verdict} size="sm" />
               </td>
