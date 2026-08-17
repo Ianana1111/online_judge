@@ -61,6 +61,7 @@ export default function UserProfileClient({
                 </div>
                 <p className="mt-1 text-sm text-ink-400">
                   {t("Joined {date}", { date: new Date(profile.createdAt).toLocaleDateString() })}
+                  {profile.school && <> · {profile.school}</>}
                 </p>
               </div>
             </div>
