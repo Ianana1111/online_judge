@@ -325,6 +325,8 @@ export default function HomeDashboard() {
   ].slice(0, 4);
 
   const { text: greetText, Icon: GreetIcon } = greeting(user.handle, t);
+  const topWeek = weekBoard?.slice(0, 5) ?? [];
+  const meInTopWeek = topWeek.some((r) => r.handle === user.handle);
 
   return (
     <div className="space-y-6 py-6">
@@ -422,121 +424,175 @@ export default function HomeDashboard() {
         </div>
       </div>
 
-      {dailyProblem && <DailyProblemCard problem={dailyProblem} />}
+      {/* Wide screens split into a main column (things to do / your log) and a narrower sidebar
+          (quick-glance social context) instead of one long single-file stack — the whole point
+          being fewer scrolls to see everything on a screen that now has the room for it. */}
+      <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
+        <div className="space-y-6 lg:col-span-2">
+          {dailyProblem && <DailyProblemCard problem={dailyProblem} />}
 
-      <div className="oj-card p-5">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-ink-200">{t("Recent activity")}</h2>
-          <Link href="/submissions" className="text-xs text-ink-500 hover:text-brand">
-            {t("view all →")}
-          </Link>
-        </div>
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-          <div className="overflow-x-auto">
-            {stats ? (
-              <MiniHeatmap data={stats.heatmap} />
-            ) : (
-              <div className="h-[95px] w-[123px] animate-pulse rounded bg-ink-800/60" />
-            )}
-            <p className="mt-2 text-[11px] text-ink-500">{t("last 10 weeks")}</p>
-          </div>
-          <div className="min-w-0 flex-1 space-y-1.5">
-            {recent && recent.items.length > 0 ? (
-              recent.items.map((s) => (
-                <Link
-                  key={s.id}
-                  href={s.problemSlug ? `/problems/${s.problemSlug}` : "/submissions"}
-                  className="flex items-center justify-between gap-3 rounded px-2 py-1.5 transition-colors hover:bg-ink-800/50"
-                >
-                  <span className="min-w-0 truncate text-sm text-ink-200">
-                    {s.problemTitle ? stripProblemNumber(s.problemTitle) : t("Submission")}
-                  </span>
-                  <span className="flex shrink-0 items-center gap-2">
-                    <span className="font-mono text-[10px] text-ink-500">{timeAgo(s.createdAt, t)}</span>
-                    <VerdictBadge verdict={s.verdict} size="sm" />
-                  </span>
-                </Link>
-              ))
-            ) : (
-              <p className="px-2 py-1.5 text-sm text-ink-400">
-                {t("No submissions yet — solve something to light up your heatmap.")}
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="oj-card p-5">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-ink-200">{t("Recommended for you")}</h2>
-          <Link href="/problems" className="text-xs text-ink-500 hover:text-brand">
-            {t("browse all →")}
-          </Link>
-        </div>
-        {suggestions.length === 0 ? (
-          <p className="text-sm text-ink-400">
-            {t("No new recommendations yet —")}{" "}
-            <Link href="/problems" className="text-brand hover:underline">
-              {t("browse the problem list")}
-            </Link>{" "}
-            {t("to get started.")}
-          </p>
-        ) : (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {suggestions.map((p) => (
-              <Link
-                key={p.id}
-                href={`/problems/${p.slug}`}
-                className={`group oj-card border-l-2 p-4 transition-all hover:-translate-y-0.5 hover:border-brand hover:bg-ink-800/40 ${REASON_ACCENT[p.kind]}`}
-              >
-                <div className="mb-3 flex items-center justify-between gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/10 text-brand">
-                    {(() => {
-                      const ReasonIcon = REASON_ICON[p.kind];
-                      return <ReasonIcon className="h-4 w-4" />;
-                    })()}
-                  </div>
-                  <DifficultyStars d={p.difficulty} />
-                </div>
-                <p className="mb-1 font-mono text-[11px] uppercase tracking-wide text-ink-500">{p.reason}</p>
-                <h3 className="text-sm font-medium text-ink-50 group-hover:text-brand">{stripProblemNumber(p.title)}</h3>
+          <div className="oj-card p-5">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-ink-200">{t("Recent activity")}</h2>
+              <Link href="/submissions" className="text-xs text-ink-500 hover:text-brand">
+                {t("view all →")}
               </Link>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {achievements && achievements.length > 0 && (
-        <div className="oj-card p-5">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-ink-200">{t("Trophy case")}</h2>
-            <Link href={`/u/${user.handle}`} className="text-xs text-ink-500 hover:text-brand">
-              {t("view profile →")}
-            </Link>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {achievements.map((a) => (
-              <div
-                key={a.code}
-                title={t("{title} — {description} ({date})", {
-                  title: a.title,
-                  description: a.description,
-                  date: new Date(a.earnedAt).toLocaleDateString(),
-                })}
-                className="flex items-center gap-2 rounded-full border border-brand/30 bg-brand/5 py-1.5 pl-1.5 pr-3"
-              >
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink-900 text-brand">
-                  {(() => {
-                    const AchievementIcon = ACHIEVEMENT_ICONS[a.code] ?? TrophyIcon;
-                    return <AchievementIcon className="h-4 w-4" />;
-                  })()}
-                </span>
-                <span className="text-xs font-medium text-ink-100">{a.title}</span>
+            </div>
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
+              <div className="overflow-x-auto">
+                {stats ? (
+                  <MiniHeatmap data={stats.heatmap} />
+                ) : (
+                  <div className="h-[95px] w-[123px] animate-pulse rounded bg-ink-800/60" />
+                )}
+                <p className="mt-2 text-[11px] text-ink-500">{t("last 10 weeks")}</p>
               </div>
-            ))}
+              <div className="min-w-0 flex-1 space-y-1.5">
+                {recent && recent.items.length > 0 ? (
+                  recent.items.map((s) => (
+                    <Link
+                      key={s.id}
+                      href={s.problemSlug ? `/problems/${s.problemSlug}` : "/submissions"}
+                      className="flex items-center justify-between gap-3 rounded px-2 py-1.5 transition-colors hover:bg-ink-800/50"
+                    >
+                      <span className="min-w-0 truncate text-sm text-ink-200">
+                        {s.problemTitle ? stripProblemNumber(s.problemTitle) : t("Submission")}
+                      </span>
+                      <span className="flex shrink-0 items-center gap-2">
+                        <span className="font-mono text-[10px] text-ink-500">{timeAgo(s.createdAt, t)}</span>
+                        <VerdictBadge verdict={s.verdict} size="sm" />
+                      </span>
+                    </Link>
+                  ))
+                ) : (
+                  <p className="px-2 py-1.5 text-sm text-ink-400">
+                    {t("No submissions yet — solve something to light up your heatmap.")}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="oj-card p-5">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-ink-200">{t("Recommended for you")}</h2>
+              <Link href="/problems" className="text-xs text-ink-500 hover:text-brand">
+                {t("browse all →")}
+              </Link>
+            </div>
+            {suggestions.length === 0 ? (
+              <p className="text-sm text-ink-400">
+                {t("No new recommendations yet —")}{" "}
+                <Link href="/problems" className="text-brand hover:underline">
+                  {t("browse the problem list")}
+                </Link>{" "}
+                {t("to get started.")}
+              </p>
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {suggestions.map((p) => (
+                  <Link
+                    key={p.id}
+                    href={`/problems/${p.slug}`}
+                    className={`group oj-card border-l-2 p-4 transition-all hover:-translate-y-0.5 hover:border-brand hover:bg-ink-800/40 ${REASON_ACCENT[p.kind]}`}
+                  >
+                    <div className="mb-3 flex items-center justify-between gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/10 text-brand">
+                        {(() => {
+                          const ReasonIcon = REASON_ICON[p.kind];
+                          return <ReasonIcon className="h-4 w-4" />;
+                        })()}
+                      </div>
+                      <DifficultyStars d={p.difficulty} />
+                    </div>
+                    <p className="mb-1 font-mono text-[11px] uppercase tracking-wide text-ink-500">{p.reason}</p>
+                    <h3 className="text-sm font-medium text-ink-50 group-hover:text-brand">{stripProblemNumber(p.title)}</h3>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      )}
+
+        <div className="space-y-6">
+          <div className="oj-card p-5">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-ink-200">{t("This week's top solvers")}</h2>
+              <Link href="/leaderboard" className="text-xs text-ink-500 hover:text-brand">
+                {t("full board →")}
+              </Link>
+            </div>
+            {topWeek.length === 0 ? (
+              <p className="text-sm text-ink-400">{t("Nobody's solved anything this week yet — be the first.")}</p>
+            ) : (
+              <div className="space-y-1">
+                {topWeek.map((r) => (
+                  <Link
+                    key={r.userId}
+                    href={`/u/${r.handle}`}
+                    className={`flex items-center gap-2.5 rounded px-2 py-1.5 transition-colors hover:bg-ink-800/50 ${
+                      r.handle === user.handle ? "bg-brand/5 ring-1 ring-brand/30" : ""
+                    }`}
+                  >
+                    <span className="w-5 shrink-0 text-center font-mono text-xs text-ink-500">
+                      {RANK_MEDAL_CLASS[r.rank] ? (
+                        <MedalIcon className={`inline h-3.5 w-3.5 ${RANK_MEDAL_CLASS[r.rank]}`} />
+                      ) : (
+                        r.rank
+                      )}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate text-sm text-ink-200">
+                      {r.handle}
+                      {r.handle === user.handle && <span className="ml-1.5 text-xs text-brand">{t("(you)")}</span>}
+                    </span>
+                    <span className="shrink-0 font-mono text-xs font-semibold text-brand">{r.score}</span>
+                  </Link>
+                ))}
+                {!meInTopWeek && myRank && (
+                  <div className="mt-1 flex items-center gap-2.5 rounded bg-brand/5 px-2 py-1.5 ring-1 ring-brand/30">
+                    <span className="w-5 shrink-0 text-center font-mono text-xs text-ink-500">#{myRank}</span>
+                    <span className="min-w-0 flex-1 truncate text-sm text-ink-200">
+                      {user.handle} <span className="text-xs text-brand">{t("(you)")}</span>
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {achievements && achievements.length > 0 && (
+            <div className="oj-card p-5">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-ink-200">{t("Trophy case")}</h2>
+                <Link href={`/u/${user.handle}`} className="text-xs text-ink-500 hover:text-brand">
+                  {t("view profile →")}
+                </Link>
+              </div>
+              <div className="space-y-1.5">
+                {achievements.map((a) => (
+                  <div
+                    key={a.code}
+                    title={t("{title} — {description} ({date})", {
+                      title: a.title,
+                      description: a.description,
+                      date: new Date(a.earnedAt).toLocaleDateString(),
+                    })}
+                    className="flex items-center gap-2.5 rounded border border-brand/20 bg-brand/5 px-2.5 py-2"
+                  >
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink-900 text-brand">
+                      {(() => {
+                        const AchievementIcon = ACHIEVEMENT_ICONS[a.code] ?? TrophyIcon;
+                        return <AchievementIcon className="h-4 w-4" />;
+                      })()}
+                    </span>
+                    <span className="min-w-0 truncate text-xs font-medium text-ink-100">{a.title}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

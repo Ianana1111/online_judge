@@ -92,7 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <PageviewTracker />
           <PromoBanner />
           <NavBar />
-          <main className="mx-auto min-h-[calc(100vh-56px)] max-w-6xl px-4 py-6">{children}</main>
+          <main className="mx-auto min-h-[calc(100vh-56px)] max-w-[1400px] px-6 py-6">{children}</main>
         </Providers>
         <Analytics />
       </body>
