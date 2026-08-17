@@ -12,19 +12,22 @@ export type Verdict =
   | "OLE"
   | "SE";
 
+// Verdicts always display as their competitive-programming abbreviation (AC, WA, TLE, ...) rather
+// than a spelled-out word or a translation — that's the universal convention in this community,
+// in English or Chinese conversation alike, so this is deliberately locale-invariant.
 export const VERDICT_LABEL: Record<Verdict, string> = {
   PENDING: "Pending",
   JUDGING: "Judging",
-  AC: "Accepted",
-  WA: "Wrong Answer",
-  TLE: "Time Limit Exceeded",
-  MLE: "Memory Limit Exceeded",
-  RE: "Runtime Error",
-  RF: "Restricted Function",
-  CE: "Compile Error",
-  PE: "Presentation Error",
-  OLE: "Output Limit Exceeded",
-  SE: "System Error",
+  AC: "AC",
+  WA: "WA",
+  TLE: "TLE",
+  MLE: "MLE",
+  RE: "RE",
+  RF: "RF",
+  CE: "CE",
+  PE: "PE",
+  OLE: "OLE",
+  SE: "SE",
 };
 
 export const LANGUAGE_LABEL: Record<string, string> = {
