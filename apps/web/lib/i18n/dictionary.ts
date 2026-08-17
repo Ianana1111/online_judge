@@ -34,6 +34,11 @@ const overrides: Record<string, string> = {
   "Solved count": "解出題數",
   "About this site": "關於本站",
   "error": "錯誤",
+
+  // --- HomeDashboard.tsx sidebar redesign ---
+  "This week's top solvers": "本週解題王",
+  "full board →": "完整排行榜 →",
+  "Nobody's solved anything this week yet — be the first.": "這週還沒有人解題，當第一個吧。",
 };
 
 /**

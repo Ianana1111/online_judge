@@ -134,7 +134,7 @@ export default function NavBar() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-ink-800 bg-ink-950/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-3">
         <div className="flex items-center gap-6">
           <Link href="/" className="font-display text-lg font-bold tracking-tight text-ink-50">
             judge<span className="text-brand">.</span>
