@@ -264,6 +264,7 @@ export class UsersService {
       solvedCount: solved.length,
       bio: user.bio,
       avatarUrl: user.avatarUrl,
+      school: user.school,
       // isProActive (not isUnlimited): this is a PUBLIC profile, so it shows the same "am I Pro"
       // answer a user gets about themselves from /billing/me (students count, same as everywhere
       // else) rather than the admin-users-table's operational "is this account ever capped" view —
@@ -272,13 +273,18 @@ export class UsersService {
     };
   }
 
-  /** Public-facing profile fields only (bio/avatar) — never handle/password/plan, those go through
-   * their own dedicated endpoints. */
+  /** Public-facing profile fields only (bio/avatar/school) — never handle/password/plan, those go
+   * through their own dedicated endpoints. */
   async updateProfile(userId: string, patch: UpdateProfileDto) {
-    const data: { bio?: string; avatarUrl?: string | null } = {};
+    const data: { bio?: string; avatarUrl?: string | null; school?: string | null } = {};
     if (patch.bio !== undefined) data.bio = patch.bio;
     if (patch.avatarUrl !== undefined) data.avatarUrl = patch.avatarUrl;
-    const user = await prisma.user.update({ where: { id: userId }, data, select: { bio: true, avatarUrl: true } });
+    if (patch.school !== undefined) data.school = patch.school;
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data,
+      select: { bio: true, avatarUrl: true, school: true },
+    });
     return user;
   }
 

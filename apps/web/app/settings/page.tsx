@@ -4,45 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import Avatar from "@/components/Avatar";
+import SchoolCombobox from "@/components/SchoolCombobox";
+import { resizeImageToDataUrl, AVATAR_MAX_DATA_URL_BYTES } from "@/lib/avatarUpload";
 import type { UserSettings } from "@/lib/types";
 import { useLocale, useT } from "@/lib/i18n/LocaleContext";
 
 const LANGUAGES = ["cpp17", "c11", "python3", "java17"];
-const AVATAR_MAX_DIMENSION = 200;
-const AVATAR_JPEG_QUALITY = 0.85;
-// Comfortably under the API's 1mb body limit (see main.ts) with room for the rest of the request.
-const AVATAR_MAX_DATA_URL_BYTES = 300_000;
-
-/** Downscales/compresses a picked image client-side so the base64 payload we send stays small —
- * there's no external file storage here (see users.service.updateProfile), so keeping this tiny is
- * what makes storing avatars as a plain DB column workable at all. */
-function resizeImageToDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("Could not read file"));
-    reader.onload = () => {
-      img.onerror = () => reject(new Error("Could not decode image"));
-      img.onload = () => {
-        const scale = Math.min(1, AVATAR_MAX_DIMENSION / Math.max(img.width, img.height));
-        const w = Math.round(img.width * scale);
-        const h = Math.round(img.height * scale);
-        const canvas = document.createElement("canvas");
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-          reject(new Error("Canvas not supported"));
-          return;
-        }
-        ctx.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL("image/jpeg", AVATAR_JPEG_QUALITY));
-      };
-      img.src = reader.result as string;
-    };
-    reader.readAsDataURL(file);
-  });
-}
 
 function ProfileSettingsForm() {
   const t = useT();
@@ -54,11 +21,29 @@ function ProfileSettingsForm() {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [schoolSaving, setSchoolSaving] = useState(false);
 
   useEffect(() => {
     setBio(user?.bio ?? "");
     setAvatarPreview(user?.avatarUrl ?? null);
   }, [user]);
+
+  async function onSchoolChange(school: string | null) {
+    if (!user) return;
+    setError(null);
+    setSchoolSaving(true);
+    try {
+      const updated = await apiFetch<{ bio: string; avatarUrl: string | null; school: string | null }>(
+        "/users/me/profile",
+        { method: "PATCH", body: { school } },
+      );
+      setUser({ ...user, school: updated.school });
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : t("Could not update school"));
+    } finally {
+      setSchoolSaving(false);
+    }
+  }
 
   async function onPickAvatar(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -164,6 +149,14 @@ function ProfileSettingsForm() {
           placeholder={t("A line about yourself, shown on your public profile")}
         />
         <p className="mt-1 text-xs text-ink-500">{bio.length}/200</p>
+      </div>
+
+      <div>
+        <label className="mb-1 block text-sm text-ink-300">{t("School")}</label>
+        <SchoolCombobox value={user.school} onChange={onSchoolChange} />
+        <p className="mt-1 text-xs text-ink-500">
+          {schoolSaving ? t("Saving…") : t("Shown on your public profile and the leaderboard.")}
+        </p>
       </div>
 
       {error && <p className="text-sm text-verdict-wa">{error}</p>}

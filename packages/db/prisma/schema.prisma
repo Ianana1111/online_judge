@@ -127,6 +127,11 @@ model User {
   /// upload, so no external file storage is needed at this scale. Null shows a generic
   /// initial-letter avatar instead.
   avatarUrl String?
+  /// One of TAIWAN_UNIVERSITIES (packages/shared) — a closed set, not free text, so the
+  /// leaderboard's school filter and "top student at X" view can group on it exactly. Null until
+  /// the user fills out ProfileSetupModal (or Settings) — that step is skippable, and this stays
+  /// null for anyone who skips it.
+  school    String?
   /// Streak-freeze inventory — see users.service.ts's applyMonthlyFreezeGrant. Granted lazily (1
   /// per calendar month, capped) the same way submitQuotaUsed/submitQuotaMonth reset lazily above,
   /// rather than via a separate cron job.

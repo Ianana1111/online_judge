@@ -35,23 +35,32 @@ export function computeStreak(dates: Set<string>): number {
 export class LeaderboardService {
   constructor(private readonly cache: CacheService) {}
 
-  async get(period: LeaderboardPeriod, scope: LeaderboardScope = "all") {
+  async get(period: LeaderboardPeriod, scope: LeaderboardScope = "all", school?: string) {
     // Recomputing this is a full AC-history scan (see below) — cache it briefly. A 60s-stale
     // leaderboard is an acceptable tradeoff for not re-scanning on every poll/page-load.
-    return this.cache.getOrSet(`leaderboard:${period}:${scope}`, 60, () => this.compute(period, scope));
+    return this.cache.getOrSet(`leaderboard:${period}:${scope}:${school ?? ""}`, 60, () =>
+      this.compute(period, scope, school),
+    );
   }
 
-  private async compute(period: LeaderboardPeriod, scope: LeaderboardScope) {
+  private async compute(period: LeaderboardPeriod, scope: LeaderboardScope, school?: string) {
     const since = periodStart(period);
     // scope=students narrows the ranked pool to a tutor's actual cohort (isStudent accounts) —
     // ranking against classmates is a far stronger motivator than an all-time-stranger global
     // board, and this site's real primary users are a tutor with named students.
-    const userWhere = scope === "students" ? { role: "USER" as const, isStudent: true } : { role: "USER" as const };
+    const userWhere = {
+      role: "USER" as const,
+      ...(scope === "students" ? { isStudent: true } : {}),
+      ...(school ? { school } : {}),
+    };
 
-    const users = await prisma.user.findMany({ where: userWhere, select: { id: true, handle: true } });
+    const users = await prisma.user.findMany({
+      where: userWhere,
+      select: { id: true, handle: true, avatarUrl: true, school: true },
+    });
     const userIds = users.map((u) => u.id);
 
-    const [periodSubs, allTimeSubs, freezeDays] = await Promise.all([
+    const [periodSubs, allTimeSubs, freezeDays, perfByUser, totalCountByUser] = await Promise.all([
       prisma.submission.findMany({
         where: { verdict: "AC", userId: { in: userIds }, ...(since ? { createdAt: { gte: since } } : {}) },
         select: { userId: true, problemId: true, createdAt: true, problem: { select: { difficulty: true } } },
@@ -65,7 +74,23 @@ export class LeaderboardService {
       // A streak-freeze day counts the same as a real AC day here too — otherwise this board would
       // disagree with the personal dashboard's own streak the moment someone uses one.
       prisma.streakFreezeDay.findMany({ where: { userId: { in: userIds } }, select: { userId: true, date: true } }),
+      // Avg time/memory reflect solving *performance*, not attempt-window — always all-time and
+      // AC-only, same reasoning as streaks: a "this week" average over 1-2 solves would be noise.
+      prisma.submission.groupBy({
+        by: ["userId"],
+        where: { verdict: "AC", userId: { in: userIds } },
+        _avg: { timeMs: true, memoryKb: true },
+      }),
+      // Total submissions (any verdict) — always all-time, a lifetime attempt-volume stat like
+      // "solved count" rather than something that makes sense scoped to a rolling window.
+      prisma.submission.groupBy({
+        by: ["userId"],
+        where: { userId: { in: userIds } },
+        _count: { _all: true },
+      }),
     ]);
+    const avgByUser = new Map(perfByUser.map((p) => [p.userId, { avgTimeMs: p._avg.timeMs, avgMemoryKb: p._avg.memoryKb }]));
+    const totalSubsByUser = new Map(totalCountByUser.map((c) => [c.userId, c._count._all]));
 
     const solvedByUser = new Map<string, Map<string, number>>(); // userId -> problemId -> difficulty (first AC only)
     for (const s of periodSubs) {
@@ -93,7 +118,20 @@ export class LeaderboardService {
       const solved = solvedByUser.get(u.id) ?? new Map<string, number>();
       const score = [...solved.values()].reduce((sum, difficulty) => sum + difficulty * POINTS_PER_STAR, 0);
       const streak = computeStreak(acDatesByUser.get(u.id) ?? new Set());
-      return { userId: u.id, handle: u.handle, score, solved: solved.size, streak, frozenToday: frozenTodayUserIds.has(u.id) };
+      const perf = avgByUser.get(u.id);
+      return {
+        userId: u.id,
+        handle: u.handle,
+        avatarUrl: u.avatarUrl,
+        school: u.school,
+        score,
+        solved: solved.size,
+        streak,
+        frozenToday: frozenTodayUserIds.has(u.id),
+        avgTimeMs: perf?.avgTimeMs != null ? Math.round(perf.avgTimeMs) : null,
+        avgMemoryKb: perf?.avgMemoryKb != null ? Math.round(perf.avgMemoryKb) : null,
+        totalSubmissions: totalSubsByUser.get(u.id) ?? 0,
+      };
     });
 
     rows.sort((a, b) => b.score - a.score || b.solved - a.solved || a.handle.localeCompare(b.handle));

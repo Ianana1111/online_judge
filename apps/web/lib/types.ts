@@ -42,6 +42,9 @@ export interface UserSettings {
   dailyGoal?: number;
   onboardingDismissed?: boolean;
   uiLocale?: "zh-TW" | "en";
+  // Set once the ProfileSetupModal is dismissed (skipped or saved) — same "never show again once
+  // handled" pattern as onboardingDismissed, independent of whether school ended up filled in.
+  profileSetupDismissed?: boolean;
 }
 
 export interface User {
@@ -54,6 +57,7 @@ export interface User {
   settings: UserSettings;
   bio: string;
   avatarUrl: string | null;
+  school: string | null;
 }
 
 export interface BillingStatus {
@@ -322,6 +326,7 @@ export interface UserProfile {
   plan: "FREE" | "PRO";
   bio: string;
   avatarUrl: string | null;
+  school: string | null;
 }
 
 export interface Discussion {
@@ -550,10 +555,15 @@ export interface UserStats {
 export interface LeaderboardRow {
   userId: string;
   handle: string;
+  avatarUrl: string | null;
+  school: string | null;
   score: number;
   solved: number;
   streak: number;
   frozenToday: boolean;
+  avgTimeMs: number | null;
+  avgMemoryKb: number | null;
+  totalSubmissions: number;
   rank: number;
 }
 

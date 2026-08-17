@@ -26,6 +26,16 @@ const CSP = [
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@oj/shared"],
+  // @oj/shared's source uses NodeNext-style explicit ".js" import specifiers (e.g. "./schemas.js"
+  // resolving to schemas.ts) — fine for tsc/ts-node, but webpack's resolver takes ".js" literally
+  // and never finds a same-named ".ts" file since the package ships no build step. This is the
+  // standard extensionAlias fix for a TS workspace package consumed straight from source.
+  webpack: (config) => {
+    config.resolve.extensionAlias = {
+      ".js": [".ts", ".tsx", ".js"],
+    };
+    return config;
+  },
   async headers() {
     return [
       {

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { VERDICTS } from "./verdicts.js";
+import { TAIWAN_UNIVERSITIES } from "./taiwanUniversities.js";
 
 export const registerSchema = z.object({
   handle: z
@@ -105,6 +106,10 @@ export const updateProfileSchema = z.object({
   avatarUrl: z
     .union([z.string().max(300_000).startsWith("data:image/"), z.null()])
     .optional(),
+  // A closed set (see taiwanUniversities.ts), not free text — enforced here too, not just in the
+  // picker UI, since the leaderboard's school filter only works if every row's value is exactly
+  // one of these strings. null clears it back to unset.
+  school: z.union([z.enum(TAIWAN_UNIVERSITIES), z.null()]).optional(),
 });
 export type UpdateProfileDto = z.infer<typeof updateProfileSchema>;
 
