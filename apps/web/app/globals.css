@@ -152,6 +152,13 @@
     @apply font-body antialiased;
   }
 
+  /* CJK glyphs sit flush against each other at the same letter-spacing that reads fine for Latin
+     text — a little extra tracking keeps 繁體中文 from looking cramped. Scoped to [lang="zh-TW"]
+     (set on <html> by LocaleContext) so switching back to English isn't affected. */
+  html[lang="zh-TW"] body {
+    letter-spacing: 0.04em;
+  }
+
   ::selection {
     @apply bg-brand/30 text-ink-50;
   }

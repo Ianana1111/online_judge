@@ -46,6 +46,28 @@ const overrides: Record<string, string> = {
   "This week's top solvers": "本週解題王",
   "full board →": "完整排行榜 →",
   "Nobody's solved anything this week yet — be the first.": "這週還沒有人解題，當第一個吧。",
+
+  // --- School profile + leaderboard redesign ---
+  "Select your school": "選擇你的學校",
+  "Search…": "搜尋…",
+  "Clear": "清除",
+  "No matches": "沒有符合的結果",
+  "School": "學校",
+  "Shown on your public profile and the leaderboard.": "會顯示在你的公開個人頁面和排行榜上。",
+  "Could not update school": "無法更新學校",
+  "Welcome! Quick setup": "歡迎！快速設定一下",
+  "Add your school so classmates can find each other on the leaderboard — takes a few seconds, and you can always change this later in Settings.":
+    "填一下你的學校，讓同校的人可以在排行榜上找到彼此——只要幾秒鐘，之後也可以隨時到設定裡修改。",
+  "Nickname": "暱稱",
+  "Skip for now": "先跳過",
+  "Could not save your profile": "無法儲存你的個人資料",
+  "Rank": "名次",
+  "User": "使用者",
+  "Avg time": "平均時間",
+  "Avg memory": "平均記憶體",
+  "Total submissions": "總提交次數",
+  "Top at {school}:": "{school} 目前最強的是：",
+  "Nobody from {school} has solved anything yet — be the first.": "{school} 還沒有人解過題，當第一個吧。",
 };
 
 /**

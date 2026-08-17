@@ -144,6 +144,7 @@ export class AuthService {
     settings: Record<string, unknown>;
     bio: string;
     avatarUrl: string | null;
+    school: string | null;
     csrfToken: string;
     csrfMaxAgeMs: number;
   }> {
@@ -166,6 +167,7 @@ export class AuthService {
       settings: (user.settings as Record<string, unknown>) ?? {},
       bio: user.bio,
       avatarUrl: user.avatarUrl,
+      school: user.school,
       csrfToken: generateCsrfToken(),
       csrfMaxAgeMs: this.tokens.refreshTtlMs,
     };

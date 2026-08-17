@@ -7,6 +7,7 @@ import Providers from "@/components/Providers";
 import NavBar from "@/components/NavBar";
 import PageviewTracker from "@/components/PageviewTracker";
 import PromoBanner from "@/components/PromoBanner";
+import ProfileSetupGate from "@/components/ProfileSetupGate";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 const display = Space_Grotesk({
@@ -92,6 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <PageviewTracker />
           <PromoBanner />
           <NavBar />
+          <ProfileSetupGate />
           <main className="mx-auto min-h-[calc(100vh-56px)] max-w-[1400px] px-6 py-6">{children}</main>
         </Providers>
         <Analytics />
