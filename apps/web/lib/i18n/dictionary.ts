@@ -67,6 +67,7 @@ const overrides: Record<string, string> = {
   "Avg memory": "平均記憶體",
   "Total submissions": "總提交次數",
   "Top at {school}:": "{school} 目前最強的是：",
+  "All schools": "所有學校",
   "Nobody from {school} has solved anything yet — be the first.": "{school} 還沒有人解過題，當第一個吧。",
 };
 
