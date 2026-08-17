@@ -15,8 +15,15 @@ import { batch4Dictionary } from "./dict/batch4";
  */
 const overrides: Record<string, string> = {
   "Submission": "送出紀錄",
-  "My Submissions": "我的送出紀錄",
+  "My Submissions": "提交歷史",
   "No submissions yet.": "還沒有送出紀錄。",
+  // Verdict/judging status stays in English everywhere (AC/WA/TLE/... is the universal CP
+  // convention, in Chinese conversation too) — these two are the only VERDICT_LABEL values that
+  // were still spelled-out English words rather than already-bare codes, so they're the only
+  // ones a batch shard had a Chinese translation for. Setting the value equal to the key forces
+  // the English passthrough even in zh-TW mode instead of deleting the (now dead) shard entries.
+  "Pending": "Pending",
+  "Judging": "Judging",
   "Contests": "比賽",
   "Handle": "帳號名稱",
   "Collections": "題目集",
