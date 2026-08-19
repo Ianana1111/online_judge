@@ -145,6 +145,8 @@ export class AuthService {
     bio: string;
     avatarUrl: string | null;
     school: string | null;
+    schoolEmail: string | null;
+    schoolVerifiedAt: Date | null;
     csrfToken: string;
     csrfMaxAgeMs: number;
   }> {
@@ -168,6 +170,11 @@ export class AuthService {
       bio: user.bio,
       avatarUrl: user.avatarUrl,
       school: user.school,
+      // Unlike the public profile/leaderboard, /auth/me is the owner's own view of their account —
+      // it shows the pending (unverified) state too, so Settings can render "verification sent to
+      // X" instead of just silently looking identical to "never started."
+      schoolEmail: user.schoolEmail,
+      schoolVerifiedAt: user.schoolVerifiedAt,
       csrfToken: generateCsrfToken(),
       csrfMaxAgeMs: this.tokens.refreshTtlMs,
     };

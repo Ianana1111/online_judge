@@ -1,14 +1,18 @@
-import { Body, Controller, Get, HttpCode, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query, Res } from "@nestjs/common";
+import { Throttle } from "@nestjs/throttler";
+import type { Response } from "express";
 import {
   changeHandleSchema,
   changePasswordSchema,
   createUserSchema,
+  requestSchoolVerificationSchema,
   setIsStudentSchema,
   updateProfileSchema,
   updateSettingsSchema,
   type ChangeHandleDto,
   type ChangePasswordDto,
   type CreateUserDto,
+  type RequestSchoolVerificationDto,
   type SetIsStudentDto,
   type UpdateProfileDto,
   type UpdateSettingsDto,
@@ -65,6 +69,29 @@ export class UsersController {
     @CurrentUser() user: RequestUser,
   ) {
     return this.users.updateProfile(user.id, body);
+  }
+
+  // Sends a real email — much tighter than the global 120/min-per-IP default, same reasoning as
+  // register/login's own throttles (auth.controller.ts): cheap to abuse, no reason to allow more
+  // than the occasional real "didn't get it, resend" click.
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  @Post("me/school/verify/request")
+  requestSchoolVerification(
+    @Body(new ZodValidationPipe(requestSchoolVerificationSchema)) body: RequestSchoolVerificationDto,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.users.requestSchoolVerification(user.id, body.email);
+  }
+
+  /** The link clicked from the verification email — public (no auth cookie required, see
+   * confirmSchoolVerification's own comment) and a plain top-level navigation, so it redirects
+   * back into the web app rather than returning JSON. */
+  @Public()
+  @Get("school/verify/confirm")
+  async confirmSchoolVerification(@Query("token") token: string | undefined, @Res() res: Response) {
+    const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
+    const result = token ? await this.users.confirmSchoolVerification(token) : { ok: false };
+    res.redirect(`${webOrigin}/settings?schoolVerified=${result.ok ? "1" : "0"}`);
   }
 
   @Roles("ADMIN")

@@ -58,6 +58,11 @@ export interface User {
   bio: string;
   avatarUrl: string | null;
   school: string | null;
+  // The address a verification link was sent to (or already verified) for the current `school` —
+  // null until the user has requested verification at least once. See schoolVerifiedAt for
+  // whether that address was actually confirmed.
+  schoolEmail: string | null;
+  schoolVerifiedAt: string | null;
 }
 
 export interface BillingStatus {
@@ -556,6 +561,8 @@ export interface LeaderboardRow {
   userId: string;
   handle: string;
   avatarUrl: string | null;
+  // Only ever a *verified* school claim — null both for "no school" and "claimed but not
+  // verified yet" (see UNVERIFIED_SCHOOL_FILTER for filtering on that second group specifically).
   school: string | null;
   solved: number;
   streak: number;

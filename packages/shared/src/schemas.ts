@@ -113,6 +113,11 @@ export const updateProfileSchema = z.object({
 });
 export type UpdateProfileDto = z.infer<typeof updateProfileSchema>;
 
+export const requestSchoolVerificationSchema = z.object({
+  email: z.string().email().max(200),
+});
+export type RequestSchoolVerificationDto = z.infer<typeof requestSchoolVerificationSchema>;
+
 export const setIsStudentSchema = z.object({
   isStudent: z.boolean(),
 });

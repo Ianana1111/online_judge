@@ -132,6 +132,17 @@ model User {
   /// the user fills out ProfileSetupModal (or Settings) — that step is skippable, and this stays
   /// null for anyone who skips it.
   school    String?
+  /// The school email address a verification link was last sent to (or already verified) for the
+  /// *current* `school` value. Reset to null whenever `school` changes — a verification only ever
+  /// vouches for one specific school claim, never carries over to a newly picked one.
+  schoolEmail             String?
+  /// Set once the emailed verification link is clicked; null means unverified (either never
+  /// requested, or requested but not yet confirmed). Only a non-null value here lets this user be
+  /// grouped under `school` on the leaderboard — see leaderboard.service's school filter.
+  schoolVerifiedAt        DateTime?
+  /// Last time a verification email actually went out, for a simple resend cooldown — unrelated
+  /// to schoolVerifiedAt, which only ever reflects a *confirmed* click.
+  schoolVerificationSentAt DateTime?
   /// Streak-freeze inventory — see users.service.ts's applyMonthlyFreezeGrant. Granted lazily (1
   /// per calendar month, capped) the same way submitQuotaUsed/submitQuotaMonth reset lazily above,
   /// rather than via a separate cron job.

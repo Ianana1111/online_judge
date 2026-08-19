@@ -9,6 +9,7 @@ import { SkeletonList } from "@/components/Skeleton";
 import Avatar from "@/components/Avatar";
 import SchoolCombobox from "@/components/SchoolCombobox";
 import { FlameIcon, SnowflakeIcon, TrophyIcon } from "@/components/icons";
+import { UNVERIFIED_SCHOOL_FILTER } from "@oj/shared";
 import type { LeaderboardRow } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
@@ -69,7 +70,8 @@ export default function LeaderboardPage() {
       .map((r, i) => ({ ...r, rank: i + 1 }));
   }, [rows, ranking]);
 
-  const topAtSchool = school && displayRows && displayRows.length > 0 ? displayRows[0] : null;
+  const topAtSchool =
+    school && school !== UNVERIFIED_SCHOOL_FILTER && displayRows && displayRows.length > 0 ? displayRows[0] : null;
 
   return (
     <div className="space-y-6">
@@ -112,8 +114,22 @@ export default function LeaderboardPage() {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <div className="w-56">
-            <SchoolCombobox value={school} onChange={setSchool} placeholder={t("All schools")} />
+            <SchoolCombobox
+              value={school === UNVERIFIED_SCHOOL_FILTER ? null : school}
+              onChange={setSchool}
+              placeholder={t("All schools")}
+            />
           </div>
+          <button
+            type="button"
+            onClick={() => setSchool((s) => (s === UNVERIFIED_SCHOOL_FILTER ? null : UNVERIFIED_SCHOOL_FILTER))}
+            title={t("No school claimed, or claimed but not yet verified.")}
+            className={
+              school === UNVERIFIED_SCHOOL_FILTER ? "oj-btn-primary px-3 py-1.5 text-xs" : "oj-btn-secondary px-3 py-1.5 text-xs"
+            }
+          >
+            {t("Unaffiliated")}
+          </button>
           {user?.isStudent && (
             <div className="flex gap-2">
               <button
@@ -202,6 +218,8 @@ export default function LeaderboardPage() {
         <div className="oj-card p-4 text-sm text-ink-400">
           {ranking === "streak" ? (
             <p>{t("Nobody has an active streak right now — solve something today to start one.")}</p>
+          ) : school === UNVERIFIED_SCHOOL_FILTER ? (
+            <p>{t("Nobody unaffiliated has solved anything yet — be the first.")}</p>
           ) : school ? (
             <p>{t("Nobody from {school} has solved anything yet — be the first.", { school })}</p>
           ) : (

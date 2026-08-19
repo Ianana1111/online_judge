@@ -74,6 +74,24 @@ const overrides: Record<string, string> = {
   "Most solved": "解出最多",
   "Ranked by how many problems you've solved — grinding a lot beats grinding hard.":
     "依解出題數排名——解得多比解得難更重要。",
+
+  // --- School email verification ---
+  "Verified via {email}": "已透過 {email} 認證",
+  "Verify a @{domain} email to attach {school} to your leaderboard entry.":
+    "驗證一個 @{domain} 的信箱，就能把 {school} 顯示在你的排行榜資料上。",
+  "Sending…": "寄送中…",
+  "Wait {n}s": "請等待 {n} 秒",
+  "Resend": "重新寄送",
+  "Send verification email": "寄送驗證信",
+  "That doesn't look like a @{domain} address.": "這看起來不是 @{domain} 的信箱。",
+  "Verification email sent to {email} — check your inbox for the link.":
+    "驗證信已寄至 {email}，請至信箱點擊連結完成驗證。",
+  "Couldn't send the verification email — try again in a moment.": "驗證信寄送失敗，請稍後再試一次。",
+  "School email verified ✓": "學校信箱已驗證 ✓",
+  "That verification link is invalid or expired — try sending a new one.": "這個驗證連結已失效或過期，請重新寄送一封。",
+  "Unaffiliated": "未認證學校",
+  "No school claimed, or claimed but not yet verified.": "尚未填寫學校，或已填寫但尚未完成信箱驗證。",
+  "Nobody unaffiliated has solved anything yet — be the first.": "還沒有未認證學校的人解過題，當第一個吧。",
 };
 
 /**

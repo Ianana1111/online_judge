@@ -3,3 +3,4 @@ export * from "./schemas.js";
 export * from "./queue.js";
 export * from "./billing.js";
 export * from "./taiwanUniversities.js";
+export * from "./taiwanUniversityDomains.js";
