@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { prisma } from "@oj/db";
+import { UNVERIFIED_SCHOOL_FILTER } from "@oj/shared";
 import { CacheService } from "../common/cache.util";
 
 export type LeaderboardPeriod = "all" | "week" | "month";
@@ -51,12 +52,18 @@ export class LeaderboardService {
     const userWhere = {
       role: "USER" as const,
       ...(scope === "students" ? { isStudent: true } : {}),
-      ...(school ? { school } : {}),
+      // A school filter only ever matches *verified* claims — see requestSchoolVerification's
+      // domain check for why an unverified one can't be trusted to group correctly.
+      ...(school === UNVERIFIED_SCHOOL_FILTER
+        ? { OR: [{ school: null }, { schoolVerifiedAt: null }] }
+        : school
+          ? { school, schoolVerifiedAt: { not: null } }
+          : {}),
     };
 
     const users = await prisma.user.findMany({
       where: userWhere,
-      select: { id: true, handle: true, avatarUrl: true, school: true },
+      select: { id: true, handle: true, avatarUrl: true, school: true, schoolVerifiedAt: true },
     });
     const userIds = users.map((u) => u.id);
 
@@ -121,7 +128,8 @@ export class LeaderboardService {
         userId: u.id,
         handle: u.handle,
         avatarUrl: u.avatarUrl,
-        school: u.school,
+        // Only a verified claim is shown — same rule as the public profile (users.service.profile).
+        school: u.schoolVerifiedAt ? u.school : null,
         solved: solved.size,
         streak,
         frozenToday: frozenTodayUserIds.has(u.id),

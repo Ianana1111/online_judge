@@ -1,9 +1,25 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import argon2 from "argon2";
+import jwt from "jsonwebtoken";
 import { prisma } from "@oj/db";
+import { TAIWAN_UNIVERSITY_DOMAINS, verifySchoolEmailDomain } from "@oj/shared";
 import type { ChangeHandleDto, ChangePasswordDto, CreateUserDto, UpdateProfileDto, UpdateSettingsDto } from "@oj/shared";
 import { isProActive, isUnlimited } from "../billing/billing.service";
 import { computeStreak } from "../leaderboard/leaderboard.service";
+import { MailService } from "../common/mail.service";
+
+const SCHOOL_VERIFY_SECRET = process.env.SCHOOL_VERIFY_SECRET ?? "dev_school_verify_secret_change_me";
+const SCHOOL_VERIFY_TOKEN_TTL = "30m";
+// Long enough that a user who fat-fingers "resend" a couple times isn't rate-limited into
+// frustration, short enough that it isn't a meaningful spam vector against someone else's inbox.
+const SCHOOL_VERIFY_RESEND_COOLDOWN_MS = 60_000;
+
+interface SchoolVerifyTokenPayload {
+  purpose: "school-verify";
+  sub: string;
+  school: string;
+  email: string;
+}
 
 const HEATMAP_DAYS = 365;
 
@@ -58,6 +74,8 @@ function applyDailyCheckIn(
 
 @Injectable()
 export class UsersService {
+  constructor(private readonly mail: MailService) {}
+
   /** Admin-only: accounts are provisioned by an instructor, not self-registered. */
   async createByAdmin(dto: CreateUserDto) {
     const existing = await prisma.user.findFirst({
@@ -264,7 +282,9 @@ export class UsersService {
       solvedCount: solved.length,
       bio: user.bio,
       avatarUrl: user.avatarUrl,
-      school: user.school,
+      // Only a *verified* school is shown publicly / counts for leaderboard grouping — an
+      // unconfirmed claim doesn't get to advertise itself on someone else's view of this profile.
+      school: user.schoolVerifiedAt ? user.school : null,
       // isProActive (not isUnlimited): this is a PUBLIC profile, so it shows the same "am I Pro"
       // answer a user gets about themselves from /billing/me (students count, same as everywhere
       // else) rather than the admin-users-table's operational "is this account ever capped" view —
@@ -276,16 +296,100 @@ export class UsersService {
   /** Public-facing profile fields only (bio/avatar/school) — never handle/password/plan, those go
    * through their own dedicated endpoints. */
   async updateProfile(userId: string, patch: UpdateProfileDto) {
-    const data: { bio?: string; avatarUrl?: string | null; school?: string | null } = {};
+    const data: {
+      bio?: string;
+      avatarUrl?: string | null;
+      school?: string | null;
+      schoolEmail?: null;
+      schoolVerifiedAt?: null;
+      schoolVerificationSentAt?: null;
+    } = {};
     if (patch.bio !== undefined) data.bio = patch.bio;
     if (patch.avatarUrl !== undefined) data.avatarUrl = patch.avatarUrl;
-    if (patch.school !== undefined) data.school = patch.school;
+    if (patch.school !== undefined) {
+      const current = await prisma.user.findUnique({ where: { id: userId }, select: { school: true } });
+      data.school = patch.school;
+      // A verification only ever vouches for one specific school claim — picking a different
+      // school (or clearing it) always starts the verification story over from scratch.
+      if (patch.school !== current?.school) {
+        data.schoolEmail = null;
+        data.schoolVerifiedAt = null;
+        data.schoolVerificationSentAt = null;
+      }
+    }
     const user = await prisma.user.update({
       where: { id: userId },
       data,
-      select: { bio: true, avatarUrl: true, school: true },
+      select: { bio: true, avatarUrl: true, school: true, schoolEmail: true, schoolVerifiedAt: true },
     });
     return user;
+  }
+
+  /** Sends a one-time verification link to `email`, only if it's actually on the domain that
+   * `school` (the user's current, already-saved claim) is known to use — see
+   * TAIWAN_UNIVERSITY_DOMAINS. The email itself carries the token; nothing pending is otherwise
+   * stored server-side beyond the resend cooldown and the "which address is this for" record. */
+  async requestSchoolVerification(userId: string, email: string) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { school: true, schoolVerifiedAt: true, schoolVerificationSentAt: true },
+    });
+    if (!user) throw new NotFoundException("User not found");
+    if (!user.school) throw new BadRequestException("Pick a school first.");
+    if (!(user.school in TAIWAN_UNIVERSITY_DOMAINS)) {
+      throw new BadRequestException("This school doesn't support email verification yet.");
+    }
+    if (user.schoolVerifiedAt) throw new BadRequestException("Your school is already verified.");
+    if (!verifySchoolEmailDomain(email, user.school)) {
+      const domain = TAIWAN_UNIVERSITY_DOMAINS[user.school as keyof typeof TAIWAN_UNIVERSITY_DOMAINS];
+      throw new BadRequestException(`That address doesn't look like a @${domain} address.`);
+    }
+    if (user.schoolVerificationSentAt && Date.now() - user.schoolVerificationSentAt.getTime() < SCHOOL_VERIFY_RESEND_COOLDOWN_MS) {
+      throw new BadRequestException("Give it a moment before requesting another email.");
+    }
+
+    const token = jwt.sign({ purpose: "school-verify", sub: userId, school: user.school, email } satisfies SchoolVerifyTokenPayload, SCHOOL_VERIFY_SECRET, {
+      expiresIn: SCHOOL_VERIFY_TOKEN_TTL,
+    });
+    const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
+    const apiOrigin = (process.env.API_ORIGIN ?? "http://localhost:4000").split(",")[0].trim();
+    const verifyUrl = `${apiOrigin}/users/school/verify/confirm?token=${encodeURIComponent(token)}`;
+
+    await this.mail.send({
+      to: email,
+      subject: `Verify your ${user.school} email — judge.tw`,
+      html: `
+        <p>Confirm that <strong>${email}</strong> belongs to you to attach <strong>${user.school}</strong> to your judge.tw leaderboard entry.</p>
+        <p><a href="${verifyUrl}">Verify my school email</a></p>
+        <p>This link expires in 30 minutes. If you didn't request this, you can ignore this email.</p>
+        <p><a href="${webOrigin}">judge.tw</a></p>
+      `,
+    });
+
+    await prisma.user.update({ where: { id: userId }, data: { schoolEmail: email, schoolVerificationSentAt: new Date() } });
+    return { ok: true as const };
+  }
+
+  /** The link clicked from the verification email — deliberately identity-free (no auth cookie
+   * required): the signed token itself carries who this is for, so it works from any device/
+   * browser the email happens to be opened in, not just the one the request originated from. Both
+   * the claimed school and email are re-checked against the user's *current* row (not just
+   * trusted from the token) so a stale link from before a school change can't silently verify the
+   * wrong thing. */
+  async confirmSchoolVerification(token: string): Promise<{ ok: boolean }> {
+    let payload: SchoolVerifyTokenPayload;
+    try {
+      payload = jwt.verify(token, SCHOOL_VERIFY_SECRET) as unknown as SchoolVerifyTokenPayload;
+    } catch {
+      return { ok: false };
+    }
+    if (payload.purpose !== "school-verify") return { ok: false };
+
+    const user = await prisma.user.findUnique({ where: { id: payload.sub }, select: { school: true, schoolEmail: true } });
+    if (!user || user.school !== payload.school || user.schoolEmail !== payload.email) return { ok: false };
+
+    await prisma.user.update({ where: { id: payload.sub }, data: { schoolVerifiedAt: new Date() } });
+    return { ok: true };
   }
 
   async stats(handle: string) {

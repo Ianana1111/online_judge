@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { TAIWAN_UNIVERSITY_DOMAINS } from "@oj/shared";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import Avatar from "@/components/Avatar";
@@ -10,6 +12,125 @@ import type { UserSettings } from "@/lib/types";
 import { useLocale, useT } from "@/lib/i18n/LocaleContext";
 
 const LANGUAGES = ["cpp17", "c11", "python3", "java17"];
+
+const RESEND_COOLDOWN_MS = 60_000;
+
+/** Only rendered once a school is picked (see ProfileSettingsForm) — lets the user prove they
+ * actually belong to that school by verifying an address on its registered domain, which is what
+ * lets the leaderboard trust school groupings instead of anyone typing in a prestigious name.
+ * "其他" (the catch-all option) has no known domain and so never gets this section at all. */
+function SchoolEmailVerification({ school }: { school: string }) {
+  const t = useT();
+  const { user, setUser } = useAuthStore();
+  const domain = (TAIWAN_UNIVERSITY_DOMAINS as Record<string, string | undefined>)[school];
+  const [email, setEmail] = useState(user?.schoolEmail ?? "");
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [cooldownUntil, setCooldownUntil] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (cooldownUntil <= now) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [cooldownUntil, now]);
+
+  if (!user || !domain) return null;
+  const verified = !!user.schoolVerifiedAt;
+  const cooling = cooldownUntil > now;
+  const domainMismatch = email.length > 0 && !email.toLowerCase().endsWith(`@${domain}`) && !email.toLowerCase().endsWith(`.${domain}`);
+
+  async function send() {
+    setError(null);
+    setSending(true);
+    try {
+      await apiFetch("/users/me/school/verify/request", { method: "POST", body: { email } });
+      setCooldownUntil(Date.now() + RESEND_COOLDOWN_MS);
+      if (user) setUser({ ...user, schoolEmail: email });
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : t("Couldn't send the verification email — try again in a moment."));
+    } finally {
+      setSending(false);
+    }
+  }
+
+  if (verified) {
+    return (
+      <p className="mt-2 flex items-center gap-1.5 text-xs text-verdict-ac">
+        ✓ {t("Verified via {email}", { email: user.schoolEmail ?? "" })}
+      </p>
+    );
+  }
+
+  return (
+    <div className="mt-2 rounded border border-ink-700 bg-ink-900/40 p-3">
+      <p className="text-xs text-ink-400">
+        {t("Verify a @{domain} email to attach {school} to your leaderboard entry.", { domain, school })}
+      </p>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <input
+          className="oj-input min-w-0 flex-1 text-sm"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder={`you@${domain}`}
+        />
+        <button
+          type="button"
+          onClick={send}
+          disabled={sending || cooling || !email || domainMismatch}
+          className="oj-btn-secondary shrink-0 px-3 py-1.5 text-xs"
+        >
+          {sending
+            ? t("Sending…")
+            : cooling
+              ? t("Wait {n}s", { n: Math.ceil((cooldownUntil - now) / 1000) })
+              : user.schoolEmail
+                ? t("Resend")
+                : t("Send verification email")}
+        </button>
+      </div>
+      {domainMismatch && <p className="mt-1.5 text-xs text-verdict-wa">{t("That doesn't look like a @{domain} address.", { domain })}</p>}
+      {!domainMismatch && user.schoolEmail && !error && (
+        <p className="mt-1.5 text-xs text-ink-500">
+          {t("Verification email sent to {email} — check your inbox for the link.", { email: user.schoolEmail })}
+        </p>
+      )}
+      {error && <p className="mt-1.5 text-xs text-verdict-wa">{error}</p>}
+    </div>
+  );
+}
+
+/** Reads ?schoolVerified=0|1 left by the API's redirect after the emailed link is clicked
+ * (users.controller.confirmSchoolVerification), re-hydrates the user (the verification happened
+ * server-side, outside this tab's own state) and shows the result once, then strips the param so
+ * a reload doesn't re-show the banner. Split out from the page body since useSearchParams needs
+ * its own Suspense boundary. */
+function SchoolVerifiedBanner() {
+  const t = useT();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const hydrate = useAuthStore((s) => s.hydrate);
+  const result = searchParams.get("schoolVerified");
+
+  useEffect(() => {
+    if (!result) return;
+    if (result === "1") hydrate();
+    router.replace("/settings", { scroll: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result]);
+
+  if (!result) return null;
+  return (
+    <div
+      className={`mb-4 rounded border p-3 text-sm ${
+        result === "1" ? "border-verdict-ac/40 bg-verdict-ac/10 text-verdict-ac" : "border-verdict-wa/40 bg-verdict-wa/10 text-verdict-wa"
+      }`}
+    >
+      {result === "1" ? t("School email verified ✓") : t("That verification link is invalid or expired — try sending a new one.")}
+    </div>
+  );
+}
 
 function ProfileSettingsForm() {
   const t = useT();
@@ -33,11 +154,17 @@ function ProfileSettingsForm() {
     setError(null);
     setSchoolSaving(true);
     try {
-      const updated = await apiFetch<{ bio: string; avatarUrl: string | null; school: string | null }>(
-        "/users/me/profile",
-        { method: "PATCH", body: { school } },
-      );
-      setUser({ ...user, school: updated.school });
+      const updated = await apiFetch<{
+        bio: string;
+        avatarUrl: string | null;
+        school: string | null;
+        schoolEmail: string | null;
+        schoolVerifiedAt: string | null;
+      }>("/users/me/profile", { method: "PATCH", body: { school } });
+      // A school change resets verification server-side (see users.service.updateProfile) —
+      // carry that reset into the store too, not just the new school name, so the verification
+      // section doesn't keep showing the previous school's "verified" state for a stale beat.
+      setUser({ ...user, school: updated.school, schoolEmail: updated.schoolEmail, schoolVerifiedAt: updated.schoolVerifiedAt });
     } catch (e) {
       setError(e instanceof ApiError ? e.message : t("Could not update school"));
     } finally {
@@ -157,6 +284,7 @@ function ProfileSettingsForm() {
         <p className="mt-1 text-xs text-ink-500">
           {schoolSaving ? t("Saving…") : t("Shown on your public profile and the leaderboard.")}
         </p>
+        {user.school && <SchoolEmailVerification key={user.school} school={user.school} />}
       </div>
 
       {error && <p className="text-sm text-verdict-wa">{error}</p>}
@@ -414,6 +542,9 @@ export default function SettingsPage() {
   return (
     <div className="mx-auto max-w-3xl py-8">
       <h1 className="mb-6 font-display text-2xl font-bold text-ink-50">{t("Settings")}</h1>
+      <Suspense>
+        <SchoolVerifiedBanner />
+      </Suspense>
       <div className="flex gap-8">
         <aside className="w-40 shrink-0">
           <nav className="flex flex-col gap-1">
