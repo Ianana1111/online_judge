@@ -69,6 +69,11 @@ const overrides: Record<string, string> = {
   "Top at {school}:": "{school} 目前最強的是：",
   "All schools": "所有學校",
   "Nobody from {school} has solved anything yet — be the first.": "{school} 還沒有人解過題，當第一個吧。",
+
+  // --- Leaderboard: score removed in favor of ranking by raw solved count ---
+  "Most solved": "解出最多",
+  "Ranked by how many problems you've solved — grinding a lot beats grinding hard.":
+    "依解出題數排名——解得多比解得難更重要。",
 };
 
 /**

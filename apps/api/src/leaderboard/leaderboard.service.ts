@@ -113,10 +113,8 @@ export class LeaderboardService {
     const todayKey = new Date().toISOString().slice(0, 10);
     const frozenTodayUserIds = new Set(freezeDays.filter((f) => f.date === todayKey).map((f) => f.userId));
 
-    const POINTS_PER_STAR = 10;
     const rows = users.map((u) => {
       const solved = solvedByUser.get(u.id) ?? new Map<string, number>();
-      const score = [...solved.values()].reduce((sum, difficulty) => sum + difficulty * POINTS_PER_STAR, 0);
       const streak = computeStreak(acDatesByUser.get(u.id) ?? new Set());
       const perf = avgByUser.get(u.id);
       return {
@@ -124,7 +122,6 @@ export class LeaderboardService {
         handle: u.handle,
         avatarUrl: u.avatarUrl,
         school: u.school,
-        score,
         solved: solved.size,
         streak,
         frozenToday: frozenTodayUserIds.has(u.id),
@@ -134,10 +131,10 @@ export class LeaderboardService {
       };
     });
 
-    rows.sort((a, b) => b.score - a.score || b.solved - a.solved || a.handle.localeCompare(b.handle));
+    rows.sort((a, b) => b.solved - a.solved || b.streak - a.streak || a.handle.localeCompare(b.handle));
 
     return rows
-      .filter((r) => r.score > 0 || r.streak > 0)
+      .filter((r) => r.solved > 0 || r.streak > 0)
       .map((r, i) => ({ ...r, rank: i + 1 }));
   }
 }
