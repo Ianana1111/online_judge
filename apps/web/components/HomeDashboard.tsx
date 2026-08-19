@@ -20,14 +20,12 @@ import {
   MoonIcon,
   RocketIcon,
   SnowflakeIcon,
-  SparklesIcon,
   SunIcon,
   SunsetIcon,
   TrophyIcon,
 } from "@/components/icons";
 import type {
   Achievement,
-  DailyProblem,
   DailyStats,
   LeaderboardRow,
   RecommendedProblems,
@@ -156,49 +154,6 @@ function StreakFreezeButton({ freezeCount }: { freezeCount: number }) {
   );
 }
 
-/** The same problem for every visitor, all day (see problems.service.dailyPick) — a shared "did you
- * do today's?" reference point rather than a personal recommendation, which is what the separate
- * "Recommended for you" section below is already for. */
-function DailyProblemCard({ problem }: { problem: DailyProblem }) {
-  const t = useT();
-  return (
-    <div className="oj-card relative overflow-hidden p-5">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.07]"
-        style={{ background: "radial-gradient(circle at 90% 10%, rgb(var(--brand)) 0%, transparent 55%)" }}
-      />
-      <div className="relative flex items-center justify-between gap-4">
-        <div className="min-w-0">
-          <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-brand">
-            <SparklesIcon className="h-3.5 w-3.5" /> {t("Today's problem")}
-          </div>
-          <Link href={`/problems/${problem.slug}`} className="mt-1.5 block truncate font-display text-lg font-bold text-ink-50 hover:text-brand">
-            {problem.uvaId != null && <span className="mr-1.5 font-mono text-sm font-normal text-ink-500">#{problem.uvaId}</span>}
-            {stripProblemNumber(problem.title, problem.uvaId)}
-          </Link>
-          <div className="mt-1.5 flex items-center gap-2">
-            <DifficultyStars d={problem.difficulty} />
-            {problem.tags.slice(0, 2).map((t) => (
-              <span key={t} className="rounded border border-ink-700 bg-ink-800/60 px-1.5 py-0.5 text-[11px] text-ink-400">
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-        {problem.solvedByMe ? (
-          <span className="flex shrink-0 items-center gap-1.5 rounded border border-verdict-ac/40 bg-verdict-ac/10 px-3 py-1.5 text-xs font-medium text-verdict-ac">
-            ✓ {t("Solved")}
-          </span>
-        ) : (
-          <Link href={`/problems/${problem.slug}`} className="oj-btn-primary shrink-0 px-3 py-1.5 text-xs">
-            {t("Solve it →")}
-          </Link>
-        )}
-      </div>
-    </div>
-  );
-}
-
 /** Compact GitHub-style heatmap scoped to the last ~10 weeks (the full-year version on the profile
  * page is the right call there, but would dwarf everything else crammed onto the homepage). */
 function MiniHeatmap({ data }: { data: { date: string; count: number }[] }) {
@@ -266,14 +221,6 @@ export default function HomeDashboard() {
     queryFn: () => apiFetch<RecommendedProblems>("/problems/recommended"),
     enabled: !!user,
   });
-  // Public endpoint (same problem for everyone), but only worth fetching once there's a
-  // logged-in dashboard to show it on.
-  const { data: dailyProblem } = useQuery({
-    queryKey: ["daily-problem"],
-    queryFn: () => apiFetch<DailyProblem>("/problems/daily"),
-    enabled: !!user,
-    staleTime: 5 * 60_000,
-  });
   const { data: recent } = useQuery({
     queryKey: ["recent-submissions"],
     queryFn: () => apiFetch<{ items: SubmissionListItem[] }>("/submissions?user=me&pageSize=5"),
@@ -325,8 +272,7 @@ export default function HomeDashboard() {
   ].slice(0, 4);
 
   const { text: greetText, Icon: GreetIcon } = greeting(user.handle, t);
-  const topWeek = weekBoard?.slice(0, 5) ?? [];
-  const meInTopWeek = topWeek.some((r) => r.handle === user.handle);
+  const hasTrophies = !!achievements && achievements.length > 0;
 
   return (
     <div className="space-y-6 py-6">
@@ -426,11 +372,11 @@ export default function HomeDashboard() {
 
       {/* Wide screens split into a main column (things to do / your log) and a narrower sidebar
           (quick-glance social context) instead of one long single-file stack — the whole point
-          being fewer scrolls to see everything on a screen that now has the room for it. */}
-      <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
-        <div className="space-y-6 lg:col-span-2">
-          {dailyProblem && <DailyProblemCard problem={dailyProblem} />}
-
+          being fewer scrolls to see everything on a screen that now has the room for it. The
+          sidebar only ever holds the trophy case now, so once there's nothing to earn yet, the
+          split collapses to a single full-width column instead of leaving a blank third. */}
+      <div className={`grid gap-6 ${hasTrophies ? "lg:grid-cols-3 lg:items-start" : ""}`}>
+        <div className={`space-y-6 ${hasTrophies ? "lg:col-span-2" : ""}`}>
           <div className="oj-card p-5">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-sm font-semibold text-ink-200">{t("Recent activity")}</h2>
@@ -514,53 +460,8 @@ export default function HomeDashboard() {
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="oj-card p-5">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-ink-200">{t("This week's top solvers")}</h2>
-              <Link href="/leaderboard" className="text-xs text-ink-500 hover:text-brand">
-                {t("full board →")}
-              </Link>
-            </div>
-            {topWeek.length === 0 ? (
-              <p className="text-sm text-ink-400">{t("Nobody's solved anything this week yet — be the first.")}</p>
-            ) : (
-              <div className="space-y-1">
-                {topWeek.map((r) => (
-                  <Link
-                    key={r.userId}
-                    href={`/u/${r.handle}`}
-                    className={`flex items-center gap-2.5 rounded px-2 py-1.5 transition-colors hover:bg-ink-800/50 ${
-                      r.handle === user.handle ? "bg-brand/5 ring-1 ring-brand/30" : ""
-                    }`}
-                  >
-                    <span className="w-5 shrink-0 text-center font-mono text-xs text-ink-500">
-                      {RANK_MEDAL_CLASS[r.rank] ? (
-                        <MedalIcon className={`inline h-3.5 w-3.5 ${RANK_MEDAL_CLASS[r.rank]}`} />
-                      ) : (
-                        r.rank
-                      )}
-                    </span>
-                    <span className="min-w-0 flex-1 truncate text-sm text-ink-200">
-                      {r.handle}
-                      {r.handle === user.handle && <span className="ml-1.5 text-xs text-brand">{t("(you)")}</span>}
-                    </span>
-                    <span className="shrink-0 font-mono text-xs font-semibold text-brand">{r.score}</span>
-                  </Link>
-                ))}
-                {!meInTopWeek && myRank && (
-                  <div className="mt-1 flex items-center gap-2.5 rounded bg-brand/5 px-2 py-1.5 ring-1 ring-brand/30">
-                    <span className="w-5 shrink-0 text-center font-mono text-xs text-ink-500">#{myRank}</span>
-                    <span className="min-w-0 flex-1 truncate text-sm text-ink-200">
-                      {user.handle} <span className="text-xs text-brand">{t("(you)")}</span>
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {achievements && achievements.length > 0 && (
+        <div className={hasTrophies ? "space-y-6" : "hidden"}>
+          {hasTrophies && (
             <div className="oj-card p-5">
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="text-sm font-semibold text-ink-200">{t("Trophy case")}</h2>

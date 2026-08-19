@@ -557,7 +557,6 @@ export interface LeaderboardRow {
   handle: string;
   avatarUrl: string | null;
   school: string | null;
-  score: number;
   solved: number;
   streak: number;
   frozenToday: boolean;

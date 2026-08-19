@@ -18,8 +18,8 @@ const PERIODS: { key: "all" | "week" | "month"; label: string }[] = [
   { key: "all", label: "All time" },
 ];
 
-const RANKINGS: { key: "score" | "streak"; label: string }[] = [
-  { key: "score", label: "Score" },
+const RANKINGS: { key: "solved" | "streak"; label: string }[] = [
+  { key: "solved", label: "Most solved" },
   { key: "streak", label: "Streak" },
 ];
 
@@ -44,7 +44,7 @@ export default function LeaderboardPage() {
   const t = useT();
   const [period, setPeriod] = useState<"all" | "week" | "month">("all");
   const [scope, setScope] = useState<"all" | "students">("all");
-  const [ranking, setRanking] = useState<"score" | "streak">("score");
+  const [ranking, setRanking] = useState<"solved" | "streak">("solved");
   const [school, setSchool] = useState<string | null>(null);
   const { user } = useAuthStore();
 
@@ -58,13 +58,14 @@ export default function LeaderboardPage() {
 
   // Streak ranking re-sorts the same rows client-side (the API already returns each user's streak
   // regardless of period) instead of a second endpoint — only the display order and rank numbers
-  // change, so it re-derives rank from position instead of trusting the score-board's r.rank.
+  // change, so it re-derives rank from position instead of trusting the API's r.rank (which is
+  // solved-count order).
   const displayRows = useMemo(() => {
     if (!rows) return rows;
-    if (ranking === "score") return rows;
+    if (ranking === "solved") return rows;
     return [...rows]
       .filter((r) => r.streak > 0)
-      .sort((a, b) => b.streak - a.streak || b.score - a.score)
+      .sort((a, b) => b.streak - a.streak || b.solved - a.solved)
       .map((r, i) => ({ ...r, rank: i + 1 }));
   }, [rows, ranking]);
 
@@ -75,8 +76,8 @@ export default function LeaderboardPage() {
       <div>
         <h1 className="font-display text-2xl font-bold text-ink-50">{t("Leaderboard")}</h1>
         <p className="mt-1 text-sm text-ink-400">
-          {ranking === "score"
-            ? t("Score is difficulty-weighted (harder problems are worth more) — grinding easy ones only gets you so far.")
+          {ranking === "solved"
+            ? t("Ranked by how many problems you've solved — grinding a lot beats grinding hard.")
             : t("Ranked by current consecutive-day streak — a day covered by a streak-freeze counts the same as a real solve.")}
         </p>
       </div>
@@ -95,7 +96,7 @@ export default function LeaderboardPage() {
               </button>
             ))}
           </div>
-          {ranking === "score" && (
+          {ranking === "solved" && (
             <div className="flex gap-2">
               {PERIODS.map((p) => (
                 <button
@@ -154,11 +155,10 @@ export default function LeaderboardPage() {
                 <th>{t("Rank")}</th>
                 <th>{t("User")}</th>
                 <th>{t("School")}</th>
-                <th>{t("Solved")}</th>
                 <th>{t("Avg time")}</th>
                 <th>{t("Avg memory")}</th>
                 <th>{t("Total submissions")}</th>
-                <th className="text-right">{ranking === "score" ? t("Score") : t("Streak")}</th>
+                <th className="text-right">{ranking === "solved" ? t("Solved") : t("Streak")}</th>
               </tr>
             </thead>
             <tbody>
@@ -175,13 +175,12 @@ export default function LeaderboardPage() {
                       </Link>
                     </td>
                     <td className="max-w-[160px] truncate text-xs text-ink-400">{r.school ?? "–"}</td>
-                    <td className="font-mono text-xs text-ink-300">{r.solved}</td>
                     <td className="font-mono text-xs text-ink-400">{formatTime(r.avgTimeMs)}</td>
                     <td className="font-mono text-xs text-ink-400">{formatMemory(r.avgMemoryKb)}</td>
                     <td className="font-mono text-xs text-ink-400">{r.totalSubmissions}</td>
                     <td className="text-right">
-                      {ranking === "score" ? (
-                        <span className="font-mono text-sm font-semibold text-brand">{r.score}</span>
+                      {ranking === "solved" ? (
+                        <span className="font-mono text-sm font-semibold text-brand">{r.solved}</span>
                       ) : (
                         <span
                           className={`inline-flex items-center gap-1 font-mono text-sm font-semibold ${r.frozenToday ? "text-sky-400" : "text-verdict-tle"}`}
