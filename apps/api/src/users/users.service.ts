@@ -307,15 +307,24 @@ export class UsersService {
     if (patch.bio !== undefined) data.bio = patch.bio;
     if (patch.avatarUrl !== undefined) data.avatarUrl = patch.avatarUrl;
     if (patch.school !== undefined) {
-      const current = await prisma.user.findUnique({ where: { id: userId }, select: { school: true } });
-      data.school = patch.school;
-      // A verification only ever vouches for one specific school claim — picking a different
-      // school (or clearing it) always starts the verification story over from scratch.
+      const current = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { school: true, schoolVerifiedAt: true },
+      });
       if (patch.school !== current?.school) {
+        // A confirmed school is permanent. Letting it be edited afterwards would make the
+        // leaderboard's school grouping meaningless — anyone could verify one school, then swap
+        // the label to a different one and keep the credibility that came with verifying.
+        if (current?.schoolVerifiedAt) {
+          throw new BadRequestException("Your school is verified and can't be changed.");
+        }
+        // Not verified yet, so nothing is being vouched for — switching schools just starts the
+        // verification story over from scratch.
         data.schoolEmail = null;
         data.schoolVerifiedAt = null;
         data.schoolVerificationSentAt = null;
       }
+      data.school = patch.school;
     }
     const user = await prisma.user.update({
       where: { id: userId },

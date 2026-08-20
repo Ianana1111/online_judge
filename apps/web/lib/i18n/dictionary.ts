@@ -39,6 +39,10 @@ const overrides: Record<string, string> = {
 
   // --- disambiguated from a collision during the dictionary merge (see comment above) ---
   "Register for contest": "報名",
+  // ...and the other half of that same collision: the contest shard's "Register": "報名" still
+  // shadowed the account shard's 註冊 through merge order, so the sign-up link on the login page
+  // read as "sign up for a contest". The only remaining t("Register") call site is that link.
+  "Register": "註冊",
   "Solved count": "解出題數",
   "About this site": "關於本站",
   "error": "錯誤",
@@ -77,7 +81,10 @@ const overrides: Record<string, string> = {
     "依解出題數排名——解得多比解得難更重要。",
 
   // --- School email verification ---
-  "Verified via {email}": "已透過 {email} 認證",
+  "Verified": "已驗證",
+  "Verified via {email} — your school is now permanent and can't be changed.":
+    "已透過 {email} 完成驗證，學校已鎖定，無法再變更。",
+  "Your school is verified and can't be changed.": "你的學校已完成驗證，無法再變更。",
   "Verify a @{domain} email to attach {school} to your leaderboard entry.":
     "驗證一個 @{domain} 的信箱，就能把 {school} 顯示在你的排行榜資料上。",
   "Sending…": "寄送中…",

@@ -15,6 +15,7 @@ import {
   CalendarCheckIcon,
   CloudSunIcon,
   FlameIcon,
+  GraduationCapIcon,
   LayersIcon,
   MedalIcon,
   MoonIcon,
@@ -292,6 +293,14 @@ export default function HomeDashboard() {
             <h1 className="flex items-center gap-2 font-display text-2xl font-bold text-ink-50">
               {greetText} <GreetIcon className="h-5 w-5 text-brand" />
             </h1>
+            {/* Only a verified school appears — an unconfirmed claim gets no badge anywhere, same
+                rule the public profile and leaderboard follow. */}
+            {user.school && user.schoolVerifiedAt && (
+              <span className="mt-1.5 inline-flex items-center gap-1.5 rounded border border-verdict-ac/30 bg-verdict-ac/5 px-2 py-0.5 text-xs text-verdict-ac">
+                <GraduationCapIcon className="h-3.5 w-3.5" />
+                {user.school}
+              </span>
+            )}
             {latestAchievement ? (
               <Link href={`/u/${user.handle}`} className="mt-1 inline-flex items-center gap-1 text-xs text-brand hover:underline">
                 <TrophyIcon className="h-3.5 w-3.5" /> {t("Latest: {title}", { title: latestAchievement.title })}
