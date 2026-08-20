@@ -276,8 +276,6 @@ export default function HomeDashboard() {
 
   return (
     <div className="space-y-6 py-6">
-      <OnboardingChecklist />
-
       <div className="oj-card relative overflow-hidden p-6">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.08]"
@@ -494,6 +492,10 @@ export default function HomeDashboard() {
           )}
         </div>
       </div>
+
+      {/* Fixed to the right edge, so it's outside the page flow — rendered last only to reflect
+          that it overlays the dashboard rather than occupying a slot in it. */}
+      <OnboardingChecklist />
     </div>
   );
 }
