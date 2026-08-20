@@ -95,6 +95,11 @@ const overrides: Record<string, string> = {
 
   // --- Onboarding checklist, reshaped into a right-edge sticky note ---
   "Tuck away": "收起來",
+
+  // --- Contests page: stopwatch-dial hero + year-grouped archive ---
+  "Latest {kind} sitting": "最新 {kind} 歷屆",
+  "Every past sitting": "完整歷屆",
+  "{n} papers · 180 minutes each": "共 {n} 場 · 每場 180 分鐘",
 };
 
 /**
