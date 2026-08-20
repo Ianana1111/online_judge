@@ -188,6 +188,14 @@ export const XIcon = makeIcon(
 
 export const ChevronRightIcon = makeIcon(<polyline points="9 18 15 12 9 6" />);
 
+/** School affiliation — only ever shown next to a *verified* school claim. */
+export const GraduationCapIcon = makeIcon(
+  <>
+    <path d="M22 10 12 5 2 10l10 5 10-5Z" />
+    <path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5" />
+  </>,
+);
+
 /** Per-achievement-code icon, shared by HomeDashboard's trophy case and the public profile page so
  * both surfaces agree on what each achievement looks like instead of one falling back to a generic
  * trophy for everything. */

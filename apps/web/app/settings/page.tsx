@@ -15,10 +15,11 @@ const LANGUAGES = ["cpp17", "c11", "python3", "java17"];
 
 const RESEND_COOLDOWN_MS = 60_000;
 
-/** Only rendered once a school is picked (see ProfileSettingsForm) — lets the user prove they
- * actually belong to that school by verifying an address on its registered domain, which is what
- * lets the leaderboard trust school groupings instead of anyone typing in a prestigious name.
- * "其他" (the catch-all option) has no known domain and so never gets this section at all. */
+/** Only rendered once a school is picked and while it is still unverified (see
+ * ProfileSettingsForm) — lets the user prove they actually belong to that school by verifying an
+ * address on its registered domain, which is what lets the leaderboard trust school groupings
+ * instead of anyone typing in a prestigious name. "其他" (the catch-all option) has no known
+ * domain and so never gets this section at all. */
 function SchoolEmailVerification({ school }: { school: string }) {
   const t = useT();
   const { user, setUser } = useAuthStore();
@@ -36,7 +37,6 @@ function SchoolEmailVerification({ school }: { school: string }) {
   }, [cooldownUntil, now]);
 
   if (!user || !domain) return null;
-  const verified = !!user.schoolVerifiedAt;
   const cooling = cooldownUntil > now;
   const domainMismatch = email.length > 0 && !email.toLowerCase().endsWith(`@${domain}`) && !email.toLowerCase().endsWith(`.${domain}`);
 
@@ -52,14 +52,6 @@ function SchoolEmailVerification({ school }: { school: string }) {
     } finally {
       setSending(false);
     }
-  }
-
-  if (verified) {
-    return (
-      <p className="mt-2 flex items-center gap-1.5 text-xs text-verdict-ac">
-        ✓ {t("Verified via {email}", { email: user.schoolEmail ?? "" })}
-      </p>
-    );
   }
 
   return (
@@ -234,6 +226,8 @@ function ProfileSettingsForm() {
 
   if (!user) return null;
 
+  const schoolLocked = !!user.school && !!user.schoolVerifiedAt;
+
   return (
     <div className="oj-card space-y-5 p-4">
       <h2 className="text-sm font-semibold text-ink-200">{t("Profile")}</h2>
@@ -280,11 +274,30 @@ function ProfileSettingsForm() {
 
       <div>
         <label className="mb-1 block text-sm text-ink-300">{t("School")}</label>
-        <SchoolCombobox value={user.school} onChange={onSchoolChange} />
-        <p className="mt-1 text-xs text-ink-500">
-          {schoolSaving ? t("Saving…") : t("Shown on your public profile and the leaderboard.")}
-        </p>
-        {user.school && <SchoolEmailVerification key={user.school} school={user.school} />}
+        {schoolLocked ? (
+          // Once verified the school is permanent (enforced in users.service.updateProfile too) —
+          // showing a disabled picker would invite clicking at something that can never change, so
+          // it becomes a plain read-only field instead.
+          <>
+            <div className="flex items-center justify-between gap-2 rounded border border-verdict-ac/40 bg-verdict-ac/5 px-3 py-2">
+              <span className="min-w-0 truncate text-sm text-ink-50">{user.school}</span>
+              <span className="shrink-0 text-xs font-semibold text-verdict-ac">✓ {t("Verified")}</span>
+            </div>
+            <p className="mt-1 text-xs text-ink-500">
+              {t("Verified via {email} — your school is now permanent and can't be changed.", {
+                email: user.schoolEmail ?? "",
+              })}
+            </p>
+          </>
+        ) : (
+          <>
+            <SchoolCombobox value={user.school} onChange={onSchoolChange} />
+            <p className="mt-1 text-xs text-ink-500">
+              {schoolSaving ? t("Saving…") : t("Shown on your public profile and the leaderboard.")}
+            </p>
+            {user.school && <SchoolEmailVerification key={user.school} school={user.school} />}
+          </>
+        )}
       </div>
 
       {error && <p className="text-sm text-verdict-wa">{error}</p>}
