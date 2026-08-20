@@ -5,8 +5,9 @@ import { batch4Dictionary } from "./dict/batch4";
 
 /**
  * A handful of English strings turned out to be used in more than one place with genuinely
- * different intended meanings (e.g. "Contests" as a nav label vs. an admin section, "Free" as
- * the plan *name* vs. a generic adjective) — these override whichever batch shard's guess would
+ * different intended meanings (e.g. "Contests", which the nav, the page heading, and the admin
+ * sidebar all share and which must read as one name — 虛擬測驗 — in every one of them, or "Free"
+ * as the plan *name* vs. a generic adjective) — these override whichever batch shard's guess would
  * otherwise win, so the same English key resolves to one consistent, context-correct translation
  * everywhere. Two other collisions ("Register" for an account vs. for a contest, "Solved" as a
  * status badge vs. a scoreboard column) were genuinely different enough to need distinct source
@@ -24,7 +25,7 @@ const overrides: Record<string, string> = {
   // the English passthrough even in zh-TW mode instead of deleting the (now dead) shard entries.
   "Pending": "Pending",
   "Judging": "Judging",
-  "Contests": "比賽",
+  "Contests": "虛擬測驗",
   "Handle": "帳號名稱",
   "Collections": "題目集",
   "Discussion": "討論",

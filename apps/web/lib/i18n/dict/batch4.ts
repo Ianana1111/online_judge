@@ -65,7 +65,7 @@ export const batch4Dictionary: Record<string, string> = {
   "Pick at least one problem": "至少選一題",
   "Pick a start time for a scheduled/group session": "請幫排定的團體場次選一個開始時間",
   "Could not create contest": "無法建立比賽",
-  "Admin · Contests": "後台．比賽",
+  "Admin · Contests": "後台．虛擬測驗",
   "Kind": "類型",
   "Public": "公開",
   "Virtual": "虛擬",
