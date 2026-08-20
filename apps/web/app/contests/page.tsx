@@ -36,40 +36,81 @@ function StatusBadge({ status }: { status: "RUNNING" | "FINISHED" }) {
   );
 }
 
-function SittingCard({ contest, dateLabel }: { contest: ContestListItem; dateLabel: string | null }) {
+// A stopwatch bezel rather than a plain circle: every sitting here is a timed run against the
+// clock, so the dial is the one shape that actually says what these are. The arc sits at ~72% and
+// sweeps closed on hover — "start the clock" — which is also the card's only motion.
+const RING_R = 45;
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_R;
+
+/** The single newest sitting of one kind, as a stopwatch dial — the page's primary action, since
+ * "practise the most recent paper" is what nearly everyone lands here to do. */
+function LatestSitting({
+  contest,
+  date,
+  kind,
+}: {
+  contest: ContestListItem;
+  date: Date | null;
+  kind: "CPE" | "GPE";
+}) {
   const t = useT();
+  const accent = kind === "CPE" ? "text-brand" : "text-sky-400";
+  const accentBorder = kind === "CPE" ? "hover:border-brand" : "hover:border-sky-400";
+  const mmdd = date ? `${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}` : "–";
+
   return (
     <Link
       href={`/contests/${contest.id}`}
-      className="group oj-card flex flex-col p-4 transition-all hover:-translate-y-0.5 hover:border-brand"
+      className={`group oj-card flex items-center gap-5 p-5 transition-all hover:-translate-y-0.5 ${accentBorder}`}
     >
-      <div className="mb-2 flex items-center justify-between">
-        <span
-          className={`rounded px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide ${
-            contest.kind === "CPE" ? "bg-brand/15 text-brand" : "bg-sky-400/15 text-sky-400"
-          }`}
-        >
-          {contest.kind}
-        </span>
-        {dateLabel && <span className="font-mono text-[11px] text-ink-500">{dateLabel}</span>}
+      <div className="relative h-[132px] w-[132px] shrink-0">
+        <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
+          <circle cx="50" cy="50" r={RING_R} fill="none" strokeWidth="3" className="stroke-ink-700" />
+          <circle
+            cx="50"
+            cy="50"
+            r={RING_R}
+            fill="none"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeDasharray={RING_CIRCUMFERENCE}
+            strokeDashoffset={RING_CIRCUMFERENCE * 0.28}
+            className={`${accent} stroke-current transition-[stroke-dashoffset] duration-500 ease-out group-hover:[stroke-dashoffset:0]`}
+          />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className={`font-mono text-[10px] font-bold uppercase tracking-widest ${accent}`}>{kind}</span>
+          <span className="font-display text-2xl font-bold tabular-nums text-ink-50">{mmdd}</span>
+          <span className="font-mono text-[11px] text-ink-500">{date ? date.getFullYear() : ""}</span>
+        </div>
       </div>
-      <h3 className="text-sm font-medium text-ink-50 group-hover:text-brand">{contest.title}</h3>
-      <p className="mt-auto pt-2 font-mono text-xs text-ink-500">{t("{n} min virtual exam", { n: contest.durationMin })}</p>
+
+      <div className="min-w-0">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">{t("Latest {kind} sitting", { kind })}</p>
+        <h2 className="mt-1 font-display text-lg font-bold text-ink-50">{contest.title}</h2>
+        <p className="mt-1 font-mono text-xs text-ink-500">{t("{n} min virtual exam", { n: contest.durationMin })}</p>
+        <span className={`mt-3 inline-flex items-center gap-1.5 text-sm font-semibold ${accent}`}>
+          {t("Start exam")} <span aria-hidden>→</span>
+        </span>
+      </div>
     </Link>
   );
 }
 
-function ArchiveRow({ contest, dateLabel }: { contest: ContestListItem; dateLabel: string | null }) {
+/** One past sitting in the archive, reduced to its date — every sitting is 180 minutes and the
+ * titles are all "<kind> <date>" restated, so the date is the only thing that distinguishes one
+ * row from the next. Chips instead of full-width rows fit ~17 years of papers on screen at once
+ * rather than behind a 480px scroll box. */
+function ArchiveChip({ contest, date, kind }: { contest: ContestListItem; date: Date | null; kind: "CPE" | "GPE" }) {
+  const hover = kind === "CPE" ? "hover:border-brand hover:text-brand" : "hover:border-sky-400 hover:text-sky-400";
+  const mmdd = date ? `${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}` : "—";
   return (
     <Link
       href={`/contests/${contest.id}`}
-      className="flex items-center justify-between gap-3 rounded px-3 py-2 transition-colors hover:bg-ink-800/60"
+      title={contest.title}
+      className={`min-w-[86px] rounded border border-ink-700 bg-ink-800/40 px-3 py-2 text-center font-mono text-sm tabular-nums text-ink-200 transition-colors ${hover}`}
     >
-      <span className="min-w-0 truncate text-sm text-ink-200">{contest.title}</span>
-      <span className="flex shrink-0 items-center gap-3">
-        {dateLabel && <span className="font-mono text-xs text-ink-500">{dateLabel}</span>}
-        <span className="font-mono text-xs text-ink-600">{contest.durationMin}m</span>
-      </span>
+      {mmdd}
     </Link>
   );
 }
@@ -102,7 +143,18 @@ export default function ContestsPage() {
   const running = (mine ?? []).filter((c) => c.status === "RUNNING");
   const activeArchive = tab === "CPE" ? cpeSorted : gpeSorted;
 
-  const dateLabel = (d: Date | null) => (d ? d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : null);
+  // Sittings run a few times a year, so the year is the unit people actually navigate by ("I want
+  // to drill the 2024 papers") — grouping on it turns one 60-row wall into a scannable index.
+  const archiveByYear = useMemo(() => {
+    const groups = new Map<string, typeof activeArchive>();
+    for (const entry of activeArchive) {
+      const year = entry.d ? String(entry.d.getFullYear()) : "—";
+      const bucket = groups.get(year) ?? [];
+      bucket.push(entry);
+      groups.set(year, bucket);
+    }
+    return [...groups.entries()];
+  }, [activeArchive]);
 
   return (
     <div className="space-y-8">
@@ -156,37 +208,20 @@ export default function ContestsPage() {
       {allLoading && <SkeletonList rows={3} />}
 
       {!allLoading && (
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div>
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-ink-200">{t("Latest CPE sittings")}</h2>
-              <span className="text-xs text-ink-500">{t("{n} total", { n: cpeSorted.length })}</span>
-            </div>
-            <div className="grid gap-3">
-              {cpeSorted.slice(0, 3).map(({ c, d }) => (
-                <SittingCard key={c.id} contest={c} dateLabel={dateLabel(d)} />
-              ))}
-              {cpeSorted.length === 0 && <p className="text-sm text-ink-400">{t("No CPE sittings loaded yet.")}</p>}
-            </div>
-          </div>
-          <div>
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-ink-200">{t("Latest GPE sittings")}</h2>
-              <span className="text-xs text-ink-500">{t("{n} total", { n: gpeSorted.length })}</span>
-            </div>
-            <div className="grid gap-3">
-              {gpeSorted.slice(0, 3).map(({ c, d }) => (
-                <SittingCard key={c.id} contest={c} dateLabel={dateLabel(d)} />
-              ))}
-              {gpeSorted.length === 0 && <p className="text-sm text-ink-400">{t("No GPE sittings loaded yet.")}</p>}
-            </div>
-          </div>
+        <div className="grid gap-6 lg:grid-cols-2">
+          {cpeSorted[0] && <LatestSitting contest={cpeSorted[0].c} date={cpeSorted[0].d} kind="CPE" />}
+          {gpeSorted[0] && <LatestSitting contest={gpeSorted[0].c} date={gpeSorted[0].d} kind="GPE" />}
         </div>
       )}
 
       <div>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-ink-200">{t("Full archive")}</h2>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="font-display text-lg font-bold text-ink-50">{t("Every past sitting")}</h2>
+            <p className="mt-0.5 text-xs text-ink-500">
+              {t("{n} papers · 180 minutes each", { n: activeArchive.length })}
+            </p>
+          </div>
           <div className="flex rounded border border-ink-700 p-0.5">
             {(["CPE", "GPE"] as const).map((k) => (
               <button
@@ -201,11 +236,28 @@ export default function ContestsPage() {
             ))}
           </div>
         </div>
-        <div className="oj-card max-h-[480px] overflow-y-auto p-2">
-          {activeArchive.map(({ c, d }) => (
-            <ArchiveRow key={c.id} contest={c} dateLabel={dateLabel(d)} />
+
+        <div className="space-y-5">
+          {archiveByYear.map(([year, sittings]) => (
+            <div key={year} className="flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-5">
+              <div className="flex shrink-0 items-center gap-3 sm:w-20">
+                <span className="font-display text-sm font-bold tabular-nums text-ink-400">{year}</span>
+                <span className="h-px flex-1 bg-ink-800 sm:hidden" />
+              </div>
+              {/* Wrapping row rather than a fixed grid: a year holds at most ~4 sittings, so
+                  grid columns wide enough for the busiest year would leave the rest half-empty,
+                  and the column alignment wouldn't mean anything anyway (each year's sittings
+                  fall in different months). */}
+              <div className="flex flex-1 flex-wrap gap-2">
+                {sittings.map(({ c, d }) => (
+                  <ArchiveChip key={c.id} contest={c} date={d} kind={tab} />
+                ))}
+              </div>
+            </div>
           ))}
-          {activeArchive.length === 0 && <p className="p-4 text-center text-sm text-ink-400">{t("Nothing here yet.")}</p>}
+          {activeArchive.length === 0 && (
+            <p className="oj-card p-4 text-center text-sm text-ink-400">{t("Nothing here yet.")}</p>
+          )}
         </div>
       </div>
     </div>
