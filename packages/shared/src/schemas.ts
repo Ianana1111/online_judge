@@ -230,10 +230,14 @@ export type MarkNotificationsReadDto = z.infer<typeof markNotificationsReadSchem
 
 // Merge-patched into User.settings (Json) — only known keys are accepted so this stays a real
 // schema, not an arbitrary-blob passthrough, even though the storage itself is untyped Json.
+// Anything not listed here is silently dropped by Zod before updateSettings ever sees it, so a
+// new settings key added on the frontend alone will appear to save and then quietly not persist —
+// every key the UI writes must have an entry here.
 export const updateSettingsSchema = z.object({
   defaultLanguage: z.enum(["cpp17", "c11", "python3", "java17"]).optional(),
   dailyGoal: z.number().int().min(1).max(50).optional(),
   onboardingDismissed: z.boolean().optional(),
+  profileSetupDismissed: z.boolean().optional(),
   uiLocale: z.enum(["zh-TW", "en"]).optional(),
 });
 export type UpdateSettingsDto = z.infer<typeof updateSettingsSchema>;

@@ -92,6 +92,9 @@ const overrides: Record<string, string> = {
   "Unaffiliated": "未認證學校",
   "No school claimed, or claimed but not yet verified.": "尚未填寫學校，或已填寫但尚未完成信箱驗證。",
   "Nobody unaffiliated has solved anything yet — be the first.": "還沒有未認證學校的人解過題，當第一個吧。",
+
+  // --- Onboarding checklist, reshaped into a right-edge sticky note ---
+  "Tuck away": "收起來",
 };
 
 /**

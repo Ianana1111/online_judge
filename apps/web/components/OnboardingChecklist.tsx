@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
-import { FileTextIcon, FlagIcon, FlameIcon } from "@/components/icons";
+import { ChevronRightIcon, FileTextIcon, FlagIcon, FlameIcon, XIcon } from "@/components/icons";
 import type { Achievement } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
@@ -33,11 +33,26 @@ const ITEMS = [
   },
 ] as const;
 
-/** Auto-dismisses (persisted to User.settings) once every item is done, so a returning user who
- * completed everything organically never sees a stale checklist — no action required from them. */
+/**
+ * A sticky note tucked against the right edge of the viewport rather than a full-width block at
+ * the top of the dashboard — onboarding is a nudge, not the main event, so it shouldn't push the
+ * greeting/streak card (the thing a returning user actually opens the site for) below the fold.
+ * Being `fixed`, it sits outside the page flow entirely, so its position in the JSX tree doesn't
+ * affect layout.
+ *
+ * Auto-dismisses (persisted to User.settings) once every item is done, so a returning user who
+ * completed everything organically never sees a stale checklist — no action required from them.
+ */
 export default function OnboardingChecklist() {
   const t = useT();
   const { user, setUser } = useAuthStore();
+  // Starts tucked into its tab and only springs open on a wide screen: at phone widths an open
+  // panel would cover most of the page, so there it waits to be tapped instead.
+  const [collapsed, setCollapsed] = useState(true);
+
+  useEffect(() => {
+    if (window.matchMedia("(min-width: 1024px)").matches) setCollapsed(false);
+  }, []);
 
   const { data: achievements } = useQuery({
     queryKey: ["achievements", user?.handle],
@@ -72,45 +87,64 @@ export default function OnboardingChecklist() {
 
   if (!user || user.settings.onboardingDismissed || allDone) return null;
 
+  const remaining = ITEMS.length - doneCount;
+
+  if (collapsed) {
+    return (
+      <button
+        type="button"
+        onClick={() => setCollapsed(false)}
+        title={t("Getting started")}
+        aria-label={t("Getting started")}
+        className="fixed right-0 top-1/2 z-30 flex -translate-y-1/2 flex-col items-center gap-1 rounded-l border border-r-0 border-brand/40 bg-brand/10 px-2 py-3 text-brand transition-colors hover:bg-brand/20"
+      >
+        <FlagIcon className="h-4 w-4" />
+        <span className="font-mono text-[11px] font-semibold tabular-nums">{remaining}</span>
+      </button>
+    );
+  }
+
   return (
-    <div className="oj-card p-5">
-      <div className="mb-4 flex items-end justify-between">
-        <div>
+    <div className="oj-card fixed right-0 top-1/2 z-30 w-[min(17rem,calc(100vw-2rem))] -translate-y-1/2 rounded-r-none border-r-0 border-l-2 border-l-brand p-4">
+      <div className="mb-3 flex items-start justify-between gap-2">
+        <div className="min-w-0">
           <h2 className="text-sm font-semibold text-ink-100">{t("Getting started")}</h2>
-          <p className="mt-0.5 text-xs text-ink-500">{t("{done} of {total} done", { done: doneCount, total: ITEMS.length })}</p>
+          <p className="mt-0.5 text-xs text-ink-500">
+            {t("{done} of {total} done", { done: doneCount, total: ITEMS.length })}
+          </p>
         </div>
-        <button onClick={dismiss} className="text-xs text-ink-500 hover:text-ink-300">
-          {t("Skip")}
-        </button>
+        <div className="flex shrink-0 items-center gap-0.5">
+          <button
+            type="button"
+            onClick={() => setCollapsed(true)}
+            title={t("Tuck away")}
+            aria-label={t("Tuck away")}
+            className="rounded p-1 text-ink-500 transition-colors hover:bg-ink-800 hover:text-ink-200"
+          >
+            <ChevronRightIcon className="h-3.5 w-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={dismiss}
+            title={t("Skip")}
+            aria-label={t("Skip")}
+            className="rounded p-1 text-ink-500 transition-colors hover:bg-ink-800 hover:text-ink-200"
+          >
+            <XIcon className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="space-y-1">
         {ITEMS.map((item) => {
           const isDone = done[item.key];
-          const body = (
-            <>
-              <div
-                className={`mb-3 flex h-9 w-9 items-center justify-center rounded-full ${
-                  isDone ? "bg-verdict-ac/15 text-verdict-ac" : "bg-brand/10 text-brand"
-                }`}
-              >
-                {isDone ? <span className="text-base">✓</span> : <item.icon className="h-4 w-4" />}
-              </div>
-              <h3
-                className={`text-sm font-medium ${
-                  isDone ? "text-ink-500 line-through" : "text-ink-50 group-hover:text-brand"
-                }`}
-              >
-                {t(item.label)}
-              </h3>
-              <p className="mt-1 text-xs leading-relaxed text-ink-500">{t(item.desc)}</p>
-            </>
-          );
-
           if (isDone) {
             return (
-              <div key={item.key} className="rounded border border-verdict-ac/30 bg-verdict-ac/5 p-4">
-                {body}
+              <div key={item.key} className="flex items-center gap-2.5 rounded px-2 py-1.5">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-verdict-ac/15 text-xs text-verdict-ac">
+                  ✓
+                </span>
+                <span className="min-w-0 truncate text-xs text-ink-500 line-through">{t(item.label)}</span>
               </div>
             );
           }
@@ -118,9 +152,16 @@ export default function OnboardingChecklist() {
             <Link
               key={item.key}
               href={item.href}
-              className="group rounded border border-ink-700 bg-ink-800/40 p-4 transition-all hover:-translate-y-0.5 hover:border-brand hover:bg-ink-800/70"
+              title={t(item.desc)}
+              className="group flex items-center gap-2.5 rounded px-2 py-1.5 transition-colors hover:bg-ink-800/70"
             >
-              {body}
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand">
+                <item.icon className="h-3.5 w-3.5" />
+              </span>
+              <span className="min-w-0 flex-1 truncate text-xs font-medium text-ink-100 group-hover:text-brand">
+                {t(item.label)}
+              </span>
+              <ChevronRightIcon className="h-3 w-3 shrink-0 text-ink-600 group-hover:text-brand" />
             </Link>
           );
         })}
