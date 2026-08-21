@@ -37,10 +37,12 @@ import type {
 import { useT } from "@/lib/i18n/LocaleContext";
 
 const REASON_ICON = { collection: BookOpenIcon, consolidate: LayersIcon, stretch: RocketIcon } as const;
+// Fills the recommendation card's left accent stripe — one color per reason a problem was
+// suggested, so the three kinds stay distinguishable without reading the label.
 const REASON_ACCENT = {
-  collection: "border-l-sky-400/70",
-  consolidate: "border-l-brand/70",
-  stretch: "border-l-verdict-wa/70",
+  collection: "bg-sky-400/70",
+  consolidate: "bg-brand/70",
+  stretch: "bg-verdict-wa/70",
 } as const;
 
 const RANK_MEDAL_CLASS: Record<number, string> = { 1: "text-yellow-400", 2: "text-slate-300", 3: "text-amber-600" };
@@ -78,12 +80,15 @@ function DifficultyStars({ d }: { d: number }) {
   );
 }
 
-/** One cell of the hero's stat strip — big tabular number, small uppercase label underneath. */
-function StatCell({ value, label, valueClassName = "text-ink-50" }: { value: ReactNode; label: string; valueClassName?: string }) {
+/** One tile of the hero's stat row — big tabular number over a small mono label. Free-standing
+ * tiles separated by gaps rather than cells inside one bordered, divided grid: the divided version
+ * read as a spreadsheet row bolted to the bottom of the card, which is most of what made the hero
+ * feel boxy. */
+function StatTile({ value, label, valueClassName = "text-ink-50" }: { value: ReactNode; label: string; valueClassName?: string }) {
   return (
-    <div className="flex flex-col items-center gap-1 bg-ink-900/60 px-3 py-3.5 text-center">
-      <span className={`font-display text-xl font-bold tabular-nums ${valueClassName}`}>{value}</span>
-      <span className="text-[10px] uppercase tracking-wide text-ink-500">{label}</span>
+    <div className="rounded-xl bg-ink-950/50 px-3 py-3.5 text-center">
+      <div className={`font-display text-2xl font-bold leading-none tabular-nums ${valueClassName}`}>{value}</div>
+      <div className="mt-1.5 font-mono text-[10px] uppercase tracking-widest text-ink-500">{label}</div>
     </div>
   );
 }
@@ -276,27 +281,31 @@ export default function HomeDashboard() {
   const hasTrophies = !!achievements && achievements.length > 0;
 
   return (
-    <div className="space-y-6 py-6">
-      <div className="oj-card relative overflow-hidden p-6">
+    <div className="space-y-8 py-6">
+      {/* The hero is deliberately a different *kind* of surface from everything below it — wider
+          radius, a brand-tinted hairline instead of the standard one, and a warm ambient wash that
+          fades out rather than stopping at a hard edge. That contrast is what stops the page from
+          reading as one uniform stack of identical boxes. */}
+      <section className="relative overflow-hidden rounded-2xl border border-brand/20 bg-ink-900 p-6 sm:p-8">
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.08]"
-          style={{ background: "radial-gradient(circle at 12% 15%, rgb(var(--brand)) 0%, transparent 50%)" }}
+          className="pointer-events-none absolute inset-0 opacity-[0.11]"
+          style={{ background: "radial-gradient(circle at 6% 0%, rgb(var(--brand)) 0%, transparent 58%)" }}
         />
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.06]"
-          style={{ background: "radial-gradient(circle at 95% 85%, rgb(var(--verdict-ac)) 0%, transparent 45%)" }}
+          className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ background: "radial-gradient(circle at 100% 100%, rgb(var(--verdict-ac)) 0%, transparent 52%)" }}
         />
 
-        <div className="relative flex flex-wrap items-center gap-6">
+        <div className="relative flex flex-wrap items-center gap-6 sm:gap-8">
           <DailyGoalRing solvedToday={daily?.solvedToday ?? 0} goal={daily?.goal ?? 1} />
           <div className="flex min-w-0 flex-1 flex-col items-start">
-            <h1 className="flex items-center gap-2 font-display text-2xl font-bold text-ink-50">
-              {greetText} <GreetIcon className="h-5 w-5 text-brand" />
+            <h1 className="flex items-center gap-2.5 font-display text-3xl font-bold tracking-tight text-ink-50">
+              {greetText} <GreetIcon className="h-6 w-6 text-brand" />
             </h1>
             {/* Only a verified school appears — an unconfirmed claim gets no badge anywhere, same
                 rule the public profile and leaderboard follow. */}
             {user.school && user.schoolVerifiedAt && (
-              <span className="mt-1.5 inline-flex items-center gap-1.5 rounded border border-verdict-ac/30 bg-verdict-ac/5 px-2 py-0.5 text-xs text-verdict-ac">
+              <span className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-verdict-ac/30 bg-verdict-ac/5 px-2.5 py-0.5 text-xs text-verdict-ac">
                 <GraduationCapIcon className="h-3.5 w-3.5" />
                 {user.school}
               </span>
@@ -328,9 +337,9 @@ export default function HomeDashboard() {
           </div>
         </div>
 
-        <div className="relative mt-5 grid grid-cols-2 divide-x divide-ink-800 overflow-hidden rounded border border-ink-800 sm:grid-cols-4">
+        <div className="relative mt-6 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
           <div className="sm:hidden">
-            <StatCell
+            <StatTile
               value={
                 daily && daily.currentStreak > 0 ? (
                   <span className="inline-flex items-center gap-1">
@@ -352,9 +361,9 @@ export default function HomeDashboard() {
               }
             />
           </div>
-          <StatCell value={<DifficultyStars d={recommended?.tier ?? 1} />} label={t("current tier")} />
-          <StatCell value={profile ? profile.solvedCount : "–"} label={t("solved")} />
-          <StatCell
+          <StatTile value={<DifficultyStars d={recommended?.tier ?? 1} />} label={t("current tier")} />
+          <StatTile value={profile ? profile.solvedCount : "–"} label={t("solved")} />
+          <StatTile
             value={
               myRank ? (
                 <span className="inline-flex items-center gap-1">
@@ -368,138 +377,143 @@ export default function HomeDashboard() {
             valueClassName={myRank && myRank <= 3 ? "text-verdict-tle" : "text-ink-50"}
           />
           <div className="hidden sm:block">
-            <StatCell
+            <StatTile
               value={achievements ? achievements.length : "–"}
               label={t("achievements")}
               valueClassName="text-brand"
             />
           </div>
         </div>
+      </section>
+
+      {/* Your log and your trophies sit side by side on a wide screen; the log takes the wider
+          share since it's the one with real content in it. With nothing earned yet the trophy
+          panel is dropped entirely rather than left as an empty third. */}
+      <div className={`grid gap-5 ${hasTrophies ? "lg:grid-cols-3 lg:items-start" : ""}`}>
+        <div className={`oj-panel p-5 ${hasTrophies ? "lg:col-span-2" : ""}`}>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="font-display text-base font-bold text-ink-50">{t("Recent activity")}</h2>
+            <Link href="/submissions" className="text-xs text-ink-500 transition-colors hover:text-brand">
+              {t("view all →")}
+            </Link>
+          </div>
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+            <div className="overflow-x-auto">
+              {stats ? (
+                <MiniHeatmap data={stats.heatmap} />
+              ) : (
+                <div className="h-[95px] w-[123px] animate-pulse rounded-lg bg-ink-800/60" />
+              )}
+              <p className="mt-2.5 font-mono text-[10px] uppercase tracking-widest text-ink-500">{t("last 10 weeks")}</p>
+            </div>
+            <div className="min-w-0 flex-1 space-y-0.5">
+              {recent && recent.items.length > 0 ? (
+                recent.items.map((s) => (
+                  <Link
+                    key={s.id}
+                    href={s.problemSlug ? `/problems/${s.problemSlug}` : "/submissions"}
+                    className="flex items-center justify-between gap-3 rounded-lg px-2.5 py-2 transition-colors hover:bg-ink-800/60"
+                  >
+                    <span className="min-w-0 truncate text-sm text-ink-200">
+                      {s.problemTitle ? stripProblemNumber(s.problemTitle) : t("Submission")}
+                    </span>
+                    <span className="flex shrink-0 items-center gap-2.5">
+                      <span className="font-mono text-[10px] text-ink-500">{timeAgo(s.createdAt, t)}</span>
+                      <VerdictBadge verdict={s.verdict} size="sm" />
+                    </span>
+                  </Link>
+                ))
+              ) : (
+                <p className="px-2.5 py-2 text-sm text-ink-400">
+                  {t("No submissions yet — solve something to light up your heatmap.")}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {hasTrophies && (
+          <div className="oj-panel p-5">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="font-display text-base font-bold text-ink-50">{t("Trophy case")}</h2>
+              <Link href={`/u/${user.handle}`} className="text-xs text-ink-500 transition-colors hover:text-brand">
+                {t("view profile →")}
+              </Link>
+            </div>
+            <div className="space-y-1.5">
+              {achievements.map((a) => (
+                <div
+                  key={a.code}
+                  title={t("{title} — {description} ({date})", {
+                    title: a.title,
+                    description: a.description,
+                    date: new Date(a.earnedAt).toLocaleDateString(),
+                  })}
+                  className="flex items-center gap-3 rounded-lg border border-brand/20 bg-brand/5 px-3 py-2"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink-950/60 text-brand">
+                    {(() => {
+                      const AchievementIcon = ACHIEVEMENT_ICONS[a.code] ?? TrophyIcon;
+                      return <AchievementIcon className="h-4 w-4" />;
+                    })()}
+                  </span>
+                  <span className="min-w-0 truncate text-xs font-medium text-ink-100">{a.title}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Wide screens split into a main column (things to do / your log) and a narrower sidebar
-          (quick-glance social context) instead of one long single-file stack — the whole point
-          being fewer scrolls to see everything on a screen that now has the room for it. The
-          sidebar only ever holds the trophy case now, so once there's nothing to earn yet, the
-          split collapses to a single full-width column instead of leaving a blank third. */}
-      <div className={`grid gap-6 ${hasTrophies ? "lg:grid-cols-3 lg:items-start" : ""}`}>
-        <div className={`space-y-6 ${hasTrophies ? "lg:col-span-2" : ""}`}>
-          <div className="oj-card p-5">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-ink-200">{t("Recent activity")}</h2>
-              <Link href="/submissions" className="text-xs text-ink-500 hover:text-brand">
-                {t("view all →")}
-              </Link>
-            </div>
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-              <div className="overflow-x-auto">
-                {stats ? (
-                  <MiniHeatmap data={stats.heatmap} />
-                ) : (
-                  <div className="h-[95px] w-[123px] animate-pulse rounded bg-ink-800/60" />
-                )}
-                <p className="mt-2 text-[11px] text-ink-500">{t("last 10 weeks")}</p>
-              </div>
-              <div className="min-w-0 flex-1 space-y-1.5">
-                {recent && recent.items.length > 0 ? (
-                  recent.items.map((s) => (
-                    <Link
-                      key={s.id}
-                      href={s.problemSlug ? `/problems/${s.problemSlug}` : "/submissions"}
-                      className="flex items-center justify-between gap-3 rounded px-2 py-1.5 transition-colors hover:bg-ink-800/50"
-                    >
-                      <span className="min-w-0 truncate text-sm text-ink-200">
-                        {s.problemTitle ? stripProblemNumber(s.problemTitle) : t("Submission")}
-                      </span>
-                      <span className="flex shrink-0 items-center gap-2">
-                        <span className="font-mono text-[10px] text-ink-500">{timeAgo(s.createdAt, t)}</span>
-                        <VerdictBadge verdict={s.verdict} size="sm" />
-                      </span>
-                    </Link>
-                  ))
-                ) : (
-                  <p className="px-2 py-1.5 text-sm text-ink-400">
-                    {t("No submissions yet — solve something to light up your heatmap.")}
-                  </p>
-                )}
-              </div>
-            </div>
+      {/* Deliberately NOT wrapped in a panel: the heading sits on the page itself and the problem
+          cards are the only boxes here. Alternating between boxed regions and bare ones is what
+          gives the page a rhythm instead of a uniform grid of outlined rectangles. */}
+      <div>
+        <div className="mb-4 flex items-end justify-between gap-3">
+          <div>
+            <h2 className="font-display text-lg font-bold text-ink-50">{t("Recommended for you")}</h2>
+            <p className="mt-0.5 text-xs text-ink-500">{t("Picked from where you are right now.")}</p>
           </div>
-
-          <div className="oj-card p-5">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-ink-200">{t("Recommended for you")}</h2>
-              <Link href="/problems" className="text-xs text-ink-500 hover:text-brand">
-                {t("browse all →")}
-              </Link>
-            </div>
-            {suggestions.length === 0 ? (
-              <p className="text-sm text-ink-400">
-                {t("No new recommendations yet —")}{" "}
-                <Link href="/problems" className="text-brand hover:underline">
-                  {t("browse the problem list")}
-                </Link>{" "}
-                {t("to get started.")}
-              </p>
-            ) : (
-              <div className="grid gap-3 sm:grid-cols-2">
-                {suggestions.map((p) => (
-                  <Link
-                    key={p.id}
-                    href={`/problems/${p.slug}`}
-                    className={`group oj-card border-l-2 p-4 transition-all hover:-translate-y-0.5 hover:border-brand hover:bg-ink-800/40 ${REASON_ACCENT[p.kind]}`}
-                  >
-                    <div className="mb-3 flex items-center justify-between gap-2">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/10 text-brand">
-                        {(() => {
-                          const ReasonIcon = REASON_ICON[p.kind];
-                          return <ReasonIcon className="h-4 w-4" />;
-                        })()}
-                      </div>
-                      <DifficultyStars d={p.difficulty} />
-                    </div>
-                    <p className="mb-1 font-mono text-[11px] uppercase tracking-wide text-ink-500">{p.reason}</p>
-                    <h3 className="text-sm font-medium text-ink-50 group-hover:text-brand">{stripProblemNumber(p.title)}</h3>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+          <Link href="/problems" className="shrink-0 text-xs text-ink-500 transition-colors hover:text-brand">
+            {t("browse all →")}
+          </Link>
         </div>
-
-        <div className={hasTrophies ? "space-y-6" : "hidden"}>
-          {hasTrophies && (
-            <div className="oj-card p-5">
-              <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-ink-200">{t("Trophy case")}</h2>
-                <Link href={`/u/${user.handle}`} className="text-xs text-ink-500 hover:text-brand">
-                  {t("view profile →")}
-                </Link>
-              </div>
-              <div className="space-y-1.5">
-                {achievements.map((a) => (
-                  <div
-                    key={a.code}
-                    title={t("{title} — {description} ({date})", {
-                      title: a.title,
-                      description: a.description,
-                      date: new Date(a.earnedAt).toLocaleDateString(),
-                    })}
-                    className="flex items-center gap-2.5 rounded border border-brand/20 bg-brand/5 px-2.5 py-2"
-                  >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink-900 text-brand">
-                      {(() => {
-                        const AchievementIcon = ACHIEVEMENT_ICONS[a.code] ?? TrophyIcon;
-                        return <AchievementIcon className="h-4 w-4" />;
-                      })()}
-                    </span>
-                    <span className="min-w-0 truncate text-xs font-medium text-ink-100">{a.title}</span>
+        {suggestions.length === 0 ? (
+          <p className="oj-panel p-5 text-sm text-ink-400">
+            {t("No new recommendations yet —")}{" "}
+            <Link href="/problems" className="text-brand hover:underline">
+              {t("browse the problem list")}
+            </Link>{" "}
+            {t("to get started.")}
+          </p>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {suggestions.map((p) => (
+              <Link
+                key={p.id}
+                href={`/problems/${p.slug}`}
+                className="group relative flex flex-col overflow-hidden rounded-xl border border-ink-800 bg-ink-900/70 p-4 transition-all duration-200 hover:-translate-y-1 hover:border-brand/50 hover:bg-ink-900"
+              >
+                {/* The accent stripe encodes *why* this problem is here (collection / consolidate /
+                    stretch), so the three kinds stay tellable apart at a glance. */}
+                <span className={`absolute inset-y-0 left-0 w-[3px] ${REASON_ACCENT[p.kind]}`} />
+                <div className="mb-4 flex items-center justify-between gap-2">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand transition-colors group-hover:bg-brand/20">
+                    {(() => {
+                      const ReasonIcon = REASON_ICON[p.kind];
+                      return <ReasonIcon className="h-4 w-4" />;
+                    })()}
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+                  <DifficultyStars d={p.difficulty} />
+                </div>
+                <p className="mb-1.5 font-mono text-[10px] uppercase tracking-widest text-ink-500">{p.reason}</p>
+                <h3 className="text-sm font-medium leading-snug text-ink-50 transition-colors group-hover:text-brand">
+                  {stripProblemNumber(p.title)}
+                </h3>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Fixed to the right edge, so it's outside the page flow — rendered last only to reflect

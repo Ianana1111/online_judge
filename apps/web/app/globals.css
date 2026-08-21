@@ -195,6 +195,15 @@
     @apply rounded border border-ink-700 bg-ink-900;
   }
 
+  /* A softer, larger-radius surface for the dashboard's big content regions. oj-card's 6px radius
+   * and high-contrast ink-700 hairline are right for dense tables and small chips, but repeated
+   * across full-width sections they read as a stack of identical hard boxes. This dials the border
+   * back a step and roughly doubles the radius so a panel reads as a *region* of the page rather
+   * than an outlined container. */
+  .oj-panel {
+    @apply rounded-xl border border-ink-800 bg-ink-900/70;
+  }
+
   .oj-input {
     @apply w-full rounded border border-ink-600 bg-ink-800 px-3 py-2 text-sm text-ink-50 placeholder:text-ink-400 focus:border-brand;
   }
