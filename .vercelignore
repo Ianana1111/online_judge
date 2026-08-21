@@ -1,0 +1,27 @@
+# Vercel only ever builds apps/web from this monorepo. Everything listed here is either
+# regenerated during that build, deployed somewhere else (Railway runs the API and the judge
+# worker), or dev-only tooling that the build graph never touches.
+#
+# NOTE: once this file exists Vercel consults it INSTEAD of .gitignore when deciding what to
+# upload, so the ordinary ignores have to be repeated here rather than only the additions.
+
+node_modules
+dist
+.next
+.turbo
+*.log
+.env
+.env.local
+.DS_Store
+coverage
+.pnpm-store
+apps/judge/boxes
+packages/db/prisma/dev.db
+generated
+.claude/
+
+# ~115MB of the repo's ~120MB: one-off data-seeding scripts, run by hand with tsx against a
+# database. Nothing imports them (apps/web depends on @oj/shared alone), so they were being
+# uploaded on every single deploy for no reason — and a source upload that large is what kept
+# collapsing Vercel's /v2/files endpoint mid-transfer.
+packages/db/scripts

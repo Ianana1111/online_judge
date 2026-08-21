@@ -104,6 +104,9 @@ const overrides: Record<string, string> = {
   // --- Onboarding checklist, reshaped into a right-edge sticky note ---
   "Tuck away": "收起來",
 
+  // --- Dashboard redesign ---
+  "Picked from where you are right now.": "依你目前的程度挑選。",
+
   // --- Contests page: stopwatch-dial hero + year-grouped archive ---
   "Latest {kind} sitting": "最新 {kind} 歷屆",
   "Every past sitting": "完整歷屆",
