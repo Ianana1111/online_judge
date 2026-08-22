@@ -20,14 +20,18 @@ export interface LanguageSpec {
 export const LANGUAGES: Record<string, LanguageSpec> = {
   cpp17: {
     sourceFileName: "main.cpp",
-    compile: { cmd: "g++", args: ["-O2", "-std=c++17", "-o", "main", "main.cpp"] },
+    // -fmax-errors caps how many diagnostics a single compile can print — normal submissions
+    // never come close to 20 errors, so this only ever bites a deliberately malformed source
+    // (e.g. one built to make the compiler echo back as much of a bogus #include'd "file" as
+    // possible), capping how much any single compile error can dump into compileError.
+    compile: { cmd: "g++", args: ["-O2", "-std=c++17", "-fmax-errors=20", "-o", "main", "main.cpp"] },
     runCmd: () => ({ cmd: "./main", args: [] }),
     timeMultiplier: 1,
     ulimitMemory: true,
   },
   c11: {
     sourceFileName: "main.c",
-    compile: { cmd: "gcc", args: ["-O2", "-std=c11", "-o", "main", "main.c"] },
+    compile: { cmd: "gcc", args: ["-O2", "-std=c11", "-fmax-errors=20", "-o", "main", "main.c"] },
     runCmd: () => ({ cmd: "./main", args: [] }),
     timeMultiplier: 1,
     ulimitMemory: true,

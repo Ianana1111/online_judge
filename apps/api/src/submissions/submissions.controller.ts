@@ -40,6 +40,10 @@ export class SubmissionsController {
     @Res() res: Response,
   ) {
     const initial = await this.submissions.detail(id, user);
+    // Whether this connection is allowed to see owner-only fields (sourceCode, compileError) —
+    // `detail()` only includes them for the owner or an admin, so their mere presence here is
+    // exactly that check already evaluated for this viewer.
+    const canSeeOwnerOnlyFields = "sourceCode" in initial;
 
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache, no-transform");
@@ -90,8 +94,21 @@ export class SubmissionsController {
       if (sourceCodeToAttach !== undefined && payload.sourceCode === undefined) {
         payload.sourceCode = sourceCodeToAttach;
       }
+      const terminal = isTerminalVerdict(payload.verdict as Verdict);
+      // compileError is only known once judging actually finishes, so — unlike sourceCode —
+      // there's no earlier snapshot to splice it in from; it was never in the broadcast payload
+      // at all (see toPublicDetail's owner-only gating). Re-fetch the now-complete row directly
+      // for an authorized viewer instead, right at the one moment it's needed.
+      if (terminal && canSeeOwnerOnlyFields) {
+        this.submissions.detail(id, user).then((full) => {
+          write({ ...payload, compileError: (full as { compileError?: string | null }).compileError });
+          res.end();
+          void cleanup();
+        });
+        return;
+      }
       write(payload);
-      if (isTerminalVerdict(payload.verdict as Verdict)) {
+      if (terminal) {
         res.end();
         void cleanup();
       }

@@ -6,6 +6,11 @@ export const OUTPUT_CAP_BYTES = 8 * 1024 * 1024; // 8MB — well above any sane 
 // against a runaway-output submission ballooning memory in this worker process while we read its
 // output back.
 const COMPILE_TIMEOUT_SEC = 20;
+// Generous relative to any legitimate CP-sized single-file submission (a few hundred MB at most,
+// even for template-heavy C++) — this exists purely to cap a memory-bomb compile (a submission
+// deliberately written to exhaust the compiler's own memory, e.g. via runaway template
+// recursion), which previously had no ceiling at all beyond the 20s wall-clock timeout.
+const COMPILE_MEMORY_LIMIT_KB = 1_048_576; // 1 GB
 
 export interface RunResult {
   exitCode: number;
@@ -110,7 +115,10 @@ export async function compileInSandbox(
 
   const compile = await sandbox.runCommand({
     cmd: "bash",
-    args: ["-c", `timeout ${COMPILE_TIMEOUT_SEC}s ${lang.compile.cmd} ${lang.compile.args.join(" ")}`],
+    args: [
+      "-c",
+      `ulimit -v ${COMPILE_MEMORY_LIMIT_KB}; timeout ${COMPILE_TIMEOUT_SEC}s ${lang.compile.cmd} ${lang.compile.args.join(" ")}`,
+    ],
     cwd: WORKDIR,
   });
   if (compile.exitCode !== 0) {
