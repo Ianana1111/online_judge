@@ -116,6 +116,13 @@ model User {
   /// Subscription cancels through that model instead (billing.service.cancelSubscription), which
   /// downgrades immediately rather than waiting out the paid period — see Subscription.status.
   planCancelRequested Boolean @default(false)
+  /// Set the one time a user claims their 30-day free Pro trial (billing.service.startTrial) —
+  /// never cleared afterward, purely to block claiming a second one. Independent of plan/
+  /// planExpiresAt: a user who later pays for real Pro keeps this timestamp from their original
+  /// trial claim, so "have they ever paid" must be checked separately (via Payment, not this
+  /// field) by anything that needs to distinguish a trial-granted period from a paid one (e.g.
+  /// trial-ending-soon reminder notifications).
+  trialStartedAt DateTime?
   /// FREE tier's submit quota resets every calendar month — submitQuotaUsed counts submissions
   /// made in submitQuotaMonth (a "YYYY-MM" key); assertCanSubmit resets both atomically the first
   /// time a user submits in a new month, so there's no separate cron/reset job to keep in sync.

@@ -138,6 +138,8 @@ export default function UpgradePlanPage() {
   const [showUnsubscribeConfirm, setShowUnsubscribeConfirm] = useState(false);
   const [unsubscribing, setUnsubscribing] = useState(false);
   const [unsubscribeError, setUnsubscribeError] = useState<string | null>(null);
+  const [startingTrial, setStartingTrial] = useState(false);
+  const [trialError, setTrialError] = useState<string | null>(null);
 
   const { data: status, isLoading } = useQuery({
     queryKey: ["billing", "me"],
@@ -187,12 +189,25 @@ export default function UpgradePlanPage() {
       setUnsubscribing(false);
     }
   }
+  async function startTrial() {
+    setStartingTrial(true);
+    setTrialError(null);
+    try {
+      await apiFetch("/billing/trial/start", { method: "POST" });
+      await queryClient.invalidateQueries({ queryKey: ["billing", "me"] });
+    } catch (e) {
+      setTrialError(e instanceof ApiError ? e.message : "無法開始試用，請稍後再試");
+    } finally {
+      setStartingTrial(false);
+    }
+  }
+
   // Admins aren't capped at all, and students are auto-Pro (see billing.service.isProActive) —
   // neither of them has anything to upgrade, so don't offer a purchase flow that can't apply to
   // them (mirrors NavBar's showUpgrade condition, since this page is reachable by direct URL too).
   const notApplicable = isAdmin || user?.isStudent;
 
-  const listPrice = plans?.pricing.MONTHLY.amountNtd ?? 500;
+  const listPrice = plans?.pricing.MONTHLY.amountNtd ?? 200;
   const nowPrice = plans?.effectivePricing.MONTHLY ?? listPrice;
   const promo = plans?.promo;
 
@@ -360,6 +375,25 @@ export default function UpgradePlanPage() {
                     <p className="mt-1.5 text-center text-[11px] text-ink-500">
                       {t("Cancels immediately — you'll switch to Free right away and won't be charged again.")}
                     </p>
+                  </>
+                ) : !isPro && status?.trialAvailable ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={startTrial}
+                      className="oj-btn-primary mt-4 w-full py-2 text-sm"
+                      disabled={!user || startingTrial}
+                    >
+                      {startingTrial ? t("Starting…") : t("Start your free 30-day trial")}
+                    </button>
+                    {trialError && <p className="mt-1.5 text-center text-xs text-verdict-wa">{trialError}</p>}
+                    <button
+                      type="button"
+                      onClick={() => router.push("/upgrade/checkout")}
+                      className="mt-2 w-full py-1 text-center text-[11px] text-ink-500 hover:text-ink-300"
+                    >
+                      {t("Or subscribe now instead")}
+                    </button>
                   </>
                 ) : (
                   <button

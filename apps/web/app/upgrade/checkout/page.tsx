@@ -67,8 +67,8 @@ export default function CheckoutPage() {
   const isSubscribed = !!status?.subscription;
   const pending = status?.pendingPayment;
 
-  const amount = plans?.effectivePricing[period] ?? (period === "MONTHLY" ? 500 : 2000);
-  const monthlyListPrice = plans?.pricing.MONTHLY.amountNtd ?? 500;
+  const amount = plans?.effectivePricing[period] ?? (period === "MONTHLY" ? 200 : 2000);
+  const monthlyListPrice = plans?.pricing.MONTHLY.amountNtd ?? 200;
   const monthlyNowPrice = plans?.effectivePricing.MONTHLY ?? monthlyListPrice;
   const yearlyPrice = plans?.pricing.YEARLY.amountNtd ?? 2000;
   const promo = plans?.promo;
