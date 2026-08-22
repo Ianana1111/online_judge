@@ -162,6 +162,9 @@ export const dictionary: Record<string, string> = {
   "Settings": "設定",
   "Account": "帳號",
   "Password": "密碼",
+  "Log in to manage your account settings.": "登入以管理你的帳號設定。",
+  "Open menu": "開啟選單",
+  "Close menu": "關閉選單",
 
   // --- batch shards (home/problems/auth, judge/contests/collections, discussion/classes/upgrade, admin) ---
   ...batch1Dictionary,

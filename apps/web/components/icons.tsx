@@ -188,6 +188,14 @@ export const XIcon = makeIcon(
 
 export const ChevronRightIcon = makeIcon(<polyline points="9 18 15 12 9 6" />);
 
+export const MenuIcon = makeIcon(
+  <>
+    <line x1="4" y1="7" x2="20" y2="7" />
+    <line x1="4" y1="12" x2="20" y2="12" />
+    <line x1="4" y1="17" x2="20" y2="17" />
+  </>,
+);
+
 /** School affiliation — only ever shown next to a *verified* school claim. */
 export const GraduationCapIcon = makeIcon(
   <>

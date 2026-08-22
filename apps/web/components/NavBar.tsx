@@ -7,6 +7,8 @@ import { useAuthStore } from "@/store/auth";
 import { useExamTimerStore } from "@/store/examTimer";
 import ThemeToggle from "@/components/ThemeToggle";
 import NotificationBell from "@/components/NotificationBell";
+import { MenuIcon, XIcon } from "@/components/icons";
+import type { User } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
 // Visible to everyone, including logged-out visitors.
@@ -109,12 +111,77 @@ function UserMenu({
   );
 }
 
+/** Every link the desktop nav can show, flattened into one list with a visibility predicate —
+ * shared by the mobile drawer so the two never drift out of sync with each other. */
+function useNavLinks(user: User | null) {
+  const showStudentLinks = !!user && user.isStudent;
+  const isAdmin = user?.role === "ADMIN";
+  const showUpgrade = !!user && !isAdmin && !user.isStudent;
+
+  return [
+    ...PUBLIC_LINKS,
+    ...(user ? AUTH_LINKS : []),
+    ...(showUpgrade ? [{ href: "/upgrade", label: "Upgrade Plan" }] : []),
+    ...(showStudentLinks ? STUDENT_LINKS : []),
+    ...(isAdmin ? [{ href: "/admin", label: "Console" }] : []),
+  ];
+}
+
+/** Slide-down panel shown below the header on narrow screens — the desktop `<nav>` is `hidden`
+ * below `sm`, so without this the entire site (Problems, Contests, Leaderboard, ...) was
+ * unreachable on a phone except by typing a URL directly. */
+function MobileMenu({ links, onNavigate }: { links: { href: string; label: string }[]; onNavigate: () => void }) {
+  const t = useT();
+  const pathname = usePathname();
+  return (
+    <nav className="oj-card absolute inset-x-4 top-full mt-2 flex flex-col gap-1 p-2 sm:hidden">
+      {links.map((l) => (
+        <Link
+          key={l.href}
+          href={l.href}
+          onClick={onNavigate}
+          className={`rounded px-3 py-2 text-sm font-medium transition-colors ${
+            pathname?.startsWith(l.href) ? "bg-brand/10 text-brand" : "text-ink-200 hover:bg-ink-800"
+          }`}
+        >
+          {t(l.label)}
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
 export default function NavBar() {
   const t = useT();
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuthStore();
   const examActive = useExamTimerStore((s) => s.active);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const navLinks = useNavLinks(user);
+
+  // A route change (including via a link inside the drawer) always closes it — otherwise
+  // navigating and reopening the header shows a drawer still open over the new page.
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    function onPointerDown(e: MouseEvent) {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) setMobileOpen(false);
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setMobileOpen(false);
+    }
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [mobileOpen]);
 
   if (examActive) {
     return null; // ExamModeShell supplies its own minimal header while a timed window is running
@@ -134,8 +201,17 @@ export default function NavBar() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-ink-800 bg-ink-950/90 backdrop-blur">
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-3">
+      <div ref={headerRef} className="relative mx-auto flex max-w-[1400px] items-center justify-between px-6 py-3">
         <div className="flex items-center gap-6">
+          <button
+            type="button"
+            onClick={() => setMobileOpen((o) => !o)}
+            aria-label={mobileOpen ? t("Close menu") : t("Open menu")}
+            aria-expanded={mobileOpen}
+            className="-ml-1.5 rounded p-1.5 text-ink-300 hover:bg-ink-800 hover:text-ink-50 sm:hidden"
+          >
+            {mobileOpen ? <XIcon className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
+          </button>
           <Link href="/" className="font-display text-lg font-bold tracking-tight text-ink-50">
             judge<span className="text-brand">.</span>
           </Link>
@@ -218,6 +294,7 @@ export default function NavBar() {
             </Link>
           )}
         </div>
+        {mobileOpen && <MobileMenu links={navLinks} onNavigate={() => setMobileOpen(false)} />}
       </div>
     </header>
   );

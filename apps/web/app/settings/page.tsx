@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TAIWAN_UNIVERSITY_DOMAINS } from "@oj/shared";
 import { apiFetch, ApiError } from "@/lib/api";
@@ -549,8 +550,27 @@ const SECTIONS = [
 
 export default function SettingsPage() {
   const t = useT();
+  const { user, status } = useAuthStore();
   const [active, setActive] = useState<(typeof SECTIONS)[number]["key"]>("profile");
   const activeSection = SECTIONS.find((s) => s.key === active) ?? SECTIONS[0];
+
+  // Previously this rendered the heading and all four (non-functional) tabs regardless of auth
+  // state — an anonymous visitor saw a page that looked interactive but was permanently empty,
+  // since every section's form bails out internally on `!user`. Gate at the top instead, same
+  // pattern as /contests and /classes.
+  if (status === "ready" && !user) {
+    return (
+      <div className="mx-auto max-w-3xl py-8">
+        <h1 className="mb-6 font-display text-2xl font-bold text-ink-50">{t("Settings")}</h1>
+        <div className="oj-card p-6 text-center">
+          <p className="text-sm text-ink-300">{t("Log in to manage your account settings.")}</p>
+          <Link href="/login" className="oj-btn-primary mt-3 inline-block px-4 py-2 text-sm">
+            {t("Log in")}
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-3xl py-8">

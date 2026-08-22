@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { serverFetch, serverFetchAuthed } from "@/lib/serverApi";
+import { serverFetch, serverFetchAuthedDetailed } from "@/lib/serverApi";
 import { SITE_URL } from "@/lib/site";
 import { previewText } from "@/lib/textPreview";
 import { stripProblemNumber } from "@/lib/problemTitle";
@@ -41,8 +41,16 @@ export default async function ProblemPage({
   // solvedByMe and Pro-gated fields (cpeAppearances) depend on who's asking — plain serverFetch
   // never forwarded the session cookie, so every visitor (Pro or not, solved or not) got the
   // same anonymous response.
-  const problem = await serverFetchAuthed<ProblemDetail>(`/problems/${slug}`);
-  if (!problem) notFound();
+  const result = await serverFetchAuthedDetailed<ProblemDetail>(`/problems/${slug}`);
+  // A real 404 (the slug genuinely doesn't exist) is the only case that should render as "this
+  // page doesn't exist" — any other failure (the API 5xx-ing, a cold-starting container's 502, a
+  // dropped connection) previously collapsed to the same `null` and hit the same notFound(), so a
+  // shared problem link caught mid-cold-start 404'd instead of showing a retryable error.
+  if (!result.ok) {
+    if (result.notFound) notFound();
+    throw new Error(`Failed to load problem "${slug}"`);
+  }
+  const problem = result.data;
 
   const jsonLd = {
     "@context": "https://schema.org",
