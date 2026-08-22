@@ -9,6 +9,6 @@ import { TokenService } from "./token.service";
   imports: [NotificationsModule],
   controllers: [AuthController],
   providers: [AuthService, TokenService, AuthGuard],
-  exports: [TokenService, AuthGuard],
+  exports: [AuthService, TokenService, AuthGuard],
 })
 export class AuthModule {}

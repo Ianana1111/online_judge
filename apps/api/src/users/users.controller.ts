@@ -1,6 +1,7 @@
 import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query, Res } from "@nestjs/common";
 import { Throttle } from "@nestjs/throttler";
 import type { Response } from "express";
+import { setAuthCookies } from "../common/cookies.util";
 import {
   changeHandleSchema,
   changePasswordSchema,
@@ -37,11 +38,14 @@ export class UsersController {
   // and, since a correct guess needs no other confirmation, a password-guessing oracle.
   @Throttle({ default: { limit: 5, ttl: 60_000 } })
   @Patch("me/password")
-  changePassword(
+  async changePassword(
     @Body(new ZodValidationPipe(changePasswordSchema)) body: ChangePasswordDto,
     @CurrentUser() user: RequestUser,
+    @Res({ passthrough: true }) res: Response,
   ) {
-    return this.users.changePassword(user.id, body);
+    const session = await this.users.changePassword(user.id, body);
+    setAuthCookies(res, session);
+    return { ok: true, csrfToken: session.csrfToken };
   }
 
   // Handles are the only public identity on profiles/leaderboards/discussions and change
