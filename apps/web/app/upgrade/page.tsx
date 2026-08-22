@@ -77,11 +77,13 @@ function DowngradeConfirmDialog({
 }
 
 function UnsubscribeConfirmDialog({
+  expiresLabel,
   submitting,
   error,
   onCancel,
   onConfirm,
 }: {
+  expiresLabel: string | null;
   submitting: boolean;
   error: string | null;
   onCancel: () => void;
@@ -111,7 +113,9 @@ function UnsubscribeConfirmDialog({
       <div className="oj-card w-full max-w-sm p-5" onClick={(e) => e.stopPropagation()}>
         <h2 className="font-display text-base font-semibold text-ink-50">{t("Unsubscribe from Pro?")}</h2>
         <p className="mt-2 text-sm text-ink-300">
-          {t("This takes effect immediately — you'll switch back to Free right now, and your card won't be charged again.")}
+          {expiresLabel
+            ? t("Your card won't be charged again. You'll keep full Pro access until {date}, then switch to Free automatically.", { date: expiresLabel })
+            : t("Your card won't be charged again. You'll keep full Pro access until your current period ends, then switch to Free automatically.")}
         </p>
         {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
         <div className="mt-5 flex justify-end gap-2">
@@ -173,9 +177,9 @@ export default function UpgradePlanPage() {
     }
   }
 
-  // Distinct from confirmCancel above: an active Subscription auto-charges again next period, so
-  // cancelling it stops that future charge and drops the user to Free right away — there's no
-  // already-paid time being cut short, unlike the one-time-purchase soft-cancel.
+  // Behaves the same as confirmCancel above now: stops the next ECPay auto-charge, but keeps Pro
+  // running until the already-paid planExpiresAt lapses on its own — the recurring subscription's
+  // first charge already paid for a full period, so there's nothing to cut short.
   async function confirmUnsubscribe() {
     setUnsubscribing(true);
     setUnsubscribeError(null);
@@ -373,7 +377,9 @@ export default function UpgradePlanPage() {
                       {t("Unsubscribe")}
                     </button>
                     <p className="mt-1.5 text-center text-[11px] text-ink-500">
-                      {t("Cancels immediately — you'll switch to Free right away and won't be charged again.")}
+                      {expiresLabel
+                        ? t("Stops auto-renewal — you'll keep Pro until {date}, then switch to Free automatically.", { date: expiresLabel })
+                        : t("Stops auto-renewal — you'll keep Pro until your current period ends, then switch to Free automatically.")}
                     </p>
                   </>
                 ) : !isPro && status?.trialAvailable ? (
@@ -422,6 +428,7 @@ export default function UpgradePlanPage() {
       )}
       {showUnsubscribeConfirm && (
         <UnsubscribeConfirmDialog
+          expiresLabel={expiresLabel}
           submitting={unsubscribing}
           error={unsubscribeError}
           onCancel={() => setShowUnsubscribeConfirm(false)}

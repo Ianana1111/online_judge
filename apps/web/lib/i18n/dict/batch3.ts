@@ -95,8 +95,14 @@ export const batch3Dictionary: Record<string, string> = {
   "Confirming…": "確認中…",
   "Confirm Downgrade": "確認降級",
   "Unsubscribe from Pro?": "確定要取消訂閱 Pro 嗎？",
-  "This takes effect immediately — you'll switch back to Free right now, and your card won't be charged again.":
-    "這會立即生效——你會馬上切換回免費方案，之後也不會再被扣款。",
+  "Your card won't be charged again. You'll keep full Pro access until {date}, then switch to Free automatically.":
+    "之後不會再被扣款。你會保留完整 Pro 權限到 {date}，之後帳號會自動切換回免費方案。",
+  "Your card won't be charged again. You'll keep full Pro access until your current period ends, then switch to Free automatically.":
+    "之後不會再被扣款。你會保留完整 Pro 權限直到本期結束，之後帳號會自動切換回免費方案。",
+  "Stops auto-renewal — you'll keep Pro until {date}, then switch to Free automatically.":
+    "停止自動續訂——你會保留 Pro 到 {date}，之後自動切換回免費方案。",
+  "Stops auto-renewal — you'll keep Pro until your current period ends, then switch to Free automatically.":
+    "停止自動續訂——你會保留 Pro 直到本期結束，之後自動切換回免費方案。",
   "Unsubscribing…": "取消訂閱中…",
   "Unsubscribe now": "立即取消訂閱",
   "Upgrade your plan": "升級你的方案",
