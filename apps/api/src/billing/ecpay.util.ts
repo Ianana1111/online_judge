@@ -13,8 +13,21 @@ const SANDBOX = {
   hashIv: "EkRm7iFT261dpevs",
 };
 
+// SANDBOX's credentials are ECPay's own publicly-published test merchant (documented in their
+// integration guide, not a secret) — safe to fall back to ONLY while genuinely pointed at their
+// sandbox checkout URL. Falling back to them while ECPAY_ENV=production would mean the real
+// checkout endpoint verifies CheckMacValue against a key anyone can look up, so a forged webhook
+// (e.g. a fake "payment succeeded" POST) would pass signature verification and grant free Pro —
+// see assertEcpayConfigured in main.ts, which refuses to even start in that state; this throw is
+// the same check at the point of use, in case ecpayConfig() is ever reached some other way.
 export function ecpayConfig() {
   const isProduction = process.env.ECPAY_ENV === "production";
+  if (isProduction && (!process.env.ECPAY_MERCHANT_ID || !process.env.ECPAY_HASH_KEY || !process.env.ECPAY_HASH_IV)) {
+    throw new Error(
+      "ECPAY_ENV is production but ECPAY_MERCHANT_ID/ECPAY_HASH_KEY/ECPAY_HASH_IV are not all set — " +
+        "refusing to fall back to ECPay's publicly-known sandbox credentials against the real checkout endpoint.",
+    );
+  }
   return {
     merchantId: process.env.ECPAY_MERCHANT_ID || SANDBOX.merchantId,
     hashKey: process.env.ECPAY_HASH_KEY || SANDBOX.hashKey,
