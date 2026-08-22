@@ -558,7 +558,6 @@ export interface UserStats {
 }
 
 export interface LeaderboardRow {
-  userId: string;
   handle: string;
   avatarUrl: string | null;
   // Only ever a *verified* school claim — null both for "no school" and "claimed but not

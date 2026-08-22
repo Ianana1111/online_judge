@@ -15,6 +15,7 @@ import {
   submissionResultChannel,
   type CreateSubmissionDto,
   type JudgeResultDto,
+  type SubmissionListQueryDto,
   type Verdict,
 } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
@@ -24,14 +25,6 @@ import { AchievementsService } from "../achievements/achievements.service";
 
 const PAGE_SIZE = 20;
 const COOLDOWN_MS = 10_000;
-
-export interface SubmissionListQuery {
-  user?: string;
-  problem?: string;
-  contestId?: string;
-  page?: string;
-  pageSize?: string;
-}
 
 @Injectable()
 export class SubmissionsService {
@@ -94,15 +87,14 @@ export class SubmissionsService {
     return this.toPublicDetail(submission, this.canSeeSource(submission.userId, requester));
   }
 
-  async list(query: SubmissionListQuery, requester: RequestUser | null) {
-    const where: Record<string, unknown> = {};
+  /** Always scoped to the caller's own submissions — `query.user` is accepted for shape
+   * compatibility with the frontend's `?user=me` but its value is never actually consulted, since
+   * there is no legitimate case for one account to list another's submission history (verdicts,
+   * timings, and per-problem activity — including during a live contest — are not public data).
+   * `requester` is guaranteed non-null by the controller no longer allowing anonymous access. */
+  async list(query: SubmissionListQueryDto, requester: RequestUser) {
+    const where: Record<string, unknown> = { userId: requester.id };
 
-    if (query.user === "me") {
-      if (!requester) throw new ForbiddenException("Authentication required");
-      where.userId = requester.id;
-    } else if (query.user) {
-      where.userId = query.user;
-    }
     if (query.problem) where.problemId = query.problem;
     if (query.contestId) where.contestId = query.contestId;
 

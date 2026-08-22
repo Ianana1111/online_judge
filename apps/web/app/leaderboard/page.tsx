@@ -181,7 +181,7 @@ export default function LeaderboardPage() {
               {displayRows.map((r) => {
                 const isMe = user?.handle === r.handle;
                 return (
-                  <tr key={r.userId} className={`${RANK_STYLE[r.rank] ?? ""} ${isMe ? "ring-1 ring-inset ring-brand" : ""}`}>
+                  <tr key={r.handle} className={`${RANK_STYLE[r.rank] ?? ""} ${isMe ? "ring-1 ring-inset ring-brand" : ""}`}>
                     <td className="font-display font-bold text-ink-400">{r.rank}</td>
                     <td>
                       <Link href={`/u/${r.handle}`} className="flex items-center gap-2.5 font-medium text-ink-50 hover:text-brand">

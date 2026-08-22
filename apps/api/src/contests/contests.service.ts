@@ -123,13 +123,27 @@ export class ContestsService {
       }
     }
 
+    // The full problem content (statement, samples, judging metadata) is only ever meant to be
+    // seen once *this* contest window is actually open for *this* caller — either they've
+    // registered (which starts their own personal countdown, the only thing "starting" means for
+    // a virtual/individual contest, the vast majority of contests here) or, for a rare scheduled
+    // group session, the whole session has finished for everyone. Without this check the raw
+    // API response carried every problem's full text regardless of any of that — the frontend's
+    // own `disabled={!contest.myParticipant}` on each problem button was the only thing standing
+    // between an anonymous visitor and the exam questions, and that's enforced nowhere but the
+    // client. An admin (setting the contest up, or reviewing it) always sees the real content.
+    const isAdmin = requester?.role === "ADMIN";
+    const scheduledEndsAt = contest.startAt ? new Date(contest.startAt.getTime() + contest.durationMin * 60_000) : null;
+    const scheduledSessionOver = !!scheduledEndsAt && Date.now() >= scheduledEndsAt.getTime();
+    const canSeeContent = isAdmin || !!myParticipant || scheduledSessionOver;
+
     // Same uvaId/sourceUrl/cpeAppearances fields the standalone /problems/:slug endpoint returns —
     // ProblemView renders identically whether it got its problem from there or from here, so a
     // problem opened inside a running exam must carry the same fields or it silently loses its
     // "judgeable" status (uvaId is what SubmissionPanel checks to allow submitting at all).
     const isPro = requester ? await isRequesterPro(requester) : false;
     const problemIds = contest.problems.map((cp) => cp.problem.id);
-    const appearancesById = isPro ? await cpeAppearancesFor(problemIds) : new Map<string, number>();
+    const appearancesById = canSeeContent && isPro ? await cpeAppearancesFor(problemIds) : new Map<string, number>();
 
     return {
       id: contest.id,
@@ -149,18 +163,18 @@ export class ContestsService {
           id: cp.problem.id,
           slug: cp.problem.slug,
           title: cp.problem.title,
-          statementMd: cp.problem.statementMd,
-          sourceUrl: cp.problem.sourceUrl,
-          inputSpecMd: cp.problem.inputSpecMd,
-          outputSpecMd: cp.problem.outputSpecMd,
+          statementMd: canSeeContent ? cp.problem.statementMd : "",
+          sourceUrl: canSeeContent ? cp.problem.sourceUrl : null,
+          inputSpecMd: canSeeContent ? cp.problem.inputSpecMd : "",
+          outputSpecMd: canSeeContent ? cp.problem.outputSpecMd : "",
           timeLimitMs: cp.problem.timeLimitMs,
           memoryLimitKb: cp.problem.memoryLimitKb,
           difficulty: cp.problem.difficulty,
           source: cp.problem.source,
-          uvaId: cp.problem.uvaId,
-          cpeAppearances: isPro ? (appearancesById.get(cp.problem.id) ?? 0) : null,
+          uvaId: canSeeContent ? cp.problem.uvaId : null,
+          cpeAppearances: canSeeContent && isPro ? (appearancesById.get(cp.problem.id) ?? 0) : null,
           tags: cp.problem.tags.map((t) => t.tag.slug),
-          samples: cp.problem.samples.map((s) => ({ ord: s.ord, input: s.input, output: s.output })),
+          samples: canSeeContent ? cp.problem.samples.map((s) => ({ ord: s.ord, input: s.input, output: s.output })) : [],
         },
       })),
     };

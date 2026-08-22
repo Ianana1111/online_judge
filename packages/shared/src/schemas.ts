@@ -241,3 +241,18 @@ export const updateSettingsSchema = z.object({
   uiLocale: z.enum(["zh-TW", "en"]).optional(),
 });
 export type UpdateSettingsDto = z.infer<typeof updateSettingsSchema>;
+
+// GET /submissions?... — every field must be a plain string (not the array/object shape qs's
+// bracket-notation parsing would build from e.g. "?problem[not]=x"), since submissions.service
+// drops these straight into a Prisma `where` clause; an object here would silently become a
+// Prisma filter operator instead of an exact-match id. `user` is accepted for shape only — the
+// service always scopes the query to the caller's own id regardless of what's sent here, so this
+// never actually authorizes looking up anyone else's submissions.
+export const submissionListQuerySchema = z.object({
+  user: z.string().max(100).optional(),
+  problem: z.string().max(100).optional(),
+  contestId: z.string().max(100).optional(),
+  page: z.string().max(20).optional(),
+  pageSize: z.string().max(20).optional(),
+});
+export type SubmissionListQueryDto = z.infer<typeof submissionListQuerySchema>;
