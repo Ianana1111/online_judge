@@ -34,6 +34,9 @@ export const judgeResultSchema = z.object({
   memoryKb: z.number().int().min(0).optional(),
   score: z.number().min(0).max(100).optional(),
   compileError: z.string().max(16384).optional(),
+  // Optional: the interim "JUDGING" report (worker.ts) doesn't know this yet at that point, and
+  // the stuck-submission reaper's synthetic SE report isn't really "judged" by either path.
+  judgedOn: z.enum(["SELF", "REMOTE"]).optional(),
 });
 export type JudgeResultDto = z.infer<typeof judgeResultSchema>;
 
