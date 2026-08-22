@@ -27,6 +27,10 @@ export function middleware(request: NextRequest) {
     `style-src 'self' 'unsafe-inline' ${MONACO_CDN}`,
     "img-src 'self' data: https:",
     "font-src 'self' data:",
+    // TODO once a real Sentry project exists (see instrumentation-client.ts): browser-side error
+    // reports are a fetch() to Sentry's ingest host, which this connect-src doesn't allow yet —
+    // add it here once the DSN reveals which host that is (varies by org/region, e.g.
+    // https://oXXXXX.ingest.us.sentry.io), or reports will silently fail with a CSP violation.
     `connect-src 'self' ${API_ORIGIN} https://accounts.google.com ${MONACO_CDN}`,
     "worker-src 'self' blob:",
     "form-action 'self' https://accounts.google.com https://payment.ecpay.com.tw https://payment-stage.ecpay.com.tw",
