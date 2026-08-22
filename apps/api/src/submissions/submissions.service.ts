@@ -193,10 +193,14 @@ export class SubmissionsService {
       timeMs: submission.timeMs,
       memoryKb: submission.memoryKb,
       score: submission.score,
-      compileError: submission.compileError,
       createdAt: submission.createdAt,
       judgedAt: submission.judgedAt,
-      ...(includeSource ? { sourceCode: submission.sourceCode } : {}),
+      // Gated the same as sourceCode (owner or admin only), not shown to arbitrary viewers: a
+      // raw compiler stderr dump can echo back whatever the submitted source tried to have the
+      // compiler print — including, in the worst case, local sandbox file contents pulled in via
+      // an absolute-path #include — and GET /submissions/:id and its SSE stream are both
+      // @OptionalAuth, so this was previously world-readable by submission id.
+      ...(includeSource ? { compileError: submission.compileError, sourceCode: submission.sourceCode } : {}),
     };
   }
 }
