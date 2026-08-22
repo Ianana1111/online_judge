@@ -1,9 +1,16 @@
 import { Controller, ForbiddenException, Get, Query } from "@nestjs/common";
+import { TAIWAN_UNIVERSITIES, UNVERIFIED_SCHOOL_FILTER } from "@oj/shared";
 import { CurrentUser, OptionalAuth, type RequestUser } from "../common/decorators";
 import { LeaderboardService, type LeaderboardPeriod, type LeaderboardScope } from "./leaderboard.service";
 
 const VALID_PERIODS = new Set(["all", "week", "month"]);
 const VALID_SCOPES = new Set(["all", "students"]);
+// A closed set, not free text — every value here becomes its own cache key in
+// LeaderboardService (`leaderboard:${period}:${scope}:${school}`, 60s TTL). Before this
+// validation, an arbitrary `?school=` value produced an arbitrary never-before-seen cache key,
+// so every request bypassed the cache entirely and forced a full recompute (a fan-out of several
+// AC-history table scans) — trivially abusable as a low-effort DB-load DoS.
+const VALID_SCHOOLS = new Set<string>([...TAIWAN_UNIVERSITIES, UNVERIFIED_SCHOOL_FILTER]);
 
 @Controller("leaderboard")
 export class LeaderboardController {
@@ -24,8 +31,7 @@ export class LeaderboardController {
     if (s === "students" && !user) {
       throw new ForbiddenException("Log in to view the student leaderboard.");
     }
-    // Trusting the raw query value is fine here — an unrecognized school just filters to an empty
-    // result set (same failure mode as any other never-matching filter), no injection surface.
-    return this.leaderboard.get(p, s, school || undefined);
+    const validSchool = school && VALID_SCHOOLS.has(school) ? school : undefined;
+    return this.leaderboard.get(p, s, validSchool);
   }
 }
