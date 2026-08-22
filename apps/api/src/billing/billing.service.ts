@@ -703,6 +703,25 @@ export class BillingService {
   }
 
   /**
+   * Used only by StuckSubmissionReaperService: a submission that never got a real judge result
+   * shouldn't have permanently consumed the user's monthly quota for it. Conditional on still
+   * being the same month the original submission consumed (`submitQuotaMonth = monthKey AND
+   * submitQuotaUsed > 0`) — if the month has since rolled over, the counter it would need to
+   * decrement no longer exists/means something else, so this is deliberately a no-op rather than
+   * touching the new month's count. That's an acceptable, narrow edge case (a submission would
+   * need to sit stuck for the reaper's 15-minute threshold to still be open right at a month
+   * boundary) — not worth a more complex mechanism to close.
+   */
+  async refundSubmitQuota(userId: string): Promise<void> {
+    const monthKey = currentMonthKey();
+    await prisma.$executeRaw`
+      UPDATE users
+      SET "submitQuotaUsed" = "submitQuotaUsed" - 1
+      WHERE id = ${userId} AND "submitQuotaMonth" = ${monthKey} AND "submitQuotaUsed" > 0
+    `;
+  }
+
+  /**
    * Throws if a FREE user has reached their THIS-CALENDAR-MONTH virtual-contest cap. PRO users
    * pass freely. Must be called from inside the same transaction/advisory-lock scope as the
    * ContestParticipant insert (see contests.service.register) — otherwise this count-then-create

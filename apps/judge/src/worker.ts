@@ -46,12 +46,12 @@ async function processJob(job: Job<JudgeJobData>): Promise<void> {
   await reportResult({ submissionId, status: "JUDGING" }).catch(() => {});
 
   const { problem } = submission;
-  const outcome =
-    problem.testCases.length > 0
-      ? await judgeLocally(problem, problem.testCases, submission.languageKey, submission.sourceCode)
-      : await judgeViaUva(problem, submission.languageKey, submission.sourceCode);
+  const judgedLocally = problem.testCases.length > 0;
+  const outcome = judgedLocally
+    ? await judgeLocally(problem, problem.testCases, submission.languageKey, submission.sourceCode)
+    : await judgeViaUva(problem, submission.languageKey, submission.sourceCode);
 
-  await reportResult({ submissionId, ...outcome });
+  await reportResult({ submissionId, judgedOn: judgedLocally ? "SELF" : "REMOTE", ...outcome });
 }
 
 const worker = new Worker<JudgeJobData>(

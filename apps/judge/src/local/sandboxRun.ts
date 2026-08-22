@@ -21,17 +21,33 @@ export interface RunResult {
   timedOut: boolean;
 }
 
-/** Parses GNU `time -v` output for the two fields judging cares about. Missing on parse failure
+// GNU time's "Elapsed (wall clock) time" is formatted either "m:ss.cc" or "h:mm:ss" depending on
+// duration — CP time limits are always well under an hour, but this handles both rather than
+// assuming the shorter form.
+function parseElapsedWallClock(raw: string): number | null {
+  const parts = raw.split(":").map((p) => parseFloat(p));
+  if (parts.some((p) => Number.isNaN(p))) return null;
+  if (parts.length === 2) return Math.round((parts[0] * 60 + parts[1]) * 1000);
+  if (parts.length === 3) return Math.round((parts[0] * 3600 + parts[1] * 60 + parts[2]) * 1000);
+  return null;
+}
+
+/** Parses GNU `time -v` output for the fields judging cares about. Missing on parse failure
  * (rather than throwing) — a malformed time.log should degrade to "unknown timing," not abort an
- * otherwise-valid verdict. */
-function parseTimeLog(log: string): { cpuMs: number | null; memoryKb: number | null } {
-  const userMatch = log.match(/User time \(seconds\):\s*([\d.]+)/);
-  const sysMatch = log.match(/System time \(seconds\):\s*([\d.]+)/);
+ * otherwise-valid verdict.
+ *
+ * Reports wall-clock elapsed time, not CPU (user+system) time — the actual TLE enforcement below
+ * is the `timeout` command wrapping the whole process, which kills based on wall-clock time. A
+ * program that spends most of its time limit blocked (sleeping, or waiting on I/O) burns very
+ * little CPU time but the same wall-clock time as a compute-bound program — reporting CPU time
+ * would silently under-count exactly that case, showing a near-timeout submission as
+ * suspiciously fast instead of reflecting how long it actually ran. */
+function parseTimeLog(log: string): { wallMs: number | null; memoryKb: number | null } {
+  const elapsedMatch = log.match(/Elapsed \(wall clock\) time[^:]*:\s*([\d:.]+)/);
   const memMatch = log.match(/Maximum resident set size \(kbytes\):\s*(\d+)/);
-  const cpuMs =
-    userMatch && sysMatch ? Math.round((parseFloat(userMatch[1]) + parseFloat(sysMatch[1])) * 1000) : null;
+  const wallMs = elapsedMatch ? parseElapsedWallClock(elapsedMatch[1]) : null;
   const memoryKb = memMatch ? parseInt(memMatch[1], 10) : null;
-  return { cpuMs, memoryKb };
+  return { wallMs, memoryKb };
 }
 
 export async function runOneCase(
@@ -52,8 +68,13 @@ export async function runOneCase(
   // so a runaway-output submission can no longer make this worker read a multi-GB buffer into its
   // own memory via readFileToBuffer below.
   const fileSizeLimitBlocks = Math.ceil(OUTPUT_CAP_BYTES / 512);
+  // A fork bomb (`:(){ :|:& };:`) or any runaway-forking submission has nothing to gain from more
+  // than a handful of processes — no supported language's normal single-process CP solution needs
+  // anywhere close to this many. `-u` is a per-user (not per-process-tree) limit, which is exactly
+  // right here since each sandbox is a disposable microVM dedicated to one submission.
+  const MAX_PROCESSES = 64;
   const fullCmd = [runCmd.cmd, ...runCmd.args].join(" ");
-  const script = `ulimit -f ${fileSizeLimitBlocks}; ${ulimitPrefix}/usr/bin/time -v -o time.log timeout ${timeLimitSec}s ${fullCmd} < in.txt > out.txt 2> err.txt; echo $? > exit.txt`;
+  const script = `ulimit -f ${fileSizeLimitBlocks}; ulimit -u ${MAX_PROCESSES}; ${ulimitPrefix}/usr/bin/time -v -o time.log timeout ${timeLimitSec}s ${fullCmd} < in.txt > out.txt 2> err.txt; echo $? > exit.txt`;
 
   await sandbox.runCommand({ cmd: "bash", args: ["-c", script], cwd: WORKDIR });
 
@@ -70,13 +91,13 @@ export async function runOneCase(
   const exitCode = Number.isNaN(parsedExit) ? 1 : parsedExit;
   const stdout = (outBuf ?? Buffer.alloc(0)).subarray(0, OUTPUT_CAP_BYTES).toString();
   const stderr = (errBuf ?? Buffer.alloc(0)).toString();
-  const { cpuMs, memoryKb } = parseTimeLog(timeBuf?.toString() ?? "");
+  const { wallMs, memoryKb } = parseTimeLog(timeBuf?.toString() ?? "");
 
   return {
     exitCode,
     stdout,
     stderr,
-    timeMs: cpuMs ?? timeLimitMs,
+    timeMs: wallMs ?? timeLimitMs,
     memoryKb,
     timedOut: exitCode === 124,
   };

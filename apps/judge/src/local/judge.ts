@@ -54,6 +54,16 @@ export async function judgeLocally(
     let maxTimeMs = 0;
     let maxMemoryKb: number | null = null;
 
+    // Deliberate: one sandbox is reused across every test case of this submission, not a fresh
+    // one per case. A submission could in principle write a file during case 1 and read it back
+    // during case 2 to behave differently than a genuinely-correct solution would — the launch
+    // audit flagged this as worth evaluating. Weighed against that: exploiting it requires the
+    // submission's author to already control what's being tested for THEIR OWN submission (no
+    // cross-user or cross-submission leakage — a fresh sandbox is still used per submission), and
+    // per-test-case sandbox creation would multiply Vercel Sandbox cold-start latency and cost by
+    // the test case count on every single submission, worst when it matters least (exam-week
+    // traffic spikes). Judged not worth that cost for the narrow, self-only risk it closes;
+    // revisit if test data grows enough (see the audit's 3.1) that this stops being self-only.
     for (const tc of testCases) {
       const run = await runOneCase(
         sandbox,

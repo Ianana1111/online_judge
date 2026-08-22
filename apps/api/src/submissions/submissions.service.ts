@@ -143,19 +143,44 @@ export class SubmissionsService {
 
   /** Used by the internal judge-result callback. Returns the updated public detail (no
    * sourceCode) so the caller can publish it to the SSE channel. */
-  async applyJudgeResult(submissionId: string, dto: JudgeResultDto) {
-    const submission = await prisma.submission.findUnique({ where: { id: submissionId } });
-    if (!submission) throw new NotFoundException("Submission not found");
+  // Only PENDING/JUDGING are valid states to update FROM — a submission already in a terminal
+  // verdict has finished judging, full stop.
+  private static readonly OPEN_VERDICTS: Verdict[] = ["PENDING", "JUDGING"];
 
+  /**
+   * Conditional on the submission still being in a non-terminal state (PENDING/JUDGING) — not a
+   * plain unconditional update — so a stalled BullMQ job's retry, or any other duplicate/delayed
+   * delivery of a result for the same submission, can't clobber an already-terminal verdict back
+   * to an earlier state, and can't re-trigger AC achievement evaluation (duplicate notifications)
+   * for a submission that was already AC. The interim "JUDGING" update from worker.ts and the
+   * final terminal update both still apply normally through this same check, since PENDING and
+   * JUDGING are both in OPEN_VERDICTS — only a THIRD, stale call arriving after the real terminal
+   * result is what this actually blocks.
+   */
+  async applyJudgeResult(submissionId: string, dto: JudgeResultDto) {
     const terminal = isTerminalVerdict(dto.status as Verdict);
     const data: Record<string, unknown> = { status: dto.status, verdict: dto.status };
     if (dto.timeMs !== undefined) data.timeMs = dto.timeMs;
     if (dto.memoryKb !== undefined) data.memoryKb = dto.memoryKb;
     if (dto.score !== undefined) data.score = dto.score;
     if (dto.compileError !== undefined) data.compileError = dto.compileError;
+    if (dto.judgedOn !== undefined) data.judgedOn = dto.judgedOn;
     if (terminal) data.judgedAt = new Date();
 
-    await prisma.submission.update({ where: { id: submissionId }, data });
+    const claimed = await prisma.submission.updateMany({
+      where: { id: submissionId, verdict: { in: SubmissionsService.OPEN_VERDICTS } },
+      data,
+    });
+    if (claimed.count === 0) {
+      // Either no such submission, or it was already terminal — check which, since the caller
+      // (the judge worker's HTTP callback) still needs a 404 for a genuinely unknown id.
+      const exists = await prisma.submission.findUnique({ where: { id: submissionId }, select: { id: true } });
+      if (!exists) throw new NotFoundException("Submission not found");
+      // `applied: false` is what lets StuckSubmissionReaperService tell "I just marked this SE"
+      // apart from "this was already terminal by the time I got to it (lost the race to a real
+      // judge result)" — only the former should refund the user's submit quota.
+      return { applied: false, detail: this.toPublicDetail((await this.findWithResults(submissionId))!, false) };
+    }
 
     const updated = await this.findWithResults(submissionId);
     const publicDetail = this.toPublicDetail(updated!, false);
@@ -167,7 +192,7 @@ export class SubmissionsService {
       await this.achievements.evaluateAfterAc(updated!.userId, updated!.problemId);
     }
 
-    return publicDetail;
+    return { applied: true, detail: publicDetail };
   }
 
   private canSeeSource(ownerId: string, requester: RequestUser | null): boolean {
