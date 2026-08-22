@@ -32,6 +32,10 @@ export class UsersController {
     return this.users.createByAdmin(body);
   }
 
+  // Each attempt costs one argon2 verify against the *current* password — unlimited attempts
+  // against a hijacked session (stolen access token, unattended device) is both a CPU-cost DoS
+  // and, since a correct guess needs no other confirmation, a password-guessing oracle.
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
   @Patch("me/password")
   changePassword(
     @Body(new ZodValidationPipe(changePasswordSchema)) body: ChangePasswordDto,
@@ -40,6 +44,10 @@ export class UsersController {
     return this.users.changePassword(user.id, body);
   }
 
+  // Handles are the only public identity on profiles/leaderboards/discussions and change
+  // instantly with no cooldown otherwise — unlimited renames enable both impersonation (grabbing
+  // a name someone just freed) and handle squatting.
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
   @Patch("me/handle")
   changeHandle(@Body(new ZodValidationPipe(changeHandleSchema)) body: ChangeHandleDto, @CurrentUser() user: RequestUser) {
     return this.users.changeHandle(user.id, body);
@@ -63,6 +71,9 @@ export class UsersController {
     return this.users.updateSettings(user.id, body);
   }
 
+  // Covers the avatar upload path too (up to a 300KB data-URL stored inline on the user row) —
+  // unlimited churn here is DB write amplification and row bloat with no cooldown otherwise.
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Patch("me/profile")
   updateProfile(
     @Body(new ZodValidationPipe(updateProfileSchema)) body: UpdateProfileDto,

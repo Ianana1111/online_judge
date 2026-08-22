@@ -16,6 +16,10 @@ function resultKey(runId: string): string {
   return `testrun:${runId}:result`;
 }
 
+function ownerKey(runId: string): string {
+  return `testrun:${runId}:owner`;
+}
+
 @Injectable()
 export class RunsService {
   constructor(
@@ -41,6 +45,10 @@ export class RunsService {
     // applyResult's doc comment for why this matters (pub/sub alone has no replay).
     const pending: TestRunResultDto = { runId, status: "RUNNING" };
     await this.redis.set(resultKey(runId), JSON.stringify(pending), "EX", RESULT_TTL_SEC);
+    // Recorded separately from the result itself (which the internal judge callback also writes,
+    // unauthenticated except for its own internal token) so ownership can be checked without
+    // threading userId through the judge worker's result-reporting DTO at all.
+    await this.redis.set(ownerKey(runId), userId, "EX", RESULT_TTL_SEC);
 
     await this.queue.add(TEST_RUN_QUEUE_NAME, {
       runId,
@@ -57,6 +65,16 @@ export class RunsService {
     const raw = await this.redis.get(resultKey(runId));
     if (!raw) throw new NotFoundException("Run not found or expired");
     return JSON.parse(raw) as TestRunResultDto;
+  }
+
+  /** A run's stdout/stderr can echo back custom input a caller typed into the "Run" panel, and
+   * possibly a snippet of another user's actual source in a compile error — so the stream this
+   * backs must only ever be readable by the account that created it. Same "not found" message for
+   * an unowned run as for a genuinely-expired one, rather than a distinct 403, so a caller can't
+   * use the response to tell "wrong owner" apart from "no such run" and go id-guessing. */
+  async assertOwner(runId: string, userId: string): Promise<void> {
+    const owner = await this.redis.get(ownerKey(runId));
+    if (owner !== userId) throw new NotFoundException("Run not found or expired");
   }
 
   /** Used by the internal judge-result callback. Unlike submissions (backed by a real Postgres

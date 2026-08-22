@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post } from "@nestjs/common";
+import { Throttle } from "@nestjs/throttler";
 import { createDiscussionSchema, type CreateDiscussionDto } from "@oj/shared";
 import { CurrentUser, Public, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
@@ -14,6 +15,8 @@ export class DiscussionsController {
     return this.discussions.listByProblem(problemId);
   }
 
+  // Public-facing text with no other cooldown — spam/flood protection.
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Post("problem/:problemId")
   @HttpCode(201)
   create(

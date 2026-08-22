@@ -1,4 +1,5 @@
 import { Body, Controller, Get, HttpCode, Post, Query, Req } from "@nestjs/common";
+import { Throttle } from "@nestjs/throttler";
 import type { Request } from "express";
 import { recordPageviewSchema, type RecordPageviewDto } from "@oj/shared";
 import { CurrentUser, OptionalAuth, Roles, type RequestUser } from "../common/decorators";
@@ -27,6 +28,10 @@ export class AnalyticsController {
    * from CSRF (see csrf.guard.ts) for the same reason: anonymous visitors have no CSRF token to
    * present, and a forged pageview event is low-stakes (it only pollutes traffic counts). */
   @OptionalAuth()
+  // Tighter than the global 120/min default: unauthenticated, writes a DB row per call, and (now
+  // that rate limiting is actually correctly per-IP — see app.module.ts) a real browser session
+  // never legitimately needs more than a handful of route changes per minute.
+  @Throttle({ default: { limit: 60, ttl: 60_000 } })
   @HttpCode(204)
   @Post("pageview")
   async pageview(

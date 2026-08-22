@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { serverFetch } from "@/lib/serverApi";
 import { SITE_URL } from "@/lib/site";
+import { jsonLdScript } from "@/lib/jsonLd";
 import { previewText } from "@/lib/textPreview";
 import type { PostDetail } from "@/lib/types";
 import PostDetailClient from "@/components/PostDetailClient";
@@ -40,7 +41,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
 
   return (
     <>
-      {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />}
+      {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />}
       <PostDetailClient id={id} />
     </>
   );

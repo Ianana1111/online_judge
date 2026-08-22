@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { serverFetch, serverFetchAuthedDetailed } from "@/lib/serverApi";
 import { SITE_URL } from "@/lib/site";
+import { jsonLdScript } from "@/lib/jsonLd";
 import { previewText } from "@/lib/textPreview";
 import { stripProblemNumber } from "@/lib/problemTitle";
 import type { ProblemDetail } from "@/lib/types";
@@ -67,7 +68,7 @@ export default async function ProblemPage({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />
       <ProblemView problem={problem} contestId={contestId} />
     </>
   );

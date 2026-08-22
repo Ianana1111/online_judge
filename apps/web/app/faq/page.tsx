@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_URL } from "@/lib/site";
+import { jsonLdScript } from "@/lib/jsonLd";
 
 export const metadata: Metadata = {
   title: "FAQ",
@@ -163,7 +164,7 @@ const FAQ_JSON_LD = {
 export default function FaqPage() {
   return (
     <div className="space-y-8">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSON_LD) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(FAQ_JSON_LD) }} />
       <div>
         <h1 className="font-display text-2xl font-bold text-ink-50">FAQ</h1>
         <p className="mt-1 text-sm text-ink-400">

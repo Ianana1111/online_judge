@@ -9,7 +9,13 @@ import {
   type BillingPeriod,
   type EcpayMethod,
 } from "@oj/shared";
-import { cancelEcpayPeriod, computeCheckMacValue, ecpayConfig, verifyCheckMacValue } from "./ecpay.util";
+import {
+  cancelEcpayPeriod,
+  computeCheckMacValue,
+  ecpayConfig,
+  redactEcpayBodyForLogging,
+  verifyCheckMacValue,
+} from "./ecpay.util";
 
 // ECPay has no "forever" recurring option — ExecTimes must be finite. These are the max values
 // ECPay allows for each PeriodType (999 for day/month, 99 for year), which is functionally
@@ -308,12 +314,14 @@ export class BillingService {
   async handleEcpayPaymentInfo(body: Record<string, string>): Promise<void> {
     const config = ecpayConfig();
     if (!(await verifyCheckMacValue(body, config))) {
-      // Full body + our recomputed value, logged only on failure — without this we have zero
-      // visibility into why a real ECPay webhook's signature didn't match ours. Nothing logged
-      // here is secret (HashKey/HashIV are never included, only the fields ECPay itself sent).
+      // An allow-listed subset of the body + our recomputed value, logged only on failure —
+      // without this we'd have zero visibility into why a real ECPay webhook's signature didn't
+      // match ours. NOT the full body: card-adjacent webhooks legitimately carry payer/card
+      // metadata (card4no/card6no, auth_code, gwsr, vAccount/BankCode) that has no reason to sit
+      // in Railway's log retention — see redactEcpayBodyForLogging.
       this.logger.warn(
         `ECPay payment-info webhook: invalid CheckMacValue for ${body.MerchantTradeNo}. ` +
-          `received=${JSON.stringify(body)} expected=${await computeCheckMacValue(body, config)}`,
+          `received=${JSON.stringify(redactEcpayBodyForLogging(body))} expected=${await computeCheckMacValue(body, config)}`,
       );
       return;
     }
@@ -336,7 +344,7 @@ export class BillingService {
     if (!(await verifyCheckMacValue(body, config))) {
       this.logger.warn(
         `ECPay return webhook: invalid CheckMacValue for ${body.MerchantTradeNo}. ` +
-          `received=${JSON.stringify(body)} expected=${await computeCheckMacValue(body, config)}`,
+          `received=${JSON.stringify(redactEcpayBodyForLogging(body))} expected=${await computeCheckMacValue(body, config)}`,
       );
       return;
     }
@@ -422,7 +430,7 @@ export class BillingService {
     if (!(await verifyCheckMacValue(body, config))) {
       this.logger.warn(
         `ECPay period-return webhook: invalid CheckMacValue for ${body.MerchantTradeNo}. ` +
-          `received=${JSON.stringify(body)} expected=${await computeCheckMacValue(body, config)}`,
+          `received=${JSON.stringify(redactEcpayBodyForLogging(body))} expected=${await computeCheckMacValue(body, config)}`,
       );
       return;
     }
