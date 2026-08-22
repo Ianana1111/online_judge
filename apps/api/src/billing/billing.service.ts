@@ -23,6 +23,19 @@ import {
 const RECURRING_EXEC_TIMES: Record<BillingPeriod, number> = { MONTHLY: 999, YEARLY: 99 };
 const RECURRING_PERIOD_TYPE: Record<BillingPeriod, "M" | "Y"> = { MONTHLY: "M", YEARLY: "Y" };
 
+// "2000 NTD for 13 months" — applied once, only on the charge that creates a brand new YEARLY
+// Subscription (ECPay's own recurring engine still charges again exactly 365 days later,
+// regardless of this bonus; extendPlan's own "extend from the later of now or existing expiry"
+// logic means this 30-day head start compounds forward forever rather than being clawed back).
+// Deliberately NOT applied to one-time ATM yearly purchases or admin grants — those aren't a
+// "subscription" being newly created, so there's no well-defined "first charge" to hang this on.
+const FIRST_YEARLY_SUBSCRIPTION_BONUS_DAYS = 30;
+
+// 30 free days, granted once, with no ECPay interaction at all (see startTrial) — the safest
+// possible implementation of "first month free" for a service that otherwise can't rely on
+// ECPay's recurring engine supporting a genuinely different first-period amount.
+const FREE_TRIAL_DAYS = 30;
+
 /** PRO is only meaningful while it hasn't expired — a lapsed PRO account behaves as FREE until a
  * new payment extends it. Centralised so every enforcement point agrees on "is this user PRO now".
  * Students (marked by an admin, see users.service.setIsStudent) are always treated as PRO — they
@@ -89,14 +102,15 @@ function currentMonthStart(d: Date = new Date()): Date {
 export class BillingService {
   private readonly logger = new Logger(BillingService.name);
 
-  /** Shared by manual-approve and the ECPay auto-approve webhook: extends from whichever is later
-   * (now, or the user's existing expiry) so paying/renewing early never loses days. Takes a
-   * transaction client so the Payment status flip and this User update commit atomically —
-   * money's involved, so a crash between the two writes must never leave them inconsistent. */
-  private async extendPlan(tx: Prisma.TransactionClient, userId: string, period: BillingPeriod): Promise<Date> {
+  /** Shared base for every "grant/extend Pro" path (real payments, the free trial, and the
+   * yearly-subscription first-charge bonus): extends from whichever is later (now, or the user's
+   * existing expiry) so paying/renewing/claiming early never loses days. Takes a transaction
+   * client so the caller's own writes (a Payment status flip, a Subscription upsert, ...) commit
+   * atomically with this User update — money or a one-time trial claim is involved, so a crash
+   * between the two writes must never leave them inconsistent. */
+  private async extendPlanByDays(tx: Prisma.TransactionClient, userId: string, days: number): Promise<Date> {
     const user = await tx.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException("User not found");
-    const days = PLAN_PRICING[period].days;
     const base = user.planExpiresAt && user.planExpiresAt.getTime() > Date.now() ? user.planExpiresAt : new Date();
     const newExpiry = new Date(base.getTime() + days * 24 * 60 * 60 * 1000);
     await tx.user.update({
@@ -104,6 +118,28 @@ export class BillingService {
       data: { plan: "PRO", planExpiresAt: newExpiry, planCancelRequested: false },
     });
     return newExpiry;
+  }
+
+  private async extendPlan(tx: Prisma.TransactionClient, userId: string, period: BillingPeriod): Promise<Date> {
+    return this.extendPlanByDays(tx, userId, PLAN_PRICING[period].days);
+  }
+
+  /** Grants the one-time 30-day free Pro trial — Plan A from the launch audit: no ECPay
+   * interaction whatsoever, so there is zero risk of an accidental real charge. trialStartedAt is
+   * the guard against claiming a second one; it's never cleared afterward even once the trial
+   * period itself has long expired, specifically so it keeps blocking a repeat claim. */
+  async startTrial(userId: string): Promise<{ plan: "PRO"; planExpiresAt: Date }> {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException("User not found");
+    if (user.trialStartedAt) {
+      throw new BadRequestException("You've already used your free trial.");
+    }
+
+    const planExpiresAt = await prisma.$transaction(async (tx) => {
+      await tx.user.update({ where: { id: userId }, data: { trialStartedAt: new Date() } });
+      return this.extendPlanByDays(tx, userId, FREE_TRIAL_DAYS);
+    });
+    return { plan: "PRO", planExpiresAt };
   }
 
   /** Current plan + quota snapshot for the logged-in user (drives the pricing page and quota UI). */
@@ -135,6 +171,7 @@ export class BillingService {
       plan: unlimited ? "PRO" : "FREE",
       planExpiresAt: pro ? user.planExpiresAt : null,
       planCancelRequested: pro && user.planCancelRequested,
+      trialAvailable: !user.trialStartedAt,
       // planExpiresAt doubles as "renews on" for an active subscription — ECPay's periodic webhook
       // never hands us an explicit next-charge date, but the paid-through date already means the
       // same thing while a Subscription auto-extends it every cycle.
@@ -416,6 +453,14 @@ export class BillingService {
           },
           update: {},
         });
+        // "2000 NTD for 13 months" — see FIRST_YEARLY_SUBSCRIPTION_BONUS_DAYS's own comment for
+        // why this only applies here (a brand new YEARLY subscription's first charge) and not to
+        // one-time ATM purchases or later renewals. Safe to apply unconditionally on this branch
+        // without an extra "was this create-or-update" check: the surrounding payment.status
+        // guard above already ensures this whole block executes at most once per payment/order.
+        if (payment.period === "YEARLY") {
+          await this.extendPlanByDays(tx, payment.userId, FIRST_YEARLY_SUBSCRIPTION_BONUS_DAYS);
+        }
       }
     });
     this.logger.log(`ECPay return webhook: approved payment ${payment.id} for user ${payment.userId}`);

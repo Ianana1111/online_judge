@@ -47,6 +47,15 @@ export class BillingController {
     return this.billing.cancelPlan(user.id);
   }
 
+  /** Claims the one-time 30-day free Pro trial — no ECPay interaction, no payment method
+   * required. Throttled generously tight since it's a free grant, not a purchase: no legitimate
+   * user ever needs to call this more than once, successfully or not. */
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  @Post("trial/start")
+  startTrial(@CurrentUser() user: RequestUser) {
+    return this.billing.startTrial(user.id);
+  }
+
   /** Immediate cancellation for an active recurring Subscription — distinct from /cancel above,
    * which only marks intent for a one-time-purchase period that's already fully paid for. */
   @Post("subscription/cancel")

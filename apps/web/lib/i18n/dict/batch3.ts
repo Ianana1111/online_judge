@@ -137,6 +137,9 @@ export const batch3Dictionary: Record<string, string> = {
   "Cancels immediately — you'll switch to Free right away and won't be charged again.": "立即取消——你會馬上切換回免費方案，之後也不會再被扣款。",
   "Extend Pro Plan": "延長 Pro 方案",
   "Get Pro Plan": "取得 Pro 方案",
+  "Start your free 30-day trial": "開始 30 天免費試用",
+  "Starting…": "啟用中…",
+  "Or subscribe now instead": "或直接訂閱",
 
   // --- app/upgrade/checkout/page.tsx ---
   "Subscribe to Pro": "訂閱 Pro",
