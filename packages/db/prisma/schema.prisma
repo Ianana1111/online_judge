@@ -300,6 +300,7 @@ model Payment {
   subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
 
   @@index([status, createdAt])
+  @@index([userId, status])
   @@map("payments")
 }
 
@@ -409,6 +410,7 @@ model CollectionProblem {
   ord          Int        @default(0)
 
   @@id([collectionId, problemId])
+  @@index([problemId])
   @@map("collection_problems")
 }
 
@@ -482,6 +484,7 @@ model Submission {
   judgedAt    DateTime?
 
   @@index([userId, createdAt])
+  @@index([userId, verdict, createdAt])
   @@index([problemId, verdict])
   @@index([contestId, userId, createdAt])
   @@index([verdict, createdAt])
@@ -529,6 +532,7 @@ model ContestProblem {
   correct     Int?
 
   @@id([contestId, problemId])
+  @@index([problemId])
   @@map("contest_problems")
 }
 
@@ -543,6 +547,7 @@ model ContestParticipant {
   status    ParticipantStatus @default(RUNNING)
 
   @@unique([contestId, userId])
+  @@index([userId])
   @@map("contest_participants")
 }
 
