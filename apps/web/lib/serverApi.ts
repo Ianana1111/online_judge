@@ -38,3 +38,41 @@ export async function serverFetchAuthed<T>(path: string): Promise<T | null> {
     return null;
   }
 }
+
+/** Result of a "detailed" fetch below — distinguishes a real 404 (the resource genuinely doesn't
+ * exist, so `notFound()` is the right call) from every other failure (5xx, a cold-starting
+ * container's 502, a timeout, a dropped connection), which should NOT render as "this page
+ * doesn't exist." Plain `serverFetch`/`serverFetchAuthed` above collapse both cases to `null`,
+ * which is fine for callers that already tolerate missing data (the homepage's problem list, the
+ * sitemap) but was actively wrong for the two pages that call `notFound()` on `null` — a shared
+ * problem or profile link hitting the API mid-cold-start rendered a hard 404 instead of a retry. */
+export type DetailedFetchResult<T> = { ok: true; data: T } | { ok: false; notFound: true } | { ok: false; notFound: false };
+
+/** Public (unauthenticated) counterpart to `serverFetch`, for the one or two call sites that need
+ * to tell a real 404 apart from a transient failure — see `DetailedFetchResult`. */
+export async function serverFetchDetailed<T>(path: string): Promise<DetailedFetchResult<T>> {
+  try {
+    const res = await fetch(`${API_URL}${path}`, { next: { revalidate: 15 } });
+    if (res.status === 404) return { ok: false, notFound: true };
+    if (!res.ok) return { ok: false, notFound: false };
+    return { ok: true, data: (await res.json()) as T };
+  } catch {
+    return { ok: false, notFound: false };
+  }
+}
+
+/** Authenticated counterpart to `serverFetchAuthed` — see `DetailedFetchResult`. */
+export async function serverFetchAuthedDetailed<T>(path: string): Promise<DetailedFetchResult<T>> {
+  try {
+    const cookieStore = await cookies();
+    const res = await fetch(`${API_URL}${path}`, {
+      headers: { Cookie: cookieStore.toString() },
+      cache: "no-store",
+    });
+    if (res.status === 404) return { ok: false, notFound: true };
+    if (!res.ok) return { ok: false, notFound: false };
+    return { ok: true, data: (await res.json()) as T };
+  } catch {
+    return { ok: false, notFound: false };
+  }
+}

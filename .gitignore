@@ -12,3 +12,4 @@ apps/judge/boxes
 packages/db/prisma/dev.db
 generated
 .claude/
+.vercel
