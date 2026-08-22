@@ -1,9 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, HttpException, HttpStatus, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
 import type { Queue } from "bullmq";
 import type Redis from "ioredis";
 import { prisma } from "@oj/db";
-import { TEST_RUN_QUEUE_NAME, testRunResultChannel, type CreateRunDto, type TestRunResultDto } from "@oj/shared";
+import { FREE_RUN_QUOTA, TEST_RUN_QUEUE_NAME, testRunResultChannel, type CreateRunDto, type TestRunResultDto } from "@oj/shared";
+import { currentMonthKey, isUnlimited } from "../billing/billing.service";
 import { REDIS_CLIENT, TEST_RUN_QUEUE } from "../common/redis.providers";
 
 const COOLDOWN_MS = 3_000;
@@ -11,6 +12,9 @@ const COOLDOWN_MS = 3_000;
 // so the TTL just needs to comfortably outlast "job queued, sandbox boots, code runs, client
 // reconnects if its tab was backgrounded."
 const RESULT_TTL_SEC = 600;
+// A month's worth of quota keys clean themselves up well after the month they count is over —
+// no separate reset job needed, same reasoning as the cooldown key's own TTL.
+const QUOTA_TTL_SEC = 40 * 24 * 60 * 60;
 
 function resultKey(runId: string): string {
   return `testrun:${runId}:result`;
@@ -18,6 +22,10 @@ function resultKey(runId: string): string {
 
 function ownerKey(runId: string): string {
   return `testrun:${runId}:owner`;
+}
+
+function quotaKey(userId: string, monthKey: string): string {
+  return `run_quota:${userId}:${monthKey}`;
 }
 
 @Injectable()
@@ -37,6 +45,21 @@ export class RunsService {
     const claimed = await this.redis.set(`run_cooldown:${userId}`, "1", "PX", COOLDOWN_MS, "NX");
     if (!claimed) {
       throw new HttpException("You're running tests too fast — wait a moment and try again.", HttpStatus.TOO_MANY_REQUESTS);
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException("User not found");
+    if (!isUnlimited(user)) {
+      // INCR (not a read-then-write) so concurrent requests can't all read "under quota" before
+      // any of them commits — same race the submit-quota check guards against. Renewing the TTL
+      // on every call is harmless: the key's identity (which month it counts) already comes from
+      // its name, so resetting the countdown just means "clean up well after last use."
+      const key = quotaKey(userId, currentMonthKey());
+      const used = await this.redis.incr(key);
+      await this.redis.expire(key, QUOTA_TTL_SEC);
+      if (used > FREE_RUN_QUOTA) {
+        throw new ForbiddenException(`Free plan test-run limit reached (${FREE_RUN_QUOTA}/month). Upgrade to Pro for unlimited runs.`);
+      }
     }
 
     const runId = randomUUID();

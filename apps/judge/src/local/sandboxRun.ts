@@ -46,8 +46,14 @@ export async function runOneCase(
 
   const timeLimitSec = Math.max(1, Math.ceil(timeLimitMs / 1000));
   const ulimitPrefix = ulimitMemory ? `ulimit -v ${memoryLimitKb}; ` : "";
+  // `ulimit -f` is in 512-byte blocks and, unlike `-v`, is safe for every language including Java
+  // (the JVM needs a large virtual address space but never needs to write huge files) — applying
+  // it unconditionally caps out.txt/err.txt at the source (SIGXFSZ kills the offending process),
+  // so a runaway-output submission can no longer make this worker read a multi-GB buffer into its
+  // own memory via readFileToBuffer below.
+  const fileSizeLimitBlocks = Math.ceil(OUTPUT_CAP_BYTES / 512);
   const fullCmd = [runCmd.cmd, ...runCmd.args].join(" ");
-  const script = `${ulimitPrefix}/usr/bin/time -v -o time.log timeout ${timeLimitSec}s ${fullCmd} < in.txt > out.txt 2> err.txt; echo $? > exit.txt`;
+  const script = `ulimit -f ${fileSizeLimitBlocks}; ${ulimitPrefix}/usr/bin/time -v -o time.log timeout ${timeLimitSec}s ${fullCmd} < in.txt > out.txt 2> err.txt; echo $? > exit.txt`;
 
   await sandbox.runCommand({ cmd: "bash", args: ["-c", script], cwd: WORKDIR });
 
