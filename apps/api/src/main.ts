@@ -30,8 +30,25 @@ function assertProdSecretsConfigured(): void {
   }
 }
 
+// Gated on ECPAY_ENV specifically (not NODE_ENV, which assertProdSecretsConfigured above already
+// checks) — the two are logically independent: a deploy could have NODE_ENV=production while
+// deliberately still pointed at ECPay's sandbox, or vice versa. Missing keys here fall back to
+// ECPay's own publicly-published sandbox credentials (see ecpayConfig), which would let anyone
+// forge a valid CheckMacValue against the real checkout endpoint and grant themselves free Pro.
+function assertEcpayConfigured(): void {
+  if (process.env.ECPAY_ENV !== "production") return;
+  const missing = ["ECPAY_MERCHANT_ID", "ECPAY_HASH_KEY", "ECPAY_HASH_IV"].filter((name) => !process.env[name]);
+  if (missing.length > 0) {
+    throw new Error(
+      `Refusing to start with ECPAY_ENV=production and missing ECPay credential(s): ${missing.join(", ")}. ` +
+        "Without them, ECPay's real checkout endpoint would still be verified against publicly-known sandbox keys.",
+    );
+  }
+}
+
 async function bootstrap() {
   assertProdSecretsConfigured();
+  assertEcpayConfigured();
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { bodyParser: false });
   // Default Express/Nest body limit is 100kb — too small for a base64 avatar upload (see
   // users.service updateProfile). ECPay's webhooks (urlencoded) stay far under this too, so
