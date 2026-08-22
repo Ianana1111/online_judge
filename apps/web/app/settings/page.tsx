@@ -4,7 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TAIWAN_UNIVERSITY_DOMAINS } from "@oj/shared";
-import { apiFetch, ApiError } from "@/lib/api";
+import { apiFetch, ApiError, setCsrfToken } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import Avatar from "@/components/Avatar";
 import SchoolCombobox from "@/components/SchoolCombobox";
@@ -383,10 +383,14 @@ function ChangePasswordForm() {
     }
     setSaving(true);
     try {
-      await apiFetch("/users/me/password", {
+      // Changing your password rotates the server-side session (see UsersController), which
+      // issues a new csrf_token cookie too — without updating the in-memory copy here, every
+      // CSRF-protected request after this one would fail until the next /auth/me refetch.
+      const { csrfToken } = await apiFetch<{ csrfToken: string }>("/users/me/password", {
         method: "PATCH",
         body: { currentPassword, newPassword },
       });
+      setCsrfToken(csrfToken);
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");

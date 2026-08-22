@@ -184,8 +184,14 @@ export class AuthService {
    * Issues a fresh access/refresh/csrf token triple and rotates the refresh session: the
    * previous jti (tracked via a `refresh:current:{userId}` pointer) is invalidated so only one
    * refresh token is valid per user at a time.
+   *
+   * Public (not just called from login/register/refresh above) so a sensitive account-mutation
+   * endpoint — currently just changePassword — can rotate the session as its own side effect:
+   * this revokes whatever refresh token existed before (e.g. one an attacker who guessed/reused
+   * the old password might be holding) while seamlessly re-authenticating the caller who just
+   * proved they know the new password, in the same request.
    */
-  private async issueSession(id: string, handle: string, email: string, role: string): Promise<IssuedSession> {
+  async issueSession(id: string, handle: string, email: string, role: string): Promise<IssuedSession> {
     const previousJti = await this.redis.get(`refresh:current:${id}`);
     if (previousJti) {
       await this.redis.del(`refresh:${id}:${previousJti}`);

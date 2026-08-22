@@ -5,6 +5,8 @@ import { prisma } from "@oj/db";
 import { TAIWAN_UNIVERSITY_DOMAINS, verifySchoolEmailDomain } from "@oj/shared";
 import type { ChangeHandleDto, ChangePasswordDto, CreateUserDto, UpdateProfileDto, UpdateSettingsDto } from "@oj/shared";
 import { isProActive, isUnlimited } from "../billing/billing.service";
+import type { IssuedSession } from "../auth/auth.service";
+import { AuthService } from "../auth/auth.service";
 import { computeStreak } from "../leaderboard/leaderboard.service";
 import { MailService } from "../common/mail.service";
 
@@ -74,7 +76,10 @@ function applyDailyCheckIn(
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly mail: MailService) {}
+  constructor(
+    private readonly mail: MailService,
+    private readonly auth: AuthService,
+  ) {}
 
   /** Admin-only: accounts are provisioned by an instructor, not self-registered. */
   async createByAdmin(dto: CreateUserDto) {
@@ -90,7 +95,11 @@ export class UsersService {
     return { id: user.id, handle: user.handle, email: user.email, role: user.role, createdAt: user.createdAt };
   }
 
-  async changePassword(userId: string, dto: ChangePasswordDto): Promise<{ ok: true }> {
+  // Rotates the refresh session as a side effect (see AuthService.issueSession) so a refresh
+  // token issued before the change — e.g. one an attacker obtained along with the old password —
+  // can no longer be used to mint new access tokens, while the caller who just proved they know
+  // the new password is transparently re-authenticated with a fresh one in the same response.
+  async changePassword(userId: string, dto: ChangePasswordDto): Promise<IssuedSession> {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException("User not found");
 
@@ -100,7 +109,7 @@ export class UsersService {
 
     const passwordHash = await argon2.hash(dto.newPassword, { type: argon2.argon2id });
     await prisma.user.update({ where: { id: userId }, data: { passwordHash } });
-    return { ok: true };
+    return this.auth.issueSession(user.id, user.handle, user.email, user.role);
   }
 
   async changeHandle(userId: string, dto: ChangeHandleDto) {
