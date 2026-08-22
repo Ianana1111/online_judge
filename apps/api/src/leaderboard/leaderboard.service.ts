@@ -125,7 +125,11 @@ export class LeaderboardService {
       const streak = computeStreak(acDatesByUser.get(u.id) ?? new Set());
       const perf = avgByUser.get(u.id);
       return {
-        userId: u.id,
+        // Deliberately no raw userId in this public, unauthenticated-readable response — it's
+        // exactly the parameter GET /submissions?user=<id> takes, and that endpoint used to skip
+        // authorization entirely (see submissions.service.list), so shipping a cuid here handed
+        // out a ready-made key for pulling anyone's full solve history. `handle` already uniquely
+        // identifies a row for the frontend's React key and its own /u/:handle links.
         handle: u.handle,
         avatarUrl: u.avatarUrl,
         // Only a verified claim is shown — same rule as the public profile (users.service.profile).

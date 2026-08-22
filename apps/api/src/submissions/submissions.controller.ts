@@ -1,10 +1,18 @@
 import { Body, Controller, Get, HttpCode, Param, Post, Query, Req, Res } from "@nestjs/common";
 import type { Request, Response } from "express";
-import { createSubmissionSchema, isTerminalVerdict, submissionResultChannel, type CreateSubmissionDto, type Verdict } from "@oj/shared";
+import {
+  createSubmissionSchema,
+  isTerminalVerdict,
+  submissionListQuerySchema,
+  submissionResultChannel,
+  type CreateSubmissionDto,
+  type SubmissionListQueryDto,
+  type Verdict,
+} from "@oj/shared";
 import { createRedisConnection } from "../common/redis.providers";
 import { CurrentUser, OptionalAuth, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
-import { SubmissionListQuery, SubmissionsService } from "./submissions.service";
+import { SubmissionsService } from "./submissions.service";
 
 @Controller("submissions")
 export class SubmissionsController {
@@ -16,9 +24,10 @@ export class SubmissionsController {
     return this.submissions.create(user.id, body);
   }
 
-  @OptionalAuth()
+  // No @OptionalAuth here — every real use of this endpoint is "my own history," which requires
+  // being logged in anyway, and there is no anonymous/other-user case it needs to serve.
   @Get()
-  list(@Query() query: SubmissionListQuery, @CurrentUser() user: RequestUser | null) {
+  list(@Query(new ZodValidationPipe(submissionListQuerySchema)) query: SubmissionListQueryDto, @CurrentUser() user: RequestUser) {
     return this.submissions.list(query, user);
   }
 
