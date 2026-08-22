@@ -21,7 +21,9 @@ export class RunsController {
   }
 
   @Get(":id/stream")
-  async stream(@Param("id") id: string, @Req() req: Request, @Res() res: Response) {
+  async stream(@Param("id") id: string, @CurrentUser() user: RequestUser, @Req() req: Request, @Res() res: Response) {
+    await this.runs.assertOwner(id, user.id);
+
     let initial: TestRunResultDto;
     try {
       initial = await this.runs.getResult(id);

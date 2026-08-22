@@ -11,7 +11,13 @@ import { AppModule } from "./app.module";
 // That fallback is a real risk if it's ever silently hit in production instead — a publicly
 // known, hardcoded secret would let anyone forge access/refresh tokens, CSRF tokens, or the
 // judge-worker's internal callback auth. Fail loudly at startup instead of failing open.
-const REQUIRED_PROD_SECRETS = ["JWT_ACCESS_SECRET", "JWT_REFRESH_SECRET", "CSRF_SECRET", "INTERNAL_SERVICE_TOKEN"];
+const REQUIRED_PROD_SECRETS = [
+  "JWT_ACCESS_SECRET",
+  "JWT_REFRESH_SECRET",
+  "CSRF_SECRET",
+  "INTERNAL_SERVICE_TOKEN",
+  "SCHOOL_VERIFY_SECRET",
+];
 
 function assertProdSecretsConfigured(): void {
   if (process.env.NODE_ENV !== "production") return;

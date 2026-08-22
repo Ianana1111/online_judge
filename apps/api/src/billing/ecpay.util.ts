@@ -88,6 +88,40 @@ export async function verifyCheckMacValue(
   return expected === provided.toUpperCase();
 }
 
+// Deliberately an allow-list, not a deny-list: a webhook body ECPay sends can carry payer/card
+// metadata (last-4 digit card4no, BIN card6no, auth_code, gwsr, bank vAccount/BankCode) that has
+// no business sitting in Railway's log retention, and a deny-list would silently start leaking
+// again the moment ECPay adds a field this list hasn't been taught about yet. Every name below has
+// been checked against ECPay's own webhook docs and is either an id we already store, a status
+// code, or a plain amount/date — nothing that identifies the payer or their instrument.
+const SAFE_TO_LOG_ECPAY_FIELDS = [
+  "MerchantTradeNo",
+  "RtnCode",
+  "RtnMsg",
+  "TradeNo",
+  "TradeAmt",
+  "PaymentDate",
+  "TradeDate",
+  "PaymentType",
+  "PaymentTypeChargeFee",
+  "TotalSuccessTimes",
+  "Frequency",
+  "ExecTimes",
+  "Status",
+] as const;
+
+/** Reduces a raw ECPay webhook body to a small allow-listed subset, safe to write to logs — see
+ * `SAFE_TO_LOG_ECPAY_FIELDS`. Used only for diagnosing a CheckMacValue mismatch; never for the
+ * actual signature computation, which still needs every field ECPay sent. */
+export function redactEcpayBodyForLogging(body: Record<string, string | number | undefined>): Record<string, unknown> {
+  const redacted: Record<string, unknown> = {};
+  for (const key of SAFE_TO_LOG_ECPAY_FIELDS) {
+    if (key in body) redacted[key] = body[key];
+  }
+  redacted._omittedFieldCount = Object.keys(body).length - Object.keys(redacted).length;
+  return redacted;
+}
+
 // --- AES-encrypted APIs (Credit/DoAction, CreditDetail/QueryTrade) ---
 // A completely separate encryption scheme from CheckMacValue above: these newer "1.0.0" APIs wrap
 // their payload as AES-128-CBC(PKCS7), key=HashKey and iv=HashIV used directly (both always

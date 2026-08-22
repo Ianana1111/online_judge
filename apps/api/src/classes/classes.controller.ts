@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from "@nestjs/common";
+import { Throttle } from "@nestjs/throttler";
 import {
   createClassCommentSchema,
   createClassSessionSchema,
@@ -68,6 +69,7 @@ export class ClassesController {
     return cls.comments;
   }
 
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Post(":id/comments")
   addComment(
     @Param("id") id: string,

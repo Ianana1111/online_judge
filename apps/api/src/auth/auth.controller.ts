@@ -167,7 +167,17 @@ export class AuthController {
         headers: { Authorization: `Bearer ${tokenBody.access_token}` },
       });
       if (!userRes.ok) throw new Error(`Google userinfo fetch failed: HTTP ${userRes.status}`);
-      const profile = (await userRes.json()) as { sub: string; email: string; name?: string };
+      const profile = (await userRes.json()) as { sub: string; email: string; email_verified?: boolean; name?: string };
+
+      // loginWithGoogle auto-links this identity to any existing password account with the same
+      // email (auth.service.ts) — without this check, someone could register a password account
+      // on a victim's email address ahead of time (there's no email verification on that path
+      // either) and have it silently absorbed the moment the victim's real Google login comes
+      // through. Google marks an address unverified when it was added to the account but never
+      // confirmed, so this is the one signal available here that the caller actually owns it.
+      if (profile.email_verified === false) {
+        throw new Error(`Google account email is not verified: ${profile.email}`);
+      }
 
       const suggestedHandle = profile.email.split("@")[0] ?? profile.name ?? "user";
       const session = await this.authService.loginWithGoogle(profile.sub, profile.email, suggestedHandle);

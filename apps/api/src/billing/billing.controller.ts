@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, Req, Res } from "@nestjs/common";
+import { Throttle } from "@nestjs/throttler";
 import type { Request, Response } from "express";
 import {
   adminGrantPlanSchema,
@@ -100,7 +101,12 @@ export class BillingController {
   /** Webhook — ECPay POSTs here (form-urlencoded, not JSON) once it has issued an ATM virtual
    * account for an order, well before the customer has actually paid. No auth/CSRF: this is
    * server-to-server from ECPay's own infrastructure, authenticated by CheckMacValue instead. */
+  // Generous, not tight: ECPay's own retries (up to 4/day) and legitimate bursts (many real
+  // purchases during an exam-week spike) all share ECPay's small pool of server IPs — a low
+  // limit here risks silently dropping real payment confirmations, which is worse than under-
+  // throttling a cheap, signature-verified, already-idempotent handler.
   @Public()
+  @Throttle({ default: { limit: 300, ttl: 60_000 } })
   @Post("ecpay/payment-info")
   async ecpayPaymentInfo(@Req() req: Request, @Res() res: Response) {
     await this.billing.handleEcpayPaymentInfo(req.body as Record<string, string>);
@@ -111,6 +117,7 @@ export class BillingController {
 
   /** Webhook — ECPay POSTs here once the customer has actually paid. Same auth model as above. */
   @Public()
+  @Throttle({ default: { limit: 300, ttl: 60_000 } })
   @Post("ecpay/return")
   async ecpayReturn(@Req() req: Request, @Res() res: Response) {
     await this.billing.handleEcpayReturn(req.body as Record<string, string>);
@@ -120,6 +127,7 @@ export class BillingController {
   /** Webhook — ECPay POSTs here after every recurring (定期定額) auto-charge from the 2nd cycle
    * onward; the 1st charge is confirmed via ecpay/return above. Same auth model as the others. */
   @Public()
+  @Throttle({ default: { limit: 300, ttl: 60_000 } })
   @Post("ecpay/period-return")
   async ecpayPeriodReturn(@Req() req: Request, @Res() res: Response) {
     await this.billing.handleEcpayPeriodReturn(req.body as Record<string, string>);
