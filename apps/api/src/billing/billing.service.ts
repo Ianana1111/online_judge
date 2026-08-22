@@ -66,10 +66,11 @@ function generateMerchantTradeNo(): string {
   return `JT${Date.now().toString(36).toUpperCase()}${rand}`.slice(0, 20);
 }
 
-// "YYYY-MM" in Asia/Taipei — the FREE tier's submit quota resets on this boundary, not UTC
-// midnight, so a submission just after midnight Taiwan time (but still "yesterday" in UTC) rolls
-// over correctly instead of a day early/late.
-function currentMonthKey(d: Date = new Date()): string {
+// "YYYY-MM" in Asia/Taipei — every FREE-tier monthly quota (submit, virtual attempts, runs) resets
+// on this boundary, not UTC midnight, so an action just after midnight Taiwan time (but still
+// "yesterday" in UTC) rolls over correctly instead of a day early/late. Exported so other quota
+// enforcement points (e.g. RunsService) share the exact same month-boundary definition.
+export function currentMonthKey(d: Date = new Date()): string {
   const parts = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Taipei", year: "numeric", month: "2-digit" }).formatToParts(d);
   const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "00";
   return `${get("year")}-${get("month")}`;
