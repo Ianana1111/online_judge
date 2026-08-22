@@ -107,17 +107,26 @@ export class BillingService {
    * existing expiry) so paying/renewing/claiming early never loses days. Takes a transaction
    * client so the caller's own writes (a Payment status flip, a Subscription upsert, ...) commit
    * atomically with this User update — money or a one-time trial claim is involved, so a crash
-   * between the two writes must never leave them inconsistent. */
+   * between the two writes must never leave them inconsistent.
+   *
+   * A single atomic UPDATE (not a SELECT then a separate UPDATE) deliberately — two of these
+   * running concurrently for the same user (e.g. a first-charge webhook racing a renewal webhook,
+   * or two admin actions) would otherwise both read the same pre-extension planExpiresAt before
+   * either commits, and the later write would silently clobber the earlier one's days. Postgres
+   * evaluates GREATEST/make_interval against each row version as it acquires that row's lock, so
+   * a second concurrent call for the same user simply waits and then computes from the
+   * already-updated value instead of stepping on it. */
   private async extendPlanByDays(tx: Prisma.TransactionClient, userId: string, days: number): Promise<Date> {
-    const user = await tx.user.findUnique({ where: { id: userId } });
-    if (!user) throw new NotFoundException("User not found");
-    const base = user.planExpiresAt && user.planExpiresAt.getTime() > Date.now() ? user.planExpiresAt : new Date();
-    const newExpiry = new Date(base.getTime() + days * 24 * 60 * 60 * 1000);
-    await tx.user.update({
-      where: { id: userId },
-      data: { plan: "PRO", planExpiresAt: newExpiry, planCancelRequested: false },
-    });
-    return newExpiry;
+    const rows = await tx.$queryRaw<{ planExpiresAt: Date }[]>`
+      UPDATE users
+      SET "planExpiresAt" = GREATEST(now(), COALESCE("planExpiresAt", now())) + make_interval(days => ${days}::int),
+          plan = 'PRO',
+          "planCancelRequested" = false
+      WHERE id = ${userId}
+      RETURNING "planExpiresAt"
+    `;
+    if (rows.length === 0) throw new NotFoundException("User not found");
+    return rows[0].planExpiresAt;
   }
 
   private async extendPlan(tx: Prisma.TransactionClient, userId: string, period: BillingPeriod): Promise<Date> {
@@ -251,10 +260,34 @@ export class BillingService {
 
   /** Admin support tool: the inverse — immediately drop someone back to Free (e.g. a grant made in
    * error). No Payment row: this isn't reversing a specific purchase, just correcting the user's
-   * current state. */
+   * current state.
+   *
+   * Also best-effort cancels any active ECPay Subscription — without this, the next scheduled
+   * auto-charge would still succeed and its webhook (handleEcpayPeriodReturn) would silently
+   * re-grant Pro, undoing the revoke a period later with no admin action in between. Deliberately
+   * doesn't block the revoke itself on ECPay being reachable (unlike the user-initiated
+   * cancelSubscription, which must not claim success while ECPay might still charge them) — an
+   * admin correcting their own mistake needs the access pulled now; a failed ECPay cancel here is
+   * logged so it doesn't silently keep charging with zero trace. */
   async adminRevoke(userId: string) {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException("User not found");
+
+    const subscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
+    if (subscription) {
+      try {
+        const config = ecpayConfig();
+        const result = await cancelEcpayPeriod(subscription.merchantTradeNo, config);
+        if (result.RtnCode === 1) {
+          await prisma.subscription.update({ where: { id: subscription.id }, data: { status: "CANCELLED", cancelledAt: new Date() } });
+        } else {
+          this.logger.error(`adminRevoke: ECPay declined to cancel subscription ${subscription.id} for user ${userId}: ${result.RtnMsg}`);
+        }
+      } catch (err) {
+        this.logger.error(`adminRevoke: failed to cancel ECPay subscription ${subscription.id} for user ${userId}: ${String(err)}`);
+      }
+    }
+
     await prisma.user.update({
       where: { id: userId },
       data: { plan: "FREE", planExpiresAt: null, planCancelRequested: false },
@@ -281,37 +314,49 @@ export class BillingService {
    * arrives via the separate PaymentInfoURL webhook (handleEcpayPaymentInfo) — that webhook simply
    * never fires for a credit-card checkout, since there's no virtual account to report. */
   async createEcpayOrder(userId: string, period: BillingPeriod, method: EcpayMethod) {
-    const existingPending = await prisma.payment.findFirst({
-      where: { userId, status: "PENDING", dismissedByUser: false },
-    });
-    if (existingPending) {
-      throw new BadRequestException("You already have a payment awaiting review.");
-    }
-
-    if (method === "CREDIT") {
-      const existingSubscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
-      if (existingSubscription) {
-        throw new BadRequestException("You already have an active subscription.");
-      }
-    }
-
     // The amount that actually gets charged is always derived server-side (PLAN_PRICING plus
     // any active launch promo via effectivePriceNtd), never trusted from the client — the client
     // only chooses which of these two fixed plans.
     const pricing = PLAN_PRICING[period];
     const amountNtd = effectivePriceNtd(period);
     const merchantTradeNo = generateMerchantTradeNo();
-    await prisma.payment.create({
-      data: {
-        userId,
-        period,
-        amountNtd,
-        method: "ECPAY",
-        ecpayMethod: method,
-        status: "PENDING",
-        merchantTradeNo,
-        isRecurring: method === "CREDIT",
-      },
+
+    // A Postgres advisory lock scoped to this user (namespaced separately from the unrelated
+    // per-user lock in contests.service.register, so the two features never block each other)
+    // serializes concurrent createEcpayOrder calls by the same user — without it, two rapid
+    // clicks/requests could both pass the "no existing pending payment" check before either one's
+    // insert commits, producing two live payable orders for the same upgrade (and, worse, two
+    // active recurring subscriptions on a CREDIT double-click). See contests.service.ts's own use
+    // of this pattern for the reference this mirrors.
+    await prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('billing_order'), hashtext(${userId}))`;
+
+      const existingPending = await tx.payment.findFirst({
+        where: { userId, status: "PENDING", dismissedByUser: false },
+      });
+      if (existingPending) {
+        throw new BadRequestException("You already have a payment awaiting review.");
+      }
+
+      if (method === "CREDIT") {
+        const existingSubscription = await tx.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
+        if (existingSubscription) {
+          throw new BadRequestException("You already have an active subscription.");
+        }
+      }
+
+      await tx.payment.create({
+        data: {
+          userId,
+          period,
+          amountNtd,
+          method: "ECPAY",
+          ecpayMethod: method,
+          status: "PENDING",
+          merchantTradeNo,
+          isRecurring: method === "CREDIT",
+        },
+      });
     });
 
     const config = ecpayConfig();
@@ -416,10 +461,17 @@ export class BillingService {
       // markCreditAuthorized) — this webhook only fires once the operator's manual capture (via
       // ECPay's own merchant backend) actually settles, so there's nothing left to grant, just the
       // record to reconcile off the "still owed" admin queue.
-      await prisma.payment.update({
-        where: { id: payment.id },
+      //
+      // updateMany with the status still in its WHERE (not a plain update after the status check
+      // above) so two near-simultaneous deliveries of the same webhook can't both pass the earlier
+      // read and both think they're the one claiming this transition — Postgres serializes
+      // concurrent UPDATEs to the same row, so only the first actually matches count=1; a second
+      // redelivery arriving a moment later sees count=0 and is a no-op instead of double-approving.
+      const claimed = await prisma.payment.updateMany({
+        where: { id: payment.id, status: "AUTHORIZED" },
         data: { status: "APPROVED", reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO" },
       });
+      if (claimed.count === 0) return; // already claimed by a concurrent delivery of this same webhook
       this.logger.log(`ECPay return webhook: capture confirmed for already-authorized payment ${payment.id}`);
       return;
     }
@@ -428,11 +480,15 @@ export class BillingService {
     // recurring credit-card order (excluded from the auth-poll/manual-capture path entirely, since
     // ECPay auto-captures those itself every cycle), or the rare race where a one-time capture
     // webhook arrived before our authorization poll caught up. Grant Pro now.
-    await prisma.$transaction(async (tx) => {
-      await tx.payment.update({
-        where: { id: payment.id },
+    const approved = await prisma.$transaction(async (tx) => {
+      // Same conditional-claim reasoning as the AUTHORIZED branch above: this is the operation
+      // that actually gates extendPlan running, so it — not the read at the top of this method —
+      // is what must be race-proof.
+      const claimed = await tx.payment.updateMany({
+        where: { id: payment.id, status: "PENDING" },
         data: { status: "APPROVED", reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO" },
       });
+      if (claimed.count === 0) return false; // already claimed by a concurrent delivery of this same webhook
       await this.extendPlan(tx, payment.userId, payment.period);
 
       if (payment.isRecurring) {
@@ -462,8 +518,9 @@ export class BillingService {
           await this.extendPlanByDays(tx, payment.userId, FIRST_YEARLY_SUBSCRIPTION_BONUS_DAYS);
         }
       }
+      return true;
     });
-    this.logger.log(`ECPay return webhook: approved payment ${payment.id} for user ${payment.userId}`);
+    if (approved) this.logger.log(`ECPay return webhook: approved payment ${payment.id} for user ${payment.userId}`);
   }
 
   /** Webhook: ECPay confirms a recurring order's Nth (N>=2) auto-charge succeeded or failed — the
@@ -493,11 +550,19 @@ export class BillingService {
     }
     const totalSuccessTimes = Number(body.TotalSuccessTimes);
     if (!Number.isFinite(totalSuccessTimes) || totalSuccessTimes <= subscription.totalSuccessTimes) {
-      return; // already processed this cycle — idempotent no-op
+      return; // cheap fast-path for ECPay's normal retries — the real guarantee is the conditional
+      // update below, since this plain read is itself racy against a concurrent delivery.
     }
 
-    await prisma.$transaction(async (tx) => {
-      await tx.subscription.update({ where: { id: subscription.id }, data: { totalSuccessTimes } });
+    const claimed = await prisma.$transaction(async (tx) => {
+      // Conditional on totalSuccessTimes still being less than this notification's value — not a
+      // plain update after the read above — so two near-simultaneous deliveries of the same
+      // renewal notification can't both pass that read and both extend the plan for one charge.
+      const updated = await tx.subscription.updateMany({
+        where: { id: subscription.id, totalSuccessTimes: { lt: totalSuccessTimes } },
+        data: { totalSuccessTimes },
+      });
+      if (updated.count === 0) return false; // already claimed by a concurrent delivery
       await tx.payment.create({
         data: {
           userId: subscription.userId,
@@ -513,19 +578,23 @@ export class BillingService {
         },
       });
       await this.extendPlan(tx, subscription.userId, subscription.period);
+      return true;
     });
+    if (!claimed) return;
     this.logger.log(
       `ECPay period-return webhook: renewal #${totalSuccessTimes} approved for subscription ${subscription.id} (user ${subscription.userId})`,
     );
   }
 
-  /** User-initiated immediate cancellation of their active Subscription — stops future ECPay
-   * auto-charges AND drops them back to Free right now (not "at the end of the paid period" like
-   * cancelPlan below): cancelling before the next charge means they haven't paid for any time past
-   * today, unlike a one-time purchase where the period is already fully paid for. Calls ECPay's
-   * Cancel action FIRST and only touches our own records if that actually succeeds — never
-   * downgrade a user while ECPay might still go on to auto-charge them. */
-  async cancelSubscription(userId: string): Promise<{ plan: "FREE"; planExpiresAt: null }> {
+  /** User-initiated cancellation of their active Subscription: stops future ECPay auto-charges,
+   * but — like cancelPlan below — leaves Pro access running until the already-paid planExpiresAt
+   * naturally lapses, rather than cutting it off today. The first charge already paid for a full
+   * period (extendPlan ran when it was approved), so an immediate downgrade would forfeit days
+   * the user already paid for; ending at period-end is what "cancel" means for every other
+   * subscription product. Calls ECPay's Cancel action FIRST and only touches our own records if
+   * that actually succeeds — never mark a subscription cancelled while ECPay might still go on to
+   * auto-charge it. */
+  async cancelSubscription(userId: string): Promise<{ plan: "PRO"; planExpiresAt: Date | null }> {
     const subscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
     if (!subscription) throw new NotFoundException("No active subscription found.");
 
@@ -535,15 +604,17 @@ export class BillingService {
       throw new BadRequestException(`Could not cancel with ECPay: ${result.RtnMsg}`);
     }
 
-    await prisma.$transaction(async (tx) => {
+    const user = await prisma.$transaction(async (tx) => {
       await tx.subscription.update({
         where: { id: subscription.id },
         data: { status: "CANCELLED", cancelledAt: new Date() },
       });
-      await tx.user.update({ where: { id: userId }, data: { plan: "FREE", planExpiresAt: null, planCancelRequested: false } });
+      return tx.user.update({ where: { id: userId }, data: { planCancelRequested: true } });
     });
-    this.logger.log(`Subscription ${subscription.id} cancelled by user ${userId} — downgraded to Free immediately.`);
-    return { plan: "FREE", planExpiresAt: null };
+    this.logger.log(
+      `Subscription ${subscription.id} cancelled by user ${userId} — stays Pro until ${user.planExpiresAt?.toISOString()}, won't auto-renew.`,
+    );
+    return { plan: "PRO", planExpiresAt: user.planExpiresAt };
   }
 
   /** Called by EcpayAuthPollService the moment ECPay confirms a credit-card order's authorization

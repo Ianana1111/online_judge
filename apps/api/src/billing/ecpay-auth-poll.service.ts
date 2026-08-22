@@ -9,6 +9,17 @@ const POLL_INTERVAL_MS = 10_000;
 // anyway.
 const MAX_ORDER_AGE_MS = 48 * 60 * 60 * 1000;
 
+// Deliberately much slower than the authorization poll above — this isn't racing to catch a
+// payment event, just periodically checking a queue that only grows between manual captures.
+const STALE_AUTH_CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000;
+// listAuthorizedPending is "Pro already granted, capture not yet confirmed" — a normal entry sits
+// there for however long the operator takes to get to ECPay's merchant backend, but one this old
+// means either the capture was forgotten entirely (money never actually collected) or something
+// about the reconciliation flow itself broke. Logged as an error specifically so it's visible now
+// via Railway's log search, and will surface as a real alert once Sentry/equivalent is wired up
+// (see the launch audit's Phase 5) without this code needing to change.
+const STALE_AUTHORIZATION_THRESHOLD_MS = 3 * 24 * 60 * 60 * 1000;
+
 function isEcpayDailyBatchWindow(now: Date): boolean {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Taipei",
@@ -36,6 +47,7 @@ function isEcpayDailyBatchWindow(now: Date): boolean {
 export class EcpayAuthPollService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(EcpayAuthPollService.name);
   private timer: NodeJS.Timeout | null = null;
+  private staleCheckTimer: NodeJS.Timeout | null = null;
   private running = false;
 
   constructor(private readonly billing: BillingService) {}
@@ -52,10 +64,31 @@ export class EcpayAuthPollService implements OnModuleInit, OnModuleDestroy {
     this.timer = setInterval(() => {
       void this.pollOnce();
     }, POLL_INTERVAL_MS);
+    this.staleCheckTimer = setInterval(() => {
+      void this.checkStaleAuthorizations();
+    }, STALE_AUTH_CHECK_INTERVAL_MS);
+    void this.checkStaleAuthorizations(); // also check once at boot, not just after the first interval
   }
 
   onModuleDestroy(): void {
     if (this.timer) clearInterval(this.timer);
+    if (this.staleCheckTimer) clearInterval(this.staleCheckTimer);
+  }
+
+  private async checkStaleAuthorizations(): Promise<void> {
+    try {
+      const pending = await this.billing.listAuthorizedPending();
+      const cutoff = Date.now() - STALE_AUTHORIZATION_THRESHOLD_MS;
+      const stale = pending.filter((p) => new Date(p.createdAt).getTime() < cutoff);
+      for (const p of stale) {
+        this.logger.error(
+          `Stale uncaptured ECPay authorization: payment ${p.id} for ${p.handle} (${p.email}), ` +
+            `NT$${p.amountNtd} ${p.period}, authorized ${p.createdAt} — capture may have been forgotten.`,
+        );
+      }
+    } catch (err) {
+      this.logger.warn(`Stale-authorization check failed: ${String(err)}`);
+    }
   }
 
   private async pollOnce(): Promise<void> {
