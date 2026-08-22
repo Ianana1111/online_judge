@@ -72,6 +72,8 @@ services:
       context: .
       dockerfile: docker/Dockerfile.judge
     restart: unless-stopped
+    ports:
+      - "4100:4100"
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
       REDIS_URL: redis://redis:6379

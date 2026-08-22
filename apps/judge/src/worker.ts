@@ -1,10 +1,14 @@
+// Must be the very first import — see instrument.ts's own comment.
+import "./instrument.js";
 import { Worker, type Job } from "bullmq";
+import * as Sentry from "@sentry/node";
 import { prisma } from "@oj/db";
 import { JUDGE_QUEUE_NAME, TEST_RUN_QUEUE_NAME, type JudgeJobData, type TestRunJobData } from "@oj/shared";
 import { judgeViaUva } from "./remote/uva.js";
 import { judgeLocally } from "./local/judge.js";
 import { runTestCases } from "./local/testRun.js";
 import { reportResult, reportTestRunResult } from "./reportResult.js";
+import { recordJudgeCompleted, startHealthServer } from "./health.js";
 
 const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 // Default 1: every submission proxies through a single shared UVa bot account, and we identify our
@@ -70,8 +74,16 @@ const worker = new Worker<JudgeJobData>(
   { connection, concurrency: CONCURRENCY },
 );
 
-worker.on("completed", (job) => console.log(`Judged submission ${job.data.submissionId}`));
-worker.on("failed", (job, err) => console.error(`Judge failed for job ${job?.id}:`, err.message));
+worker.on("completed", (job) => {
+  recordJudgeCompleted();
+  console.log(`Judged submission ${job.data.submissionId}`);
+});
+worker.on("failed", (job, err) => {
+  console.error(`Judge failed for job ${job?.id}:`, err.message);
+  // Not also captured in the inner catch above — that block re-throws, so this event always
+  // fires for the same failure too; capturing in both places would double-report every failure.
+  Sentry.captureException(err, { tags: { submissionId: job?.data.submissionId } });
+});
 
 // "Run" jobs (apps/judge/src/local/testRun.ts) — compile+run against sample/custom input for the
 // site's in-browser test feature. No Submission row, no verdict, nothing persisted; the result
@@ -103,10 +115,14 @@ const testRunWorker = new Worker<TestRunJobData>(
 );
 
 testRunWorker.on("completed", (job) => console.log(`Ran test cases for run ${job.data.runId}`));
-testRunWorker.on("failed", (job, err) => console.error(`Test run failed for job ${job?.id}:`, err.message));
+testRunWorker.on("failed", (job, err) => {
+  console.error(`Test run failed for job ${job?.id}:`, err.message);
+  Sentry.captureException(err, { tags: { runId: job?.data.runId } });
+});
 
 console.log(`Judge worker started (concurrency=${CONCURRENCY}), listening on queue "${JUDGE_QUEUE_NAME}"`);
 console.log(`Test-run worker started (concurrency=${TEST_RUN_CONCURRENCY}), listening on queue "${TEST_RUN_QUEUE_NAME}"`);
+startHealthServer();
 
 async function shutdown() {
   console.log("Shutting down judge worker...");

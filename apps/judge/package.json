@@ -12,6 +12,7 @@
   "dependencies": {
     "@oj/db": "workspace:*",
     "@oj/shared": "workspace:*",
+    "@sentry/node": "^10.70.0",
     "@vercel/sandbox": "^2.6.0",
     "bullmq": "^5.34.0"
   },

@@ -21,4 +21,5 @@ RUN pnpm install --frozen-lockfile=false
 RUN pnpm --filter @oj/db exec prisma generate
 
 WORKDIR /repo/apps/judge
+EXPOSE 4100
 CMD ["pnpm", "exec", "tsx", "src/worker.ts"]

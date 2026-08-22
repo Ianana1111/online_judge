@@ -1,3 +1,6 @@
+// Must be the very first import — Sentry's own docs require its instrumentation to load before
+// anything else so it can hook into modules (http, etc.) as they're first required.
+import "./instrument";
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import type { NestExpressApplication } from "@nestjs/platform-express";
@@ -5,6 +8,9 @@ import cookieParser from "cookie-parser";
 import { json, urlencoded } from "express";
 import helmet from "helmet";
 import { AppModule } from "./app.module";
+import { AllExceptionsFilter } from "./common/all-exceptions.filter";
+import { JsonLoggerService } from "./common/json-logger.service";
+import { requestIdMiddleware } from "./common/request-id.middleware";
 
 // Every one of these has a hardcoded "dev_..._change_me" fallback where it's actually read
 // (token.service.ts, csrf.util.ts, internal-token.guard.ts) so local dev works with zero setup.
@@ -49,12 +55,19 @@ function assertEcpayConfigured(): void {
 async function bootstrap() {
   assertProdSecretsConfigured();
   assertEcpayConfigured();
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bodyParser: false });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bodyParser: false,
+    logger: new JsonLoggerService(),
+  });
+  // First, before anything else touches the request — every subsequent middleware/guard/handler
+  // (and every log line any of them emit) needs the request id already in AsyncLocalStorage.
+  app.use(requestIdMiddleware);
   // Default Express/Nest body limit is 100kb — too small for a base64 avatar upload (see
   // users.service updateProfile). ECPay's webhooks (urlencoded) stay far under this too, so
   // raising it is strictly safer for them, never a regression.
   app.use(json({ limit: "1mb" }));
   app.use(urlencoded({ extended: true, limit: "1mb" }));
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   app.use(
     helmet({
