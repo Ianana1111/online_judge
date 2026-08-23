@@ -2,6 +2,7 @@ import { batch1Dictionary } from "./dict/batch1";
 import { batch2Dictionary } from "./dict/batch2";
 import { batch3Dictionary } from "./dict/batch3";
 import { batch4Dictionary } from "./dict/batch4";
+import { batch5Dictionary } from "./dict/batch5";
 
 /**
  * A handful of English strings turned out to be used in more than one place with genuinely
@@ -171,6 +172,7 @@ export const dictionary: Record<string, string> = {
   ...batch2Dictionary,
   ...batch3Dictionary,
   ...batch4Dictionary,
+  ...batch5Dictionary,
 
   // --- conflict resolutions (must stay last so they win) ---
   ...overrides,
