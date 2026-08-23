@@ -103,4 +103,25 @@ export const batch5Dictionary: Record<string, string> = {
   // --- accessibility: keyboard-operable table rows (Phase 6.9) ---
   "View submission from {when}": "查看 {when} 的提交",
   "View submission for {title}": "查看「{title}」的提交",
+
+  // --- account deletion (Phase 8) ---
+  "Danger zone": "危險區域",
+  "Permanently delete your account and all data associated with it. This cannot be undone.":
+    "永久刪除你的帳號以及所有相關資料，此操作無法復原。",
+  "Delete account": "刪除帳號",
+  "Delete your account?": "確定要刪除帳號嗎？",
+  "This permanently deletes your account and everything tied to it — submissions, discussion posts, notes, achievements. It cannot be undone. If you have an active Pro subscription, it will be cancelled first so you won't be charged again.":
+    "這會永久刪除你的帳號以及所有相關資料——包含提交紀錄、討論留言、筆記、成就徽章，此操作無法復原。如果你有進行中的 Pro 訂閱，系統會先為你取消，之後不會再扣款。",
+  "Current password (leave blank if you sign in with Google)": "目前密碼（若使用 Google 登入請留空）",
+  'Type "{word}" to confirm': "輸入「{word}」以確認",
+  "Deleting…": "刪除中…",
+  "Delete my account": "刪除我的帳號",
+  "Could not delete your account": "無法刪除帳號",
+
+  // --- footer / legal pages (Phase 8) ---
+  "Terms of Service": "服務條款",
+  "Privacy Policy": "隱私權政策",
+  "Refund Policy": "退款與訂閱政策",
+  "I agree to the": "我同意",
+  "and": "以及",
 };

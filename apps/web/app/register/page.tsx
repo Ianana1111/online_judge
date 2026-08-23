@@ -17,6 +17,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -79,8 +80,21 @@ export default function RegisterPage() {
             required
           />
         </div>
+        <label className="flex items-start gap-2 text-xs text-ink-400">
+          <input
+            type="checkbox"
+            checked={agreed}
+            onChange={(e) => setAgreed(e.target.checked)}
+            className="mt-0.5"
+            required
+          />
+          <span>
+            {t("I agree to the")} <Link href="/terms" className="text-brand hover:underline">{t("Terms of Service")}</Link>{" "}
+            {t("and")} <Link href="/privacy" className="text-brand hover:underline">{t("Privacy Policy")}</Link>.
+          </span>
+        </label>
         {error && <p className="text-sm text-verdict-wa">{error}</p>}
-        <button type="submit" disabled={loading} className="oj-btn-primary w-full">
+        <button type="submit" disabled={loading || !agreed} className="oj-btn-primary w-full">
           {loading ? t("Creating account…") : t("Create account")}
         </button>
       </form>
@@ -90,7 +104,7 @@ export default function RegisterPage() {
         <span className="text-xs text-ink-500">{t("or")}</span>
         <div className="h-px flex-1 bg-ink-800" />
       </div>
-      <GoogleLoginButton />
+      <GoogleLoginButton disabled={!agreed} />
 
       <p className="mt-4 text-sm text-ink-400">
         {t("Already have an account?")}{" "}

@@ -92,6 +92,13 @@ export const changePasswordSchema = z.object({
 });
 export type ChangePasswordDto = z.infer<typeof changePasswordSchema>;
 
+// currentPassword is optional because a Google-signin-only account has no passwordHash to check
+// against — see users.service.deleteAccount for how the two cases are handled server-side.
+export const deleteAccountSchema = z.object({
+  currentPassword: z.string().min(1).optional(),
+});
+export type DeleteAccountDto = z.infer<typeof deleteAccountSchema>;
+
 export const changeHandleSchema = z.object({
   handle: z
     .string()

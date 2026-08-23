@@ -3,8 +3,15 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { prisma } from "@oj/db";
 import { TAIWAN_UNIVERSITY_DOMAINS, verifySchoolEmailDomain } from "@oj/shared";
-import type { ChangeHandleDto, ChangePasswordDto, CreateUserDto, UpdateProfileDto, UpdateSettingsDto } from "@oj/shared";
-import { isProActive, isUnlimited } from "../billing/billing.service";
+import type {
+  ChangeHandleDto,
+  ChangePasswordDto,
+  CreateUserDto,
+  DeleteAccountDto,
+  UpdateProfileDto,
+  UpdateSettingsDto,
+} from "@oj/shared";
+import { BillingService, isProActive, isUnlimited } from "../billing/billing.service";
 import type { IssuedSession } from "../auth/auth.service";
 import { AuthService } from "../auth/auth.service";
 import { computeStreak } from "../leaderboard/leaderboard.service";
@@ -79,6 +86,7 @@ export class UsersService {
   constructor(
     private readonly mail: MailService,
     private readonly auth: AuthService,
+    private readonly billing: BillingService,
   ) {}
 
   /** Admin-only: accounts are provisioned by an instructor, not self-registered. */
@@ -110,6 +118,39 @@ export class UsersService {
     const passwordHash = await argon2.hash(dto.newPassword, { type: argon2.argon2id });
     await prisma.user.update({ where: { id: userId }, data: { passwordHash } });
     return this.auth.issueSession(user.id, user.handle, user.email, user.role);
+  }
+
+  /** Permanent account deletion (PDPA right-to-erasure). Requires re-proving the current password
+   * first — same reasoning as changePassword: a stolen access token shouldn't be enough on its own
+   * to destroy the account, only to use it. Google-only accounts (no passwordHash) skip that check
+   * since there's no separate secret to verify; the session cookie itself is the only credential
+   * they have. Cancels any active ECPay subscription BEFORE deleting the row — if that cancel call
+   * fails, deletion aborts too, since a deleted account with a still-live recurring charge would
+   * keep billing a card with nobody able to see or stop it. Everything else (submissions,
+   * discussion posts, achievements, etc.) cascades via the schema's onDelete: Cascade — this is a
+   * real deletion, not a soft one, matching what "delete my account" has to mean under PDPA. */
+  async deleteAccount(userId: string, dto: DeleteAccountDto, refreshToken: string | undefined): Promise<void> {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException("User not found");
+
+    if (user.passwordHash) {
+      if (!dto.currentPassword) throw new UnauthorizedException("Current password is required");
+      const ok = await argon2.verify(user.passwordHash, dto.currentPassword);
+      if (!ok) throw new UnauthorizedException("Current password is incorrect");
+    }
+
+    try {
+      await this.billing.cancelSubscription(userId);
+    } catch (e) {
+      // No active subscription is the expected case for most accounts — nothing to cancel, not a
+      // failure. Any other error (ECPay actually declining the cancel) must block deletion.
+      if (!(e instanceof NotFoundException)) throw e;
+    }
+
+    await prisma.user.delete({ where: { id: userId } });
+    // Sessions live in Redis, keyed by userId (see AuthService) — not in Postgres, so deleting the
+    // User row above doesn't revoke them on its own.
+    await this.auth.logout(refreshToken);
   }
 
   async changeHandle(userId: string, dto: ChangeHandleDto) {

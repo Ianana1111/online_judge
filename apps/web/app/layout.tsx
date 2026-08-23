@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import NavBar from "@/components/NavBar";
+import Footer from "@/components/Footer";
 import PageviewTracker from "@/components/PageviewTracker";
 import PromoBanner from "@/components/PromoBanner";
 import ProfileSetupGate from "@/components/ProfileSetupGate";
@@ -99,6 +100,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <NavBar />
           <ProfileSetupGate />
           <main className="mx-auto min-h-[calc(100vh-56px)] max-w-[1400px] px-6 py-6">{children}</main>
+          <Footer />
         </Providers>
         <Analytics />
       </body>

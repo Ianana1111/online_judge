@@ -1,10 +1,15 @@
 import { apiUrl } from "@/lib/api";
 import { useT } from "@/lib/i18n/LocaleContext";
 
-export default function GoogleLoginButton() {
+export default function GoogleLoginButton({ disabled = false }: { disabled?: boolean }) {
   const t = useT();
   return (
-    <a href={apiUrl("/auth/google")} className="oj-btn-secondary flex w-full items-center justify-center gap-2">
+    <a
+      href={disabled ? undefined : apiUrl("/auth/google")}
+      aria-disabled={disabled}
+      onClick={(e) => disabled && e.preventDefault()}
+      className={`oj-btn-secondary flex w-full items-center justify-center gap-2 ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+    >
       <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
         <path
           fill="#FFC107"

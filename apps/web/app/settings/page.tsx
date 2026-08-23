@@ -11,6 +11,7 @@ import SchoolCombobox from "@/components/SchoolCombobox";
 import { resizeImageToDataUrl, AVATAR_MAX_DATA_URL_BYTES } from "@/lib/avatarUpload";
 import type { UserSettings } from "@/lib/types";
 import { useLocale, useT } from "@/lib/i18n/LocaleContext";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 
 const LANGUAGES = ["cpp17", "c11", "python3", "java17"];
 
@@ -366,6 +367,117 @@ function ChangeHandleForm() {
   );
 }
 
+function DeleteAccountConfirmDialog({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: (password: string) => Promise<void> }) {
+  const t = useT();
+  const [password, setPassword] = useState("");
+  const [confirmText, setConfirmText] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const trapRef = useFocusTrap<HTMLDivElement>(true);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onCancel();
+    }
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onCancel]);
+
+  async function handleConfirm() {
+    setError(null);
+    setSubmitting(true);
+    try {
+      await onConfirm(password);
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : t("Could not delete your account"));
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true" onClick={onCancel}>
+      <div ref={trapRef} tabIndex={-1} className="oj-card w-full max-w-sm p-5 outline-none" onClick={(e) => e.stopPropagation()}>
+        <h2 className="font-display text-base font-semibold text-verdict-wa">{t("Delete your account?")}</h2>
+        <p className="mt-2 text-sm text-ink-300">
+          {t(
+            "This permanently deletes your account and everything tied to it — submissions, discussion posts, notes, achievements. It cannot be undone. If you have an active Pro subscription, it will be cancelled first so you won't be charged again.",
+          )}
+        </p>
+        <div className="mt-4">
+          <label htmlFor="delete-account-password" className="mb-1 block text-sm text-ink-300">
+            {t("Current password (leave blank if you sign in with Google)")}
+          </label>
+          <input
+            id="delete-account-password"
+            type="password"
+            className="oj-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div className="mt-4">
+          <label htmlFor="delete-account-confirm-text" className="mb-1 block text-sm text-ink-300">
+            {t('Type "{word}" to confirm', { word: "DELETE" })}
+          </label>
+          <input
+            id="delete-account-confirm-text"
+            className="oj-input"
+            value={confirmText}
+            onChange={(e) => setConfirmText(e.target.value)}
+          />
+        </div>
+        {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={onCancel} className="oj-btn-secondary px-4 py-2 text-sm" disabled={submitting}>
+            {t("Cancel")}
+          </button>
+          <button
+            type="button"
+            onClick={handleConfirm}
+            disabled={submitting || confirmText !== "DELETE"}
+            className="inline-flex items-center justify-center gap-2 rounded bg-verdict-wa px-4 py-2 text-sm font-semibold text-onbrand transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {submitting ? t("Deleting…") : t("Delete my account")}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DeleteAccountSection() {
+  const t = useT();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+
+  async function handleConfirm(password: string) {
+    await apiFetch("/users/me", {
+      method: "DELETE",
+      body: password ? { currentPassword: password } : {},
+    });
+    await useAuthStore.getState().logout();
+    router.push("/");
+  }
+
+  return (
+    <div className="oj-card space-y-2 border-verdict-wa/30 p-4">
+      <h2 className="text-sm font-semibold text-verdict-wa">{t("Danger zone")}</h2>
+      <p className="text-xs text-ink-400">
+        {t("Permanently delete your account and all data associated with it. This cannot be undone.")}
+      </p>
+      <button type="button" onClick={() => setOpen(true)} className="oj-btn-secondary border-verdict-wa/40 px-3 py-1.5 text-xs text-verdict-wa">
+        {t("Delete account")}
+      </button>
+      {open && <DeleteAccountConfirmDialog onCancel={() => setOpen(false)} onConfirm={handleConfirm} />}
+    </div>
+  );
+}
+
 function ChangePasswordForm() {
   const t = useT();
   const [currentPassword, setCurrentPassword] = useState("");
@@ -567,7 +679,16 @@ function PreferencesForm() {
 
 const SECTIONS = [
   { key: "profile", label: "Profile", render: () => <ProfileSettingsForm /> },
-  { key: "account", label: "Account", render: () => <ChangeHandleForm /> },
+  {
+    key: "account",
+    label: "Account",
+    render: () => (
+      <div className="space-y-4">
+        <ChangeHandleForm />
+        <DeleteAccountSection />
+      </div>
+    ),
+  },
   { key: "password", label: "Password", render: () => <ChangePasswordForm /> },
   { key: "preferences", label: "Preferences", render: () => <PreferencesForm /> },
 ] as const;
