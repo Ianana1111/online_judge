@@ -723,18 +723,19 @@ export default function SettingsPage() {
       <Suspense>
         <SchoolVerifiedBanner />
       </Suspense>
-      <div className="flex gap-8">
-        <aside className="w-40 shrink-0">
+      <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
+        <aside className="shrink-0 sm:w-40">
           <div
             role="tablist"
             aria-label={t("Settings sections")}
             aria-orientation="vertical"
-            className="flex flex-col gap-1"
+            className="flex flex-row flex-wrap gap-1 sm:flex-col"
             onKeyDown={(e) => {
-              if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+              if (!["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"].includes(e.key)) return;
               e.preventDefault();
+              const dir = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : -1;
               const i = SECTIONS.findIndex((s) => s.key === active);
-              const next = e.key === "ArrowDown" ? (i + 1) % SECTIONS.length : (i - 1 + SECTIONS.length) % SECTIONS.length;
+              const next = (i + dir + SECTIONS.length) % SECTIONS.length;
               setActive(SECTIONS[next].key);
               document.getElementById(`settings-tab-${SECTIONS[next].key}`)?.focus();
             }}
