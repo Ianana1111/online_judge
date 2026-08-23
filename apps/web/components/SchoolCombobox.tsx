@@ -9,26 +9,38 @@ import { useT } from "@/lib/i18n/LocaleContext";
  * with ~90 <option>s works but is slow to scan; typing to filter is much faster for a list this
  * long. Deliberately can't submit free text: `value` only ever becomes one of the list's exact
  * strings (or null), which is what makes the leaderboard's school filter work at all.
+ *
+ * Implements the ARIA combobox-listbox pattern's keyboard behavior (Up/Down to move a highlighted
+ * option, Enter to choose it, Home/End to jump) instead of relying on Tab to reach each of the
+ * ~90 option buttons one at a time.
  */
 export default function SchoolCombobox({
   value,
   onChange,
   placeholder,
+  id,
 }: {
   value: string | null;
   onChange: (school: string | null) => void;
   placeholder?: string;
+  id?: string;
 }) {
   const t = useT();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [highlighted, setHighlighted] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const listboxId = "school-combobox-listbox";
 
   const filtered = useMemo(() => {
     if (!query) return TAIWAN_UNIVERSITIES;
     return TAIWAN_UNIVERSITIES.filter((u) => u.includes(query));
   }, [query]);
+
+  useEffect(() => {
+    setHighlighted(0);
+  }, [query, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -52,16 +64,44 @@ export default function SchoolCombobox({
     };
   }, [open]);
 
+  function choose(school: string | null) {
+    onChange(school);
+    setOpen(false);
+    setQuery("");
+  }
+
+  function onInputKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlighted((i) => Math.min(i + 1, filtered.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlighted((i) => Math.max(i - 1, 0));
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      setHighlighted(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      setHighlighted(filtered.length - 1);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (filtered[highlighted]) choose(filtered[highlighted]);
+    }
+  }
+
   return (
     <div ref={rootRef} className="relative">
       <button
+        id={id}
         type="button"
         onClick={() => {
           setOpen((o) => !o);
           setTimeout(() => inputRef.current?.focus(), 0);
         }}
+        role="combobox"
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-controls={listboxId}
         className="oj-input flex items-center justify-between gap-2 text-left"
       >
         <span className={`truncate ${value ? "text-ink-50" : "text-ink-400"}`}>
@@ -78,45 +118,45 @@ export default function SchoolCombobox({
         </svg>
       </button>
       {open && (
-        <div role="listbox" className="oj-card absolute left-0 top-full z-20 mt-1.5 w-full overflow-hidden">
+        <div className="oj-card absolute left-0 top-full z-20 mt-1.5 w-full overflow-hidden">
           <div className="border-b border-ink-800 p-2">
             <input
               ref={inputRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={onInputKeyDown}
               placeholder={t("Search…")}
+              role="combobox"
+              aria-expanded={open}
+              aria-controls={listboxId}
+              aria-activedescendant={filtered[highlighted] ? `school-option-${highlighted}` : undefined}
+              aria-autocomplete="list"
               className="oj-input"
             />
           </div>
-          <div className="max-h-56 overflow-y-auto p-1">
+          <div id={listboxId} role="listbox" aria-label={t("Schools")} className="max-h-56 overflow-y-auto p-1">
             {value && (
               <button
                 type="button"
-                onClick={() => {
-                  onChange(null);
-                  setOpen(false);
-                  setQuery("");
-                }}
+                onClick={() => choose(null)}
                 className="block w-full rounded px-3 py-1.5 text-left text-sm text-ink-500 hover:bg-ink-800"
               >
                 {t("Clear")}
               </button>
             )}
             {filtered.length === 0 && <p className="px-3 py-2 text-sm text-ink-500">{t("No matches")}</p>}
-            {filtered.map((u) => (
+            {filtered.map((u, i) => (
               <button
                 key={u}
+                id={`school-option-${i}`}
                 type="button"
                 role="option"
                 aria-selected={u === value}
-                onClick={() => {
-                  onChange(u);
-                  setOpen(false);
-                  setQuery("");
-                }}
-                className={`block w-full truncate rounded px-3 py-1.5 text-left text-sm hover:bg-ink-800 ${
-                  u === value ? "text-brand" : "text-ink-200"
-                }`}
+                onClick={() => choose(u)}
+                onMouseEnter={() => setHighlighted(i)}
+                className={`block w-full truncate rounded px-3 py-1.5 text-left text-sm ${
+                  i === highlighted ? "bg-ink-800" : ""
+                } ${u === value ? "text-brand" : "text-ink-200"}`}
               >
                 {u}
               </button>

@@ -199,41 +199,37 @@ export default function TestPanel({
     <div className="oj-card p-3">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-1.5">
-          {cases.map((c, i) => (
-            <button
+          {cases.map((c) => (
+            <div
               key={c.id}
-              type="button"
-              onClick={() => setActiveId(c.id)}
-              className={`group relative rounded border px-2.5 py-1 text-xs transition-colors ${
+              className={`inline-flex items-center rounded border text-xs transition-colors ${
                 c.id === activeId
                   ? "border-brand text-brand"
                   : "border-ink-700 text-ink-300 hover:border-ink-500 hover:text-ink-100"
               }`}
             >
-              <span className="inline-flex items-center gap-1">
-                {c.isSample ? c.label : customLabelById.get(c.id)}
-                {results[c.id] &&
-                  (c.isSample
-                    ? normalize(results[c.id].stdout) === normalize(c.expectedOutput ?? "") && !results[c.id].timedOut
-                      ? <span className="text-verdict-ac">✓</span>
-                      : <span className="text-verdict-wa">✗</span>
-                    : null)}
-              </span>
+              <button type="button" onClick={() => setActiveId(c.id)} className="px-2.5 py-1">
+                <span className="inline-flex items-center gap-1">
+                  {c.isSample ? c.label : customLabelById.get(c.id)}
+                  {results[c.id] &&
+                    (c.isSample
+                      ? normalize(results[c.id].stdout) === normalize(c.expectedOutput ?? "") && !results[c.id].timedOut
+                        ? <span className="text-verdict-ac">✓</span>
+                        : <span className="text-verdict-wa">✗</span>
+                      : null)}
+                </span>
+              </button>
               {!c.isSample && (
-                <span
-                  role="button"
-                  tabIndex={-1}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeCase(c.id);
-                  }}
-                  className="ml-1.5 text-ink-500 hover:text-verdict-wa"
+                <button
+                  type="button"
+                  onClick={() => removeCase(c.id)}
+                  className="pr-2 text-ink-500 hover:text-verdict-wa"
                   aria-label={t("Remove test case")}
                 >
                   ×
-                </span>
+                </button>
               )}
-            </button>
+            </div>
           ))}
           {cases.length < MAX_CASES && (
             <button

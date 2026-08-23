@@ -194,6 +194,7 @@ export default function SubmissionPanel({
       )}
       <div className="flex items-center justify-between">
         <select
+          aria-label={t("Language")}
           value={languageKey}
           onChange={(e) => {
             const next = e.target.value;

@@ -39,7 +39,20 @@ export default function SubmissionHistory({ problemId }: { problemId: string }) 
         </thead>
         <tbody>
           {items.map((s) => (
-            <tr key={s.id} onClick={() => setOpenId(s.id)} className="cursor-pointer transition-colors hover:bg-ink-800/50">
+            <tr
+              key={s.id}
+              onClick={() => setOpenId(s.id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setOpenId(s.id);
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-label={t("View submission from {when}", { when: new Date(s.createdAt).toLocaleString() })}
+              className="cursor-pointer transition-colors hover:bg-ink-800/50 focus:outline-none focus-visible:bg-ink-800/50 focus-visible:ring-1 focus-visible:ring-brand"
+            >
               <td className="font-mono text-xs text-ink-400">{new Date(s.createdAt).toLocaleString()}</td>
               <td>{t(LANGUAGE_LABEL[s.languageKey] ?? s.languageKey)}</td>
               <td>

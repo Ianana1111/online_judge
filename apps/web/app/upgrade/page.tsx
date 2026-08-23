@@ -9,6 +9,7 @@ import { useAuthStore } from "@/store/auth";
 import BackButton from "@/components/BackButton";
 import type { BillingPlans, BillingStatus } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 
 function Check({ children }: { children: React.ReactNode }) {
   return (
@@ -35,6 +36,7 @@ function DowngradeConfirmDialog({
   onConfirm: () => void;
 }) {
   const t = useT();
+  const trapRef = useFocusTrap<HTMLDivElement>(true);
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onCancel();
@@ -55,7 +57,7 @@ function DowngradeConfirmDialog({
       aria-modal="true"
       onClick={onCancel}
     >
-      <div className="oj-card w-full max-w-sm p-5" onClick={(e) => e.stopPropagation()}>
+      <div ref={trapRef} tabIndex={-1} className="oj-card w-full max-w-sm p-5 outline-none" onClick={(e) => e.stopPropagation()}>
         <h2 className="font-display text-base font-semibold text-ink-50">{t("Downgrade to Free Plan?")}</h2>
         <p className="mt-2 text-sm text-ink-300">
           {expiresLabel
@@ -90,6 +92,7 @@ function UnsubscribeConfirmDialog({
   onConfirm: () => void;
 }) {
   const t = useT();
+  const trapRef = useFocusTrap<HTMLDivElement>(true);
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onCancel();
@@ -110,7 +113,7 @@ function UnsubscribeConfirmDialog({
       aria-modal="true"
       onClick={onCancel}
     >
-      <div className="oj-card w-full max-w-sm p-5" onClick={(e) => e.stopPropagation()}>
+      <div ref={trapRef} tabIndex={-1} className="oj-card w-full max-w-sm p-5 outline-none" onClick={(e) => e.stopPropagation()}>
         <h2 className="font-display text-base font-semibold text-ink-50">{t("Unsubscribe from Pro?")}</h2>
         <p className="mt-2 text-sm text-ink-300">
           {expiresLabel

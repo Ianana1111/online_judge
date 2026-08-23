@@ -234,11 +234,11 @@ function ProfileSettingsForm() {
       <h2 className="text-sm font-semibold text-ink-200">{t("Profile")}</h2>
 
       <div>
-        <label className="mb-2 block text-sm text-ink-300">{t("Avatar")}</label>
+        <label htmlFor="settings-avatar" className="mb-2 block text-sm text-ink-300">{t("Avatar")}</label>
         <div className="flex items-center gap-4">
           <Avatar avatarUrl={avatarPreview} handle={user.handle} size={72} />
           <div className="flex flex-col gap-2">
-            <input ref={fileInputRef} type="file" accept="image/*" onChange={onPickAvatar} className="hidden" />
+            <input id="settings-avatar" ref={fileInputRef} type="file" accept="image/*" onChange={onPickAvatar} className="hidden" />
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
@@ -262,8 +262,9 @@ function ProfileSettingsForm() {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm text-ink-300">{t("Motto")}</label>
+        <label htmlFor="settings-bio" className="mb-1 block text-sm text-ink-300">{t("Motto")}</label>
         <input
+          id="settings-bio"
           className="oj-input"
           value={bio}
           onChange={(e) => setBio(e.target.value)}
@@ -274,7 +275,7 @@ function ProfileSettingsForm() {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm text-ink-300">{t("School")}</label>
+        <label htmlFor="settings-school" className="mb-1 block text-sm text-ink-300">{t("School")}</label>
         {schoolLocked ? (
           // Once verified the school is permanent (enforced in users.service.updateProfile too) —
           // showing a disabled picker would invite clicking at something that can never change, so
@@ -292,7 +293,7 @@ function ProfileSettingsForm() {
           </>
         ) : (
           <>
-            <SchoolCombobox value={user.school} onChange={onSchoolChange} />
+            <SchoolCombobox id="settings-school" value={user.school} onChange={onSchoolChange} />
             <p className="mt-1 text-xs text-ink-500">
               {schoolSaving ? t("Saving…") : t("Shown on your public profile and the leaderboard.")}
             </p>
@@ -341,8 +342,9 @@ function ChangeHandleForm() {
     <form onSubmit={onSubmit} className="oj-card space-y-3 p-4">
       <h2 className="text-sm font-semibold text-ink-200">{t("Change display name")}</h2>
       <div>
-        <label className="mb-1 block text-sm text-ink-300">{t("Handle")}</label>
+        <label htmlFor="settings-handle" className="mb-1 block text-sm text-ink-300">{t("Handle")}</label>
         <input
+          id="settings-handle"
           className="oj-input"
           value={handle}
           onChange={(e) => setHandle(e.target.value)}
@@ -407,8 +409,9 @@ function ChangePasswordForm() {
     <form onSubmit={onSubmit} className="oj-card space-y-3 p-4">
       <h2 className="text-sm font-semibold text-ink-200">{t("Change password")}</h2>
       <div>
-        <label className="mb-1 block text-sm text-ink-300">{t("Current password")}</label>
+        <label htmlFor="settings-current-password" className="mb-1 block text-sm text-ink-300">{t("Current password")}</label>
         <input
+          id="settings-current-password"
           type="password"
           className="oj-input"
           value={currentPassword}
@@ -417,8 +420,9 @@ function ChangePasswordForm() {
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm text-ink-300">{t("New password")}</label>
+        <label htmlFor="settings-new-password" className="mb-1 block text-sm text-ink-300">{t("New password")}</label>
         <input
+          id="settings-new-password"
           type="password"
           className="oj-input"
           value={newPassword}
@@ -428,8 +432,9 @@ function ChangePasswordForm() {
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm text-ink-300">{t("Confirm new password")}</label>
+        <label htmlFor="settings-confirm-password" className="mb-1 block text-sm text-ink-300">{t("Confirm new password")}</label>
         <input
+          id="settings-confirm-password"
           type="password"
           className="oj-input"
           value={confirmPassword}
@@ -451,12 +456,13 @@ function LanguageToggle() {
   const { locale, setLocale } = useLocale();
 
   return (
-    <div>
-      <label className="mb-1.5 block text-sm text-ink-300">{t("Display language")}</label>
+    <fieldset>
+      <legend className="mb-1.5 block text-sm text-ink-300">{t("Display language")}</legend>
       <div className="grid grid-cols-2 gap-2">
         <button
           type="button"
           onClick={() => setLocale("zh-TW")}
+          aria-pressed={locale === "zh-TW"}
           className={`oj-card p-2 text-sm font-medium transition-colors ${
             locale === "zh-TW" ? "border-brand text-brand" : "text-ink-300 hover:border-ink-500"
           }`}
@@ -466,6 +472,7 @@ function LanguageToggle() {
         <button
           type="button"
           onClick={() => setLocale("en")}
+          aria-pressed={locale === "en"}
           className={`oj-card p-2 text-sm font-medium transition-colors ${
             locale === "en" ? "border-brand text-brand" : "text-ink-300 hover:border-ink-500"
           }`}
@@ -473,7 +480,7 @@ function LanguageToggle() {
           English
         </button>
       </div>
-    </div>
+    </fieldset>
   );
 }
 
@@ -520,8 +527,13 @@ function PreferencesForm() {
       <h2 className="text-sm font-semibold text-ink-200">{t("Preferences")}</h2>
       <LanguageToggle />
       <div>
-        <label className="mb-1 block text-sm text-ink-300">{t("Default language")}</label>
-        <select value={defaultLanguage} onChange={(e) => setDefaultLanguage(e.target.value)} className="oj-input">
+        <label htmlFor="settings-default-language" className="mb-1 block text-sm text-ink-300">{t("Default language")}</label>
+        <select
+          id="settings-default-language"
+          value={defaultLanguage}
+          onChange={(e) => setDefaultLanguage(e.target.value)}
+          className="oj-input"
+        >
           {LANGUAGES.map((l) => (
             <option key={l} value={l}>
               {l}
@@ -530,8 +542,9 @@ function PreferencesForm() {
         </select>
       </div>
       <div>
-        <label className="mb-1 block text-sm text-ink-300">{t("Daily goal")}</label>
+        <label htmlFor="settings-daily-goal" className="mb-1 block text-sm text-ink-300">{t("Daily goal")}</label>
         <input
+          id="settings-daily-goal"
           type="number"
           min={1}
           max={50}
@@ -591,10 +604,28 @@ export default function SettingsPage() {
       </Suspense>
       <div className="flex gap-8">
         <aside className="w-40 shrink-0">
-          <nav className="flex flex-col gap-1">
+          <div
+            role="tablist"
+            aria-label={t("Settings sections")}
+            aria-orientation="vertical"
+            className="flex flex-col gap-1"
+            onKeyDown={(e) => {
+              if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+              e.preventDefault();
+              const i = SECTIONS.findIndex((s) => s.key === active);
+              const next = e.key === "ArrowDown" ? (i + 1) % SECTIONS.length : (i - 1 + SECTIONS.length) % SECTIONS.length;
+              setActive(SECTIONS[next].key);
+              document.getElementById(`settings-tab-${SECTIONS[next].key}`)?.focus();
+            }}
+          >
             {SECTIONS.map((s) => (
               <button
                 key={s.key}
+                id={`settings-tab-${s.key}`}
+                role="tab"
+                aria-selected={active === s.key}
+                aria-controls={`settings-tabpanel-${s.key}`}
+                tabIndex={active === s.key ? 0 : -1}
                 onClick={() => setActive(s.key)}
                 className={`rounded px-3 py-1.5 text-left text-sm font-medium transition-colors ${
                   active === s.key ? "bg-brand/10 text-brand" : "text-ink-300 hover:bg-ink-800 hover:text-ink-50"
@@ -603,9 +634,16 @@ export default function SettingsPage() {
                 {t(s.label)}
               </button>
             ))}
-          </nav>
+          </div>
         </aside>
-        <div className="min-w-0 flex-1">{activeSection.render()}</div>
+        <div
+          id={`settings-tabpanel-${activeSection.key}`}
+          role="tabpanel"
+          aria-labelledby={`settings-tab-${activeSection.key}`}
+          className="min-w-0 flex-1"
+        >
+          {activeSection.render()}
+        </div>
       </div>
     </div>
   );

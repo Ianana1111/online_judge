@@ -21,6 +21,16 @@ import { useT } from "@/lib/i18n/LocaleContext";
 const DIFFICULTY_EXPLANATION =
   "Curated ratings come first: problems from an officially-rated set (like the CPE 必考49題 one-star selection) keep that rating. Everything else is derived from how many people worldwide have solved it on UVa (more solvers = more introductory), with a minimum floor based on the algorithm topic — a DP or graph problem never rates below what its technique demands.";
 
+type TabKey = "statement" | "history" | "discussion" | "stats" | "notes";
+const TAB_ORDER: TabKey[] = ["statement", "history", "discussion", "stats", "notes"];
+const TAB_LABEL: Record<TabKey, string> = {
+  statement: "Statement",
+  history: "My submissions",
+  discussion: "Discussion",
+  stats: "Stats",
+  notes: "Notes",
+};
+
 export default function ProblemView({
   problem,
   contestId,
@@ -40,7 +50,7 @@ export default function ProblemView({
   outputSpecNode: React.ReactNode;
 }) {
   const t = useT();
-  const [tab, setTab] = useState<"statement" | "history" | "discussion" | "stats" | "notes">("statement");
+  const [tab, setTab] = useState<TabKey>("statement");
   const examActive = useExamTimerStore((s) => s.active);
   // endsAt is a plain epoch-ms number in the store — a stable, idempotent selector. Computing
   // "remaining" from it requires the current time, which must live in local state instead of
@@ -80,41 +90,37 @@ export default function ProblemView({
           <InfoTooltip text={t(DIFFICULTY_EXPLANATION)} />
         </span>
       </div>
-      <div className="mb-4 flex gap-4 border-b border-ink-800 text-sm">
-        <button
-          onClick={() => setTab("statement")}
-          className={`border-b-2 px-1 py-2 ${tab === "statement" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}
-        >
-          {t("Statement")}
-        </button>
-        <button
-          onClick={() => setTab("history")}
-          className={`border-b-2 px-1 py-2 ${tab === "history" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}
-        >
-          {t("My submissions")}
-        </button>
-        <button
-          onClick={() => setTab("discussion")}
-          className={`border-b-2 px-1 py-2 ${tab === "discussion" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}
-        >
-          {t("Discussion")}
-        </button>
-        <button
-          onClick={() => setTab("stats")}
-          className={`border-b-2 px-1 py-2 ${tab === "stats" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}
-        >
-          {t("Stats")}
-        </button>
-        <button
-          onClick={() => setTab("notes")}
-          className={`border-b-2 px-1 py-2 ${tab === "notes" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}
-        >
-          {t("Notes")}
-        </button>
+      <div
+        role="tablist"
+        aria-label={t("Problem sections")}
+        className="mb-4 flex gap-4 border-b border-ink-800 text-sm"
+        onKeyDown={(e) => {
+          if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+          e.preventDefault();
+          const i = TAB_ORDER.indexOf(tab);
+          const next = e.key === "ArrowRight" ? (i + 1) % TAB_ORDER.length : (i - 1 + TAB_ORDER.length) % TAB_ORDER.length;
+          setTab(TAB_ORDER[next]);
+          document.getElementById(`problem-tab-${TAB_ORDER[next]}`)?.focus();
+        }}
+      >
+        {TAB_ORDER.map((key) => (
+          <button
+            key={key}
+            id={`problem-tab-${key}`}
+            role="tab"
+            aria-selected={tab === key}
+            aria-controls={`problem-tabpanel-${key}`}
+            tabIndex={tab === key ? 0 : -1}
+            onClick={() => setTab(key)}
+            className={`border-b-2 px-1 py-2 ${tab === key ? "border-brand text-brand" : "border-transparent text-ink-400"}`}
+          >
+            {t(TAB_LABEL[key])}
+          </button>
+        ))}
       </div>
 
       {tab === "statement" && (
-        <div>
+        <div id="problem-tabpanel-statement" role="tabpanel" aria-labelledby="problem-tab-statement">
           <div className="mb-4 flex gap-4 font-mono text-xs text-ink-400">
             <span>{t("Time limit: {ms} ms", { ms: problem.timeLimitMs })}</span>
             <span>{t("Memory limit: {mb} MB", { mb: Math.round(problem.memoryLimitKb / 1024) })}</span>
@@ -179,10 +185,26 @@ export default function ProblemView({
           </div>
         </div>
       )}
-      {tab === "history" && <SubmissionHistory problemId={problem.id} />}
-      {tab === "discussion" && <DiscussionPanel problemId={problem.id} />}
-      {tab === "stats" && <ProblemStatsPanel slug={problem.slug} />}
-      {tab === "notes" && <ProblemNotePanel slug={problem.slug} />}
+      {tab === "history" && (
+        <div id="problem-tabpanel-history" role="tabpanel" aria-labelledby="problem-tab-history">
+          <SubmissionHistory problemId={problem.id} />
+        </div>
+      )}
+      {tab === "discussion" && (
+        <div id="problem-tabpanel-discussion" role="tabpanel" aria-labelledby="problem-tab-discussion">
+          <DiscussionPanel problemId={problem.id} />
+        </div>
+      )}
+      {tab === "stats" && (
+        <div id="problem-tabpanel-stats" role="tabpanel" aria-labelledby="problem-tab-stats">
+          <ProblemStatsPanel slug={problem.slug} />
+        </div>
+      )}
+      {tab === "notes" && (
+        <div id="problem-tabpanel-notes" role="tabpanel" aria-labelledby="problem-tab-notes">
+          <ProblemNotePanel slug={problem.slug} />
+        </div>
+      )}
     </div>
   );
 

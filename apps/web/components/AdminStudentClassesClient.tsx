@@ -41,8 +41,9 @@ function ProblemPicker({
 
   return (
     <div>
-      <label className="mb-1 block text-sm text-ink-300">{t("Homework problems")}</label>
+      <label htmlFor="homework-problem-search" className="mb-1 block text-sm text-ink-300">{t("Homework problems")}</label>
       <input
+        id="homework-problem-search"
         className="oj-input"
         placeholder={t("Search problems by title…")}
         value={query}
@@ -122,11 +123,13 @@ function EditClassForm({
     }
   }
 
+  const formId = cls?.id ?? "new";
   return (
     <form onSubmit={save} className="oj-card space-y-3 p-4">
       <div>
-        <label className="mb-1 block text-sm text-ink-300">{t("Title (optional)")}</label>
+        <label htmlFor={`class-title-${formId}`} className="mb-1 block text-sm text-ink-300">{t("Title (optional)")}</label>
         <input
+          id={`class-title-${formId}`}
           className="oj-input"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -134,8 +137,9 @@ function EditClassForm({
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm text-ink-300">{t("What was taught today")}</label>
+        <label htmlFor={`class-content-${formId}`} className="mb-1 block text-sm text-ink-300">{t("What was taught today")}</label>
         <textarea
+          id={`class-content-${formId}`}
           className="oj-input h-48 font-mono text-sm"
           value={contentMd}
           onChange={(e) => setContentMd(e.target.value)}

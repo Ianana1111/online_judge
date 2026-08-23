@@ -96,24 +96,25 @@ export default function AdminContestsPage() {
       <form onSubmit={createContest} className="oj-card space-y-4 p-4">
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm text-ink-300">{t("Title")}</label>
-            <input className="oj-input" value={title} onChange={(e) => setTitle(e.target.value)} required />
+            <label htmlFor="contest-title" className="mb-1 block text-sm text-ink-300">{t("Title")}</label>
+            <input id="contest-title" className="oj-input" value={title} onChange={(e) => setTitle(e.target.value)} required />
           </div>
           <div>
-            <label className="mb-1 block text-sm text-ink-300">{t("Slug")}</label>
-            <input className="oj-input" value={slug} onChange={(e) => setSlug(e.target.value)} required />
+            <label htmlFor="contest-slug" className="mb-1 block text-sm text-ink-300">{t("Slug")}</label>
+            <input id="contest-slug" className="oj-input" value={slug} onChange={(e) => setSlug(e.target.value)} required />
           </div>
           <div>
-            <label className="mb-1 block text-sm text-ink-300">{t("Kind")}</label>
-            <select className="oj-input" value={kind} onChange={(e) => setKind(e.target.value as typeof kind)}>
+            <label htmlFor="contest-kind" className="mb-1 block text-sm text-ink-300">{t("Kind")}</label>
+            <select id="contest-kind" className="oj-input" value={kind} onChange={(e) => setKind(e.target.value as typeof kind)}>
               <option value="PUBLIC">{t("Public")}</option>
               <option value="CPE">CPE</option>
               <option value="VIRTUAL">{t("Virtual")}</option>
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm text-ink-300">{t("Duration (minutes)")}</label>
+            <label htmlFor="contest-duration" className="mb-1 block text-sm text-ink-300">{t("Duration (minutes)")}</label>
             <input
+              id="contest-duration"
               type="number"
               className="oj-input"
               value={durationMin}
@@ -131,8 +132,9 @@ export default function AdminContestsPage() {
           </label>
           {scheduled ? (
             <div className="mt-2">
-              <label className="mb-1 block text-sm text-ink-300">{t("Start time")}</label>
+              <label htmlFor="contest-start" className="mb-1 block text-sm text-ink-300">{t("Start time")}</label>
               <input
+                id="contest-start"
                 type="datetime-local"
                 className="oj-input max-w-xs"
                 value={startAt}
@@ -149,8 +151,9 @@ export default function AdminContestsPage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm text-ink-300">{t("Problems (labeled A, B, C… in the order added)")}</label>
+          <label htmlFor="contest-problem-search" className="mb-1 block text-sm text-ink-300">{t("Problems (labeled A, B, C… in the order added)")}</label>
           <input
+            id="contest-problem-search"
             className="oj-input"
             placeholder={t("Search problems by title…")}
             value={problemQuery}
