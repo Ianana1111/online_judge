@@ -1,11 +1,12 @@
-import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, Req, Res } from "@nestjs/common";
 import { Throttle } from "@nestjs/throttler";
-import type { Response } from "express";
-import { setAuthCookies } from "../common/cookies.util";
+import type { Request, Response } from "express";
+import { clearAuthCookies, setAuthCookies } from "../common/cookies.util";
 import {
   changeHandleSchema,
   changePasswordSchema,
   createUserSchema,
+  deleteAccountSchema,
   requestSchoolVerificationSchema,
   setIsStudentSchema,
   updateProfileSchema,
@@ -13,6 +14,7 @@ import {
   type ChangeHandleDto,
   type ChangePasswordDto,
   type CreateUserDto,
+  type DeleteAccountDto,
   type RequestSchoolVerificationDto,
   type SetIsStudentDto,
   type UpdateProfileDto,
@@ -46,6 +48,22 @@ export class UsersController {
     const session = await this.users.changePassword(user.id, body);
     setAuthCookies(res, session);
     return { ok: true, csrfToken: session.csrfToken };
+  }
+
+  // Same reasoning as changePassword's throttle: unlimited attempts against a hijacked session
+  // would let a stolen access token be used to brute-force the current password and delete the
+  // account, wiping everything it's attached to.
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  @Delete("me")
+  @HttpCode(204)
+  async deleteAccount(
+    @Body(new ZodValidationPipe(deleteAccountSchema)) body: DeleteAccountDto,
+    @CurrentUser() user: RequestUser,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.users.deleteAccount(user.id, body, req.cookies?.refresh_token);
+    clearAuthCookies(res);
   }
 
   // Handles are the only public identity on profiles/leaderboards/discussions and change

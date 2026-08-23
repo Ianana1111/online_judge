@@ -23,6 +23,7 @@ export default function CheckoutPage() {
   const [ecpayError, setEcpayError] = useState<string | null>(null);
   const [ecpayLoading, setEcpayLoading] = useState(false);
   const [dismissing, setDismissing] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   // Paying with ECPay does a real <form method="POST"> navigation off-site to their hosted
   // checkout (see startEcpay below) — that's a genuine browser history entry on ECPay's own
@@ -330,9 +331,22 @@ export default function CheckoutPage() {
                         })}
                   </p>
 
+                  <label className="flex items-start gap-2 text-xs text-ink-400">
+                    <input
+                      type="checkbox"
+                      checked={agreed}
+                      onChange={(e) => setAgreed(e.target.checked)}
+                      className="mt-0.5"
+                    />
+                    <span>
+                      {t("I agree to the")} <Link href="/refund" className="text-brand hover:underline">{t("Refund Policy")}</Link>{" "}
+                      {t("and")} <Link href="/terms" className="text-brand hover:underline">{t("Terms of Service")}</Link>.
+                    </span>
+                  </label>
+
                   {ecpayError && <p className="text-sm text-verdict-wa">{ecpayError}</p>}
 
-                  <button onClick={startEcpay} disabled={ecpayLoading} className="oj-btn-primary w-full py-2.5">
+                  <button onClick={startEcpay} disabled={ecpayLoading || !agreed} className="oj-btn-primary w-full py-2.5">
                     {ecpayLoading ? (
                       <span className="inline-flex items-center gap-2">
                         <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
