@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { Space_Grotesk, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import "katex/dist/katex.min.css";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import NavBar from "@/components/NavBar";

@@ -6,6 +6,14 @@
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@oj/shared"],
+  // Default ("loose") CSS chunking merges stylesheets that are commonly loaded together into
+  // shared chunks — which merged katex.min.css (only imported by StatementRenderer, meant to load
+  // on problem/discussion/class pages only) into the same chunk as globals.css, shipping it to
+  // every page including the homepage. "strict" makes each CSS chunk follow the actual JS import
+  // graph instead.
+  experimental: {
+    cssChunking: "strict",
+  },
   // @oj/shared's source uses NodeNext-style explicit ".js" import specifiers (e.g. "./schemas.js"
   // resolving to schemas.ts) — fine for tsc/ts-node, but webpack's resolver takes ".js" literally
   // and never finds a same-named ".ts" file since the package ships no build step. This is the

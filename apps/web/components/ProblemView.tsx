@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import StatementRenderer from "@/components/StatementRenderer";
 import SubmissionPanel from "@/components/SubmissionPanel";
 import SubmissionHistory from "@/components/SubmissionHistory";
 import DiscussionPanel from "@/components/DiscussionPanel";
@@ -22,7 +21,24 @@ import { useT } from "@/lib/i18n/LocaleContext";
 const DIFFICULTY_EXPLANATION =
   "Curated ratings come first: problems from an officially-rated set (like the CPE 必考49題 one-star selection) keep that rating. Everything else is derived from how many people worldwide have solved it on UVa (more solvers = more introductory), with a minimum floor based on the algorithm topic — a DP or graph problem never rates below what its technique demands.";
 
-export default function ProblemView({ problem, contestId }: { problem: ProblemDetail; contestId?: string }) {
+export default function ProblemView({
+  problem,
+  contestId,
+  statementNode,
+  inputSpecNode,
+  outputSpecNode,
+}: {
+  problem: ProblemDetail;
+  contestId?: string;
+  // Rendered server-side by the parent Server Component (app/problems/[slug]/page.tsx) instead of
+  // calling StatementRenderer from here: this component is "use client", and StatementRenderer
+  // pulls in react-markdown/remark/rehype/katex (~99KB gzip) — importing it directly here would
+  // ship that whole chunk to the browser on every problem-page load. Passing already-rendered JSX
+  // down as props keeps it server-only.
+  statementNode: React.ReactNode;
+  inputSpecNode: React.ReactNode;
+  outputSpecNode: React.ReactNode;
+}) {
   const t = useT();
   const [tab, setTab] = useState<"statement" | "history" | "discussion" | "stats" | "notes">("statement");
   const examActive = useExamTimerStore((s) => s.active);
@@ -103,17 +119,17 @@ export default function ProblemView({ problem, contestId }: { problem: ProblemDe
             <span>{t("Time limit: {ms} ms", { ms: problem.timeLimitMs })}</span>
             <span>{t("Memory limit: {mb} MB", { mb: Math.round(problem.memoryLimitKb / 1024) })}</span>
           </div>
-          <StatementRenderer content={problem.statementMd} />
-          {problem.inputSpecMd && (
+          {statementNode}
+          {inputSpecNode && (
             <>
               <h3 className="mb-2 mt-5 font-display text-lg font-semibold text-ink-50">{t("Input")}</h3>
-              <StatementRenderer content={problem.inputSpecMd} />
+              {inputSpecNode}
             </>
           )}
-          {problem.outputSpecMd && (
+          {outputSpecNode && (
             <>
               <h3 className="mb-2 mt-5 font-display text-lg font-semibold text-ink-50">{t("Output")}</h3>
-              <StatementRenderer content={problem.outputSpecMd} />
+              {outputSpecNode}
             </>
           )}
           {problem.samples.map((s) => (

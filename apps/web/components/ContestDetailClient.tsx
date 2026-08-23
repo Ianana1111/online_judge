@@ -2,13 +2,24 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import type { ContestDetail } from "@/lib/types";
 import Scoreboard from "@/components/Scoreboard";
 import ExamModeShell from "@/components/ExamModeShell";
 import ProblemView from "@/components/ProblemView";
+import { Skeleton } from "@/components/Skeleton";
 import { useT } from "@/lib/i18n/LocaleContext";
+
+// Markdown/KaTeX parsing is a large chunk unrelated to the rest of this page — deferring it out
+// of the initial page JS keeps the surrounding content interactive sooner. Unlike the plain
+// problem page (app/problems/[slug]/page.tsx), contest problems are only known after a
+// client-side fetch, so there's no Server Component boundary available to render this ahead of
+// time — code-splitting is the next best thing here.
+const StatementRenderer = dynamic(() => import("@/components/StatementRenderer"), {
+  loading: () => <Skeleton className="h-64 w-full" />,
+});
 
 export default function ContestDetailClient({ contestId }: { contestId: string }) {
   const t = useT();
@@ -71,7 +82,13 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
       <button onClick={() => setActiveProblemSlug(null)} className="mb-4 text-sm text-brand hover:underline">
         {t("← Back to problem set")}
       </button>
-      <ProblemView problem={activeProblem} contestId={contestId} />
+      <ProblemView
+        problem={activeProblem}
+        contestId={contestId}
+        statementNode={<StatementRenderer content={activeProblem.statementMd} />}
+        inputSpecNode={activeProblem.inputSpecMd ? <StatementRenderer content={activeProblem.inputSpecMd} /> : null}
+        outputSpecNode={activeProblem.outputSpecMd ? <StatementRenderer content={activeProblem.outputSpecMd} /> : null}
+      />
     </div>
   ) : (
     <div className="space-y-6">

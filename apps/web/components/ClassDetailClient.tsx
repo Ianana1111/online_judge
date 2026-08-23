@@ -1,16 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { ClassSessionDetail } from "@/lib/types";
 import BackButton from "@/components/BackButton";
-import StatementRenderer from "@/components/StatementRenderer";
 import HomeworkStatusBadge from "@/components/HomeworkStatusBadge";
 import ClassCommentThread from "@/components/ClassCommentThread";
 import { Skeleton } from "@/components/Skeleton";
 import { useT } from "@/lib/i18n/LocaleContext";
+
+// Markdown/KaTeX parsing is a large chunk unrelated to the rest of this page — deferring it out
+// of the initial page JS keeps the surrounding content interactive sooner.
+const StatementRenderer = dynamic(() => import("@/components/StatementRenderer"), {
+  loading: () => <Skeleton className="h-64 w-full" />,
+});
 
 export default function ClassDetailClient({ classId, backHref }: { classId: string; backHref: string }) {
   const t = useT();

@@ -2,14 +2,20 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { AdminUser, ClassSessionItem, ProblemListResponse } from "@/lib/types";
 import { previewText } from "@/lib/textPreview";
-import StatementRenderer from "@/components/StatementRenderer";
-import { SkeletonList } from "@/components/Skeleton";
+import { SkeletonList, Skeleton } from "@/components/Skeleton";
 import { useT } from "@/lib/i18n/LocaleContext";
+
+// Markdown/KaTeX parsing is a large chunk unrelated to the rest of this page — deferring it out
+// of the initial page JS keeps the surrounding content interactive sooner.
+const StatementRenderer = dynamic(() => import("@/components/StatementRenderer"), {
+  loading: () => <Skeleton className="h-64 w-full" />,
+});
 
 interface ProblemPick {
   id: string;
