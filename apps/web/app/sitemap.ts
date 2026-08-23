@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { serverFetch } from "@/lib/serverApi";
+import { serverFetchDetailed } from "@/lib/serverApi";
 import { SITE_URL } from "@/lib/site";
 import type { ProblemListResponse, CollectionListItem, PostListItem } from "@/lib/types";
 
@@ -20,11 +20,27 @@ const STATIC_ROUTES: { path: string; changeFrequency: MetadataRoute.Sitemap[numb
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [problems, collections, posts] = await Promise.all([
-    serverFetch<ProblemListResponse>("/problems?pageSize=1000"),
-    serverFetch<CollectionListItem[]>("/collections"),
-    serverFetch<PostListItem[]>("/posts"),
+  // Next.js attempts to prerender this route at BUILD time (revalidate alone doesn't skip that
+  // first static pass) — throwing on a fetch failure here was tried and rejected: it turned "the
+  // API happened to be unreachable/cold right as a build ran" into a hard build failure that
+  // blocks the ENTIRE site from deploying, which is a much worse outcome than a temporarily
+  // incomplete sitemap. None of these three endpoints ever legitimately 404s (they're always-200
+  // list endpoints), so a failure here really is transient infrastructure trouble, not a "this
+  // doesn't exist" case — logged loudly (Sentry once configured, console in the meantime) so it's
+  // at least visible instead of being a silent, undetectable degradation, while still letting the
+  // build/deploy succeed with whatever static routes are always safe to list.
+  const [problemsResult, collectionsResult, postsResult] = await Promise.all([
+    serverFetchDetailed<ProblemListResponse>("/problems?pageSize=1000"),
+    serverFetchDetailed<CollectionListItem[]>("/collections"),
+    serverFetchDetailed<PostListItem[]>("/posts"),
   ]);
+  for (const [name, result] of [
+    ["problems", problemsResult],
+    ["collections", collectionsResult],
+    ["posts", postsResult],
+  ] as const) {
+    if (!result.ok) console.error(`sitemap: failed to fetch ${name} — falling back to static routes only for this entry`);
+  }
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map(({ path, changeFrequency, priority }) => ({
     url: `${SITE_URL}${path}`,
@@ -32,24 +48,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority,
   }));
 
-  const problemEntries: MetadataRoute.Sitemap = (problems?.items ?? []).map((p) => ({
-    url: `${SITE_URL}/problems/${p.slug}`,
-    changeFrequency: "monthly",
-    priority: 0.6,
-  }));
+  const problemEntries: MetadataRoute.Sitemap = problemsResult.ok
+    ? problemsResult.data.items.map((p) => ({ url: `${SITE_URL}/problems/${p.slug}`, changeFrequency: "monthly" as const, priority: 0.6 }))
+    : [];
 
-  const collectionEntries: MetadataRoute.Sitemap = (collections ?? []).map((c) => ({
-    url: `${SITE_URL}/collections/${c.slug}`,
-    changeFrequency: "weekly",
-    priority: 0.6,
-  }));
+  const collectionEntries: MetadataRoute.Sitemap = collectionsResult.ok
+    ? collectionsResult.data.map((c) => ({ url: `${SITE_URL}/collections/${c.slug}`, changeFrequency: "weekly" as const, priority: 0.6 }))
+    : [];
 
-  const postEntries: MetadataRoute.Sitemap = (posts ?? []).map((p) => ({
-    url: `${SITE_URL}/discussion/${p.id}`,
-    lastModified: new Date(p.createdAt),
-    changeFrequency: "monthly",
-    priority: 0.5,
-  }));
+  const postEntries: MetadataRoute.Sitemap = postsResult.ok
+    ? postsResult.data.map((p) => ({
+        url: `${SITE_URL}/discussion/${p.id}`,
+        lastModified: new Date(p.createdAt),
+        changeFrequency: "monthly" as const,
+        priority: 0.5,
+      }))
+    : [];
 
   return [...staticEntries, ...problemEntries, ...collectionEntries, ...postEntries];
 }

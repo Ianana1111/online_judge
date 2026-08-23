@@ -48,10 +48,18 @@ const config: Config = {
           pending: themedColor("verdict-pending"),
         },
       },
+      // The Google-font variables above only cover Latin glyphs (subsets: ["latin"] in
+      // layout.tsx) — every CJK character on the page falls through to these fallbacks. A bare
+      // "sans-serif" fallback commonly resolves to a Simplified-Chinese face on Android (Noto
+      // Sans SC), rendering Traditional Chinese with visibly wrong glyph shapes (門→门, 直→直
+      // with a different stroke, etc.) for a site whose primary language is zh-TW. Naming the
+      // real TC system faces first (per-OS: PingFang TC on Apple, Microsoft JhengHei on Windows,
+      // Noto Sans TC as the actual cross-platform CJK web font) fixes this without touching the
+      // Latin rendering these variables already handle.
       fontFamily: {
-        display: ["var(--font-display)", "sans-serif"],
-        body: ["var(--font-body)", "sans-serif"],
-        mono: ["var(--font-mono)", "monospace"],
+        display: ["var(--font-display)", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "sans-serif"],
+        body: ["var(--font-body)", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "sans-serif"],
+        mono: ["var(--font-mono)", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "monospace"],
       },
       borderRadius: {
         DEFAULT: "6px",
