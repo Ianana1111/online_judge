@@ -51,9 +51,9 @@ export default function PostDetailClient({ id }: { id: string }) {
         <div className="mt-5 flex items-center gap-2 border-b border-ink-800 pb-6 text-sm text-ink-400">
           <Avatar avatarUrl={data.authorAvatarUrl} handle={data.authorHandle} size={32} />
           <span className="font-medium text-ink-200">{data.authorHandle}</span>
-          <span className="text-ink-700">·</span>
+          <span className="text-ink-500">·</span>
           <span className="font-mono">{new Date(data.createdAt).toLocaleDateString()}</span>
-          <span className="text-ink-700">·</span>
+          <span className="text-ink-500">·</span>
           <span>{estimateReadMinutes(data.bodyMd)} 分鐘閱讀</span>
         </div>
       </div>

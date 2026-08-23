@@ -57,7 +57,7 @@ export default function Scoreboard({ contestId, problems }: { contestId: string;
                     ) : cell?.attempts ? (
                       <span className="text-verdict-wa">-{cell.attempts}</span>
                     ) : (
-                      <span className="text-ink-600">—</span>
+                      <span className="text-ink-400">—</span>
                     )}
                   </td>
                 );

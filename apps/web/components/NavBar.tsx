@@ -227,7 +227,7 @@ export default function NavBar() {
                 {t(l.label)}
               </Link>
             ))}
-            {!!user && <span className="mx-1 text-ink-700">|</span>}
+            {!!user && <span className="mx-1 text-ink-500">|</span>}
             {!!user &&
               AUTH_LINKS.map((l) => (
                 <Link
@@ -262,7 +262,7 @@ export default function NavBar() {
                   {t(l.label)}
                 </Link>
               ))}
-            {isAdmin && <span className="mx-1 text-ink-700">|</span>}
+            {isAdmin && <span className="mx-1 text-ink-500">|</span>}
             {isAdmin && (
               <Link
                 href="/admin"

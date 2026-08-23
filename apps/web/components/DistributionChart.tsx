@@ -5,6 +5,7 @@ import { Bar, BarChart, Cell, ResponsiveContainer, XAxis, YAxis } from "recharts
 import { LANGUAGE_LABEL } from "@/lib/types";
 import type { HistogramBucket } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
+import { useChartColors } from "@/lib/useChartColors";
 
 const LANGUAGE_COLOR: Record<string, string> = {
   cpp17: "#5B8DEF",
@@ -31,6 +32,7 @@ export default function DistributionChart<T extends HistogramBucket>({
   unit: string;
 }) {
   const t = useT();
+  const colors = useChartColors();
   const [selected, setSelected] = useState<number | null>(yourBucketIndex);
 
   const data = buckets.map((b, i) => ({ index: i, count: b.count, label: formatRange(b) }));
@@ -43,13 +45,13 @@ export default function DistributionChart<T extends HistogramBucket>({
     <div>
       <ResponsiveContainer width="100%" height={140}>
         <BarChart data={data} margin={{ left: 8, right: 8 }}>
-          <XAxis dataKey="index" tick={false} axisLine={{ stroke: "#2a3441" }} />
-          <YAxis tick={{ fill: "#6b7a8b", fontSize: 11 }} axisLine={{ stroke: "#2a3441" }} allowDecimals={false} width={28} />
+          <XAxis dataKey="index" tick={false} axisLine={{ stroke: colors.gridLine }} />
+          <YAxis tick={{ fill: colors.axisMuted, fontSize: 11 }} axisLine={{ stroke: colors.gridLine }} allowDecimals={false} width={28} />
           <Bar dataKey="count" radius={[3, 3, 0, 0]} cursor="pointer" onClick={(_, i) => setSelected(i)}>
             {data.map((d) => (
               <Cell
                 key={d.index}
-                fill={d.index === yourBucketIndex ? "#e8a33d" : d.index === selected ? "#5B8DEF" : "#3a4653"}
+                fill={d.index === yourBucketIndex ? "#e8a33d" : d.index === selected ? "#5B8DEF" : colors.barNeutral}
               />
             ))}
           </Bar>
@@ -69,7 +71,7 @@ export default function DistributionChart<T extends HistogramBucket>({
             <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
               {selectedLanguages.map(([lang, count]) => (
                 <li key={lang} className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-sm" style={{ background: LANGUAGE_COLOR[lang] ?? "#6b7a8b" }} />
+                  <span className="h-2 w-2 rounded-sm" style={{ background: LANGUAGE_COLOR[lang] ?? colors.axisMuted }} />
                   <span className="text-ink-300">{t(LANGUAGE_LABEL[lang] ?? lang)}</span>
                   <span className="font-mono text-ink-500">{count}</span>
                 </li>
