@@ -7,6 +7,7 @@ import { previewText } from "@/lib/textPreview";
 import { stripProblemNumber } from "@/lib/problemTitle";
 import type { ProblemDetail } from "@/lib/types";
 import ProblemView from "@/components/ProblemView";
+import StatementRenderer from "@/components/StatementRenderer";
 
 // Metadata must reflect the same page for every visitor (search engines don't have a session), so
 // this uses the public serverFetch rather than the authed one the page body uses for
@@ -69,7 +70,13 @@ export default async function ProblemPage({
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />
-      <ProblemView problem={problem} contestId={contestId} />
+      <ProblemView
+        problem={problem}
+        contestId={contestId}
+        statementNode={<StatementRenderer content={problem.statementMd} />}
+        inputSpecNode={problem.inputSpecMd ? <StatementRenderer content={problem.inputSpecMd} /> : null}
+        outputSpecNode={problem.outputSpecMd ? <StatementRenderer content={problem.outputSpecMd} /> : null}
+      />
     </>
   );
 }

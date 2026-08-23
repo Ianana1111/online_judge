@@ -1,14 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
-import StatementRenderer from "@/components/StatementRenderer";
 import { Skeleton } from "@/components/Skeleton";
 import Avatar from "@/components/Avatar";
 import { estimateReadMinutes } from "@/lib/readTime";
 import type { PostDetail } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
+
+// Markdown/KaTeX parsing is a large chunk unrelated to the rest of this page — deferring it out
+// of the initial page JS keeps the surrounding content interactive sooner.
+const StatementRenderer = dynamic(() => import("@/components/StatementRenderer"), {
+  loading: () => <Skeleton className="h-64 w-full" />,
+});
 
 export default function PostDetailClient({ id }: { id: string }) {
   const t = useT();
