@@ -1,6 +1,7 @@
 "use client";
 
 import Editor from "@monaco-editor/react";
+import "@/lib/monacoLoader";
 import { useTheme } from "@/lib/useTheme";
 
 const MONACO_LANG: Record<string, string> = {

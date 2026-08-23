@@ -13,3 +13,6 @@ packages/db/prisma/dev.db
 generated
 .claude/
 .vercel
+# Self-hosted Monaco assets — copied from node_modules/monaco-editor/min/vs by
+# scripts/copy-monaco.js (see apps/web's postinstall), not source, not committed.
+apps/web/public/vs
