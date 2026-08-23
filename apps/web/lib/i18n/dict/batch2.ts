@@ -61,6 +61,7 @@ export const batch2Dictionary: Record<string, string> = {
   "Your approach, gotchas, things to remember next time…": "解題思路、踩過的坑、下次要記得的事……",
   "Saved ✓": "已儲存 ✓",
   "Save note": "儲存筆記",
+  "Could not save your note": "無法儲存筆記",
 
   // --- components/ProblemStatsPanel.tsx ---
   "Nobody's solved this one yet — be the first, and these stats fill in.": "還沒有人解出這一題，成為第一個，這裡的統計就會開始累積。",

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import { Skeleton } from "@/components/Skeleton";
 import type { ProblemNote } from "@/lib/types";
@@ -15,6 +15,7 @@ export default function ProblemNotePanel({ slug }: { slug: string }) {
   const [content, setContent] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["problem-note", slug],
@@ -34,11 +35,16 @@ export default function ProblemNotePanel({ slug }: { slug: string }) {
   async function save() {
     setSaving(true);
     setSaved(false);
+    setError(null);
     try {
       await apiFetch(`/problems/${slug}/note`, { method: "PUT", body: { content } });
       await qc.invalidateQueries({ queryKey: ["problem-note", slug] });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
+    } catch (e) {
+      // Previously had no catch — a failed save on a long note silently discarded it with the
+      // button just returning to normal, no different from a successful save at a glance.
+      setError(e instanceof ApiError ? e.message : t("Could not save your note"));
     } finally {
       setSaving(false);
     }
@@ -53,6 +59,7 @@ export default function ProblemNotePanel({ slug }: { slug: string }) {
         onChange={(e) => setContent(e.target.value)}
         placeholder={t("Your approach, gotchas, things to remember next time…")}
       />
+      {error && <p className="text-sm text-verdict-wa">{error}</p>}
       <button onClick={save} disabled={saving} className="oj-btn-primary">
         {saving ? t("Saving…") : saved ? t("Saved ✓") : t("Save note")}
       </button>

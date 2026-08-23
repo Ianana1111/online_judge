@@ -89,11 +89,14 @@ export default function AdminAssignmentsPage() {
   }
 
   async function remove(id: string) {
+    if (!confirm(t("Delete this assignment? This cannot be undone."))) return;
     try {
       await apiFetch(`/assignments/${id}`, { method: "DELETE" });
       await qc.invalidateQueries({ queryKey: ["assignments", "admin"] });
-    } catch {
-      /* best-effort */
+    } catch (e) {
+      // Previously silently swallowed — a failed delete left the assignment still listed with no
+      // explanation of why the click appeared to do nothing.
+      setError(e instanceof ApiError ? e.message : t("Could not delete this assignment"));
     }
   }
 

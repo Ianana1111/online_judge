@@ -266,6 +266,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
         </span>
       </div>
 
+      <div className="overflow-x-auto">
       <table className="oj-table">
         <thead>
           <tr>
@@ -385,6 +386,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
           )}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

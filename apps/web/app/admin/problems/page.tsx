@@ -17,6 +17,11 @@ const EMPTY_FORM = {
   memoryLimitKb: 65536,
   difficulty: 1,
   source: "CUSTOM" as const,
+  // A problem judges locally once it has TestCase rows (added separately, after creation), and
+  // relays to UVa's own judge otherwise — but only if it has this. Without either, every
+  // submission to a problem created here would come back SE ("Remote judging is not configured"),
+  // since there was previously no way to set this at creation time at all.
+  uvaId: "",
 };
 
 export default function AdminProblemsPage() {
@@ -42,7 +47,9 @@ export default function AdminProblemsPage() {
     setError(null);
     setSaving(true);
     try {
-      await apiFetch("/problems", { method: "POST", body: form });
+      const { uvaId, ...rest } = form;
+      const body = uvaId.trim() ? { ...rest, uvaId: Number(uvaId) } : rest;
+      await apiFetch("/problems", { method: "POST", body });
       setForm(EMPTY_FORM);
       await qc.invalidateQueries({ queryKey: ["problems", "admin"] });
     } catch (e) {
@@ -86,6 +93,19 @@ export default function AdminProblemsPage() {
             <option value="UVA">UVa</option>
             <option value="CPE">CPE</option>
           </select>
+        </div>
+        <div>
+          <label className="mb-1 block text-sm text-ink-300">{t("UVa problem number (optional)")}</label>
+          <input
+            type="number"
+            className="oj-input"
+            value={form.uvaId}
+            onChange={(e) => setForm((f) => ({ ...f, uvaId: e.target.value }))}
+            placeholder="100"
+          />
+          <p className="mt-1 text-xs text-ink-500">
+            {t("Required for judging unless you add local test cases after creating this problem — otherwise every submission will come back as a system error.")}
+          </p>
         </div>
         <div className="sm:col-span-2">
           <label className="mb-1 block text-sm text-ink-300">{t("Statement (Markdown)")}</label>
