@@ -38,11 +38,14 @@ export default function DiscussionPanel({ problemId }: { problemId: string }) {
   }
 
   async function remove(id: string) {
+    if (!confirm(t("Delete this comment? This cannot be undone."))) return;
     try {
       await apiFetch(`/discussions/${id}`, { method: "DELETE" });
       await qc.invalidateQueries({ queryKey: ["discussions", problemId] });
-    } catch {
-      /* best-effort */
+    } catch (e) {
+      // Previously silently swallowed — a failed delete (e.g. a permission error) left the comment
+      // still there with no explanation of why the click appeared to do nothing.
+      setError(e instanceof ApiError ? e.message : t("Could not delete this comment"));
     }
   }
 

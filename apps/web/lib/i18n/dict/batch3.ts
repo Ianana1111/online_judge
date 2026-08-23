@@ -8,6 +8,8 @@ export const batch3Dictionary: Record<string, string> = {
 
   // --- components/DiscussionPanel.tsx ---
   "Could not post": "無法發布",
+  "Delete this comment? This cannot be undone.": "刪除這則留言？這個動作無法復原。",
+  "Could not delete this comment": "無法刪除這則留言",
   "Loading discussion…": "討論載入中…",
   "Ask a question or share a hint…": "提出問題或分享一點提示…",
   "Posting…": "發布中…",

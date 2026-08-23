@@ -50,6 +50,9 @@ export const batch4Dictionary: Record<string, string> = {
   "Slug": "網址代稱",
   "Source": "來源",
   "Custom": "自訂",
+  "UVa problem number (optional)": "UVa 題號（選填）",
+  "Required for judging unless you add local test cases after creating this problem — otherwise every submission will come back as a system error.":
+    "除非之後手動新增本地測資，否則判題需要這個欄位——沒填的話，每次送出都會回傳系統錯誤。",
   "Statement (Markdown)": "題目敘述（Markdown）",
   "Time limit (ms)": "時間限制（毫秒）",
   "Memory limit (KB)": "記憶體限制（KB）",
@@ -111,6 +114,8 @@ export const batch4Dictionary: Record<string, string> = {
 
   // --- app/admin/assignments/page.tsx ---
   "Could not create assignment": "無法建立作業",
+  "Delete this assignment? This cannot be undone.": "刪除這份作業？這個動作無法復原。",
+  "Could not delete this assignment": "無法刪除這份作業",
   "Admin · Assignments": "後台．作業",
   "Due date (optional)": "截止日期（選填）",
   "Description (optional)": "說明（選填）",

@@ -484,6 +484,7 @@ function PreferencesForm() {
   const [dailyGoal, setDailyGoal] = useState(1);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Falls back to the pre-4e localStorage value on a user's first load after this shipped, so
@@ -495,6 +496,7 @@ function PreferencesForm() {
 
   async function save() {
     setSaving(true);
+    setError(null);
     try {
       const { settings } = await apiFetch<{ settings: UserSettings }>("/users/me/settings", {
         method: "PATCH",
@@ -504,6 +506,10 @@ function PreferencesForm() {
       if (user) setUser({ ...user, settings });
       setSaved(true);
       setTimeout(() => setSaved(false), 1500);
+    } catch (e) {
+      // Previously had no catch at all — a failed save silently left `saving` reset to false with
+      // no confirmation and no error, indistinguishable from a successful save at a glance.
+      setError(e instanceof ApiError ? e.message : t("Could not save your preferences"));
     } finally {
       setSaving(false);
     }
@@ -538,6 +544,7 @@ function PreferencesForm() {
       <p className="text-xs text-ink-500">
         {t("Light/dark theme is in the top-right corner of the page, next to your account menu.")}
       </p>
+      {error && <p className="text-sm text-verdict-wa">{error}</p>}
       <button onClick={save} disabled={saving} className="oj-btn-primary">
         {saving ? t("Saving…") : saved ? t("Saved ✓") : t("Save")}
       </button>
