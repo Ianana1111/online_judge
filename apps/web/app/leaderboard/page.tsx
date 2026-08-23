@@ -49,7 +49,12 @@ export default function LeaderboardPage() {
   const [school, setSchool] = useState<string | null>(null);
   const { user } = useAuthStore();
 
-  const { data: rows, isLoading } = useQuery({
+  const {
+    data: rows,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["leaderboard", period, scope, school],
     queryFn: () =>
       apiFetch<LeaderboardRow[]>(
@@ -162,6 +167,18 @@ export default function LeaderboardPage() {
       )}
 
       {isLoading && <SkeletonList rows={8} />}
+
+      {/* Previously the empty-state condition below (displayRows?.length === 0) was also `false`
+          on error (undefined !== 0), so a failed fetch rendered nothing at all here — no table,
+          no empty message, no indication anything was wrong. */}
+      {isError && (
+        <div className="oj-card flex flex-col items-center gap-2 p-6 text-center">
+          <p className="text-sm text-ink-300">{t("Something went wrong")}</p>
+          <button type="button" onClick={() => refetch()} className="oj-btn-secondary px-4 py-1.5 text-xs">
+            {t("Try again")}
+          </button>
+        </div>
+      )}
 
       {!isLoading && displayRows && displayRows.length > 0 && (
         <div className="oj-card overflow-x-auto">

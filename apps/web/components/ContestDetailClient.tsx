@@ -18,7 +18,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
   const [activeProblemSlug, setActiveProblemSlug] = useState<string | null>(null);
   const [now, setNow] = useState(Date.now());
 
-  const { data: contest, isLoading } = useQuery({
+  const { data: contest, isLoading, isError, refetch } = useQuery({
     queryKey: ["contest", contestId],
     queryFn: () => apiFetch<ContestDetail>(`/contests/${contestId}`),
     refetchInterval: 15_000,
@@ -42,7 +42,22 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
     }
   }
 
-  if (isLoading || !contest) return <p className="text-sm text-ink-400">{t("Loading contest…")}</p>;
+  if (isLoading) return <p className="text-sm text-ink-400">{t("Loading contest…")}</p>;
+
+  // Previously fell into the same "Loading contest…" branch as the isLoading check above — with
+  // no isError check, a failed fetch left isLoading false and contest undefined forever, so an
+  // API error or slow cold start showed a permanent, misleading loading message instead of any
+  // indication something was actually wrong.
+  if (isError || !contest) {
+    return (
+      <div className="oj-card flex flex-col items-center gap-2 p-6 text-center">
+        <p className="text-sm text-ink-300">{t("Something went wrong")}</p>
+        <button type="button" onClick={() => refetch()} className="oj-btn-secondary px-4 py-1.5 text-xs">
+          {t("Try again")}
+        </button>
+      </div>
+    );
+  }
 
   const scheduledNotStarted = !!contest.startAt && new Date(contest.startAt).getTime() > now;
   const isRunning =

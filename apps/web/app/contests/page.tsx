@@ -122,7 +122,12 @@ export default function ContestsPage() {
   const initialTab = searchParams.get("tab")?.toUpperCase() === "GPE" ? "GPE" : "CPE";
   const [tab, setTab] = useState<"CPE" | "GPE">(initialTab);
 
-  const { data: all, isLoading: allLoading } = useQuery({
+  const {
+    data: all,
+    isLoading: allLoading,
+    isError: allIsError,
+    refetch: refetchAll,
+  } = useQuery({
     queryKey: ["contests", "all"],
     queryFn: () => apiFetch<ContestListItem[]>("/contests"),
   });
@@ -207,59 +212,72 @@ export default function ContestsPage() {
 
       {allLoading && <SkeletonList rows={3} />}
 
-      {!allLoading && (
+      {/* Without this, a failed /contests fetch fell through to `all ?? []` everywhere below and
+          rendered as "Nothing here yet." — indistinguishable from a genuinely empty archive. */}
+      {allIsError && (
+        <div className="oj-card flex flex-col items-center gap-2 p-6 text-center">
+          <p className="text-sm text-ink-300">{t("Something went wrong")}</p>
+          <button type="button" onClick={() => refetchAll()} className="oj-btn-secondary px-4 py-1.5 text-xs">
+            {t("Try again")}
+          </button>
+        </div>
+      )}
+
+      {!allLoading && !allIsError && (
         <div className="grid gap-6 lg:grid-cols-2">
           {cpeSorted[0] && <LatestSitting contest={cpeSorted[0].c} date={cpeSorted[0].d} kind="CPE" />}
           {gpeSorted[0] && <LatestSitting contest={gpeSorted[0].c} date={gpeSorted[0].d} kind="GPE" />}
         </div>
       )}
 
-      <div>
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h2 className="font-display text-lg font-bold text-ink-50">{t("Every past sitting")}</h2>
-            <p className="mt-0.5 text-xs text-ink-500">
-              {t("{n} papers · 180 minutes each", { n: activeArchive.length })}
-            </p>
-          </div>
-          <div className="flex rounded border border-ink-700 p-0.5">
-            {(["CPE", "GPE"] as const).map((k) => (
-              <button
-                key={k}
-                onClick={() => setTab(k)}
-                className={`rounded px-3 py-1 text-xs font-semibold transition-colors ${
-                  tab === k ? "bg-brand text-onbrand" : "text-ink-400 hover:text-ink-100"
-                }`}
-              >
-                {k} ({k === "CPE" ? cpeSorted.length : gpeSorted.length})
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-5">
-          {archiveByYear.map(([year, sittings]) => (
-            <div key={year} className="flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-5">
-              <div className="flex shrink-0 items-center gap-3 sm:w-20">
-                <span className="font-display text-sm font-bold tabular-nums text-ink-400">{year}</span>
-                <span className="h-px flex-1 bg-ink-800 sm:hidden" />
-              </div>
-              {/* Wrapping row rather than a fixed grid: a year holds at most ~4 sittings, so
-                  grid columns wide enough for the busiest year would leave the rest half-empty,
-                  and the column alignment wouldn't mean anything anyway (each year's sittings
-                  fall in different months). */}
-              <div className="flex flex-1 flex-wrap gap-2">
-                {sittings.map(({ c, d }) => (
-                  <ArchiveChip key={c.id} contest={c} date={d} kind={tab} />
-                ))}
-              </div>
+      {!allIsError && (
+        <div>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="font-display text-lg font-bold text-ink-50">{t("Every past sitting")}</h2>
+              <p className="mt-0.5 text-xs text-ink-500">
+                {t("{n} papers · 180 minutes each", { n: activeArchive.length })}
+              </p>
             </div>
-          ))}
-          {activeArchive.length === 0 && (
-            <p className="oj-card p-4 text-center text-sm text-ink-400">{t("Nothing here yet.")}</p>
-          )}
+            <div className="flex rounded border border-ink-700 p-0.5">
+              {(["CPE", "GPE"] as const).map((k) => (
+                <button
+                  key={k}
+                  onClick={() => setTab(k)}
+                  className={`rounded px-3 py-1 text-xs font-semibold transition-colors ${
+                    tab === k ? "bg-brand text-onbrand" : "text-ink-400 hover:text-ink-100"
+                  }`}
+                >
+                  {k} ({k === "CPE" ? cpeSorted.length : gpeSorted.length})
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-5">
+            {archiveByYear.map(([year, sittings]) => (
+              <div key={year} className="flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-5">
+                <div className="flex shrink-0 items-center gap-3 sm:w-20">
+                  <span className="font-display text-sm font-bold tabular-nums text-ink-400">{year}</span>
+                  <span className="h-px flex-1 bg-ink-800 sm:hidden" />
+                </div>
+                {/* Wrapping row rather than a fixed grid: a year holds at most ~4 sittings, so
+                    grid columns wide enough for the busiest year would leave the rest half-empty,
+                    and the column alignment wouldn't mean anything anyway (each year's sittings
+                    fall in different months). */}
+                <div className="flex flex-1 flex-wrap gap-2">
+                  {sittings.map(({ c, d }) => (
+                    <ArchiveChip key={c.id} contest={c} date={d} kind={tab} />
+                  ))}
+                </div>
+              </div>
+            ))}
+            {activeArchive.length === 0 && !allLoading && (
+              <p className="oj-card p-4 text-center text-sm text-ink-400">{t("Nothing here yet.")}</p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

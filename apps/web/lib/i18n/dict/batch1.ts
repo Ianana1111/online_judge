@@ -26,6 +26,7 @@ export const batch1Dictionary: Record<string, string> = {
   "This page hit an unexpected error. It's been logged — try again, or head back to the homepage.":
     "這個頁面發生非預期的錯誤，我們已經記錄下來了——可以再試一次，或是回首頁。",
   "Try again": "再試一次",
+  "Some data on this page failed to load — try refreshing.": "這個頁面有部分資料載入失敗——請重新整理。",
 
   // --- app/not-found.tsx ---
   "This page doesn't exist": "這個頁面不存在",

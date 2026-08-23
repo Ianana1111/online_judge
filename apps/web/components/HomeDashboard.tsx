@@ -217,46 +217,69 @@ export default function HomeDashboard() {
   const t = useT();
   const { user } = useAuthStore();
 
-  const { data: daily } = useQuery({
+  const dailyQuery = useQuery({
     queryKey: ["daily"],
     queryFn: () => apiFetch<DailyStats>("/users/me/daily"),
     enabled: !!user,
   });
-  const { data: recommended } = useQuery({
+  const recommendedQuery = useQuery({
     queryKey: ["recommended"],
     queryFn: () => apiFetch<RecommendedProblems>("/problems/recommended"),
     enabled: !!user,
   });
-  const { data: recent } = useQuery({
+  const recentQuery = useQuery({
     queryKey: ["recent-submissions"],
     queryFn: () => apiFetch<{ items: SubmissionListItem[] }>("/submissions?user=me&pageSize=5"),
     enabled: !!user,
   });
   // Same queryKey OnboardingChecklist uses for the same handle, so react-query dedupes the two
   // components down to a single network request instead of firing it twice on this page.
-  const { data: profile } = useQuery({
+  const profileQuery = useQuery({
     queryKey: ["users", user?.handle, "profile"],
     queryFn: () => apiFetch<UserProfile>(`/users/${user!.handle}`),
     enabled: !!user,
   });
-  const { data: achievements } = useQuery({
+  const achievementsQuery = useQuery({
     queryKey: ["achievements", user?.handle],
     queryFn: () => apiFetch<Achievement[]>(`/achievements/${user!.handle}`),
     enabled: !!user,
   });
-  const { data: stats } = useQuery({
+  const statsQuery = useQuery({
     queryKey: ["users", user?.handle, "stats"],
     queryFn: () => apiFetch<UserStats>(`/users/${user!.handle}/stats`),
     enabled: !!user,
   });
-  const { data: weekBoard } = useQuery({
+  const weekBoardQuery = useQuery({
     queryKey: ["leaderboard", "week", "all"],
     queryFn: () => apiFetch<LeaderboardRow[]>("/leaderboard?period=week&scope=all"),
     enabled: !!user,
     staleTime: 60_000,
   });
+  const { data: daily } = dailyQuery;
+  const { data: recommended } = recommendedQuery;
+  const { data: recent } = recentQuery;
+  const { data: profile } = profileQuery;
+  const { data: achievements } = achievementsQuery;
+  const { data: stats } = statsQuery;
+  const { data: weekBoard } = weekBoardQuery;
 
   if (!user) return null;
+
+  // Previously, a failed fetch on any of the 7 queries above just left that widget showing its
+  // own "–" placeholder with nothing to say why — indistinguishable from "you have no data yet."
+  // One shared banner instead of per-widget error UI: redesigning all 7 widgets individually for
+  // this is a much larger change than the actual problem (an outage/cold-start being invisible)
+  // calls for, and every one of them already has a working retry path (the query itself retries
+  // once automatically, and React Query refetches on window refocus by default).
+  const anyDashboardQueryFailed = [
+    dailyQuery,
+    recommendedQuery,
+    recentQuery,
+    profileQuery,
+    achievementsQuery,
+    statsQuery,
+    weekBoardQuery,
+  ].some((q) => q.isError);
 
   const latestAchievement = achievements?.length
     ? [...achievements].sort((a, b) => +new Date(b.earnedAt) - +new Date(a.earnedAt))[0]
@@ -282,6 +305,11 @@ export default function HomeDashboard() {
 
   return (
     <div className="space-y-8 py-6">
+      {anyDashboardQueryFailed && (
+        <div className="oj-card flex items-center justify-between gap-3 border-verdict-wa/30 bg-verdict-wa/5 px-4 py-2.5 text-sm">
+          <span className="text-ink-200">{t("Some data on this page failed to load — try refreshing.")}</span>
+        </div>
+      )}
       {/* The hero is deliberately a different *kind* of surface from everything below it — wider
           radius, a brand-tinted hairline instead of the standard one, and a warm ambient wash that
           fades out rather than stopping at a hard edge. That contrast is what stops the page from
