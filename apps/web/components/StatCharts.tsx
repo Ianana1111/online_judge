@@ -4,6 +4,7 @@ import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis
 import type { UserStats, Verdict } from "@/lib/types";
 import { LANGUAGE_LABEL, VERDICT_LABEL } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
+import { useChartColors } from "@/lib/useChartColors";
 
 // Fixed categorical order/hues — never reassigned based on which languages appear in the data.
 const LANGUAGE_ORDER = ["cpp17", "c11", "python3", "java17"];
@@ -31,16 +32,16 @@ const VERDICT_COLOR: Record<Verdict, string> = {
   JUDGING: "#4a6fa5",
 };
 
-const tooltipStyle = {
-  background: "#141a22",
-  border: "1px solid #2a3441",
-  borderRadius: 6,
-  fontSize: 12,
-  color: "#e8ecef",
-};
-
 export default function StatCharts({ stats }: { stats: UserStats }) {
   const t = useT();
+  const colors = useChartColors();
+  const tooltipStyle = {
+    background: colors.tooltipBg,
+    border: `1px solid ${colors.tooltipBorder}`,
+    borderRadius: 6,
+    fontSize: 12,
+    color: colors.tooltipText,
+  };
   const langData = LANGUAGE_ORDER.map((key) => ({
     key,
     name: t(LANGUAGE_LABEL[key] ?? key),
@@ -76,7 +77,7 @@ export default function StatCharts({ stats }: { stats: UserStats }) {
               <PieChart>
                 <Pie data={langData} dataKey="value" nameKey="name" innerRadius={40} outerRadius={70} paddingAngle={2}>
                   {langData.map((d) => (
-                    <Cell key={d.key} fill={LANGUAGE_COLOR[d.key]} stroke="#0e1218" strokeWidth={2} />
+                    <Cell key={d.key} fill={LANGUAGE_COLOR[d.key]} stroke={colors.chartStroke} strokeWidth={2} />
                   ))}
                 </Pie>
                 <Tooltip contentStyle={tooltipStyle} />
@@ -127,9 +128,9 @@ export default function StatCharts({ stats }: { stats: UserStats }) {
         <h3 className="mb-3 text-sm font-semibold text-ink-200">{t("Solved by difficulty")}</h3>
         <ResponsiveContainer width="100%" height={160}>
           <BarChart data={difficultyData} margin={{ left: 8, right: 16 }}>
-            <XAxis dataKey="difficulty" tick={{ fill: "#9aa8b5", fontSize: 12 }} axisLine={{ stroke: "#2a3441" }} />
-            <YAxis tick={{ fill: "#6b7a8b", fontSize: 11 }} axisLine={{ stroke: "#2a3441" }} allowDecimals={false} />
-            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "#1c2530" }} />
+            <XAxis dataKey="difficulty" tick={{ fill: colors.axisMain, fontSize: 12 }} axisLine={{ stroke: colors.gridLine }} />
+            <YAxis tick={{ fill: colors.axisMuted, fontSize: 11 }} axisLine={{ stroke: colors.gridLine }} allowDecimals={false} />
+            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: colors.cursorFill }} />
             <Bar dataKey="count" radius={[4, 4, 0, 0]}>
               {difficultyData.map((_, i) => (
                 <Cell key={i} fill="#e8a33d" fillOpacity={0.4 + i * 0.2} />

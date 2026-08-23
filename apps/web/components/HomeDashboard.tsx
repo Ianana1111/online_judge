@@ -40,7 +40,7 @@ const REASON_ICON = { collection: BookOpenIcon, consolidate: LayersIcon, stretch
 // Fills the recommendation card's left accent stripe — one color per reason a problem was
 // suggested, so the three kinds stay distinguishable without reading the label.
 const REASON_ACCENT = {
-  collection: "bg-sky-400/70",
+  collection: "bg-verdict-pending/70",
   consolidate: "bg-brand/70",
   stretch: "bg-verdict-wa/70",
 } as const;
@@ -75,7 +75,7 @@ function DifficultyStars({ d }: { d: number }) {
   return (
     <span className="font-mono text-xs">
       <span className="text-brand">{"★".repeat(d)}</span>
-      <span className="text-ink-700">{"★".repeat(Math.max(0, 4 - d))}</span>
+      <span className="text-ink-500">{"★".repeat(Math.max(0, 4 - d))}</span>
     </span>
   );
 }
@@ -102,8 +102,8 @@ function StreakFlame({ streak, atRisk, frozenToday }: { streak: number; atRisk: 
   if (streak <= 0) {
     return (
       <div className="flex flex-col items-center gap-1">
-        <FlameIcon className="h-6 w-6 text-ink-700" />
-        <span className="text-[10px] uppercase tracking-wide text-ink-600">{t("no streak yet")}</span>
+        <FlameIcon className="h-6 w-6 text-ink-500" />
+        <span className="text-[10px] uppercase tracking-wide text-ink-400">{t("no streak yet")}</span>
       </div>
     );
   }
@@ -111,8 +111,8 @@ function StreakFlame({ streak, atRisk, frozenToday }: { streak: number; atRisk: 
   if (frozenToday) {
     return (
       <div className="flex flex-col items-center gap-1">
-        <SnowflakeIcon className={`${size} text-sky-400`} />
-        <span className="font-display font-bold tabular-nums text-sky-400">{streak}</span>
+        <SnowflakeIcon className={`${size} text-verdict-pending`} />
+        <span className="font-display font-bold tabular-nums text-verdict-pending">{streak}</span>
         <span className="text-[10px] uppercase tracking-wide text-ink-500">{t("protected today")}</span>
       </div>
     );
@@ -150,7 +150,7 @@ function StreakFreezeButton({ freezeCount }: { freezeCount: number }) {
         onClick={() => mutation.mutate()}
         disabled={mutation.isPending}
         title={t("Life gets busy — spend one to keep your streak alive today without solving anything.")}
-        className="inline-flex items-center gap-1.5 rounded border border-sky-400/40 bg-sky-400/10 px-2.5 py-1.5 text-xs font-medium text-sky-300 transition-colors hover:bg-sky-400/20 disabled:opacity-50"
+        className="inline-flex items-center gap-1.5 rounded border border-verdict-pending/40 bg-verdict-pending/10 px-2.5 py-1.5 text-xs font-medium text-verdict-pending transition-colors hover:bg-verdict-pending/20 disabled:opacity-50"
       >
         <SnowflakeIcon className="h-3.5 w-3.5" />
         {mutation.isPending ? t("Using…") : t("Use a freeze ({n} left)", { n: freezeCount })}
@@ -347,7 +347,7 @@ export default function HomeDashboard() {
             )}
             {daily && daily.loginStreak > 1 && (
               <p className="mt-1 flex items-center gap-1 text-xs text-ink-500">
-                <CalendarCheckIcon className="h-3.5 w-3.5 text-sky-400" />
+                <CalendarCheckIcon className="h-3.5 w-3.5 text-verdict-pending" />
                 {t("{n} days in a row you've shown up", { n: daily.loginStreak })}
                 {daily.loginMilestoneHit && t(" — bonus streak-freeze earned!")}
               </p>
@@ -380,12 +380,12 @@ export default function HomeDashboard() {
               label={daily?.frozenToday ? t("protected today") : daily?.atRisk ? t("at risk today") : t("day streak")}
               valueClassName={
                 daily?.frozenToday
-                  ? "text-sky-400"
+                  ? "text-verdict-pending"
                   : daily?.atRisk
                     ? "text-verdict-wa animate-pulse-soft"
                     : daily && daily.currentStreak > 0
                       ? "text-verdict-tle"
-                      : "text-ink-600"
+                      : "text-ink-400"
               }
             />
           </div>

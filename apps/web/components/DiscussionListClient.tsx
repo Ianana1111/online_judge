@@ -15,9 +15,9 @@ function Byline({ post, size = 20 }: { post: PostListItem; size?: number }) {
     <div className="flex items-center gap-2 text-xs text-ink-500">
       <Avatar avatarUrl={post.authorAvatarUrl} handle={post.authorHandle} size={size} />
       <span className="text-ink-300">{post.authorHandle}</span>
-      <span className="text-ink-700">·</span>
+      <span className="text-ink-500">·</span>
       <span className="font-mono">{new Date(post.createdAt).toLocaleDateString()}</span>
-      <span className="text-ink-700">·</span>
+      <span className="text-ink-500">·</span>
       <span>{estimateReadMinutesFromLength(post.bodyLength)} 分鐘閱讀</span>
     </div>
   );

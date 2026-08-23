@@ -38,8 +38,8 @@ function sortDirectionOf(current: SortKey | null, pair: [SortKey, SortKey]): "de
 function SortArrows({ direction }: { direction: "desc" | "asc" | null }) {
   return (
     <span className="inline-flex flex-col leading-none">
-      <span className={`text-[9px] ${direction === "asc" ? "text-brand" : "text-ink-700"}`}>▲</span>
-      <span className={`-mt-1 text-[9px] ${direction === "desc" ? "text-brand" : "text-ink-700"}`}>▼</span>
+      <span className={`text-[9px] ${direction === "asc" ? "text-brand" : "text-ink-500"}`}>▲</span>
+      <span className={`-mt-1 text-[9px] ${direction === "desc" ? "text-brand" : "text-ink-500"}`}>▼</span>
     </span>
   );
 }
@@ -276,7 +276,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
                   type="button"
                   onClick={() => handleHeaderClick(["solved-first", "unsolved-first"], true)}
                   title={isPro ? t("Sort by solved") : undefined}
-                  className={`inline-flex items-center gap-1 ${isPro ? "text-verdict-ac hover:text-brand" : "text-ink-600 hover:text-brand"}`}
+                  className={`inline-flex items-center gap-1 ${isPro ? "text-verdict-ac hover:text-brand" : "text-ink-400 hover:text-brand"}`}
                 >
                   ✓
                   {isPro ? (
@@ -363,13 +363,13 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
                   p.cpeAppearances ? (
                     <span className="text-brand">×{p.cpeAppearances}</span>
                   ) : (
-                    <span className="text-ink-700">—</span>
+                    <span className="text-ink-400">—</span>
                   )
                 ) : (
                   <Link
                     href="/upgrade"
                     title={t("Pro feature — upgrade to see how many past CPE exams this problem appeared in")}
-                    className="inline-flex text-ink-600 hover:text-brand"
+                    className="inline-flex text-ink-400 hover:text-brand"
                   >
                     <LockIcon />
                   </Link>

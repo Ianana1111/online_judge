@@ -73,7 +73,7 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
           <span className="truncate">{stripProblemNumber(prev.title, prev.uvaId)}</span>
         </Link>
       ) : (
-        <span className="flex-1 text-sm text-ink-700">{t("← Start of list")}</span>
+        <span className="flex-1 text-sm text-ink-500">{t("← Start of list")}</span>
       )}
 
       <span className="shrink-0 font-mono text-xs text-ink-500">
@@ -91,7 +91,7 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
           </span>
         </Link>
       ) : (
-        <span className="flex-1 text-right text-sm text-ink-700">{t("End of list →")}</span>
+        <span className="flex-1 text-right text-sm text-ink-500">{t("End of list →")}</span>
       )}
     </div>
   );

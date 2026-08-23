@@ -27,6 +27,7 @@ import type {
   TrafficSummary,
 } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
+import { useChartColors } from "@/lib/useChartColors";
 
 // Ordered easiest -> hardest (algorithmic sophistication required), not by frequency — so the
 // stacked bars and legend read as "simple techniques first, advanced ones stacking on top".
@@ -74,18 +75,18 @@ const TOPIC_COLOR: Record<string, string> = {
 };
 const LABEL_ORDER = ["A", "B", "C", "D", "E", "F", "G"];
 
-const tooltipStyle = {
-  background: "#141a22",
-  border: "1px solid #2a3441",
-  borderRadius: 6,
-  fontSize: 12,
-  color: "#e8ecef",
-};
-
 export default function AdminAnalyticsPage() {
   const t = useT();
   const { user, status } = useAuthStore();
   const isAdmin = user?.role === "ADMIN";
+  const colors = useChartColors();
+  const tooltipStyle = {
+    background: colors.tooltipBg,
+    border: `1px solid ${colors.tooltipBorder}`,
+    borderRadius: 6,
+    fontSize: 12,
+    color: colors.tooltipText,
+  };
 
   const { data: avgTrend } = useQuery({
     queryKey: ["analytics", "avg-correct-trend"],
@@ -182,14 +183,14 @@ export default function AdminAnalyticsPage() {
           ) : (
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={dailyTraffic} margin={{ left: 8, right: 16 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1c2530" />
+                <CartesianGrid strokeDasharray="3 3" stroke={colors.cursorFill} />
                 <XAxis
                   dataKey="date"
-                  tick={{ fill: "#6b7a8b", fontSize: 10 }}
-                  axisLine={{ stroke: "#2a3441" }}
+                  tick={{ fill: colors.axisMuted, fontSize: 10 }}
+                  axisLine={{ stroke: colors.gridLine }}
                   interval="preserveStartEnd"
                 />
-                <YAxis tick={{ fill: "#6b7a8b", fontSize: 11 }} axisLine={{ stroke: "#2a3441" }} allowDecimals={false} />
+                <YAxis tick={{ fill: colors.axisMuted, fontSize: 11 }} axisLine={{ stroke: colors.gridLine }} allowDecimals={false} />
                 <Tooltip contentStyle={tooltipStyle} />
                 <Line type="monotone" dataKey="count" stroke="#5b8def" strokeWidth={2} dot={false} name={t("Pageviews")} />
               </LineChart>
@@ -248,18 +249,18 @@ export default function AdminAnalyticsPage() {
           ) : (
             <ResponsiveContainer width="100%" height={260}>
               <LineChart data={avgTrend} margin={{ left: 8, right: 16 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1c2530" />
+                <CartesianGrid strokeDasharray="3 3" stroke={colors.cursorFill} />
                 <XAxis
                   dataKey="date"
-                  tick={{ fill: "#6b7a8b", fontSize: 10 }}
-                  axisLine={{ stroke: "#2a3441" }}
+                  tick={{ fill: colors.axisMuted, fontSize: 10 }}
+                  axisLine={{ stroke: colors.gridLine }}
                   interval="preserveStartEnd"
                 />
                 <YAxis
                   domain={[0, 7]}
-                  tick={{ fill: "#6b7a8b", fontSize: 11 }}
-                  axisLine={{ stroke: "#2a3441" }}
-                  label={{ value: t("avg correct / 7"), angle: -90, fill: "#6b7a8b", fontSize: 11 }}
+                  tick={{ fill: colors.axisMuted, fontSize: 11 }}
+                  axisLine={{ stroke: colors.gridLine }}
+                  label={{ value: t("avg correct / 7"), angle: -90, fill: colors.axisMuted, fontSize: 11 }}
                 />
                 <Tooltip contentStyle={tooltipStyle} />
                 <Line type="monotone" dataKey="avgCorrectCount" stroke="#e8a33d" strokeWidth={2} dot={false} />
@@ -280,11 +281,11 @@ export default function AdminAnalyticsPage() {
             <>
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={answerRate} margin={{ left: 8, right: 16 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1c2530" />
-                  <XAxis dataKey="label" tick={{ fill: "#9aa8b5", fontSize: 12 }} axisLine={{ stroke: "#2a3441" }} />
-                  <YAxis tick={{ fill: "#6b7a8b", fontSize: 11 }} axisLine={{ stroke: "#2a3441" }} allowDecimals={false} />
-                  <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "#1c2530" }} />
-                  <Legend wrapperStyle={{ fontSize: 11, color: "#9aa8b5" }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={colors.cursorFill} />
+                  <XAxis dataKey="label" tick={{ fill: colors.axisMain, fontSize: 12 }} axisLine={{ stroke: colors.gridLine }} />
+                  <YAxis tick={{ fill: colors.axisMuted, fontSize: 11 }} axisLine={{ stroke: colors.gridLine }} allowDecimals={false} />
+                  <Tooltip contentStyle={tooltipStyle} cursor={{ fill: colors.cursorFill }} />
+                  <Legend wrapperStyle={{ fontSize: 11, color: colors.axisMain }} />
                   <Bar dataKey="correct" stackId="ans" fill="#2fae5e" name={t("Correct")} />
                   <Bar dataKey="incorrect" stackId="ans" fill="#d9534f" name={t("Incorrect (attempted, not solved)")} />
                 </BarChart>
@@ -337,11 +338,11 @@ export default function AdminAnalyticsPage() {
         <div className="oj-card p-4">
           <ResponsiveContainer width="100%" height={340}>
             <BarChart data={labelChartData} margin={{ left: 8, right: 16 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1c2530" />
-              <XAxis dataKey="label" tick={{ fill: "#9aa8b5", fontSize: 12 }} axisLine={{ stroke: "#2a3441" }} />
-              <YAxis tick={{ fill: "#6b7a8b", fontSize: 11 }} axisLine={{ stroke: "#2a3441" }} allowDecimals={false} />
-              <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "#1c2530" }} />
-              <Legend wrapperStyle={{ fontSize: 11, color: "#9aa8b5" }} />
+              <CartesianGrid strokeDasharray="3 3" stroke={colors.cursorFill} />
+              <XAxis dataKey="label" tick={{ fill: colors.axisMain, fontSize: 12 }} axisLine={{ stroke: colors.gridLine }} />
+              <YAxis tick={{ fill: colors.axisMuted, fontSize: 11 }} axisLine={{ stroke: colors.gridLine }} allowDecimals={false} />
+              <Tooltip contentStyle={tooltipStyle} cursor={{ fill: colors.cursorFill }} />
+              <Legend wrapperStyle={{ fontSize: 11, color: colors.axisMain }} />
               {TOPIC_ORDER.map((topic) => (
                 <Bar key={topic} dataKey={topic} stackId="topics" fill={TOPIC_COLOR[topic]} name={t(TOPIC_LABEL[topic])} />
               ))}
