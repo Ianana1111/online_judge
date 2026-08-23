@@ -93,8 +93,9 @@ export default function AdminUsersPage() {
 
       <form onSubmit={createUser} className="oj-card grid gap-3 p-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-sm text-ink-300">{t("Handle")}</label>
+          <label htmlFor="new-user-handle" className="mb-1 block text-sm text-ink-300">{t("Handle")}</label>
           <input
+            id="new-user-handle"
             className="oj-input"
             value={form.handle}
             onChange={(e) => setForm((f) => ({ ...f, handle: e.target.value }))}
@@ -105,8 +106,9 @@ export default function AdminUsersPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-ink-300">{t("Email")}</label>
+          <label htmlFor="new-user-email" className="mb-1 block text-sm text-ink-300">{t("Email")}</label>
           <input
+            id="new-user-email"
             type="email"
             className="oj-input"
             value={form.email}
@@ -115,8 +117,9 @@ export default function AdminUsersPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-ink-300">{t("Initial password")}</label>
+          <label htmlFor="new-user-password" className="mb-1 block text-sm text-ink-300">{t("Initial password")}</label>
           <input
+            id="new-user-password"
             type="text"
             className="oj-input"
             value={form.password}
@@ -126,8 +129,9 @@ export default function AdminUsersPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-ink-300">{t("Role")}</label>
+          <label htmlFor="new-user-role" className="mb-1 block text-sm text-ink-300">{t("Role")}</label>
           <select
+            id="new-user-role"
             className="oj-input"
             value={form.role}
             onChange={(e) => setForm((f) => ({ ...f, role: e.target.value as "USER" | "ADMIN" }))}

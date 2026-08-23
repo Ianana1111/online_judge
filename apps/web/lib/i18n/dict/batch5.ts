@@ -99,4 +99,8 @@ export const batch5Dictionary: Record<string, string> = {
     "會，每場模擬考都有自己的計分（含罰時），可以在該場比賽頁面看到即時排名；平常的單題練習也會累計進整體排行榜與你的個人 Activity 頁面。",
 
   "Frequently asked questions. Can't find your answer? Email us at": "常見問題整理。找不到答案的話，歡迎寄信到",
+
+  // --- accessibility: keyboard-operable table rows (Phase 6.9) ---
+  "View submission from {when}": "查看 {when} 的提交",
+  "View submission for {title}": "查看「{title}」的提交",
 };

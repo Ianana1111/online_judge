@@ -65,8 +65,9 @@ export default function AdminProblemsPage() {
 
       <form onSubmit={createProblem} className="oj-card grid gap-3 p-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <label className="mb-1 block text-sm text-ink-300">{t("Title")}</label>
+          <label htmlFor="problem-title" className="mb-1 block text-sm text-ink-300">{t("Title")}</label>
           <input
+            id="problem-title"
             className="oj-input"
             value={form.title}
             onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
@@ -74,8 +75,9 @@ export default function AdminProblemsPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-ink-300">{t("Slug")}</label>
+          <label htmlFor="problem-slug" className="mb-1 block text-sm text-ink-300">{t("Slug")}</label>
           <input
+            id="problem-slug"
             className="oj-input"
             value={form.slug}
             onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
@@ -83,8 +85,9 @@ export default function AdminProblemsPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-ink-300">{t("Source")}</label>
+          <label htmlFor="problem-source" className="mb-1 block text-sm text-ink-300">{t("Source")}</label>
           <select
+            id="problem-source"
             className="oj-input"
             value={form.source}
             onChange={(e) => setForm((f) => ({ ...f, source: e.target.value as typeof form.source }))}
@@ -95,8 +98,9 @@ export default function AdminProblemsPage() {
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-sm text-ink-300">{t("UVa problem number (optional)")}</label>
+          <label htmlFor="problem-uva-id" className="mb-1 block text-sm text-ink-300">{t("UVa problem number (optional)")}</label>
           <input
+            id="problem-uva-id"
             type="number"
             className="oj-input"
             value={form.uvaId}
@@ -108,8 +112,9 @@ export default function AdminProblemsPage() {
           </p>
         </div>
         <div className="sm:col-span-2">
-          <label className="mb-1 block text-sm text-ink-300">{t("Statement (Markdown)")}</label>
+          <label htmlFor="problem-statement" className="mb-1 block text-sm text-ink-300">{t("Statement (Markdown)")}</label>
           <textarea
+            id="problem-statement"
             className="oj-input h-32 font-mono text-xs"
             value={form.statementMd}
             onChange={(e) => setForm((f) => ({ ...f, statementMd: e.target.value }))}
@@ -117,8 +122,9 @@ export default function AdminProblemsPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-ink-300">{t("Time limit (ms)")}</label>
+          <label htmlFor="problem-time-limit" className="mb-1 block text-sm text-ink-300">{t("Time limit (ms)")}</label>
           <input
+            id="problem-time-limit"
             type="number"
             className="oj-input"
             value={form.timeLimitMs}
@@ -126,8 +132,9 @@ export default function AdminProblemsPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-ink-300">{t("Memory limit (KB)")}</label>
+          <label htmlFor="problem-memory-limit" className="mb-1 block text-sm text-ink-300">{t("Memory limit (KB)")}</label>
           <input
+            id="problem-memory-limit"
             type="number"
             className="oj-input"
             value={form.memoryLimitKb}
@@ -135,8 +142,9 @@ export default function AdminProblemsPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-ink-300">{t("Difficulty (1-4)")}</label>
+          <label htmlFor="problem-difficulty" className="mb-1 block text-sm text-ink-300">{t("Difficulty (1-4)")}</label>
           <input
+            id="problem-difficulty"
             type="number"
             min={1}
             max={4}

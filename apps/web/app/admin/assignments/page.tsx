@@ -107,12 +107,13 @@ export default function AdminAssignmentsPage() {
       <form onSubmit={createAssignment} className="oj-card space-y-4 p-4">
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm text-ink-300">{t("Title")}</label>
-            <input className="oj-input" value={title} onChange={(e) => setTitle(e.target.value)} required />
+            <label htmlFor="assignment-title" className="mb-1 block text-sm text-ink-300">{t("Title")}</label>
+            <input id="assignment-title" className="oj-input" value={title} onChange={(e) => setTitle(e.target.value)} required />
           </div>
           <div>
-            <label className="mb-1 block text-sm text-ink-300">{t("Due date (optional)")}</label>
+            <label htmlFor="assignment-due" className="mb-1 block text-sm text-ink-300">{t("Due date (optional)")}</label>
             <input
+              id="assignment-due"
               type="datetime-local"
               className="oj-input"
               value={dueAt}
@@ -120,8 +121,9 @@ export default function AdminAssignmentsPage() {
             />
           </div>
           <div className="sm:col-span-2">
-            <label className="mb-1 block text-sm text-ink-300">{t("Description (optional)")}</label>
+            <label htmlFor="assignment-description" className="mb-1 block text-sm text-ink-300">{t("Description (optional)")}</label>
             <textarea
+              id="assignment-description"
               className="oj-input h-20 text-sm"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -130,8 +132,9 @@ export default function AdminAssignmentsPage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm text-ink-300">{t("Problems")}</label>
+          <label htmlFor="assignment-problem-search" className="mb-1 block text-sm text-ink-300">{t("Problems")}</label>
           <input
+            id="assignment-problem-search"
             className="oj-input"
             placeholder={t("Search problems by title…")}
             value={problemQuery}

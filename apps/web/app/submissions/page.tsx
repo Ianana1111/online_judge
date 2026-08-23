@@ -16,7 +16,19 @@ import { useT } from "@/lib/i18n/LocaleContext";
 function SubmissionRow({ s, onOpen }: { s: SubmissionListItem; onOpen: (id: string) => void }) {
   const t = useT();
   return (
-    <tr onClick={() => onOpen(s.id)} className="cursor-pointer transition-colors hover:bg-ink-800/50">
+    <tr
+      onClick={() => onOpen(s.id)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpen(s.id);
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label={t("View submission for {title}", { title: s.problemTitle ?? "" })}
+      className="cursor-pointer transition-colors hover:bg-ink-800/50 focus:outline-none focus-visible:bg-ink-800/50 focus-visible:ring-1 focus-visible:ring-brand"
+    >
       <td className="font-mono text-xs text-ink-400">{new Date(s.createdAt).toLocaleString()}</td>
       <td>
         {s.problemSlug ? (

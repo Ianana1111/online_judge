@@ -9,6 +9,7 @@ import VerdictBadge from "@/components/VerdictBadge";
 import CopyButton from "@/components/CopyButton";
 import { Skeleton } from "@/components/Skeleton";
 import { useT } from "@/lib/i18n/LocaleContext";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 
 export default function SubmissionCodeModal({
   submissionId,
@@ -22,6 +23,7 @@ export default function SubmissionCodeModal({
     queryKey: ["submission", submissionId],
     queryFn: () => apiFetch<SubmissionDetail>(`/submissions/${submissionId}`),
   });
+  const trapRef = useFocusTrap<HTMLDivElement>(true);
 
   // Close on Escape, and lock body scroll while the modal is open.
   useEffect(() => {
@@ -45,7 +47,9 @@ export default function SubmissionCodeModal({
       onClick={onClose}
     >
       <div
-        className="oj-card flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden"
+        ref={trapRef}
+        tabIndex={-1}
+        className="oj-card flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden outline-none"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-ink-800 px-4 py-3">

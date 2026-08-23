@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import Avatar from "@/components/Avatar";
@@ -8,6 +8,7 @@ import SchoolCombobox from "@/components/SchoolCombobox";
 import { resizeImageToDataUrl, AVATAR_MAX_DATA_URL_BYTES } from "@/lib/avatarUpload";
 import type { UserSettings } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 
 /**
  * One-time "finish setting up your account" prompt — shown by ProfileSetupGate right after
@@ -25,6 +26,23 @@ export default function ProfileSetupModal({ onClose }: { onClose: () => void }) 
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const trapRef = useFocusTrap<HTMLDivElement>(true);
+
+  // Close on Escape, and lock body scroll while the modal is open — same pattern as
+  // SubmissionCodeModal / upgrade/page.tsx's confirm dialogs.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") dismiss();
+    }
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!user) return null;
 
@@ -96,7 +114,7 @@ export default function ProfileSetupModal({ onClose }: { onClose: () => void }) 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true">
-      <div className="oj-card w-full max-w-md p-6">
+      <div ref={trapRef} tabIndex={-1} className="oj-card w-full max-w-md p-6 outline-none">
         <h2 className="font-display text-lg font-bold text-ink-50">{t("Welcome! Quick setup")}</h2>
         <p className="mt-1 text-sm text-ink-400">
           {t("Add your school so classmates can find each other on the leaderboard — takes a few seconds, and you can always change this later in Settings.")}
@@ -105,7 +123,7 @@ export default function ProfileSetupModal({ onClose }: { onClose: () => void }) 
         <div className="mt-5 flex items-center gap-4">
           <Avatar avatarUrl={avatarPreview} handle={user.handle} size={64} />
           <div className="flex flex-col gap-2">
-            <input ref={fileInputRef} type="file" accept="image/*" onChange={onPickAvatar} className="hidden" />
+            <input id="profile-setup-avatar" ref={fileInputRef} type="file" accept="image/*" onChange={onPickAvatar} className="hidden" />
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
@@ -118,8 +136,9 @@ export default function ProfileSetupModal({ onClose }: { onClose: () => void }) 
         </div>
 
         <div className="mt-4">
-          <label className="mb-1 block text-sm text-ink-300">{t("Nickname")}</label>
+          <label htmlFor="profile-setup-handle" className="mb-1 block text-sm text-ink-300">{t("Nickname")}</label>
           <input
+            id="profile-setup-handle"
             className="oj-input"
             value={handle}
             onChange={(e) => setHandle(e.target.value)}
@@ -130,8 +149,8 @@ export default function ProfileSetupModal({ onClose }: { onClose: () => void }) 
         </div>
 
         <div className="mt-4">
-          <label className="mb-1 block text-sm text-ink-300">{t("School")}</label>
-          <SchoolCombobox value={school} onChange={setSchool} />
+          <label htmlFor="profile-setup-school" className="mb-1 block text-sm text-ink-300">{t("School")}</label>
+          <SchoolCombobox id="profile-setup-school" value={school} onChange={setSchool} />
         </div>
 
         {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
