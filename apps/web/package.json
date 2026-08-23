@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "postinstall": "node scripts/copy-monaco.js"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
@@ -17,6 +18,7 @@
     "@vercel/analytics": "^2.0.1",
     "hast-util-sanitize": "^5.0.2",
     "katex": "^0.16.11",
+    "monaco-editor": "^0.56.0",
     "next": "^15.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
