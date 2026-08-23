@@ -34,6 +34,15 @@ export default function StatementRenderer({ content }: { content: string }) {
               {children}
             </a>
           ),
+          // Unlike <pre> (already wrapped in overflow-x-auto via .prose-statement), a wide table
+          // (e.g. a reference/lookup table with many columns) had no scroll container of its own —
+          // on a narrow screen it forced the whole page to scroll horizontally instead of just the
+          // table, the same class of bug already fixed for ProblemFilterTable.
+          table: ({ children, ...props }) => (
+            <div className="overflow-x-auto">
+              <table {...props}>{children}</table>
+            </div>
+          ),
         }}
       >
         {content}
