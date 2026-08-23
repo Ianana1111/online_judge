@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/auth";
 import VerdictBadge from "@/components/VerdictBadge";
 import SubmissionCodeModal from "@/components/SubmissionCodeModal";
 import { SkeletonList } from "@/components/Skeleton";
+import QueryBoundary from "@/components/QueryBoundary";
 import { LANGUAGE_LABEL } from "@/lib/types";
 import type { SubmissionListItem, UserProfile } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
@@ -45,11 +46,12 @@ export default function MySubmissionsPage() {
   const [groupBy, setGroupBy] = useState<"time" | "topic">("time");
   const [openId, setOpenId] = useState<string | null>(null);
 
-  const { data, isLoading } = useQuery({
+  const submissionsQuery = useQuery({
     queryKey: ["submissions", "me", "all"],
     queryFn: () => apiFetch<{ items: SubmissionListItem[]; total: number }>("/submissions?user=me&pageSize=200"),
     enabled: !!user,
   });
+  const { data } = submissionsQuery;
 
   const { data: profile } = useQuery({
     queryKey: ["users", user?.handle, "profile"],
@@ -108,42 +110,22 @@ export default function MySubmissionsPage() {
         </button>
       </div>
 
-      {isLoading && <SkeletonList rows={8} />}
-      {data?.items.length === 0 && (
-        <div className="oj-card p-4 text-sm text-ink-400">
-          <p>{t("No submissions yet.")}</p>
-          <Link href="/problems" className="mt-2 inline-block text-brand hover:underline">
-            {t("Solve your first problem →")}
-          </Link>
-        </div>
-      )}
-
-      {groupBy === "time" && data && data.items.length > 0 && (
-        <table className="oj-table">
-          <thead>
-            <tr>
-              <th>{t("When")}</th>
-              <th>{t("Problem")}</th>
-              <th>{t("Language")}</th>
-              <th>{t("Verdict")}</th>
-              <th>{t("Time")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.items.map((s) => (
-              <SubmissionRow key={s.id} s={s} onOpen={setOpenId} />
-            ))}
-          </tbody>
-        </table>
-      )}
-
-      {groupBy === "topic" && byTopic.length > 0 && (
-        <div className="space-y-6">
-          {byTopic.map(([topic, items]) => (
-            <div key={topic}>
-              <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-400">
-                {topic} <span className="font-normal normal-case text-ink-500">({items.length})</span>
-              </h2>
+      <QueryBoundary
+        query={submissionsQuery}
+        loading={<SkeletonList rows={8} />}
+        isEmpty={(d) => d.items.length === 0}
+        empty={
+          <div className="oj-card p-4 text-sm text-ink-400">
+            <p>{t("No submissions yet.")}</p>
+            <Link href="/problems" className="mt-2 inline-block text-brand hover:underline">
+              {t("Solve your first problem →")}
+            </Link>
+          </div>
+        }
+      >
+        {() => (
+          <>
+            {groupBy === "time" && data && (
               <table className="oj-table">
                 <thead>
                   <tr>
@@ -155,15 +137,43 @@ export default function MySubmissionsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map((s) => (
+                  {data.items.map((s) => (
                     <SubmissionRow key={s.id} s={s} onOpen={setOpenId} />
                   ))}
                 </tbody>
               </table>
-            </div>
-          ))}
-        </div>
-      )}
+            )}
+
+            {groupBy === "topic" && (
+              <div className="space-y-6">
+                {byTopic.map(([topic, items]) => (
+                  <div key={topic}>
+                    <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-400">
+                      {topic} <span className="font-normal normal-case text-ink-500">({items.length})</span>
+                    </h2>
+                    <table className="oj-table">
+                      <thead>
+                        <tr>
+                          <th>{t("When")}</th>
+                          <th>{t("Problem")}</th>
+                          <th>{t("Language")}</th>
+                          <th>{t("Verdict")}</th>
+                          <th>{t("Time")}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {items.map((s) => (
+                          <SubmissionRow key={s.id} s={s} onOpen={setOpenId} />
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </QueryBoundary>
 
       {openId && <SubmissionCodeModal submissionId={openId} onClose={() => setOpenId(null)} />}
     </div>
