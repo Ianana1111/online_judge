@@ -76,9 +76,14 @@ export default function FaqContent() {
       title: t("Submissions & judging"),
       items: [
         {
-          q: t("My code got AC on another online judge, but here it's Wrong Answer or TLE — why?"),
-          a: t(
-            "The most common cause is a small output formatting difference (an extra space, a newline) or a time limit that doesn't exactly match the original problem. Our judging is calibrated to match what the problem's original source (e.g. UVa) actually accepts — if you're confident your logic is correct and it passes on the original source, please report it and we'll check whether our test data or limits need fixing.",
+          q: t("I got Wrong Answer or TLE, but I'm sure my logic is correct — what should I do?"),
+          a: (
+            <>
+              {t(
+                "Start by re-checking the exact output format described in the problem statement — a lot of WA cases come down to something small: a missing newline, an extra trailing space, or an edge case that's easy to miss. If you've double-checked and still think something's off, email us at",
+              )}{" "}
+              <span className="text-brand">judges0801@gmail.com</span> {t("with your submission and we'll take a look.")}
+            </>
           ),
         },
         {
