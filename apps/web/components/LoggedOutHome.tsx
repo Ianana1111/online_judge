@@ -5,28 +5,47 @@ import { useAuthStore } from "@/store/auth";
 import type { ProblemListItem } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
+const FEATURES = [
+  {
+    title: "Judged like the real exam",
+    body: "Every problem is calibrated against what the exam itself actually accepts — the result you see here is the result you'd see on exam day, not a guess.",
+  },
+  {
+    title: "A scoreboard that behaves like contest day",
+    body: "ICPC-style scoring, penalty minutes, and a freeze period — the same rules that decide the real ranking, not a simplified stand-in.",
+  },
+  {
+    title: "Sorted by what actually gets tested",
+    body: "Filter by difficulty, or by how often a problem has shown up on past CPE exams — so you know exactly where to spend your time.",
+  },
+];
+
 /** The original marketing homepage (hero + recent problems), self-gated to hide once a session is
  * confirmed — HomeDashboard takes over for logged-in visitors. Both pieces render from the server
  * component and toggle client-side on the same auth check NavBar already uses, so there's no
  * server/client branching needed in the page itself. */
-export default function LoggedOutHome({ items }: { items: ProblemListItem[] }) {
+export default function LoggedOutHome({ items, total }: { items: ProblemListItem[]; total: number }) {
   const t = useT();
   const { user, status } = useAuthStore();
   if (status === "ready" && user) return null;
 
   return (
-    <div className="space-y-12">
-      <section className="grid gap-8 py-10 sm:grid-cols-[1.3fr_1fr] sm:items-center">
+    <div className="space-y-16">
+      <section className="grid gap-10 py-10 sm:grid-cols-[1.25fr_1fr] sm:items-center">
         <div>
-          <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-brand">accepted / wrong answer / tle</p>
-          <h1 className="font-display text-4xl font-bold leading-tight text-ink-50 sm:text-5xl">
-            {t("Practice UVa.")}
+          <span className="inline-flex items-center gap-2 rounded-full border border-ink-700 bg-ink-900 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.15em] text-ink-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+            {t("CPE Judge")}
+          </span>
+          <h1 className="mt-4 font-display text-4xl font-bold leading-tight text-ink-50 sm:text-5xl">
+            {t("This is CPE Judge.")}
             <br />
-            {t("Sit CPE for real.")}
+            {t("Train like it's exam day.")}
           </h1>
           <p className="mt-4 max-w-md text-ink-300">
             {t(
-              "A judge built around the 3-hour, 7-problem CPE format — solve at your own pace, or start a timed virtual exam with a real scoreboard and ICPC-style penalties.",
+              "{total}+ practice problems, timed CPE/GPE virtual exams, and a live scoreboard with real ICPC-style penalties — prepare at the exact pace of the real thing.",
+              { total },
             )}
           </p>
           <div className="mt-6 flex gap-3">
@@ -39,20 +58,33 @@ export default function LoggedOutHome({ items }: { items: ProblemListItem[] }) {
           </div>
         </div>
         <div className="oj-card p-5 font-mono text-xs leading-relaxed text-ink-400">
-          <div className="mb-2 flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-verdict-ac" />
-            <span className="h-2.5 w-2.5 rounded-full bg-verdict-tle" />
-            <span className="h-2.5 w-2.5 rounded-full bg-verdict-wa" />
+          <div className="mb-2 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-verdict-ac" />
+              <span className="h-2.5 w-2.5 rounded-full bg-verdict-tle" />
+              <span className="h-2.5 w-2.5 rounded-full bg-verdict-wa" />
+            </div>
+            <span className="text-[10px] tracking-wide text-ink-500">{t("contest clock · 02:57:12")}</span>
           </div>
-          <pre className="whitespace-pre-wrap text-ink-300">{`> submit main.cpp
+          <pre className="whitespace-pre-wrap text-ink-300">{`$ submit C.cpp --contest cpe
 compiling...        ok (0.4s)
 test 01/04          AC   4ms   1.2MB
 test 02/04          AC   6ms   1.2MB
 test 03/04          AC   5ms   1.2MB
 test 04/04          AC   4ms   1.2MB
 
-verdict: ACCEPTED`}</pre>
+verdict: ACCEPTED
+penalty: +0 min`}</pre>
         </div>
+      </section>
+
+      <section className="grid gap-4 sm:grid-cols-3">
+        {FEATURES.map((f) => (
+          <div key={f.title} className="oj-panel p-5">
+            <h3 className="font-medium text-ink-50">{t(f.title)}</h3>
+            <p className="mt-2 text-sm text-ink-400">{t(f.body)}</p>
+          </div>
+        ))}
       </section>
 
       <section>

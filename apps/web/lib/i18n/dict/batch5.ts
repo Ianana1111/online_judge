@@ -1,4 +1,21 @@
 export const batch5Dictionary: Record<string, string> = {
+  // --- components/LoggedOutHome.tsx ---
+  "CPE Judge": "CPE Judge",
+  "This is CPE Judge.": "這裡就是 CPE Judge。",
+  "Train like it's exam day.": "練習，就照考場的節奏來。",
+  "{total}+ practice problems, timed CPE/GPE virtual exams, and a live scoreboard with real ICPC-style penalties — prepare at the exact pace of the real thing.":
+    "{total}+ 題練習庫、限時的 CPE / GPE 虛擬模擬考，還有跟正式賽事一模一樣的即時計分板與 ICPC 罰時規則——照考場的節奏準備，考試當天不會是你第一次感受這個壓力。",
+  "contest clock · 02:57:12": "考試倒數 · 02:57:12",
+  "Judged like the real exam": "考場等級的判題",
+  "Every problem is calibrated against what the exam itself actually accepts — the result you see here is the result you'd see on exam day, not a guess.":
+    "每一題的判題標準都對齊考試本身實際會接受的結果——在這裡看到的判定，就是考場上會看到的判定，不是用猜的。",
+  "A scoreboard that behaves like contest day": "跟正式比賽同一套規則的計分板",
+  "ICPC-style scoring, penalty minutes, and a freeze period — the same rules that decide the real ranking, not a simplified stand-in.":
+    "ICPC 罰時制、封榜機制——決定正式排名的同一套規則，不是簡化版。",
+  "Sorted by what actually gets tested": "照真正會考的方式排序",
+  "Filter by difficulty, or by how often a problem has shown up on past CPE exams — so you know exactly where to spend your time.":
+    "依難度分級，也能看每題在歷屆 CPE 出現過幾次，讓你清楚知道時間該花在哪裡。",
+
   // --- components/AboutContent.tsx ---
   "A CPE practice platform built for Taiwanese CS students": "為台灣資工人打造的 CPE 練習平台",
   "This site collects past CPE (大學程式能力檢定) exam problems, and every submission goes through the same rigorous automated judging you'd face in the real exam — not a guess at right or wrong, but a real Accepted or Wrong Answer. Practice by topic and difficulty, or start a timed virtual exam to get used to the real pacing.":
@@ -40,10 +57,11 @@ export const batch5Dictionary: Record<string, string> = {
   "with your account handle and we'll help you reset it.": "告訴我們你的帳號 handle，我們會協助你重設。",
 
   "Submissions & judging": "提交與判題",
-  "My code got AC on another online judge, but here it's Wrong Answer or TLE — why?":
-    "我的程式在別的 Online Judge 上是 AC，這裡卻是 Wrong Answer 或 TLE，為什麼？",
-  "The most common cause is a small output formatting difference (an extra space, a newline) or a time limit that doesn't exactly match the original problem. Our judging is calibrated to match what the problem's original source (e.g. UVa) actually accepts — if you're confident your logic is correct and it passes on the original source, please report it and we'll check whether our test data or limits need fixing.":
-    "最常見的原因是輸出格式差一個空白、換行，或是時間限制設定和原始題目不完全一致。我們的判題標準是對齊題目原始出處（例如 UVa）實際會接受的結果——如果你確定程式邏輯正確、且能在原始出處上通過，歡迎回報，我們會檢查資料/限制是否有誤並修正。",
+  "I got Wrong Answer or TLE, but I'm sure my logic is correct — what should I do?":
+    "我拿到 Wrong Answer 或 TLE，但我很確定邏輯是對的，該怎麼辦？",
+  "Start by re-checking the exact output format described in the problem statement — a lot of WA cases come down to something small: a missing newline, an extra trailing space, or an edge case that's easy to miss. If you've double-checked and still think something's off, email us at":
+    "先回去仔細對一次題目敘述裡規定的輸出格式——很多 WA 其實是小地方沒對到：漏了一個換行、多了一個空白、或是一個容易漏掉的邊界情況。如果你已經仔細檢查過，還是覺得哪裡不對，歡迎寫信到",
+  "with your submission and we'll take a look.": "並附上你的提交，我們會幫你看看。",
   "What do the different verdicts mean?": "各種判題結果（Verdict）分別是什麼意思？",
   "Accepted (AC)": "Accepted (AC)",
   ": completely correct.": "：完全正確。",

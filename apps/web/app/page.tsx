@@ -6,11 +6,12 @@ import LoggedOutHome from "@/components/LoggedOutHome";
 export default async function HomePage() {
   const problems = await serverFetch<ProblemListResponse>("/problems?page=1");
   const items = problems?.items?.slice(0, 6) ?? [];
+  const total = problems?.total ?? 430;
 
   return (
     <>
       <HomeDashboard />
-      <LoggedOutHome items={items} />
+      <LoggedOutHome items={items} total={total} />
     </>
   );
 }
