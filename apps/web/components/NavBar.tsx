@@ -7,6 +7,8 @@ import { useAuthStore } from "@/store/auth";
 import { useExamTimerStore } from "@/store/examTimer";
 import ThemeToggle from "@/components/ThemeToggle";
 import NotificationBell from "@/components/NotificationBell";
+import DiscordLink from "@/components/DiscordLink";
+import Avatar from "@/components/Avatar";
 import { MenuIcon, XIcon } from "@/components/icons";
 import type { User } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
@@ -30,11 +32,13 @@ const STUDENT_LINKS = [{ href: "/classes", label: "My Classes" }];
 
 function UserMenu({
   handle,
+  avatarUrl,
   isAdmin,
   plan,
   onLogout,
 }: {
   handle: string;
+  avatarUrl: string | null;
   isAdmin: boolean;
   plan: "FREE" | "PRO";
   onLogout: () => void;
@@ -63,6 +67,7 @@ function UserMenu({
             {t("Admin")}
           </span>
         )}
+        <Avatar avatarUrl={avatarUrl} handle={handle} size={22} />
         {handle}
         <svg width="10" height="10" viewBox="0 0 10 10" className={`transition-transform ${open ? "rotate-180" : ""}`}>
           <path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
@@ -277,10 +282,12 @@ export default function NavBar() {
         </div>
         <div className="flex items-center gap-3">
           {user && <NotificationBell />}
+          <DiscordLink />
           <ThemeToggle />
           {user ? (
             <UserMenu
               handle={user.handle}
+              avatarUrl={user.avatarUrl}
               isAdmin={user.role === "ADMIN"}
               plan={user.plan}
               onLogout={async () => {

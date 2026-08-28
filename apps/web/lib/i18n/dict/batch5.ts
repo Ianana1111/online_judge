@@ -1,4 +1,7 @@
 export const batch5Dictionary: Record<string, string> = {
+  // --- components/DiscordLink.tsx ---
+  "Join our Discord": "加入我們的 Discord",
+
   // --- components/LoggedOutHome.tsx ---
   "CPE Judge": "CPE Judge",
   "This is CPE Judge.": "這裡就是 CPE Judge。",
