@@ -125,19 +125,34 @@ export const batch5Dictionary: Record<string, string> = {
   "View submission from {when}": "查看 {when} 的提交",
   "View submission for {title}": "查看「{title}」的提交",
 
-  // --- account deletion (Phase 8) ---
+  // --- account deletion (Phase 8, revised with a grace period) ---
   "Danger zone": "危險區域",
-  "Permanently delete your account and all data associated with it. This cannot be undone.":
-    "永久刪除你的帳號以及所有相關資料，此操作無法復原。",
+  "Request account deletion. Your account is logged out right away; the data itself is permanently deleted 3 days later, and logging back in before then lets you cancel.":
+    "申請刪除帳號。帳號會立刻被登出，資料本身會在 3 天後才真正永久刪除——這段期間內只要重新登入，就能取消刪除。",
   "Delete account": "刪除帳號",
   "Delete your account?": "確定要刪除帳號嗎？",
-  "This permanently deletes your account and everything tied to it — submissions, discussion posts, notes, achievements. It cannot be undone. If you have an active Pro subscription, it will be cancelled first so you won't be charged again.":
-    "這會永久刪除你的帳號以及所有相關資料——包含提交紀錄、討論留言、筆記、成就徽章，此操作無法復原。如果你有進行中的 Pro 訂閱，系統會先為你取消，之後不會再扣款。",
-  "Current password (leave blank if you sign in with Google)": "目前密碼（若使用 Google 登入請留空）",
+  "This schedules your account and everything tied to it — submissions, discussion posts, notes, achievements — for permanent deletion in 3 days. You're logged out immediately; logging back in before then lets you cancel it. If you have an active Pro subscription, it will be cancelled first so you won't be charged again.":
+    "這會把你的帳號以及所有相關資料——包含提交紀錄、討論留言、筆記、成就徽章——排定在 3 天後永久刪除。你會立刻被登出；在那之前重新登入就能取消。如果你有進行中的 Pro 訂閱，系統會先為你取消，之後不會再扣款。",
+  "Current password": "目前密碼",
+  "Google identity re-verified ✓": "已重新驗證 Google 身分 ✓",
+  "This account signs in with Google — re-authenticate with it first to confirm it's really you.":
+    "這個帳號是用 Google 登入的——請先重新驗證身分，確認真的是你本人操作。",
+  "Re-authenticate with Google": "重新驗證 Google 身分",
+  "That didn't match your account's Google login — try again with the same Google account.":
+    "驗證的 Google 帳號跟你的帳號對不上——請用同一個 Google 帳號再試一次。",
   'Type "{word}" to confirm': "輸入「{word}」以確認",
   "Deleting…": "刪除中…",
   "Delete my account": "刪除我的帳號",
   "Could not delete your account": "無法刪除帳號",
+
+  // --- components/PendingDeletionGate.tsx ---
+  "Account deletion pending": "帳號已排定刪除",
+  "Your account is scheduled to be permanently deleted on {date}.": "你的帳號將於 {date} 永久刪除。",
+  "If you didn't request this, cancel it below. If you did, no action is needed — it will go through automatically.":
+    "如果這不是你本人操作，請點選下方取消。如果是你本人要刪除，不需要做任何事，時間到了會自動執行。",
+  "Couldn't cancel — try again in a moment.": "取消失敗，請稍後再試一次。",
+  "Cancel deletion": "取消刪除",
+  "Cancelling…": "取消中…",
 
   // --- footer / legal pages (Phase 8) ---
   "Terms of Service": "服務條款",

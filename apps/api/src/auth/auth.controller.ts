@@ -5,10 +5,11 @@ import type Redis from "ioredis";
 import type { Request, Response } from "express";
 import { loginSchema, registerSchema, type LoginDto, type RegisterDto } from "@oj/shared";
 import { clearAuthCookies, setAuthCookies, setCsrfCookie } from "../common/cookies.util";
-import { CurrentUser, Public, type RequestUser } from "../common/decorators";
+import { CurrentUser, OptionalAuth, Public, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { REDIS_CLIENT } from "../common/redis.providers";
 import { AuthService } from "./auth.service";
+import { TokenService } from "./token.service";
 
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -20,6 +21,7 @@ export class AuthController {
 
   constructor(
     private readonly authService: AuthService,
+    private readonly tokens: TokenService,
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
   ) {}
 
@@ -82,24 +84,37 @@ export class AuthController {
   }
 
   /** Kicks off the redirect dance — a plain top-level navigation (not fetch), so the frontend
-   * just points a link/window.location here directly instead of calling it via apiFetch. */
-  @Public()
+   * just points a link/window.location here directly instead of calling it via apiFetch.
+   *
+   * `intent=delete_account` is the one exception: a Google-only (no password) account has no
+   * other secret to re-prove with before self-deleting, so the delete flow sends the browser
+   * through a fresh Google login and only trusts the *matching* result (see googleCallback) —
+   * mirrors deleteAccount's password re-check for everyone else. Requires an existing session
+   * (OptionalAuth, checked below) since there'd otherwise be no account to match the result
+   * against. */
+  @OptionalAuth()
   @Get("google")
-  googleStart(@Res() res: Response) {
+  googleStart(@Query("intent") intent: string | undefined, @CurrentUser() user: RequestUser | null, @Res() res: Response) {
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const redirectUri = process.env.GOOGLE_REDIRECT_URI;
     if (!clientId || !redirectUri) {
       throw new BadRequestException("Google sign-in isn't configured on this server yet.");
     }
+    const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
+    if (intent === "delete_account" && !user) {
+      return res.redirect(`${webOrigin}/login`);
+    }
 
     const state = randomBytes(24).toString("hex");
-    res.cookie("google_oauth_state", state, {
+    const cookieOpts = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      sameSite: (process.env.NODE_ENV === "production" ? "none" : "lax") as "none" | "lax",
       maxAge: 10 * 60 * 1000,
       path: "/auth/google",
-    });
+    };
+    res.cookie("google_oauth_state", state, cookieOpts);
+    if (intent === "delete_account") res.cookie("google_oauth_intent", "delete_account", cookieOpts);
 
     const params = new URLSearchParams({
       client_id: clientId,
@@ -112,11 +127,12 @@ export class AuthController {
     res.redirect(`${GOOGLE_AUTH_URL}?${params.toString()}`);
   }
 
-  @Public()
+  @OptionalAuth()
   @Get("google/callback")
   async googleCallback(
     @Query("code") code: string | undefined,
     @Query("state") state: string | undefined,
+    @CurrentUser() currentUser: RequestUser | null,
     @Req() req: Request,
     @Res() res: Response,
   ) {
@@ -124,10 +140,16 @@ export class AuthController {
     // URL, so use the first entry as the canonical site origin to land the user back on.
     const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
     const cookieState = req.cookies?.google_oauth_state;
+    const intent = req.cookies?.google_oauth_intent;
     res.clearCookie("google_oauth_state", { path: "/auth/google" });
+    res.clearCookie("google_oauth_intent", { path: "/auth/google" });
+    const isDeleteReauth = intent === "delete_account";
 
     if (!code || !state || !cookieState || state !== cookieState) {
       return res.redirect(`${webOrigin}/login?error=google_state_mismatch`);
+    }
+    if (isDeleteReauth && !currentUser) {
+      return res.redirect(`${webOrigin}/settings?reauthError=1`);
     }
 
     // Some browsers (prefetch/preconnect, extensions, or a double navigation) fire this callback
@@ -181,13 +203,32 @@ export class AuthController {
 
       const suggestedHandle = profile.email.split("@")[0] ?? profile.name ?? "user";
       const session = await this.authService.loginWithGoogle(profile.sub, profile.email, suggestedHandle);
+
+      if (isDeleteReauth) {
+        // Deliberately does NOT call setAuthCookies: the point of this round trip is only to prove
+        // "you can still log into the Google account this profile is linked to," not to switch the
+        // browser's active session — doing that would silently swap the logged-in account out from
+        // under the user if they picked a different Google account at the prompt.
+        if (session.user.id !== currentUser!.id) {
+          return res.redirect(`${webOrigin}/settings?reauthError=1`);
+        }
+        res.cookie("delete_reauth_token", this.tokens.signDeleteReauthToken(currentUser!.id), {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          maxAge: 5 * 60 * 1000,
+          path: "/",
+        });
+        return res.redirect(`${webOrigin}/settings?reauth=1`);
+      }
+
       setAuthCookies(res, session);
       res.redirect(webOrigin);
     } catch (err) {
       // Previously swallowed silently — every past "Google sign-in failed" report was
       // undiagnosable because nothing was logged. Always log the real cause now.
       this.logger.error(`Google OAuth callback failed: ${err instanceof Error ? err.message : String(err)}`);
-      res.redirect(`${webOrigin}/login?error=google_failed`);
+      res.redirect(isDeleteReauth ? `${webOrigin}/settings?reauthError=1` : `${webOrigin}/login?error=google_failed`);
     }
   }
 }

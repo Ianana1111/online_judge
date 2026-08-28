@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import PageviewTracker from "@/components/PageviewTracker";
 import PromoBanner from "@/components/PromoBanner";
 import ProfileSetupGate from "@/components/ProfileSetupGate";
+import PendingDeletionGate from "@/components/PendingDeletionGate";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { jsonLdScript } from "@/lib/jsonLd";
 
@@ -99,6 +100,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <PromoBanner />
           <NavBar />
           <ProfileSetupGate />
+          <PendingDeletionGate />
           <main className="mx-auto min-h-[calc(100vh-56px)] max-w-[1400px] px-6 py-6">{children}</main>
           <Footer />
         </Providers>

@@ -147,6 +147,8 @@ export class AuthService {
     school: string | null;
     schoolEmail: string | null;
     schoolVerifiedAt: Date | null;
+    hasPassword: boolean;
+    deletionRequestedAt: Date | null;
     csrfToken: string;
     csrfMaxAgeMs: number;
   }> {
@@ -175,6 +177,8 @@ export class AuthService {
       // X" instead of just silently looking identical to "never started."
       schoolEmail: user.schoolEmail,
       schoolVerifiedAt: user.schoolVerifiedAt,
+      hasPassword: !!user.passwordHash,
+      deletionRequestedAt: user.deletionRequestedAt,
       csrfToken: generateCsrfToken(),
       csrfMaxAgeMs: this.tokens.refreshTtlMs,
     };
