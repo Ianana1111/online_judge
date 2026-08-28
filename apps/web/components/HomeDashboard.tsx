@@ -338,12 +338,10 @@ export default function HomeDashboard() {
                 {user.school}
               </span>
             )}
-            {latestAchievement ? (
+            {latestAchievement && (
               <Link href={`/u/${user.handle}`} className="mt-1 inline-flex items-center gap-1 text-xs text-brand hover:underline">
                 <TrophyIcon className="h-3.5 w-3.5" /> {t("Latest: {title}", { title: latestAchievement.title })}
               </Link>
-            ) : (
-              <p className="mt-1 text-xs text-ink-500">{t("Ready to pick up where you left off?")}</p>
             )}
             {daily && daily.loginStreak > 1 && (
               <p className="mt-1 flex items-center gap-1 text-xs text-ink-500">
