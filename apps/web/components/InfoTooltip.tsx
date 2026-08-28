@@ -20,7 +20,7 @@ export default function InfoTooltip({ text }: { text: string }) {
         ?
       </span>
       {open && (
-        <span className="oj-card absolute bottom-full left-1/2 z-10 mb-2 w-56 -translate-x-1/2 whitespace-normal p-2 text-xs font-normal normal-case text-ink-300">
+        <span className="oj-card absolute top-full left-1/2 z-10 mt-2 w-56 -translate-x-1/2 whitespace-normal p-2 text-xs font-normal normal-case text-ink-300">
           {text}
         </span>
       )}

@@ -61,7 +61,6 @@ export const batch1Dictionary: Record<string, string> = {
   "Build your tier": "鞏固你的等級",
   "Stretch — one tier up": "挑戰高一級",
   "Latest: {title}": "最新成就：{title}",
-  "Ready to pick up where you left off?": "準備好接續上次的進度了嗎？",
   "{n} days in a row you've shown up": "連續 {n} 天都有上線",
   " — bonus streak-freeze earned!": "——獲得額外的連續紀錄凍結！",
   "Continue solving": "繼續解題",
