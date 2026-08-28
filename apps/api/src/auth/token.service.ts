@@ -13,6 +13,11 @@ export interface RefreshTokenPayload {
   jti: string;
 }
 
+export interface DeleteReauthTokenPayload {
+  sub: string;
+  purpose: "delete-reauth";
+}
+
 @Injectable()
 export class TokenService {
   private readonly accessSecret = process.env.JWT_ACCESS_SECRET ?? "dev_access_secret_change_me";
@@ -42,5 +47,21 @@ export class TokenService {
 
   verifyRefreshToken(token: string): RefreshTokenPayload {
     return jwt.verify(token, this.refreshSecret) as unknown as RefreshTokenPayload;
+  }
+
+  /** Proves "this browser just re-authenticated with Google" for a Google-only (no password)
+   * account's delete flow — see AuthController's googleStart/googleCallback intent=delete_account
+   * branch. Reuses the access-token secret rather than a dedicated env var; the `purpose` field
+   * keeps it from being confused with (or forged from) a normal access token. */
+  signDeleteReauthToken(userId: string): string {
+    return jwt.sign({ sub: userId, purpose: "delete-reauth" } satisfies DeleteReauthTokenPayload, this.accessSecret, {
+      expiresIn: "5m",
+    });
+  }
+
+  verifyDeleteReauthToken(token: string): DeleteReauthTokenPayload {
+    const payload = jwt.verify(token, this.accessSecret) as unknown as DeleteReauthTokenPayload;
+    if (payload.purpose !== "delete-reauth") throw new Error("Wrong token purpose");
+    return payload;
   }
 }

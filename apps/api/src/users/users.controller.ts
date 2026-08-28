@@ -62,8 +62,19 @@ export class UsersController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    await this.users.deleteAccount(user.id, body, req.cookies?.refresh_token);
+    await this.users.deleteAccount(user.id, body, req.cookies?.delete_reauth_token, req.cookies?.refresh_token);
     clearAuthCookies(res);
+    res.clearCookie("delete_reauth_token", { path: "/" });
+  }
+
+  /** Reverses a still-pending deletion (see UsersService.deleteAccount) — the one action a
+   * pending-deletion account is still allowed to take, so PendingDeletionGate's "cancel" button
+   * has somewhere to call. */
+  @Post("me/cancel-deletion")
+  @HttpCode(200)
+  async cancelDeletion(@CurrentUser() user: RequestUser) {
+    await this.users.cancelDeletion(user.id);
+    return { ok: true };
   }
 
   // Handles are the only public identity on profiles/leaderboards/discussions and change

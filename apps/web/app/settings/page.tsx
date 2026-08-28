@@ -4,7 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TAIWAN_UNIVERSITY_DOMAINS } from "@oj/shared";
-import { apiFetch, ApiError, setCsrfToken } from "@/lib/api";
+import { apiFetch, apiUrl, ApiError, setCsrfToken } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import Avatar from "@/components/Avatar";
 import SchoolCombobox from "@/components/SchoolCombobox";
@@ -367,13 +367,28 @@ function ChangeHandleForm() {
   );
 }
 
-function DeleteAccountConfirmDialog({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: (password: string) => Promise<void> }) {
+function DeleteAccountConfirmDialog({
+  hasPassword,
+  reauthed,
+  reauthError,
+  onCancel,
+  onConfirm,
+}: {
+  hasPassword: boolean;
+  reauthed: boolean;
+  reauthError: boolean;
+  onCancel: () => void;
+  onConfirm: (password: string) => Promise<void>;
+}) {
   const t = useT();
   const [password, setPassword] = useState("");
   const [confirmText, setConfirmText] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    reauthError ? t("That didn't match your account's Google login — try again with the same Google account.") : null,
+  );
   const [submitting, setSubmitting] = useState(false);
   const trapRef = useFocusTrap<HTMLDivElement>(true);
+  const identityConfirmed = hasPassword || reauthed;
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -405,21 +420,34 @@ function DeleteAccountConfirmDialog({ onCancel, onConfirm }: { onCancel: () => v
         <h2 className="font-display text-base font-semibold text-verdict-wa">{t("Delete your account?")}</h2>
         <p className="mt-2 text-sm text-ink-300">
           {t(
-            "This permanently deletes your account and everything tied to it — submissions, discussion posts, notes, achievements. It cannot be undone. If you have an active Pro subscription, it will be cancelled first so you won't be charged again.",
+            "This schedules your account and everything tied to it — submissions, discussion posts, notes, achievements — for permanent deletion in 3 days. You're logged out immediately; logging back in before then lets you cancel it. If you have an active Pro subscription, it will be cancelled first so you won't be charged again.",
           )}
         </p>
-        <div className="mt-4">
-          <label htmlFor="delete-account-password" className="mb-1 block text-sm text-ink-300">
-            {t("Current password (leave blank if you sign in with Google)")}
-          </label>
-          <input
-            id="delete-account-password"
-            type="password"
-            className="oj-input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+        {hasPassword ? (
+          <div className="mt-4">
+            <label htmlFor="delete-account-password" className="mb-1 block text-sm text-ink-300">
+              {t("Current password")}
+            </label>
+            <input
+              id="delete-account-password"
+              type="password"
+              className="oj-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+        ) : reauthed ? (
+          <p className="mt-4 text-sm text-verdict-ac">{t("Google identity re-verified ✓")}</p>
+        ) : (
+          <div className="mt-4 space-y-2">
+            <p className="text-sm text-ink-300">
+              {t("This account signs in with Google — re-authenticate with it first to confirm it's really you.")}
+            </p>
+            <a href={apiUrl("/auth/google?intent=delete_account")} className="oj-btn-secondary inline-flex px-3 py-1.5 text-xs">
+              {t("Re-authenticate with Google")}
+            </a>
+          </div>
+        )}
         <div className="mt-4">
           <label htmlFor="delete-account-confirm-text" className="mb-1 block text-sm text-ink-300">
             {t('Type "{word}" to confirm', { word: "DELETE" })}
@@ -429,6 +457,7 @@ function DeleteAccountConfirmDialog({ onCancel, onConfirm }: { onCancel: () => v
             className="oj-input"
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
+            disabled={!identityConfirmed}
           />
         </div>
         {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
@@ -439,7 +468,7 @@ function DeleteAccountConfirmDialog({ onCancel, onConfirm }: { onCancel: () => v
           <button
             type="button"
             onClick={handleConfirm}
-            disabled={submitting || confirmText !== "DELETE"}
+            disabled={submitting || confirmText !== "DELETE" || !identityConfirmed}
             className="inline-flex items-center justify-center gap-2 rounded bg-verdict-wa px-4 py-2 text-sm font-semibold text-onbrand transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {submitting ? t("Deleting…") : t("Delete my account")}
@@ -453,7 +482,27 @@ function DeleteAccountConfirmDialog({ onCancel, onConfirm }: { onCancel: () => v
 function DeleteAccountSection() {
   const t = useT();
   const router = useRouter();
+  const { user } = useAuthStore();
   const [open, setOpen] = useState(false);
+  const [reauthed, setReauthed] = useState(false);
+  const [reauthError, setReauthError] = useState(false);
+
+  // Google-only accounts land back here after the intent=delete_account re-auth round trip (see
+  // AuthController's googleCallback) — reopen the dialog exactly where they left off instead of
+  // making them click "Delete account" a second time. Reads window.location directly rather than
+  // useSearchParams() so this doesn't need its own Suspense boundary (see SchoolVerifiedBanner for
+  // the alternative that does).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const gotReauth = params.get("reauth") === "1";
+    const gotReauthError = params.get("reauthError") === "1";
+    if (!gotReauth && !gotReauthError) return;
+    setOpen(true);
+    setReauthed(gotReauth);
+    setReauthError(gotReauthError);
+    router.replace("/settings", { scroll: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleConfirm(password: string) {
     await apiFetch("/users/me", {
@@ -468,12 +517,22 @@ function DeleteAccountSection() {
     <div className="oj-card space-y-2 border-verdict-wa/30 p-4">
       <h2 className="text-sm font-semibold text-verdict-wa">{t("Danger zone")}</h2>
       <p className="text-xs text-ink-400">
-        {t("Permanently delete your account and all data associated with it. This cannot be undone.")}
+        {t(
+          "Request account deletion. Your account is logged out right away; the data itself is permanently deleted 3 days later, and logging back in before then lets you cancel.",
+        )}
       </p>
       <button type="button" onClick={() => setOpen(true)} className="oj-btn-secondary border-verdict-wa/40 px-3 py-1.5 text-xs text-verdict-wa">
         {t("Delete account")}
       </button>
-      {open && <DeleteAccountConfirmDialog onCancel={() => setOpen(false)} onConfirm={handleConfirm} />}
+      {open && (
+        <DeleteAccountConfirmDialog
+          hasPassword={user?.hasPassword ?? true}
+          reauthed={reauthed}
+          reauthError={reauthError}
+          onCancel={() => setOpen(false)}
+          onConfirm={handleConfirm}
+        />
+      )}
     </div>
   );
 }
@@ -696,7 +755,15 @@ const SECTIONS = [
 export default function SettingsPage() {
   const t = useT();
   const { user, status } = useAuthStore();
-  const [active, setActive] = useState<(typeof SECTIONS)[number]["key"]>("profile");
+  // Lands on "account" when returning from the Google re-auth round trip DeleteAccountSection
+  // kicks off (?reauth=1 / ?reauthError=1) — otherwise that section, and the effect in it that
+  // reopens the delete dialog, would never even mount. Read directly off window.location rather
+  // than useSearchParams() so this initializer doesn't need a Suspense boundary.
+  const [active, setActive] = useState<(typeof SECTIONS)[number]["key"]>(() => {
+    if (typeof window === "undefined") return "profile";
+    const params = new URLSearchParams(window.location.search);
+    return params.get("reauth") === "1" || params.get("reauthError") === "1" ? "account" : "profile";
+  });
   const activeSection = SECTIONS.find((s) => s.key === active) ?? SECTIONS[0];
 
   // Previously this rendered the heading and all four (non-functional) tabs regardless of auth

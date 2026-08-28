@@ -161,6 +161,12 @@ model User {
   /// something. Every 7-day milestone grants a bonus streak-freeze.
   loginStreak   Int     @default(0)
   lastLoginDate String?
+  /// Set when the user requests account deletion (users.service.deleteAccount) — the account is
+  /// logged out and unusable from that moment, but the row itself isn't actually removed until
+  /// AccountDeletionReaperService's sweep finds it past ACCOUNT_DELETION_GRACE_MS, giving a short
+  /// window to recover from an accidental or malicious deletion request (see cancelDeletion).
+  /// Null means no deletion is pending.
+  deletionRequestedAt DateTime?
   settings     Json     @default("{}")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

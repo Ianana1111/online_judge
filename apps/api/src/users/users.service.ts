@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { prisma } from "@oj/db";
@@ -14,6 +14,7 @@ import type {
 import { BillingService, isProActive, isUnlimited } from "../billing/billing.service";
 import type { IssuedSession } from "../auth/auth.service";
 import { AuthService } from "../auth/auth.service";
+import { TokenService } from "../auth/token.service";
 import { computeStreak } from "../leaderboard/leaderboard.service";
 import { MailService } from "../common/mail.service";
 
@@ -31,6 +32,11 @@ interface SchoolVerifyTokenPayload {
 }
 
 const HEATMAP_DAYS = 365;
+
+// How long a requested deletion sits reversible before AccountDeletionReaperService actually
+// removes the row — long enough to recover from an accidental click or a session left open on a
+// shared/campus computer, short enough that PDPA's erasure request is still honored promptly.
+export const ACCOUNT_DELETION_GRACE_MS = 3 * 24 * 3600 * 1000;
 
 // Held inventory is capped so a long-dormant account can't stockpile a year of freezes and coast
 // through it indefinitely — this is meant to smooth over the occasional missed day, not replace
@@ -83,10 +89,13 @@ function applyDailyCheckIn(
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     private readonly mail: MailService,
     private readonly auth: AuthService,
     private readonly billing: BillingService,
+    private readonly tokens: TokenService,
   ) {}
 
   /** Admin-only: accounts are provisioned by an instructor, not self-registered. */
@@ -120,16 +129,26 @@ export class UsersService {
     return this.auth.issueSession(user.id, user.handle, user.email, user.role);
   }
 
-  /** Permanent account deletion (PDPA right-to-erasure). Requires re-proving the current password
-   * first — same reasoning as changePassword: a stolen access token shouldn't be enough on its own
-   * to destroy the account, only to use it. Google-only accounts (no passwordHash) skip that check
-   * since there's no separate secret to verify; the session cookie itself is the only credential
-   * they have. Cancels any active ECPay subscription BEFORE deleting the row — if that cancel call
-   * fails, deletion aborts too, since a deleted account with a still-live recurring charge would
-   * keep billing a card with nobody able to see or stop it. Everything else (submissions,
-   * discussion posts, achievements, etc.) cascades via the schema's onDelete: Cascade — this is a
-   * real deletion, not a soft one, matching what "delete my account" has to mean under PDPA. */
-  async deleteAccount(userId: string, dto: DeleteAccountDto, refreshToken: string | undefined): Promise<void> {
+  /** Requests account deletion (PDPA right-to-erasure) — does NOT delete the row immediately.
+   * Requires re-proving identity first, same reasoning as changePassword: a stolen or left-open
+   * session shouldn't be enough on its own to destroy the account, only to use it.
+   *   - Password accounts: re-enter the current password (dto.currentPassword).
+   *   - Google-only accounts: no separate secret exists to check, so `deleteReauthToken` (minted by
+   *     AuthController's googleCallback after the user re-authenticates with the *same* Google
+   *     account, see intent=delete_account) stands in for it instead.
+   * Cancels any active ECPay subscription up front — if that fails, the request aborts too, since a
+   * pending-deletion account with a still-live recurring charge would keep billing a card with
+   * nobody able to see or stop it. The row itself isn't removed until
+   * AccountDeletionReaperService's sweep finds it past ACCOUNT_DELETION_GRACE_MS — see
+   * cancelDeletion for how the user can back out before then. A best-effort notification email
+   * goes out so a deletion the account owner didn't actually request (compromised or left-open
+   * session) has a chance of being noticed and cancelled in time. */
+  async deleteAccount(
+    userId: string,
+    dto: DeleteAccountDto,
+    deleteReauthToken: string | undefined,
+    refreshToken: string | undefined,
+  ): Promise<void> {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException("User not found");
 
@@ -137,6 +156,15 @@ export class UsersService {
       if (!dto.currentPassword) throw new UnauthorizedException("Current password is required");
       const ok = await argon2.verify(user.passwordHash, dto.currentPassword);
       if (!ok) throw new UnauthorizedException("Current password is incorrect");
+    } else {
+      if (!deleteReauthToken) throw new UnauthorizedException("Please re-authenticate with Google first");
+      try {
+        if (this.tokens.verifyDeleteReauthToken(deleteReauthToken).sub !== userId) {
+          throw new Error("Token belongs to a different account");
+        }
+      } catch {
+        throw new UnauthorizedException("Please re-authenticate with Google first");
+      }
     }
 
     try {
@@ -147,10 +175,40 @@ export class UsersService {
       if (!(e instanceof NotFoundException)) throw e;
     }
 
-    await prisma.user.delete({ where: { id: userId } });
-    // Sessions live in Redis, keyed by userId (see AuthService) — not in Postgres, so deleting the
-    // User row above doesn't revoke them on its own.
+    await prisma.user.update({ where: { id: userId }, data: { deletionRequestedAt: new Date() } });
+    // Sessions live in Redis, keyed by userId (see AuthService) — not in Postgres, so this doesn't
+    // happen automatically just from the User row changing.
     await this.auth.logout(refreshToken);
+
+    const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
+    const graceDays = Math.round(ACCOUNT_DELETION_GRACE_MS / (24 * 3600 * 1000));
+    try {
+      await this.mail.send({
+        to: user.email,
+        subject: "Your judge.tw account is scheduled for deletion",
+        html: `
+          <p>A deletion request was just made for the judge.tw account <strong>${user.handle}</strong>. It will be permanently deleted in <strong>${graceDays} days</strong>.</p>
+          <p>If this wasn't you, log in at <a href="${webOrigin}/login">${webOrigin}</a> before then to cancel it — logging in shows a "cancel deletion" option instead of the normal site.</p>
+          <p>If this was you, no action is needed.</p>
+        `,
+      });
+    } catch (e) {
+      // Best-effort — the deletion request itself is already recorded and still reversible during
+      // the grace period even if this notification never reaches the inbox.
+      this.logger.warn(`Failed to send deletion-scheduled email to ${user.email}: ${String(e)}`);
+    }
+  }
+
+  /** Reverses a still-pending deletion requested via deleteAccount, as long as the grace period
+   * hasn't already elapsed (past that, AccountDeletionReaperService may have already deleted the
+   * row — there's nothing left to cancel). No extra re-proof of identity beyond the normal
+   * @CurrentUser() session required here: unlike *starting* a deletion, undoing one is the safe
+   * direction to make easy. */
+  async cancelDeletion(userId: string): Promise<void> {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException("User not found");
+    if (!user.deletionRequestedAt) return;
+    await prisma.user.update({ where: { id: userId }, data: { deletionRequestedAt: null } });
   }
 
   async changeHandle(userId: string, dto: ChangeHandleDto) {
