@@ -39,6 +39,7 @@ export default function ProblemView({
   outputSpecNode,
   fullHeight = false,
   prevNextNode,
+  hideDifficulty = false,
 }: {
   problem: ProblemDetail;
   contestId?: string;
@@ -60,6 +61,9 @@ export default function ProblemView({
    * When true, the prev/next bar stays fixed while the rest of the left pane scrolls on its own,
    * and the right pane fills the viewport with an independently-resizable editor/test split. */
   fullHeight?: boolean;
+  /** Set by ContestDetailClient once a virtual exam has been started — a real CPE sitting never
+   * shows difficulty upfront, so a mock one shouldn't either once you're actually taking it. */
+  hideDifficulty?: boolean;
 }) {
   const t = useT();
   const [tab, setTab] = useState<TabKey>("statement");
@@ -98,10 +102,12 @@ export default function ProblemView({
             stripProblemNumber(problem.title, problem.uvaId)
           )}
         </h1>
-        <span className="flex items-center gap-1.5 font-mono text-base text-brand">
-          {"★".repeat(problem.difficulty)}
-          <InfoTooltip text={t(DIFFICULTY_EXPLANATION)} />
-        </span>
+        {!hideDifficulty && (
+          <span className="flex items-center gap-1.5 font-mono text-base text-brand">
+            {"★".repeat(problem.difficulty)}
+            <InfoTooltip text={t(DIFFICULTY_EXPLANATION)} />
+          </span>
+        )}
       </div>
       <div
         role="tablist"

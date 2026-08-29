@@ -118,6 +118,10 @@ export class ContestsService {
     // contests (no fixed startAt) allow more than one, and only once the latest has actually ended.
     let myParticipant: { startedAt: Date; endsAt: Date; status: string; attemptNumber: number } | null = null;
     let canStartNewAttempt = false;
+    // Which of this contest's problems this specific attempt has solved — scoped by
+    // contestParticipantId (not just userId), same reasoning as the scoreboard: a re-attempt must
+    // never inherit a "solved" mark from a different attempt's submissions.
+    let solvedProblemIds: string[] = [];
     if (requester) {
       const participant = await this.latestParticipant(id, requester.id);
       if (participant) {
@@ -128,6 +132,12 @@ export class ContestsService {
           attemptNumber: participant.attemptNumber,
         };
         canStartNewAttempt = !contest.startAt && Date.now() >= participant.endsAt.getTime();
+        const solved = await prisma.submission.findMany({
+          where: { contestParticipantId: participant.id, verdict: "AC" },
+          select: { problemId: true },
+          distinct: ["problemId"],
+        });
+        solvedProblemIds = solved.map((s) => s.problemId);
       } else {
         canStartNewAttempt = true;
       }
@@ -167,6 +177,7 @@ export class ContestsService {
       isPublic: contest.isPublic,
       myParticipant,
       canStartNewAttempt,
+      solvedProblemIds,
       problems: contest.problems.map((cp) => ({
         label: cp.label,
         ord: cp.ord,
