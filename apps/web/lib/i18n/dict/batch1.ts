@@ -137,8 +137,8 @@ export const batch1Dictionary: Record<string, string> = {
   "Continue with Google": "使用 Google 繼續",
 
   // --- components/ProblemFilterTable.tsx / components/ProblemView.tsx (shared DIFFICULTY_EXPLANATION) ---
-  "Curated ratings come first: problems from an officially-rated set (like the CPE 必考49題 one-star selection) keep that rating. Everything else is derived from how many people worldwide have solved it on UVa (more solvers = more introductory), with a minimum floor based on the algorithm topic — a DP or graph problem never rates below what its technique demands.":
-    "有官方評級的題目優先採用該評級（例如 CPE 必考49題 的一星選題）。其餘題目則依據全世界在 UVa 上解出的人數估算（解出人數越多代表越入門），並依演算法主題設下難度下限——DP 或圖論題不會因為解題人數多就被評得比技術要求還低。",
+  "Estimated from official ratings where available, otherwise from worldwide solve statistics — for reference only.":
+    "有官方評級的採用官方評級，其餘則由全球解題統計估算，僅供參考。",
   "Pro perk: sort by whether you've solved a problem yet, to hunt down what's left.":
     "Pro 專屬：依照是否解過排序，方便找出還沒解的題目。",
   "Pro perk: how many past CPE sittings this problem has appeared in.": "Pro 專屬：這題在歷屆 CPE 中出現過幾次。",

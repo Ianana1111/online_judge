@@ -21,7 +21,7 @@ import {
   RocketIcon,
   SnowflakeIcon,
   SunHighIcon,
-  SunIcon,
+  SunriseIcon,
   SunsetIcon,
   TrophyIcon,
 } from "@/components/icons";
@@ -53,7 +53,7 @@ function greeting(handle: string, t: Translate) {
   const hour = new Date().getHours();
   const part =
     hour < 5 ? t("Still up") : hour < 12 ? t("Good morning") : hour < 18 ? t("Good afternoon") : t("Good evening");
-  const Icon = hour < 5 ? MoonIcon : hour < 12 ? SunIcon : hour < 18 ? SunHighIcon : SunsetIcon;
+  const Icon = hour < 5 ? MoonIcon : hour < 12 ? SunriseIcon : hour < 18 ? SunHighIcon : SunsetIcon;
   return { text: `${part}, ${handle}`, Icon };
 }
 

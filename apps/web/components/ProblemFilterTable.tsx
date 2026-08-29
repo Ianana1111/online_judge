@@ -12,7 +12,7 @@ import type { ProblemRow } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
 const DIFFICULTY_EXPLANATION =
-  "Curated ratings come first: problems from an officially-rated set (like the CPE 必考49題 one-star selection) keep that rating. Everything else is derived from how many people worldwide have solved it on UVa (more solvers = more introductory), with a minimum floor based on the algorithm topic — a DP or graph problem never rates below what its technique demands.";
+  "Estimated from official ratings where available, otherwise from worldwide solve statistics — for reference only.";
 
 const SOLVED_EXPLANATION = "Pro perk: sort by whether you've solved a problem yet, to hunt down what's left.";
 const CPE_EXPLANATION = "Pro perk: how many past CPE sittings this problem has appeared in.";

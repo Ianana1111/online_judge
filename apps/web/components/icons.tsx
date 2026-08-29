@@ -99,48 +99,52 @@ export const MedalIcon = makeIcon(
   </>,
 );
 
-export const SunIcon = makeIcon(
+// The four HomeDashboard greeting icons (still-up / morning / afternoon / evening) are
+// deliberately one cohesive family — a solid filled shape (moon or sun) plus a few thin
+// accent strokes, never the reverse — rather than each being whatever generic weather-icon
+// shape happened to exist. Two earlier attempts (a cloud+sun glyph, then a thin outlined sun
+// ring paired with an unrelated filled-disc sun) both got called out as looking rough at the
+// 24px size this actually renders at; this set was checked side by side at both 26px and 64px
+// before landing here.
+export const MoonIcon = makeIcon(
+  <path
+    d="M19.5 14.5c-1 .3-2 .5-3 .5a8 8 0 0 1-8-8c0-1 .2-2 .5-3A8.5 8.5 0 1 0 19.5 14.5z"
+    fill="currentColor"
+    stroke="none"
+  />,
+);
+
+export const SunriseIcon = makeIcon(
   <>
-    <circle cx="12" cy="12" r="5" />
-    <line x1="12" y1="1" x2="12" y2="3" />
-    <line x1="12" y1="21" x2="12" y2="23" />
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-    <line x1="1" y1="12" x2="3" y2="12" />
-    <line x1="21" y1="12" x2="23" y2="12" />
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    <path d="M6 18a6 6 0 0 1 12 0" fill="currentColor" stroke="none" />
+    <line x1="2" y1="18" x2="22" y2="18" />
+    <line x1="12" y1="8" x2="12" y2="5" />
+    <line x1="6.5" y1="10.5" x2="4.6" y2="8.6" />
+    <line x1="17.5" y1="10.5" x2="19.4" y2="8.6" />
   </>,
 );
 
-export const MoonIcon = makeIcon(<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />);
-
-// A solid (filled, not outlined) disc — deliberately distinct from SunIcon's thin ring, since the
-// two sit right next to each other in HomeDashboard's morning/afternoon greeting and need to read
-// clearly apart at a glance, not just on close inspection. The previous CloudSunIcon (a cloud
-// silhouette overlapping a small sun ring) had too many crossing curves to stay legible at the
-// 24px size the greeting actually renders at — it read as a muddled blob rather than a cloud+sun.
 export const SunHighIcon = makeIcon(
   <>
-    <circle cx="12" cy="13" r="4.5" fill="currentColor" stroke="none" />
-    <line x1="12" y1="3" x2="12" y2="5" />
-    <line x1="4.93" y1="7.93" x2="6.34" y2="9.34" />
-    <line x1="17.66" y1="7.93" x2="19.07" y2="9.34" />
-    <line x1="2" y1="13" x2="4" y2="13" />
-    <line x1="20" y1="13" x2="22" y2="13" />
+    <circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" />
+    <line x1="12" y1="2.5" x2="12" y2="4.5" />
+    <line x1="12" y1="19.5" x2="12" y2="21.5" />
+    <line x1="2.5" y1="12" x2="4.5" y2="12" />
+    <line x1="19.5" y1="12" x2="21.5" y2="12" />
+    <line x1="5.3" y1="5.3" x2="6.7" y2="6.7" />
+    <line x1="17.3" y1="17.3" x2="18.7" y2="18.7" />
+    <line x1="5.3" y1="18.7" x2="6.7" y2="17.3" />
+    <line x1="17.3" y1="6.7" x2="18.7" y2="5.3" />
   </>,
 );
 
 export const SunsetIcon = makeIcon(
   <>
-    <path d="M17 18a5 5 0 0 0-10 0" />
-    <line x1="12" y1="9" x2="12" y2="2" />
-    <line x1="4.22" y1="10.22" x2="5.64" y2="11.64" />
-    <line x1="1" y1="18" x2="3" y2="18" />
-    <line x1="21" y1="18" x2="23" y2="18" />
-    <line x1="18.36" y1="11.64" x2="19.78" y2="10.22" />
-    <polyline points="8 6 12 2 16 6" />
-    <line x1="2" y1="22" x2="22" y2="22" />
+    <path d="M6 15a6 6 0 0 1 12 0" fill="currentColor" stroke="none" />
+    <line x1="2" y1="18" x2="22" y2="18" />
+    <line x1="12" y1="8" x2="12" y2="6" />
+    <line x1="6.5" y1="10.5" x2="5.1" y2="9.1" />
+    <line x1="17.5" y1="10.5" x2="18.9" y2="9.1" />
   </>,
 );
 
