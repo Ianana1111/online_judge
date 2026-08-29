@@ -217,8 +217,8 @@ export default function ProblemView({
 
   const left = fullHeight ? (
     <div className="flex h-full flex-col">
-      <div className="shrink-0">{leftHeader}</div>
-      <div className="min-h-0 flex-1 overflow-y-auto">{leftBody}</div>
+      <div className="shrink-0 pr-4">{leftHeader}</div>
+      <div className="min-h-0 flex-1 overflow-y-auto pr-4">{leftBody}</div>
     </div>
   ) : (
     <div>
