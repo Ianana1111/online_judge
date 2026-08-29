@@ -37,6 +37,7 @@ export default function ProblemView({
   statementNode,
   inputSpecNode,
   outputSpecNode,
+  fullHeight = false,
 }: {
   problem: ProblemDetail;
   contestId?: string;
@@ -48,6 +49,11 @@ export default function ProblemView({
   statementNode: React.ReactNode;
   inputSpecNode: React.ReactNode;
   outputSpecNode: React.ReactNode;
+  /** Standalone problem page only — never passed by the contest-embedded usage
+   * (ContestDetailClient), which must keep its existing normal-document-flow behavior unchanged.
+   * When true, the prev/next bar stays fixed while the rest of the left pane scrolls on its own,
+   * and the right pane fills the viewport with an independently-resizable editor/test split. */
+  fullHeight?: boolean;
 }) {
   const t = useT();
   const [tab, setTab] = useState<TabKey>("statement");
@@ -69,9 +75,10 @@ export default function ProblemView({
   const remaining = endsAt ? Math.max(0, endsAt - now) : 0;
   const locked = examActive && remaining <= 0;
 
-  const left = (
+  const leftHeader = <ProblemPrevNext slug={problem.slug} />;
+
+  const leftBody = (
     <div>
-      <ProblemPrevNext slug={problem.slug} />
       <div className="mb-4 flex items-center justify-between">
         <h1 className="font-display text-3xl font-bold text-ink-50">
           {problem.uvaId != null && (
@@ -208,6 +215,18 @@ export default function ProblemView({
     </div>
   );
 
+  const left = fullHeight ? (
+    <div className="flex h-full flex-col">
+      <div className="shrink-0">{leftHeader}</div>
+      <div className="min-h-0 flex-1 overflow-y-auto">{leftBody}</div>
+    </div>
+  ) : (
+    <div>
+      {leftHeader}
+      {leftBody}
+    </div>
+  );
+
   const right = (
     <SubmissionPanel
       problemId={problem.id}
@@ -216,8 +235,9 @@ export default function ProblemView({
       locked={locked}
       judgeable={problem.uvaId != null}
       samples={problem.samples}
+      fullHeight={fullHeight}
     />
   );
 
-  return <SplitPane left={left} right={right} />;
+  return <SplitPane left={left} right={right} fullHeight={fullHeight} />;
 }

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import VerdictBadge from "@/components/VerdictBadge";
 import TestPanel from "@/components/TestPanel";
+import VerticalSplitPane from "@/components/VerticalSplitPane";
 import { apiFetch, ApiError, openSubmissionStream } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { BillingStatus, Sample, SubmissionDetail } from "@/lib/types";
@@ -39,6 +40,7 @@ export default function SubmissionPanel({
   locked = false,
   judgeable = true,
   samples = [],
+  fullHeight = false,
 }: {
   problemId: string;
   slug: string;
@@ -50,6 +52,10 @@ export default function SubmissionPanel({
   judgeable?: boolean;
   /** This problem's sample input/output pairs — seeds the Run panel's default test cases. */
   samples?: Sample[];
+  /** Standalone problem page only (see ProblemView/SplitPane) — splits the editor and TestPanel
+   * into their own independently-resizable, independently-scrolling halves instead of the normal
+   * one-after-another stack a contest-embedded ProblemView still uses. */
+  fullHeight?: boolean;
 }) {
   const t = useT();
   const { user, status: authStatus } = useAuthStore();
@@ -172,11 +178,11 @@ export default function SubmissionPanel({
   // session (see the storageKey comment above). Loading state first so this doesn't flash before
   // hydrate() resolves.
   if (authStatus !== "ready") {
-    return <div className="oj-card h-[480px] animate-pulse bg-ink-900" />;
+    return <div className={`oj-card animate-pulse bg-ink-900 ${fullHeight ? "h-full" : "h-[480px]"}`} />;
   }
   if (!user) {
     return (
-      <div className="oj-card flex h-[480px] flex-col items-center justify-center gap-3 p-6 text-center">
+      <div className={`oj-card flex flex-col items-center justify-center gap-3 p-6 text-center ${fullHeight ? "h-full" : "h-[480px]"}`}>
         <p className="text-sm text-ink-300">{t("Log in to write and submit code for this problem.")}</p>
         <Link href="/login" className="oj-btn-primary px-4 py-2 text-sm">
           {t("Log in")}
@@ -185,7 +191,7 @@ export default function SubmissionPanel({
     );
   }
 
-  return (
+  const controls = (
     <div className="space-y-3">
       {!judgeable && (
         <p className="rounded border border-ink-700 bg-ink-800/60 px-3 py-2 text-xs text-ink-400">
@@ -276,17 +282,48 @@ export default function SubmissionPanel({
           )}
         </div>
       )}
+    </div>
+  );
 
+  const bottomContent = (
+    <TestPanel
+      problemId={problemId}
+      slug={slug}
+      userId={user.id}
+      languageKey={languageKey}
+      sourceCode={sourceCode}
+      samples={samples}
+    />
+  );
+
+  if (fullHeight) {
+    // CodeEditor needs a flex-1/min-h-0 ancestor with an actual pixel height to fill — a plain
+    // space-y-3 stack (as in the non-fullHeight branch below) sizes to its content instead, which
+    // collapsed the editor to ~0px when this was first wired up. The controls block above it stays
+    // its natural content height (shrink-0); the editor takes whatever's left.
+    const topContent = (
+      <div className="flex h-full min-h-0 flex-col gap-3 overflow-y-auto pr-1">
+        <div className="shrink-0">{controls}</div>
+        <div className="min-h-[200px] flex-1">
+          <CodeEditor languageKey={languageKey} value={sourceCode} onChange={setSourceCode} fillHeight />
+        </div>
+      </div>
+    );
+    return (
+      <div className="flex h-full min-h-0 flex-col">
+        <VerticalSplitPane
+          top={topContent}
+          bottom={<div className="h-full min-h-0 overflow-y-auto pr-1">{bottomContent}</div>}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {controls}
       <CodeEditor languageKey={languageKey} value={sourceCode} onChange={setSourceCode} />
-
-      <TestPanel
-        problemId={problemId}
-        slug={slug}
-        userId={user.id}
-        languageKey={languageKey}
-        sourceCode={sourceCode}
-        samples={samples}
-      />
+      {bottomContent}
     </div>
   );
 }
