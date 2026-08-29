@@ -5,7 +5,8 @@
  */
 import { readFileSync } from "node:fs";
 import { Queue } from "bullmq";
-import { JUDGE_QUEUE_NAME } from "@oj/shared";
+import { prisma } from "@oj/db";
+import { JUDGE_LOCAL_QUEUE_NAME, JUDGE_REMOTE_QUEUE_NAME } from "@oj/shared";
 
 async function main() {
   const redisUrl = process.env.REDIS_URL;
@@ -14,12 +15,20 @@ async function main() {
   const ids = JSON.parse(readFileSync("/tmp/rejudge-ids.json", "utf8")) as string[];
   console.log(`Enqueuing ${ids.length} submissions.`);
 
-  const queue = new Queue(JUDGE_QUEUE_NAME, { connection: { url: redisUrl } });
+  const localQueue = new Queue(JUDGE_LOCAL_QUEUE_NAME, { connection: { url: redisUrl } });
+  const remoteQueue = new Queue(JUDGE_REMOTE_QUEUE_NAME, { connection: { url: redisUrl } });
   for (const id of ids) {
-    await queue.add(JUDGE_QUEUE_NAME, { submissionId: id });
-    console.log(`Enqueued ${id}`);
+    const submission = await prisma.submission.findUniqueOrThrow({
+      where: { id },
+      include: { problem: { include: { _count: { select: { testCases: true } } } } },
+    });
+    const judgedLocally = submission.problem._count.testCases > 0;
+    const queue = judgedLocally ? localQueue : remoteQueue;
+    const queueName = judgedLocally ? JUDGE_LOCAL_QUEUE_NAME : JUDGE_REMOTE_QUEUE_NAME;
+    await queue.add(queueName, { submissionId: id });
+    console.log(`Enqueued ${id} (${judgedLocally ? "local" : "remote"})`);
   }
-  await queue.close();
+  await Promise.all([localQueue.close(), remoteQueue.close()]);
   console.log("Done.");
 }
 
