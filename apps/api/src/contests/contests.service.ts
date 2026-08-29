@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { prisma } from "@oj/db";
+import { prisma, Prisma } from "@oj/db";
 import type { CreateContestDto } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
 import { AchievementsService } from "../achievements/achievements.service";
@@ -49,23 +49,24 @@ export class ContestsService {
     });
     if (participants.length === 0) return [];
 
-    // One query for every submission across every contest this user has ever entered, instead of
-    // one query per contest — grouped by contestId in JS below.
+    // One query for every submission across every attempt this user has ever made, instead of one
+    // query per attempt — grouped by contestParticipantId below so a re-attempt's submissions
+    // never bleed into another attempt's solvedCount/penalty for the same contest.
     const submissions = await prisma.submission.findMany({
-      where: { userId, contestId: { in: participants.map((p) => p.contestId) } },
-      select: SCOREBOARD_SUBMISSION_SELECT,
+      where: { userId, contestParticipantId: { in: participants.map((p) => p.id) } },
+      select: { ...SCOREBOARD_SUBMISSION_SELECT, contestParticipantId: true },
       orderBy: { createdAt: "asc" },
     });
-    const submissionsByContest = new Map<string, typeof submissions>();
+    const submissionsByParticipant = new Map<string, typeof submissions>();
     for (const s of submissions) {
-      const list = submissionsByContest.get(s.contestId!) ?? [];
+      const list = submissionsByParticipant.get(s.contestParticipantId!) ?? [];
       list.push(s);
-      submissionsByContest.set(s.contestId!, list);
+      submissionsByParticipant.set(s.contestParticipantId!, list);
     }
 
     const now = Date.now();
     return participants.map((p) => {
-      const subs = submissionsByContest.get(p.contestId) ?? [];
+      const subs = submissionsByParticipant.get(p.id) ?? [];
       const bySubs = subs.filter((s) => s.verdict !== "PENDING" && s.verdict !== "JUDGING");
 
       let solvedCount = 0;
@@ -93,6 +94,7 @@ export class ContestsService {
         status: now < p.endsAt.getTime() ? "RUNNING" : "FINISHED",
         solvedCount,
         penalty,
+        attemptNumber: p.attemptNumber,
       };
     });
   }
@@ -109,17 +111,25 @@ export class ContestsService {
     });
     if (!contest) throw new NotFoundException("Contest not found");
 
-    let myParticipant: { startedAt: Date; endsAt: Date; status: string } | null = null;
+    // The most recent attempt, if any — a contest can now have more than one ContestParticipant
+    // row per user (see ContestParticipant.attemptNumber), so this is "the one currently relevant
+    // to this caller" rather than "the" participant. canStartNewAttempt tells the frontend whether
+    // clicking start again would resume this attempt or begin a fresh one: only individual/virtual
+    // contests (no fixed startAt) allow more than one, and only once the latest has actually ended.
+    let myParticipant: { startedAt: Date; endsAt: Date; status: string; attemptNumber: number } | null = null;
+    let canStartNewAttempt = false;
     if (requester) {
-      const participant = await prisma.contestParticipant.findUnique({
-        where: { contestId_userId: { contestId: id, userId: requester.id } },
-      });
+      const participant = await this.latestParticipant(id, requester.id);
       if (participant) {
         myParticipant = {
           startedAt: participant.startedAt,
           endsAt: participant.endsAt,
           status: participant.status,
+          attemptNumber: participant.attemptNumber,
         };
+        canStartNewAttempt = !contest.startAt && Date.now() >= participant.endsAt.getTime();
+      } else {
+        canStartNewAttempt = true;
       }
     }
 
@@ -156,6 +166,7 @@ export class ContestsService {
       penaltyMin: contest.penaltyMin,
       isPublic: contest.isPublic,
       myParticipant,
+      canStartNewAttempt,
       problems: contest.problems.map((cp) => ({
         label: cp.label,
         ord: cp.ord,
@@ -180,14 +191,27 @@ export class ContestsService {
     };
   }
 
+  /** Latest attempt (highest attemptNumber) this user has at this contest, or null if they've
+   * never registered. Every downstream "am I currently in this contest" check should go through
+   * this rather than a raw findUnique on {contestId, userId} — that compound key stopped being
+   * unique once re-attempts existed (see ContestParticipant.attemptNumber). */
+  private async latestParticipant(contestId: string, userId: string, tx: Prisma.TransactionClient | typeof prisma = prisma) {
+    return tx.contestParticipant.findFirst({
+      where: { contestId, userId },
+      orderBy: { attemptNumber: "desc" },
+    });
+  }
+
   async register(id: string, userId: string) {
     const contest = await prisma.contest.findUnique({ where: { id } });
     if (!contest) throw new NotFoundException("Contest not found");
 
-    const existing = await prisma.contestParticipant.findUnique({
-      where: { contestId_userId: { contestId: id, userId } },
-    });
-    if (existing) return existing;
+    const existing = await this.latestParticipant(id, userId);
+    // Still running (or a scheduled sitting that hasn't started yet) — nothing new to create,
+    // "starting" again just re-enters the same attempt. Re-attempts are also only offered for
+    // individual/virtual contests (no fixed startAt) — a scheduled group sitting is a one-shot
+    // synchronized event by design, so this returns the existing attempt unconditionally for it.
+    if (existing && (contest.startAt || Date.now() < existing.endsAt.getTime())) return existing;
 
     // The FREE-plan virtual-contest cap is enforced by counting existing ContestParticipant rows
     // (assertCanStartVirtual), then this method creates a new one — a classic TOCTOU race: firing
@@ -200,10 +224,8 @@ export class ContestsService {
 
       // Re-check inside the lock: a concurrent duplicate registration for this same contest may
       // have committed while we were waiting to acquire it.
-      const already = await tx.contestParticipant.findUnique({
-        where: { contestId_userId: { contestId: id, userId } },
-      });
-      if (already) return already;
+      const already = await this.latestParticipant(id, userId, tx);
+      if (already && (contest.startAt || Date.now() < already.endsAt.getTime())) return already;
 
       await this.billing.assertCanStartVirtual(userId, tx);
 
@@ -223,14 +245,15 @@ export class ContestsService {
         }
         status = now < contest.startAt ? "REGISTERED" : "RUNNING";
       } else {
-        // Virtual/individual: personal window starting the moment they register.
+        // Virtual/individual: personal window starting the moment they register (or re-register
+        // for another attempt).
         startedAt = now;
         endsAt = new Date(now.getTime() + contest.durationMin * 60_000);
         status = "RUNNING";
       }
 
       return tx.contestParticipant.create({
-        data: { contestId: id, userId, startedAt, endsAt, status },
+        data: { contestId: id, userId, startedAt, endsAt, status, attemptNumber: (already?.attemptNumber ?? 0) + 1 },
       });
     }).then(async (participant) => {
       // Outside the transaction: awarding an achievement doesn't need to be atomic with the
@@ -277,6 +300,10 @@ export class ContestsService {
 
     const participants = await prisma.contestParticipant.findMany({
       where: { contestId: id },
+      // Ties in the best-attempt reduction below keep whichever attempt is seen first — ordering
+      // by attemptNumber ascending makes that a stable, deterministic "earliest attempt wins a
+      // tie" rather than depending on whatever order Postgres happens to return rows in.
+      orderBy: { attemptNumber: "asc" },
       include: { user: { select: { id: true, handle: true } } },
     });
 
@@ -284,29 +311,34 @@ export class ContestsService {
       return { standings: [], frozen: false };
     }
 
-    // One query for every submission in the contest, instead of one query per participant.
+    // One query for every submission in the contest, instead of one query per participant. Scoped
+    // by contestParticipantId (not userId) — a user can now have more than one attempt at this
+    // contest, and each attempt's submissions must only ever count toward that attempt's own row.
     const allSubmissions = await prisma.submission.findMany({
-      where: { contestId: id },
-      select: SCOREBOARD_SUBMISSION_SELECT,
+      where: { contestParticipantId: { in: participants.map((p) => p.id) } },
+      select: { ...SCOREBOARD_SUBMISSION_SELECT, contestParticipantId: true },
       orderBy: { createdAt: "asc" },
     });
-    const submissionsByUser = new Map<string, typeof allSubmissions>();
+    const submissionsByParticipant = new Map<string, typeof allSubmissions>();
     for (const s of allSubmissions) {
-      const list = submissionsByUser.get(s.userId) ?? [];
+      const list = submissionsByParticipant.get(s.contestParticipantId!) ?? [];
       list.push(s);
-      submissionsByUser.set(s.userId, list);
+      submissionsByParticipant.set(s.contestParticipantId!, list);
     }
 
     const now = Date.now();
     let anyFrozen = false;
 
-    const rows = participants.map((p) => {
+    // One row per attempt first — reduced to one row per user (their best attempt) below. Re-runs
+    // are for practice; the standings only reward whichever attempt actually did best, so nobody
+    // can pad the board by attempting the same sitting over and over.
+    const attemptRows = participants.map((p) => {
       const freezeCutoff = p.endsAt.getTime() - contest.freezeMin * 60_000;
       const stillRunning = now < p.endsAt.getTime();
       const isFrozenForThisParticipant = stillRunning && now >= freezeCutoff;
       if (isFrozenForThisParticipant) anyFrozen = true;
 
-      const submissions = submissionsByUser.get(p.userId) ?? [];
+      const submissions = submissionsByParticipant.get(p.id) ?? [];
       const visibleSubmissions = isFrozenForThisParticipant
         ? submissions.filter((s) => s.createdAt.getTime() <= freezeCutoff)
         : submissions;
@@ -338,11 +370,24 @@ export class ContestsService {
       return {
         userId: p.user.id,
         handle: p.user.handle,
+        attemptNumber: p.attemptNumber,
         solvedCount,
         penalty,
         problems: problemCells,
       };
     });
+
+    // Best attempt per user: higher solvedCount wins, ties broken by lower penalty — the exact
+    // criteria the standings are ultimately sorted by, so "best" here means the same thing as
+    // "best" on the board.
+    const bestByUser = new Map<string, (typeof attemptRows)[number]>();
+    for (const row of attemptRows) {
+      const current = bestByUser.get(row.userId);
+      if (!current || row.solvedCount > current.solvedCount || (row.solvedCount === current.solvedCount && row.penalty < current.penalty)) {
+        bestByUser.set(row.userId, row);
+      }
+    }
+    const rows = [...bestByUser.values()];
 
     rows.sort((a, b) => (b.solvedCount - a.solvedCount) || (a.penalty - b.penalty));
 

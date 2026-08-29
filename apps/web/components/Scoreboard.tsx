@@ -42,7 +42,12 @@ export default function Scoreboard({ contestId, problems }: { contestId: string;
           {data.standings.map((row) => (
             <tr key={row.userId}>
               <td className="font-mono">{row.rank}</td>
-              <td className="font-medium text-ink-50">{row.handle}</td>
+              <td className="font-medium text-ink-50">
+                {row.handle}
+                {row.attemptNumber > 1 && (
+                  <span className="ml-1.5 font-mono text-[10px] font-normal text-ink-500">#{row.attemptNumber}</span>
+                )}
+              </td>
               <td className="font-mono">{row.solvedCount}</td>
               <td className="font-mono text-ink-400">{row.penalty}</td>
               {problems.map((p) => {

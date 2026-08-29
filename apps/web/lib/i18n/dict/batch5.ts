@@ -160,4 +160,12 @@ export const batch5Dictionary: Record<string, string> = {
   "Refund Policy": "退款與訂閱政策",
   "I agree to the": "我同意",
   "and": "以及",
+
+  // --- components/ContestDetailClient.tsx (contest re-attempts) ---
+  "You finished attempt #{n} of this sitting.": "你已完成這場考試的第 {n} 次挑戰。",
+  "Starting again begins a brand new timed attempt (#{n}) — your scoreboard entry only ever keeps whichever attempt scored best.":
+    "再次開始會啟動全新的第 {n} 次計時挑戰——排行榜上永遠只會顯示你表現最好的那一次成績。",
+  "Attempt again": "再次挑戰",
+  "Starting…": "開始中…",
+  "attempt #{n}": "第 {n} 次挑戰",
 };

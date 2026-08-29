@@ -44,9 +44,15 @@ export class SubmissionsService {
     });
     if (!problem) throw new NotFoundException("Problem not found");
 
+    // A contest can now have more than one attempt per user (re-attempts on an individual/virtual
+    // sitting — see ContestParticipant.attemptNumber), so contestId+userId is no longer a unique
+    // lookup: take the latest attempt, which is always the currently-relevant one, since a new
+    // attempt only ever starts after the previous one's window has closed.
+    let participant: Awaited<ReturnType<typeof prisma.contestParticipant.findFirst>> = null;
     if (dto.contestId) {
-      const participant = await prisma.contestParticipant.findUnique({
-        where: { contestId_userId: { contestId: dto.contestId, userId } },
+      participant = await prisma.contestParticipant.findFirst({
+        where: { contestId: dto.contestId, userId },
+        orderBy: { attemptNumber: "desc" },
       });
       const now = Date.now();
       if (!participant || participant.endsAt.getTime() < now || participant.startedAt.getTime() > now) {
@@ -72,6 +78,7 @@ export class SubmissionsService {
         userId,
         problemId: dto.problemId,
         contestId: dto.contestId,
+        contestParticipantId: participant?.id,
         languageKey: dto.languageKey,
         sourceCode: dto.sourceCode,
         status: "PENDING",
