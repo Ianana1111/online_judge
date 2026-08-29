@@ -78,6 +78,60 @@ function DowngradeConfirmDialog({
   );
 }
 
+function RequestRefundConfirmDialog({
+  submitting,
+  error,
+  onCancel,
+  onConfirm,
+}: {
+  submitting: boolean;
+  error: string | null;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  const t = useT();
+  const trapRef = useFocusTrap<HTMLDivElement>(true);
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onCancel();
+    }
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onCancel]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      role="dialog"
+      aria-modal="true"
+      onClick={onCancel}
+    >
+      <div ref={trapRef} tabIndex={-1} className="oj-card w-full max-w-sm p-5 outline-none" onClick={(e) => e.stopPropagation()}>
+        <h2 className="font-display text-base font-semibold text-ink-50">{t("Request a full refund?")}</h2>
+        <p className="mt-2 text-sm text-ink-300">
+          {t(
+            "Refunds your first charge in full, cancels your subscription, and switches you to Free right away — you won't keep Pro access for the rest of this period. You can only do this once per account.",
+          )}
+        </p>
+        {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={onCancel} className="oj-btn-secondary px-4 py-2 text-sm" disabled={submitting}>
+            {t("Keep Pro")}
+          </button>
+          <button type="button" onClick={onConfirm} className="oj-btn-primary px-4 py-2 text-sm" disabled={submitting}>
+            {submitting ? t("Processing…") : t("Refund me")}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function UnsubscribeConfirmDialog({
   expiresLabel,
   submitting,
@@ -145,8 +199,9 @@ export default function UpgradePlanPage() {
   const [showUnsubscribeConfirm, setShowUnsubscribeConfirm] = useState(false);
   const [unsubscribing, setUnsubscribing] = useState(false);
   const [unsubscribeError, setUnsubscribeError] = useState<string | null>(null);
-  const [startingTrial, setStartingTrial] = useState(false);
-  const [trialError, setTrialError] = useState<string | null>(null);
+  const [showRefundConfirm, setShowRefundConfirm] = useState(false);
+  const [refunding, setRefunding] = useState(false);
+  const [refundError, setRefundError] = useState<string | null>(null);
 
   const { data: status, isLoading } = useQuery({
     queryKey: ["billing", "me"],
@@ -196,16 +251,20 @@ export default function UpgradePlanPage() {
       setUnsubscribing(false);
     }
   }
-  async function startTrial() {
-    setStartingTrial(true);
-    setTrialError(null);
+  // Downgrades to Free immediately (unlike confirmUnsubscribe above, which runs out the
+  // already-paid period) — the whole point of a refund is that this period is being handed back,
+  // not kept.
+  async function confirmRefund() {
+    setRefunding(true);
+    setRefundError(null);
     try {
-      await apiFetch("/billing/trial/start", { method: "POST" });
+      await apiFetch("/billing/refund/request", { method: "POST" });
       await queryClient.invalidateQueries({ queryKey: ["billing", "me"] });
+      setShowRefundConfirm(false);
     } catch (e) {
-      setTrialError(e instanceof ApiError ? e.message : "無法開始試用，請稍後再試");
+      setRefundError(e instanceof ApiError ? e.message : "無法處理退款，請稍後再試");
     } finally {
-      setStartingTrial(false);
+      setRefunding(false);
     }
   }
 
@@ -384,25 +443,20 @@ export default function UpgradePlanPage() {
                         ? t("Stops auto-renewal — you'll keep Pro until {date}, then switch to Free automatically.", { date: expiresLabel })
                         : t("Stops auto-renewal — you'll keep Pro until your current period ends, then switch to Free automatically.")}
                     </p>
-                  </>
-                ) : !isPro && status?.trialAvailable ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={startTrial}
-                      className="oj-btn-primary mt-4 w-full py-2 text-sm"
-                      disabled={!user || startingTrial}
-                    >
-                      {startingTrial ? t("Starting…") : t("Start your free 30-day trial")}
-                    </button>
-                    {trialError && <p className="mt-1.5 text-center text-xs text-verdict-wa">{trialError}</p>}
-                    <button
-                      type="button"
-                      onClick={() => router.push("/upgrade/checkout")}
-                      className="mt-2 w-full py-1 text-center text-[11px] text-ink-500 hover:text-ink-300"
-                    >
-                      {t("Or subscribe now instead")}
-                    </button>
+                    {status.refundEligibleUntil && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setRefundError(null);
+                          setShowRefundConfirm(true);
+                        }}
+                        className="mt-2 w-full py-1 text-center text-[11px] text-ink-500 underline hover:text-verdict-wa"
+                      >
+                        {t("Not what you expected? Request a full refund (until {date})", {
+                          date: new Date(status.refundEligibleUntil).toLocaleDateString(),
+                        })}
+                      </button>
+                    )}
                   </>
                 ) : (
                   <button
@@ -436,6 +490,14 @@ export default function UpgradePlanPage() {
           error={unsubscribeError}
           onCancel={() => setShowUnsubscribeConfirm(false)}
           onConfirm={confirmUnsubscribe}
+        />
+      )}
+      {showRefundConfirm && (
+        <RequestRefundConfirmDialog
+          submitting={refunding}
+          error={refundError}
+          onCancel={() => setShowRefundConfirm(false)}
+          onConfirm={confirmRefund}
         />
       )}
     </div>

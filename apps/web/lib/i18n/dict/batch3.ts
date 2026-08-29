@@ -145,9 +145,12 @@ export const batch3Dictionary: Record<string, string> = {
   "Cancels immediately — you'll switch to Free right away and won't be charged again.": "立即取消——你會馬上切換回免費方案，之後也不會再被扣款。",
   "Extend Pro Plan": "延長 Pro 方案",
   "Get Pro Plan": "取得 Pro 方案",
-  "Start your free 30-day trial": "開始 30 天免費試用",
-  "Starting…": "啟用中…",
-  "Or subscribe now instead": "或直接訂閱",
+  "Not what you expected? Request a full refund (until {date})": "不符合期待？可在 {date} 前申請全額退款",
+  "Request a full refund?": "確定要申請全額退款嗎？",
+  "Refunds your first charge in full, cancels your subscription, and switches you to Free right away — you won't keep Pro access for the rest of this period. You can only do this once per account.":
+    "會全額退還你的第一筆扣款、取消訂閱，並立即切換回免費方案——不會保留這期剩餘的 Pro 權限。每個帳號只能申請一次。",
+  "Processing…": "處理中…",
+  "Refund me": "申請退款",
 
   // --- app/upgrade/checkout/page.tsx ---
   "Subscribe to Pro": "訂閱 Pro",

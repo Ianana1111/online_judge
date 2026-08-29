@@ -24,8 +24,8 @@ export const PLAN_PRICING: Record<BillingPeriod, { amountNtd: number; days: numb
 
 /** Launch promo: 50% off the monthly plan for judge.tw's first month of real operation. A fixed
  * end date (not "30 days from whenever the server happens to restart") so the discount doesn't
- * silently extend itself on every deploy. Currently inactive — the 30-day free trial
- * (billing.service.startTrial) is judge.tw's actual new-user incentive now; leaving this false
+ * silently extend itself on every deploy. Currently inactive — the first-month refund guarantee
+ * (billing.service.requestRefund) is judge.tw's actual new-user incentive now; leaving this false
  * rather than deleting it in case a separate future promo period wants the same mechanism. */
 export const LAUNCH_PROMO = {
   active: false,

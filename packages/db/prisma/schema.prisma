@@ -86,6 +86,9 @@ enum PaymentStatus {
   AUTHORIZED
   APPROVED
   REJECTED
+  /// Set by billing.service.requestRefund once ECPay confirms the refund/void actually went
+  /// through — a terminal state like APPROVED/REJECTED, never transitions further.
+  REFUNDED
 }
 
 // ---------------------------------------------------------------------------

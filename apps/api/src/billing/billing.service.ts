@@ -12,7 +12,9 @@ import {
 import {
   cancelEcpayPeriod,
   computeCheckMacValue,
+  doCreditCardAction,
   ecpayConfig,
+  queryEcpayCreditTrade,
   redactEcpayBodyForLogging,
   verifyCheckMacValue,
 } from "./ecpay.util";
@@ -31,10 +33,13 @@ const RECURRING_PERIOD_TYPE: Record<BillingPeriod, "M" | "Y"> = { MONTHLY: "M", 
 // "subscription" being newly created, so there's no well-defined "first charge" to hang this on.
 const FIRST_YEARLY_SUBSCRIPTION_BONUS_DAYS = 30;
 
-// 30 free days, granted once, with no ECPay interaction at all (see startTrial) — the safest
-// possible implementation of "first month free" for a service that otherwise can't rely on
-// ECPay's recurring engine supporting a genuinely different first-period amount.
-const FREE_TRIAL_DAYS = 30;
+// Credit-card subscribers can get a full, automatic refund of their very first charge within this
+// many days of it — replaces the old 30-day free trial (Plan A) with "pay now, guaranteed refund
+// if you back out early" instead of "don't pay until you decide to." ATM purchases are
+// deliberately excluded from this: ECPay has no API to reverse a bank transfer the way it does a
+// card charge, so those still have to go through a manual, human-initiated refund — see
+// requestRefund's own doc comment.
+const REFUND_WINDOW_MS = 30 * 24 * 3600 * 1000;
 
 /** PRO is only meaningful while it hasn't expired — a lapsed PRO account behaves as FREE until a
  * new payment extends it. Centralised so every enforcement point agrees on "is this user PRO now".
@@ -102,12 +107,12 @@ function currentMonthStart(d: Date = new Date()): Date {
 export class BillingService {
   private readonly logger = new Logger(BillingService.name);
 
-  /** Shared base for every "grant/extend Pro" path (real payments, the free trial, and the
+  /** Shared base for every "grant/extend Pro" path (real payments, admin grants, and the
    * yearly-subscription first-charge bonus): extends from whichever is later (now, or the user's
    * existing expiry) so paying/renewing/claiming early never loses days. Takes a transaction
    * client so the caller's own writes (a Payment status flip, a Subscription upsert, ...) commit
-   * atomically with this User update — money or a one-time trial claim is involved, so a crash
-   * between the two writes must never leave them inconsistent.
+   * atomically with this User update — real money is involved, so a crash between the two writes
+   * must never leave them inconsistent.
    *
    * A single atomic UPDATE (not a SELECT then a separate UPDATE) deliberately — two of these
    * running concurrently for the same user (e.g. a first-charge webhook racing a renewal webhook,
@@ -133,22 +138,20 @@ export class BillingService {
     return this.extendPlanByDays(tx, userId, PLAN_PRICING[period].days);
   }
 
-  /** Grants the one-time 30-day free Pro trial — Plan A from the launch audit: no ECPay
-   * interaction whatsoever, so there is zero risk of an accidental real charge. trialStartedAt is
-   * the guard against claiming a second one; it's never cleared afterward even once the trial
-   * period itself has long expired, specifically so it keeps blocking a repeat claim. */
-  async startTrial(userId: string): Promise<{ plan: "PRO"; planExpiresAt: Date }> {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw new NotFoundException("User not found");
-    if (user.trialStartedAt) {
-      throw new BadRequestException("You've already used your free trial.");
-    }
+  /** Refund eligibility for the logged-in user — see requestRefund for the actual action. Whether
+   * they're eligible depends on having a first CREDIT charge that's both unrefunded and still
+   * within REFUND_WINDOW_MS; `deadline` is only meaningful when `eligible` is true. */
+  private async findRefundableFirstPayment(userId: string) {
+    const alreadyRefunded = await prisma.payment.findFirst({ where: { userId, status: "REFUNDED" } });
+    if (alreadyRefunded) return null;
 
-    const planExpiresAt = await prisma.$transaction(async (tx) => {
-      await tx.user.update({ where: { id: userId }, data: { trialStartedAt: new Date() } });
-      return this.extendPlanByDays(tx, userId, FREE_TRIAL_DAYS);
+    const firstCreditPayment = await prisma.payment.findFirst({
+      where: { userId, method: "ECPAY", ecpayMethod: "CREDIT", status: { in: ["APPROVED", "AUTHORIZED"] } },
+      orderBy: { createdAt: "asc" },
     });
-    return { plan: "PRO", planExpiresAt };
+    if (!firstCreditPayment) return null;
+    if (Date.now() - firstCreditPayment.createdAt.getTime() > REFUND_WINDOW_MS) return null;
+    return firstCreditPayment;
   }
 
   /** Current plan + quota snapshot for the logged-in user (drives the pricing page and quota UI). */
@@ -172,6 +175,7 @@ export class BillingService {
       orderBy: { createdAt: "desc" },
     });
     const subscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
+    const refundablePayment = await this.findRefundableFirstPayment(userId);
 
     return {
       // "plan" drives every Pro-gated UI check, so ADMIN reports "PRO" here too (see isUnlimited)
@@ -180,7 +184,7 @@ export class BillingService {
       plan: unlimited ? "PRO" : "FREE",
       planExpiresAt: pro ? user.planExpiresAt : null,
       planCancelRequested: pro && user.planCancelRequested,
-      trialAvailable: !user.trialStartedAt,
+      refundEligibleUntil: refundablePayment ? new Date(refundablePayment.createdAt.getTime() + REFUND_WINDOW_MS) : null,
       // planExpiresAt doubles as "renews on" for an active subscription — ECPay's periodic webhook
       // never hands us an explicit next-charge date, but the paid-through date already means the
       // same thing while a Subscription auto-extends it every cycle.
@@ -615,6 +619,71 @@ export class BillingService {
       `Subscription ${subscription.id} cancelled by user ${userId} — stays Pro until ${user.planExpiresAt?.toISOString()}, won't auto-renew.`,
     );
     return { plan: "PRO", planExpiresAt: user.planExpiresAt };
+  }
+
+  /** Self-service full refund of a user's very first credit-card charge, within REFUND_WINDOW_MS
+   * of that charge, at most once per account ever (findRefundableFirstPayment blocks a repeat once
+   * any payment has status REFUNDED) — this is what replaces the old 30-day free trial. Unlike
+   * cancelSubscription/cancelPlan, which both run out the already-paid period before downgrading,
+   * this downgrades to FREE immediately: the entire point of a refund is that this period was NOT
+   * actually kept paid for.
+   *
+   * Calls ECPay's action FIRST and only touches our own records if that succeeds — same "never
+   * claim something ECPay might not have actually done" discipline as cancelSubscription. Note
+   * this whole DoAction family (queryEcpayCreditTrade included) cannot be exercised in ECPay's
+   * sandbox/stage environment per their own docs — there is no safe way to test this except
+   * against production. */
+  async requestRefund(userId: string): Promise<{ plan: "FREE"; refundedAmountNtd: number }> {
+    const payment = await this.findRefundableFirstPayment(userId);
+    if (!payment || !payment.merchantTradeNo) {
+      throw new BadRequestException(
+        "You're not eligible for a refund — either the 30-day window has passed, this isn't a credit-card subscription, or you've already used your one-time refund.",
+      );
+    }
+
+    const config = ecpayConfig();
+    const trade = await queryEcpayCreditTrade(payment.merchantTradeNo, config);
+    if (!trade.TradeID) {
+      throw new BadRequestException("Couldn't verify this payment with ECPay — please contact us and we'll process the refund manually.");
+    }
+    // "Authorized"/"To be captured" (not yet actually captured) should be rare in practice —
+    // recurring orders auto-capture on ECPay's own side within the same cycle (see
+    // EcpayAuthPollService's own doc comment on why it skips these entirely) — but costs nothing
+    // to handle correctly: voiding money that was never actually taken needs Action "E", not a
+    // "R" refund.
+    const action = trade.Status === "Captured" ? "R" : "E";
+    const result = await doCreditCardAction(payment.merchantTradeNo, trade.TradeID, action, payment.amountNtd, config);
+    if (result.RtnCode !== 1) {
+      throw new BadRequestException(`ECPay declined the refund: ${result.RtnMsg}. Please contact us and we'll process it manually.`);
+    }
+
+    // Best-effort: the refund itself already succeeded (money is going back) regardless of whether
+    // this also succeeds, so a failure here is logged for manual follow-up rather than thrown —
+    // the alternative (throwing) would falsely tell the user their refund failed when it didn't.
+    const subscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
+    if (subscription) {
+      try {
+        const cancelResult = await cancelEcpayPeriod(subscription.merchantTradeNo, config);
+        if (cancelResult.RtnCode === 1) {
+          await prisma.subscription.update({ where: { id: subscription.id }, data: { status: "CANCELLED", cancelledAt: new Date() } });
+        } else {
+          this.logger.error(
+            `requestRefund: refunded payment ${payment.id} but ECPay declined to cancel subscription ${subscription.id}: ${cancelResult.RtnMsg} — it will keep auto-renewing, needs manual follow-up.`,
+          );
+        }
+      } catch (err) {
+        this.logger.error(
+          `requestRefund: refunded payment ${payment.id} but failed to cancel subscription ${subscription.id}: ${String(err)} — it will keep auto-renewing, needs manual follow-up.`,
+        );
+      }
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.payment.update({ where: { id: payment.id }, data: { status: "REFUNDED", reviewedAt: new Date(), reviewedBy: "USER_REFUND" } });
+      await tx.user.update({ where: { id: userId }, data: { plan: "FREE", planExpiresAt: null, planCancelRequested: false } });
+    });
+    this.logger.log(`Refunded payment ${payment.id} (NT$${payment.amountNtd}) for user ${userId} and downgraded to Free.`);
+    return { plan: "FREE", refundedAmountNtd: payment.amountNtd };
   }
 
   /** Called by EcpayAuthPollService the moment ECPay confirms a credit-card order's authorization

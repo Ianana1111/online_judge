@@ -76,9 +76,10 @@ export interface BillingStatus {
   plan: "FREE" | "PRO";
   planExpiresAt: string | null;
   planCancelRequested: boolean;
-  // False once the one-time 30-day free trial has ever been claimed (see POST /billing/trial/start)
-  // — never flips back to true, even long after that trial period itself has expired.
-  trialAvailable: boolean;
+  // Non-null while the user can still self-serve a full refund of their first credit-card charge
+  // (see POST /billing/refund/request) — null once used, expired, or never applicable (no credit
+  // subscription on file). Replaces the old free-trial mechanism.
+  refundEligibleUntil: string | null;
   // Present only while an ECPay recurring (定期定額) subscription is ACTIVE — planExpiresAt
   // doubles as "renews on" for this case, since it auto-extends every successful auto-charge.
   subscription: { period: "MONTHLY" | "YEARLY"; amountNtd: number } | null;

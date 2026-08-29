@@ -49,13 +49,21 @@ export default function FaqContent() {
         {
           q: t("How do I cancel Pro?"),
           a: t(
-            "Click \"Unsubscribe\" on the Upgrade Plan page — there's no auto-renewal here; every payment is a one-time purchase that extends your existing expiry date, so \"cancelling\" just flags your account to switch back to Free once your current Pro period ends. You won't lose Pro immediately, and no refund is issued.",
+            "Click \"Unsubscribe\" on the Upgrade Plan page — this stops future auto-renewal, but you keep full Pro access until your current paid period ends, then switch to Free automatically. No refund is issued for the time already paid for (unless you're within your first-month refund window — see the next question).",
           ),
         },
         {
           q: t("Can I get a refund?"),
-          a: t(
-            "All payments are currently treated as one-time purchases that take effect immediately, and we don't offer refunds. If it was a mistaken charge or a system error (e.g. the wrong amount was charged), contact us directly and we'll help sort it out.",
+          a: (
+            <>
+              {t(
+                "If you subscribed by credit card, you can request a full refund within 30 days of your first charge — it cancels your subscription and switches you to Free immediately, and you can only do this once per account. Find the option on the Upgrade Plan page while it's still available. ATM transfers can't be refunded automatically the same way; contact us directly and we'll process it manually. See our",
+              )}{" "}
+              <Link href="/refund" className="text-brand hover:underline">
+                {t("Refund Policy")}
+              </Link>{" "}
+              {t("for the full details.")}
+            </>
           ),
         },
         {
