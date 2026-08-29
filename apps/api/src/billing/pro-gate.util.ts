@@ -15,13 +15,15 @@ export async function isRequesterPro(requester: RequestUser): Promise<boolean> {
   return !!user && isProActive(user);
 }
 
-/** How many distinct past CPE sittings (Contest rows with kind=CPE) each of these problems has
- * appeared in, via ContestProblem — the raw "歷屆出過幾次" count Pro users get to see. */
-export async function cpeAppearancesFor(problemIds: string[]): Promise<Map<string, number>> {
+/** How many distinct past sittings of the given kind (Contest rows with kind=CPE or kind=GPE) each
+ * of these problems has appeared in, via ContestProblem — the raw "歷屆出過幾次" count Pro users
+ * get to see. Generalized from a CPE-only helper so the problems list can toggle between CPE and
+ * GPE appearance counts in the same column (see ProblemFilterTable) rather than needing two. */
+export async function examAppearancesFor(problemIds: string[], kind: "CPE" | "GPE"): Promise<Map<string, number>> {
   if (problemIds.length === 0) return new Map();
   const rows = await prisma.contestProblem.groupBy({
     by: ["problemId"],
-    where: { problemId: { in: problemIds }, contest: { kind: "CPE" } },
+    where: { problemId: { in: problemIds }, contest: { kind } },
     _count: true,
   });
   return new Map(rows.map((r) => [r.problemId, r._count]));

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { prisma } from "@oj/db";
 import type { RequestUser } from "../common/decorators";
-import { cpeAppearancesFor, isRequesterPro } from "../billing/pro-gate.util";
+import { examAppearancesFor, isRequesterPro } from "../billing/pro-gate.util";
 
 @Injectable()
 export class CollectionsService {
@@ -58,13 +58,14 @@ export class CollectionsService {
       solvedSet = new Set(solved.map((s) => s.problemId));
     }
 
-    // Same Pro-gated "appeared in N past CPE sittings" perk as the main problem list (see
+    // Same Pro-gated "appeared in N past CPE/GPE sittings" perk as the main problem list (see
     // problems.service.list) — collection pages use the same ProblemFilterTable and must agree,
-    // or a collection's "Past CPE" column would silently show nothing for every Pro user.
+    // or a collection's appearances column/toggle would silently show nothing for every Pro user.
     const isPro = requester ? await isRequesterPro(requester) : false;
-    const appearancesById = isPro
-      ? await cpeAppearancesFor(collection.problems.map((p) => p.problemId))
-      : new Map<string, number>();
+    const collectionProblemIds = collection.problems.map((p) => p.problemId);
+    const [cpeAppearancesById, gpeAppearancesById] = isPro
+      ? await Promise.all([examAppearancesFor(collectionProblemIds, "CPE"), examAppearancesFor(collectionProblemIds, "GPE")])
+      : [new Map<string, number>(), new Map<string, number>()];
 
     return {
       id: collection.id,
@@ -80,7 +81,8 @@ export class CollectionsService {
         source: cp.problem.source,
         tags: cp.problem.tags.map((t) => t.tag.slug),
         solvedByMe: solvedSet.has(cp.problem.id),
-        cpeAppearances: isPro ? (appearancesById.get(cp.problem.id) ?? 0) : null,
+        cpeAppearances: isPro ? (cpeAppearancesById.get(cp.problem.id) ?? 0) : null,
+        gpeAppearances: isPro ? (gpeAppearancesById.get(cp.problem.id) ?? 0) : null,
       })),
     };
   }

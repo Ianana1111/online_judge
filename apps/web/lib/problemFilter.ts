@@ -9,8 +9,8 @@ export type SortKey =
   | "number-asc"
   | "difficulty-desc"
   | "difficulty-asc"
-  | "cpe-desc"
-  | "cpe-asc"
+  | "appearances-desc"
+  | "appearances-asc"
   | "solved-first"
   | "unsolved-first";
 export const SORT_KEYS: SortKey[] = [
@@ -18,16 +18,22 @@ export const SORT_KEYS: SortKey[] = [
   "number-asc",
   "difficulty-desc",
   "difficulty-asc",
-  "cpe-desc",
-  "cpe-asc",
+  "appearances-desc",
+  "appearances-asc",
   "solved-first",
   "unsolved-first",
 ];
+
+// Which exam's past-appearance count the "appearances" sort/column reads — CPE and GPE counts are
+// both always present on ProblemRow (see its own comment), so switching this is instant, no
+// refetch. Defaults to CPE (the site's main audience) wherever it's omitted from the URL.
+export type ExamKind = "CPE" | "GPE";
 
 export interface ProblemFilters {
   difficulty?: string; // "" | "1".."4", same string the <select> uses directly
   tag?: string;
   sort?: SortKey | null;
+  examKind?: ExamKind;
 }
 
 /**
@@ -45,7 +51,7 @@ export function buildProblemNavHref(
   slug: string,
   listSource: "problems" | "collection",
   listId: string | null,
-  filters: { sort: SortKey | null; difficulty: string; tag: string },
+  filters: { sort: SortKey | null; difficulty: string; tag: string; examKind?: ExamKind },
 ): string {
   const params = new URLSearchParams();
   params.set("listSource", listSource);
@@ -53,15 +59,22 @@ export function buildProblemNavHref(
   if (filters.sort) params.set("sort", filters.sort);
   if (filters.difficulty) params.set("difficulty", filters.difficulty);
   if (filters.tag) params.set("tag", filters.tag);
+  // Omitted for the default (CPE) so a plain/no-toggle URL stays exactly as short as before this
+  // existed — only a deliberate switch to GPE shows up in the link.
+  if (filters.examKind === "GPE") params.set("examKind", filters.examKind);
   return `/problems/${slug}?${params.toString()}`;
 }
 
-export function filterAndSortProblems(problems: ProblemRow[], { difficulty, tag, sort }: ProblemFilters): ProblemRow[] {
+export function filterAndSortProblems(
+  problems: ProblemRow[],
+  { difficulty, tag, sort, examKind = "CPE" }: ProblemFilters,
+): ProblemRow[] {
   const list = problems.filter((p) => {
     if (difficulty && p.difficulty !== parseInt(difficulty, 10)) return false;
     if (tag && !p.tags.includes(tag)) return false;
     return true;
   });
+  const appearancesOf = (p: ProblemRow) => (examKind === "GPE" ? p.gpeAppearances : p.cpeAppearances) ?? 0;
   switch (sort ?? null) {
     case "number-desc":
       list.sort((a, b) => (b.uvaId ?? -Infinity) - (a.uvaId ?? -Infinity));
@@ -72,11 +85,11 @@ export function filterAndSortProblems(problems: ProblemRow[], { difficulty, tag,
     case "difficulty-asc":
       list.sort((a, b) => a.difficulty - b.difficulty);
       break;
-    case "cpe-desc":
-      list.sort((a, b) => (b.cpeAppearances ?? 0) - (a.cpeAppearances ?? 0));
+    case "appearances-desc":
+      list.sort((a, b) => appearancesOf(b) - appearancesOf(a));
       break;
-    case "cpe-asc":
-      list.sort((a, b) => (a.cpeAppearances ?? 0) - (b.cpeAppearances ?? 0));
+    case "appearances-asc":
+      list.sort((a, b) => appearancesOf(a) - appearancesOf(b));
       break;
     case "solved-first":
       list.sort((a, b) => Number(b.solvedByMe) - Number(a.solvedByMe));

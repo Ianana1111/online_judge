@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import type { CreateProblemDto } from "@oj/shared";
 import { prisma } from "@oj/db";
 import type { RequestUser } from "../common/decorators";
-import { cpeAppearancesFor, isRequesterPro } from "../billing/pro-gate.util";
+import { examAppearancesFor, isRequesterPro } from "../billing/pro-gate.util";
 
 const PAGE_SIZE = 20;
 
@@ -117,11 +117,16 @@ export class ProblemsService {
       solvedSet = new Set(solved.map((s) => s.problemId));
     }
 
-    // "Appeared in N past CPE sittings" is a Pro perk (see billing.service isProActive) — never
+    // "Appeared in N past CPE/GPE sittings" is a Pro perk (see billing.service isProActive) — never
     // computed-and-hidden client-side only, since that would let anyone read it straight off the
     // network response. Cheap either way: at most ~350 problems total, one groupBy for the page.
+    // Both kinds are fetched upfront (not behind a query param) so ProblemFilterTable's CPE/GPE
+    // toggle is instant — no refetch on switching.
     const isPro = requester ? await isRequesterPro(requester) : false;
-    const appearancesById = isPro ? await cpeAppearancesFor(rows.map((r) => r.id)) : new Map<string, number>();
+    const problemIds = rows.map((r) => r.id);
+    const [cpeAppearancesById, gpeAppearancesById] = isPro
+      ? await Promise.all([examAppearancesFor(problemIds, "CPE"), examAppearancesFor(problemIds, "GPE")])
+      : [new Map<string, number>(), new Map<string, number>()];
 
     return {
       items: rows.map((p) => ({
@@ -133,7 +138,8 @@ export class ProblemsService {
         source: p.source,
         tags: p.tags.map((t) => t.tag.slug),
         solvedByMe: solvedSet.has(p.id),
-        cpeAppearances: isPro ? (appearancesById.get(p.id) ?? 0) : null,
+        cpeAppearances: isPro ? (cpeAppearancesById.get(p.id) ?? 0) : null,
+        gpeAppearances: isPro ? (gpeAppearancesById.get(p.id) ?? 0) : null,
       })),
       total,
       page,
@@ -273,7 +279,7 @@ export class ProblemsService {
       throw new NotFoundException("Problem not found");
     }
     const isPro = requester ? await isRequesterPro(requester) : false;
-    const cpeAppearances = isPro ? (await cpeAppearancesFor([problem.id])).get(problem.id) ?? 0 : null;
+    const cpeAppearances = isPro ? (await examAppearancesFor([problem.id], "CPE")).get(problem.id) ?? 0 : null;
     return {
       id: problem.id,
       slug: problem.slug,

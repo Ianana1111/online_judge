@@ -141,7 +141,7 @@ export const batch1Dictionary: Record<string, string> = {
     "有官方評級的採用官方評級，其餘則由全球解題統計估算，僅供參考。",
   "Pro perk: sort by whether you've solved a problem yet, to hunt down what's left.":
     "Pro 專屬：依照是否解過排序，方便找出還沒解的題目。",
-  "Pro perk: how many past CPE sittings this problem has appeared in.": "Pro 專屬：這題在歷屆 CPE 中出現過幾次。",
+  "Pro perk: how many past {kind} sittings this problem has appeared in.": "Pro 專屬：這題在歷屆 {kind} 中出現過幾次。",
   "All difficulties": "所有難度",
   "All tags": "所有標籤",
   "Sort by solved": "依是否解過排序",
@@ -152,8 +152,9 @@ export const batch1Dictionary: Record<string, string> = {
   "Source": "來源",
   "Difficulty": "難度",
   "Tags": "標籤",
-  "Sort by past CPE appearances": "依歷屆 CPE 出現次數排序",
-  "Past CPE": "歷屆 CPE",
+  "Sort by past {kind} appearances": "依歷屆 {kind} 出現次數排序",
+  "Past": "歷屆",
+  "Exam kind": "考試類型",
   "Filter by {tag}": "篩選標籤：{tag}",
   "Pro feature — upgrade to see how many past CPE exams this problem appeared in":
     "Pro 專屬功能——升級後可查看這題在歷屆 CPE 出現過幾次",
