@@ -307,6 +307,10 @@ export interface ContestDetail extends ContestListItem {
   /** True once this attempt (if any) has ended and another one can be started — always false for
    * a scheduled/group sitting (Contest.startAt set), since those are one-shot by design. */
   canStartNewAttempt: boolean;
+  /** Problem ids this specific attempt (myParticipant) has an AC submission for — empty when not
+   * registered. Scoped to the current attempt, not the user's best one (see Scoreboard), so a
+   * fresh re-attempt starts with none marked solved even if an earlier attempt solved them. */
+  solvedProblemIds: string[];
   freezeMin: number;
   penaltyMin: number;
 }

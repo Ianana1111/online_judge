@@ -168,6 +168,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
               inputSpecNode={activeProblem.inputSpecMd ? <StatementRenderer content={activeProblem.inputSpecMd} /> : null}
               outputSpecNode={activeProblem.outputSpecMd ? <StatementRenderer content={activeProblem.outputSpecMd} /> : null}
               fullHeight
+              hideDifficulty
               prevNextNode={
                 <ContestProblemNav problems={contest.problems} currentSlug={activeProblem.slug} onNavigate={setActiveProblemSlug} />
               }
@@ -185,6 +186,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
             statementNode={<StatementRenderer content={activeProblem.statementMd} />}
             inputSpecNode={activeProblem.inputSpecMd ? <StatementRenderer content={activeProblem.inputSpecMd} /> : null}
             outputSpecNode={activeProblem.outputSpecMd ? <StatementRenderer content={activeProblem.outputSpecMd} /> : null}
+            hideDifficulty
             prevNextNode={
               <ContestProblemNav problems={contest.problems} currentSlug={activeProblem.slug} onNavigate={setActiveProblemSlug} />
             }
@@ -197,18 +199,29 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
         <div>
           <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Problems")}</h2>
           <div className="grid gap-2 sm:grid-cols-2">
-            {contest.problems.map((cp) => (
-              <button
-                key={cp.problem.id}
-                onClick={() => setActiveProblemSlug(cp.problem.slug)}
-                disabled={!contest.myParticipant}
-                className="oj-card flex items-center justify-between p-3 text-left transition-colors hover:border-brand disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <span className="font-mono text-brand">{cp.label}</span>
-                <span className="flex-1 px-3 text-ink-100">{cp.problem.title}</span>
-                <span className="font-mono text-xs text-ink-500">{"★".repeat(cp.problem.difficulty)}</span>
-              </button>
-            ))}
+            {contest.problems.map((cp) => {
+              const solved = contest.solvedProblemIds.includes(cp.problem.id);
+              return (
+                <button
+                  key={cp.problem.id}
+                  onClick={() => setActiveProblemSlug(cp.problem.slug)}
+                  disabled={!contest.myParticipant}
+                  className={`oj-card flex items-center justify-between p-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                    solved ? "border-verdict-ac/50 bg-verdict-ac/10 hover:border-verdict-ac" : "hover:border-brand"
+                  }`}
+                >
+                  <span className={`font-mono ${solved ? "text-verdict-ac" : "text-brand"}`}>{cp.label}</span>
+                  <span className="flex-1 px-3 text-ink-100">{cp.problem.title}</span>
+                  {/* Hidden once the exam has actually started (myParticipant exists) — a real CPE
+                      sitting never shows difficulty upfront either. Solved status (see above) takes
+                      over as the meaningful signal on this button at that point. */}
+                  {!contest.myParticipant && (
+                    <span className="font-mono text-xs text-ink-500">{"★".repeat(cp.problem.difficulty)}</span>
+                  )}
+                  {solved && <span className="font-mono text-xs text-verdict-ac">✓</span>}
+                </button>
+              );
+            })}
           </div>
         </div>
         <div>
