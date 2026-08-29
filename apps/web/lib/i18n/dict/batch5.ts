@@ -49,11 +49,12 @@ export const batch5Dictionary: Record<string, string> = {
   "10 code submissions and 1 virtual exam per calendar month — the quota resets automatically at the start of each month, no need to request it manually.":
     "每個日曆月可以提交 10 次程式碼、開 1 場虛擬模擬考，額度會在每個月初自動重置，不需要手動申請。",
   "How do I cancel Pro?": "Pro 方案要怎麼取消？",
-  "Click \"Unsubscribe\" on the Upgrade Plan page — there's no auto-renewal here; every payment is a one-time purchase that extends your existing expiry date, so \"cancelling\" just flags your account to switch back to Free once your current Pro period ends. You won't lose Pro immediately, and no refund is issued.":
-    "在 Upgrade Plan 頁面按下「取消訂閱」即可——這裡沒有自動續訂機制，每次付款都是單次購買、延長既有的到期日，所以「取消」只是設定一個標記，讓帳號在目前的 Pro 到期後自動變回 Free，不會立即失去 Pro，也不會有任何退款產生。",
+  "Click \"Unsubscribe\" on the Upgrade Plan page — this stops future auto-renewal, but you keep full Pro access until your current paid period ends, then switch to Free automatically. No refund is issued for the time already paid for (unless you're within your first-month refund window — see the next question).":
+    "在 Upgrade Plan 頁面按下「取消訂閱」即可——這會停止之後的自動續扣，但目前這期已付費的 Pro 權限會持續使用到到期日，之後才自動變回 Free。已扣款的當期費用不會退還（除非你還在首月退款期限內，見下一題）。",
   "Can I get a refund?": "可以退款嗎？",
-  "All payments are currently treated as one-time purchases that take effect immediately, and we don't offer refunds. If it was a mistaken charge or a system error (e.g. the wrong amount was charged), contact us directly and we'll help sort it out.":
-    "目前所有付款都視為單次購買且立即生效，不提供退款。如果是誤刷或系統錯誤（例如刷了卡但金額不對），請直接聯絡我們協助處理。",
+  "If you subscribed by credit card, you can request a full refund within 30 days of your first charge — it cancels your subscription and switches you to Free immediately, and you can only do this once per account. Find the option on the Upgrade Plan page while it's still available. ATM transfers can't be refunded automatically the same way; contact us directly and we'll process it manually. See our":
+    "以信用卡訂閱的話，第一次扣款後 30 天內可以在 Upgrade Plan 頁面自助申請全額退款——會取消訂閱並立即切換回 Free，每個帳號限用一次。ATM 轉帳無法用同樣的方式自動退款，請直接聯絡我們協助以匯款方式處理。詳見",
+  "for the full details.": "頁面。",
   "I forgot my password — what do I do?": "忘記密碼怎麼辦？",
   "There's no self-service password reset yet. If your account was created with Google, just use \"Continue with Google\" to skip the password entirely. If you registered with a handle and password and forgot it, email":
     "目前還沒有自助重設密碼的功能——如果你的帳號是用 Google 登入建立的，直接用「使用 Google 登入」即可繞過密碼；如果是帳密註冊的帳號忘記密碼，請寄信到",

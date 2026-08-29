@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/refund` },
 };
 
-const LAST_UPDATED = "2026-08-23";
+const LAST_UPDATED = "2026-08-29";
 
 // Server Component, zh-TW only — see terms/page.tsx's file-level comment for why this isn't run
 // through useT()/split into a client component like about/faq.
@@ -22,9 +22,14 @@ export default function RefundPolicyPage() {
       </div>
 
       <section>
-        <h2 className="font-display text-lg font-semibold text-ink-50">免費試用</h2>
+        <h2 className="font-display text-lg font-semibold text-ink-50">首月退款保證</h2>
         <p className="mt-2">
-          每個帳號可領取一次 30 天的 Pro 免費試用，<strong className="text-ink-100">不需要輸入任何金流資訊</strong>，也不會有任何扣款。試用期滿後，帳號會自動回復為 Free 方案，除非你自行訂閱 Pro。試用資格僅限一次，且不可重複領取。
+          以<strong className="text-ink-100">信用卡</strong>訂閱 Pro 的使用者，在第一次扣款後 <strong className="text-ink-100">30 天內</strong>，可以在「升級方案」頁面自助申請
+          <strong className="text-ink-100">全額退款</strong>——系統會立即退還第一筆扣款、取消訂閱，並將帳號切換回 Free 方案。每個帳號只能使用這個退款資格一次。
+        </p>
+        <p className="mt-2">
+          此退款保證<strong className="text-ink-100">僅適用於信用卡定期定額</strong>付款；透過 ATM
+          轉帳（虛擬帳號）付款者，因銀行轉帳無法透過自動化方式原路退回，若需退款請透過下方聯絡方式與我們聯繫，由專人以匯款方式處理。
         </p>
       </section>
 
@@ -73,9 +78,9 @@ export default function RefundPolicyPage() {
       <section>
         <h2 className="font-display text-lg font-semibold text-ink-50">退款規則</h2>
         <p className="mt-2">
-          由於 Pro 權限在付款核准後即刻生效（等同服務已開始提供），
+          除了上方「首月退款保證」的範圍（信用卡訂閱、扣款後 30 天內、每帳號限一次）之外，
           <strong className="text-ink-100">已扣款的費用原則上不予退還</strong>
-          ，包含但不限於：使用一段時間後才決定取消、忘記取消導致的續扣、對判題結果或功能不滿意等情形。取消訂閱只會停止未來續扣，不會退還當期已付費用（但如上所述，當期 Pro 權限仍可使用到到期日）。
+          ，包含但不限於：超過首月退款期限才決定取消、忘記取消導致的續扣、對判題結果或功能不滿意等情形。取消訂閱只會停止未來續扣，不會退還當期已付費用（但如上所述，當期 Pro 權限仍可使用到到期日）。
         </p>
         <p className="mt-2">以下情形本站會主動處理退款或補償：</p>
         <ul className="mt-2 list-disc space-y-1.5 pl-5">

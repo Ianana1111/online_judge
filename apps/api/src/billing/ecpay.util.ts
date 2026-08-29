@@ -206,6 +206,34 @@ export async function queryEcpayCreditTrade(merchantTradeNo: string, config: Ecp
   );
 }
 
+export interface EcpayDoActionResult {
+  RtnCode: number;
+  RtnMsg: string;
+  MerchantID: string;
+  MerchantTradeNo: string;
+  TradeNo: string;
+}
+
+/** Refunds ("R") a captured credit-card charge, or voids ("E") one that's only been authorized —
+ * distinct from cancelEcpayPeriod above, which stops FUTURE auto-charges on a recurring order but
+ * never touches money already moved for a period already charged. Same AES-encrypted API family
+ * (and same "no real authorization capability in ECPay's sandbox/stage environment" limitation —
+ * see queryEcpayCreditTrade's own callers) as CreditDetail/QueryTrade, which is what supplies the
+ * `tradeNo` this needs — ECPay's own TradeID for the transaction, not our MerchantTradeNo. */
+export async function doCreditCardAction(
+  merchantTradeNo: string,
+  tradeNo: string,
+  action: "R" | "E",
+  totalAmount: number,
+  config: EcpayApiConfig,
+): Promise<EcpayDoActionResult> {
+  return callEcpayAesApi<EcpayDoActionResult>(
+    "/1.0.0/CreditDetail/DoAction",
+    { MerchantTradeNo: merchantTradeNo, TradeNo: tradeNo, Action: action, TotalAmount: totalAmount },
+    config,
+  );
+}
+
 export interface EcpayPeriodActionResult {
   RtnCode: number;
   RtnMsg: string;
