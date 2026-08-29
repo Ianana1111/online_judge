@@ -117,8 +117,10 @@ export interface ProblemRow {
   source: "UVA" | "CPE" | "GPE" | "CUSTOM";
   tags: string[];
   solvedByMe: boolean;
-  // Pro-only: how many past CPE sittings this problem has appeared in. null for non-Pro users.
+  // Pro-only: how many past CPE/GPE sittings this problem has appeared in. null for non-Pro users.
+  // Both are always sent together so ProblemFilterTable's CPE/GPE toggle is instant.
   cpeAppearances: number | null;
+  gpeAppearances: number | null;
 }
 
 export type ProblemListItem = ProblemRow;

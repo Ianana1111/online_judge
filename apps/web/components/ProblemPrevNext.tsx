@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
-import { buildProblemNavHref, filterAndSortProblems, SORT_KEYS, type SortKey } from "@/lib/problemFilter";
+import { buildProblemNavHref, filterAndSortProblems, SORT_KEYS, type ExamKind, type SortKey } from "@/lib/problemFilter";
 import { stripProblemNumber } from "@/lib/problemTitle";
 import type { CollectionDetail, ProblemListResponse } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
@@ -29,6 +29,7 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
   const sort: SortKey | null = sortParam && SORT_KEYS.includes(sortParam as SortKey) ? (sortParam as SortKey) : null;
   const difficulty = searchParams.get("difficulty") ?? "";
   const tag = searchParams.get("tag") ?? "";
+  const examKind: ExamKind = searchParams.get("examKind") === "GPE" ? "GPE" : "CPE";
 
   const enabled = listSource === "problems" || (listSource === "collection" && !!listId);
 
@@ -50,7 +51,7 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
   const pool = listSource === "problems" ? allProblems?.items : collection?.problems;
   if (!pool) return null; // still loading — say nothing rather than a layout-shifting skeleton
 
-  const ordered = filterAndSortProblems(pool, { difficulty, tag, sort });
+  const ordered = filterAndSortProblems(pool, { difficulty, tag, sort, examKind });
   const index = ordered.findIndex((p) => p.slug === slug);
   // The current problem fell out of the list it supposedly came from (a filter changed underneath
   // it, or it's genuinely not a member) — nothing sane to render Previous/Next against.
@@ -64,7 +65,7 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
     <div className="oj-card mb-4 flex items-center justify-between gap-3 px-3 py-2">
       {prev ? (
         <Link
-          href={buildProblemNavHref(prev.slug, listSource as "problems" | "collection", listId, { sort, difficulty, tag })}
+          href={buildProblemNavHref(prev.slug, listSource as "problems" | "collection", listId, { sort, difficulty, tag, examKind })}
           className="group flex min-w-0 flex-1 items-center gap-1.5 text-sm text-ink-300 hover:text-brand"
         >
           <span aria-hidden className="shrink-0 transition-transform group-hover:-translate-x-0.5">
@@ -82,7 +83,7 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
 
       {next ? (
         <Link
-          href={buildProblemNavHref(next.slug, listSource as "problems" | "collection", listId, { sort, difficulty, tag })}
+          href={buildProblemNavHref(next.slug, listSource as "problems" | "collection", listId, { sort, difficulty, tag, examKind })}
           className="group flex min-w-0 flex-1 items-center justify-end gap-1.5 text-right text-sm text-ink-300 hover:text-brand"
         >
           <span className="truncate">{stripProblemNumber(next.title, next.uvaId)}</span>

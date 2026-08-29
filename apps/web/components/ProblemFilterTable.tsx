@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import InfoTooltip from "@/components/InfoTooltip";
 import LockIcon from "@/components/LockIcon";
 import { stripProblemNumber } from "@/lib/problemTitle";
-import { buildProblemNavHref, filterAndSortProblems, SORT_KEYS, type SortKey } from "@/lib/problemFilter";
+import { buildProblemNavHref, filterAndSortProblems, SORT_KEYS, type ExamKind, type SortKey } from "@/lib/problemFilter";
 import { useAuthStore } from "@/store/auth";
 import type { ProblemRow } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
@@ -15,7 +15,9 @@ const DIFFICULTY_EXPLANATION =
   "Estimated from official ratings where available, otherwise from worldwide solve statistics — for reference only.";
 
 const SOLVED_EXPLANATION = "Pro perk: sort by whether you've solved a problem yet, to hunt down what's left.";
-const CPE_EXPLANATION = "Pro perk: how many past CPE sittings this problem has appeared in.";
+// {kind} is substituted with the currently-toggled exam ("CPE" or "GPE") — not translated per kind,
+// since those are the same two ASCII abbreviations in either language.
+const APPEARANCES_EXPLANATION = "Pro perk: how many past {kind} sittings this problem has appeared in.";
 
 /** Each sortable column cycles through exactly three states on repeated clicks: `desc`, then
  * `asc`, then back to no sort at all (`null`) — see `cycleSort`. `pair` is [descKey, ascKey]; for
@@ -52,7 +54,7 @@ export type ListContext = { type: "problems" } | { type: "collection"; slug: str
 function buildProblemHref(
   slug: string,
   ctx: ListContext,
-  filters: { sort: SortKey | null; difficulty: string; tag: string },
+  filters: { sort: SortKey | null; difficulty: string; tag: string; examKind: ExamKind },
 ): string {
   return buildProblemNavHref(slug, ctx.type, ctx.type === "collection" ? ctx.slug : null, filters);
 }
@@ -170,16 +172,20 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
   );
   const [difficulty, setDifficultyState] = useState(searchParams.get("difficulty") ?? "");
   const [tag, setTagState] = useState(searchParams.get("tag") ?? "");
+  const [examKind, setExamKindState] = useState<ExamKind>(searchParams.get("examKind") === "GPE" ? "GPE" : "CPE");
 
-  function syncUrl(next: { sort?: SortKey | null; difficulty?: string; tag?: string }) {
+  function syncUrl(next: { sort?: SortKey | null; difficulty?: string; tag?: string; examKind?: ExamKind }) {
     const params = new URLSearchParams(searchParams.toString());
-    const merged = { sort, difficulty, tag, ...next };
+    const merged = { sort, difficulty, tag, examKind, ...next };
     if (merged.sort) params.set("sort", merged.sort);
     else params.delete("sort");
     if (merged.difficulty) params.set("difficulty", merged.difficulty);
     else params.delete("difficulty");
     if (merged.tag) params.set("tag", merged.tag);
     else params.delete("tag");
+    // Omitted for the default (CPE) — see buildProblemNavHref's own comment for why.
+    if (merged.examKind === "GPE") params.set("examKind", merged.examKind);
+    else params.delete("examKind");
     const qs = params.toString();
     // replace (not push): changing a filter shouldn't pile up its own back-button history — only
     // the navigation to/from a problem page should do that.
@@ -202,6 +208,12 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
   function setDifficulty(next: string) {
     setDifficultyState(next);
     syncUrl({ difficulty: next });
+  }
+  /** Switches which exam's appearance count the column shows/sorts by — a display toggle, not a
+   * row filter, so it never touches which problems are visible, only what that one column reads. */
+  function setExamKind(next: ExamKind) {
+    setExamKindState(next);
+    syncUrl({ examKind: next });
   }
   function setTag(next: string) {
     setTagState(next);
@@ -228,8 +240,8 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
     [allTags, t],
   );
   const filteredSorted = useMemo(
-    () => filterAndSortProblems(problems, { difficulty, tag, sort }),
-    [problems, difficulty, tag, sort],
+    () => filterAndSortProblems(problems, { difficulty, tag, sort, examKind }),
+    [problems, difficulty, tag, sort, examKind],
   );
   const visible = useMemo(
     () => (q ? filteredSorted.filter((p) => p.title.toLowerCase().includes(q.toLowerCase())) : filteredSorted),
@@ -314,17 +326,38 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
             </th>
             <th>{t("Tags")}</th>
             <th>
-              <span className="inline-flex items-center gap-1">
+              <span className="inline-flex items-center gap-1.5">
                 <button
                   type="button"
-                  onClick={() => handleHeaderClick(["cpe-desc", "cpe-asc"], true)}
-                  title={isPro ? t("Sort by past CPE appearances") : undefined}
+                  onClick={() => handleHeaderClick(["appearances-desc", "appearances-asc"], true)}
+                  title={isPro ? t("Sort by past {kind} appearances", { kind: examKind }) : undefined}
                   className={`inline-flex items-center gap-1 ${isPro ? "text-brand hover:text-brand/80" : "text-ink-400 hover:text-brand"}`}
                 >
-                  {t("Past CPE")}
-                  {isPro ? <SortArrows direction={sortDirectionOf(sort, ["cpe-desc", "cpe-asc"])} /> : <LockIcon />}
+                  {t("Past")}
+                  {isPro ? <SortArrows direction={sortDirectionOf(sort, ["appearances-desc", "appearances-asc"])} /> : <LockIcon />}
                 </button>
-                <InfoTooltip text={t(CPE_EXPLANATION)} />
+                {/* CPE/GPE toggle — a display switch for this one column, not a sort trigger and
+                    not itself Pro-gated (the underlying count still is, via the lock icon above):
+                    stopPropagation keeps a click here from also bubbling into the sort cycle. */}
+                <span className="inline-flex overflow-hidden rounded border border-ink-700" role="group" aria-label={t("Exam kind")}>
+                  {(["CPE", "GPE"] as const).map((k) => (
+                    <button
+                      key={k}
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setExamKind(k);
+                      }}
+                      aria-pressed={examKind === k}
+                      className={`px-1.5 py-0.5 text-[10px] font-semibold normal-case tracking-normal transition-colors ${
+                        examKind === k ? "bg-brand text-onbrand" : "text-ink-400 hover:text-ink-100"
+                      }`}
+                    >
+                      {k}
+                    </button>
+                  ))}
+                </span>
+                <InfoTooltip text={t(APPEARANCES_EXPLANATION, { kind: examKind })} />
               </span>
             </th>
           </tr>
@@ -336,7 +369,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
               <td className="font-mono text-xs text-ink-400">{p.uvaId ?? "—"}</td>
               <td>
                 <Link
-                  href={buildProblemHref(p.slug, listContext, { sort, difficulty, tag })}
+                  href={buildProblemHref(p.slug, listContext, { sort, difficulty, tag, examKind })}
                   className="font-medium text-ink-50 hover:text-brand"
                 >
                   {stripProblemNumber(p.title, p.uvaId)}
@@ -360,11 +393,14 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
               </td>
               <td className="text-center font-mono text-xs">
                 {isPro ? (
-                  p.cpeAppearances ? (
-                    <span className="text-brand">×{p.cpeAppearances}</span>
-                  ) : (
-                    <span className="text-ink-400">—</span>
-                  )
+                  (() => {
+                    const appearances = examKind === "GPE" ? p.gpeAppearances : p.cpeAppearances;
+                    return appearances ? (
+                      <span className="text-brand">×{appearances}</span>
+                    ) : (
+                      <span className="text-ink-400">—</span>
+                    );
+                  })()
                 ) : (
                   <Link
                     href="/upgrade"

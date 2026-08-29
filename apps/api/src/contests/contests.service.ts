@@ -5,7 +5,7 @@ import type { RequestUser } from "../common/decorators";
 import { AchievementsService } from "../achievements/achievements.service";
 import { BillingService } from "../billing/billing.service";
 import { CacheService } from "../common/cache.util";
-import { cpeAppearancesFor, isRequesterPro } from "../billing/pro-gate.util";
+import { examAppearancesFor, isRequesterPro } from "../billing/pro-gate.util";
 
 // Fields actually needed for scoreboard/standings math — never sourceCode, which each of these
 // queries used to pull (and immediately discard) for every submission in the contest.
@@ -163,7 +163,7 @@ export class ContestsService {
     // "judgeable" status (uvaId is what SubmissionPanel checks to allow submitting at all).
     const isPro = requester ? await isRequesterPro(requester) : false;
     const problemIds = contest.problems.map((cp) => cp.problem.id);
-    const appearancesById = canSeeContent && isPro ? await cpeAppearancesFor(problemIds) : new Map<string, number>();
+    const appearancesById = canSeeContent && isPro ? await examAppearancesFor(problemIds, "CPE") : new Map<string, number>();
 
     return {
       id: contest.id,
