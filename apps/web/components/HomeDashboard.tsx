@@ -13,7 +13,6 @@ import {
   ACHIEVEMENT_ICONS,
   BookOpenIcon,
   CalendarCheckIcon,
-  CloudSunIcon,
   FlameIcon,
   GraduationCapIcon,
   LayersIcon,
@@ -21,6 +20,7 @@ import {
   MoonIcon,
   RocketIcon,
   SnowflakeIcon,
+  SunHighIcon,
   SunIcon,
   SunsetIcon,
   TrophyIcon,
@@ -53,7 +53,7 @@ function greeting(handle: string, t: Translate) {
   const hour = new Date().getHours();
   const part =
     hour < 5 ? t("Still up") : hour < 12 ? t("Good morning") : hour < 18 ? t("Good afternoon") : t("Good evening");
-  const Icon = hour < 5 ? MoonIcon : hour < 12 ? SunIcon : hour < 18 ? CloudSunIcon : SunsetIcon;
+  const Icon = hour < 5 ? MoonIcon : hour < 12 ? SunIcon : hour < 18 ? SunHighIcon : SunsetIcon;
   return { text: `${part}, ${handle}`, Icon };
 }
 

@@ -38,10 +38,9 @@ export const batch5Dictionary: Record<string, string> = {
   // --- components/FaqContent.tsx ---
   "Account & Pro plan": "帳號與 Pro 方案",
   "I already paid, but my account still hasn't been upgraded to Pro — what do I do?": "我已經付款了，但帳號還沒有升級成 Pro，怎麼辦？",
-  "Both credit card and ATM payments are approved fully automatically: once your card is charged, the system detects it and upgrades your account within seconds to a few minutes — no manual review involved. If it's been more than 10 minutes and your account still shows Free, refresh the page first in case it's just a caching issue. If it still hasn't updated, email us at":
-    "信用卡與 ATM 付款都是全自動核准的：完成刷卡後系統會在數十秒到幾分鐘內自動偵測並升級，不需要任何人工審核。如果付款成功超過 10 分鐘帳號仍顯示 Free，請先重新整理頁面確認不是快取問題；如果還是沒有更新，請透過",
-  "with the time you paid and (if applicable) the last five digits of the ATM transfer account, and we'll grant you Pro directly.":
-    "聯絡我們，並附上付款當下的時間與（如果有的話）ATM 轉帳帳號末五碼，我們會直接為你補上 Pro。",
+  "Payments are approved fully automatically: once your card is charged, the system detects it and upgrades your account within seconds to a few minutes — no manual review involved. If it's been more than 10 minutes and your account still shows Free, refresh the page first in case it's just a caching issue. If it still hasn't updated, email us at":
+    "付款都是全自動核准的：完成刷卡後系統會在數十秒到幾分鐘內自動偵測並升級，不需要任何人工審核。如果付款成功超過 10 分鐘帳號仍顯示 Free，請先重新整理頁面確認不是快取問題；如果還是沒有更新，請透過",
+  "with the time you paid and we'll grant you Pro directly.": "聯絡我們，並附上付款當下的時間，我們會直接為你補上 Pro。",
   "What do you get with Pro?": "Pro 方案有哪些權益？",
   "Unlimited code submissions, unlimited self-run virtual exams, seeing (and sorting by) how many times each problem has appeared in past exams, full access to discussions and the leaderboard, and priority support.":
     "無限次數的程式碼提交、無限次自己開的虛擬模擬考、看到每題「歷屆出過幾次」的統計與依此排序、完整的討論區與排行榜存取，以及優先支援。",
@@ -52,8 +51,8 @@ export const batch5Dictionary: Record<string, string> = {
   "Click \"Unsubscribe\" on the Upgrade Plan page — this stops future auto-renewal, but you keep full Pro access until your current paid period ends, then switch to Free automatically. No refund is issued for the time already paid for (unless you're within your first-month refund window — see the next question).":
     "在 Upgrade Plan 頁面按下「取消訂閱」即可——這會停止之後的自動續扣，但目前這期已付費的 Pro 權限會持續使用到到期日，之後才自動變回 Free。已扣款的當期費用不會退還（除非你還在首月退款期限內，見下一題）。",
   "Can I get a refund?": "可以退款嗎？",
-  "If you subscribed by credit card, you can request a full refund within 30 days of your first charge — it cancels your subscription and switches you to Free immediately, and you can only do this once per account. Find the option on the Upgrade Plan page while it's still available. ATM transfers can't be refunded automatically the same way; contact us directly and we'll process it manually. See our":
-    "以信用卡訂閱的話，第一次扣款後 30 天內可以在 Upgrade Plan 頁面自助申請全額退款——會取消訂閱並立即切換回 Free，每個帳號限用一次。ATM 轉帳無法用同樣的方式自動退款，請直接聯絡我們協助以匯款方式處理。詳見",
+  "You can request a full refund within 30 days of your first charge — it cancels your subscription and switches you to Free immediately, and you can only do this once per account. Find the option on the Upgrade Plan page while it's still available. See our":
+    "第一次扣款後 30 天內可以在 Upgrade Plan 頁面自助申請全額退款——會取消訂閱並立即切換回 Free，每個帳號限用一次。詳見",
   "for the full details.": "頁面。",
   "I forgot my password — what do I do?": "忘記密碼怎麼辦？",
   "There's no self-service password reset yet. If your account was created with Google, just use \"Continue with Google\" to skip the password entirely. If you registered with a handle and password and forgot it, email":

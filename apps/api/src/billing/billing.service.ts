@@ -7,7 +7,6 @@ import {
   FREE_VIRTUAL_ATTEMPTS,
   PLAN_PRICING,
   type BillingPeriod,
-  type EcpayMethod,
 } from "@oj/shared";
 import {
   cancelEcpayPeriod,
@@ -302,25 +301,20 @@ export class BillingService {
     return { plan: "FREE", planExpiresAt: null };
   }
 
-  // --- ECPay (綠界) automated checkout flow (ATM virtual account + credit card) ---
+  // --- ECPay (綠界) automated checkout flow (credit-card subscriptions only — ATM was removed) ---
 
   /** User starts an automated upgrade: creates a PENDING Payment tied to a fresh ECPay order and
    * returns the auto-submit form ECPay's AioCheckOut endpoint expects (form POST, not a JSON API —
    * this is how every ECPay integration works: the browser navigates to their hosted checkout).
-   * `method` (validated to exactly "CREDIT" | "ATM" by ecpayCreateSchema before this is ever
-   * called — never a raw string from the client) maps to ECPay's own ChoosePayment values, so
-   * their hosted checkout opens directly on the channel the user picked on OUR page instead of
-   * making them pick again on ECPay's.
    *
-   * CREDIT orders are always ECPay recurring (定期定額) orders now — PeriodAmount/PeriodType/
-   * Frequency/ExecTimes below turn this into a real subscription that ECPay auto-charges every
-   * period on its own, not a one-time purchase. ATM has no such thing (a bank transfer can't be
-   * auto-charged) and stays exactly the one-time flow it always was. Both still confirm this FIRST
-   * charge via the same ReturnURL webhook (RtnCode "1" = paid); handleEcpayReturn spins up the
-   * Subscription row there for recurring orders. Only ATM issues a virtual account number, which
-   * arrives via the separate PaymentInfoURL webhook (handleEcpayPaymentInfo) — that webhook simply
-   * never fires for a credit-card checkout, since there's no virtual account to report. */
-  async createEcpayOrder(userId: string, period: BillingPeriod, method: EcpayMethod) {
+   * Always a credit-card ECPay recurring (定期定額) order — PeriodAmount/PeriodType/Frequency/
+   * ExecTimes below turn this into a real subscription that ECPay auto-charges every period on its
+   * own, not a one-time purchase. (ATM used to be the alternative here — a one-time bank transfer,
+   * no auto-renewal, no API-driven refund path — but that meant maintaining two entirely different
+   * payment lifecycles for one product; removed rather than kept as unused flexibility.) Confirms
+   * this first charge via the ReturnURL webhook (RtnCode "1" = paid); handleEcpayReturn spins up
+   * the Subscription row there. */
+  async createEcpayOrder(userId: string, period: BillingPeriod) {
     // The amount that actually gets charged is always derived server-side (PLAN_PRICING plus
     // any active launch promo via effectivePriceNtd), never trusted from the client — the client
     // only chooses which of these two fixed plans.
@@ -333,8 +327,8 @@ export class BillingService {
     // serializes concurrent createEcpayOrder calls by the same user — without it, two rapid
     // clicks/requests could both pass the "no existing pending payment" check before either one's
     // insert commits, producing two live payable orders for the same upgrade (and, worse, two
-    // active recurring subscriptions on a CREDIT double-click). See contests.service.ts's own use
-    // of this pattern for the reference this mirrors.
+    // active recurring subscriptions on a double-click). See contests.service.ts's own use of this
+    // pattern for the reference this mirrors.
     await prisma.$transaction(async (tx) => {
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('billing_order'), hashtext(${userId}))`;
 
@@ -345,11 +339,9 @@ export class BillingService {
         throw new BadRequestException("You already have a payment awaiting review.");
       }
 
-      if (method === "CREDIT") {
-        const existingSubscription = await tx.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
-        if (existingSubscription) {
-          throw new BadRequestException("You already have an active subscription.");
-        }
+      const existingSubscription = await tx.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
+      if (existingSubscription) {
+        throw new BadRequestException("You already have an active subscription.");
       }
 
       await tx.payment.create({
@@ -358,10 +350,10 @@ export class BillingService {
           period,
           amountNtd,
           method: "ECPAY",
-          ecpayMethod: method,
+          ecpayMethod: "CREDIT",
           status: "PENDING",
           merchantTradeNo,
-          isRecurring: method === "CREDIT",
+          isRecurring: true,
         },
       });
     });
@@ -381,49 +373,18 @@ export class BillingService {
       TradeDesc: "judge.tw Pro upgrade",
       ItemName: `judge.tw Pro (${pricing.label})`,
       ReturnURL: `${apiPublicUrl}/billing/ecpay/return`,
-      PaymentInfoURL: `${apiPublicUrl}/billing/ecpay/payment-info`,
       ClientBackURL: `${webOrigin}/upgrade/checkout`,
-      ChoosePayment: method === "CREDIT" ? "Credit" : "ATM",
+      ChoosePayment: "Credit",
       EncryptType: 1,
+      PeriodAmount: amountNtd,
+      PeriodType: RECURRING_PERIOD_TYPE[period],
+      Frequency: 1,
+      ExecTimes: RECURRING_EXEC_TIMES[period],
+      PeriodReturnURL: `${apiPublicUrl}/billing/ecpay/period-return`,
     };
-    if (method === "CREDIT") {
-      params.PeriodAmount = amountNtd;
-      params.PeriodType = RECURRING_PERIOD_TYPE[period];
-      params.Frequency = 1;
-      params.ExecTimes = RECURRING_EXEC_TIMES[period];
-      params.PeriodReturnURL = `${apiPublicUrl}/billing/ecpay/period-return`;
-    }
     const CheckMacValue = await computeCheckMacValue(params, config);
 
     return { actionUrl: config.checkoutUrl, fields: { ...params, CheckMacValue }, sandbox: config.isSandbox };
-  }
-
-  /** Webhook: ECPay tells us the ATM virtual account number it issued for an order (fires right
-   * after order creation, well before the customer actually pays). Store it so the pricing page
-   * can show it even if the user navigated away from ECPay's own confirmation page. */
-  async handleEcpayPaymentInfo(body: Record<string, string>): Promise<void> {
-    const config = ecpayConfig();
-    if (!(await verifyCheckMacValue(body, config))) {
-      // An allow-listed subset of the body + our recomputed value, logged only on failure —
-      // without this we'd have zero visibility into why a real ECPay webhook's signature didn't
-      // match ours. NOT the full body: card-adjacent webhooks legitimately carry payer/card
-      // metadata (card4no/card6no, auth_code, gwsr, vAccount/BankCode) that has no reason to sit
-      // in Railway's log retention — see redactEcpayBodyForLogging.
-      this.logger.warn(
-        `ECPay payment-info webhook: invalid CheckMacValue for ${body.MerchantTradeNo}. ` +
-          `received=${JSON.stringify(redactEcpayBodyForLogging(body))} expected=${await computeCheckMacValue(body, config)}`,
-      );
-      return;
-    }
-    const payment = await prisma.payment.findUnique({ where: { merchantTradeNo: body.MerchantTradeNo } });
-    if (!payment) {
-      this.logger.warn(`ECPay payment-info webhook: unknown MerchantTradeNo ${body.MerchantTradeNo}`);
-      return;
-    }
-    await prisma.payment.update({
-      where: { id: payment.id },
-      data: { bankCode: body.BankCode, vAccount: body.vAccount, expireDate: body.ExpireDate },
-    });
   }
 
   /** Webhook: ECPay confirms the customer actually paid. Idempotent — ECPay retries this call up

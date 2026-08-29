@@ -115,14 +115,19 @@ export const SunIcon = makeIcon(
 
 export const MoonIcon = makeIcon(<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />);
 
-export const CloudSunIcon = makeIcon(
+// A solid (filled, not outlined) disc — deliberately distinct from SunIcon's thin ring, since the
+// two sit right next to each other in HomeDashboard's morning/afternoon greeting and need to read
+// clearly apart at a glance, not just on close inspection. The previous CloudSunIcon (a cloud
+// silhouette overlapping a small sun ring) had too many crossing curves to stay legible at the
+// 24px size the greeting actually renders at — it read as a muddled blob rather than a cloud+sun.
+export const SunHighIcon = makeIcon(
   <>
-    <path d="M12 2v2" />
-    <path d="M4.93 4.93l1.41 1.41" />
-    <path d="M20 12h2" />
-    <path d="M2 12h2" />
-    <circle cx="12" cy="9" r="3" />
-    <path d="M17 20a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1.5A4 4 0 0 0 7 20z" />
+    <circle cx="12" cy="13" r="4.5" fill="currentColor" stroke="none" />
+    <line x1="12" y1="3" x2="12" y2="5" />
+    <line x1="4.93" y1="7.93" x2="6.34" y2="9.34" />
+    <line x1="17.66" y1="7.93" x2="19.07" y2="9.34" />
+    <line x1="2" y1="13" x2="4" y2="13" />
+    <line x1="20" y1="13" x2="22" y2="13" />
   </>,
 );
 

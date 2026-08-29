@@ -97,34 +97,22 @@ export class BillingController {
     return this.billing.listAuthorizedPending();
   }
 
-  // --- ECPay (綠界) automated ATM virtual-account flow ---
+  // --- ECPay (綠界) automated checkout flow (credit-card subscriptions only) ---
 
   /** Starts an automated upgrade. Returns a form-post target + fields — the frontend auto-submits
    * a hidden <form> to ECPay's hosted checkout, which is how every ECPay integration works (not a
    * JSON API call: the browser itself must navigate there). */
   @Post("ecpay/create")
   createEcpayOrder(@Body(new ZodValidationPipe(ecpayCreateSchema)) body: EcpayCreateDto, @CurrentUser() user: RequestUser) {
-    return this.billing.createEcpayOrder(user.id, body.period, body.method);
+    return this.billing.createEcpayOrder(user.id, body.period);
   }
 
-  /** Webhook — ECPay POSTs here (form-urlencoded, not JSON) once it has issued an ATM virtual
-   * account for an order, well before the customer has actually paid. No auth/CSRF: this is
-   * server-to-server from ECPay's own infrastructure, authenticated by CheckMacValue instead. */
-  // Generous, not tight: ECPay's own retries (up to 4/day) and legitimate bursts (many real
-  // purchases during an exam-week spike) all share ECPay's small pool of server IPs — a low
-  // limit here risks silently dropping real payment confirmations, which is worse than under-
-  // throttling a cheap, signature-verified, already-idempotent handler.
-  @Public()
-  @Throttle({ default: { limit: 300, ttl: 60_000 } })
-  @Post("ecpay/payment-info")
-  async ecpayPaymentInfo(@Req() req: Request, @Res() res: Response) {
-    await this.billing.handleEcpayPaymentInfo(req.body as Record<string, string>);
-    // ECPay requires exactly this literal response to consider the notification delivered —
-    // anything else (including a JSON body) makes it retry up to 4x/day.
-    res.type("text/plain").send("1|OK");
-  }
-
-  /** Webhook — ECPay POSTs here once the customer has actually paid. Same auth model as above. */
+  /** Webhook — ECPay POSTs here once the customer has actually paid (form-urlencoded, not JSON).
+   * No auth/CSRF: this is server-to-server from ECPay's own infrastructure, authenticated by
+   * CheckMacValue instead. Generous throttle, not tight — ECPay's own retries (up to 4/day) and
+   * legitimate bursts (many real purchases during an exam-week spike) all share ECPay's small pool
+   * of server IPs, and a low limit here risks silently dropping real payment confirmations, which
+   * is worse than under-throttling a cheap, signature-verified, already-idempotent handler. */
   @Public()
   @Throttle({ default: { limit: 300, ttl: 60_000 } })
   @Post("ecpay/return")
@@ -134,7 +122,7 @@ export class BillingController {
   }
 
   /** Webhook — ECPay POSTs here after every recurring (定期定額) auto-charge from the 2nd cycle
-   * onward; the 1st charge is confirmed via ecpay/return above. Same auth model as the others. */
+   * onward; the 1st charge is confirmed via ecpay/return above. Same auth model as that one. */
   @Public()
   @Throttle({ default: { limit: 300, ttl: 60_000 } })
   @Post("ecpay/period-return")
