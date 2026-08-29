@@ -24,12 +24,8 @@ export default function RefundPolicyPage() {
       <section>
         <h2 className="font-display text-lg font-semibold text-ink-50">首月退款保證</h2>
         <p className="mt-2">
-          以<strong className="text-ink-100">信用卡</strong>訂閱 Pro 的使用者，在第一次扣款後 <strong className="text-ink-100">30 天內</strong>，可以在「升級方案」頁面自助申請
+          訂閱 Pro 後，在第一次扣款後 <strong className="text-ink-100">30 天內</strong>，可以在「升級方案」頁面自助申請
           <strong className="text-ink-100">全額退款</strong>——系統會立即退還第一筆扣款、取消訂閱，並將帳號切換回 Free 方案。每個帳號只能使用這個退款資格一次。
-        </p>
-        <p className="mt-2">
-          此退款保證<strong className="text-ink-100">僅適用於信用卡定期定額</strong>付款；透過 ATM
-          轉帳（虛擬帳號）付款者，因銀行轉帳無法透過自動化方式原路退回，若需退款請透過下方聯絡方式與我們聯繫，由專人以匯款方式處理。
         </p>
       </section>
 
@@ -44,7 +40,7 @@ export default function RefundPolicyPage() {
           </li>
         </ul>
         <p className="mt-2">
-          你在訂閱當下鎖定的價格，會維持在你的訂閱有效期間內；日後若本站調整定價，不會影響你既有訂閱的金額，只適用於你之後續約或重新訂閱時的新價格。
+          Pro 方案目前僅支援信用卡定期定額付款。你在訂閱當下鎖定的價格，會維持在你的訂閱有效期間內；日後若本站調整定價，不會影響你既有訂閱的金額，只適用於你之後續約或重新訂閱時的新價格。
         </p>
       </section>
 
@@ -78,7 +74,7 @@ export default function RefundPolicyPage() {
       <section>
         <h2 className="font-display text-lg font-semibold text-ink-50">退款規則</h2>
         <p className="mt-2">
-          除了上方「首月退款保證」的範圍（信用卡訂閱、扣款後 30 天內、每帳號限一次）之外，
+          除了上方「首月退款保證」的範圍（扣款後 30 天內、每帳號限一次）之外，
           <strong className="text-ink-100">已扣款的費用原則上不予退還</strong>
           ，包含但不限於：超過首月退款期限才決定取消、忘記取消導致的續扣、對判題結果或功能不滿意等情形。取消訂閱只會停止未來續扣，不會退還當期已付費用（但如上所述，當期 Pro 權限仍可使用到到期日）。
         </p>

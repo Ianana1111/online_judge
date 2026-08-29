@@ -11,7 +11,6 @@ import type { BillingPlans, BillingStatus } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
 type Period = "MONTHLY" | "YEARLY";
-type Method = "CREDIT" | "ATM";
 
 export default function CheckoutPage() {
   const t = useT();
@@ -19,7 +18,6 @@ export default function CheckoutPage() {
   const qc = useQueryClient();
   const { user, status: authStatus } = useAuthStore();
   const [period, setPeriod] = useState<Period>("MONTHLY");
-  const [method, setMethod] = useState<Method>("CREDIT");
   const [ecpayError, setEcpayError] = useState<string | null>(null);
   const [ecpayLoading, setEcpayLoading] = useState(false);
   const [dismissing, setDismissing] = useState(false);
@@ -83,7 +81,7 @@ export default function CheckoutPage() {
     try {
       const res = await apiFetch<{ actionUrl: string; fields: Record<string, string | number>; sandbox: boolean }>(
         "/billing/ecpay/create",
-        { method: "POST", body: { period, method } },
+        { method: "POST", body: { period } },
       );
       // ECPay's checkout is a hosted page, not a JSON API — the browser itself has to navigate
       // there via a form POST carrying the signed order fields.
@@ -172,31 +170,7 @@ export default function CheckoutPage() {
           ) : pending ? (
             <div className="space-y-3">
               <div className="oj-card border-verdict-tle/40 p-5 text-sm">
-                {pending.method === "ECPAY" && pending.ecpayMethod === "ATM" && pending.vAccount ? (
-                  <>
-                    <p className="font-semibold text-verdict-tle">{t("Complete your ATM transfer")}</p>
-                    <div className="mt-3 space-y-1 rounded border border-ink-700 bg-ink-800/50 p-3 font-mono text-sm">
-                      <p>
-                        {t("Bank code:")} <span className="font-semibold text-ink-50">{pending.bankCode}</span>
-                      </p>
-                      <p>
-                        {t("Virtual account:")} <span className="font-semibold text-ink-50">{pending.vAccount}</span>
-                      </p>
-                      {pending.expireDate && <p className="text-xs text-ink-400">{t("Pay by: {date}", { date: pending.expireDate })}</p>}
-                    </div>
-                    <p className="mt-3 text-ink-300">
-                      {t("Transfer NT${amount} to the account above via ATM / online / mobile banking. Pro unlocks", {
-                        amount: pending.amountNtd,
-                      })}{" "}
-                      <span className="text-verdict-ac">{t("automatically")}</span> {t("once it's received — this page updates on its own.")}
-                    </p>
-                  </>
-                ) : pending.method === "ECPAY" && pending.ecpayMethod === "ATM" ? (
-                  <>
-                    <p className="font-semibold text-verdict-tle">{t("Generating your virtual account…")}</p>
-                    <p className="mt-1 text-ink-300">{t("One moment — this page updates automatically.")}</p>
-                  </>
-                ) : pending.method === "ECPAY" ? (
+                {pending.method === "ECPAY" ? (
                   <>
                     <p className="font-semibold text-verdict-tle">{t("Confirming your card payment…")}</p>
                     <p className="mt-1 text-ink-300">{t("This is usually instant. This page updates automatically once it clears.")}</p>
@@ -268,36 +242,16 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div>
-                  <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-ink-400">{t("Payment method")}</p>
-                  <div className="space-y-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setMethod("CREDIT")}
-                      className={`oj-card flex w-full items-start gap-2.5 p-2.5 text-left transition-colors ${method === "CREDIT" ? "border-brand" : "hover:border-ink-500"}`}
-                    >
-                      <span className="mt-0.5 text-lg leading-none">💳</span>
-                      <span>
-                        <span className="block text-sm font-semibold text-ink-50">{t("Credit / Debit Card")}</span>
-                        <span className="block text-xs text-ink-400">
-                          {t("Subscribe — we auto-renew your card every {period} until you cancel.", {
-                            period: period === "MONTHLY" ? t("month") : t("year"),
-                          })}
-                        </span>
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setMethod("ATM")}
-                      className={`oj-card flex w-full items-start gap-2.5 p-2.5 text-left transition-colors ${method === "ATM" ? "border-brand" : "hover:border-ink-500"}`}
-                    >
-                      <span className="mt-0.5 text-lg leading-none">🏦</span>
-                      <span>
-                        <span className="block text-sm font-semibold text-ink-50">{t("ATM Transfer")}</span>
-                        <span className="block text-xs text-ink-400">{t("One-time payment — transfer again manually whenever you want to renew.")}</span>
-                      </span>
-                    </button>
-                  </div>
+                <div className="oj-card flex items-start gap-2.5 p-2.5">
+                  <span className="mt-0.5 text-lg leading-none">💳</span>
+                  <span>
+                    <span className="block text-sm font-semibold text-ink-50">{t("Credit / Debit Card")}</span>
+                    <span className="block text-xs text-ink-400">
+                      {t("We auto-renew your card every {period} until you cancel.", {
+                        period: period === "MONTHLY" ? t("month") : t("year"),
+                      })}
+                    </span>
+                  </span>
                 </div>
               </div>
 
@@ -322,13 +276,9 @@ export default function CheckoutPage() {
                   </div>
 
                   <p className="rounded border border-ink-700 bg-ink-800/50 px-2.5 py-1.5 text-xs text-ink-400">
-                    {method === "CREDIT"
-                      ? t("Billed every {period} · renews automatically until you cancel from your account.", {
-                          period: period === "MONTHLY" ? t("month") : t("year"),
-                        })
-                      : t("One-time payment, valid for {days} days · renew again manually anytime.", {
-                          days: period === "MONTHLY" ? "30" : "365",
-                        })}
+                    {t("Billed every {period} · renews automatically until you cancel from your account. Cancel within your first month for a full refund.", {
+                      period: period === "MONTHLY" ? t("month") : t("year"),
+                    })}
                   </p>
 
                   <label className="flex items-start gap-2 text-xs text-ink-400">
@@ -355,10 +305,8 @@ export default function CheckoutPage() {
                         </svg>
                         {t("Redirecting to ECPay…")}
                       </span>
-                    ) : method === "CREDIT" ? (
-                      t("Subscribe — NT${amount}/{period}", { amount, period: period === "MONTHLY" ? t("month") : t("year") })
                     ) : (
-                      t("Pay NT${amount}", { amount })
+                      t("Subscribe — NT${amount}/{period}", { amount, period: period === "MONTHLY" ? t("month") : t("year") })
                     )}
                   </button>
 

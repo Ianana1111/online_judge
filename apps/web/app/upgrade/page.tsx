@@ -425,6 +425,7 @@ export default function UpgradePlanPage() {
                   <Check>{t("See & sort by past-CPE-exam appearance count")}</Check>
                   <Check>{t("Full access to discussions & leaderboard")}</Check>
                   <Check>{t("Priority support")}</Check>
+                  <Check>{t("Cancel within your first month for a full refund")}</Check>
                 </ul>
                 {isPro && status?.subscription ? (
                   <>

@@ -25,12 +25,10 @@ export default function FaqContent() {
           a: (
             <>
               {t(
-                "Both credit card and ATM payments are approved fully automatically: once your card is charged, the system detects it and upgrades your account within seconds to a few minutes — no manual review involved. If it's been more than 10 minutes and your account still shows Free, refresh the page first in case it's just a caching issue. If it still hasn't updated, email us at",
+                "Payments are approved fully automatically: once your card is charged, the system detects it and upgrades your account within seconds to a few minutes — no manual review involved. If it's been more than 10 minutes and your account still shows Free, refresh the page first in case it's just a caching issue. If it still hasn't updated, email us at",
               )}
               <span className="text-brand"> judges0801@gmail.com </span>
-              {t(
-                "with the time you paid and (if applicable) the last five digits of the ATM transfer account, and we'll grant you Pro directly.",
-              )}
+              {t("with the time you paid and we'll grant you Pro directly.")}
             </>
           ),
         },
@@ -57,7 +55,7 @@ export default function FaqContent() {
           a: (
             <>
               {t(
-                "If you subscribed by credit card, you can request a full refund within 30 days of your first charge — it cancels your subscription and switches you to Free immediately, and you can only do this once per account. Find the option on the Upgrade Plan page while it's still available. ATM transfers can't be refunded automatically the same way; contact us directly and we'll process it manually. See our",
+                "You can request a full refund within 30 days of your first charge — it cancels your subscription and switches you to Free immediately, and you can only do this once per account. Find the option on the Upgrade Plan page while it's still available. See our",
               )}{" "}
               <Link href="/refund" className="text-brand hover:underline">
                 {t("Refund Policy")}
