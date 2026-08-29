@@ -3,11 +3,12 @@ export const batch5Dictionary: Record<string, string> = {
   "Join our Discord": "加入我們的 Discord",
 
   // --- components/LoggedOutHome.tsx ---
-  "CPE Judge": "CPE Judge",
-  "This is CPE Judge.": "這裡就是 CPE Judge。",
+  "CPE/GPE Judge": "CPE/GPE Judge",
+  "This is CPE/GPE Judge.": "這裡就是 CPE/GPE Judge。",
   "Train like it's exam day.": "練習，就照考場的節奏來。",
   "{total}+ practice problems, timed CPE/GPE virtual exams, and a live scoreboard with real ICPC-style penalties — prepare at the exact pace of the real thing.":
     "{total}+ 題練習庫、限時的 CPE / GPE 虛擬模擬考，還有跟正式賽事一模一樣的即時計分板與 ICPC 罰時規則——照考場的節奏準備，考試當天不會是你第一次感受這個壓力。",
+  "Start a virtual exam": "開始一場虛擬測驗",
   "contest clock · 02:57:12": "考試倒數 · 02:57:12",
   "Judged like the real exam": "考場等級的判題",
   "Every problem is calibrated against what the exam itself actually accepts — the result you see here is the result you'd see on exam day, not a guess.":
@@ -16,8 +17,8 @@ export const batch5Dictionary: Record<string, string> = {
   "ICPC-style scoring, penalty minutes, and a freeze period — the same rules that decide the real ranking, not a simplified stand-in.":
     "ICPC 罰時制、封榜機制——決定正式排名的同一套規則，不是簡化版。",
   "Sorted by what actually gets tested": "照真正會考的方式排序",
-  "Filter by difficulty, or by how often a problem has shown up on past CPE exams — so you know exactly where to spend your time.":
-    "依難度分級，也能看每題在歷屆 CPE 出現過幾次，讓你清楚知道時間該花在哪裡。",
+  "Filter by difficulty, or by how often a problem has shown up on past CPE/GPE exams — so you know exactly where to spend your time.":
+    "依難度分級，也能看每題在歷屆 CPE/GPE 出現過幾次，讓你清楚知道時間該花在哪裡。",
 
   // --- components/AboutContent.tsx ---
   "A CPE practice platform built for Taiwanese CS students": "為台灣資工人打造的 CPE 練習平台",

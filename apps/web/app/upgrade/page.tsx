@@ -326,11 +326,11 @@ export default function UpgradePlanPage() {
                   </Check>
                   <Check>
                     {status
-                      ? t("{used}/{limit} virtual CPE contests this month", {
+                      ? t("{used}/{limit} virtual CPE/GPE contests this month", {
                           used: status.virtualContests.used,
                           limit: status.virtualContests.limit ?? 0,
                         })
-                      : t("1 self-run virtual CPE contest / month")}
+                      : t("1 self-run virtual CPE/GPE contest / month")}
                   </Check>
                   <Check>{t("Full access to discussions & leaderboard")}</Check>
                 </ul>
@@ -422,13 +422,19 @@ export default function UpgradePlanPage() {
                     <span className="text-xs font-normal text-ink-400 sm:text-sm"> / {t("month")}</span>
                   </p>
                 )}
+                {/* Not a feature — a reassurance about the price itself (effectively a first-month
+                    trial), so it sits with the price rather than in the checklist below. Only
+                    relevant before subscribing; an existing subscriber manages this from the
+                    "Not what you expected?" refund link further down instead. */}
+                {!isPro && (
+                  <p className="mt-1 text-[11px] text-ink-500">{t("Cancel within your first month for a full refund")}</p>
+                )}
                 <ul className="mt-3 flex-1 space-y-1.5 sm:mt-4 sm:space-y-2">
                   <Check>{t("Unlimited submissions")}</Check>
-                  <Check>{t("Unlimited self-run virtual CPE contests")}</Check>
-                  <Check>{t("See & sort by past-CPE-exam appearance count")}</Check>
+                  <Check>{t("Unlimited self-run virtual CPE/GPE contests")}</Check>
+                  <Check>{t("See & sort by past CPE/GPE appearance count")}</Check>
                   <Check>{t("Full access to discussions & leaderboard")}</Check>
                   <Check>{t("Priority support")}</Check>
-                  <Check>{t("Cancel within your first month for a full refund")}</Check>
                 </ul>
                 {isPro && status?.subscription ? (
                   <>

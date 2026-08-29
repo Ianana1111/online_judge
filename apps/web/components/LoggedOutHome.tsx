@@ -16,7 +16,7 @@ const FEATURES = [
   },
   {
     title: "Sorted by what actually gets tested",
-    body: "Filter by difficulty, or by how often a problem has shown up on past CPE exams — so you know exactly where to spend your time.",
+    body: "Filter by difficulty, or by how often a problem has shown up on past CPE/GPE exams — so you know exactly where to spend your time.",
   },
 ];
 
@@ -35,10 +35,10 @@ export default function LoggedOutHome({ items, total }: { items: ProblemListItem
         <div>
           <span className="inline-flex items-center gap-2 rounded-full border border-ink-700 bg-ink-900 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.15em] text-ink-400">
             <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-            {t("CPE Judge")}
+            {t("CPE/GPE Judge")}
           </span>
           <h1 className="mt-4 font-display text-4xl font-bold leading-tight text-ink-50 sm:text-5xl">
-            {t("This is CPE Judge.")}
+            {t("This is CPE/GPE Judge.")}
             <br />
             {t("Train like it's exam day.")}
           </h1>
@@ -52,8 +52,8 @@ export default function LoggedOutHome({ items, total }: { items: ProblemListItem
             <Link href="/problems" className="oj-btn-primary px-5 py-2.5">
               {t("Browse problems")}
             </Link>
-            <Link href="/cpe" className="oj-btn-secondary px-5 py-2.5">
-              {t("Start a CPE exam")}
+            <Link href="/contests" className="oj-btn-secondary px-5 py-2.5">
+              {t("Start a virtual exam")}
             </Link>
           </div>
         </div>

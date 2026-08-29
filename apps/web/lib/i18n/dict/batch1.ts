@@ -87,7 +87,6 @@ export const batch1Dictionary: Record<string, string> = {
   "Sit CPE for real.": "真實模擬 CPE 應考。",
   "A judge built around the 3-hour, 7-problem CPE format — solve at your own pace, or start a timed virtual exam with a real scoreboard and ICPC-style penalties.":
     "專為 3 小時、7 題的 CPE 考試格式打造的評測系統——可以照自己的步調練習，也能開一場限時模擬考，附帶即時排行榜與 ICPC 式罰時。",
-  "Start a CPE exam": "開始一場 CPE 模擬考",
   "Recent problems": "近期題目",
   "View all →": "查看全部 →",
   "No problems yet — check back soon.": "目前還沒有題目，稍後再來看看。",
