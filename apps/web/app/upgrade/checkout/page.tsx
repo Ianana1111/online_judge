@@ -122,10 +122,10 @@ export default function CheckoutPage() {
   }
 
   return (
-    // 56px is the sticky NavBar's height, 3rem is <main>'s own py-6 (top+bottom) in the root
-    // layout — this page sits inside both, so `h-screen` here would always leave the page ~100px
-    // taller than the viewport and force a slight scroll even though nothing needs it.
-    <div className="mx-auto flex h-[calc(100vh-56px-3rem)] max-w-4xl flex-col overflow-y-auto px-6 py-4">
+    // NavBar renders nothing on /upgrade* (see NavBar's own check) and Footer does the same (see
+    // Footer's own check) — so unlike every other page, there's no 56px navbar to subtract here,
+    // only <main>'s own py-6 (3rem, top+bottom).
+    <div className="mx-auto flex h-[calc(100vh-3rem)] max-w-4xl flex-col overflow-y-auto px-6 py-4">
       <div className="shrink-0">
         <BackButton fallbackHref="/upgrade" />
       </div>

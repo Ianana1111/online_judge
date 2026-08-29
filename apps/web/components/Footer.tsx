@@ -21,6 +21,11 @@ export default function Footer() {
   const t = useT();
   const pathname = usePathname();
   if (pathname && PROBLEM_DETAIL_PATTERN.test(pathname)) return null;
+  // /upgrade and /upgrade/checkout are the same deliberately focused, single-viewport flow NavBar
+  // already hides itself on (see NavBar's own /upgrade check) — a footer below them would add
+  // height NavBar's absence doesn't free up, forcing a page-level scrollbar on a page designed to
+  // never need one.
+  if (pathname?.startsWith("/upgrade")) return null;
   return (
     <footer className="mx-auto mt-12 max-w-[1400px] border-t border-ink-800 px-6 py-6 text-xs text-ink-500">
       <div className="flex flex-wrap items-center justify-between gap-3">

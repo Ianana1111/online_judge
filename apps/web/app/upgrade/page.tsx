@@ -278,7 +278,10 @@ export default function UpgradePlanPage() {
   const promo = plans?.promo;
 
   return (
-    <div className="mx-auto flex h-screen max-w-4xl flex-col overflow-y-auto px-6 py-4">
+    // NavBar renders nothing on /upgrade* (see NavBar's own check) and Footer does the same (see
+    // Footer's own check) — so unlike every other page, there's no 56px navbar to subtract here,
+    // only <main>'s own py-6 (3rem, top+bottom).
+    <div className="mx-auto flex h-[calc(100vh-3rem)] max-w-4xl flex-col overflow-y-auto px-6 py-4">
       <div className="shrink-0">
         <BackButton />
       </div>
