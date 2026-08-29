@@ -38,6 +38,7 @@ export default function ProblemView({
   inputSpecNode,
   outputSpecNode,
   fullHeight = false,
+  prevNextNode,
 }: {
   problem: ProblemDetail;
   contestId?: string;
@@ -49,6 +50,11 @@ export default function ProblemView({
   statementNode: React.ReactNode;
   inputSpecNode: React.ReactNode;
   outputSpecNode: React.ReactNode;
+  /** Overrides the default <ProblemPrevNext> (which walks the URL-driven problems/collection list
+   * — see that component's own comment). ContestDetailClient passes its own bar here instead: a
+   * contest is browsed via local React state, not the URL, and "prev/next" should walk *this
+   * contest's* problem order, not whatever list the user happened to arrive from. */
+  prevNextNode?: React.ReactNode;
   /** Standalone problem page only — never passed by the contest-embedded usage
    * (ContestDetailClient), which must keep its existing normal-document-flow behavior unchanged.
    * When true, the prev/next bar stays fixed while the rest of the left pane scrolls on its own,
@@ -75,7 +81,7 @@ export default function ProblemView({
   const remaining = endsAt ? Math.max(0, endsAt - now) : 0;
   const locked = examActive && remaining <= 0;
 
-  const leftHeader = <ProblemPrevNext slug={problem.slug} />;
+  const leftHeader = prevNextNode ?? <ProblemPrevNext slug={problem.slug} />;
 
   const leftBody = (
     <div>

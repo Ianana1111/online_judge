@@ -21,6 +21,66 @@ const StatementRenderer = dynamic(() => import("@/components/StatementRenderer")
   loading: () => <Skeleton className="h-64 w-full" />,
 });
 
+/** ProblemView's prevNextNode override for a contest — same look as the standalone page's
+ * <ProblemPrevNext>, but walks *this contest's* problem order (by label, A/B/C/...) via the local
+ * activeProblemSlug state instead of a URL-driven list, since a contest is never browsed by URL. */
+function ContestProblemNav({
+  problems,
+  currentSlug,
+  onNavigate,
+}: {
+  problems: ContestDetail["problems"];
+  currentSlug: string;
+  onNavigate: (slug: string) => void;
+}) {
+  const t = useT();
+  const index = problems.findIndex((cp) => cp.problem.slug === currentSlug);
+  const prev = index > 0 ? problems[index - 1] : null;
+  const next = index < problems.length - 1 ? problems[index + 1] : null;
+
+  return (
+    <div className="oj-card mb-4 flex items-center justify-between gap-3 px-3 py-2">
+      {prev ? (
+        <button
+          type="button"
+          onClick={() => onNavigate(prev.problem.slug)}
+          className="group flex min-w-0 flex-1 items-center gap-1.5 text-left text-sm text-ink-300 hover:text-brand"
+        >
+          <span aria-hidden className="shrink-0 transition-transform group-hover:-translate-x-0.5">
+            ←
+          </span>
+          <span className="truncate">
+            {prev.label}. {prev.problem.title}
+          </span>
+        </button>
+      ) : (
+        <span className="flex-1 text-sm text-ink-500">{t("← Start of list")}</span>
+      )}
+
+      <span className="shrink-0 font-mono text-xs text-ink-500">
+        {t("{n} / {total} · {context}", { n: index + 1, total: problems.length, context: t("Problems") })}
+      </span>
+
+      {next ? (
+        <button
+          type="button"
+          onClick={() => onNavigate(next.problem.slug)}
+          className="group flex min-w-0 flex-1 items-center justify-end gap-1.5 text-right text-sm text-ink-300 hover:text-brand"
+        >
+          <span className="truncate">
+            {next.label}. {next.problem.title}
+          </span>
+          <span aria-hidden className="shrink-0 transition-transform group-hover:translate-x-0.5">
+            →
+          </span>
+        </button>
+      ) : (
+        <span className="flex-1 text-right text-sm text-ink-500">{t("End of list →")}</span>
+      )}
+    </div>
+  );
+}
+
 export default function ContestDetailClient({ contestId }: { contestId: string }) {
   const t = useT();
   const qc = useQueryClient();
@@ -82,44 +142,82 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
     ? contest.problems.find((p) => p.problem.slug === activeProblemSlug)?.problem
     : null;
 
-  const inner = activeProblem ? (
-    <div>
-      <button onClick={() => setActiveProblemSlug(null)} className="mb-4 text-sm text-brand hover:underline">
-        {t("← Back to problem set")}
-      </button>
-      <ProblemView
-        problem={activeProblem}
-        contestId={contestId}
-        statementNode={<StatementRenderer content={activeProblem.statementMd} />}
-        inputSpecNode={activeProblem.inputSpecMd ? <StatementRenderer content={activeProblem.inputSpecMd} /> : null}
-        outputSpecNode={activeProblem.outputSpecMd ? <StatementRenderer content={activeProblem.outputSpecMd} /> : null}
-      />
-    </div>
-  ) : (
-    <div className="space-y-6">
-      <div>
-        <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Problems")}</h2>
-        <div className="grid gap-2 sm:grid-cols-2">
-          {contest.problems.map((cp) => (
-            <button
-              key={cp.problem.id}
-              onClick={() => setActiveProblemSlug(cp.problem.slug)}
-              disabled={!contest.myParticipant}
-              className="oj-card flex items-center justify-between p-3 text-left transition-colors hover:border-brand disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <span className="font-mono text-brand">{cp.label}</span>
-              <span className="flex-1 px-3 text-ink-100">{cp.problem.title}</span>
-              <span className="font-mono text-xs text-ink-500">{"★".repeat(cp.problem.difficulty)}</span>
-            </button>
-          ))}
+  // fullHeight only while actually viewing one problem inside the running exam (the LeetCode-style
+  // split-pane workspace) — the problem-list/scoreboard menu, and any of this same JSX rendered
+  // after the exam ends for review, stay normal-flow/scrollable, so this is built per call site
+  // rather than once as a shared constant.
+  // Takes `contest` as an explicit parameter (shadowing the outer one) rather than closing over it
+  // — the early `if (!contest) return` above narrows the outer binding for the rest of *this*
+  // render, but TypeScript can't carry that narrowing into a nested function declaration, since in
+  // general nothing stops the outer binding from being reassigned before the inner function runs.
+  function buildInner(contest: ContestDetail, fullHeight: boolean) {
+    if (activeProblem) {
+      return fullHeight ? (
+        <div className="flex h-full min-h-0 flex-col">
+          <button
+            onClick={() => setActiveProblemSlug(null)}
+            className="mb-3 shrink-0 text-left text-sm text-brand hover:underline"
+          >
+            {t("← Back to problem set")}
+          </button>
+          <div className="min-h-0 flex-1">
+            <ProblemView
+              problem={activeProblem}
+              contestId={contestId}
+              statementNode={<StatementRenderer content={activeProblem.statementMd} />}
+              inputSpecNode={activeProblem.inputSpecMd ? <StatementRenderer content={activeProblem.inputSpecMd} /> : null}
+              outputSpecNode={activeProblem.outputSpecMd ? <StatementRenderer content={activeProblem.outputSpecMd} /> : null}
+              fullHeight
+              prevNextNode={
+                <ContestProblemNav problems={contest.problems} currentSlug={activeProblem.slug} onNavigate={setActiveProblemSlug} />
+              }
+            />
+          </div>
+        </div>
+      ) : (
+        <div>
+          <button onClick={() => setActiveProblemSlug(null)} className="mb-4 text-sm text-brand hover:underline">
+            {t("← Back to problem set")}
+          </button>
+          <ProblemView
+            problem={activeProblem}
+            contestId={contestId}
+            statementNode={<StatementRenderer content={activeProblem.statementMd} />}
+            inputSpecNode={activeProblem.inputSpecMd ? <StatementRenderer content={activeProblem.inputSpecMd} /> : null}
+            outputSpecNode={activeProblem.outputSpecMd ? <StatementRenderer content={activeProblem.outputSpecMd} /> : null}
+            prevNextNode={
+              <ContestProblemNav problems={contest.problems} currentSlug={activeProblem.slug} onNavigate={setActiveProblemSlug} />
+            }
+          />
+        </div>
+      );
+    }
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Problems")}</h2>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {contest.problems.map((cp) => (
+              <button
+                key={cp.problem.id}
+                onClick={() => setActiveProblemSlug(cp.problem.slug)}
+                disabled={!contest.myParticipant}
+                className="oj-card flex items-center justify-between p-3 text-left transition-colors hover:border-brand disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <span className="font-mono text-brand">{cp.label}</span>
+                <span className="flex-1 px-3 text-ink-100">{cp.problem.title}</span>
+                <span className="font-mono text-xs text-ink-500">{"★".repeat(cp.problem.difficulty)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Scoreboard")}</h2>
+          <Scoreboard contestId={contestId} problems={contest.problems} />
         </div>
       </div>
-      <div>
-        <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Scoreboard")}</h2>
-        <Scoreboard contestId={contestId} problems={contest.problems} />
-      </div>
-    </div>
-  );
+    );
+  }
 
   if (isRunning && contest.myParticipant) {
     return (
@@ -128,8 +226,9 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
         title={contest.myParticipant.attemptNumber > 1 ? `${contest.title} (#${contest.myParticipant.attemptNumber})` : contest.title}
         endsAtIso={contest.myParticipant.endsAt}
         homeHref={contest.kind === "GPE" ? "/gpe" : "/cpe"}
+        fullHeight={!!activeProblem}
       >
-        {inner}
+        {buildInner(contest, !!activeProblem)}
       </ExamModeShell>
     );
   }
@@ -200,7 +299,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
         </div>
       )}
 
-      {inner}
+      {buildInner(contest, false)}
     </div>
   );
 }
