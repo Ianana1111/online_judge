@@ -191,7 +191,7 @@ export default function LeaderboardPage() {
                 <th>{t("Avg time")}</th>
                 <th>{t("Avg memory")}</th>
                 <th>{t("Total submissions")}</th>
-                <th className="text-right">{ranking === "solved" ? t("Solved") : t("Streak")}</th>
+                <th className="!text-right">{ranking === "solved" ? t("Solved") : t("Streak")}</th>
               </tr>
             </thead>
             <tbody>
