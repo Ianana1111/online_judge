@@ -140,12 +140,15 @@ export class BillingService {
 
   /** Refund eligibility for the logged-in user — see requestRefund for the actual action. Whether
    * they're eligible depends on having a first CREDIT charge that's both unrefunded and still
-   * within REFUND_WINDOW_MS; `deadline` is only meaningful when `eligible` is true. */
-  private async findRefundableFirstPayment(userId: string) {
-    const alreadyRefunded = await prisma.payment.findFirst({ where: { userId, status: "REFUNDED" } });
+   * within REFUND_WINDOW_MS; `deadline` is only meaningful when `eligible` is true. Takes an
+   * optional transaction client so requestRefund can run this same check again *inside* its
+   * advisory-locked transaction, seeing any REFUNDED write a just-finished concurrent call made,
+   * rather than a plain `prisma` read that could still see pre-lock state. */
+  private async findRefundableFirstPayment(userId: string, db: Prisma.TransactionClient | typeof prisma = prisma) {
+    const alreadyRefunded = await db.payment.findFirst({ where: { userId, status: "REFUNDED" } });
     if (alreadyRefunded) return null;
 
-    const firstCreditPayment = await prisma.payment.findFirst({
+    const firstCreditPayment = await db.payment.findFirst({
       where: { userId, method: "ECPAY", ecpayMethod: "CREDIT", status: { in: ["APPROVED", "AUTHORIZED"] } },
       orderBy: { createdAt: "asc" },
     });
@@ -632,9 +635,27 @@ export class BillingService {
    * claim something ECPay might not have actually done" discipline as cancelSubscription. Note
    * this whole DoAction family (queryEcpayCreditTrade included) cannot be exercised in ECPay's
    * sandbox/stage environment per their own docs — there is no safe way to test this except
-   * against production. */
+   * against production.
+   *
+   * A pg_advisory_xact_lock scoped to this user (same pattern as createEcpayOrder, different
+   * namespace) serializes concurrent calls — without it, a rapid double-click could both pass
+   * findRefundableFirstPayment's "not already REFUNDED" check before either write commits, and
+   * both go on to fire a real ECPay refund/void call. Held across the ECPay round trips
+   * themselves, not just the DB checks, since that's exactly the window a second click could land
+   * in — hence the extended transaction timeout (ECPay's own docs give no SLA for these calls, and
+   * the default 5s is tight for two-to-three sequential HTTP round trips to another service). */
   async requestRefund(userId: string): Promise<{ plan: "FREE"; refundedAmountNtd: number }> {
-    const payment = await this.findRefundableFirstPayment(userId);
+    return prisma.$transaction(
+      async (tx) => {
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('billing_refund'), hashtext(${userId}))`;
+        return this.doRequestRefund(userId, tx);
+      },
+      { timeout: 20_000 },
+    );
+  }
+
+  private async doRequestRefund(userId: string, tx: Prisma.TransactionClient): Promise<{ plan: "FREE"; refundedAmountNtd: number }> {
+    const payment = await this.findRefundableFirstPayment(userId, tx);
     if (!payment || !payment.merchantTradeNo) {
       throw new BadRequestException(
         "You're not eligible for a refund — either the 30-day window has passed, this isn't a credit-card subscription, or you've already used your one-time refund.",
@@ -660,12 +681,12 @@ export class BillingService {
     // Best-effort: the refund itself already succeeded (money is going back) regardless of whether
     // this also succeeds, so a failure here is logged for manual follow-up rather than thrown —
     // the alternative (throwing) would falsely tell the user their refund failed when it didn't.
-    const subscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
+    const subscription = await tx.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
     if (subscription) {
       try {
         const cancelResult = await cancelEcpayPeriod(subscription.merchantTradeNo, config);
         if (cancelResult.RtnCode === 1) {
-          await prisma.subscription.update({ where: { id: subscription.id }, data: { status: "CANCELLED", cancelledAt: new Date() } });
+          await tx.subscription.update({ where: { id: subscription.id }, data: { status: "CANCELLED", cancelledAt: new Date() } });
         } else {
           this.logger.error(
             `requestRefund: refunded payment ${payment.id} but ECPay declined to cancel subscription ${subscription.id}: ${cancelResult.RtnMsg} — it will keep auto-renewing, needs manual follow-up.`,
@@ -678,10 +699,8 @@ export class BillingService {
       }
     }
 
-    await prisma.$transaction(async (tx) => {
-      await tx.payment.update({ where: { id: payment.id }, data: { status: "REFUNDED", reviewedAt: new Date(), reviewedBy: "USER_REFUND" } });
-      await tx.user.update({ where: { id: userId }, data: { plan: "FREE", planExpiresAt: null, planCancelRequested: false } });
-    });
+    await tx.payment.update({ where: { id: payment.id }, data: { status: "REFUNDED", reviewedAt: new Date(), reviewedBy: "USER_REFUND" } });
+    await tx.user.update({ where: { id: userId }, data: { plan: "FREE", planExpiresAt: null, planCancelRequested: false } });
     this.logger.log(`Refunded payment ${payment.id} (NT$${payment.amountNtd}) for user ${userId} and downgraded to Free.`);
     return { plan: "FREE", refundedAmountNtd: payment.amountNtd };
   }
