@@ -1,11 +1,12 @@
 import { Queue } from "bullmq";
 import Redis from "ioredis";
-import { JUDGE_QUEUE_NAME, TEST_RUN_QUEUE_NAME } from "@oj/shared";
+import { JUDGE_LOCAL_QUEUE_NAME, JUDGE_REMOTE_QUEUE_NAME, TEST_RUN_QUEUE_NAME } from "@oj/shared";
 
 export const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 
 export const REDIS_CLIENT = "REDIS_CLIENT";
-export const JUDGE_QUEUE = "JUDGE_QUEUE";
+export const JUDGE_LOCAL_QUEUE = "JUDGE_LOCAL_QUEUE";
+export const JUDGE_REMOTE_QUEUE = "JUDGE_REMOTE_QUEUE";
 export const TEST_RUN_QUEUE = "TEST_RUN_QUEUE";
 
 /**
@@ -37,15 +38,24 @@ const DEFAULT_JOB_OPTIONS = {
   removeOnFail: { count: 5000 },
 };
 
-export const judgeQueueProvider = {
-  provide: JUDGE_QUEUE,
+export const judgeLocalQueueProvider = {
+  provide: JUDGE_LOCAL_QUEUE,
   // Pass a plain connection options object rather than constructing our own `Redis` instance
   // here: BullMQ bundles its own copy of ioredis, and a separately-installed ioredis copy (even
   // the "same" version) can resolve to a structurally distinct class under pnpm's strict
   // node_modules layout, which then fails BullMQ's ConnectionOptions type/behavior checks.
   // Letting BullMQ build its client internally sidesteps that (matches apps/judge's approach).
   useFactory: (): Queue =>
-    new Queue(JUDGE_QUEUE_NAME, {
+    new Queue(JUDGE_LOCAL_QUEUE_NAME, {
+      connection: { url: REDIS_URL, maxRetriesPerRequest: null },
+      defaultJobOptions: DEFAULT_JOB_OPTIONS,
+    }),
+};
+
+export const judgeRemoteQueueProvider = {
+  provide: JUDGE_REMOTE_QUEUE,
+  useFactory: (): Queue =>
+    new Queue(JUDGE_REMOTE_QUEUE_NAME, {
       connection: { url: REDIS_URL, maxRetriesPerRequest: null },
       defaultJobOptions: DEFAULT_JOB_OPTIONS,
     }),

@@ -10,7 +10,8 @@ import type { Queue } from "bullmq";
 import type Redis from "ioredis";
 import { prisma } from "@oj/db";
 import {
-  JUDGE_QUEUE_NAME,
+  JUDGE_LOCAL_QUEUE_NAME,
+  JUDGE_REMOTE_QUEUE_NAME,
   isTerminalVerdict,
   submissionResultChannel,
   type CreateSubmissionDto,
@@ -19,7 +20,7 @@ import {
   type Verdict,
 } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
-import { JUDGE_QUEUE, REDIS_CLIENT } from "../common/redis.providers";
+import { JUDGE_LOCAL_QUEUE, JUDGE_REMOTE_QUEUE, REDIS_CLIENT } from "../common/redis.providers";
 import { BillingService } from "../billing/billing.service";
 import { AchievementsService } from "../achievements/achievements.service";
 
@@ -29,14 +30,18 @@ const COOLDOWN_MS = 10_000;
 @Injectable()
 export class SubmissionsService {
   constructor(
-    @Inject(JUDGE_QUEUE) private readonly queue: Queue,
+    @Inject(JUDGE_LOCAL_QUEUE) private readonly localQueue: Queue,
+    @Inject(JUDGE_REMOTE_QUEUE) private readonly remoteQueue: Queue,
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
     private readonly billing: BillingService,
     private readonly achievements: AchievementsService,
   ) {}
 
   async create(userId: string, dto: CreateSubmissionDto): Promise<{ id: string }> {
-    const problem = await prisma.problem.findUnique({ where: { id: dto.problemId } });
+    const problem = await prisma.problem.findUnique({
+      where: { id: dto.problemId },
+      include: { _count: { select: { testCases: true } } },
+    });
     if (!problem) throw new NotFoundException("Problem not found");
 
     if (dto.contestId) {
@@ -74,9 +79,18 @@ export class SubmissionsService {
       },
     });
 
-    // Default attempts (1) is intentional: silently re-running arbitrary user code on a
-    // transient job failure is not safe, so we don't override BullMQ's retry behavior here.
-    await this.queue.add(JUDGE_QUEUE_NAME, { submissionId: submission.id });
+    // Routed once, here, rather than left for the worker to decide — a problem with local test
+    // cases goes to the local queue (high concurrency: every submission gets its own isolated
+    // sandbox, so there's no reason to serialize them), everything else falls back to the remote
+    // queue (kept serialized — see worker.ts). Default attempts (1) is intentional: silently
+    // re-running arbitrary user code on a transient job failure is not safe, so we don't override
+    // BullMQ's retry behavior here.
+    const judgedLocally = problem._count.testCases > 0;
+    if (judgedLocally) {
+      await this.localQueue.add(JUDGE_LOCAL_QUEUE_NAME, { submissionId: submission.id });
+    } else {
+      await this.remoteQueue.add(JUDGE_REMOTE_QUEUE_NAME, { submissionId: submission.id });
+    }
 
     return { id: submission.id };
   }

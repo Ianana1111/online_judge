@@ -3,7 +3,13 @@ import "./instrument.js";
 import { Worker, type Job } from "bullmq";
 import * as Sentry from "@sentry/node";
 import { prisma } from "@oj/db";
-import { JUDGE_QUEUE_NAME, TEST_RUN_QUEUE_NAME, type JudgeJobData, type TestRunJobData } from "@oj/shared";
+import {
+  JUDGE_LOCAL_QUEUE_NAME,
+  JUDGE_REMOTE_QUEUE_NAME,
+  TEST_RUN_QUEUE_NAME,
+  type JudgeJobData,
+  type TestRunJobData,
+} from "@oj/shared";
 import { judgeViaUva } from "./remote/uva.js";
 import { judgeLocally } from "./local/judge.js";
 import { runTestCases } from "./local/testRun.js";
@@ -11,11 +17,17 @@ import { reportResult, reportTestRunResult } from "./reportResult.js";
 import { recordJudgeCompleted, startHealthServer } from "./health.js";
 
 const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
+// Local sandbox judging has no cross-submission shared state to serialize around — every
+// submission gets its own disposable, isolated microVM — so this can run with real concurrency.
+// The default (6) is a starting point, not a measured ceiling: raise it if Vercel Sandbox is
+// comfortably keeping up and queue depth is the bottleneck; lower it if sandbox creation starts
+// erroring under load (account-level concurrent-sandbox limits).
+const LOCAL_CONCURRENCY = parseInt(process.env.JUDGE_LOCAL_CONCURRENCY ?? "6", 10);
 // Default 1: every submission proxies through a single shared UVa bot account, and we identify our
 // verdict row by "smallest new submission id" (see remote/uva.ts) — which is only unambiguous if
 // submissions go out strictly one at a time. Parallel submits through one account would also raise
 // rate-limit/ban risk on a community-run judge for no real throughput gain.
-const CONCURRENCY = parseInt(process.env.JUDGE_CONCURRENCY ?? "1", 10);
+const REMOTE_CONCURRENCY = parseInt(process.env.JUDGE_CONCURRENCY ?? "1", 10);
 // The "Run" feature has no such constraint — each run gets its own disposable sandbox and never
 // touches UVa — so it can afford more headroom to stay snappy under concurrent site usage.
 const TEST_RUN_CONCURRENCY = parseInt(process.env.TEST_RUN_CONCURRENCY ?? "3", 10);
@@ -26,14 +38,13 @@ const TEST_RUN_CONCURRENCY = parseInt(process.env.TEST_RUN_CONCURRENCY ?? "3", 1
 // `Worker`'s ConnectionOptions type check. Letting BullMQ build the client itself sidesteps that.
 const connection = { url: REDIS_URL, maxRetriesPerRequest: null };
 
-// A problem judges locally (apps/judge/src/local/judge.ts, a Vercel Sandbox microVM) the moment
-// it has at least one TestCase row, and relays to the real UVa Online Judge otherwise
-// (apps/judge/src/remote/README.md). Deliberately keyed off the data rather than a separate
-// "judgeMode" flag on Problem — a flag could drift out of sync with whether test cases actually
-// exist; this can't. Concurrency here just bounds how many submissions are mid-flight at once;
-// judgeViaUva throttles its own requests to onlinejudge.org, judgeLocally has no such constraint
-// (each submission gets its own disposable sandbox).
-async function processJob(job: Job<JudgeJobData>): Promise<void> {
+// Which queue a submission landed in was already decided at enqueue time (see
+// submissions.service.ts, keyed off whether the problem has TestCase rows) — these two processors
+// just judge it the way that queue promises: judgeLocally in a Vercel Sandbox microVM, or
+// judgeViaUva against the real UVa Online Judge (apps/judge/src/remote/README.md). A defensive
+// re-check still runs here too (judgeLocally itself returns SE if testCases turns out empty) in
+// case test data was deleted between submit and judge.
+async function processLocalJob(job: Job<JudgeJobData>): Promise<void> {
   const { submissionId } = job.data;
 
   const submission = await prisma.submission.findUniqueOrThrow({
@@ -46,19 +57,30 @@ async function processJob(job: Job<JudgeJobData>): Promise<void> {
   await reportResult({ submissionId, status: "JUDGING" }).catch(() => {});
 
   const { problem } = submission;
-  const judgedLocally = problem.testCases.length > 0;
-  const outcome = judgedLocally
-    ? await judgeLocally(problem, problem.testCases, submission.languageKey, submission.sourceCode)
-    : await judgeViaUva(problem, submission.languageKey, submission.sourceCode);
+  const outcome = await judgeLocally(problem, problem.testCases, submission.languageKey, submission.sourceCode);
 
-  await reportResult({ submissionId, judgedOn: judgedLocally ? "SELF" : "REMOTE", ...outcome });
+  await reportResult({ submissionId, judgedOn: "SELF", ...outcome });
 }
 
-const worker = new Worker<JudgeJobData>(
-  JUDGE_QUEUE_NAME,
-  async (job) => {
+async function processRemoteJob(job: Job<JudgeJobData>): Promise<void> {
+  const { submissionId } = job.data;
+
+  const submission = await prisma.submission.findUniqueOrThrow({
+    where: { id: submissionId },
+    include: { problem: true },
+  });
+
+  await reportResult({ submissionId, status: "JUDGING" }).catch(() => {});
+
+  const outcome = await judgeViaUva(submission.problem, submission.languageKey, submission.sourceCode);
+
+  await reportResult({ submissionId, judgedOn: "REMOTE", ...outcome });
+}
+
+function makeJudgeFailureHandler(processFn: (job: Job<JudgeJobData>) => Promise<void>) {
+  return async (job: Job<JudgeJobData>) => {
     try {
-      await processJob(job);
+      await processFn(job);
     } catch (err) {
       console.error(`Job ${job.id} (submission ${job.data.submissionId}) failed:`, err);
       await reportResult({
@@ -70,20 +92,30 @@ const worker = new Worker<JudgeJobData>(
       });
       throw err;
     }
-  },
-  { connection, concurrency: CONCURRENCY },
-);
+  };
+}
 
-worker.on("completed", (job) => {
-  recordJudgeCompleted();
-  console.log(`Judged submission ${job.data.submissionId}`);
+const localWorker = new Worker<JudgeJobData>(JUDGE_LOCAL_QUEUE_NAME, makeJudgeFailureHandler(processLocalJob), {
+  connection,
+  concurrency: LOCAL_CONCURRENCY,
 });
-worker.on("failed", (job, err) => {
-  console.error(`Judge failed for job ${job?.id}:`, err.message);
-  // Not also captured in the inner catch above — that block re-throws, so this event always
-  // fires for the same failure too; capturing in both places would double-report every failure.
-  Sentry.captureException(err, { tags: { submissionId: job?.data.submissionId } });
+const remoteWorker = new Worker<JudgeJobData>(JUDGE_REMOTE_QUEUE_NAME, makeJudgeFailureHandler(processRemoteJob), {
+  connection,
+  concurrency: REMOTE_CONCURRENCY,
 });
+
+for (const w of [localWorker, remoteWorker]) {
+  w.on("completed", (job) => {
+    recordJudgeCompleted();
+    console.log(`Judged submission ${job.data.submissionId}`);
+  });
+  w.on("failed", (job, err) => {
+    console.error(`Judge failed for job ${job?.id}:`, err.message);
+    // Not also captured in the inner catch above — that block re-throws, so this event always
+    // fires for the same failure too; capturing in both places would double-report every failure.
+    Sentry.captureException(err, { tags: { submissionId: job?.data.submissionId } });
+  });
+}
 
 // "Run" jobs (apps/judge/src/local/testRun.ts) — compile+run against sample/custom input for the
 // site's in-browser test feature. No Submission row, no verdict, nothing persisted; the result
@@ -120,13 +152,14 @@ testRunWorker.on("failed", (job, err) => {
   Sentry.captureException(err, { tags: { runId: job?.data.runId } });
 });
 
-console.log(`Judge worker started (concurrency=${CONCURRENCY}), listening on queue "${JUDGE_QUEUE_NAME}"`);
+console.log(`Local judge worker started (concurrency=${LOCAL_CONCURRENCY}), listening on queue "${JUDGE_LOCAL_QUEUE_NAME}"`);
+console.log(`Remote judge worker started (concurrency=${REMOTE_CONCURRENCY}), listening on queue "${JUDGE_REMOTE_QUEUE_NAME}"`);
 console.log(`Test-run worker started (concurrency=${TEST_RUN_CONCURRENCY}), listening on queue "${TEST_RUN_QUEUE_NAME}"`);
 startHealthServer();
 
 async function shutdown() {
   console.log("Shutting down judge worker...");
-  await Promise.all([worker.close(), testRunWorker.close()]);
+  await Promise.all([localWorker.close(), remoteWorker.close(), testRunWorker.close()]);
   await prisma.$disconnect();
   process.exit(0);
 }

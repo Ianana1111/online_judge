@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import { Queue } from "bullmq";
-import { JUDGE_QUEUE_NAME, TEST_RUN_QUEUE_NAME } from "@oj/shared";
+import { JUDGE_LOCAL_QUEUE_NAME, JUDGE_REMOTE_QUEUE_NAME, TEST_RUN_QUEUE_NAME } from "@oj/shared";
 
 const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 const PORT = Number(process.env.JUDGE_HEALTH_PORT ?? 4100);
@@ -11,7 +11,8 @@ const connection = { url: REDIS_URL, maxRetriesPerRequest: null };
 // from "judge worker is idle because nothing was submitted" from outside the process at all — a
 // plain Node worker with no HTTP surface gives Railway nothing to healthcheck and gives nobody a
 // signal to notice a silent stall.
-const judgeQueue = new Queue(JUDGE_QUEUE_NAME, { connection });
+const judgeLocalQueue = new Queue(JUDGE_LOCAL_QUEUE_NAME, { connection });
+const judgeRemoteQueue = new Queue(JUDGE_REMOTE_QUEUE_NAME, { connection });
 const testRunQueue = new Queue(TEST_RUN_QUEUE_NAME, { connection });
 
 let lastJudgeCompletedAt: number | null = null;
@@ -34,13 +35,14 @@ export function startHealthServer(): void {
       res.writeHead(404).end();
       return;
     }
-    void Promise.all([judgeQueue.getJobCounts(), testRunQueue.getJobCounts()])
-      .then(([judgeCounts, testRunCounts]) => {
+    void Promise.all([judgeLocalQueue.getJobCounts(), judgeRemoteQueue.getJobCounts(), testRunQueue.getJobCounts()])
+      .then(([localCounts, remoteCounts, testRunCounts]) => {
         const body = {
           ok: true,
           lastJudgeCompletedAt: lastJudgeCompletedAt ? new Date(lastJudgeCompletedAt).toISOString() : null,
           secondsSinceLastJudge: lastJudgeCompletedAt ? Math.round((Date.now() - lastJudgeCompletedAt) / 1000) : null,
-          judgeQueue: judgeCounts,
+          judgeLocalQueue: localCounts,
+          judgeRemoteQueue: remoteCounts,
           testRunQueue: testRunCounts,
         };
         res.writeHead(200, { "Content-Type": "application/json" }).end(JSON.stringify(body));
