@@ -32,7 +32,7 @@ export default function Scoreboard({ contestId, problems }: { contestId: string;
             <th>{t("Solved count")}</th>
             <th>{t("Penalty")}</th>
             {problems.map((p) => (
-              <th key={p.label} className="text-center">
+              <th key={p.label} className="!text-center">
                 {p.label}
               </th>
             ))}
