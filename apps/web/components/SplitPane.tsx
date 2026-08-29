@@ -1,27 +1,30 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useIsDesktop } from "@/lib/useIsDesktop";
 
 const MIN_PERCENT = 20;
-const DESKTOP_QUERY = "(min-width: 1024px)";
-
-function useIsDesktop(): boolean {
-  const [isDesktop, setIsDesktop] = useState(true);
-  useEffect(() => {
-    const mql = window.matchMedia(DESKTOP_QUERY);
-    setIsDesktop(mql.matches);
-    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
-    mql.addEventListener("change", onChange);
-    return () => mql.removeEventListener("change", onChange);
-  }, []);
-  return isDesktop;
-}
 
 /**
  * Two-pane layout with a draggable divider (desktop only — stacks normally on mobile).
  * Each side is clamped to [MIN_PERCENT, 100 - MIN_PERCENT] so neither can be dragged away entirely.
+ *
+ * `fullHeight` opts into filling (not just growing to) the container's own height — stretches the
+ * pane and both children to `h-full` instead of leaving them their natural content height. Only
+ * the standalone problem page (app/problems/[slug]/page.tsx) passes this: it wraps ProblemView in
+ * a fixed `100vh`-derived height so the page itself never scrolls, and each side scrolls its own
+ * content independently instead. The contest-embedded ProblemView (ContestDetailClient) doesn't
+ * pass it, and keeps behaving exactly as it always has — normal document flow, whole-page scroll.
  */
-export default function SplitPane({ left, right }: { left: React.ReactNode; right: React.ReactNode }) {
+export default function SplitPane({
+  left,
+  right,
+  fullHeight = false,
+}: {
+  left: React.ReactNode;
+  right: React.ReactNode;
+  fullHeight?: boolean;
+}) {
   const isDesktop = useIsDesktop();
   const containerRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
@@ -65,8 +68,8 @@ export default function SplitPane({ left, right }: { left: React.ReactNode; righ
   }
 
   return (
-    <div ref={containerRef} className="flex w-full items-stretch">
-      <div style={{ flexBasis: `${leftPercent}%` }} className="min-w-0 overflow-hidden">
+    <div ref={containerRef} className={`flex w-full items-stretch ${fullHeight ? "h-full min-h-0" : ""}`}>
+      <div style={{ flexBasis: `${leftPercent}%` }} className={`min-w-0 overflow-hidden ${fullHeight ? "h-full" : ""}`}>
         {left}
       </div>
       <div
@@ -77,7 +80,7 @@ export default function SplitPane({ left, right }: { left: React.ReactNode; righ
       >
         <div className="h-full w-px bg-ink-800 transition-colors group-hover:bg-brand group-active:bg-brand" />
       </div>
-      <div style={{ flexBasis: `${100 - leftPercent}%` }} className="min-w-0 flex-1 overflow-hidden">
+      <div style={{ flexBasis: `${100 - leftPercent}%` }} className={`min-w-0 flex-1 overflow-hidden ${fullHeight ? "h-full" : ""}`}>
         {right}
       </div>
     </div>
