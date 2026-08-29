@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { prisma } from "@oj/db";
+import { prisma, Prisma } from "@oj/db";
 import { TAIWAN_UNIVERSITY_DOMAINS, verifySchoolEmailDomain } from "@oj/shared";
 import type {
   ChangeHandleDto,
@@ -29,6 +29,13 @@ interface SchoolVerifyTokenPayload {
   sub: string;
   school: string;
   email: string;
+}
+
+/** Case/whitespace-insensitive key for UsedSchoolEmail — the one thing that has to line up between
+ * an early check, the confirmed insert, and the migration's own backfill (see its comment), or the
+ * same real inbox could slip through as "different" addresses. */
+function normalizeSchoolEmail(email: string): string {
+  return email.trim().toLowerCase();
 }
 
 const HEATMAP_DAYS = 365;
@@ -464,6 +471,13 @@ export class UsersService {
     if (user.schoolVerificationSentAt && Date.now() - user.schoolVerificationSentAt.getTime() < SCHOOL_VERIFY_RESEND_COOLDOWN_MS) {
       throw new BadRequestException("Give it a moment before requesting another email.");
     }
+    // Early, friendly rejection — the authoritative check (immune to the TOCTOU race this alone
+    // can't close) happens atomically in confirmSchoolVerification when the link is actually
+    // clicked. This just saves sending an email that could never succeed.
+    const alreadyUsed = await prisma.usedSchoolEmail.findUnique({ where: { email: normalizeSchoolEmail(email) } });
+    if (alreadyUsed && alreadyUsed.userId !== userId) {
+      throw new BadRequestException("That email has already been used to verify a different account.");
+    }
 
     const token = jwt.sign({ purpose: "school-verify", sub: userId, school: user.school, email } satisfies SchoolVerifyTokenPayload, SCHOOL_VERIFY_SECRET, {
       expiresIn: SCHOOL_VERIFY_TOKEN_TTL,
@@ -493,7 +507,7 @@ export class UsersService {
    * the claimed school and email are re-checked against the user's *current* row (not just
    * trusted from the token) so a stale link from before a school change can't silently verify the
    * wrong thing. */
-  async confirmSchoolVerification(token: string): Promise<{ ok: boolean }> {
+  async confirmSchoolVerification(token: string): Promise<{ ok: boolean; reason?: "duplicate" }> {
     let payload: SchoolVerifyTokenPayload;
     try {
       payload = jwt.verify(token, SCHOOL_VERIFY_SECRET) as unknown as SchoolVerifyTokenPayload;
@@ -505,7 +519,34 @@ export class UsersService {
     const user = await prisma.user.findUnique({ where: { id: payload.sub }, select: { school: true, schoolEmail: true } });
     if (!user || user.school !== payload.school || user.schoolEmail !== payload.email) return { ok: false };
 
-    await prisma.user.update({ where: { id: payload.sub }, data: { schoolVerifiedAt: new Date() } });
+    const normalizedEmail = normalizeSchoolEmail(payload.email);
+    const claimedBy = await prisma.usedSchoolEmail.findUnique({ where: { email: normalizedEmail } });
+    // Already claimed by this same account — a double-clicked link, or the tab was left open from
+    // before and clicked again. Treat as an idempotent success rather than a false "duplicate"
+    // rejection; there's nothing left to insert, but schoolVerifiedAt is worth re-affirming anyway.
+    if (claimedBy && claimedBy.userId === payload.sub) {
+      await prisma.user.update({ where: { id: payload.sub }, data: { schoolVerifiedAt: new Date() } });
+      return { ok: true };
+    }
+    if (claimedBy) return { ok: false, reason: "duplicate" };
+
+    // Claiming the UsedSchoolEmail row and marking the user verified happen in one transaction —
+    // the insert's primary-key uniqueness is what actually enforces "one account per email",
+    // atomically, even against two different accounts racing to confirm the same address right
+    // after the check above (which is not itself atomic with this transaction).
+    try {
+      await prisma.$transaction([
+        prisma.usedSchoolEmail.create({
+          data: { email: normalizedEmail, userId: payload.sub, school: payload.school },
+        }),
+        prisma.user.update({ where: { id: payload.sub }, data: { schoolVerifiedAt: new Date() } }),
+      ]);
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
+        return { ok: false, reason: "duplicate" };
+      }
+      throw err;
+    }
     return { ok: true };
   }
 

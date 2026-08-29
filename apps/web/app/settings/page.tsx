@@ -121,7 +121,11 @@ function SchoolVerifiedBanner() {
         result === "1" ? "border-verdict-ac/40 bg-verdict-ac/10 text-verdict-ac" : "border-verdict-wa/40 bg-verdict-wa/10 text-verdict-wa"
       }`}
     >
-      {result === "1" ? t("School email verified ✓") : t("That verification link is invalid or expired — try sending a new one.")}
+      {result === "1"
+        ? t("School email verified ✓")
+        : result === "duplicate"
+          ? t("That email has already been used to verify a different account — each school email can only verify one account.")
+          : t("That verification link is invalid or expired — try sending a new one.")}
     </div>
   );
 }

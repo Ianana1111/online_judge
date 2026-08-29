@@ -168,4 +168,10 @@ export const batch5Dictionary: Record<string, string> = {
   "Attempt again": "再次挑戰",
   "Starting…": "開始中…",
   "attempt #{n}": "第 {n} 次挑戰",
+
+  // --- app/settings/page.tsx (SchoolVerifiedBanner) ---
+  "School email verified ✓": "學校信箱驗證成功 ✓",
+  "That verification link is invalid or expired — try sending a new one.": "這個驗證連結無效或已過期，請重新寄送一次。",
+  "That email has already been used to verify a different account — each school email can only verify one account.":
+    "這個信箱已經被用來驗證過另一個帳號——每個學校信箱只能驗證一個帳號。",
 };

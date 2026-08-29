@@ -134,8 +134,9 @@ export class UsersController {
   @Get("school/verify/confirm")
   async confirmSchoolVerification(@Query("token") token: string | undefined, @Res() res: Response) {
     const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
-    const result = token ? await this.users.confirmSchoolVerification(token) : { ok: false };
-    res.redirect(`${webOrigin}/settings?schoolVerified=${result.ok ? "1" : "0"}`);
+    const result = token ? await this.users.confirmSchoolVerification(token) : { ok: false as const };
+    const status = result.ok ? "1" : result.reason === "duplicate" ? "duplicate" : "0";
+    res.redirect(`${webOrigin}/settings?schoolVerified=${status}`);
   }
 
   @Roles("ADMIN")

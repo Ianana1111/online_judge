@@ -190,8 +190,30 @@ model User {
   achievements         UserAchievement[]
   notifications        Notification[]
   streakFreezeDays      StreakFreezeDay[]
+  usedSchoolEmails      UsedSchoolEmail[]
 
   @@map("users")
+}
+
+/// Anti-abuse ledger: one row per school email that has ever actually completed verification
+/// (confirmSchoolVerification), so the same real @school.edu.tw address can't be used to verify
+/// more than one account — without this, a whole dorm could share one classmate's inbox to all
+/// claim the same school. Separate from User.schoolEmail (which just holds the *current*, possibly
+/// unconfirmed claim and gets reset on a school change) — this row is written once, on confirmed
+/// verification, and never touched again, so it survives even if the verifying user later switches
+/// schools or deletes their account.
+model UsedSchoolEmail {
+  /// Lowercased/trimmed — see normalizeSchoolEmail in users.service.ts. The primary key itself is
+  /// what makes a second confirmation for the same address fail atomically (unique violation)
+  /// rather than needing a separate check-then-write.
+  email      String   @id
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  school     String
+  verifiedAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("used_school_emails")
 }
 
 /// One row per calendar day a user spent a streak-freeze on — that day then counts as "solved" for
