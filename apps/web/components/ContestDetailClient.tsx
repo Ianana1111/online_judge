@@ -73,6 +73,11 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
   const scheduledNotStarted = !!contest.startAt && new Date(contest.startAt).getTime() > now;
   const isRunning =
     contest.myParticipant && !scheduledNotStarted && new Date(contest.myParticipant.endsAt).getTime() > now;
+  // Their latest attempt has ended (and it's not just "hasn't started yet" for a scheduled
+  // sitting) — canStartNewAttempt tells us whether that also means a fresh attempt is on offer
+  // (individual/virtual contests only; a scheduled group sitting is one-shot).
+  const finished = !!contest.myParticipant && !isRunning && !scheduledNotStarted;
+  const canReattempt = finished && contest.canStartNewAttempt;
   const activeProblem = activeProblemSlug
     ? contest.problems.find((p) => p.problem.slug === activeProblemSlug)?.problem
     : null;
@@ -120,7 +125,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
     return (
       <ExamModeShell
         contestId={contestId}
-        title={contest.title}
+        title={contest.myParticipant.attemptNumber > 1 ? `${contest.title} (#${contest.myParticipant.attemptNumber})` : contest.title}
         endsAtIso={contest.myParticipant.endsAt}
         homeHref={contest.kind === "GPE" ? "/gpe" : "/cpe"}
       >
@@ -138,6 +143,9 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
         <h1 className="mb-1 font-display text-2xl font-bold text-ink-50">{contest.title}</h1>
         <p className="font-mono text-xs text-ink-400">
           {contest.kind} · {t("{n} min", { n: contest.durationMin })} · {t("penalty {n}m/wrong", { n: contest.penaltyMin })}
+          {contest.myParticipant && contest.myParticipant.attemptNumber > 1 && (
+            <> · {t("attempt #{n}", { n: contest.myParticipant.attemptNumber })}</>
+          )}
         </p>
       </div>
 
@@ -161,6 +169,21 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
           {error && <p className="mb-2 text-sm text-verdict-wa">{error}</p>}
           <button onClick={register} disabled={registering} className="oj-btn-primary">
             {registering ? t("Joining…") : contest.startAt ? t("Register for contest") : t("Start exam")}
+          </button>
+        </div>
+      )}
+
+      {canReattempt && (
+        <div className="oj-card p-4">
+          <p className="mb-3 text-sm text-ink-300">
+            {t("You finished attempt #{n} of this sitting.", { n: contest.myParticipant!.attemptNumber })}{" "}
+            {t("Starting again begins a brand new timed attempt (#{n}) — your scoreboard entry only ever keeps whichever attempt scored best.", {
+              n: contest.myParticipant!.attemptNumber + 1,
+            })}
+          </p>
+          {error && <p className="mb-2 text-sm text-verdict-wa">{error}</p>}
+          <button onClick={register} disabled={registering} className="oj-btn-primary">
+            {registering ? t("Starting…") : t("Attempt again")}
           </button>
         </div>
       )}

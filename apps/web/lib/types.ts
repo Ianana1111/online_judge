@@ -298,11 +298,15 @@ export interface ContestParticipant {
   startedAt: string;
   endsAt: string;
   status: "REGISTERED" | "RUNNING" | "FINISHED";
+  attemptNumber: number;
 }
 
 export interface ContestDetail extends ContestListItem {
   problems: ContestProblemRef[];
   myParticipant: ContestParticipant | null;
+  /** True once this attempt (if any) has ended and another one can be started — always false for
+   * a scheduled/group sitting (Contest.startAt set), since those are one-shot by design. */
+  canStartNewAttempt: boolean;
   freezeMin: number;
   penaltyMin: number;
 }
@@ -319,6 +323,7 @@ export interface MyContest {
   status: "RUNNING" | "FINISHED";
   solvedCount: number;
   penalty: number;
+  attemptNumber: number;
 }
 
 export interface ScoreboardRow {
@@ -327,6 +332,10 @@ export interface ScoreboardRow {
   solvedCount: number;
   penalty: number;
   rank: number;
+  /** Which attempt this user's best (and therefore only shown) result on the board came from — a
+   * re-attempt only replaces this row when it actually scores better; earlier attempts never get
+   * their own row (see ContestsService.computeScoreboard). */
+  attemptNumber: number;
   problems: Record<string, { solved: boolean; attempts: number; solveMin: number | null }>;
 }
 

@@ -480,6 +480,12 @@ model Submission {
   problem     Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
   contestId   String?
   contest     Contest? @relation(fields: [contestId], references: [id], onDelete: SetNull)
+  /// Which specific attempt (ContestParticipant row) this submission belongs to — a contest can
+  /// now have more than one attempt per user (see ContestParticipant.attemptNumber), so contestId
+  /// alone is no longer enough to tell which attempt's clock/scoreboard a submission counts
+  /// against. Null for pre-migration submissions and anything not made during a contest.
+  contestParticipantId String?
+  contestParticipant    ContestParticipant? @relation(fields: [contestParticipantId], references: [id], onDelete: SetNull)
   languageKey String
   sourceCode  String
   status      Verdict  @default(PENDING)
@@ -496,6 +502,7 @@ model Submission {
   @@index([userId, verdict, createdAt])
   @@index([problemId, verdict])
   @@index([contestId, userId, createdAt])
+  @@index([contestParticipantId])
   @@index([verdict, createdAt])
   @@map("submissions")
 }
@@ -551,12 +558,19 @@ model ContestParticipant {
   contest   Contest           @relation(fields: [contestId], references: [id], onDelete: Cascade)
   userId    String
   user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// 1 for a user's first attempt at this contest, 2 for their second, etc. Only individual/
+  /// virtual contests (Contest.startAt is null) allow more than one — a scheduled group sitting
+  /// still stops at attemptNumber 1 (see ContestsService.register). Re-attempts are only possible
+  /// once the previous attempt's endsAt has passed, so a user never has two live attempts at once.
+  attemptNumber Int            @default(1)
   startedAt DateTime          @default(now())
   endsAt    DateTime
   status    ParticipantStatus @default(RUNNING)
+  submissions Submission[]
 
-  @@unique([contestId, userId])
+  @@unique([contestId, userId, attemptNumber])
   @@index([userId])
+  @@index([contestId, userId])
   @@map("contest_participants")
 }
 
