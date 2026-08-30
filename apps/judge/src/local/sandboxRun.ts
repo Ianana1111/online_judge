@@ -86,7 +86,12 @@ function parseElapsedWallClock(raw: string): number | null {
  * would silently under-count exactly that case, showing a near-timeout submission as
  * suspiciously fast instead of reflecting how long it actually ran. */
 function parseTimeLog(log: string): { wallMs: number | null; memoryKb: number | null } {
-  const elapsedMatch = log.match(/Elapsed \(wall clock\) time[^:]*:\s*([\d:.]+)/);
+  // GNU time's real label is "Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.30" (verified
+  // against actual `/usr/bin/time -v` output) — the old [^:]* here couldn't match past the colon
+  // inside that "(h:mm:ss" parenthetical, so this never matched anything, ever, on any submission:
+  // every single timeMs silently fell back to the problem's timeLimitMs (see the ?? below) instead
+  // of a real measurement. Matching the literal parenthetical fixes it.
+  const elapsedMatch = log.match(/Elapsed \(wall clock\) time \(h:mm:ss or m:ss\):\s*([\d:.]+)/);
   const memMatch = log.match(/Maximum resident set size \(kbytes\):\s*(\d+)/);
   const wallMs = elapsedMatch ? parseElapsedWallClock(elapsedMatch[1]) : null;
   const memoryKb = memMatch ? parseInt(memMatch[1], 10) : null;
