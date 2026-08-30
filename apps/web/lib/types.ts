@@ -239,6 +239,15 @@ export interface ProblemStats {
   time: { minMs: number; medianMs: number; maxMs: number } | null;
   memoryAvailable: boolean;
   yourBest: { timeMs: number; beatsPct: number | null } | null;
+  // Percentiles for one specific run (passed as ?runTimeMs=&runMemoryKb= — see the submission
+  // result tab in ProblemView), as opposed to yourBest which always means "your fastest ever for
+  // this problem". null unless the request asked for a specific run.
+  yourRun: {
+    beatsTimePct: number | null;
+    timeBucketIndex: number | null;
+    beatsMemoryPct: number | null;
+    memoryBucketIndex: number | null;
+  } | null;
   timeHistogram: TimeHistogramBucket[];
   memoryHistogram: MemoryHistogramBucket[] | null;
   yourTimeBucketIndex: number | null;
@@ -280,6 +289,7 @@ export interface SubmissionResultTab {
   compileError?: string | null;
   sourceCode: string;
   languageKey: string;
+  createdAt: string;
 }
 
 export interface SubmissionListItem {

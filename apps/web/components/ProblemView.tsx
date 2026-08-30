@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import SubmissionPanel from "@/components/SubmissionPanel";
+import SubmissionResultPanel from "@/components/SubmissionResultPanel";
 import SubmissionHistory from "@/components/SubmissionHistory";
 import DiscussionPanel from "@/components/DiscussionPanel";
 import ProblemStatsPanel from "@/components/ProblemStatsPanel";
@@ -42,9 +43,16 @@ export default function ProblemView({
   fullHeight = false,
   prevNextNode,
   hideDifficulty = false,
+  attemptNumber,
 }: {
   problem: ProblemDetail;
   contestId?: string;
+  /** Set by ContestDetailClient to the current attempt's number — namespaces the code draft (see
+   * SubmissionPanel's storageKey) so a fresh re-attempt never inherits code left over from a
+   * previous attempt (or from standalone practice on the same problem outside any contest), which
+   * would otherwise let someone instantly re-submit an already-known-correct answer instead of
+   * actually re-solving it. */
+  attemptNumber?: number;
   // Rendered server-side by the parent Server Component (app/problems/[slug]/page.tsx) instead of
   // calling StatementRenderer from here: this component is "use client", and StatementRenderer
   // pulls in react-markdown/remark/rehype/katex (~99KB gzip) — importing it directly here would
@@ -262,25 +270,7 @@ export default function ProblemView({
       )}
       {tab === "result" && resultTab && (
         <div id="problem-tabpanel-result" role="tabpanel" aria-labelledby="problem-tab-result">
-          <div className="mb-4">
-            <VerdictBadge verdict={resultTab.verdict} />
-          </div>
-          {resultTab.verdict === "CE" ? (
-            <>
-              <p className="mb-2 text-sm text-ink-300">{t("Compile error:")}</p>
-              <pre className="oj-card overflow-x-auto p-3 font-mono text-xs text-verdict-ce">
-                {resultTab.compileError}
-              </pre>
-            </>
-          ) : resultTab.verdict === "AC" ? (
-            <>
-              <div className="mb-3 flex gap-4 font-mono text-xs text-ink-400">
-                <span>{t("Time: {ms} ms", { ms: resultTab.timeMs ?? 0 })}</span>
-                <span>{t("Memory: {mb} MB", { mb: Math.round((resultTab.memoryKb ?? 0) / 1024) })}</span>
-              </div>
-              <pre className="oj-card overflow-x-auto p-3 font-mono text-xs">{resultTab.sourceCode}</pre>
-            </>
-          ) : null}
+          <SubmissionResultPanel slug={problem.slug} resultTab={resultTab} />
         </div>
       )}
     </div>
@@ -307,6 +297,7 @@ export default function ProblemView({
       judgeable={problem.uvaId != null}
       samples={problem.samples}
       fullHeight={fullHeight}
+      attemptNumber={attemptNumber}
       onResult={(result) => {
         setResultTab(result);
         setTab("result");

@@ -5,7 +5,20 @@ import { apiFetch } from "@/lib/api";
 import type { ContestProblemRef, Scoreboard as ScoreboardT } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
-export default function Scoreboard({ contestId, problems }: { contestId: string; problems: ContestProblemRef[] }) {
+export default function Scoreboard({
+  contestId,
+  problems,
+  liveUserId,
+}: {
+  contestId: string;
+  problems: ContestProblemRef[];
+  /** The viewer's own userId, but only while their own attempt is still running — set to null once
+   * it ends or when browsing someone else's/a past attempt. Solved cells in that one row get a
+   * green highlight for the duration, matching the same live-only highlight on the problem list
+   * (ContestDetailClient); the underlying +/attempts/time record itself is unaffected and stays
+   * visible either way, this only toggles the highlight. */
+  liveUserId?: string | null;
+}) {
   const t = useT();
   const { data, isLoading } = useQuery({
     queryKey: ["scoreboard", contestId],
@@ -52,8 +65,9 @@ export default function Scoreboard({ contestId, problems }: { contestId: string;
               <td className="font-mono text-ink-400">{row.penalty}</td>
               {problems.map((p) => {
                 const cell = row.problems[p.label];
+                const live = cell?.solved && row.userId === liveUserId;
                 return (
-                  <td key={p.label} className="text-center font-mono text-xs">
+                  <td key={p.label} className={`text-center font-mono text-xs ${live ? "bg-verdict-ac/10" : ""}`}>
                     {cell?.solved ? (
                       <span className="text-verdict-ac">
                         +{cell.attempts > 1 ? cell.attempts - 1 : ""}

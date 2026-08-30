@@ -36,8 +36,25 @@ export class ProblemsController {
 
   @OptionalAuth()
   @Get(":slug/stats")
-  stats(@Param("slug") slug: string, @CurrentUser() user: RequestUser | null) {
-    return this.problems.stats(slug, user);
+  stats(
+    @Param("slug") slug: string,
+    @CurrentUser() user: RequestUser | null,
+    @Query("runTimeMs") runTimeMs?: string,
+    @Query("runMemoryKb") runMemoryKb?: string,
+  ) {
+    // Optional — set by the "just submitted" result tab (ProblemView) to ask "how does *this*
+    // specific run compare", separately from yourBest (this problem's Stats tab, which always
+    // means "your fastest ever"). Not a trust boundary: these numbers only steer a percentile
+    // shown back to the same requester and never get written anywhere, so a spoofed value can only
+    // mislead the person who sent it about their own cosmetic display.
+    const parsedTimeMs = runTimeMs !== undefined ? Number(runTimeMs) : undefined;
+    const parsedMemoryKb = runMemoryKb !== undefined ? Number(runMemoryKb) : undefined;
+    return this.problems.stats(
+      slug,
+      user,
+      parsedTimeMs !== undefined && Number.isFinite(parsedTimeMs) && parsedTimeMs >= 0 ? parsedTimeMs : undefined,
+      parsedMemoryKb !== undefined && Number.isFinite(parsedMemoryKb) && parsedMemoryKb >= 0 ? parsedMemoryKb : undefined,
+    );
   }
 
   @Get(":slug/note")

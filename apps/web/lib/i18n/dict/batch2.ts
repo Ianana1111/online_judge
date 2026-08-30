@@ -19,6 +19,14 @@ export const batch2Dictionary: Record<string, string> = {
   "for unlimited.": "即可無限送出。",
   "{used}/{limit} free submissions used": "已使用 {used}/{limit} 次免費送出額度",
   "Verdict": "結果",
+
+  // --- components/SubmissionResultPanel.tsx ---
+  "Submitted at {time}": "送出於 {time}",
+  "Runtime": "執行時間",
+  "Beats {pct}%": "擊敗 {pct}% 的人",
+  "Runtime distribution": "執行時間分布",
+  "Memory distribution": "記憶體分布",
+  "Code": "程式碼",
   // Language display names (LANGUAGE_LABEL values) are deliberately left untranslated — "C++17"
   // etc. read the same in both languages, so t() just falls back to the original text.
 
