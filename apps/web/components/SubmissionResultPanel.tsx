@@ -57,9 +57,8 @@ export default function SubmissionResultPanel({ slug, resultTab }: { slug: strin
   return (
     <div>
       <div className="mb-4">
-        {/* Deliberately its own key, not VERDICT_LABEL's shared "Accepted" (→ "通過" everywhere
-            else a verdict badge shows — history, scoreboard, stats) — this big AC-screen heading
-            keeps the literal English word in both locales instead. */}
+        {/* Deliberately its own key, not VerdictBadge's short VERDICT_LABEL code ("AC") — this big
+            AC-screen heading spells out the literal English word "Accept" in both locales. */}
         <p className="font-display text-2xl font-bold text-verdict-ac">{t("Accept")}</p>
         <p className="text-xs text-ink-500">
           {t("Submitted at {time}", { time: new Date(resultTab.createdAt).toLocaleString() })}
