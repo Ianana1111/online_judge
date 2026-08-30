@@ -41,11 +41,23 @@ export async function judgeLocally(
     return { status: "SE" as Verdict, compileError: "This problem has no local test cases configured." };
   }
 
+  // Coarse phase timing, logged once at the end — the launch audit flagged that there was no way
+  // to tell "sandbox boot" from "compile" from "running N test cases" apart from a single opaque
+  // end-to-end duration. Cheap (a handful of Date.now() calls) and directly answers "did the
+  // round-trip-folding change in sandboxRun.ts actually help, and where does the rest of the time
+  // go" without needing to reproduce a slow submission under a debugger.
+  const t0 = Date.now();
+  let tAfterCreate = t0;
+  let tAfterCompile = t0;
+  const caseTimings: number[] = [];
+
   let sandbox: Sandbox | undefined;
   try {
     sandbox = await createJudgeSandbox(snapshotId, 90_000);
+    tAfterCreate = Date.now();
 
     const compiled = await compileInSandbox(sandbox, lang, sourceCode);
+    tAfterCompile = Date.now();
     if (!compiled.ok) {
       return { status: "CE" as Verdict, compileError: compiled.compileError };
     }
@@ -65,6 +77,7 @@ export async function judgeLocally(
     // traffic spikes). Judged not worth that cost for the narrow, self-only risk it closes;
     // revisit if test data grows enough (see the audit's 3.1) that this stops being self-only.
     for (const tc of testCases) {
+      const tCaseStart = Date.now();
       const run = await runOneCase(
         sandbox,
         lang.runCmd({ memKb: problem.memoryLimitKb }),
@@ -73,6 +86,7 @@ export async function judgeLocally(
         problem.memoryLimitKb,
         lang.ulimitMemory,
       );
+      caseTimings.push(Date.now() - tCaseStart);
 
       maxTimeMs = Math.max(maxTimeMs, run.timeMs);
       if (run.memoryKb !== null) maxMemoryKb = Math.max(maxMemoryKb ?? 0, run.memoryKb);
@@ -102,5 +116,11 @@ export async function judgeLocally(
     };
   } finally {
     if (sandbox) await sandbox.stop().catch(() => {});
+    const tStop = Date.now();
+    console.log(
+      `[judgeLocally] problem=${problem.uvaId ?? problem.id} lang=${languageKey} totalMs=${tStop - t0} ` +
+        `createMs=${tAfterCreate - t0} compileMs=${tAfterCompile - tAfterCreate} ` +
+        `casesMs=[${caseTimings.join(",")}] stopMs=${tStop - (caseTimings.length ? tAfterCompile + caseTimings.reduce((a, b) => a + b, 0) : tAfterCompile)}`,
+    );
   }
 }

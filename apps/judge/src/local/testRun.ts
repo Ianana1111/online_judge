@@ -40,11 +40,19 @@ export async function runTestCases(
     return { runId, status: "ERROR", compileError: "Problem not found." };
   }
 
+  // Same coarse phase timing as judgeLocally (judge.ts) — see that function's own comment.
+  const t0 = Date.now();
+  let tAfterCreate = t0;
+  let tAfterCompile = t0;
+  const caseTimings: number[] = [];
+
   let sandbox: Sandbox | undefined;
   try {
     sandbox = await createJudgeSandbox(snapshotId, RUN_SANDBOX_TIMEOUT_MS);
+    tAfterCreate = Date.now();
 
     const compiled = await compileInSandbox(sandbox, lang, sourceCode);
+    tAfterCompile = Date.now();
     if (!compiled.ok) {
       return { runId, status: "COMPILE_ERROR", compileError: compiled.compileError };
     }
@@ -52,6 +60,7 @@ export async function runTestCases(
     const timeLimitMs = problem.timeLimitMs * lang.timeMultiplier;
     const results: RunCaseResultDto[] = [];
     for (const c of cases) {
+      const tCaseStart = Date.now();
       const run = await runOneCase(
         sandbox,
         lang.runCmd({ memKb: problem.memoryLimitKb }),
@@ -60,6 +69,7 @@ export async function runTestCases(
         problem.memoryLimitKb,
         lang.ulimitMemory,
       );
+      caseTimings.push(Date.now() - tCaseStart);
       results.push({
         id: c.id,
         stdout: run.stdout.slice(0, STDOUT_CAP_CHARS),
@@ -75,5 +85,9 @@ export async function runTestCases(
     return { runId, status: "ERROR", compileError: err instanceof Error ? err.message : String(err) };
   } finally {
     if (sandbox) await sandbox.stop().catch(() => {});
+    console.log(
+      `[runTestCases] problem=${problemId} lang=${languageKey} totalMs=${Date.now() - t0} ` +
+        `createMs=${tAfterCreate - t0} compileMs=${tAfterCompile - tAfterCreate} casesMs=[${caseTimings.join(",")}]`,
+    );
   }
 }

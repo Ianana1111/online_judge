@@ -297,7 +297,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
                     <LockIcon />
                   )}
                 </button>
-                <InfoTooltip text={t(SOLVED_EXPLANATION)} />
+                <InfoTooltip text={t(SOLVED_EXPLANATION)} align="left" />
               </span>
             </th>
             <th>
@@ -357,7 +357,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
                     </button>
                   ))}
                 </span>
-                <InfoTooltip text={t(APPEARANCES_EXPLANATION, { kind: examKind })} />
+                <InfoTooltip text={t(APPEARANCES_EXPLANATION, { kind: examKind })} align="right" />
               </span>
             </th>
           </tr>
