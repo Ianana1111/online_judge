@@ -11,6 +11,7 @@ export const batch2Dictionary: Record<string, string> = {
   "Not gradeable": "無法評分",
   "Locked": "已鎖定",
   "Submitting…": "送出中…",
+  "Pending…": "評測中…",
   "Wait {n}s": "等待 {n} 秒",
   "Submit": "送出",
   "You've used all {limit} free submissions —": "你已經用完 {limit} 次免費送出額度 —",

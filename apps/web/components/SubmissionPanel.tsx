@@ -4,12 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import VerdictBadge from "@/components/VerdictBadge";
 import TestPanel from "@/components/TestPanel";
 import VerticalSplitPane from "@/components/VerticalSplitPane";
 import { apiFetch, ApiError, openSubmissionStream } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
-import type { BillingStatus, Sample, SubmissionDetail } from "@/lib/types";
+import type { BillingStatus, Sample, SubmissionDetail, SubmissionResultTab } from "@/lib/types";
 import { LANGUAGE_LABEL } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
@@ -41,6 +40,7 @@ export default function SubmissionPanel({
   judgeable = true,
   samples = [],
   fullHeight = false,
+  onResult,
 }: {
   problemId: string;
   slug: string;
@@ -56,6 +56,10 @@ export default function SubmissionPanel({
    * into their own independently-resizable, independently-scrolling halves instead of the normal
    * one-after-another stack a contest-embedded ProblemView still uses. */
   fullHeight?: boolean;
+  /** Called once a submission reaches a terminal verdict — ProblemView shows this as a dynamic
+   * last tab (see its own TAB_ORDER) instead of this panel rendering the result inline. Not called
+   * for PENDING/JUDGING; the submit button's own "Pending…" state covers that in-between window. */
+  onResult?: (result: SubmissionResultTab) => void;
 }) {
   const t = useT();
   const { user, status: authStatus } = useAuthStore();
@@ -67,11 +71,13 @@ export default function SubmissionPanel({
   const [languageKey, setLanguageKey] = useState("cpp17");
   const [sourceCode, setSourceCode] = useState(STUB.cpp17);
   const [submitting, setSubmitting] = useState(false);
+  // True from the moment a submission is accepted until its verdict comes back over SSE — drives
+  // the submit button's "Pending…" state. Distinct from `submitting`, which only covers the POST
+  // request itself (typically well under a second); this covers the actual judging wait.
+  const [judging, setJudging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cooldownUntil, setCooldownUntil] = useState(0);
   const [now, setNow] = useState(Date.now());
-  const [detail, setDetail] = useState<SubmissionDetail | null>(null);
-  const [flash, setFlash] = useState(false);
   const esRef = useRef<EventSource | null>(null);
   const qc = useQueryClient();
 
@@ -115,28 +121,24 @@ export default function SubmissionPanel({
   useEffect(() => () => esRef.current?.close(), []);
 
   const cooldownRemaining = Math.max(0, cooldownUntil - now);
-  const canSubmit = judgeable && !locked && !submitting && cooldownRemaining <= 0 && sourceCode.trim().length > 0;
+  const canSubmit =
+    judgeable && !locked && !submitting && !judging && cooldownRemaining <= 0 && sourceCode.trim().length > 0;
 
   async function handleSubmit() {
     setError(null);
     setSubmitting(true);
+    // Snapshotted here, not read again from state later — the editor stays live while judging is
+    // in flight, so by the time the SSE verdict arrives `sourceCode`/`languageKey` may already
+    // reflect edits made *after* this particular submission, not what it actually judged.
+    const submittedSourceCode = sourceCode;
+    const submittedLanguageKey = languageKey;
     try {
       const { id } = await apiFetch<{ id: string }>("/submissions", {
         method: "POST",
         body: { problemId, contestId, languageKey, sourceCode },
       });
       setCooldownUntil(Date.now() + COOLDOWN_MS);
-      setDetail({
-        id,
-        userId: "",
-        problemId,
-        contestId,
-        languageKey,
-        status: "PENDING",
-        verdict: "PENDING",
-        score: 0,
-        createdAt: new Date().toISOString(),
-      });
+      setJudging(true);
       // A successful submission just consumed one unit of a FREE user's quota server-side —
       // refetch so the indicator below reflects it immediately instead of going stale until the
       // next unrelated billing fetch.
@@ -146,14 +148,20 @@ export default function SubmissionPanel({
       esRef.current = es;
       es.addEventListener("status", (evt) => {
         const payload = JSON.parse((evt as MessageEvent).data) as SubmissionDetail;
-        setDetail(payload);
-        if (payload.verdict !== "PENDING" && payload.verdict !== "JUDGING") {
-          setFlash(true);
-          setTimeout(() => setFlash(false), 400);
-          es.close();
-        }
+        if (payload.verdict === "PENDING" || payload.verdict === "JUDGING") return;
+        setJudging(false);
+        onResult?.({
+          verdict: payload.verdict,
+          timeMs: payload.timeMs,
+          memoryKb: payload.memoryKb,
+          compileError: payload.compileError,
+          sourceCode: submittedSourceCode,
+          languageKey: submittedLanguageKey,
+        });
+        es.close();
       });
       es.onerror = () => {
+        setJudging(false);
         es.close();
       };
     } catch (e) {
@@ -224,9 +232,11 @@ export default function SubmissionPanel({
               ? t("Locked")
               : submitting
                 ? t("Submitting…")
-                : cooldownRemaining > 0
-                  ? t("Wait {n}s", { n: Math.ceil(cooldownRemaining / 1000) })
-                  : t("Submit")}
+                : judging
+                  ? t("Pending…")
+                  : cooldownRemaining > 0
+                    ? t("Wait {n}s", { n: Math.ceil(cooldownRemaining / 1000) })
+                    : t("Submit")}
         </button>
       </div>
 
@@ -260,27 +270,6 @@ export default function SubmissionPanel({
         <p className="rounded border border-verdict-wa/40 bg-verdict-wa/10 px-3 py-2 text-sm text-verdict-wa">
           {error}
         </p>
-      )}
-
-      {detail && (
-        <div className="oj-card p-4">
-          <div className="mb-3 flex items-center gap-2">
-            <span className="text-sm font-medium text-ink-300">{t("Verdict")}</span>
-            <VerdictBadge verdict={detail.verdict} flash={flash} />
-          </div>
-          {(detail.timeMs !== undefined || detail.memoryKb !== undefined) && (
-            <p className="mb-2 font-mono text-xs text-ink-400">
-              {detail.timeMs != null && `${detail.timeMs} ms`}
-              {detail.timeMs != null && detail.memoryKb != null && " · "}
-              {detail.memoryKb != null && `${Math.round(detail.memoryKb / 1024)} MB`}
-            </p>
-          )}
-          {detail.compileError && (
-            <pre className="mb-2 overflow-x-auto rounded bg-ink-800 p-3 text-xs text-verdict-ce">
-              {detail.compileError}
-            </pre>
-          )}
-        </div>
       )}
     </div>
   );
