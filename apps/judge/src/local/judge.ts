@@ -4,7 +4,10 @@ import type { Verdict } from "@oj/shared";
 import { LANGUAGES } from "./languages.js";
 import { checkOutput } from "./checkers.js";
 import { OUTPUT_CAP_BYTES, compileInSandbox, createJudgeSandbox, runOneCase } from "./sandboxRun.js";
+import { notePoolActivity, tryClaimPooledSandbox } from "./sandboxPool.js";
 import type { JudgeOutcome } from "../remote/uva.js";
+
+const JUDGE_SANDBOX_TIMEOUT_MS = 90_000;
 
 /** Signal-exit heuristics for classifying a nonzero, non-timeout exit as MLE vs plain RE. `ulimit
  * -v` capping virtual memory doesn't produce a clean, distinguishable exit code across languages —
@@ -49,11 +52,19 @@ export async function judgeLocally(
   const t0 = Date.now();
   let tAfterCreate = t0;
   let tAfterCompile = t0;
+  let fromPool = false;
   const caseTimings: number[] = [];
+
+  // Notify the pool regardless of whether we end up claiming from it — this is what keeps a spare
+  // ready for whichever job comes *next*; it must never delay this one (see notePoolActivity's own
+  // contract — fire-and-forget, no await).
+  notePoolActivity(snapshotId);
 
   let sandbox: Sandbox | undefined;
   try {
-    sandbox = await createJudgeSandbox(snapshotId, 90_000);
+    sandbox = (await tryClaimPooledSandbox(JUDGE_SANDBOX_TIMEOUT_MS)) ?? undefined;
+    fromPool = !!sandbox;
+    if (!sandbox) sandbox = await createJudgeSandbox(snapshotId, JUDGE_SANDBOX_TIMEOUT_MS);
     tAfterCreate = Date.now();
 
     const compiled = await compileInSandbox(sandbox, lang, sourceCode);
@@ -118,7 +129,7 @@ export async function judgeLocally(
     if (sandbox) await sandbox.stop().catch(() => {});
     const tStop = Date.now();
     console.log(
-      `[judgeLocally] problem=${problem.uvaId ?? problem.id} lang=${languageKey} totalMs=${tStop - t0} ` +
+      `[judgeLocally] problem=${problem.uvaId ?? problem.id} lang=${languageKey} pool=${fromPool} totalMs=${tStop - t0} ` +
         `createMs=${tAfterCreate - t0} compileMs=${tAfterCompile - tAfterCreate} ` +
         `casesMs=[${caseTimings.join(",")}] stopMs=${tStop - (caseTimings.length ? tAfterCompile + caseTimings.reduce((a, b) => a + b, 0) : tAfterCompile)}`,
     );

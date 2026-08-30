@@ -3,6 +3,7 @@ import { prisma } from "@oj/db";
 import type { RunCaseResultDto, TestRunResultDto } from "@oj/shared";
 import { LANGUAGES } from "./languages.js";
 import { compileInSandbox, createJudgeSandbox, runOneCase } from "./sandboxRun.js";
+import { notePoolActivity, tryClaimPooledSandbox } from "./sandboxPool.js";
 
 // Shorter than the real judge's 90s (judge.ts) — a "Run" is a handful of small sample/custom
 // cases for eyeballing output, not a stress-test suite, and this feature has no per-user quota
@@ -44,11 +45,19 @@ export async function runTestCases(
   const t0 = Date.now();
   let tAfterCreate = t0;
   let tAfterCompile = t0;
+  let fromPool = false;
   const caseTimings: number[] = [];
+
+  // Shares the same standby pool as real submissions (judge.ts) — someone iterating on one
+  // problem commonly alternates Run/Submit in quick succession, so either one keeps a spare ready
+  // for the other. See notePoolActivity's own contract: fire-and-forget, never awaited here.
+  notePoolActivity(snapshotId);
 
   let sandbox: Sandbox | undefined;
   try {
-    sandbox = await createJudgeSandbox(snapshotId, RUN_SANDBOX_TIMEOUT_MS);
+    sandbox = (await tryClaimPooledSandbox(RUN_SANDBOX_TIMEOUT_MS)) ?? undefined;
+    fromPool = !!sandbox;
+    if (!sandbox) sandbox = await createJudgeSandbox(snapshotId, RUN_SANDBOX_TIMEOUT_MS);
     tAfterCreate = Date.now();
 
     const compiled = await compileInSandbox(sandbox, lang, sourceCode);
@@ -86,7 +95,7 @@ export async function runTestCases(
   } finally {
     if (sandbox) await sandbox.stop().catch(() => {});
     console.log(
-      `[runTestCases] problem=${problemId} lang=${languageKey} totalMs=${Date.now() - t0} ` +
+      `[runTestCases] problem=${problemId} lang=${languageKey} pool=${fromPool} totalMs=${Date.now() - t0} ` +
         `createMs=${tAfterCreate - t0} compileMs=${tAfterCompile - tAfterCreate} casesMs=[${caseTimings.join(",")}]`,
     );
   }

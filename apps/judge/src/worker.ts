@@ -15,6 +15,7 @@ import { judgeLocally } from "./local/judge.js";
 import { runTestCases } from "./local/testRun.js";
 import { reportResult, reportTestRunResult } from "./reportResult.js";
 import { recordJudgeCompleted, startHealthServer } from "./health.js";
+import { drainSandboxPool } from "./local/sandboxPool.js";
 
 const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 // Local sandbox judging has no cross-submission shared state to serialize around — every
@@ -159,6 +160,10 @@ startHealthServer();
 
 async function shutdown() {
   console.log("Shutting down judge worker...");
+  // Stop any standby sandboxes before disconnecting — a deliberate restart/deploy shouldn't leave
+  // pooled sandboxes running any longer than necessary (see sandboxPool.ts's own comment; Vercel's
+  // own per-member timeout is only the last-resort safety net, not the intended cleanup path).
+  await drainSandboxPool().catch(() => {});
   await Promise.all([localWorker.close(), remoteWorker.close(), testRunWorker.close()]);
   await prisma.$disconnect();
   process.exit(0);
