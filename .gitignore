@@ -16,3 +16,7 @@ generated
 # Self-hosted Monaco assets — copied from node_modules/monaco-editor/min/vs by
 # scripts/copy-monaco.js (see apps/web's postinstall), not source, not committed.
 apps/web/public/vs
+
+# Cached source PDFs for the statement-fidelity audit (packages/db/scripts/audit-statement-fidelity.ts)
+# — large, re-fetchable from onlinejudge.org/cpe.mcu.edu.tw, not source.
+packages/db/audit/pdf-cache/
