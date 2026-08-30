@@ -10,10 +10,11 @@ import ProblemNotePanel from "@/components/ProblemNotePanel";
 import InfoTooltip from "@/components/InfoTooltip";
 import CopyButton from "@/components/CopyButton";
 import LockIcon from "@/components/LockIcon";
+import VerdictBadge from "@/components/VerdictBadge";
 import { ArchiveIcon } from "@/components/icons";
 import SplitPane from "@/components/SplitPane";
 import ProblemPrevNext from "@/components/ProblemPrevNext";
-import type { ProblemDetail } from "@/lib/types";
+import type { ProblemDetail, SubmissionResultTab } from "@/lib/types";
 import { useExamTimerStore } from "@/store/examTimer";
 import { stripProblemNumber } from "@/lib/problemTitle";
 import { useT } from "@/lib/i18n/LocaleContext";
@@ -21,7 +22,7 @@ import { useT } from "@/lib/i18n/LocaleContext";
 const DIFFICULTY_EXPLANATION =
   "Estimated from official ratings where available, otherwise from worldwide solve statistics — for reference only.";
 
-type TabKey = "statement" | "history" | "discussion" | "stats" | "notes";
+type TabKey = "statement" | "history" | "discussion" | "stats" | "notes" | "result";
 const TAB_ORDER: TabKey[] = ["statement", "history", "discussion", "stats", "notes"];
 const TAB_LABEL: Record<TabKey, string> = {
   statement: "Statement",
@@ -29,6 +30,7 @@ const TAB_LABEL: Record<TabKey, string> = {
   discussion: "Discussion",
   stats: "Stats",
   notes: "Notes",
+  result: "", // never looked up — the result tab's own label is its verdict, not a fixed string.
 };
 
 export default function ProblemView({
@@ -67,6 +69,13 @@ export default function ProblemView({
 }) {
   const t = useT();
   const [tab, setTab] = useState<TabKey>("statement");
+  const [resultTab, setResultTab] = useState<SubmissionResultTab | null>(null);
+  const tabOrder: TabKey[] = resultTab ? [...TAB_ORDER, "result"] : TAB_ORDER;
+  function closeResultTab(e: React.MouseEvent) {
+    e.stopPropagation();
+    setResultTab(null);
+    setTab((cur) => (cur === "result" ? "statement" : cur));
+  }
   const examActive = useExamTimerStore((s) => s.active);
   // endsAt is a plain epoch-ms number in the store — a stable, idempotent selector. Computing
   // "remaining" from it requires the current time, which must live in local state instead of
@@ -116,26 +125,53 @@ export default function ProblemView({
         onKeyDown={(e) => {
           if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
           e.preventDefault();
-          const i = TAB_ORDER.indexOf(tab);
-          const next = e.key === "ArrowRight" ? (i + 1) % TAB_ORDER.length : (i - 1 + TAB_ORDER.length) % TAB_ORDER.length;
-          setTab(TAB_ORDER[next]);
-          document.getElementById(`problem-tab-${TAB_ORDER[next]}`)?.focus();
+          const i = tabOrder.indexOf(tab);
+          const next = e.key === "ArrowRight" ? (i + 1) % tabOrder.length : (i - 1 + tabOrder.length) % tabOrder.length;
+          setTab(tabOrder[next]);
+          document.getElementById(`problem-tab-${tabOrder[next]}`)?.focus();
         }}
       >
-        {TAB_ORDER.map((key) => (
-          <button
-            key={key}
-            id={`problem-tab-${key}`}
-            role="tab"
-            aria-selected={tab === key}
-            aria-controls={`problem-tabpanel-${key}`}
-            tabIndex={tab === key ? 0 : -1}
-            onClick={() => setTab(key)}
-            className={`border-b-2 px-1 py-2 ${tab === key ? "border-brand text-brand" : "border-transparent text-ink-400"}`}
-          >
-            {t(TAB_LABEL[key])}
-          </button>
-        ))}
+        {tabOrder.map((key) =>
+          key === "result" && resultTab ? (
+            <button
+              key={key}
+              id={`problem-tab-${key}`}
+              role="tab"
+              aria-selected={tab === key}
+              aria-controls={`problem-tabpanel-${key}`}
+              tabIndex={tab === key ? 0 : -1}
+              onClick={() => setTab(key)}
+              className={`flex items-center gap-1.5 border-b-2 px-1 py-2 ${tab === key ? "border-brand text-brand" : "border-transparent text-ink-400"}`}
+            >
+              <VerdictBadge verdict={resultTab.verdict} size="sm" />
+              <span
+                role="button"
+                aria-label={t("Close result")}
+                tabIndex={0}
+                onClick={closeResultTab}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") closeResultTab(e as unknown as React.MouseEvent);
+                }}
+                className="rounded px-1 text-ink-500 hover:bg-ink-800 hover:text-ink-200"
+              >
+                ×
+              </span>
+            </button>
+          ) : (
+            <button
+              key={key}
+              id={`problem-tab-${key}`}
+              role="tab"
+              aria-selected={tab === key}
+              aria-controls={`problem-tabpanel-${key}`}
+              tabIndex={tab === key ? 0 : -1}
+              onClick={() => setTab(key)}
+              className={`border-b-2 px-1 py-2 ${tab === key ? "border-brand text-brand" : "border-transparent text-ink-400"}`}
+            >
+              {t(TAB_LABEL[key])}
+            </button>
+          ),
+        )}
       </div>
 
       {tab === "statement" && (
@@ -224,6 +260,29 @@ export default function ProblemView({
           <ProblemNotePanel slug={problem.slug} />
         </div>
       )}
+      {tab === "result" && resultTab && (
+        <div id="problem-tabpanel-result" role="tabpanel" aria-labelledby="problem-tab-result">
+          <div className="mb-4">
+            <VerdictBadge verdict={resultTab.verdict} />
+          </div>
+          {resultTab.verdict === "CE" ? (
+            <>
+              <p className="mb-2 text-sm text-ink-300">{t("Compile error:")}</p>
+              <pre className="oj-card overflow-x-auto p-3 font-mono text-xs text-verdict-ce">
+                {resultTab.compileError}
+              </pre>
+            </>
+          ) : resultTab.verdict === "AC" ? (
+            <>
+              <div className="mb-3 flex gap-4 font-mono text-xs text-ink-400">
+                <span>{t("Time: {ms} ms", { ms: resultTab.timeMs ?? 0 })}</span>
+                <span>{t("Memory: {mb} MB", { mb: Math.round((resultTab.memoryKb ?? 0) / 1024) })}</span>
+              </div>
+              <pre className="oj-card overflow-x-auto p-3 font-mono text-xs">{resultTab.sourceCode}</pre>
+            </>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 
@@ -248,6 +307,10 @@ export default function ProblemView({
       judgeable={problem.uvaId != null}
       samples={problem.samples}
       fullHeight={fullHeight}
+      onResult={(result) => {
+        setResultTab(result);
+        setTab("result");
+      }}
     />
   );
 

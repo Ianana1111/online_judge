@@ -267,6 +267,21 @@ export interface SubmissionDetail {
   sourceCode?: string | null;
 }
 
+/** A just-judged submission's result, as shown in ProblemView's dynamic last tab (see
+ * SubmissionPanel's onResult prop) — a deliberately smaller shape than SubmissionDetail: only what
+ * that tab actually renders, with sourceCode/languageKey captured from what was submitted at click
+ * time rather than trusted from a later SSE payload (which never echoes the source back). Only one
+ * of these exists at a time and each new terminal verdict overwrites it — it's a snapshot of "the
+ * most recent result," not a history. */
+export interface SubmissionResultTab {
+  verdict: Verdict;
+  timeMs?: number | null;
+  memoryKb?: number | null;
+  compileError?: string | null;
+  sourceCode: string;
+  languageKey: string;
+}
+
 export interface SubmissionListItem {
   id: string;
   problemId: string;
