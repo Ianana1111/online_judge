@@ -93,9 +93,19 @@ export async function runTestCases(
   } catch (err) {
     return { runId, status: "ERROR", compileError: err instanceof Error ? err.message : String(err) };
   } finally {
-    if (sandbox) await sandbox.stop().catch(() => {});
+    // See judge.ts's identical fix for why this fires in the background instead of being awaited
+    // — measured in production, this single call was routinely 6-7 seconds, dwarfing everything
+    // else combined, for zero benefit to the person waiting on their output.
+    const tDone = Date.now();
+    if (sandbox) {
+      const s = sandbox;
+      void s
+        .stop()
+        .catch((err) => console.error(`[runTestCases] background sandbox.stop failed:`, err))
+        .finally(() => console.log(`[runTestCases] problem=${problemId} backgroundStopMs=${Date.now() - tDone}`));
+    }
     console.log(
-      `[runTestCases] problem=${problemId} lang=${languageKey} pool=${fromPool} totalMs=${Date.now() - t0} ` +
+      `[runTestCases] problem=${problemId} lang=${languageKey} pool=${fromPool} totalMs=${tDone - t0} ` +
         `createMs=${tAfterCreate - t0} compileMs=${tAfterCompile - tAfterCreate} casesMs=[${caseTimings.join(",")}]`,
     );
   }
