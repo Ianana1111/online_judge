@@ -40,11 +40,14 @@ export default function SubmissionPanel({
   judgeable = true,
   samples = [],
   fullHeight = false,
+  attemptNumber,
   onResult,
 }: {
   problemId: string;
   slug: string;
   contestId?: string;
+  /** See ProblemView's own comment — namespaces the draft key below per contest attempt. */
+  attemptNumber?: number;
   locked?: boolean;
   /** False for reference-only problems with no matching UVa id (some archived GPE problems) —
    * submitting would just burn the user's quota/cooldown for a guaranteed system-error verdict,
@@ -67,7 +70,16 @@ export default function SubmissionPanel({
   // out, or logged into a different account — would read back whatever the last signed-in user on
   // this device had typed, which is both a privacy leak on shared/public machines and confusing on
   // your own. null while logged out so no draft is ever read or written for an anonymous session.
-  const storageKey = user ? `oj:draft:${user.id}:${slug}` : null;
+  //
+  // Inside a contest, additionally namespaced by contestId+attemptNumber so a fresh attempt (or a
+  // different contest reusing the same problem) never inherits code from elsewhere — including
+  // standalone practice on this same problem outside any contest — which would otherwise let
+  // someone just resubmit an already-known-correct answer instead of actually re-solving it.
+  const storageKey = user
+    ? contestId && attemptNumber != null
+      ? `oj:draft:${user.id}:${slug}:contest:${contestId}:${attemptNumber}`
+      : `oj:draft:${user.id}:${slug}`
+    : null;
   const [languageKey, setLanguageKey] = useState("cpp17");
   const [sourceCode, setSourceCode] = useState(STUB.cpp17);
   const [submitting, setSubmitting] = useState(false);
@@ -157,6 +169,7 @@ export default function SubmissionPanel({
           compileError: payload.compileError,
           sourceCode: submittedSourceCode,
           languageKey: submittedLanguageKey,
+          createdAt: payload.createdAt,
         });
         es.close();
       });

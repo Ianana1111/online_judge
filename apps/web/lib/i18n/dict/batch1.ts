@@ -174,8 +174,6 @@ export const batch1Dictionary: Record<string, string> = {
   "Memory limit: {mb} MB": "記憶體限制：{mb} MB",
   "Close result": "關閉結果",
   "Compile error:": "編譯錯誤：",
-  "Time: {ms} ms": "時間：{ms} 毫秒",
-  "Memory: {mb} MB": "記憶體：{mb} MB",
   "Input": "輸入",
   "Output": "輸出",
   "Sample input {n}": "範例輸入 {n}",

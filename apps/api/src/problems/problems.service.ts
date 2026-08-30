@@ -55,6 +55,26 @@ function buildHistogram(
   return { buckets, bucketIndexByUserId };
 }
 
+/** Which bucket an arbitrary value (not necessarily one of the points buildHistogram was built
+ * from) falls into — used to place "this specific submission" on a chart of best-per-user values
+ * without needing to re-run buildHistogram itself. Mirrors buildHistogram's own boundary rule
+ * (top edge belongs to the last bucket) so a value equal to the maximum lands the same way. */
+function bucketIndexForValue(buckets: HistogramBucket[], value: number): number {
+  for (let i = 0; i < buckets.length; i++) {
+    if (i === buckets.length - 1 || value < buckets[i + 1].minValue) return i;
+  }
+  return 0;
+}
+
+/** Percentage of `values` that are >= `x` — "you beat this fraction of solvers" for a
+ * lower-is-better metric (runtime, memory). Shared by both the time and memory computations in
+ * stats() below. */
+function percentileOfIn(values: number[], x: number): number | null {
+  if (values.length === 0) return null;
+  const slowerOrEqual = values.filter((v) => v >= x).length;
+  return Math.round((slowerOrEqual / values.length) * 100);
+}
+
 /**
  * UVa's own submission form needs its internal problem id ("pid" in uHunt's API), which is
  * unrelated to the public problem number (uvaId) everyone knows the problem by except by
@@ -309,7 +329,7 @@ export class ProblemsService {
    * doesn't publish memory (that column is literally commented out in their markup), so every
    * submission judged through the remote adapter has memoryKb=null; only locally-judged problems
    * ever have real memory data to chart. */
-  async stats(slug: string, requester: RequestUser | null) {
+  async stats(slug: string, requester: RequestUser | null, runTimeMs?: number, runMemoryKb?: number) {
     const problem = await prisma.problem.findUnique({ where: { slug }, select: { id: true } });
     if (!problem) throw new NotFoundException("Problem not found");
 
@@ -328,16 +348,10 @@ export class ProblemsService {
     const entries = [...bestByUser.entries()];
     const times = entries.map(([, v]) => v.timeMs).sort((a, b) => a - b);
 
-    const percentileOf = (t: number) => {
-      if (times.length === 0) return null;
-      const slower = times.filter((x) => x >= t).length;
-      return Math.round((slower / times.length) * 100);
-    };
-
     let yourBest: { timeMs: number; beatsPct: number | null } | null = null;
     if (requester) {
       const mine = bestByUser.get(requester.id);
-      if (mine !== undefined) yourBest = { timeMs: mine.timeMs, beatsPct: percentileOf(mine.timeMs) };
+      if (mine !== undefined) yourBest = { timeMs: mine.timeMs, beatsPct: percentileOfIn(times, mine.timeMs) };
     }
 
     const timePoints = entries.map(([userId, v]) => ({ userId, value: v.timeMs, languageKey: v.languageKey }));
@@ -347,6 +361,26 @@ export class ProblemsService {
       .filter(([, v]) => v.memoryKb !== null)
       .map(([userId, v]) => ({ userId, value: v.memoryKb!, languageKey: v.languageKey }));
     const memHist = memPoints.length > 0 ? buildHistogram(memPoints) : null;
+    const memValues = memPoints.map((p) => p.value).sort((a, b) => a - b);
+
+    // "How does *this one submission* compare" — distinct from yourBest (always your fastest ever)
+    // so a re-run that's slower than an earlier AC still gets an honest percentile for the run that
+    // was actually just judged, instead of silently reporting an old best it doesn't belong to.
+    let yourRun: {
+      beatsTimePct: number | null;
+      timeBucketIndex: number | null;
+      beatsMemoryPct: number | null;
+      memoryBucketIndex: number | null;
+    } | null = null;
+    if (runTimeMs !== undefined) {
+      const beatsMemoryPct = runMemoryKb !== undefined ? percentileOfIn(memValues, runMemoryKb) : null;
+      yourRun = {
+        beatsTimePct: percentileOfIn(times, runTimeMs),
+        timeBucketIndex: timeHist.buckets.length > 0 ? bucketIndexForValue(timeHist.buckets, runTimeMs) : null,
+        beatsMemoryPct,
+        memoryBucketIndex: memHist && beatsMemoryPct !== null ? bucketIndexForValue(memHist.buckets, runMemoryKb!) : null,
+      };
+    }
 
     return {
       solvedCount: times.length,
@@ -356,6 +390,7 @@ export class ProblemsService {
           : null,
       memoryAvailable: memHist !== null,
       yourBest,
+      yourRun,
       timeHistogram: timeHist.buckets.map((b) => ({ minMs: b.minValue, maxMs: b.maxValue, count: b.count, languageCounts: b.languageCounts })),
       memoryHistogram: memHist
         ? memHist.buckets.map((b) => ({ minKb: b.minValue, maxKb: b.maxValue, count: b.count, languageCounts: b.languageCounts }))

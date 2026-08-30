@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import type { ContestDetail } from "@/lib/types";
+import { useAuthStore } from "@/store/auth";
 import Scoreboard from "@/components/Scoreboard";
 import ExamModeShell from "@/components/ExamModeShell";
 import ProblemView from "@/components/ProblemView";
@@ -84,6 +85,7 @@ function ContestProblemNav({
 export default function ContestDetailClient({ contestId }: { contestId: string }) {
   const t = useT();
   const qc = useQueryClient();
+  const { user } = useAuthStore();
   const [registering, setRegistering] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeProblemSlug, setActiveProblemSlug] = useState<string | null>(null);
@@ -169,6 +171,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
               outputSpecNode={activeProblem.outputSpecMd ? <StatementRenderer content={activeProblem.outputSpecMd} /> : null}
               fullHeight
               hideDifficulty
+              attemptNumber={contest.myParticipant?.attemptNumber}
               prevNextNode={
                 <ContestProblemNav problems={contest.problems} currentSlug={activeProblem.slug} onNavigate={setActiveProblemSlug} />
               }
@@ -187,6 +190,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
             inputSpecNode={activeProblem.inputSpecMd ? <StatementRenderer content={activeProblem.inputSpecMd} /> : null}
             outputSpecNode={activeProblem.outputSpecMd ? <StatementRenderer content={activeProblem.outputSpecMd} /> : null}
             hideDifficulty
+            attemptNumber={contest.myParticipant?.attemptNumber}
             prevNextNode={
               <ContestProblemNav problems={contest.problems} currentSlug={activeProblem.slug} onNavigate={setActiveProblemSlug} />
             }
@@ -200,7 +204,11 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
           <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Problems")}</h2>
           <div className="grid gap-2 sm:grid-cols-2">
             {contest.problems.map((cp) => {
-              const solved = contest.solvedProblemIds.includes(cp.problem.id);
+              // Only highlighted while *this* attempt is still running — once it ends (or when
+              // browsing a past attempt), the problem list goes back to plain/unmarked; the
+              // scoreboard is where a solve stays visible permanently (see Scoreboard's own
+              // liveUserId prop for the matching live-only highlight there).
+              const solved = isRunning && contest.solvedProblemIds.includes(cp.problem.id);
               return (
                 <button
                   key={cp.problem.id}
@@ -226,7 +234,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
         </div>
         <div>
           <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Scoreboard")}</h2>
-          <Scoreboard contestId={contestId} problems={contest.problems} />
+          <Scoreboard contestId={contestId} problems={contest.problems} liveUserId={isRunning ? (user?.id ?? null) : null} />
         </div>
       </div>
     );
