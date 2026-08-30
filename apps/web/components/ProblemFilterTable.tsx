@@ -310,7 +310,6 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
               </button>
             </th>
             <th>{t("Title")}</th>
-            <th>{t("Source")}</th>
             <th>
               <span className="inline-flex items-center gap-1">
                 <button
@@ -375,7 +374,6 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
                   {stripProblemNumber(p.title, p.uvaId)}
                 </Link>
               </td>
-              <td className="font-mono text-xs text-ink-400">{p.source}</td>
               <td className="font-mono text-xs text-brand">{"★".repeat(p.difficulty)}</td>
               <td>
                 <div className="flex flex-wrap gap-1">
