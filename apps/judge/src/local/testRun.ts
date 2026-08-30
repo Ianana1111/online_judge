@@ -2,7 +2,7 @@ import type { Sandbox } from "@vercel/sandbox";
 import { prisma } from "@oj/db";
 import type { RunCaseResultDto, TestRunResultDto } from "@oj/shared";
 import { LANGUAGES } from "./languages.js";
-import { compileInSandbox, createJudgeSandbox, runOneCase } from "./sandboxRun.js";
+import { compileInSandbox, createJudgeSandbox, logSandboxApiError, runOneCase } from "./sandboxRun.js";
 import { notePoolActivity, tryClaimPooledSandbox } from "./sandboxPool.js";
 
 // Shorter than the real judge's 90s (judge.ts) — a "Run" is a handful of small sample/custom
@@ -91,6 +91,7 @@ export async function runTestCases(
 
     return { runId, status: "DONE", cases: results };
   } catch (err) {
+    logSandboxApiError(`runTestCases problem=${problemId}`, err);
     return { runId, status: "ERROR", compileError: err instanceof Error ? err.message : String(err) };
   } finally {
     // See judge.ts's identical fix for why this fires in the background instead of being awaited
