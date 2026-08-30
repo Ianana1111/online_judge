@@ -126,12 +126,25 @@ export async function judgeLocally(
       compileError: `Local judge error: ${err instanceof Error ? err.message : String(err)}`,
     };
   } finally {
-    if (sandbox) await sandbox.stop().catch(() => {});
-    const tStop = Date.now();
+    // The verdict above is already fully decided by this point — stopping the sandbox is pure
+    // cleanup with zero bearing on it, so the caller (and the person waiting on their result) must
+    // never be made to wait for it. Measured in production: this single `await` was routinely
+    // 6-7 SECONDS — dwarfing boot + compile + every test case *combined* — making it the actual
+    // dominant cost behind "judging feels slow," not sandbox creation as originally suspected.
+    // Fired in the background instead and logged separately once it actually finishes (purely for
+    // visibility); the sandbox's own bounded timeout is what guarantees it's cleaned up eventually
+    // even in the worst case where this call never resolves at all.
+    const tDone = Date.now();
+    if (sandbox) {
+      const s = sandbox;
+      void s
+        .stop()
+        .catch((err) => console.error(`[judgeLocally] background sandbox.stop failed:`, err))
+        .finally(() => console.log(`[judgeLocally] problem=${problem.uvaId ?? problem.id} backgroundStopMs=${Date.now() - tDone}`));
+    }
     console.log(
-      `[judgeLocally] problem=${problem.uvaId ?? problem.id} lang=${languageKey} pool=${fromPool} totalMs=${tStop - t0} ` +
-        `createMs=${tAfterCreate - t0} compileMs=${tAfterCompile - tAfterCreate} ` +
-        `casesMs=[${caseTimings.join(",")}] stopMs=${tStop - (caseTimings.length ? tAfterCompile + caseTimings.reduce((a, b) => a + b, 0) : tAfterCompile)}`,
+      `[judgeLocally] problem=${problem.uvaId ?? problem.id} lang=${languageKey} pool=${fromPool} totalMs=${tDone - t0} ` +
+        `createMs=${tAfterCreate - t0} compileMs=${tAfterCompile - tAfterCreate} casesMs=[${caseTimings.join(",")}]`,
     );
   }
 }
