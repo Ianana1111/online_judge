@@ -3,7 +3,7 @@ import type { Problem, TestCase } from "@oj/db";
 import type { Verdict } from "@oj/shared";
 import { LANGUAGES } from "./languages.js";
 import { checkOutput } from "./checkers.js";
-import { OUTPUT_CAP_BYTES, compileInSandbox, createJudgeSandbox, runOneCase } from "./sandboxRun.js";
+import { OUTPUT_CAP_BYTES, compileInSandbox, createJudgeSandbox, logSandboxApiError, runOneCase } from "./sandboxRun.js";
 import { notePoolActivity, tryClaimPooledSandbox } from "./sandboxPool.js";
 import type { JudgeOutcome } from "../remote/uva.js";
 
@@ -121,6 +121,7 @@ export async function judgeLocally(
 
     return { status: "AC" as Verdict, timeMs: maxTimeMs, memoryKb: maxMemoryKb ?? undefined, score: 100 };
   } catch (err) {
+    logSandboxApiError(`judgeLocally problem=${problem.uvaId ?? problem.id}`, err);
     return {
       status: "SE" as Verdict,
       compileError: `Local judge error: ${err instanceof Error ? err.message : String(err)}`,

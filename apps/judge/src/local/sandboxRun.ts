@@ -13,11 +13,18 @@ const COMPILE_TIMEOUT_SEC = 20;
 const COMPILE_MEMORY_LIMIT_KB = 1_048_576; // 1 GB
 
 // Above this size, folding a file's content into the command line itself (as base64) stops being a
-// win — the payload balloons ~33% over the raw size and starts pushing on the sandbox's own
-// command-length limits — so it falls back to a real writeFiles call instead. Comfortably above any
-// real CP-sized input/source (a few KB to tens of KB; even a deliberately large stress-test input
-// is rarely near this), so the fast path is what almost every real submission actually takes.
-const INLINE_WRITE_MAX_BYTES = 256 * 1024;
+// win — the payload balloons ~33% over the raw size and starts pushing on the sandbox API's own
+// request-size limits — so it falls back to a real writeFiles call instead. Originally set to
+// 256KB on the theory that it was "comfortably above any real CP-sized input" — that theory was
+// wrong: a real 169596-byte stress-test input (uva-10193, "All You Need Is Love!") stayed under
+// that 256KB ceiling and still got embedded inline, and the resulting ~226KB command body got
+// rejected by the Sandbox API with a bare "Status code 400 is not ok" (no size-specific error
+// surfaced client-side — see judge.ts/testRun.ts's catch blocks, which now log the API's raw
+// response body for exactly this kind of case). Every real CP problem's test data can include a
+// stress-test input in the hundreds of KB, so this needs to stay well clear of wherever the actual
+// limit is, not just "seem generous" — 32KB keeps the inline fast path for the overwhelming
+// majority of real inputs while routing anything sizeable through the always-safe writeFiles path.
+const INLINE_WRITE_MAX_BYTES = 32 * 1024;
 
 /** Returns a bash snippet that recreates `content` at `relPath` (relative to WORKDIR) via a single
  * `base64 -d`, meant to be prepended into a command that's about to run anyway — this is what lets
@@ -33,6 +40,19 @@ async function inlineWriteOrFallback(sandbox: Sandbox, relPath: string, content:
   // Base64's alphabet (A-Za-z0-9+/=) has no shell metacharacters, so it's always safe to embed
   // inside a single-quoted string regardless of what the original content was.
   return `printf '%s' '${content.toString("base64")}' | base64 -d > ${relPath}; `;
+}
+
+/** @vercel/sandbox's APIError carries the actual response body on .text/.json, which its own
+ * .message never includes (every API failure just says "Status code {n} is not ok") — diagnosing
+ * a real one of these (a 400 from a too-large inlined command, see INLINE_WRITE_MAX_BYTES above)
+ * required manually reconstructing the cause from submission data since nothing logged the body.
+ * Call from a judge/testRun catch block so the next infra failure is diagnosable from Railway logs
+ * alone. */
+export function logSandboxApiError(context: string, err: unknown): void {
+  const apiErr = err as { text?: string; json?: unknown } | undefined;
+  if (apiErr?.text || apiErr?.json) {
+    console.error(`[${context}] sandbox API error detail:`, apiErr.text ?? apiErr.json);
+  }
 }
 
 export interface RunResult {
