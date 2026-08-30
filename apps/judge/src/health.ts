@@ -1,6 +1,7 @@
 import { createServer } from "node:http";
 import { Queue } from "bullmq";
 import { JUDGE_LOCAL_QUEUE_NAME, JUDGE_REMOTE_QUEUE_NAME, TEST_RUN_QUEUE_NAME } from "@oj/shared";
+import { getPoolStatus } from "./local/sandboxPool.js";
 
 const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 const PORT = Number(process.env.JUDGE_HEALTH_PORT ?? 4100);
@@ -44,6 +45,7 @@ export function startHealthServer(): void {
           judgeLocalQueue: localCounts,
           judgeRemoteQueue: remoteCounts,
           testRunQueue: testRunCounts,
+          sandboxPool: getPoolStatus(),
         };
         res.writeHead(200, { "Content-Type": "application/json" }).end(JSON.stringify(body));
       })
