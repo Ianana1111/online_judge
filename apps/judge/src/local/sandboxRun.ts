@@ -12,6 +12,29 @@ const COMPILE_TIMEOUT_SEC = 20;
 // recursion), which previously had no ceiling at all beyond the 20s wall-clock timeout.
 const COMPILE_MEMORY_LIMIT_KB = 1_048_576; // 1 GB
 
+// Above this size, folding a file's content into the command line itself (as base64) stops being a
+// win — the payload balloons ~33% over the raw size and starts pushing on the sandbox's own
+// command-length limits — so it falls back to a real writeFiles call instead. Comfortably above any
+// real CP-sized input/source (a few KB to tens of KB; even a deliberately large stress-test input
+// is rarely near this), so the fast path is what almost every real submission actually takes.
+const INLINE_WRITE_MAX_BYTES = 256 * 1024;
+
+/** Returns a bash snippet that recreates `content` at `relPath` (relative to WORKDIR) via a single
+ * `base64 -d`, meant to be prepended into a command that's about to run anyway — this is what lets
+ * "write the input/source" and "run something that reads it" collapse into one sandbox.runCommand
+ * round trip instead of a writeFiles call followed by a separate runCommand. Above
+ * INLINE_WRITE_MAX_BYTES it just performs the write directly (a real writeFiles call, same as
+ * before this existed) and returns "" for the caller to prepend nothing. */
+async function inlineWriteOrFallback(sandbox: Sandbox, relPath: string, content: Buffer): Promise<string> {
+  if (content.byteLength > INLINE_WRITE_MAX_BYTES) {
+    await sandbox.writeFiles([{ path: `${WORKDIR}/${relPath}`, content }]);
+    return "";
+  }
+  // Base64's alphabet (A-Za-z0-9+/=) has no shell metacharacters, so it's always safe to embed
+  // inside a single-quoted string regardless of what the original content was.
+  return `printf '%s' '${content.toString("base64")}' | base64 -d > ${relPath}; `;
+}
+
 export interface RunResult {
   exitCode: number;
   stdout: string;
@@ -58,7 +81,11 @@ export async function runOneCase(
   memoryLimitKb: number,
   ulimitMemory: boolean,
 ): Promise<RunResult> {
-  await sandbox.writeFiles([{ path: `${WORKDIR}/in.txt`, content: Buffer.from(input) }]);
+  // Folded into the run script below (see inlineWriteOrFallback) instead of a separate writeFiles
+  // call first — cuts one full network round trip to the Sandbox API per test case, which used to
+  // be paid N times per submission for no reason other than habit (writeFiles-then-runCommand is
+  // the obvious way to write this, not the fastest one).
+  const writeInput = await inlineWriteOrFallback(sandbox, "in.txt", Buffer.from(input));
 
   const timeLimitSec = Math.max(1, Math.ceil(timeLimitMs / 1000));
   const ulimitPrefix = ulimitMemory ? `ulimit -v ${memoryLimitKb}; ` : "";
@@ -74,7 +101,7 @@ export async function runOneCase(
   // right here since each sandbox is a disposable microVM dedicated to one submission.
   const MAX_PROCESSES = 64;
   const fullCmd = [runCmd.cmd, ...runCmd.args].join(" ");
-  const script = `ulimit -f ${fileSizeLimitBlocks}; ulimit -u ${MAX_PROCESSES}; ${ulimitPrefix}/usr/bin/time -v -o time.log timeout ${timeLimitSec}s ${fullCmd} < in.txt > out.txt 2> err.txt; echo $? > exit.txt`;
+  const script = `${writeInput}ulimit -f ${fileSizeLimitBlocks}; ulimit -u ${MAX_PROCESSES}; ${ulimitPrefix}/usr/bin/time -v -o time.log timeout ${timeLimitSec}s ${fullCmd} < in.txt > out.txt 2> err.txt; echo $? > exit.txt`;
 
   await sandbox.runCommand({ cmd: "bash", args: ["-c", script], cwd: WORKDIR });
 
@@ -136,15 +163,23 @@ export async function compileInSandbox(
   lang: LanguageSpec,
   sourceCode: string,
 ): Promise<{ ok: true } | { ok: false; compileError: string }> {
-  await sandbox.writeFiles([{ path: `${WORKDIR}/${lang.sourceFileName}`, content: Buffer.from(sourceCode) }]);
+  // Same round-trip fold as runOneCase's input — the source write rides along with the compile
+  // command instead of needing its own writeFiles call first.
+  const writeSource = await inlineWriteOrFallback(sandbox, lang.sourceFileName, Buffer.from(sourceCode));
 
-  if (!lang.compile) return { ok: true };
+  if (!lang.compile) {
+    // Interpreted language: nothing to compile, but the source still needs to land on disk before
+    // judge.ts's run loop starts — inlineWriteOrFallback already did that via writeFiles if the
+    // source was too big to inline; otherwise the snippet it returned still needs to actually run.
+    if (writeSource) await sandbox.runCommand({ cmd: "bash", args: ["-c", writeSource], cwd: WORKDIR });
+    return { ok: true };
+  }
 
   const compile = await sandbox.runCommand({
     cmd: "bash",
     args: [
       "-c",
-      `ulimit -v ${COMPILE_MEMORY_LIMIT_KB}; timeout ${COMPILE_TIMEOUT_SEC}s ${lang.compile.cmd} ${lang.compile.args.join(" ")}`,
+      `${writeSource}ulimit -v ${COMPILE_MEMORY_LIMIT_KB}; timeout ${COMPILE_TIMEOUT_SEC}s ${lang.compile.cmd} ${lang.compile.args.join(" ")}`,
     ],
     cwd: WORKDIR,
   });
