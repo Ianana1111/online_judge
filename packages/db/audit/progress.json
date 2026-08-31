@@ -200,12 +200,12 @@
   {
     "slug": "uva-263-number-chains",
     "uvaId": 263,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a trailing note paragraph was merged directly onto the last numbered-list item with no break or punctuation; lost exponent (109 should be 10^9)",
+    "fixApplied": "separated the trailing note into its own paragraph; restored the exponent 10^9",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:52:27.792Z",
     "notes": ""
   },
   {
@@ -343,12 +343,12 @@
   {
     "slug": "gpe-22151-big-mod",
     "uvaId": 374,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a displayed formula lost its superscript notation and was left as flattened text",
+    "fixApplied": "wrapped the formula in a fenced code block with the exponent restored",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:52:28.069Z",
     "notes": ""
   },
   {
@@ -398,12 +398,12 @@
   {
     "slug": "uva-392-polynomial-showdown",
     "uvaId": 392,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:52:29.554Z",
     "notes": ""
   },
   {
@@ -508,12 +508,12 @@
   {
     "slug": "uva-455-periodic-strings",
     "uvaId": 455,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:52:29.555Z",
     "notes": ""
   },
   {
@@ -541,12 +541,12 @@
   {
     "slug": "uva-483-word-scramble",
     "uvaId": 483,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:52:29.555Z",
     "notes": ""
   },
   {
@@ -563,23 +563,23 @@
   {
     "slug": "uva-490-rotating-sentences",
     "uvaId": 490,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:52:29.555Z",
     "notes": ""
   },
   {
     "slug": "uva-494-kindergarten-counting-game",
     "uvaId": 494,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:52:29.555Z",
     "notes": ""
   },
   {
@@ -596,12 +596,12 @@
   {
     "slug": "uva-499-what-s-the-frequency-kenneth",
     "uvaId": 499,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:52:29.555Z",
     "notes": ""
   },
   {
@@ -838,12 +838,12 @@
   {
     "slug": "uva-673-parentheses-balance",
     "uvaId": 673,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph breaks between the (a)/(b)/(c) definition items and before the following sentence",
+    "fixApplied": "inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:52:28.345Z",
     "notes": ""
   },
   {
@@ -893,12 +893,12 @@
   {
     "slug": "uva-706-lc-display",
     "uvaId": 706,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:52:29.555Z",
     "notes": ""
   },
   {
@@ -948,12 +948,12 @@
   {
     "slug": "uva-748-exponentiation",
     "uvaId": 748,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:52:29.555Z",
     "notes": ""
   },
   {
@@ -1058,12 +1058,12 @@
   {
     "slug": "uva-865-substitution-cypher",
     "uvaId": 865,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a closing remark was merged directly onto the last bullet item with no paragraph break",
+    "fixApplied": "separated the closing remark from the bullet list",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:52:28.653Z",
     "notes": ""
   },
   {
@@ -1135,12 +1135,12 @@
   {
     "slug": "uva-948-fibonaccimal-base",
     "uvaId": 948,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:52:29.556Z",
     "notes": ""
   },
   {
@@ -1157,23 +1157,23 @@
   {
     "slug": "gpe-10501-safe-salutations",
     "uvaId": 991,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:52:29.556Z",
     "notes": ""
   },
   {
     "slug": "uva-993-product-of-digits",
     "uvaId": 993,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "lost exponent (109 should be 10^9)",
+    "fixApplied": "restored the exponent 10^9",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:52:28.950Z",
     "notes": ""
   },
   {
