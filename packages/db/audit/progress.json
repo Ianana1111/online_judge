@@ -2,12 +2,12 @@
   {
     "slug": "uva-100-the-3n-1-problem",
     "uvaId": 100,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:37:13.261Z",
     "notes": ""
   },
   {
@@ -90,12 +90,12 @@
   {
     "slug": "gpe-22181-dollars",
     "uvaId": 147,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:37:13.261Z",
     "notes": ""
   },
   {
@@ -1762,12 +1762,12 @@
   {
     "slug": "uva-10025-the-1-2-n-k-problem",
     "uvaId": 10025,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a displayed formula was left as flattened text, and a worked example starting with '- ' would render as an unintended bullet-list item",
+    "fixApplied": "wrapped the formula and the worked example in fenced code blocks",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:37:10.954Z",
     "notes": ""
   },
   {
@@ -1828,12 +1828,12 @@
   {
     "slug": "uva-10041-vito-s-family",
     "uvaId": 10041,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:37:13.259Z",
     "notes": ""
   },
   {
@@ -2048,12 +2048,12 @@
   {
     "slug": "uva-10110-light-more-light",
     "uvaId": 10110,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "lost exponent (232 should be 2^32)",
+    "fixApplied": "restored the exponent 2^32",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:37:11.230Z",
     "notes": ""
   },
   {
@@ -2224,12 +2224,12 @@
   {
     "slug": "uva-10190-divide-but-not-quite-conquer",
     "uvaId": 10190,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:37:13.261Z",
     "notes": ""
   },
   {
@@ -2543,12 +2543,12 @@
   {
     "slug": "uva-10355-superman",
     "uvaId": 10355,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:37:13.261Z",
     "notes": ""
   },
   {
@@ -2631,12 +2631,12 @@
   {
     "slug": "uva-10407-simple-division",
     "uvaId": 10407,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:37:13.261Z",
     "notes": ""
   },
   {
@@ -2763,12 +2763,12 @@
   {
     "slug": "uva-10550-combination-lock",
     "uvaId": 10550,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:37:13.261Z",
     "notes": ""
   },
   {
@@ -3093,12 +3093,12 @@
   {
     "slug": "gpe-11192-simple-minded-hashing",
     "uvaId": 10912,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a sentence was absorbed as a continuation of the last numbered-list item instead of its own paragraph",
+    "fixApplied": "separated the trailing sentence from the numbered list",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:37:11.521Z",
     "notes": ""
   },
   {
@@ -3148,12 +3148,12 @@
   {
     "slug": "uva-11000-the-four-in-one-stadium",
     "uvaId": 11000,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "lost exponent (232 should be 2^32)",
+    "fixApplied": "restored the exponent 2^32",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:37:11.799Z",
     "notes": ""
   },
   {
@@ -3357,12 +3357,12 @@
   {
     "slug": "uva-11192-group-reverse",
     "uvaId": 11192,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "two displayed example strings were run directly into the surrounding prose with no visual separation",
+    "fixApplied": "set the two example strings off with paragraph breaks",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:37:12.094Z",
     "notes": ""
   },
   {
@@ -3654,12 +3654,12 @@
   {
     "slug": "uva-11489-integer-game",
     "uvaId": 11489,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:37:13.261Z",
     "notes": ""
   },
   {
@@ -3698,12 +3698,12 @@
   {
     "slug": "uva-11526-h-n",
     "uvaId": 11526,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a C++ function was left as escaped inline braces with only single newlines, collapsing into an unreadable run-on line",
+    "fixApplied": "wrapped the function in a fenced code block",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:37:12.370Z",
     "notes": ""
   },
   {
@@ -4490,12 +4490,12 @@
   {
     "slug": "uva-13185-dpa-numbers-i",
     "uvaId": 13185,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a spurious paragraph break split 'which sum' from '21.' mid-sentence, which would render '21.' as an unintended ordered-list item; lost exponent (103 should be 10^3)",
+    "fixApplied": "joined the mid-sentence split back into one paragraph; restored the exponent 10^3",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:37:12.652Z",
     "notes": ""
   },
   {
