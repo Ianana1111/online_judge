@@ -2521,12 +2521,12 @@
   {
     "slug": "uva-10336-rank-the-languages",
     "uvaId": 10336,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "the example language map lost its grid alignment; missing paragraph break",
+    "fixApplied": "wrapped the example map in a fenced code block; inserted paragraph break",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:29.948Z",
     "notes": ""
   },
   {
@@ -2576,12 +2576,12 @@
   {
     "slug": "uva-10369-arctic-network",
     "uvaId": 10369,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph break",
+    "fixApplied": "inserted paragraph break at PDF-indented start",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:30.228Z",
     "notes": ""
   },
   {
@@ -2598,12 +2598,12 @@
   {
     "slug": "uva-10397-connect-the-campus",
     "uvaId": 10397,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph breaks (the referenced campus map figure is a drawn image not reproducible as text); figure caption not visually distinguished",
+    "fixApplied": "inserted paragraph breaks at PDF-indented starts; italicized the figure caption",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:30.505Z",
     "notes": ""
   },
   {
@@ -2642,12 +2642,12 @@
   {
     "slug": "uva-10409-die-game",
     "uvaId": 10409,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph breaks",
+    "fixApplied": "inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:30.904Z",
     "notes": ""
   },
   {
@@ -2774,12 +2774,12 @@
   {
     "slug": "uva-10583-ubiquitous-religions",
     "uvaId": 10583,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph break",
+    "fixApplied": "inserted paragraph break at PDF-indented start",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:31.183Z",
     "notes": ""
   },
   {
@@ -2807,12 +2807,12 @@
   {
     "slug": "gpe-11184-opening-doors",
     "uvaId": 10606,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "the principal's note ran into the body prose with no separation; missing paragraph breaks",
+    "fixApplied": "italicized the principal's note, separated from the body; inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:31.462Z",
     "notes": ""
   },
   {
@@ -2873,12 +2873,12 @@
   {
     "slug": "uva-10666-the-eurocup-is-here",
     "uvaId": 10666,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph breaks (the referenced bracket-diagram figure is a drawn image not reproducible as text)",
+    "fixApplied": "inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:31.741Z",
     "notes": ""
   },
   {
@@ -2950,12 +2950,12 @@
   {
     "slug": "uva-10740-first-love",
     "uvaId": 10740,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "the path-sequence arrows were dropped by the original PDF import (rendered as '!'), the Path/Length table was flattened, the ≤ comparison symbols were dropped throughout, and the ≠ symbol was garbled; missing paragraph breaks",
+    "fixApplied": "restored the → arrows and ≤/≠ symbols (verified against a fresh pdftotext -layout extraction), converted the path listing to a GFM table, inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:32.031Z",
     "notes": ""
   },
   {
@@ -3027,23 +3027,23 @@
   {
     "slug": "uva-10813-traditional-bingo",
     "uvaId": 10813,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "the card-count formula and the list of 75 BINGO numbers were flattened into unstructured lines, and the formula's exponent was dropped ('...11)4 *' should be '...11)^4 *'); missing paragraph breaks",
+    "fixApplied": "wrapped the formula (restoring the exponent) and the number listing in fenced code blocks; inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:32.321Z",
     "notes": ""
   },
   {
     "slug": "uva-10815-andy-s-first-dictionary",
     "uvaId": 10815,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph break",
+    "fixApplied": "inserted paragraph break at PDF-indented start",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:32.598Z",
     "notes": ""
   },
   {
@@ -3170,12 +3170,12 @@
   {
     "slug": "uva-11005-cheapest-base",
     "uvaId": 11005,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph breaks",
+    "fixApplied": "inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:32.876Z",
     "notes": ""
   },
   {
@@ -3214,12 +3214,12 @@
   {
     "slug": "uva-11054-wine-trading-in-gergovig",
     "uvaId": 11054,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph breaks",
+    "fixApplied": "inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:33.152Z",
     "notes": ""
   },
   {
@@ -3258,12 +3258,12 @@
   {
     "slug": "uva-11067-little-red-riding-hood",
     "uvaId": 11067,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a lost superscript collapsed '2^32 - 1' into the misleading plain number '232 - 1'; missing paragraph break",
+    "fixApplied": "restored the exponent (verified against a fresh pdftotext -layout extraction); inserted paragraph break at PDF-indented start",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:33.463Z",
     "notes": ""
   },
   {
@@ -3280,12 +3280,12 @@
   {
     "slug": "gpe-10906-matrix-decompressing",
     "uvaId": 11082,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "the four summation formulas were scattered across disconnected lines, splitting the sigma symbols from their bounds and summands",
+    "fixApplied": "wrapped the four formulas in a fenced code block using sum_{lower}^{upper} notation to unambiguously preserve their bounds",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:33.740Z",
     "notes": ""
   },
   {
@@ -3335,12 +3335,12 @@
   {
     "slug": "uva-11157-dynamic-frog",
     "uvaId": 11157,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph breaks",
+    "fixApplied": "inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:16:34.018Z",
     "notes": ""
   },
   {
