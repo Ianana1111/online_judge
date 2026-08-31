@@ -1,0 +1,44 @@
+[
+  {
+    "slug": "uva-10106-product",
+    "issue": "lost exponent (10250 should be 10^250)",
+    "fixApplied": "restored the exponent 10^250",
+    "statementMd": "The problem is to multiply two integers X, Y . (0 ≤ X, Y \\< 10^250)\n\n### Input\n\nThe input will consist of a set of pairs of lines. Each line in pair contains one multiplyer.\n\n### Output\n\nFor each input pair of lines the output line should consist one integer the product."
+  },
+  {
+    "slug": "uva-10107-what-is-the-median",
+    "issue": "a spurious paragraph break split 'less than' from '10000.' mid-sentence; lost exponent (231 should be 2^31)",
+    "fixApplied": "joined the mid-sentence split back into one paragraph; restored the exponent 2^31",
+    "statementMd": "Median plays an important role in the world of statistics. By definition, it is a value which divides\nan array into two equal parts. In this problem you are to determine the current median of some long\nintegers. Suppose, we have five numbers \\{1,3,6,2,7\\}. In this case, 3 is the median as it has exactly two\nnumbers on its each side. \\{1,2\\} and \\{6,7\\}. If there are even number of values like \\{1,3,6,2,7,8\\}, only\none value cannot split this array into equal two parts, so we consider the average of the middle values\n\\{3,6\\}. Thus, the median will be (3+6)/2 = 4.5. In this problem, you have to print only the integer\npart, not the fractional. As a result, according to this problem, the median will be 4 !\n\n### Input\n\nThe input file consists of series of integers X (0 ≤ X \\< 2^31) and total number of integers N is less than 10000. The numbers may have leading or trailing spaces.\n\n### Output\n\nFor each input print the current value of the median."
+  },
+  {
+    "slug": "gpe-10416-last-digit",
+    "issue": "a displayed formula lost its exponent notation entirely; lost exponent in the input bound (2*10100 should be 2*10^100)",
+    "fixApplied": "wrapped the formula in a fenced code block with restored exponent notation; restored the exponent 10^100",
+    "statementMd": "Give you a integer number N (1 ≤ n ≤ 2 ∗ 10^100). Please compute\n\n```\nS = 1^1 + 2^2 + 3^3 + . . . + N^N\n```\n\nGive the last digit of S to me.\n\n### Input\n\nInput file consists of several N ’s, each N a line. It is ended with N = 0.\n\n### Output\n\nFor each N give a line containing only one digit, which is the last digit of S."
+  },
+  {
+    "slug": "gpe-10679-irreducible-basic-fractions",
+    "issue": "the three worked-example fraction lists (stacked numerator/denominator layout in the PDF) were completely lost during extraction, leaving only the introductory sentences with no data; the statementMd also had an entire unrelated poem, an author credit, and a source-URL footer scraped in as trailing garbage; the 'Sample Input'/'Sample Output' text was embedded in the statement body instead of being left to the testcase data; the definition of 'basic' dropped its lower bound (0 ≤ m)",
+    "fixApplied": "reconstructed all three fraction lists as LaTeX math (verified against the given n=12 example and its sample output count of 4); removed the poem/author/source-URL garbage and the embedded Sample Input/Output text; restored '0 ≤ m < n' in the definition",
+    "statementMd": "A fraction m/n is basic if 0 ≤ m \\< n and it is irreducible if gcd(m, n) = 1. Given a positive integer n, in this problem you are required to find out the number of irreducible basic fractions with denominator n.\n\nFor example, the set of all basic fractions with denominator 12, before reduction to lowest terms, is\n\n$$\\frac{0}{12}, \\frac{1}{12}, \\frac{2}{12}, \\frac{3}{12}, \\frac{4}{12}, \\frac{5}{12}, \\frac{6}{12}, \\frac{7}{12}, \\frac{8}{12}, \\frac{9}{12}, \\frac{10}{12}, \\frac{11}{12}$$\n\nReduction yields\n\n$$\\frac{0}{12}, \\frac{1}{12}, \\frac{1}{6}, \\frac{1}{4}, \\frac{1}{3}, \\frac{5}{12}, \\frac{1}{2}, \\frac{7}{12}, \\frac{2}{3}, \\frac{3}{4}, \\frac{5}{6}, \\frac{11}{12}$$\n\nHence there are only the following 4 irreducible basic fractions with denominator 12\n\n$$\\frac{1}{12}, \\frac{5}{12}, \\frac{7}{12}, \\frac{11}{12}$$\n\n### Input\n\nEach line of the input contains a positive integer n (\\< 1000000000) and the input terminates with a value 0 for n (do not process this terminating value).\n\n### Output\n\nFor each n in the input print a line containing the number of irreducible basic fractions with denominator n."
+  },
+  {
+    "slug": "uva-10200-prime-time",
+    "issue": "lost exponent (n2 should be n^2)",
+    "fixApplied": "restored the exponent n^2",
+    "statementMd": "Euler is a well-known matematician, and, among many other things, he discovered that the formula\nn^2 + n + 41 produces a prime for 0 ≤ n \\< 40. For n = 40, the formula produces 1681, which is 41 ∗ 41.\nEven though this formula doesn’t always produce a prime, it still produces a lot of primes. It’s known\nthat for n ≤ 10000000, there are 47,5% of primes produced by the formula!\nSo, you’ll write a program that will output how many primes does the formula output for a certain\ninterval.\n\n### Input\n\nEach line of input will be given two positive integer a and b such that 0 ≤ a ≤ b ≤ 10000. You must\nread until the end of the file.\n\n### Output\n\nFor each pair a, b read, you must output the percentage of prime numbers produced by the formula in\nthis interval (a ≤ n ≤ b) rounded to two decimal digits."
+  },
+  {
+    "slug": "uva-10229-modular-fibonacci",
+    "issue": "a displayed recurrence definition was flattened into plain text and lost its subscript notation; the formula 'Mn = Fn mod 2m' lost both subscripts and the exponent on 2^m",
+    "fixApplied": "wrapped the recurrence in a fenced code block with restored subscripts; restored the subscripts and exponent in the Mn formula",
+    "statementMd": "The Fibonacci numbers (0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, ...) are defined by the recurrence:\n\n```\nF_0 = 0\nF_1 = 1\nF_i = F_(i-1) + F_(i-2) for i > 1\n```\n\nWrite a program which calculates M_n = F_n mod 2^m for given pair of n and m. 0 ≤ n ≤ 2147483647\nand 0 ≤ m \\< 20. Note that a mod b gives the remainder when a is divided by b.\n\n### Input\n\nInput consists of several lines specifying a pair of n and m.\n\n### Output\n\nOutput should be corresponding M_n, one per line."
+  },
+  {
+    "slug": "gpe-10582-power-strings",
+    "issue": "a displayed exponentiation formula lost its superscript notation",
+    "fixApplied": "restored the exponents (a^0, a^(n+1), a^n)",
+    "statementMd": "Given two strings a and b we define a ∗ b to be their concatenation. For\nexample, if a = ‘abc’ and b = ‘def’ then a ∗ b = ‘abcdef’. If we think of\nconcatenation as multiplication, exponentiation by a non-negative integer is\ndefined in the normal way: a^0 = ‘’ (the empty string) and a^(n+1) = a ∗ (a^n).\n\n### Input\n\nEach test case is a line of input representing s, a string of printable characters.\nThe length of s will be at least 1 and will not exceed 1 million characters. A\nline containing a period follows the last test case.\n\n### Output\n\nFor each s you should print the largest n such that s = a^n for some string a."
+  }
+]
