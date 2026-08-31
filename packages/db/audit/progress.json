@@ -4237,12 +4237,12 @@
   {
     "slug": "gpe-24911-robot-instructions",
     "uvaId": 12503,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:37:32.331Z",
     "notes": ""
   },
   {
@@ -4402,23 +4402,23 @@
   {
     "slug": "uva-12911-subset-sum",
     "uvaId": 12911,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "lost exponents (109 should be 10^9); missing paragraph breaks around the worked examples",
+    "fixApplied": "restored the exponents 10^9; inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:37:31.570Z",
     "notes": ""
   },
   {
     "slug": "uva-12918-lucky-thief",
     "uvaId": 12918,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:37:32.332Z",
     "notes": ""
   },
   {
@@ -4446,12 +4446,12 @@
   {
     "slug": "gpe-10642-marbles",
     "uvaId": 13043,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:37:32.332Z",
     "notes": ""
   },
   {
@@ -4512,12 +4512,12 @@
   {
     "slug": "uva-13204-count-these-permutations",
     "uvaId": 13204,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a displayed formula was badly garbled: absolute-value bars '|' became literal 'j' characters, the ellipsis dots became blank spaces, and the exponent n2 lost its superscript; dropped comparison symbols in the Input section",
+    "fixApplied": "wrapped the formula in a fenced code block with restored bars, ellipsis, and exponent; restored the dropped ≤ symbols",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:37:31.721Z",
     "notes": ""
   },
   {
