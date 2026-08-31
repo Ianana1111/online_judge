@@ -442,12 +442,12 @@
   {
     "slug": "uva-409-exeuses-excuses",
     "uvaId": 409,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:25:25.013Z",
     "notes": ""
   },
   {
@@ -585,12 +585,12 @@
   {
     "slug": "uva-496-simply-subsets",
     "uvaId": 496,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:25:25.013Z",
     "notes": ""
   },
   {
@@ -794,12 +794,12 @@
   {
     "slug": "uva-615-is-it-a-tree",
     "uvaId": 615,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph break at a PDF-indented start",
+    "fixApplied": "inserted paragraph break at PDF-indented start",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:25:23.074Z",
     "notes": ""
   },
   {
@@ -1036,12 +1036,12 @@
   {
     "slug": "uva-846-steps",
     "uvaId": 846,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "lost exponent (231 should be 2^31)",
+    "fixApplied": "restored the exponent 2^31",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:25:23.346Z",
     "notes": ""
   },
   {
@@ -1069,12 +1069,12 @@
   {
     "slug": "gpe-10500-brick-wall-patterns",
     "uvaId": 900,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a dropped space merged 'the figure' into 'thefigure'; a garbled em-dash appeared as an escaped pipe; a garbled quote around the terminator digit",
+    "fixApplied": "restored the missing space, the em-dash, and the curly quotes",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:25:23.643Z",
     "notes": ""
   },
   {
@@ -1300,12 +1300,12 @@
   {
     "slug": "uva-1225-digit-counting",
     "uvaId": 1225,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a displayed example number was left as plain flattened text, collapsing into the surrounding prose; missing paragraph break",
+    "fixApplied": "wrapped the example number in a fenced code block; inserted paragraph break at PDF-indented start",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:25:23.924Z",
     "notes": ""
   },
   {
@@ -1520,12 +1520,12 @@
   {
     "slug": "uva-1644-prime-gap",
     "uvaId": 1644,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a dropped minus sign left a blank gap in 'n  1' (should read 'n − 1')",
+    "fixApplied": "restored the missing minus sign",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:25:24.222Z",
     "notes": ""
   },
   {
@@ -1630,12 +1630,12 @@
   {
     "slug": "uva-10004-bicoloring",
     "uvaId": 10004,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:25:25.013Z",
     "notes": ""
   },
   {
@@ -4336,12 +4336,12 @@
   {
     "slug": "uva-12694-meeting-room-arrangement",
     "uvaId": 12694,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:25:25.012Z",
     "notes": ""
   },
   {
@@ -4358,23 +4358,23 @@
   {
     "slug": "uva-12820-cool-word",
     "uvaId": 12820,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "example words lost their curly quotes (garbled into backslash + straight quote); missing paragraph breaks",
+    "fixApplied": "restored proper curly quotes; inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:25:21.921Z",
     "notes": ""
   },
   {
     "slug": "uva-12869-zeroes",
     "uvaId": 12869,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph break between the 'Note:' label and its worked-example illustration",
+    "fixApplied": "inserted paragraph break between 'Note:' and the worked-example illustration",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:25:22.191Z",
     "notes": ""
   },
   {
@@ -4391,12 +4391,12 @@
   {
     "slug": "uva-12908-the-book-thief",
     "uvaId": 12908,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:25:25.013Z",
     "notes": ""
   },
   {
@@ -4424,12 +4424,12 @@
   {
     "slug": "uva-12959-strategy-game",
     "uvaId": 12959,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T06:25:25.013Z",
     "notes": ""
   },
   {
@@ -4468,12 +4468,12 @@
   {
     "slug": "gpe-10535-prime-distance",
     "uvaId": 13157,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph breaks between the 'Hint:' label and its two example remarks",
+    "fixApplied": "inserted paragraph breaks between 'Hint:' and each example remark",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:25:22.468Z",
     "notes": ""
   },
   {
@@ -4545,12 +4545,12 @@
   {
     "slug": "uva-13257-license-plates",
     "uvaId": 13257,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "six sentences that should clearly be separate paragraphs had no blank lines between them; lost exponent (105 should be 10^5)",
+    "fixApplied": "inserted paragraph breaks at PDF-indented starts; restored the exponent 10^5",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T06:25:22.744Z",
     "notes": ""
   }
 ]
