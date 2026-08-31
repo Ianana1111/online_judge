@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "uva-10405-longest-common-subsequence",
+    "issue": "two dangling 'Sequence 1:'/'Sequence 2:' labels referred to illustrative images that have no text-layer content and cannot be reconstructed; missing paragraph break",
+    "fixApplied": "removed the unreconstructible dangling labels; inserted paragraph break at PDF-indented start",
+    "statementMd": "Given two sequences of characters, print the length of the longest common subsequence of both sequences.\n\nFor example, the longest common subsequence of the following two sequences ‘abcdgh’ ans ‘aedfhr’\nis ‘adh’ of length 3.\n\n### Input\n\nInput consists of pairs of lines. The first line of a pair contains the first string and the second line\ncontains the second string. Each string is on a separate line and consists of at most 1,000 characters\n\n### Output\n\nFor each subsequent pair of input lines, output a line containing one integer number which satisfies the\ncriteria stated above."
+  },
+  {
+    "slug": "uva-10533-digit-primes",
+    "issue": "a closing performance note about scanf/printf vs. cin/cout was entirely missing from the statement",
+    "fixApplied": "restored the missing closing note",
+    "statementMd": "A prime number is a positive number, which is divisible by exactly two different integers. A digit prime\nis a prime number whose sum of digits is also prime. For example the prime number 41 is a digit prime\nbecause 4 + 1 = 5 and 5 is a prime number. 17 is not a digit prime because 1 + 7 = 8, and 8 is not\na prime number. In this problem your job is to find out the number of digit primes within a certain\nrange less than 1000000.\n\n### Input\n\nFirst line of the input file contains a single integer N (0 \\< N ≤ 500000) that indicates the total number\nof inputs. Each of the next N lines contains two integers t1 and t2 (0 \\< t1 ≤ t2 \\< 1000000).\n\n### Output\n\nFor each line of input except the first line produce one line of output containing a single integer that\nindicates the number of digit primes between t1 and t2 (inclusive).\n\nNote: You should at least use scanf() and printf() to take input and produce output for this\nproblem. cin and cout is too slow for this problem to get it within time limit."
+  },
+  {
+    "slug": "uva-10539-almost-prime-numbers",
+    "issue": "lost exponent (1012 should be 10^12)",
+    "fixApplied": "restored the exponent 10^12",
+    "statementMd": "Almost prime numbers are the non-prime numbers which are divisible by only a single prime number.\nIn this problem your job is to write a program which finds out the number of almost prime numbers\nwithin a certain range.\n\n### Input\n\nFirst line of the input file contains an integer N (N ≤ 600) which indicates how many sets of inputs\nare there. Each of the next N lines make a single set of input. Each set contains two integer numbers\nlow and high (0 \\< low ≤ high \\< 10^12).\n\n### Output\n\nFor each line of input except the first line you should produce one line of output. This line contains\na single integer, which indicates how many almost prime numbers are within the range (inclusive)\nlow . . . high."
+  },
+  {
+    "slug": "uva-10633-rare-easy-problem",
+    "issue": "lost exponent (1018 should be 10^18)",
+    "fixApplied": "restored the exponent 10^18",
+    "statementMd": "N is a random number, which for some reason, is at least two digits. John Doe, a nondescript man,\nperforms an operation on N : he chops off the last digit to form a new number M , and then finds\nN − M . This excites him in a hard-to-justify way. He then tells you N − M . Thrilled by the fascinating\nback-story behind this number, you make it your life goal to figure out what N was.\nBy the way, John was later eaten by a tiger.\n\n### Input\n\nInput consists of multiple lines, one line per case. Each line contains a single positive integer between\n10 and 10^18 inclusive, giving the value of N − M . Input is terminated by a line containing ‘0’.\n\n### Output\n\nFor each case, print one line containing the possible values of N in sorted order. Separate consecutive\nnumbers with a single space."
+  },
+  {
+    "slug": "uva-10931-parity",
+    "issue": "a lost subscript merged the binary-base marker into the number ('101012' should be '10101 base 2'); a dropped space in '3(mod2)'",
+    "fixApplied": "restored the subscript notation and the missing space",
+    "statementMd": "We define the parity of an integer n as the sum of the bits in binary representation computed modulo\ntwo. As an example, the number 21 = 10101_2 has three 1s in its binary representation so it has parity\n3 (mod 2), or 1.\nIn this problem you have to calculate the parity of an integer 1 ≤ I ≤ 2147483647.\n\n### Input\n\nEach line of the input has an integer I and the end of the input is indicated by a line where I = 0 that\nshould not be processed.\n\n### Output\n\nFor each integer I in the inputt you should print a line ‘The parity of B is P (mod 2).’, where B\nis the binary representation of I."
+  }
+]
