@@ -1,0 +1,44 @@
+[
+  {
+    "slug": "uva-10025-the-1-2-n-k-problem",
+    "issue": "a displayed formula was left as flattened text, and a worked example starting with '- ' would render as an unintended bullet-list item",
+    "fixApplied": "wrapped the formula and the worked example in fenced code blocks",
+    "statementMd": "Given the following formula, one can set operators ‘+’ or ‘-’ instead of each ‘?’, in order to obtain a\ngiven k\n\n```\n?1?2? . . .?n = k\n```\n\nFor example: to obtain k = 12, the expression to be used will be:\n\n```\n- 1 + 2 + 3 + 4 + 5 + 6 - 7 = 12\n```\n\nwith n = 7\n\n### Input\n\nThe first line is the number of test cases, followed by a blank line.\n\nEach test case of the input contains an integer k (0 ≤ \\|k\\| ≤ 1000000000).\n\nEach test case will be separated by a single line.\n\n### Output\n\nFor each test case, your program should print the minimal possible n (1 ≤ n) to obtain k with the\nabove formula.\n\nPrint a blank line between the outputs for two consecutive test cases."
+  },
+  {
+    "slug": "uva-10110-light-more-light",
+    "issue": "lost exponent (232 should be 2^32)",
+    "fixApplied": "restored the exponent 2^32",
+    "statementMd": "There is man named ”mabu” for switching on-off light in our University. He switches on-off the lights\nin a corridor. Every bulb has its own toggle switch. That is, if it is pressed then the bulb turns on.\nAnother press will turn it off. To save power consumption (or may be he is mad or something else)\nhe does a peculiar thing. If in a corridor there is n bulbs, he walks along the corridor back and forth\nn times and in i-th walk he toggles only the switches whose serial is divisable by i. He does not press\nany switch when coming back to his initial position. A i-th walk is defined as going down the corridor\n(while doing the peculiar thing) and coming back again. Now you have to determine what is the final\ncondition of the last bulb. Is it on or off?\n\n### Input\n\nThe input will be an integer indicating the n’th bulb in a corridor. Which is less then or equals 2^32 − 1.\nA zero indicates the end of input. You should not process this input.\n\n### Output\n\nOutput ‘yes’ if the light is on otherwise ‘no’, in a single line."
+  },
+  {
+    "slug": "gpe-11192-simple-minded-hashing",
+    "issue": "a sentence was absorbed as a continuation of the last numbered-list item instead of its own paragraph",
+    "fixApplied": "separated the trailing sentence from the numbered list",
+    "statementMd": "All of you know a bit or two about hashing. It involves mapping an element into a numerical value\nusing some mathematical function. In this problem we will consider a very ‘simple minded hashing’. It\ninvolves assigning numerical value to the alphabets and summing these values of the characters.\nFor example, the string “acm” is mapped to 1 + 3 + 13 = 17. Unfortunately, this method does not\ngive one-to-one mapping. The string “adl” also maps to 17 (1 + 4 + 12). This is called collision.\nIn this problem you will have to find the number of strings of length L, which maps to an integer S,\nusing the above hash function. You have to consider strings that have only lowercase letters in strictly\nascending order.\nSuppose L = 3 and S = 10, there are 4 such strings.\n\n1. abg\n2. acf\n3. ade\n4. bce\n\n“agb” also produces 10 but the letters are not strictly in ascending order.\n\n“bh” also produces 10 but it has 2 letters.\n\n### Input\n\nThere will be several cases. Each case consists of 2 integers L and S (0 \\< L, S \\< 10000). Input is\nterminated with 2 zeros.\n\n### Output\n\nFor each case, output ‘Case#:’ where # is replaced by case number. Then output the result. Follow\nthe sample for exact format. The result will fit in 32 signed integers."
+  },
+  {
+    "slug": "uva-11000-the-four-in-one-stadium",
+    "issue": "lost exponent (232 should be 2^32)",
+    "fixApplied": "restored the exponent 2^32",
+    "statementMd": "In Africa there is a very special species of bee. Every year, the female bees of such species give birth\nto one male bee, while the male bees give birth to one male bee and one female bee, and then they die!\nNow scientists have accidentally found one “magical female bee” of such special species to the effect\nthat she is immortal, but still able to give birth once a year as all the other female bees. The scientists\nwould like to know how many bees there will be after N years. Please write a program that helps them\nfind the number of male bees and the total number of all bees after N years.\n\n### Input\n\nEach line of input contains an integer N (≥ 0). Input ends with a case where N = −1. (This case\nshould NOT be processed.)\n\n### Output\n\nEach line of output should have two numbers, the first one being the number of male bees after N\nyears, and the second one being the total number of bees after N years. (The two numbers will not\nexceed 2^32.)"
+  },
+  {
+    "slug": "uva-11192-group-reverse",
+    "issue": "two displayed example strings were run directly into the surrounding prose with no visual separation",
+    "fixApplied": "set the two example strings off with paragraph breaks",
+    "statementMd": "Group reversing a string means reversing a string by groups. For example consider a string:\n\n“TOBENUMBERONEWEMEETAGAINANDAGAINUNDERBLUEICPCSKY”\n\nThis string has length 48. We have divided into 8 groups of equal length and so the length of each\ngroup is 6. Now we can reverse each of these eight groups to get a new string:\n\n“UNEBOTNOREBMEEMEWENIAGATAGADNAEDNUNIIEULBRYKSCPC”\n\nGiven the string and number of groups in it, your program will have to group reverse it.\n\n### Input\n\nThe input file contains at most 101 lines of inputs. Each line contains at integer G (G \\< 10) which\ndenotes the number of groups followed by a string whose length is a multiple of G. The length of the\nstring is not greater than 100. The string contains only alpha numerals. Input is terminated by a line\ncontaining a single zero.\n\n### Output\n\nFor each line of input produce one line of output which contains the group reversed string."
+  },
+  {
+    "slug": "uva-11526-h-n",
+    "issue": "a C++ function was left as escaped inline braces with only single newlines, collapsing into an unreadable run-on line",
+    "fixApplied": "wrapped the function in a fenced code block",
+    "statementMd": "What is the value this simple C++ function will return?\n\n```\nlong long H(int n){\n    long long res = 0;\n    for( int i = 1; i <= n; i=i+1 ){\n        res = (res + n/i);\n    }\n    return res;\n}\n```\n\n### Input\n\nThe first line of input is an integer T (T ≤ 1000) that indicates the number of test cases. Each of the\nnext T line will contain a single signed 32 bit integer n.\n\n### Output\n\nFor each test case, output will be a single line containing H(n)."
+  },
+  {
+    "slug": "uva-13185-dpa-numbers-i",
+    "issue": "a spurious paragraph break split 'which sum' from '21.' mid-sentence, which would render '21.' as an unintended ordered-list item; lost exponent (103 should be 10^3)",
+    "fixApplied": "joined the mid-sentence split back into one paragraph; restored the exponent 10^3",
+    "statementMd": "In number theory, a positive integer belongs to one and only one of the following categories: Deficient,\nPerfect or Abundant (DPA).\nTo decide the category of a positive integer n, first you have to calculate the sum of all its proper\npositive divisors. If the result is less than n then n is a deficient number, if the result is equal to n then\nn is a perfect number and if the result is greater than n then n is an abundant number. Remember\nthat the proper divisors of n don’t include n itself.\nFor example, the proper divisors of the number 8 are 1, 2 and 4 which sum 7. Since 7 \\< 8 therefore\n8 is a deficient number. The proper divisors of the number 6 are 1, 2 and 3 which sum 6. Since 6 = 6\ntherefore 6 is a perfect number. The proper divisors of the number 18 are 1, 2, 3, 6 and 9 which sum 21. Since 21 \\> 18 therefore 18 is an abundant number.\n\nThe task is to choose the category of a positive integer n as a deficient, perfect or abundant number.\n\n### Input\n\nInput begins with an integer t (1 ≤ t ≤ 500), the number of test cases, followed by t lines, each line\ncontaining an integer n (2 ≤ n ≤ 10^3).\n\n### Output\n\nFor each test case, you should print a single line containing the word ‘deficient’, ‘perfect’ or\n‘abundant’ that representing the category of the number n."
+  }
+]
