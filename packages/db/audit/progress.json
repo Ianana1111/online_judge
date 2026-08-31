@@ -35,12 +35,12 @@
   {
     "slug": "uva-111-history-grading",
     "uvaId": 111,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph breaks",
+    "fixApplied": "inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:23.967Z",
     "notes": ""
   },
   {
@@ -4105,12 +4105,12 @@
   {
     "slug": "uva-12195-jingle-composing",
     "uvaId": 12195,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "the note-duration table was a rendered image with no text layer at all, leaving the problem unsolvable without it; missing paragraph breaks",
+    "fixApplied": "reconstructed the note-duration table by mathematically verifying it against the worked example and sample input/output already present in the problem (W=1, H=1/2, Q=1/4, E=1/8, S=1/16, T=1/32, X=1/64 — confirmed the third measure XXXTXTEQH sums to exactly 1 and that HW in the last measure sums to 3/2, matching the stated '4 correct, 1 wrong' result); inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:20.026Z",
     "notes": ""
   },
   {
@@ -4138,34 +4138,34 @@
   {
     "slug": "uva-12223-moving-to-nuremberg",
     "uvaId": 12223,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph breaks",
+    "fixApplied": "inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:20.326Z",
     "notes": ""
   },
   {
     "slug": "uva-12250-language-detection",
     "uvaId": 12250,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T02:58:24.583Z",
     "notes": ""
   },
   {
     "slug": "uva-12319-edgetown-s-traffic-jams",
     "uvaId": 12319,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a stray 'Modified from UVA12319' page-header fragment bled into the body text; missing paragraph breaks",
+    "fixApplied": "removed the stray page-header fragment; inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:20.627Z",
     "notes": ""
   },
   {
@@ -4259,12 +4259,12 @@
   {
     "slug": "uva-12546-lcm-pair-sum",
     "uvaId": 12546,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "the constrained-sum formula was scattered across disconnected lines; a missing space collapsed 'for exact' into 'forexact'; missing paragraph break",
+    "fixApplied": "wrapped the formula in a fenced code block, restored the missing space (verified against a fresh pdftotext -layout extraction), inserted paragraph break",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:20.913Z",
     "notes": ""
   },
   {
@@ -4281,12 +4281,12 @@
   {
     "slug": "uva-12592-slogan-learning-of-princess",
     "uvaId": 12592,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "the two-column example table was flattened, losing its First-Line/Second-Line pairing; missing paragraph break",
+    "fixApplied": "converted the example to a GFM table; inserted paragraph break",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:21.200Z",
     "notes": ""
   },
   {
@@ -4314,12 +4314,12 @@
   {
     "slug": "uva-12650-dangerous-dive",
     "uvaId": 12650,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a lost exponent collapsed '10^4' into the misleading plain number '104'; missing paragraph break",
+    "fixApplied": "restored the exponent (verified against a fresh pdftotext -layout extraction); inserted paragraph break before the Restrictions list",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:21.492Z",
     "notes": ""
   },
   {
@@ -4347,12 +4347,12 @@
   {
     "slug": "uva-12797-letters",
     "uvaId": 12797,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "the example grid pair lost its column alignment",
+    "fixApplied": "wrapped the example grid pair in a fenced code block",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:21.777Z",
     "notes": ""
   },
   {
@@ -4380,12 +4380,12 @@
   {
     "slug": "uva-12882-city-park",
     "uvaId": 12882,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "the two-row Constraints listing lost its two-column structure; a subsection heading ('Sample Output Explanation') was not promoted like Input/Output; missing paragraph breaks",
+    "fixApplied": "converted the Constraints listing to a GFM table; promoted 'Sample Output Explanation' to a heading matching Input/Output; inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:22.122Z",
     "notes": ""
   },
   {
@@ -4435,12 +4435,12 @@
   {
     "slug": "uva-12970-alcoholic-pilots",
     "uvaId": 12970,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a lost exponent collapsed '10^9' into the misleading plain number '109'; missing paragraph breaks",
+    "fixApplied": "restored the exponent (verified against a fresh pdftotext -layout extraction); inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:22.409Z",
     "notes": ""
   },
   {
@@ -4457,12 +4457,12 @@
   {
     "slug": "uva-13055-inception",
     "uvaId": 13055,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "the three query definitions had inconsistent spacing (only one had a blank-line break from the PDF); missing paragraph break",
+    "fixApplied": "converted the three query definitions to a bullet list for consistent separation; inserted paragraph break at PDF-indented start",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:22.700Z",
     "notes": ""
   },
   {
@@ -4479,12 +4479,12 @@
   {
     "slug": "uva-13171-pixel-art",
     "uvaId": 13171,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "missing paragraph break",
+    "fixApplied": "inserted paragraph break at PDF-indented start",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:22.988Z",
     "notes": ""
   },
   {
@@ -4501,12 +4501,12 @@
   {
     "slug": "uva-13190-rockabye-tobby",
     "uvaId": 13190,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a kerning-split word collapsed 'frecuency' into 'f recuency', and a lost exponent left '3∗103' instead of '3∗10^3'; missing paragraph break",
+    "fixApplied": "restored the word split and the exponent (verified against a fresh pdftotext -layout extraction); inserted paragraph break",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:23.276Z",
     "notes": ""
   },
   {
@@ -4523,12 +4523,12 @@
   {
     "slug": "uva-13211-geonosis",
     "uvaId": 13211,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "the summation formula was scattered across disconnected lines and its ≠ symbol was garbled; a lost exponent collapsed '10^4' into the misleading plain number '104'; missing paragraph breaks",
+    "fixApplied": "wrapped the formula in a fenced code block, restored the ≠ symbol and exponent (verified against a fresh pdftotext -layout extraction), inserted paragraph breaks at PDF-indented starts",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T02:58:23.582Z",
     "notes": ""
   },
   {
