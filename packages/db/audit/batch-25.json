@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "uva-1513-movie-collection",
+    "issue": "dropped 'fi' ligature ('nishes' should be 'finishes')",
+    "fixApplied": "restored the ligature",
+    "statementMd": "Mr. K. I. has a very big movie collection. He has organized his collection in a big stack. Whenever he\nwants to watch one of the movies, he locates the movie in this stack and removes it carefully, ensuring\nthat the stack doesn't fall over. After he finishes watching the movie, he places it at the top of the\nstack.\nSince the stack of movies is so big, he needs to keep track of the position of each movie. It is\nsufficient to know for each movie how many movies are placed above it, since, with this information,\nits position in the stack can be calculated. Each movie is identified by a number printed on the movie\nbox.\nYour task is to implement a program which will keep track of the position of each movie. In\nparticular, each time Mr. K. I. removes a movie box from the stack, your program should print the\nnumber of movies that were placed above it before it was removed.\n\n### Input\n\nOn the first line a positive integer: the number of test cases, at most 100. After that per test case:\n\n- one line with two integers n and m (1 ≤ n, m ≤ 100000): the number of movies in the stack and\nthe number of locate requests.\n- one line with m integers a1, . . . , am (1 ≤ ai ≤ n) representing the identification numbers of movies\nthat Mr. K. I. wants to watch.\n\nFor simplicity, assume the initial stack contains the movies with identification numbers 1, 2, . . . , n\nin increasing order, where the movie box with label 1 is the top-most box.\n\n### Output\n\nPer test case:\n\n- one line with m integers, where the i-th integer gives the number of movie boxes above the box\nwith label ai, immediately before this box is removed from the stack.\n\nNote that after each locate request ai, the movie box with label ai is placed at the top of the stack."
+  },
+  {
+    "slug": "uva-1640-the-counting-problem",
+    "issue": "a displayed example sequence was left as flattened text; a spurious paragraph break split '0 < a, b <' from '100000000.' mid-sentence",
+    "fixApplied": "wrapped the example sequence in a fenced code block; joined the mid-sentence split back into one paragraph",
+    "statementMd": "Given two integers a and b, we write the numbers between a and b, inclusive, in a list. Your task is to\ncalculate the number of occurrences of each digit. For example, if a = 1024 and b = 1032, the list will\nbe\n\n```\n1024 1025 1026 1027 1028 1029 1030 1031 1032\n```\n\nthere are ten 0’s in the list, ten 1’s, seven 2’s, three 3’s, and etc.\n\n### Input\n\nThe input consists of up to 500 lines. Each line contains two numbers a and b where 0 \\< a, b \\< 100000000. The input is terminated by a line ‘0 0’, which is not considered as part of the input.\n\n### Output\n\nFor each pair of input, output a line containing ten numbers separated by single spaces. The first\nnumber is the number of occurrences of the digit 0, the second is the number of occurrences of the digit\n1, etc."
+  },
+  {
+    "slug": "gpe-10609-square-root",
+    "issue": "lost exponent (101000 should be 10^1000)",
+    "fixApplied": "restored the exponent 10^1000",
+    "statementMd": "You are to determinate X by given Y , from expression X = √Y\n\n### Input\n\nThe first line is the number of test cases, followed by a blank line.\nEach test case of the input contains a positive integer Y (1 ≤ Y ≤ 10^1000), with no blanks or leading\nzeroes in it.\nIt is guaranteed, that for given Y , X will be always an integer.\nEach test case will be separated by a single line.\n\n### Output\n\nFor each test case, your program should print X in the same format as Y was given in input.\nPrint a blank line between the outputs for two consecutive test cases."
+  },
+  {
+    "slug": "uva-10038-jolly-jumpers",
+    "issue": "a displayed example sequence was left as flattened text, collapsing into the surrounding prose",
+    "fixApplied": "wrapped the example sequence in a fenced code block",
+    "statementMd": "A sequence of n \\> 0 integers is called a jolly jumper if the absolute values of the difference between\nsuccessive elements take on all the values 1 through n − 1. For instance,\n\n```\n1 4 2 3\n```\n\nis a jolly jumper, because the absolutes differences are 3, 2, and 1 respectively. The definition implies\nthat any sequence of a single integer is a jolly jumper. You are to write a program to determine whether\nor not each of a number of sequences is a jolly jumper.\n\n### Input\n\nEach line of input contains an integer n ≤ 3000 followed by n integers representing the sequence.\n\n### Output\n\nFor each line of input, generate a line of output saying ‘Jolly’ or ‘Not jolly’."
+  },
+  {
+    "slug": "uva-10055-hashmat",
+    "issue": "lost exponent (232 should be 2^32)",
+    "fixApplied": "restored the exponent 2^32",
+    "statementMd": "Hashmat is a brave warrior who with his group of young soldiers moves from one place to another to\nfight against his opponents. Before Fighting he just calculates one thing, the difference between his\nsoldier number and the opponent’s soldier number. From this difference he decides whether to fight or\nnot. Hashmat’s soldier number is never greater than his opponent.\n\n### Input\n\nThe input contains two numbers in every line. These two numbers in each line denotes the number\nsoldiers in Hashmat’s army and his opponent’s army or vice versa. The input numbers are not greater\nthan 2^32. Input is terminated by ‘End of File’.\n\n### Output\n\nFor each line of input, print the difference of number of soldiers between Hashmat’s army and his\nopponent’s army. Each output should be in seperate line."
+  }
+]

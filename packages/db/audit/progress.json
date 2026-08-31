@@ -1311,12 +1311,12 @@
   {
     "slug": "uva-1234-racing",
     "uvaId": 1234,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:03:56.498Z",
     "notes": ""
   },
   {
@@ -1432,12 +1432,12 @@
   {
     "slug": "uva-1513-movie-collection",
     "uvaId": 1513,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "dropped 'fi' ligature ('nishes' should be 'finishes')",
+    "fixApplied": "restored the ligature",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:03:55.320Z",
     "notes": ""
   },
   {
@@ -1509,12 +1509,12 @@
   {
     "slug": "uva-1640-the-counting-problem",
     "uvaId": 1640,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a displayed example sequence was left as flattened text; a spurious paragraph break split '0 < a, b <' from '100000000.' mid-sentence",
+    "fixApplied": "wrapped the example sequence in a fenced code block; joined the mid-sentence split back into one paragraph",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:03:55.466Z",
     "notes": ""
   },
   {
@@ -1608,12 +1608,12 @@
   {
     "slug": "gpe-10505-center-of-masses",
     "uvaId": 10002,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:03:56.499Z",
     "notes": ""
   },
   {
@@ -1718,12 +1718,12 @@
   {
     "slug": "uva-10019-funny-encryption-method",
     "uvaId": 10019,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:03:56.499Z",
     "notes": ""
   },
   {
@@ -1740,23 +1740,23 @@
   {
     "slug": "gpe-10609-square-root",
     "uvaId": 10023,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "lost exponent (101000 should be 10^1000)",
+    "fixApplied": "restored the exponent 10^1000",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:03:55.610Z",
     "notes": ""
   },
   {
     "slug": "gpe-10610-curling-up-the-cube",
     "uvaId": 10024,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:03:56.499Z",
     "notes": ""
   },
   {
@@ -1795,12 +1795,12 @@
   {
     "slug": "uva-10035-primary-arithmetic",
     "uvaId": 10035,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:03:56.499Z",
     "notes": ""
   },
   {
@@ -1817,12 +1817,12 @@
   {
     "slug": "uva-10038-jolly-jumpers",
     "uvaId": 10038,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a displayed example sequence was left as flattened text, collapsing into the surrounding prose",
+    "fixApplied": "wrapped the example sequence in a fenced code block",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:03:55.753Z",
     "notes": ""
   },
   {
@@ -1861,12 +1861,12 @@
   {
     "slug": "uva-10055-hashmat",
     "uvaId": 10055,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "lost exponent (232 should be 2^32)",
+    "fixApplied": "restored the exponent 2^32",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:03:55.895Z",
     "notes": ""
   },
   {
@@ -1894,12 +1894,12 @@
   {
     "slug": "uva-10062-tell-me-the-frequencies",
     "uvaId": 10062,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:03:56.499Z",
     "notes": ""
   },
   {
@@ -1916,12 +1916,12 @@
   {
     "slug": "uva-10071-back-to-high-school-physics",
     "uvaId": 10071,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:03:56.499Z",
     "notes": ""
   },
   {
@@ -1960,23 +1960,23 @@
   {
     "slug": "gpe-10637-tight-words",
     "uvaId": 10081,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:03:56.499Z",
     "notes": ""
   },
   {
     "slug": "uva-10082-wertyu",
     "uvaId": 10082,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:03:56.499Z",
     "notes": ""
   },
   {
@@ -2004,12 +2004,12 @@
   {
     "slug": "uva-10101-bangla-numbers",
     "uvaId": 10101,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:03:56.499Z",
     "notes": ""
   },
   {
