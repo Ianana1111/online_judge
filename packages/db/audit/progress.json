@@ -3159,12 +3159,12 @@
   {
     "slug": "uva-11003-boxes",
     "uvaId": 11003,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:33:29.521Z",
     "notes": ""
   },
   {
@@ -3236,23 +3236,23 @@
   {
     "slug": "gpe-10468-maximum-product",
     "uvaId": 11059,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:33:29.522Z",
     "notes": ""
   },
   {
     "slug": "uva-11063-b2-sequence",
     "uvaId": 11063,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:33:29.522Z",
     "notes": ""
   },
   {
@@ -3291,12 +3291,12 @@
   {
     "slug": "uva-11085-back-to-the-8-queens",
     "uvaId": 11085,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a dropped multiplication sign left a blank gap in '8  8 dimension'; dropped comparison symbols and a garbled not-equal symbol",
+    "fixApplied": "restored the missing ×, ≤, and ≠ symbols",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:33:28.465Z",
     "notes": ""
   },
   {
@@ -3544,23 +3544,23 @@
   {
     "slug": "uva-11389-the-bus-driver-problem",
     "uvaId": 11389,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:33:29.522Z",
     "notes": ""
   },
   {
     "slug": "uva-11401-triangle-counting",
     "uvaId": 11401,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:33:29.522Z",
     "notes": ""
   },
   {
@@ -3588,12 +3588,12 @@
   {
     "slug": "uva-11455-behold-my-quadrangle",
     "uvaId": 11455,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "lost exponent (230 should be 2^30)",
+    "fixApplied": "restored the exponent 2^30",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:33:28.612Z",
     "notes": ""
   },
   {
@@ -3610,34 +3610,34 @@
   {
     "slug": "uva-11461-square-numbers",
     "uvaId": 11461,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:33:29.522Z",
     "notes": ""
   },
   {
     "slug": "uva-11472-beautiful-numbers",
     "uvaId": 11472,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:33:29.522Z",
     "notes": ""
   },
   {
     "slug": "gpe-24931-extend-to-palindromes",
     "uvaId": 11475,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a garbled word merge produced 'extrafficharacters' instead of 'extra characters'",
+    "fixApplied": "restored 'extra characters'",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:33:28.759Z",
     "notes": ""
   },
   {
@@ -3885,12 +3885,12 @@
   {
     "slug": "uva-11743-credit-check",
     "uvaId": 11743,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a continuation sentence of numbered-list item 2 was split off into its own orphan paragraph, breaking the list",
+    "fixApplied": "merged the continuation sentence back into item 2",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:33:28.905Z",
     "notes": ""
   },
   {
@@ -4006,23 +4006,23 @@
   {
     "slug": "uva-11957-checkers",
     "uvaId": 11957,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:33:29.522Z",
     "notes": ""
   },
   {
     "slug": "uva-11960-divisor-game",
     "uvaId": 11960,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:33:29.522Z",
     "notes": ""
   },
   {
@@ -4193,12 +4193,12 @@
   {
     "slug": "uva-12385-interesting-sequences",
     "uvaId": 12385,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:33:29.522Z",
     "notes": ""
   },
   {
@@ -4226,12 +4226,12 @@
   {
     "slug": "uva-12455-bars",
     "uvaId": 12455,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:33:29.522Z",
     "notes": ""
   },
   {
