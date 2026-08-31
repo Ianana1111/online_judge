@@ -2620,13 +2620,13 @@
   {
     "slug": "uva-10405-longest-common-subsequence",
     "uvaId": 10405,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
-    "notes": ""
+    "status": "fixed-prod",
+    "issue": "two dangling 'Sequence 1:'/'Sequence 2:' labels referred to illustrative images that have no text-layer content and cannot be reconstructed; missing paragraph break",
+    "fixApplied": "removed the unreconstructible dangling labels; inserted paragraph break at PDF-indented start",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:15:53.263Z",
+    "notes": "Production DB has a stale slug/title for this row (uva-10405-jolly-jumpers / \"10405 - Jolly Jumpers\") even though the content is Longest Common Subsequence; local dev already has the correct slug/title. Applied the statementMd fix to production by record id since the slug lookup would not match. Flagged to user as a separate data-integrity issue, not fixed here (out of audit scope)."
   },
   {
     "slug": "uva-10407-simple-division",
@@ -2653,12 +2653,12 @@
   {
     "slug": "uva-10415-eb-alto-saxophone-player",
     "uvaId": 10415,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:21:37.862Z",
     "notes": ""
   },
   {
@@ -2686,12 +2686,12 @@
   {
     "slug": "gpe-11174-homer-simpson",
     "uvaId": 10465,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:21:37.863Z",
     "notes": ""
   },
   {
@@ -2708,12 +2708,12 @@
   {
     "slug": "uva-10487-closest-sums",
     "uvaId": 10487,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:21:37.863Z",
     "notes": ""
   },
   {
@@ -2730,34 +2730,34 @@
   {
     "slug": "uva-10533-digit-primes",
     "uvaId": 10533,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a closing performance note about scanf/printf vs. cin/cout was entirely missing from the statement",
+    "fixApplied": "restored the missing closing note",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:21:36.787Z",
     "notes": ""
   },
   {
     "slug": "gpe-11179-wavio-sequence",
     "uvaId": 10534,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:21:37.863Z",
     "notes": ""
   },
   {
     "slug": "uva-10539-almost-prime-numbers",
     "uvaId": 10539,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "lost exponent (1012 should be 10^12)",
+    "fixApplied": "restored the exponent 10^12",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:21:36.939Z",
     "notes": ""
   },
   {
@@ -2829,12 +2829,12 @@
   {
     "slug": "uva-10633-rare-easy-problem",
     "uvaId": 10633,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "lost exponent (1018 should be 10^18)",
+    "fixApplied": "restored the exponent 10^18",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:21:37.108Z",
     "notes": ""
   },
   {
@@ -2906,34 +2906,34 @@
   {
     "slug": "uva-10690-expression-again",
     "uvaId": 10690,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:21:37.863Z",
     "notes": ""
   },
   {
     "slug": "gpe-23671-camel-trading",
     "uvaId": 10700,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:21:37.863Z",
     "notes": ""
   },
   {
     "slug": "gpe-23661-bit-mask",
     "uvaId": 10718,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:21:37.863Z",
     "notes": ""
   },
   {
@@ -2972,12 +2972,12 @@
   {
     "slug": "uva-10783-odd-sum",
     "uvaId": 10783,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:21:37.863Z",
     "notes": ""
   },
   {
@@ -3115,34 +3115,34 @@
   {
     "slug": "uva-10922-2-the-9s",
     "uvaId": 10922,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:21:37.863Z",
     "notes": ""
   },
   {
     "slug": "uva-10929-you-can-say-11",
     "uvaId": 10929,
-    "status": "unchecked",
+    "status": "verified-ok",
     "issue": null,
     "fixApplied": null,
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-08-31T07:21:37.863Z",
     "notes": ""
   },
   {
     "slug": "uva-10931-parity",
     "uvaId": 10931,
-    "status": "unchecked",
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
-    "verifiedProd": false,
-    "checkedAt": null,
+    "status": "fixed-prod",
+    "issue": "a lost subscript merged the binary-base marker into the number ('101012' should be '10101 base 2'); a dropped space in '3(mod2)'",
+    "fixApplied": "restored the subscript notation and the missing space",
+    "verifiedLocal": true,
+    "verifiedProd": true,
+    "checkedAt": "2026-08-31T07:21:37.256Z",
     "notes": ""
   },
   {
