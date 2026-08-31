@@ -2626,7 +2626,7 @@
     "verifiedLocal": true,
     "verifiedProd": true,
     "checkedAt": "2026-08-31T07:15:53.263Z",
-    "notes": "Production DB has a stale slug/title for this row (uva-10405-jolly-jumpers / \"10405 - Jolly Jumpers\") even though the content is Longest Common Subsequence; local dev already has the correct slug/title. Applied the statementMd fix to production by record id since the slug lookup would not match. Flagged to user as a separate data-integrity issue, not fixed here (out of audit scope)."
+    "notes": "Production DB had a stale slug/title for this row (uva-10405-jolly-jumpers / \"10405 - Jolly Jumpers\") even though the content is Longest Common Subsequence. Flagged to user, who approved fixing it; production slug/title corrected to match local dev (uva-10405-longest-common-subsequence / \"10405 - Longest Common Subsequence\")."
   },
   {
     "slug": "uva-10407-simple-division",
