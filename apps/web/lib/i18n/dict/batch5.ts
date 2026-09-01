@@ -175,4 +175,37 @@ export const batch5Dictionary: Record<string, string> = {
   "That verification link is invalid or expired — try sending a new one.": "這個驗證連結無效或已過期，請重新寄送一次。",
   "That email has already been used to verify a different account — each school email can only verify one account.":
     "這個信箱已經被用來驗證過另一個帳號——每個學校信箱只能驗證一個帳號。",
+
+  // --- components/SubmissionResultPanel.tsx (verdict headings + explanations) ---
+  "Accepted": "答案正確",
+  "Wrong Answer": "答案錯誤",
+  "Time Limit Exceeded": "超過時間限制",
+  "Memory Limit Exceeded": "超過記憶體限制",
+  "Runtime Error": "執行期錯誤",
+  "Restricted Function": "使用受限制的函式",
+  "Compile Error": "編譯錯誤",
+  "Presentation Error": "格式錯誤",
+  "Output Limit Exceeded": "輸出超過限制",
+  "System Error": "系統錯誤",
+  "Your code didn't compile — fix the errors below and try again.": "你的程式碼沒有通過編譯——請根據以下錯誤訊息修正後再試一次。",
+  "Compiler output": "編譯器輸出",
+  "Your program ran to completion, but its output didn't match the expected answer on at least one test case.":
+    "你的程式有正常執行完畢，但輸出結果跟至少一筆測試資料的正確答案不一樣。",
+  "Your program was still running when it hit this problem's {ms} ms time limit.": "你的程式在還沒執行完畢時，就超過了這題 {ms} 毫秒的時間限制。",
+  "Your program took too long to finish and hit this problem's time limit.": "你的程式執行時間過長，超過了這題的時間限制。",
+  "Your program used more memory than this problem's {mb} MB limit allows.": "你的程式使用的記憶體超過了這題 {mb} MB 的限制。",
+  "Your program used more memory than this problem allows.": "你的程式使用的記憶體超過了這題的限制。",
+  "Your program crashed while running — common causes include out-of-bounds array access, division by zero, or dereferencing a null pointer.":
+    "你的程式在執行過程中當掉了——常見原因包含陣列存取越界、除以零，或存取到空指標。",
+  "Your submission used a function or feature that isn't allowed for this problem.": "你的程式使用了這題不允許使用的函式或功能。",
+  "Your output was almost right, but its formatting — spacing or line breaks — didn't exactly match what was expected.":
+    "你的輸出內容大致正確，但格式（例如空白或換行）跟預期的不完全一樣。",
+  "Your program printed far more output than expected — check for an infinite loop or unbounded printing.":
+    "你的程式輸出的內容遠超過預期——檢查看看是不是有無窮迴圈或印出過多內容。",
+  "Something went wrong on our end while judging this submission — this isn't an issue with your code. Try submitting again.":
+    "評測系統這邊發生了一些問題，不是你程式碼的問題，請再試著送出一次。",
+  "Want to find out where it went wrong? Use the Run panel to test your code against your own input and compare the output yourself.":
+    "想知道錯在哪嗎？可以用「執行」功能，貼上你自己的測試資料，親自比對輸出結果找出問題。",
+  "Use the Run panel with your own input to try to reproduce the crash and narrow down where it happens.":
+    "可以用「執行」功能搭配你自己的測試資料重現這個錯誤，找出問題出在哪一步。",
 };

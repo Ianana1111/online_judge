@@ -270,7 +270,12 @@ export default function ProblemView({
       )}
       {tab === "result" && resultTab && (
         <div id="problem-tabpanel-result" role="tabpanel" aria-labelledby="problem-tab-result">
-          <SubmissionResultPanel slug={problem.slug} resultTab={resultTab} />
+          <SubmissionResultPanel
+            slug={problem.slug}
+            resultTab={resultTab}
+            timeLimitMs={problem.timeLimitMs}
+            memoryLimitKb={problem.memoryLimitKb}
+          />
         </div>
       )}
     </div>

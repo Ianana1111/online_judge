@@ -213,6 +213,98 @@ export const GraduationCapIcon = makeIcon(
   </>,
 );
 
+// The submission-result verdict set (SubmissionResultPanel) — one glyph per verdict, sharing the
+// same thin-stroke language as the rest of this file so the result panel doesn't introduce a
+// second icon style. Grouped by what they're actually saying rather than by verdict code: AC gets
+// a check, WA an x, CE a terminal prompt (it's showing compiler output), TLE a clock, MLE a chip,
+// RE a warning triangle (a crash), RF a slashed circle (something disallowed), PE misaligned lines
+// (a formatting mismatch), OLE an "expanding past the frame" glyph, SE an alert octagon (distinct
+// from RE's triangle — this one is the judge's fault, not the submission's).
+export const CheckCircleIcon = makeIcon(
+  <>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M8.5 12.5l2.5 2.5 5-5" />
+  </>,
+);
+
+export const XCircleIcon = makeIcon(
+  <>
+    <circle cx="12" cy="12" r="9" />
+    <line x1="9.5" y1="9.5" x2="14.5" y2="14.5" />
+    <line x1="14.5" y1="9.5" x2="9.5" y2="14.5" />
+  </>,
+);
+
+export const ClockIcon = makeIcon(
+  <>
+    <circle cx="12" cy="12" r="9" />
+    <polyline points="12 7 12 12 15.5 14" />
+  </>,
+);
+
+export const CpuIcon = makeIcon(
+  <>
+    <rect x="6" y="6" width="12" height="12" rx="1" />
+    <rect x="9.5" y="9.5" width="5" height="5" />
+    <line x1="9" y1="2" x2="9" y2="6" />
+    <line x1="15" y1="2" x2="15" y2="6" />
+    <line x1="9" y1="18" x2="9" y2="22" />
+    <line x1="15" y1="18" x2="15" y2="22" />
+    <line x1="2" y1="9" x2="6" y2="9" />
+    <line x1="2" y1="15" x2="6" y2="15" />
+    <line x1="18" y1="9" x2="22" y2="9" />
+    <line x1="18" y1="15" x2="22" y2="15" />
+  </>,
+);
+
+export const AlertTriangleIcon = makeIcon(
+  <>
+    <path d="M12 3 2 20h20L12 3z" />
+    <line x1="12" y1="10" x2="12" y2="14.5" />
+    <line x1="12" y1="17.3" x2="12" y2="17.31" />
+  </>,
+);
+
+export const AlertOctagonIcon = makeIcon(
+  <>
+    <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86" />
+    <line x1="12" y1="8" x2="12" y2="12.5" />
+    <line x1="12" y1="15.3" x2="12" y2="15.31" />
+  </>,
+);
+
+export const SlashCircleIcon = makeIcon(
+  <>
+    <circle cx="12" cy="12" r="9" />
+    <line x1="6" y1="18" x2="18" y2="6" />
+  </>,
+);
+
+export const TerminalIcon = makeIcon(
+  <>
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <polyline points="6 9 10.5 12 6 15" />
+    <line x1="12" y1="15" x2="17" y2="15" />
+  </>,
+);
+
+export const AlignLeftIcon = makeIcon(
+  <>
+    <line x1="4" y1="6" x2="20" y2="6" />
+    <line x1="4" y1="12" x2="14" y2="12" />
+    <line x1="4" y1="18" x2="17" y2="18" />
+  </>,
+);
+
+export const MaximizeIcon = makeIcon(
+  <>
+    <polyline points="8 3 3 3 3 8" />
+    <polyline points="16 3 21 3 21 8" />
+    <polyline points="3 16 3 21 8 21" />
+    <polyline points="21 16 21 21 16 21" />
+  </>,
+);
+
 /** Per-achievement-code icon, shared by HomeDashboard's trophy case and the public profile page so
  * both surfaces agree on what each achievement looks like instead of one falling back to a generic
  * trophy for everything. */
