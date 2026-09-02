@@ -1,0 +1,8 @@
+[
+  { "slug": "gpe-10579-hay-points", "issue": "PDF page 1 has an embedded painting (haystacks), purely decorative, unrelated to the problem's content.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "gpe-10582-power-strings", "issue": "PDF page 1 has an embedded photo of a person, purely decorative.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10364-square", "issue": "PDF page 1 has an embedded decorative photo (Trafalgar Square), a thematic pun on the title, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10365-blocks", "issue": "PDF page 1 has an embedded decorative photo of baby blocks, a thematic pun on the title, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10369-arctic-network", "issue": "PDF page 1 has an embedded decorative map of the Canadian arctic, thematic flavor only, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10397-connect-the-campus", "issue": "PDF page 1 has an embedded decorative campus map (University of Waterloo), thematic flavor only, not used as data for the actual coordinate/MST problem.", "fixApplied": "Skipped — not meaningful content to embed." }
+]
