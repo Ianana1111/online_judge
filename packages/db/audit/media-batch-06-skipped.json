@@ -1,0 +1,10 @@
+[
+  { "slug": "gpe-23681-bachet-s-game", "issue": "PDF page 1 has an embedded decorative photo (pebbles/stones), thematic flavor only, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10405-longest-common-subsequence", "issue": "PDF page 1 has two embedded decorative photo strips (beer mugs), unrelated to the LCS algorithm content, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10409-die-game", "issue": "PDF page 1 has a tiny embedded decorative dice icon, not referenced by the problem text with any figure/diagram wording.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10415-eb-alto-saxophone-player", "issue": "PDF page 1 has an embedded decorative photo of a saxophone, a thematic pun on the title, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10443-rock-scissors-paper", "issue": "PDF page 1 has an embedded decorative championship/tournament photo, unrelated to the algorithmic content, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "gpe-11174-homer-simpson", "issue": "PDF page 1 has an embedded decorative Homer Simpson clip-art illustration, a thematic pun on the title, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10474-where-is-the-marble", "issue": "PDF page 1 has an embedded decorative illustration ('All children have equal rights'), unrelated to the algorithmic content, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10530-guessing-game", "issue": "PDF page 1 has an embedded decorative question-marks graphic (confirmed genuinely black-and-white via pdftoppm page-render cross-check, not a color-mask loss). Not referenced by the problem text, purely decorative.", "fixApplied": "Skipped — not meaningful content to embed." }
+]
