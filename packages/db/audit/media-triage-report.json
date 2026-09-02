@@ -1,0 +1,4551 @@
+[
+  {
+    "slug": "uva-100-the-3n-1-problem",
+    "uvaId": 100,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-105-the-skyline-problem",
+    "uvaId": 105,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 942,
+        "height": 322,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 11,
+        "indent": 12,
+        "baseline": 0,
+        "text": "(1, 11, 5), (2, 6, 7), (3, 13, 9), (12, 7, 16), (14, 3, 25), (19, 18, 22), (23, 13, 29), (24, 4, 28)"
+      },
+      {
+        "lineIndex": 15,
+        "indent": 30,
+        "baseline": 0,
+        "text": "(1, 11, 3, 13, 9, 0, 12, 7, 16, 3, 19, 18, 22, 3, 23, 13, 29, 0)"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-108-maximum-sum",
+    "uvaId": 108,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-111-history-grading",
+    "uvaId": 111,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-118-mutant-flatworld-explorers",
+    "uvaId": 118,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-122-trees-on-the-level",
+    "uvaId": 122,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 434,
+        "height": 337,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-141-the-spot-game",
+    "uvaId": 141,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 867,
+        "height": 153,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-145-gondwanaland-telecom",
+    "uvaId": 145,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-22181-dollars",
+    "uvaId": 147,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-151-power-crisis",
+    "uvaId": 151,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-160-factors-and-factorials",
+    "uvaId": 160,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-165-stamps",
+    "uvaId": 165,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-23781-making-change",
+    "uvaId": 166,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-240-variable-radix-huffman-encoding",
+    "uvaId": 240,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-242-stamps-and-envelope-size",
+    "uvaId": 242,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-24941-uncompress",
+    "uvaId": 245,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-255-correct-move",
+    "uvaId": 255,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [
+      {
+        "lineIndex": 28,
+        "indent": 10,
+        "baseline": 0,
+        "text": "◦    K    ◦"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-22351-quirksome-squares",
+    "uvaId": 256,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-263-number-chains",
+    "uvaId": 263,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-264-count-on-cantor",
+    "uvaId": 264,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-272-tex-quotes",
+    "uvaId": 272,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-288-arithmetic-operations-with-large-integers",
+    "uvaId": 288,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-294-divisors",
+    "uvaId": 294,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-297-quadtrees",
+    "uvaId": 297,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 578,
+        "height": 502,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-299-train-swapping",
+    "uvaId": 299,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-300-maya-calendar",
+    "uvaId": 300,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-302-john-s-trip",
+    "uvaId": 302,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-315-network",
+    "uvaId": 315,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-337-interpreting-control-sequence",
+    "uvaId": 337,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-340-master-mind-hints",
+    "uvaId": 340,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-357-let-me-count-the-ways",
+    "uvaId": 357,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-22151-big-mod",
+    "uvaId": 374,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-378-intersecting-lines",
+    "uvaId": 378,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-380-call-forwarding",
+    "uvaId": 380,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-382-perfection",
+    "uvaId": 382,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-389-basically-speaking",
+    "uvaId": 389,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-392-polynomial-showdown",
+    "uvaId": 392,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-397-equation-elation",
+    "uvaId": 397,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-401-palindromes",
+    "uvaId": 401,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-406-prime-cuts",
+    "uvaId": 406,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-409-exeuses-excuses",
+    "uvaId": 409,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-417-word-index",
+    "uvaId": 417,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-437-the-tower-of-babylon",
+    "uvaId": 437,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-439-knight-moves",
+    "uvaId": 439,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-441-lotto",
+    "uvaId": 441,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-442-matrix-chain-multiplication",
+    "uvaId": 442,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-455-periodic-strings",
+    "uvaId": 455,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-458-the-decoder",
+    "uvaId": 458,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-482-permutation-arrays",
+    "uvaId": 482,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-483-word-scramble",
+    "uvaId": 483,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-488-triangle-wave",
+    "uvaId": 488,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-490-rotating-sentences",
+    "uvaId": 490,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-494-kindergarten-counting-game",
+    "uvaId": 494,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-496-simply-subsets",
+    "uvaId": 496,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-499-what-s-the-frequency-kenneth",
+    "uvaId": 499,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-501-black-box",
+    "uvaId": 501,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-512-spreadsheet-tracking",
+    "uvaId": 512,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-514-rails",
+    "uvaId": 514,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 471,
+        "height": 249,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-516-prime-land",
+    "uvaId": 516,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 8,
+        "indent": 45,
+        "baseline": 0,
+        "text": "(ekx , ekx −1 , . . . , e1 , e0 )"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-532-dungeon-master",
+    "uvaId": 532,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-534-frogger",
+    "uvaId": 534,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-536-tree-recovery",
+    "uvaId": 536,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-540-team-queue",
+    "uvaId": 540,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-541-error-correction",
+    "uvaId": 541,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-543-goldbach-s-conjecture",
+    "uvaId": 543,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-544-heavy-cargo",
+    "uvaId": 544,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-22821-oil-deposits",
+    "uvaId": 572,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-573-the-snail",
+    "uvaId": 573,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-579-clockhands",
+    "uvaId": 579,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-580-critical-mass",
+    "uvaId": 580,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-591-box-of-bricks",
+    "uvaId": 591,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 493,
+        "height": 138,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-612-dna-sorting",
+    "uvaId": 612,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-615-is-it-a-tree",
+    "uvaId": 615,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 607,
+        "height": 195,
+        "color": "gray",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-630-anagrams-ii",
+    "uvaId": 630,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-657-the-die-is-cast",
+    "uvaId": 657,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 176,
+        "height": 175,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-665-false-coin",
+    "uvaId": 665,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 347,
+        "height": 248,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-673-parentheses-balance",
+    "uvaId": 673,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-674-coin-change",
+    "uvaId": 674,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-679-dropping-balls",
+    "uvaId": 679,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 646,
+        "height": 264,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 22,
+        "indent": 8,
+        "baseline": 0,
+        "text": "Fig. 1: An example of FBT with the maximum depth 4 and sequential node numbers."
+      },
+      {
+        "lineIndex": 31,
+        "indent": 37,
+        "baseline": 0,
+        "text": "2 ≤ D ≤ 20, and 1 ≤ I ≤ 524288."
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-686-goldbach-s-conjecture-ii",
+    "uvaId": 686,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-696-how-many-knights",
+    "uvaId": 696,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-706-lc-display",
+    "uvaId": 706,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-709-formatting-text",
+    "uvaId": 709,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-714-copying-books",
+    "uvaId": 714,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-23581-glass-beads",
+    "uvaId": 719,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-725-division",
+    "uvaId": 725,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-748-exponentiation",
+    "uvaId": 748,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-753-a-plug-for-unix",
+    "uvaId": 753,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10600-network-connections",
+    "uvaId": 793,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-798-title-puzzle",
+    "uvaId": 798,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 477,
+        "height": 88,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 11,
+        "indent": 29,
+        "baseline": 0,
+        "text": "Figure 1: Combining tiles to rebuild a surface"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-815-flooded",
+    "uvaId": 815,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-820-internet-bandwidth",
+    "uvaId": 820,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-828-deciphering-messages",
+    "uvaId": 828,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-834-continued-fractions",
+    "uvaId": 834,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-846-steps",
+    "uvaId": 846,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-855-lunch-in-grid-city",
+    "uvaId": 855,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 169,
+        "height": 169,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-865-substitution-cypher",
+    "uvaId": 865,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10500-brick-wall-patterns",
+    "uvaId": 900,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 221,
+        "height": 178,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-907-winterim-backpacking-trip",
+    "uvaId": 907,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 477,
+        "height": 260,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-913-joana-and-the-odd-numbers",
+    "uvaId": 913,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 153,
+        "height": 287,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10601-eternal-truths",
+    "uvaId": 928,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 137,
+        "height": 145,
+        "color": "index",
+        "enc": "image"
+      },
+      {
+        "page": 1,
+        "width": 140,
+        "height": 140,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-929-number-maze",
+    "uvaId": 929,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 177,
+        "height": 132,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-941-permutations",
+    "uvaId": 941,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-948-fibonaccimal-base",
+    "uvaId": 948,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-967-circular",
+    "uvaId": 967,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10501-safe-salutations",
+    "uvaId": 991,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 1095,
+        "height": 193,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-993-product-of-digits",
+    "uvaId": 993,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10503-show-the-sequence",
+    "uvaId": 997,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 6,
+        "indent": 33,
+        "baseline": 0,
+        "text": "S = [n]     meaning that       Si = n      ∀i ∈ IN,"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1056-degrees-of-separation",
+    "uvaId": 1056,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [
+      {
+        "lineIndex": 15,
+        "indent": 10,
+        "baseline": 0,
+        "text": "Network A: Max. degree of separation = 2                 Network B: Disconnected"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1062-containers",
+    "uvaId": 1062,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1101-addmul",
+    "uvaId": 1101,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1118-binary-stirling-numbers",
+    "uvaId": 1118,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 8,
+        "indent": 17,
+        "baseline": 0,
+        "text": "S(n, m) = mS(n − 1, m) + S(n − 1, m − 1), for integers 1 < m < n."
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1193-radar-installation",
+    "uvaId": 1193,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 377,
+        "height": 228,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 14,
+        "indent": 28,
+        "baseline": 0,
+        "text": "Figure 1: A Sample Input of Radar Installation"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1200-a-dp-problem",
+    "uvaId": 1200,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 3,
+        "indent": 41,
+        "baseline": 0,
+        "text": "2x − 4 + 5x + 300 = 98x"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1203-argus",
+    "uvaId": 1203,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1207-agtc",
+    "uvaId": 1207,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1208-oreon",
+    "uvaId": 1208,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 542,
+        "height": 324,
+        "color": "gray",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 22,
+        "indent": 23,
+        "baseline": 0,
+        "text": "Figure 2: Map of six cities and its interconnecting tunnels"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-24461-sum-of-consecutive-prime-numbers",
+    "uvaId": 1210,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1225-digit-counting",
+    "uvaId": 1225,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 4,
+        "indent": 44,
+        "baseline": 0,
+        "text": "12345678910111213"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1234-racing",
+    "uvaId": 1234,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 420,
+        "height": 286,
+        "color": "rgb",
+        "enc": "image"
+      },
+      {
+        "page": 2,
+        "width": 463,
+        "height": 286,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1237-expert-enough",
+    "uvaId": 1237,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10465-necklace",
+    "uvaId": 1242,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1260-sales",
+    "uvaId": 1260,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1262-password",
+    "uvaId": 1262,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 638,
+        "height": 325,
+        "color": "rgb",
+        "enc": "image"
+      },
+      {
+        "page": 1,
+        "width": 209,
+        "height": 215,
+        "color": "rgb",
+        "enc": "image"
+      },
+      {
+        "page": 2,
+        "width": 502,
+        "height": 248,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 16,
+        "indent": 16,
+        "baseline": 0,
+        "text": "Figure 1. 6 × 5 window clips a valid grid representation for a password."
+      },
+      {
+        "lineIndex": 48,
+        "indent": 18,
+        "baseline": 0,
+        "text": "Figure 3. Both of ‘COMPU’ and ‘DPMAG’ are feasible password ."
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1292-strategic-game",
+    "uvaId": 1292,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 223,
+        "height": 214,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1316-supermarket",
+    "uvaId": 1316,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 169,
+        "height": 180,
+        "color": "index",
+        "enc": "image"
+      },
+      {
+        "page": 1,
+        "width": 80,
+        "height": 50,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1339-ancient-cipher",
+    "uvaId": 1339,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1366-martian-mining",
+    "uvaId": 1366,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 327,
+        "height": 195,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1368-dna-consensus-string",
+    "uvaId": 1368,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 294,
+        "height": 400,
+        "color": "gray",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1371-period",
+    "uvaId": 1371,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 494,
+        "height": 174,
+        "color": "icc",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1513-movie-collection",
+    "uvaId": 1513,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10038-disk-tree",
+    "uvaId": 1556,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1583-digit-generator",
+    "uvaId": 1583,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1585-score",
+    "uvaId": 1585,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1587-box",
+    "uvaId": 1587,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 460,
+        "height": 112,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1594-ducci-sequence",
+    "uvaId": 1594,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 4,
+        "indent": 30,
+        "baseline": 0,
+        "text": "(a1 , a2 , · · · , an ) → (|a1 − a2 |, |a2 − a3 |, · · · , |an − a1 |)"
+      },
+      {
+        "lineIndex": 9,
+        "indent": 16,
+        "baseline": 0,
+        "text": "(8, 11, 2, 7) → (3, 9, 5, 1) → (6, 4, 4, 2) → (2, 0, 2, 4) → (2, 2, 2, 2) → (0, 0, 0, 0)."
+      },
+      {
+        "lineIndex": 13,
+        "indent": 8,
+        "baseline": 0,
+        "text": "(4, 2, 0, 2, 0) → (2, 2, 2, 2, 4) → (0,0,0,2,2) → (0, 0, 2, 0, 2) → (0, 2, 2, 2, 2) → (2, 0, 0, 0, 2) →"
+      },
+      {
+        "lineIndex": 15,
+        "indent": 8,
+        "baseline": 0,
+        "text": "(2, 0, 0, 2, 0) → (2, 0, 2, 2, 2) → (2, 2, 0, 0, 0) → (0, 2, 0, 0, 2) → (2, 2, 0, 2, 2) → (0, 2, 2, 0, 0) →"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1632-alibaba",
+    "uvaId": 1632,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1640-the-counting-problem",
+    "uvaId": 1640,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1644-prime-gap",
+    "uvaId": 1644,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1650-number-string",
+    "uvaId": 1650,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1657-game",
+    "uvaId": 1657,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1660-cable-tv-network",
+    "uvaId": 1660,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 424,
+        "height": 131,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 13,
+        "indent": 37,
+        "baseline": 0,
+        "text": "Figure 1. Cable TV networks"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1714-keyboarding",
+    "uvaId": 1714,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 585,
+        "height": 226,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 22,
+        "indent": 10,
+        "baseline": 0,
+        "text": "Figure F.1: Sample Input 1. An example virtual keyboard and hardware buttons."
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1730-sum-of-mslcm",
+    "uvaId": 1730,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-1746-string-theory",
+    "uvaId": 1746,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10602-longest-paths",
+    "uvaId": 10000,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10505-center-of-masses",
+    "uvaId": 10002,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10603-cutting-sticks",
+    "uvaId": 10003,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10004-bicoloring",
+    "uvaId": 10004,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10604-packing-polygons",
+    "uvaId": 10005,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10605-count-the-trees",
+    "uvaId": 10007,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10008-what-s-cryptanalysis",
+    "uvaId": 10008,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10010-where-s-waldorf",
+    "uvaId": 10010,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10606-how-big-is-it",
+    "uvaId": 10012,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10607-joseph-s-cousin",
+    "uvaId": 10015,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10018-reverse-and-add",
+    "uvaId": 10018,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10019-funny-encryption-method",
+    "uvaId": 10019,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10608-minimal-coverage",
+    "uvaId": 10020,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10609-square-root",
+    "uvaId": 10023,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10610-curling-up-the-cube",
+    "uvaId": 10024,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10025-the-1-2-n-k-problem",
+    "uvaId": 10025,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10026-shoemaker-s-problem",
+    "uvaId": 10026,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10032-tug-of-war",
+    "uvaId": 10032,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10035-primary-arithmetic",
+    "uvaId": 10035,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10036-divisibility",
+    "uvaId": 10036,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10038-jolly-jumpers",
+    "uvaId": 10038,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10041-vito-s-family",
+    "uvaId": 10041,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-23571-smith-numbers",
+    "uvaId": 10042,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 7,
+        "indent": 40,
+        "baseline": 0,
+        "text": "4937775 = 3 · 5 · 5 · 65837"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10050-hartals",
+    "uvaId": 10050,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10055-hashmat",
+    "uvaId": 10055,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10056-what-is-the-probability",
+    "uvaId": 10056,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10057-a-mid-summer-night-s-dream",
+    "uvaId": 10057,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 14,
+        "indent": 31,
+        "baseline": 0,
+        "text": "(|X1 − A| + |X2 − A| + . . . + |Xn − A|)"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10062-tell-me-the-frequencies",
+    "uvaId": 10062,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10066-the-twin-towers",
+    "uvaId": 10066,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10071-back-to-high-school-physics",
+    "uvaId": 10071,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10074-take-the-land",
+    "uvaId": 10074,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10079-pizza-cutting",
+    "uvaId": 10079,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 161,
+        "height": 161,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10636-gopher-ii",
+    "uvaId": 10080,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 405,
+        "height": 303,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10637-tight-words",
+    "uvaId": 10081,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10082-wertyu",
+    "uvaId": 10082,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 331,
+        "height": 109,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10093-an-easy-problem",
+    "uvaId": 10093,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10099-the-tourist-guide",
+    "uvaId": 10099,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 344,
+        "height": 287,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10101-bangla-numbers",
+    "uvaId": 10101,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10645-euclid-problem",
+    "uvaId": 10104,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10106-product",
+    "uvaId": 10106,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10107-what-is-the-median",
+    "uvaId": 10107,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10110-light-more-light",
+    "uvaId": 10110,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10655-sumsets",
+    "uvaId": 10125,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 188,
+        "height": 188,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10531-zipf-s-law",
+    "uvaId": 10126,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 343,
+        "height": 285,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10130-supersale",
+    "uvaId": 10130,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10658-is-bigger-smarter",
+    "uvaId": 10131,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10533-the-trip",
+    "uvaId": 10137,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10142-australian-voting",
+    "uvaId": 10142,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10150-doublets",
+    "uvaId": 10150,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10161-ant-on-a-chessboard",
+    "uvaId": 10161,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10416-last-digit",
+    "uvaId": 10162,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 3,
+        "indent": 38,
+        "baseline": 0,
+        "text": "S = 11 + 22 + 33 + . . . + N N"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10675-urn-ball-probabilities",
+    "uvaId": 10169,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10170-the-hotel-with-infinite-rooms",
+    "uvaId": 10170,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10679-irreducible-basic-fractions",
+    "uvaId": 10179,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10551-bee-maja",
+    "uvaId": 10182,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 284,
+        "height": 367,
+        "color": "index",
+        "enc": "image"
+      },
+      {
+        "page": 1,
+        "width": 284,
+        "height": 368,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10188-automated-judge-script",
+    "uvaId": 10188,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10189-minesweeper",
+    "uvaId": 10189,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10190-divide-but-not-quite-conquer",
+    "uvaId": 10190,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10191-longest-nap",
+    "uvaId": 10191,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10193-all-you-need-is-love",
+    "uvaId": 10193,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10200-prime-time",
+    "uvaId": 10200,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10732-snow-clearing",
+    "uvaId": 10203,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 272,
+        "height": 182,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10422-is-this-integration",
+    "uvaId": 10209,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 500,
+        "height": 503,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10559-i-love-big-numbers",
+    "uvaId": 10220,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10221-satellites",
+    "uvaId": 10221,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 300,
+        "height": 300,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10222-decode-the-mad-man",
+    "uvaId": 10222,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10226-hardwood-species",
+    "uvaId": 10226,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 176,
+        "height": 174,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10229-modular-fibonacci",
+    "uvaId": 10229,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10235-simply-emirp",
+    "uvaId": 10235,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10242-fourth-point",
+    "uvaId": 10242,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10741-the-grand-dinner",
+    "uvaId": 10249,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10252-common-permutation",
+    "uvaId": 10252,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-11130-the-priest-mathematician",
+    "uvaId": 10254,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 467,
+        "height": 249,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 9,
+        "indent": 30,
+        "baseline": 0,
+        "text": "Fig: The Four Needle (Peg) Tower of Hanoi"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10429-contest-scoreboard",
+    "uvaId": 10258,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10267-graphical-editor",
+    "uvaId": 10267,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10268-498-bis",
+    "uvaId": 10268,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 10,
+        "indent": 36,
+        "baseline": 0,
+        "text": "a0 xn + a1 xn−1 + . . . + an−1 x + an ."
+      },
+      {
+        "lineIndex": 14,
+        "indent": 34,
+        "baseline": 0,
+        "text": "a0 nxn−1 + a1 (n − 1)xn−2 + . . . + an−1 ."
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10273-eat-or-not-to-eat",
+    "uvaId": 10273,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 405,
+        "height": 500,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10432-mine-sweeper",
+    "uvaId": 10279,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 160,
+        "height": 239,
+        "color": "index",
+        "enc": "image"
+      },
+      {
+        "page": 1,
+        "width": 160,
+        "height": 239,
+        "color": "index",
+        "enc": "image"
+      },
+      {
+        "page": 1,
+        "width": 160,
+        "height": 239,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10579-hay-points",
+    "uvaId": 10295,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 299,
+        "height": 177,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10582-power-strings",
+    "uvaId": 10298,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 177,
+        "height": 312,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-24731-roads-in-the-north",
+    "uvaId": 10308,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10309-turn-the-lights-off",
+    "uvaId": 10309,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10326-the-polynomial-equation",
+    "uvaId": 10326,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 11,
+        "indent": 44,
+        "baseline": 0,
+        "text": "x2 − 5x + 6 = 0"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10327-flip-sort",
+    "uvaId": 10327,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10336-rank-the-languages",
+    "uvaId": 10336,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-11009-all-in-all",
+    "uvaId": 10340,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10355-superman",
+    "uvaId": 10355,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10364-square",
+    "uvaId": 10364,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 411,
+        "height": 269,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10365-blocks",
+    "uvaId": 10365,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 297,
+        "height": 116,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10369-arctic-network",
+    "uvaId": 10369,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 355,
+        "height": 483,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10382-watering-grass",
+    "uvaId": 10382,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 530,
+        "height": 261,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10397-connect-the-campus",
+    "uvaId": 10397,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 596,
+        "height": 303,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 17,
+        "indent": 33,
+        "baseline": 0,
+        "text": "Fig: University of Waterloo Campus"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-23681-bachet-s-game",
+    "uvaId": 10404,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 453,
+        "height": 159,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10405-longest-common-subsequence",
+    "uvaId": 10405,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 495,
+        "height": 60,
+        "color": "rgb",
+        "enc": "image"
+      },
+      {
+        "page": 1,
+        "width": 510,
+        "height": 60,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10407-simple-division",
+    "uvaId": 10407,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 169,
+        "height": 174,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10409-die-game",
+    "uvaId": 10409,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 58,
+        "height": 52,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10415-eb-alto-saxophone-player",
+    "uvaId": 10415,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 200,
+        "height": 444,
+        "color": "icc",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10420-list-of-conquests",
+    "uvaId": 10420,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10443-rock-scissors-paper",
+    "uvaId": 10443,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 240,
+        "height": 320,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-11174-homer-simpson",
+    "uvaId": 10465,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 115,
+        "height": 181,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10474-where-is-the-marble",
+    "uvaId": 10474,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 194,
+        "height": 286,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10487-closest-sums",
+    "uvaId": 10487,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10530-guessing-game",
+    "uvaId": 10530,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 251,
+        "height": 217,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10533-digit-primes",
+    "uvaId": 10533,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-11179-wavio-sequence",
+    "uvaId": 10534,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 16,
+        "indent": 34,
+        "baseline": 0,
+        "text": "1 2 3 2 1 2 3 4 3 2 1 5 4 1 2 3 2 2 1."
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10539-almost-prime-numbers",
+    "uvaId": 10539,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10550-combination-lock",
+    "uvaId": 10550,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 227,
+        "height": 335,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10583-ubiquitous-religions",
+    "uvaId": 10583,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 226,
+        "height": 305,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10591-happy-number",
+    "uvaId": 10591,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10603-fill",
+    "uvaId": 10603,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-11184-opening-doors",
+    "uvaId": 10606,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10626-buying-coke",
+    "uvaId": 10626,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10633-rare-easy-problem",
+    "uvaId": 10633,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10635-the-art-gallery",
+    "uvaId": 10635,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 348,
+        "height": 330,
+        "color": "rgb",
+        "enc": "jpeg"
+      },
+      {
+        "page": 1,
+        "width": 492,
+        "height": 252,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10642-can-you-solve-it",
+    "uvaId": 10642,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 402,
+        "height": 341,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 5,
+        "indent": 8,
+        "baseline": 0,
+        "text": "total_number_of _step(s)_needed = number_of _intermediate_circles_you_pass + 1"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10664-luggage",
+    "uvaId": 10664,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10666-the-eurocup-is-here",
+    "uvaId": 10666,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 477,
+        "height": 175,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10672-marbles-on-a-tree",
+    "uvaId": 10672,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 320,
+        "height": 240,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-23651-the-jackpot",
+    "uvaId": 10684,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10690-expression-again",
+    "uvaId": 10690,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-23671-camel-trading",
+    "uvaId": 10700,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-23661-bit-mask",
+    "uvaId": 10718,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10721-bar-codes",
+    "uvaId": 10721,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 117,
+        "height": 202,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10740-first-love",
+    "uvaId": 10740,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 192,
+        "height": 197,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10763-foreign-exchange",
+    "uvaId": 10763,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10783-odd-sum",
+    "uvaId": 10783,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10789-prime-frequency",
+    "uvaId": 10789,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 300,
+        "height": 240,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10800-not-that-kind-of-graph",
+    "uvaId": 10800,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10810-ultra-quicksort",
+    "uvaId": 10810,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 94,
+        "height": 366,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10812-beat-the-spread",
+    "uvaId": 10812,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 120,
+        "height": 120,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10813-traditional-bingo",
+    "uvaId": 10813,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 351,
+        "height": 413,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10815-andy-s-first-dictionary",
+    "uvaId": 10815,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 255,
+        "height": 200,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10858-unique-factorization",
+    "uvaId": 10858,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10903-playing-war",
+    "uvaId": 10903,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 620,
+        "height": 219,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-11041-children-s-game",
+    "uvaId": 10905,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10908-largest-squares",
+    "uvaId": 10908,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-11192-simple-minded-hashing",
+    "uvaId": 10912,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10921-find-the-telephone",
+    "uvaId": 10921,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10922-2-the-9s",
+    "uvaId": 10922,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10929-you-can-say-11",
+    "uvaId": 10929,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-10931-parity",
+    "uvaId": 10931,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11000-the-four-in-one-stadium",
+    "uvaId": 11000,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11003-boxes",
+    "uvaId": 11003,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11005-cheapest-base",
+    "uvaId": 11005,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10766-antimatter-ray-clearcutting",
+    "uvaId": 11008,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11039-building-designing",
+    "uvaId": 11039,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11040-add-bricks-in-the-wall",
+    "uvaId": 11040,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 475,
+        "height": 291,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11054-wine-trading-in-gergovig",
+    "uvaId": 11054,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-11058-exact-sum",
+    "uvaId": 11057,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10468-maximum-product",
+    "uvaId": 11059,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11063-b2-sequence",
+    "uvaId": 11063,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11067-little-red-riding-hood",
+    "uvaId": 11067,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 550,
+        "height": 347,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11078-open-credit-system",
+    "uvaId": 11078,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10906-matrix-decompressing",
+    "uvaId": 11082,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11085-back-to-the-8-queens",
+    "uvaId": 11085,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11094-continents",
+    "uvaId": 11094,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11121-base-2",
+    "uvaId": 11121,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11150-cola",
+    "uvaId": 11150,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 601,
+        "height": 374,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11157-dynamic-frog",
+    "uvaId": 11157,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 213,
+        "height": 228,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11175-from-d-to-e-and-back",
+    "uvaId": 11175,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11192-group-reverse",
+    "uvaId": 11192,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11219-basic-wall-maze",
+    "uvaId": 11219,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11220-decoding-the-message",
+    "uvaId": 11220,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11233-deli-deli",
+    "uvaId": 11233,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11240-antimonotonicity",
+    "uvaId": 11240,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 339,
+        "height": 140,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 14,
+        "indent": 30,
+        "baseline": 0,
+        "text": "n F red[0] F red[1] F red[2] . . . F red[n − 1]."
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11258-string-partition",
+    "uvaId": 11258,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11264-coin-collector",
+    "uvaId": 11264,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11284-shopping-trip",
+    "uvaId": 11284,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 468,
+        "height": 126,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10520-conformity",
+    "uvaId": 11286,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 515,
+        "height": 257,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10471-counting-chaos",
+    "uvaId": 11309,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 147,
+        "height": 115,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11321-sort-sort-and-sort",
+    "uvaId": 11321,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11332-summing-digits",
+    "uvaId": 11332,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 300,
+        "height": 541,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11336-drm",
+    "uvaId": 11336,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11344-the-huge-one",
+    "uvaId": 11344,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11349-symmetric-matrix",
+    "uvaId": 11349,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11360-having-fun-with-matrices",
+    "uvaId": 11360,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11364-parking",
+    "uvaId": 11364,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 109,
+        "height": 110,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11389-the-bus-driver-problem",
+    "uvaId": 11389,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11401-triangle-counting",
+    "uvaId": 11401,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 487,
+        "height": 96,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-21964-fill-the-containers",
+    "uvaId": 11413,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11417-gcd",
+    "uvaId": 11417,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11455-behold-my-quadrangle",
+    "uvaId": 11455,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11456-trainsorting",
+    "uvaId": 11456,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11461-square-numbers",
+    "uvaId": 11461,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11472-beautiful-numbers",
+    "uvaId": 11472,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-24931-extend-to-palindromes",
+    "uvaId": 11475,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11481-square-sums",
+    "uvaId": 11481,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11489-integer-game",
+    "uvaId": 11489,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11495-bubbles-and-buckets",
+    "uvaId": 11495,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11498-division-of-nlogonia",
+    "uvaId": 11498,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 501,
+        "height": 237,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11518-dominos-2",
+    "uvaId": 11518,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11526-h-n",
+    "uvaId": 11526,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11536-smallest-sub-array",
+    "uvaId": 11536,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11538-chess-queen",
+    "uvaId": 11538,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 347,
+        "height": 254,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 9,
+        "indent": 14,
+        "baseline": 0,
+        "text": "Figure: in a (2 × 2) chessboard 2 queens can be in attacking position in 12 ways"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11541-decoding",
+    "uvaId": 11541,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11576-scrolling-sign",
+    "uvaId": 11576,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11584-partitioning-by-palindromes",
+    "uvaId": 11584,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 553,
+        "height": 733,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11624-fire",
+    "uvaId": 11624,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 300,
+        "height": 377,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11633-food-portion-size",
+    "uvaId": 11633,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11634-generate-random-numbers",
+    "uvaId": 11634,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11636-hello-world",
+    "uvaId": 11636,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 936,
+        "height": 241,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11639-guard-the-land",
+    "uvaId": 11639,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 624,
+        "height": 394,
+        "color": "gray",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11659-informants",
+    "uvaId": 11659,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11677-alarm-clock",
+    "uvaId": 11677,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11678-cards-exchange",
+    "uvaId": 11678,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11689-soda-surpler",
+    "uvaId": 11689,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 320,
+        "height": 218,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11728-alternate-task",
+    "uvaId": 11728,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11730-number-transformation",
+    "uvaId": 11730,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11743-credit-check",
+    "uvaId": 11743,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 619,
+        "height": 397,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11747-heavy-cycle-edges",
+    "uvaId": 11747,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 300,
+        "height": 242,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 26,
+        "indent": 9,
+        "baseline": 0,
+        "text": "– remove edge e from T where e has the heaviest weight in C"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11764-cricket-field",
+    "uvaId": 11764,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 295,
+        "height": 166,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11792-krochanska-is-here",
+    "uvaId": 11792,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 384,
+        "height": 287,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11806-cheerleaders",
+    "uvaId": 11806,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 562,
+        "height": 315,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11824-a-minimum-land-price",
+    "uvaId": 11824,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 10,
+        "indent": 26,
+        "baseline": 0,
+        "text": "(2 × 7) + (2 × 22 ) + (2 × 103 ) = 2022 millions baht"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11908-skyscraper",
+    "uvaId": 11908,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11917-do-your-own-homework",
+    "uvaId": 11917,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 324,
+        "height": 220,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11934-magic-formula",
+    "uvaId": 11934,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 433,
+        "height": 337,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 3,
+        "indent": 18,
+        "baseline": 0,
+        "text": "f (x) = ax2 + bx + c"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11942-lumberjack-sequencing",
+    "uvaId": 11942,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11956-brainfuck",
+    "uvaId": 11956,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11957-checkers",
+    "uvaId": 11957,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11960-divisor-game",
+    "uvaId": 11960,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11987-almost-union-find",
+    "uvaId": 11987,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-11995-i-can-guess-the-data-structure",
+    "uvaId": 11995,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12015-google-is-feeling-lucky",
+    "uvaId": 12015,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12019-doom-s-day-algorithm",
+    "uvaId": 12019,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12041-bfs-binary-fibonacci-string",
+    "uvaId": 12041,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12063-zeros-and-ones",
+    "uvaId": 12063,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12096-the-setstack-computer",
+    "uvaId": 12096,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 300,
+        "height": 187,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12195-jingle-composing",
+    "uvaId": 12195,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 475,
+        "height": 98,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 19,
+        "indent": 38,
+        "baseline": 0,
+        "text": "/HH/QQQQ/XXXTXTEQH/W/HW/"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12208-how-many-ones-needed",
+    "uvaId": 12208,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 98,
+        "height": 276,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12218-an-industrial-spy",
+    "uvaId": 12218,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12223-moving-to-nuremberg",
+    "uvaId": 12223,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12250-language-detection",
+    "uvaId": 12250,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 297,
+        "height": 304,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12319-edgetown-s-traffic-jams",
+    "uvaId": 12319,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 413,
+        "height": 204,
+        "color": "rgb",
+        "enc": "image"
+      },
+      {
+        "page": 1,
+        "width": 512,
+        "height": 248,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-23771-lexicographic-order",
+    "uvaId": 12335,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12382-grid-of-lamps",
+    "uvaId": 12382,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12385-interesting-sequences",
+    "uvaId": 12385,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12428-enemy-at-the-gates",
+    "uvaId": 12428,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 766,
+        "height": 262,
+        "color": "index",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12442-forwarding-emails",
+    "uvaId": 12442,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12455-bars",
+    "uvaId": 12455,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-24911-robot-instructions",
+    "uvaId": 12503,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12532-interval-product",
+    "uvaId": 12532,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12546-lcm-pair-sum",
+    "uvaId": 12546,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10615-divisibility",
+    "uvaId": 12581,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12592-slogan-learning-of-princess",
+    "uvaId": 12592,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12602-nice-licence-plates",
+    "uvaId": 12602,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 618,
+        "height": 408,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12627-erratic-expansion",
+    "uvaId": 12627,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 624,
+        "height": 284,
+        "color": "rgb",
+        "enc": "jpeg"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12650-dangerous-dive",
+    "uvaId": 12650,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12654-patches",
+    "uvaId": 12654,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12694-meeting-room-arrangement",
+    "uvaId": 12694,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12797-letters",
+    "uvaId": 12797,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12820-cool-word",
+    "uvaId": 12820,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12869-zeroes",
+    "uvaId": 12869,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": true,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12882-city-park",
+    "uvaId": 12882,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 500,
+        "height": 335,
+        "color": "rgb",
+        "enc": "jpeg"
+      },
+      {
+        "page": 2,
+        "width": 882,
+        "height": 446,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12908-the-book-thief",
+    "uvaId": 12908,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12911-subset-sum",
+    "uvaId": 12911,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12918-lucky-thief",
+    "uvaId": 12918,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12959-strategy-game",
+    "uvaId": 12959,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-12970-alcoholic-pilots",
+    "uvaId": 12970,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10642-marbles",
+    "uvaId": 13043,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-13055-inception",
+    "uvaId": 13055,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "gpe-10535-prime-distance",
+    "uvaId": 13157,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 145,
+        "height": 231,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-13171-pixel-art",
+    "uvaId": 13171,
+    "imageObjects": [
+      {
+        "page": 1,
+        "width": 202,
+        "height": 203,
+        "color": "icc",
+        "enc": "image"
+      },
+      {
+        "page": 1,
+        "width": 726,
+        "height": 703,
+        "color": "rgb",
+        "enc": "image"
+      }
+    ],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-13185-dpa-numbers-i",
+    "uvaId": 13185,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-13190-rockabye-tobby",
+    "uvaId": 13190,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-13204-count-these-permutations",
+    "uvaId": 13204,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [
+      {
+        "lineIndex": 3,
+        "indent": 35,
+        "baseline": 0,
+        "text": "|a1 –1| + |a2 –2| + · · · + |an –n| = ⌊n2 /2⌋"
+      }
+    ],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-13211-geonosis",
+    "uvaId": 13211,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-13242-pool-filling",
+    "uvaId": 13242,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  },
+  {
+    "slug": "uva-13257-license-plates",
+    "uvaId": 13257,
+    "imageObjects": [],
+    "hasVectorDiagramCandidate": false,
+    "centerCandidates": [],
+    "fetchError": null
+  }
+]
