@@ -1,0 +1,73 @@
+[
+  {
+    "slug": "uva-10082-wertyu",
+    "statementMd": "A common typing error is to place the hands on\nthe keyboard one row to the right of the correct\nposition. So ‘Q’ is typed as ‘W’ and ‘J’ is typed\nas ‘K’ and so on. You are to decode a message\ntyped in this manner.\n\n![Standard QWERTY keyboard layout](/problem-images/uva-10082-wertyu.png)\n\n### Input\n\nInput consists of several lines of text. Each line may contain digits, spaces, upper case letters (except\nQ, A, Z), or punctuation shown above \\[except back-quote (\\`)\\]. Keys labelled with words \\[Tab, BackSp,\nControl, etc.\\] are not represented in the input.\n\n### Output\n\nYou are to replace each letter or punction symbol by the one immediately to its left on the ‘QWERTY’\nkeyboard shown above. Spaces in the input should be echoed in the output.\n",
+    "imagesAdded": [
+      "uva-10082-wertyu.png"
+    ],
+    "centeredBlocksAdded": 0,
+    "issue": "PDF has embedded diagram(s) dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it."
+  },
+  {
+    "slug": "uva-10099-the-tourist-guide",
+    "statementMd": "Mr. G. works as a tourist guide. His current assignment is to take some tourists from one city to\nanother. Some two-way roads connect the cities. For each pair of neighboring cities there is a bus\nservice that runs only between those two cities and uses the road that directly connects them. Each\nbus service has a limit on the maximum number of passengers it can carry. Mr. G. has a map showing\nthe cities and the roads connecting them. He also has the information regarding each bus service. He\nunderstands that it may not always be possible for him to take all the tourists to the destination city\nin a single trip. For example, consider the following road map of 7 cities. The edges connecting the\ncities represent the roads and the number written on each edge indicates the passenger limit of the bus\nservice that runs on that road.\n\n![Example road map of 7 cities with passenger limits on each edge](/problem-images/uva-10099-the-tourist-guide.png)\n\nNow, if he wants to take 99 tourists from city 1 to city 7, he will require at least 5 trips and the\nroute he should take is : 1 - 2 - 4 - 7.\n\nBut, Mr. G. finds it difficult to find the best route all by himself so that he may be able to take all\nthe tourists to the destination city in minimum number of trips. So, he seeks your help.\n\n### Input\n\nThe input will contain one or more test cases. The first line of each test case will contain two integers:\nN (N ≤ 100) and R representing respectively the number of cities and the number of road segments.\nThen R lines will follow each containing three integers: C<sub>1</sub>, C<sub>2</sub> and P . C<sub>1</sub> and C<sub>2</sub> are the city numbers\nand P (P \\> 1) is the limit on the maximum number of passengers to be carried by the bus service\nbetween the two cities. City numbers are positive integers ranging from 1 to N . The (R + 1)-th line\nwill contain three integers: S, D and T representing respectively the starting city, the destination city\nand the number of tourists to be guided.\n\nThe input will end with two zeroes for N and R.\n\n### Output\n\nFor each test case in the input first output the scenario number. Then output the minimum number of\ntrips required for this case on a separate line. Print a blank line after the output of each test case.\n",
+    "imagesAdded": [
+      "uva-10099-the-tourist-guide.png"
+    ],
+    "centeredBlocksAdded": 0,
+    "issue": "PDF has embedded diagram(s) dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it."
+  },
+  {
+    "slug": "gpe-10655-sumsets",
+    "statementMd": "Given S, a set of integers, find the largest d such that a + b + c = d\nwhere a, b, c, and d are distinct elements of S.\n\n![Venn diagram of S = {2, 3, 5, 7, 12}, illustrating the sample where 2+3+7=12](/problem-images/gpe-10655-sumsets.png)\n\n### Input\n\nSeveral S, each consisting of a line containing an integer 1 ≤ n ≤ 1000\nindicating the number of elements in S, followed by the elements of S,\none per line. Each element of S is a distinct integer between -536870912\nand +536870911 inclusive. The last line of input contains ‘0’.\n\n### Output\n\nFor each S, a single line containing d, or a single line containing ‘no solution’.\n",
+    "imagesAdded": [
+      "gpe-10655-sumsets.png"
+    ],
+    "centeredBlocksAdded": 0,
+    "issue": "PDF has embedded diagram(s) dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it."
+  },
+  {
+    "slug": "gpe-10531-zipf-s-law",
+    "statementMd": "Harvard linguistics professor George Kingsley\nZipf (1902-1950) observed that the frequency\nof the k-th most common word in a text is\nroughly proportional to 1/k. He justified his\nobservations in a book titled Human behavior\nand the principle of least effort published in\n1949. While Zipf’s rationale has largely been discredited, the principle still holds, and others have afforded it a more sound mathematical basis.\n\nYou are to find all the words occurring n\ntimes in an English text. A word is a sequence\nof letters. Words are separated by non-letters.\nCapitalization should be ignored. A word can\nbe of any length that an English word can be.\n\n![Log-log plot of word frequency versus rank, showing the Zipf's law relationship](/problem-images/gpe-10531-zipf-s-law.png)\n\n### Input\n\nInput consists of several test cases. The first line of each case contains a single positive integer n.\nSeveral lines of text follow which will contain no more than 10000 words. The text for each case is\nterminated by a single line containing EndOfText. EndOfText does not appear elsewhere in the input\nand is not considered a word.\n\n### Output\n\nFor each test case, output the words which occur n times in the input text, one word per line, lower\ncase, in alphabetical order. If there are no such words in input, output the following line:\n\n```\nThere is no such word.\n```\n\nLeave a blank line between cases.\n",
+    "imagesAdded": [
+      "gpe-10531-zipf-s-law.png"
+    ],
+    "centeredBlocksAdded": 0,
+    "issue": "PDF has embedded diagram(s) dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it."
+  },
+  {
+    "slug": "gpe-10551-bee-maja",
+    "statementMd": "Maja is a bee. She lives in a bee hive with thousands of other bees. This bee hive consists of many\nhexagonal honey combs where the honey is stored in.\n\nBut bee Maja has a problem. Willi told her where she can meet him, but because Willi is a male\ndrone and Maja is a female worker they have different coordinate systems.\n\n**Maja’s Coordinate System**\n\nMaja who often flies directly to a special honey comb has laid an advanced two dimensional grid over the whole hive.\n\n![Maja's coordinate system: hexagonal grid labeled with (x,y) coordinate pairs](/problem-images/gpe-10551-bee-maja-1.png)\n\n**Willi’s Coordinate System**\n\nWilli who is more lazy and often walks around just numbered the cells clockwise starting from 1 in the middle of the hive.\n\n![Willi's coordinate system: hexagonal grid numbered clockwise starting from 1 in the center](/problem-images/gpe-10551-bee-maja-2.png)\n\nHelp Maja to convert Willi’s system to hers. Write a program which for a given honey comb number\ngives the coordinates in Maja’s system.\n\n### Input\n\nThe input file contains one or more integers which represent Willi’s numbers. Each number stands on\nits own in a separate line, directly followed by a newline. The honey comb numbers are all less than\n100 000.\n\n### Output\n\nYou should output the corresponding Maja coordinates to Willi’s numbers, each coordinate pair on a\nseparate line.\n",
+    "imagesAdded": [
+      "gpe-10551-bee-maja-1.png",
+      "gpe-10551-bee-maja-2.png"
+    ],
+    "centeredBlocksAdded": 0,
+    "issue": "PDF has embedded diagram(s) dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it."
+  },
+  {
+    "slug": "gpe-10422-is-this-integration",
+    "statementMd": "In the image below you can see a square ABCD,\nwhere AB = BC = CD = DA = a. Four arcs\nare drawn taking the four vertexes A, B, C, D\nas centers and a as the radius. The arc that is\ndrawn taking A as center, starts at neighboring\nvertex B and ends at neighboring vertex D. All\nother arcs are drawn in a similar fashion. Regions of three different shapes are created in\nthis fashion. You will have to determine the\ntotal area if these different shaped regions.\n\n![Square ABCD with four arcs from each vertex creating three differently-shaded regions](/problem-images/gpe-10422-is-this-integration.png)\n\n### Input\n\nThe input file contains a floating-point number\na (0 ≤ a ≤ 10000) in each line which indicates\nthe length of one side of the square. Input is\nterminated by end of file.\n\n### Output\n\nFor each line of input, output in a single line\nthe total area of the three types of region (filled with different patterns in the image above).\n\nThese three numbers will of course be floating point numbers with three digits after the decimal\npoint. First number will denote the area of the striped region, the second number will denote the total\narea of the dotted regions and the third number will denote the area of the rest of the regions.\n",
+    "imagesAdded": [
+      "gpe-10422-is-this-integration.png"
+    ],
+    "centeredBlocksAdded": 0,
+    "issue": "PDF has embedded diagram(s) dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it."
+  },
+  {
+    "slug": "uva-10221-satellites",
+    "statementMd": "The radius of earth is 6440 Kilometer. There are many Satellites\nand Asteroids moving around the earth. If two Satellites create\nan angle with the center of earth, can you find out the distance\nbetween them? By distance we mean both the arc and chord\ndistances. Both satellites are on the same orbit (However, please\nconsider that they are revolving on a circular path rather than\nan elliptical path).\n\n![Diagram of Earth (E) and two satellite positions with angle a, radius r, and distance s](/problem-images/uva-10221-satellites.png)\n\n### Input\n\nThe input file will contain one or more test cases.\n\nEach test case consists of one line containing two-integer s\nand a, and a string ‘min’ or ‘deg’. Here s is the distance of the\nsatellite from the surface of the earth and a is the angle that the\nsatellites make with the center of earth. It may be in minutes (′) or in degrees (◦). Remember that the\nsame line will never contain minute and degree at a time.\n\n### Output\n\nFor each test case, print one line containing the required distances i.e. both arc distance and chord\ndistance respectively between two satellites in Kilometer. The distance will be a floating-point value\nwith six digits after decimal point.\n",
+    "imagesAdded": [
+      "uva-10221-satellites.png"
+    ],
+    "centeredBlocksAdded": 0,
+    "issue": "PDF has embedded diagram(s) dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it."
+  }
+]

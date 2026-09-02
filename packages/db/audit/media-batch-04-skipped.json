@@ -1,0 +1,5 @@
+[
+  { "slug": "gpe-10636-gopher-ii", "issue": "PDF page 1 has an embedded photo of a gopher, but it's a decorative stock photo carrying a visible third-party copyright watermark ('ANIMAL-PICTURES') — not appropriate to redistribute, and not referenced by the problem text anyway.", "fixApplied": "Skipped — not meaningful content to embed, and copyright-watermarked." },
+  { "slug": "gpe-10732-snow-clearing", "issue": "PDF page 1 has an embedded photo of a snowplow, but it's generic decorative stock photography unrelated to the problem's content.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10226-hardwood-species", "issue": "PDF page 1 has an embedded decorative tree clip-art illustration, purely decorative.", "fixApplied": "Skipped — not meaningful content to embed." }
+]
