@@ -1,0 +1,7 @@
+[
+  { "slug": "uva-10583-ubiquitous-religions", "issue": "PDF page 1 has an embedded decorative photo of a bookstore religion-section shelf, thematic flavor only, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10672-marbles-on-a-tree", "issue": "PDF page 1 has an embedded decorative photo of marbles spilling from a cup, thematic pun on the title, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10789-prime-frequency", "issue": "PDF page 1 has an embedded decorative \"counting sheep\" illustration, unrelated to the algorithmic content, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10810-ultra-quicksort", "issue": "PDF page 1 has an embedded decorative photo of a bubble lamp, a thematic pun on \"sort\", not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-10812-beat-the-spread", "issue": "PDF page 1 has an embedded decorative photo of a football, thematic flavor for the Superbowl-betting framing, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." }
+]
