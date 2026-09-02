@@ -13,7 +13,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-105-the-skyline-problem",
@@ -21,17 +23,19 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "fixed-prod",
+    "status": "fixed-local",
     "imagesAdded": [
       "uva-105-skyline.png"
     ],
     "centeredBlocksAdded": 2,
-    "issue": "PDF page 1 has an embedded diagram (buildings + resulting skyline) that was dropped during the original PDF-to-markdown import; the two tuple-list lines right below it are PDF-centered but were left-aligned plain text.",
-    "fixApplied": "Extracted the diagram via pdftoppm+crop (predates the pdfimages-based pipeline used for the rest of this pass) into apps/web/public/problem-images/uva-105-skyline.png, referenced it right after the sentence introducing it. Wrapped the two tuple-list lines in <div class=\"oj-center\"> to match their PDF-centered layout. Verified locally and on production, light and dark mode.",
+    "issue": "v1,v2,v3,vn-2,vn-1,vn,vi (x2) in the Output section were flattened subscripts.",
+    "fixApplied": "Wrapped in <sub>. Also fixed the missing bottom margin on .oj-center blocks (globals.css) that was cramping this problem's spacing.",
     "verifiedLocal": true,
     "verifiedProd": true,
-    "checkedAt": "2026-09-02T15:26:28.771Z",
-    "notes": ""
+    "checkedAt": "2026-09-02T16:23:18.957Z",
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 8
   },
   {
     "slug": "uva-108-maximum-sum",
@@ -47,7 +51,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-111-history-grading",
@@ -63,7 +69,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-118-mutant-flatworld-explorers",
@@ -79,7 +87,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-122-trees-on-the-level",
@@ -97,7 +107,9 @@
     "verifiedLocal": true,
     "verifiedProd": true,
     "checkedAt": "2026-09-02T15:42:48.422Z",
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-141-the-spot-game",
@@ -115,7 +127,9 @@
     "verifiedLocal": true,
     "verifiedProd": true,
     "checkedAt": "2026-09-02T15:42:48.719Z",
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-145-gondwanaland-telecom",
@@ -131,7 +145,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-22181-dollars",
@@ -147,7 +163,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-151-power-crisis",
@@ -163,7 +181,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-160-factors-and-factorials",
@@ -179,7 +199,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-165-stamps",
@@ -195,7 +217,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-23781-making-change",
@@ -211,7 +235,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-240-variable-radix-huffman-encoding",
@@ -227,7 +253,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-242-stamps-and-envelope-size",
@@ -243,7 +271,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-24941-uncompress",
@@ -259,7 +289,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-255-correct-move",
@@ -275,7 +307,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-22351-quirksome-squares",
@@ -291,7 +325,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-263-number-chains",
@@ -307,7 +343,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-264-count-on-cantor",
@@ -323,7 +361,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-272-tex-quotes",
@@ -339,7 +379,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-288-arithmetic-operations-with-large-integers",
@@ -355,7 +397,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-294-divisors",
@@ -371,7 +415,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-297-quadtrees",
@@ -389,7 +435,9 @@
     "verifiedLocal": true,
     "verifiedProd": true,
     "checkedAt": "2026-09-02T15:42:49.021Z",
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-299-train-swapping",
@@ -405,7 +453,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-300-maya-calendar",
@@ -421,7 +471,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-302-john-s-trip",
@@ -437,7 +489,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-315-network",
@@ -453,7 +507,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-337-interpreting-control-sequence",
@@ -469,7 +525,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-340-master-mind-hints",
@@ -485,7 +543,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-357-let-me-count-the-ways",
@@ -501,7 +561,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-22151-big-mod",
@@ -517,7 +579,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-378-intersecting-lines",
@@ -533,7 +597,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-380-call-forwarding",
@@ -549,7 +615,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-382-perfection",
@@ -565,7 +633,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-389-basically-speaking",
@@ -581,7 +651,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-392-polynomial-showdown",
@@ -597,7 +669,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-397-equation-elation",
@@ -613,7 +687,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-401-palindromes",
@@ -629,7 +705,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-406-prime-cuts",
@@ -645,7 +723,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-409-exeuses-excuses",
@@ -661,7 +741,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-417-word-index",
@@ -677,7 +759,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-437-the-tower-of-babylon",
@@ -693,7 +777,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-439-knight-moves",
@@ -709,7 +795,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-441-lotto",
@@ -725,7 +813,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-442-matrix-chain-multiplication",
@@ -741,7 +831,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-455-periodic-strings",
@@ -757,7 +849,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-458-the-decoder",
@@ -773,7 +867,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-482-permutation-arrays",
@@ -789,7 +885,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-483-word-scramble",
@@ -805,7 +903,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-488-triangle-wave",
@@ -821,7 +921,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-490-rotating-sentences",
@@ -837,7 +939,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-494-kindergarten-counting-game",
@@ -853,7 +957,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-496-simply-subsets",
@@ -869,7 +975,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-499-what-s-the-frequency-kenneth",
@@ -885,7 +993,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-501-black-box",
@@ -901,7 +1011,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-512-spreadsheet-tracking",
@@ -917,7 +1029,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-514-rails",
@@ -925,17 +1039,19 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-prod",
+    "status": "fixed-local",
     "imagesAdded": [
       "uva-514-rails.png"
     ],
     "centeredBlocksAdded": 0,
-    "issue": "PDF has an embedded diagram dropped during the original import.",
-    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-514-rails.png.",
+    "issue": "a1,a2,aN were flattened subscripts.",
+    "fixApplied": "Wrapped in <sub>.",
     "verifiedLocal": true,
     "verifiedProd": true,
-    "checkedAt": "2026-09-02T15:42:49.325Z",
-    "notes": ""
+    "checkedAt": "2026-09-02T16:23:18.958Z",
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 3
   },
   {
     "slug": "uva-516-prime-land",
@@ -951,7 +1067,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-532-dungeon-master",
@@ -967,7 +1085,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-534-frogger",
@@ -983,7 +1103,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-536-tree-recovery",
@@ -999,7 +1121,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-540-team-queue",
@@ -1015,7 +1139,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-541-error-correction",
@@ -1031,7 +1157,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-543-goldbach-s-conjecture",
@@ -1047,7 +1175,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-544-heavy-cargo",
@@ -1063,7 +1193,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-22821-oil-deposits",
@@ -1079,7 +1211,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-573-the-snail",
@@ -1095,7 +1229,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-579-clockhands",
@@ -1111,7 +1247,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-580-critical-mass",
@@ -1127,7 +1265,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-591-box-of-bricks",
@@ -1145,7 +1285,9 @@
     "verifiedLocal": true,
     "verifiedProd": true,
     "checkedAt": "2026-09-02T15:42:49.633Z",
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-612-dna-sorting",
@@ -1161,7 +1303,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-615-is-it-a-tree",
@@ -1179,7 +1323,9 @@
     "verifiedLocal": true,
     "verifiedProd": true,
     "checkedAt": "2026-09-02T15:42:49.917Z",
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-630-anagrams-ii",
@@ -1195,7 +1341,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-657-the-die-is-cast",
@@ -1203,17 +1351,19 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-prod",
+    "status": "fixed-local",
     "imagesAdded": [
       "uva-657-the-die-is-cast.png"
     ],
     "centeredBlocksAdded": 0,
-    "issue": "PDF has an embedded diagram dropped during the original import.",
-    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-657-the-die-is-cast.png.",
+    "issue": "a1,a2,ak (x2 for a1/ak),ai,ai+1 were flattened subscripts.",
+    "fixApplied": "Wrapped in <sub>.",
     "verifiedLocal": true,
     "verifiedProd": true,
-    "checkedAt": "2026-09-02T15:42:50.239Z",
-    "notes": ""
+    "checkedAt": "2026-09-02T16:23:18.958Z",
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 6
   },
   {
     "slug": "uva-665-false-coin",
@@ -1229,7 +1379,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": "2026-09-02T15:42:51.863Z",
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-673-parentheses-balance",
@@ -1245,7 +1397,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-674-coin-change",
@@ -1261,7 +1415,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-679-dropping-balls",
@@ -1269,17 +1425,19 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "fixed-prod",
+    "status": "fixed-local",
     "imagesAdded": [
       "uva-679-dropping-balls.png"
     ],
     "centeredBlocksAdded": 0,
-    "issue": "PDF has an embedded diagram dropped during the original import.",
-    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-679-dropping-balls.png.",
+    "issue": "D1,I1,Dk,Ik,Dl,Il in the input/output format table were flattened subscripts.",
+    "fixApplied": "Wrapped in <sub> inside the table cells.",
     "verifiedLocal": true,
     "verifiedProd": true,
-    "checkedAt": "2026-09-02T15:42:50.540Z",
-    "notes": ""
+    "checkedAt": "2026-09-02T16:23:18.958Z",
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 6
   },
   {
     "slug": "uva-686-goldbach-s-conjecture-ii",
@@ -1295,7 +1453,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-696-how-many-knights",
@@ -1311,7 +1471,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-706-lc-display",
@@ -1327,7 +1489,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-709-formatting-text",
@@ -1343,7 +1507,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-714-copying-books",
@@ -1359,7 +1525,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-23581-glass-beads",
@@ -1375,7 +1543,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-725-division",
@@ -1391,7 +1561,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-748-exponentiation",
@@ -1407,7 +1579,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-753-a-plug-for-unix",
@@ -1423,7 +1597,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10600-network-connections",
@@ -1439,7 +1615,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-798-title-puzzle",
@@ -1447,17 +1625,19 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "fixed-prod",
+    "status": "fixed-local",
     "imagesAdded": [
       "uva-798-title-puzzle.png"
     ],
     "centeredBlocksAdded": 0,
-    "issue": "PDF has an embedded diagram dropped during the original import.",
-    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-798-title-puzzle.png.",
+    "issue": "m1,w1,h1,mn,wn,hn,mk,wk,hk were flattened subscripts.",
+    "fixApplied": "Wrapped in <sub>.",
     "verifiedLocal": true,
     "verifiedProd": true,
-    "checkedAt": "2026-09-02T15:42:50.963Z",
-    "notes": ""
+    "checkedAt": "2026-09-02T16:23:18.959Z",
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 8
   },
   {
     "slug": "uva-815-flooded",
@@ -1473,7 +1653,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-820-internet-bandwidth",
@@ -1489,7 +1671,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-828-deciphering-messages",
@@ -1505,7 +1689,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-834-continued-fractions",
@@ -1521,7 +1707,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-846-steps",
@@ -1537,7 +1725,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-855-lunch-in-grid-city",
@@ -1553,7 +1743,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-865-substitution-cypher",
@@ -1569,7 +1761,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10500-brick-wall-patterns",
@@ -1585,7 +1779,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-907-winterim-backpacking-trip",
@@ -1601,7 +1797,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-913-joana-and-the-odd-numbers",
@@ -1617,7 +1815,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10601-eternal-truths",
@@ -1633,7 +1833,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-929-number-maze",
@@ -1649,7 +1851,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-941-permutations",
@@ -1665,7 +1869,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-948-fibonaccimal-base",
@@ -1681,7 +1887,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-967-circular",
@@ -1697,7 +1905,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10501-safe-salutations",
@@ -1713,7 +1923,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-993-product-of-digits",
@@ -1729,7 +1941,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10503-show-the-sequence",
@@ -1745,7 +1959,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1056-degrees-of-separation",
@@ -1761,7 +1977,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1062-containers",
@@ -1777,7 +1995,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1101-addmul",
@@ -1793,7 +2013,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1118-binary-stirling-numbers",
@@ -1809,7 +2031,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1193-radar-installation",
@@ -1825,7 +2049,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1200-a-dp-problem",
@@ -1841,7 +2067,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1203-argus",
@@ -1857,7 +2085,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1207-agtc",
@@ -1873,7 +2103,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1208-oreon",
@@ -1889,7 +2121,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-24461-sum-of-consecutive-prime-numbers",
@@ -1905,7 +2139,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1225-digit-counting",
@@ -1921,7 +2157,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1234-racing",
@@ -1937,7 +2175,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1237-expert-enough",
@@ -1953,7 +2193,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10465-necklace",
@@ -1969,7 +2211,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1260-sales",
@@ -1985,7 +2229,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1262-password",
@@ -2001,7 +2247,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1292-strategic-game",
@@ -2017,7 +2265,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1316-supermarket",
@@ -2033,7 +2283,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1339-ancient-cipher",
@@ -2049,7 +2301,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1366-martian-mining",
@@ -2065,7 +2319,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1368-dna-consensus-string",
@@ -2081,7 +2337,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1371-period",
@@ -2097,7 +2355,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1513-movie-collection",
@@ -2113,7 +2373,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10038-disk-tree",
@@ -2129,7 +2391,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1583-digit-generator",
@@ -2145,7 +2409,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1585-score",
@@ -2161,7 +2427,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1587-box",
@@ -2177,7 +2445,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1594-ducci-sequence",
@@ -2193,7 +2463,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1632-alibaba",
@@ -2209,7 +2481,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1640-the-counting-problem",
@@ -2225,7 +2499,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1644-prime-gap",
@@ -2241,7 +2517,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1650-number-string",
@@ -2257,7 +2535,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1657-game",
@@ -2273,7 +2553,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1660-cable-tv-network",
@@ -2289,7 +2571,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1714-keyboarding",
@@ -2305,7 +2589,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1730-sum-of-mslcm",
@@ -2321,7 +2607,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-1746-string-theory",
@@ -2337,7 +2625,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10602-longest-paths",
@@ -2353,7 +2643,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10505-center-of-masses",
@@ -2369,7 +2661,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10603-cutting-sticks",
@@ -2385,7 +2679,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10004-bicoloring",
@@ -2401,7 +2697,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10604-packing-polygons",
@@ -2417,7 +2715,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10605-count-the-trees",
@@ -2433,7 +2733,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10008-what-s-cryptanalysis",
@@ -2449,7 +2751,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10010-where-s-waldorf",
@@ -2465,7 +2769,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10606-how-big-is-it",
@@ -2481,7 +2787,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10607-joseph-s-cousin",
@@ -2497,7 +2805,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10018-reverse-and-add",
@@ -2513,7 +2823,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10019-funny-encryption-method",
@@ -2529,7 +2841,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10608-minimal-coverage",
@@ -2545,7 +2859,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10609-square-root",
@@ -2561,7 +2877,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10610-curling-up-the-cube",
@@ -2577,7 +2895,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10025-the-1-2-n-k-problem",
@@ -2593,7 +2913,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10026-shoemaker-s-problem",
@@ -2609,7 +2931,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10032-tug-of-war",
@@ -2625,7 +2949,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10035-primary-arithmetic",
@@ -2641,7 +2967,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10036-divisibility",
@@ -2657,7 +2985,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10038-jolly-jumpers",
@@ -2673,7 +3003,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10041-vito-s-family",
@@ -2689,7 +3021,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-23571-smith-numbers",
@@ -2705,7 +3039,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10050-hartals",
@@ -2721,7 +3057,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10055-hashmat",
@@ -2737,7 +3075,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10056-what-is-the-probability",
@@ -2753,7 +3093,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10057-a-mid-summer-night-s-dream",
@@ -2769,7 +3111,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10062-tell-me-the-frequencies",
@@ -2785,7 +3129,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10066-the-twin-towers",
@@ -2801,7 +3147,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10071-back-to-high-school-physics",
@@ -2817,7 +3165,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10074-take-the-land",
@@ -2833,7 +3183,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10079-pizza-cutting",
@@ -2849,7 +3201,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10636-gopher-ii",
@@ -2865,7 +3219,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10637-tight-words",
@@ -2881,7 +3237,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10082-wertyu",
@@ -2897,7 +3255,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10093-an-easy-problem",
@@ -2913,7 +3273,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10099-the-tourist-guide",
@@ -2929,7 +3291,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10101-bangla-numbers",
@@ -2945,7 +3309,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10645-euclid-problem",
@@ -2961,7 +3327,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10106-product",
@@ -2977,7 +3345,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10107-what-is-the-median",
@@ -2993,7 +3363,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10110-light-more-light",
@@ -3009,7 +3381,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10655-sumsets",
@@ -3025,7 +3399,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10531-zipf-s-law",
@@ -3041,7 +3417,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10130-supersale",
@@ -3057,7 +3435,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10658-is-bigger-smarter",
@@ -3073,7 +3453,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10533-the-trip",
@@ -3089,7 +3471,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10142-australian-voting",
@@ -3105,7 +3489,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10150-doublets",
@@ -3121,7 +3507,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10161-ant-on-a-chessboard",
@@ -3137,7 +3525,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10416-last-digit",
@@ -3153,7 +3543,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10675-urn-ball-probabilities",
@@ -3169,7 +3561,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10170-the-hotel-with-infinite-rooms",
@@ -3185,7 +3579,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10679-irreducible-basic-fractions",
@@ -3201,7 +3597,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10551-bee-maja",
@@ -3217,7 +3615,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10188-automated-judge-script",
@@ -3233,7 +3633,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10189-minesweeper",
@@ -3249,7 +3651,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10190-divide-but-not-quite-conquer",
@@ -3265,7 +3669,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10191-longest-nap",
@@ -3281,7 +3687,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10193-all-you-need-is-love",
@@ -3297,7 +3705,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10200-prime-time",
@@ -3313,7 +3723,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10732-snow-clearing",
@@ -3329,7 +3741,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10422-is-this-integration",
@@ -3345,7 +3759,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10559-i-love-big-numbers",
@@ -3361,7 +3777,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10221-satellites",
@@ -3377,7 +3795,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10222-decode-the-mad-man",
@@ -3393,7 +3813,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10226-hardwood-species",
@@ -3409,7 +3831,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10229-modular-fibonacci",
@@ -3425,7 +3849,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10235-simply-emirp",
@@ -3441,7 +3867,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10242-fourth-point",
@@ -3457,7 +3885,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10741-the-grand-dinner",
@@ -3473,7 +3903,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10252-common-permutation",
@@ -3489,7 +3921,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-11130-the-priest-mathematician",
@@ -3505,7 +3939,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10429-contest-scoreboard",
@@ -3521,7 +3957,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10267-graphical-editor",
@@ -3537,7 +3975,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10268-498-bis",
@@ -3553,7 +3993,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10273-eat-or-not-to-eat",
@@ -3569,7 +4011,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10432-mine-sweeper",
@@ -3585,7 +4029,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10579-hay-points",
@@ -3601,7 +4047,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10582-power-strings",
@@ -3617,7 +4065,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-24731-roads-in-the-north",
@@ -3633,7 +4083,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10309-turn-the-lights-off",
@@ -3649,7 +4101,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10326-the-polynomial-equation",
@@ -3665,7 +4119,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10327-flip-sort",
@@ -3681,7 +4137,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10336-rank-the-languages",
@@ -3697,7 +4155,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-11009-all-in-all",
@@ -3713,7 +4173,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10355-superman",
@@ -3729,7 +4191,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10364-square",
@@ -3745,7 +4209,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10365-blocks",
@@ -3761,7 +4227,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10369-arctic-network",
@@ -3777,7 +4245,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10382-watering-grass",
@@ -3793,7 +4263,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10397-connect-the-campus",
@@ -3809,7 +4281,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-23681-bachet-s-game",
@@ -3825,7 +4299,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10405-longest-common-subsequence",
@@ -3841,7 +4317,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10407-simple-division",
@@ -3857,7 +4335,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10409-die-game",
@@ -3873,7 +4353,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10415-eb-alto-saxophone-player",
@@ -3889,7 +4371,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10420-list-of-conquests",
@@ -3905,7 +4389,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10443-rock-scissors-paper",
@@ -3921,7 +4407,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-11174-homer-simpson",
@@ -3937,7 +4425,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10474-where-is-the-marble",
@@ -3953,7 +4443,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10487-closest-sums",
@@ -3969,7 +4461,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10530-guessing-game",
@@ -3985,7 +4479,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10533-digit-primes",
@@ -4001,7 +4497,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-11179-wavio-sequence",
@@ -4017,7 +4515,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10539-almost-prime-numbers",
@@ -4033,7 +4533,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10550-combination-lock",
@@ -4049,7 +4551,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10583-ubiquitous-religions",
@@ -4065,7 +4569,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10591-happy-number",
@@ -4081,7 +4587,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10603-fill",
@@ -4097,7 +4605,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-11184-opening-doors",
@@ -4113,7 +4623,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10626-buying-coke",
@@ -4129,7 +4641,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10633-rare-easy-problem",
@@ -4145,7 +4659,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10635-the-art-gallery",
@@ -4161,7 +4677,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10642-can-you-solve-it",
@@ -4177,7 +4695,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10664-luggage",
@@ -4193,7 +4713,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10666-the-eurocup-is-here",
@@ -4209,7 +4731,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10672-marbles-on-a-tree",
@@ -4225,7 +4749,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-23651-the-jackpot",
@@ -4241,7 +4767,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10690-expression-again",
@@ -4257,7 +4785,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-23671-camel-trading",
@@ -4273,7 +4803,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-23661-bit-mask",
@@ -4289,7 +4821,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10721-bar-codes",
@@ -4305,7 +4839,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10740-first-love",
@@ -4321,7 +4857,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10763-foreign-exchange",
@@ -4337,7 +4875,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10783-odd-sum",
@@ -4353,7 +4893,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10789-prime-frequency",
@@ -4369,7 +4911,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10800-not-that-kind-of-graph",
@@ -4385,7 +4929,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10810-ultra-quicksort",
@@ -4401,7 +4947,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10812-beat-the-spread",
@@ -4417,7 +4965,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10813-traditional-bingo",
@@ -4433,7 +4983,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10815-andy-s-first-dictionary",
@@ -4449,7 +5001,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10858-unique-factorization",
@@ -4465,7 +5019,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10903-playing-war",
@@ -4481,7 +5037,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-11041-children-s-game",
@@ -4497,7 +5055,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10908-largest-squares",
@@ -4513,7 +5073,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-11192-simple-minded-hashing",
@@ -4529,7 +5091,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10921-find-the-telephone",
@@ -4545,7 +5109,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10922-2-the-9s",
@@ -4561,7 +5127,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10929-you-can-say-11",
@@ -4577,7 +5145,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-10931-parity",
@@ -4593,7 +5163,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11000-the-four-in-one-stadium",
@@ -4609,7 +5181,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11003-boxes",
@@ -4625,7 +5199,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11005-cheapest-base",
@@ -4641,7 +5217,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10766-antimatter-ray-clearcutting",
@@ -4657,7 +5235,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11039-building-designing",
@@ -4673,7 +5253,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11040-add-bricks-in-the-wall",
@@ -4689,7 +5271,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11054-wine-trading-in-gergovig",
@@ -4705,7 +5289,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-11058-exact-sum",
@@ -4721,7 +5307,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10468-maximum-product",
@@ -4737,7 +5325,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11063-b2-sequence",
@@ -4753,7 +5343,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11067-little-red-riding-hood",
@@ -4769,7 +5361,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11078-open-credit-system",
@@ -4785,7 +5379,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10906-matrix-decompressing",
@@ -4801,7 +5397,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11085-back-to-the-8-queens",
@@ -4817,7 +5415,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11094-continents",
@@ -4833,7 +5433,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11121-base-2",
@@ -4849,7 +5451,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11150-cola",
@@ -4865,7 +5469,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11157-dynamic-frog",
@@ -4881,7 +5487,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11175-from-d-to-e-and-back",
@@ -4897,7 +5505,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11192-group-reverse",
@@ -4913,7 +5523,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11219-basic-wall-maze",
@@ -4929,7 +5541,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11220-decoding-the-message",
@@ -4945,7 +5559,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11233-deli-deli",
@@ -4961,7 +5577,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11240-antimonotonicity",
@@ -4977,7 +5595,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11258-string-partition",
@@ -4993,7 +5613,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11264-coin-collector",
@@ -5009,7 +5631,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11284-shopping-trip",
@@ -5025,7 +5649,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10520-conformity",
@@ -5041,7 +5667,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10471-counting-chaos",
@@ -5057,7 +5685,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11321-sort-sort-and-sort",
@@ -5073,7 +5703,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11332-summing-digits",
@@ -5089,7 +5721,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11336-drm",
@@ -5105,7 +5739,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11344-the-huge-one",
@@ -5121,7 +5757,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11349-symmetric-matrix",
@@ -5137,7 +5775,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11360-having-fun-with-matrices",
@@ -5153,7 +5793,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11364-parking",
@@ -5169,7 +5811,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11389-the-bus-driver-problem",
@@ -5185,7 +5829,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11401-triangle-counting",
@@ -5201,7 +5847,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-21964-fill-the-containers",
@@ -5217,7 +5865,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11417-gcd",
@@ -5233,7 +5883,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11455-behold-my-quadrangle",
@@ -5249,7 +5901,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11456-trainsorting",
@@ -5265,7 +5919,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11461-square-numbers",
@@ -5281,7 +5937,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11472-beautiful-numbers",
@@ -5297,7 +5955,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-24931-extend-to-palindromes",
@@ -5313,7 +5973,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11481-square-sums",
@@ -5329,7 +5991,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11489-integer-game",
@@ -5345,7 +6009,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11495-bubbles-and-buckets",
@@ -5361,7 +6027,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11498-division-of-nlogonia",
@@ -5377,7 +6045,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11518-dominos-2",
@@ -5393,7 +6063,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11526-h-n",
@@ -5409,7 +6081,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11536-smallest-sub-array",
@@ -5425,7 +6099,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11538-chess-queen",
@@ -5441,7 +6117,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11541-decoding",
@@ -5457,7 +6135,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11576-scrolling-sign",
@@ -5473,7 +6153,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11584-partitioning-by-palindromes",
@@ -5489,7 +6171,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11624-fire",
@@ -5505,7 +6189,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11633-food-portion-size",
@@ -5521,7 +6207,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11634-generate-random-numbers",
@@ -5537,7 +6225,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11636-hello-world",
@@ -5553,7 +6243,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11639-guard-the-land",
@@ -5569,7 +6261,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11659-informants",
@@ -5585,7 +6279,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11677-alarm-clock",
@@ -5601,7 +6297,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11678-cards-exchange",
@@ -5617,7 +6315,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11689-soda-surpler",
@@ -5633,7 +6333,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11728-alternate-task",
@@ -5649,7 +6351,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11730-number-transformation",
@@ -5665,7 +6369,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11743-credit-check",
@@ -5681,7 +6387,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11747-heavy-cycle-edges",
@@ -5697,7 +6405,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11764-cricket-field",
@@ -5713,7 +6423,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11792-krochanska-is-here",
@@ -5729,7 +6441,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11806-cheerleaders",
@@ -5745,7 +6459,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11824-a-minimum-land-price",
@@ -5761,7 +6477,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11908-skyscraper",
@@ -5777,7 +6495,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11917-do-your-own-homework",
@@ -5793,7 +6513,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11934-magic-formula",
@@ -5809,7 +6531,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11942-lumberjack-sequencing",
@@ -5825,7 +6549,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11956-brainfuck",
@@ -5841,7 +6567,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11957-checkers",
@@ -5857,7 +6585,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11960-divisor-game",
@@ -5873,7 +6603,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11987-almost-union-find",
@@ -5889,7 +6621,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-11995-i-can-guess-the-data-structure",
@@ -5905,7 +6639,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12015-google-is-feeling-lucky",
@@ -5921,7 +6657,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12019-doom-s-day-algorithm",
@@ -5937,7 +6675,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12041-bfs-binary-fibonacci-string",
@@ -5953,7 +6693,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12063-zeros-and-ones",
@@ -5969,7 +6711,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12096-the-setstack-computer",
@@ -5985,7 +6729,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12195-jingle-composing",
@@ -6001,7 +6747,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12208-how-many-ones-needed",
@@ -6017,7 +6765,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12218-an-industrial-spy",
@@ -6033,7 +6783,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12223-moving-to-nuremberg",
@@ -6049,7 +6801,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12250-language-detection",
@@ -6065,7 +6819,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12319-edgetown-s-traffic-jams",
@@ -6081,7 +6837,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-23771-lexicographic-order",
@@ -6097,7 +6855,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12382-grid-of-lamps",
@@ -6113,7 +6873,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12385-interesting-sequences",
@@ -6129,7 +6891,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12428-enemy-at-the-gates",
@@ -6145,7 +6909,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12442-forwarding-emails",
@@ -6161,7 +6927,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12455-bars",
@@ -6177,7 +6945,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-24911-robot-instructions",
@@ -6193,7 +6963,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12532-interval-product",
@@ -6209,7 +6981,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12546-lcm-pair-sum",
@@ -6225,7 +6999,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10615-divisibility",
@@ -6241,7 +7017,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12592-slogan-learning-of-princess",
@@ -6257,7 +7035,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12602-nice-licence-plates",
@@ -6273,7 +7053,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12627-erratic-expansion",
@@ -6289,7 +7071,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12650-dangerous-dive",
@@ -6305,7 +7089,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12654-patches",
@@ -6321,7 +7107,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12694-meeting-room-arrangement",
@@ -6337,7 +7125,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12797-letters",
@@ -6353,7 +7143,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12820-cool-word",
@@ -6369,7 +7161,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12869-zeroes",
@@ -6385,7 +7179,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12882-city-park",
@@ -6401,7 +7197,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12908-the-book-thief",
@@ -6417,7 +7215,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12911-subset-sum",
@@ -6433,7 +7233,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12918-lucky-thief",
@@ -6449,7 +7251,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12959-strategy-game",
@@ -6465,7 +7269,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-12970-alcoholic-pilots",
@@ -6481,7 +7287,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10642-marbles",
@@ -6497,7 +7305,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-13055-inception",
@@ -6513,7 +7323,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "gpe-10535-prime-distance",
@@ -6529,7 +7341,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-13171-pixel-art",
@@ -6545,7 +7359,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-13185-dpa-numbers-i",
@@ -6561,7 +7377,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-13190-rockabye-tobby",
@@ -6577,7 +7395,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-13204-count-these-permutations",
@@ -6593,7 +7413,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-13211-geonosis",
@@ -6609,7 +7431,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": true,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-13242-pool-filling",
@@ -6625,7 +7449,9 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   },
   {
     "slug": "uva-13257-license-plates",
@@ -6641,6 +7467,8 @@
     "verifiedLocal": false,
     "verifiedProd": false,
     "checkedAt": null,
-    "notes": ""
+    "notes": "",
+    "hasSubscriptCandidate": false,
+    "subscriptsFixed": 0
   }
 ]

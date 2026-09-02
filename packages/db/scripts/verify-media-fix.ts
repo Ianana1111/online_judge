@@ -15,6 +15,8 @@
  *   3. No `<div class="oj-center">` sits immediately inside a ``` fence (that combination was
  *      never intended — code blocks are for monospace-alignment content, centered divs are for
  *      plain-text display content; the two fix types should never nest).
+ *   4. Every `<sub>`/`<sup>` has a matching close tag (equal counts each) — same unbalanced-tag
+ *      risk as oj-center, just for the subscript/superscript fix.
  *
  * Usage (run from packages/db):
  *   DATABASE_URL=<url> npx tsx scripts/verify-media-fix.ts <slug> [<slug> ...]
@@ -39,6 +41,10 @@ const PUBLIC_DIR = path.join(__dirname, "..", "..", "..", "apps", "web", "public
 const IMAGE_REF_RE = /!\[[^\]]*\]\((\/problem-images\/[^)\s]+)\)/g;
 const OJ_CENTER_OPEN_RE = /<div class="oj-center">/g;
 const OJ_CENTER_CLOSE_RE = /<\/div>/g;
+const SUB_OPEN_RE = /<sub>/g;
+const SUB_CLOSE_RE = /<\/sub>/g;
+const SUP_OPEN_RE = /<sup>/g;
+const SUP_CLOSE_RE = /<\/sup>/g;
 
 async function isValidImage(absPath: string): Promise<boolean> {
   try {
@@ -76,6 +82,17 @@ async function checkProblem(slug: string, combined: string): Promise<CheckResult
   const closeCount = [...combined.matchAll(OJ_CENTER_CLOSE_RE)].length;
   if (openCount !== closeCount) {
     problems.push(`unbalanced oj-center divs: ${openCount} opening tag(s), ${closeCount} closing </div> tag(s)`);
+  }
+
+  const subOpen = [...combined.matchAll(SUB_OPEN_RE)].length;
+  const subClose = [...combined.matchAll(SUB_CLOSE_RE)].length;
+  if (subOpen !== subClose) {
+    problems.push(`unbalanced <sub> tags: ${subOpen} opening, ${subClose} closing`);
+  }
+  const supOpen = [...combined.matchAll(SUP_OPEN_RE)].length;
+  const supClose = [...combined.matchAll(SUP_CLOSE_RE)].length;
+  if (supOpen !== supClose) {
+    problems.push(`unbalanced <sup> tags: ${supOpen} opening, ${supClose} closing`);
   }
 
   // Fence-nesting check: scan line-by-line, tracking fence state, flag an oj-center div opened
