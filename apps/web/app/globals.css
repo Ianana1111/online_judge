@@ -258,7 +258,7 @@
    * StatementRenderer.tsx's doc comment — raw HTML in statement content is the established
    * pattern, same as <br>), matching how the PDF visually set that content apart from body text. */
   .prose-statement .oj-center {
-    @apply text-center;
+    @apply mb-3 text-center;
   }
 
   .prose-statement h1, .prose-statement h2, .prose-statement h3 {
