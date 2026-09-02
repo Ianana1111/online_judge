@@ -23,6 +23,7 @@ interface TriageRow {
   imageObjects: unknown[];
   hasVectorDiagramCandidate: boolean;
   centerCandidates: unknown[];
+  subscriptCandidates: unknown[];
 }
 
 interface MediaProgressRow {
@@ -31,9 +32,11 @@ interface MediaProgressRow {
   hasImageCandidate: boolean;
   hasVectorCandidate: boolean;
   hasCenterCandidate: boolean;
+  hasSubscriptCandidate: boolean;
   status: Status;
   imagesAdded: string[];
   centeredBlocksAdded: number;
+  subscriptsFixed: number;
   issue: string | null;
   fixApplied: string | null;
   verifiedLocal: boolean;
@@ -59,9 +62,11 @@ async function main() {
     hasImageCandidate: t.imageObjects.length > 0,
     hasVectorCandidate: t.hasVectorDiagramCandidate,
     hasCenterCandidate: t.centerCandidates.length > 0,
+    hasSubscriptCandidate: t.subscriptCandidates.length > 0,
     status: "unchecked",
     imagesAdded: [],
     centeredBlocksAdded: 0,
+    subscriptsFixed: 0,
     issue: null,
     fixApplied: null,
     verifiedLocal: false,

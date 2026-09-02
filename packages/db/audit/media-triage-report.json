@@ -5,6 +5,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -34,6 +35,20 @@
         "text": "(1, 11, 3, 13, 9, 0, 12, 7, 16, 3, 19, 18, 22, 3, 23, 13, 29, 0)"
       }
     ],
+    "subscriptCandidates": [
+      {
+        "match": "v1",
+        "context": "above. In the skyline vector (v1, v2, v3, . . . , vn−2, vn−1,"
+      },
+      {
+        "match": "v2",
+        "context": "e. In the skyline vector (v1, v2, v3, . . . , vn−2, vn−1, vn),"
+      },
+      {
+        "match": "v3",
+        "context": "n the skyline vector (v1, v2, v3, . . . , vn−2, vn−1, vn), the"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -42,6 +57,12 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "N2",
+        "context": "al array. This is followed by N2 integers separated by white-s"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -50,6 +71,24 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "c1",
+        "context": "f n events 1, 2, . . . , n as c1, c2, . . . cn where 1 ≤ ci ≤"
+      },
+      {
+        "match": "c2",
+        "context": "events 1, 2, . . . , n as c1, c2, . . . cn where 1 ≤ ci ≤ n de"
+      },
+      {
+        "match": "r1",
+        "context": "sequence of student responses r1, r2, . . . , rn where 1 ≤ ri"
+      },
+      {
+        "match": "r2",
+        "context": "ence of student responses r1, r2, . . . , rn where 1 ≤ ri ≤ n"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -58,6 +97,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -74,6 +114,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -90,6 +131,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -98,6 +140,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -106,6 +149,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -114,6 +158,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -122,6 +167,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -130,6 +176,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -138,6 +185,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -146,6 +194,28 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "S1",
+        "context": "letters (the source alphabet, S1 through SN, with frequencies"
+      },
+      {
+        "match": "f1",
+        "context": "through SN, with frequencies f1 through fN) into the first R"
+      },
+      {
+        "match": "T1",
+        "context": "digits (the target alphabet, T1 through TR). Consider determ"
+      },
+      {
+        "match": "S2",
+        "context": "owest frequencies, say S1 and S2, are grouped to form a new “c"
+      },
+      {
+        "match": "f2",
+        "context": "requency is the sum of f1 and f2. If there is a tie for the lo"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -154,6 +224,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -162,6 +233,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -177,6 +249,7 @@
         "text": "◦    K    ◦"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -185,6 +258,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -193,6 +267,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -201,6 +276,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -209,6 +285,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -217,6 +294,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -225,6 +303,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -241,6 +320,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -249,6 +329,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -257,6 +338,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -265,6 +347,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -273,6 +356,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -281,6 +365,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -289,6 +374,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "s1",
+        "context": "u will be given a secret code s1 . . . sn and a guess g1 . . ."
+      },
+      {
+        "match": "g1",
+        "context": "code s1 . . . sn and a guess g1 . . . gn, and are to determin"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -297,6 +392,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -305,6 +401,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -313,6 +410,40 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "x1",
+        "context": "nts on the plane in the order x1 y1 x2 y2 x3 y3 x4 y4. Thus ea"
+      },
+      {
+        "match": "y1",
+        "context": "on the plane in the order x1 y1 x2 y2 x3 y3 x4 y4. Thus each"
+      },
+      {
+        "match": "x2",
+        "context": "the plane in the order x1 y1 x2 y2 x3 y3 x4 y4. Thus each of"
+      },
+      {
+        "match": "y2",
+        "context": "e plane in the order x1 y1 x2 y2 x3 y3 x4 y4. Thus each of the"
+      },
+      {
+        "match": "x3",
+        "context": "lane in the order x1 y1 x2 y2 x3 y3 x4 y4. Thus each of these"
+      },
+      {
+        "match": "y3",
+        "context": "e in the order x1 y1 x2 y2 x3 y3 x4 y4. Thus each of these inp"
+      },
+      {
+        "match": "x4",
+        "context": "n the order x1 y1 x2 y2 x3 y3 x4 y4. Thus each of these input"
+      },
+      {
+        "match": "y4",
+        "context": "he order x1 y1 x2 y2 x3 y3 x4 y4. Thus each of these input lin"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -321,6 +452,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -329,6 +461,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -337,6 +470,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -345,6 +479,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -353,6 +488,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -361,6 +497,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -369,6 +506,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -377,6 +515,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -385,6 +524,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -393,6 +533,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -401,6 +542,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -409,6 +551,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -417,6 +560,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -425,6 +569,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -433,6 +578,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -441,6 +587,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -449,6 +596,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -457,6 +605,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -465,6 +614,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -473,6 +623,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -481,6 +632,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -489,6 +641,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -497,6 +650,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -505,6 +659,28 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "r1",
+        "context": "xchange the contents of cell (r1 , c1 ) with the contents of c"
+      },
+      {
+        "match": "c1",
+        "context": "ge the contents of cell (r1 , c1 ) with the contents of cell ("
+      },
+      {
+        "match": "r2",
+        "context": ") with the contents of cell (r2 , c2 ) is given by:"
+      },
+      {
+        "match": "c2",
+        "context": "th the contents of cell (r2 , c2 ) is given by:"
+      },
+      {
+        "match": "x1",
+        "context": "ive integer less than 10, and x1 , . . . , xA are the labels o"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -521,6 +697,16 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "a1",
+        "context": "B so that their order will be a1.a2, . . . , aN . Help him and"
+      },
+      {
+        "match": "a2",
+        "context": "o that their order will be a1.a2, . . . , aN . Help him and wr"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -536,6 +722,16 @@
         "text": "(ekx , ekx −1 , . . . , e1 , e0 )"
       }
     ],
+    "subscriptCandidates": [
+      {
+        "match": "e1",
+        "context": "integers ekx , ekx−1, . . . , e1, e0, (ekx \\> 0), that x = pek"
+      },
+      {
+        "match": "e0",
+        "context": "gers ekx , ekx−1, . . . , e1, e0, (ekx \\> 0), that x = pekx kx"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -544,6 +740,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -552,6 +749,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -560,6 +758,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -568,6 +767,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -576,6 +776,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -584,6 +785,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -592,6 +794,12 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "V12",
+        "context": "ir latest model, the Godzilla V12, is so big that the amount of"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -600,6 +808,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -608,6 +817,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -616,6 +826,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -624,6 +835,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -640,6 +852,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -648,6 +861,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -664,6 +878,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -672,6 +887,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -688,6 +904,16 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "a1",
+        "context": "els in S, there is a sequence a1, a2, . . . , ak in S such tha"
+      },
+      {
+        "match": "a2",
+        "context": "in S, there is a sequence a1, a2, . . . , ak in S such that a"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -704,6 +930,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -712,6 +939,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -720,6 +948,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -749,6 +978,16 @@
         "text": "2 ≤ D ≤ 20, and 1 ≤ I ≤ 524288."
       }
     ],
+    "subscriptCandidates": [
+      {
+        "match": "D1",
+        "context": "er of test cases | | Line 2 | D1 I1 | test case #1, two decima"
+      },
+      {
+        "match": "I1",
+        "context": "of test cases | | Line 2 | D1 I1 | test case #1, two decimal n"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -757,6 +996,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "p1",
+        "context": "ast one pair of prime numbers p1 and p2 such that n = p1 + p2."
+      },
+      {
+        "match": "p2",
+        "context": "pair of prime numbers p1 and p2 such that n = p1 + p2.* This"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -765,6 +1014,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -773,6 +1023,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -781,6 +1032,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -789,6 +1041,28 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "p1",
+        "context": "ve different number of pages (p1, p2, . . . , pm) and you want"
+      },
+      {
+        "match": "p2",
+        "context": "ifferent number of pages (p1, p2, . . . , pm) and you want to"
+      },
+      {
+        "match": "b0",
+        "context": "ing succession of numbers 0 = b0 \\< b1 \\< b2, . . . \\< bk−1 ≤"
+      },
+      {
+        "match": "b1",
+        "context": "ccession of numbers 0 = b0 \\< b1 \\< b2, . . . \\< bk−1 ≤ bk = m"
+      },
+      {
+        "match": "b2",
+        "context": "on of numbers 0 = b0 \\< b1 \\< b2, . . . \\< bk−1 ≤ bk = m such"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -797,6 +1071,12 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "a1",
+        "context": "nsidered to precede character a1 in circular fashion. The dis"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -805,6 +1085,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -813,6 +1094,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -821,6 +1103,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -829,6 +1112,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -852,6 +1136,20 @@
         "text": "Figure 1: Combining tiles to rebuild a surface"
       }
     ],
+    "subscriptCandidates": [
+      {
+        "match": "m1",
+        "context": "puzzle, has the format w h n m1 w1 h1 . . . mn wn hn, where 0"
+      },
+      {
+        "match": "w1",
+        "context": "zzle, has the format w h n m1 w1 h1 . . . mn wn hn, where 0 \\<"
+      },
+      {
+        "match": "h1",
+        "context": "e, has the format w h n m1 w1 h1 . . . mn wn hn, where 0 \\< w,"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -860,6 +1158,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -868,6 +1167,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -876,6 +1176,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -884,6 +1185,20 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "b0",
+        "context": "Let b0, b1, b2, . . . , bn be intege"
+      },
+      {
+        "match": "b1",
+        "context": "Let b0, b1, b2, . . . , bn be integers w"
+      },
+      {
+        "match": "b2",
+        "context": "Let b0, b1, b2, . . . , bn be integers with"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -892,6 +1207,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -908,6 +1224,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -916,6 +1233,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -932,6 +1250,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -948,6 +1267,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -964,6 +1284,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -987,6 +1308,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1003,6 +1325,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1011,6 +1334,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1019,6 +1343,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1027,6 +1352,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1043,6 +1369,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1051,6 +1378,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1066,6 +1394,7 @@
         "text": "S = [n]     meaning that       Si = n      ∀i ∈ IN,"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1081,6 +1410,7 @@
         "text": "Network A: Max. degree of separation = 2                 Network B: Disconnected"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1089,6 +1419,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1097,6 +1428,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1112,6 +1444,7 @@
         "text": "S(n, m) = mS(n − 1, m) + S(n − 1, m − 1), for integers 1 < m < n."
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1135,6 +1468,7 @@
         "text": "Figure 1: A Sample Input of Radar Installation"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1150,6 +1484,7 @@
         "text": "2x − 4 + 5x + 300 = 98x"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1158,6 +1493,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1166,6 +1502,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1189,6 +1526,7 @@
         "text": "Figure 2: Map of six cities and its interconnecting tunnels"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1197,6 +1535,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1212,6 +1551,7 @@
         "text": "12345678910111213"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1235,6 +1575,12 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "F1",
+        "context": "d turns. In the run up to the F1 race, the number of illegal n"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1243,6 +1589,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1251,6 +1598,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "C1",
+        "context": "graph is a sequence of cycles C1, C2, . . . , Ck (k ≥ 1), sati"
+      },
+      {
+        "match": "C2",
+        "context": "h is a sequence of cycles C1, C2, . . . , Ck (k ≥ 1), satisfyi"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1259,6 +1616,40 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "a1",
+        "context": "formally as follows. Let A = (a1, a2, . . . , an) denote the l"
+      },
+      {
+        "match": "a2",
+        "context": "ally as follows. Let A = (a1, a2, . . . , an) denote the list"
+      },
+      {
+        "match": "b1",
+        "context": "y sales amounts. And let B = (b1, b2, . . . , bn−1) be another"
+      },
+      {
+        "match": "b2",
+        "context": "les amounts. And let B = (b1, b2, . . . , bn−1) be another int"
+      },
+      {
+        "match": "a4",
+        "context": "he fourth day's sales amount, a4 = 43, the number of previous"
+      },
+      {
+        "match": "a3",
+        "context": "2 since a1 ≤ a4, a2 ≤ a4, and a3 \\> a4. Therefore, b3 = 2. Sim"
+      },
+      {
+        "match": "b3",
+        "context": "a4, and a3 \\> a4. Therefore, b3 = 2. Similarly, b1, b2, and b"
+      },
+      {
+        "match": "b4",
+        "context": "3 = 2. Similarly, b1, b2, and b4 can be obtained and it result"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1302,6 +1693,28 @@
         "text": "Figure 3. Both of ‘COMPU’ and ‘DPMAG’ are feasible password ."
       }
     ],
+    "subscriptCandidates": [
+      {
+        "match": "p1",
+        "context": "e a length-5 password such as p1 p2 p3 p4 p5. In order to pass"
+      },
+      {
+        "match": "p2",
+        "context": "length-5 password such as p1 p2 p3 p4 p5. In order to pass th"
+      },
+      {
+        "match": "p3",
+        "context": "ngth-5 password such as p1 p2 p3 p4 p5. In order to pass the a"
+      },
+      {
+        "match": "p4",
+        "context": "h-5 password such as p1 p2 p3 p4 p5. In order to pass the auth"
+      },
+      {
+        "match": "p5",
+        "context": "password such as p1 p2 p3 p4 p5. In order to pass the authent"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1318,6 +1731,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1341,6 +1755,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1349,6 +1764,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1365,6 +1781,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1381,6 +1798,12 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "s1",
+        "context": "Given a set of strings S = \\{s1, . . . , sm\\} of length n, th"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1397,6 +1820,20 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "p1",
+        "context": "not a null string, i.e., x = p1 · p2 · p3 · · · pt. If the ed"
+      },
+      {
+        "match": "p2",
+        "context": "a null string, i.e., x = p1 · p2 · p3 · · · pt. If the edit di"
+      },
+      {
+        "match": "p3",
+        "context": "l string, i.e., x = p1 · p2 · p3 · · · pt. If the edit distanc"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1405,6 +1842,12 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "a1",
+        "context": "s. - one line with m integers a1, . . . , am (1 ≤ ai ≤ n) repr"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1413,6 +1856,12 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "X86",
+        "context": "SYSTEM32\\\\CERTSRV\\\\CERTCO\\~1\\\\X86”) for some directories. He pu"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1421,6 +1870,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1429,6 +1879,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1445,6 +1896,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1478,6 +1930,20 @@
         "text": "(2, 0, 0, 2, 0) → (2, 0, 2, 2, 2) → (2, 2, 0, 0, 0) → (0, 2, 0, 0, 2) → (2, 2, 0, 2, 2) → (0, 2, 2, 0, 0) →"
       }
     ],
+    "subscriptCandidates": [
+      {
+        "match": "a1",
+        "context": "Given an n-tuple of integers (a1, a2, · · · , an), the next n-"
+      },
+      {
+        "match": "a2",
+        "context": "n an n-tuple of integers (a1, a2, · · · , an), the next n-tupl"
+      },
+      {
+        "match": "a3",
+        "context": ", an) → (\\|a1 − a2\\|, \\|a2 − a3\\|, · · · , \\|an − a1\\|) Ducc"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1486,6 +1952,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1494,6 +1961,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1502,6 +1970,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1510,6 +1979,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1518,6 +1988,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1541,6 +2012,7 @@
         "text": "Figure 1. Cable TV networks"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1564,6 +2036,7 @@
         "text": "Figure F.1: Sample Input 1. An example virtual keyboard and hardware buttons."
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1572,6 +2045,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1580,6 +2054,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "a1",
+        "context": "cond line contains n integers a1, a2, . . . , an (1 ≤ ai ≤ 100"
+      },
+      {
+        "match": "a2",
+        "context": "line contains n integers a1, a2, . . . , an (1 ≤ ai ≤ 100), w"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1588,6 +2072,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1596,6 +2081,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1604,6 +2090,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1612,6 +2099,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1620,6 +2108,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1628,6 +2117,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1636,6 +2126,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1644,6 +2135,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1652,6 +2144,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1660,6 +2153,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1668,6 +2162,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1676,6 +2171,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1684,6 +2180,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1692,6 +2189,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1700,6 +2198,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1708,6 +2207,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1716,6 +2216,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1724,6 +2225,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1732,6 +2234,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1740,6 +2243,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1748,6 +2252,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1756,6 +2261,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "s1",
+        "context": "treet numbers (also integers) s1, s2, . . . , si, . . . , sr w"
+      },
+      {
+        "match": "s2",
+        "context": "t numbers (also integers) s1, s2, . . . , si, . . . , sr where"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1771,6 +2286,7 @@
         "text": "4937775 = 3 · 5 · 5 · 65837"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1779,6 +2295,20 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "h1",
+        "context": "ree political parties. Assume h1 = 3, h2 = 4 and h3 = 8 where"
+      },
+      {
+        "match": "h2",
+        "context": "tical parties. Assume h1 = 3, h2 = 4 and h3 = 8 where hi is th"
+      },
+      {
+        "match": "h3",
+        "context": "es. Assume h1 = 3, h2 = 4 and h3 = 8 where hi is the hartal pa"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1787,6 +2317,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1795,6 +2326,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1810,6 +2342,16 @@
         "text": "(|X1 − A| + |X2 − A| + . . . + |Xn − A|)"
       }
     ],
+    "subscriptCandidates": [
+      {
+        "match": "X1",
+        "context": "clue that if the numbers are (X1, X2, …, Xn) he will have to f"
+      },
+      {
+        "match": "X2",
+        "context": "that if the numbers are (X1, X2, …, Xn) he will have to find"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1818,6 +2360,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1826,6 +2369,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "N1",
+        "context": "a block contains two integers N1 and N2 (1 ≤ N1, N2 ≤ 100) ind"
+      },
+      {
+        "match": "N2",
+        "context": "contains two integers N1 and N2 (1 ≤ N1, N2 ≤ 100) indicating"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1834,6 +2387,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1842,6 +2396,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1858,6 +2413,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1874,6 +2430,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1882,6 +2439,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1898,6 +2456,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1906,6 +2465,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1922,6 +2482,16 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "C1",
+        "context": "ch containing three integers: C1, C2 and P . C1 and C2 are the"
+      },
+      {
+        "match": "C2",
+        "context": "ontaining three integers: C1, C2 and P . C1 and C2 are the cit"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -1930,6 +2500,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1938,6 +2509,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1946,6 +2518,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1954,6 +2527,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1962,6 +2536,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1978,6 +2553,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -1994,6 +2570,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2002,6 +2579,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2010,6 +2588,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2018,6 +2597,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2026,6 +2606,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2034,6 +2615,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2042,6 +2624,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2057,6 +2640,7 @@
         "text": "S = 11 + 22 + 33 + . . . + N N"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2065,6 +2649,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2073,6 +2658,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2081,6 +2667,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2104,6 +2691,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2112,6 +2700,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2120,6 +2709,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2128,6 +2718,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2136,6 +2727,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2144,6 +2736,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "S1",
+        "context": "ven two valid binary strings, S1 and S2, find if it's possible"
+      },
+      {
+        "match": "S2",
+        "context": "valid binary strings, S1 and S2, find if it's possible to hav"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -2152,6 +2754,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2168,6 +2771,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2184,6 +2788,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2192,6 +2797,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2208,6 +2814,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2216,6 +2823,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2232,6 +2840,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2240,6 +2849,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2248,6 +2858,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2256,6 +2867,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2264,6 +2876,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2272,6 +2885,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2295,6 +2909,7 @@
         "text": "Fig: The Four Needle (Peg) Tower of Hanoi"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2303,6 +2918,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2311,6 +2927,24 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "Y1",
+        "context": "the column X between the rows Y1 and Y2 inclusive in colour C."
+      },
+      {
+        "match": "Y2",
+        "context": "umn X between the rows Y1 and Y2 inclusive in colour C. | |"
+      },
+      {
+        "match": "X1",
+        "context": "the row Y between the columns X1 and X2 inclusive in colour C."
+      },
+      {
+        "match": "X2",
+        "context": "Y between the columns X1 and X2 inclusive in colour C. | |"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -2332,6 +2966,16 @@
         "text": "a0 nxn−1 + a1 (n − 1)xn−2 + . . . + an−1 ."
       }
     ],
+    "subscriptCandidates": [
+      {
+        "match": "a0",
+        "context": "ll contain a list of integers a0, a1, ..., an−1, an, which rep"
+      },
+      {
+        "match": "a1",
+        "context": "ontain a list of integers a0, a1, ..., an−1, an, which represe"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -2348,6 +2992,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2378,6 +3023,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2394,6 +3040,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2410,6 +3057,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2418,6 +3066,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2426,6 +3075,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2441,6 +3091,7 @@
         "text": "x2 − 5x + 6 = 0"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2449,6 +3100,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2457,6 +3109,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2465,6 +3118,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2473,6 +3127,32 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "x1",
+        "context": "d ending points’ coordinates (x1, y1, z1, x2, y2, z2) of Super"
+      },
+      {
+        "match": "y1",
+        "context": "ding points’ coordinates (x1, y1, z1, x2, y2, z2) of Superman’"
+      },
+      {
+        "match": "z1",
+        "context": "points’ coordinates (x1, y1, z1, x2, y2, z2) of Superman’s pa"
+      },
+      {
+        "match": "x2",
+        "context": "nts’ coordinates (x1, y1, z1, x2, y2, z2) of Superman’s path ("
+      },
+      {
+        "match": "y2",
+        "context": "coordinates (x1, y1, z1, x2, y2, z2) of Superman’s path (sepa"
+      },
+      {
+        "match": "z2",
+        "context": "rdinates (x1, y1, z1, x2, y2, z2) of Superman’s path (separate"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -2489,6 +3169,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2505,6 +3186,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2521,6 +3203,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2537,6 +3220,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2560,6 +3244,7 @@
         "text": "Fig: University of Waterloo Campus"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2576,6 +3261,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2599,6 +3285,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2615,6 +3302,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2631,6 +3319,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2647,6 +3336,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2655,6 +3345,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2671,6 +3362,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2687,6 +3379,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2703,6 +3396,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2711,6 +3405,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2727,6 +3422,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2735,6 +3431,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "t1",
+        "context": "N lines contains two integers t1 and t2 (0 \\< t1 ≤ t2 \\< 10000"
+      },
+      {
+        "match": "t2",
+        "context": "contains two integers t1 and t2 (0 \\< t1 ≤ t2 \\< 1000000). #"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -2750,6 +3456,7 @@
         "text": "1 2 3 2 1 2 3 4 3 2 1 5 4 1 2 3 2 2 1."
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2758,6 +3465,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2774,6 +3482,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2790,6 +3499,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2798,6 +3508,20 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "S0",
+        "context": "digits of a positive integer S0 be represented by S1. In a si"
+      },
+      {
+        "match": "S1",
+        "context": "integer S0 be represented by S1. In a similar way, let the su"
+      },
+      {
+        "match": "S2",
+        "context": "igits of S1 be represented by S2 and so on. If Si = 1 for some"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -2806,6 +3530,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2814,6 +3539,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2822,6 +3548,20 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "n1",
+        "context": "mber of cokes I want to buy), n1, n5, n10 (the number of coins"
+      },
+      {
+        "match": "n5",
+        "context": "of cokes I want to buy), n1, n5, n10 (the number of coins of"
+      },
+      {
+        "match": "n10",
+        "context": "cokes I want to buy), n1, n5, n10 (the number of coins of value"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -2830,6 +3570,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2853,6 +3594,24 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "x1",
+        "context": "e p-th square he enters, then x1, x2, …, xp+1 are all differen"
+      },
+      {
+        "match": "x2",
+        "context": "th square he enters, then x1, x2, …, xp+1 are all different. N"
+      },
+      {
+        "match": "y1",
+        "context": "ly reach square n ∗ n. We use y1, y2, …, yq+1 to denote the se"
+      },
+      {
+        "match": "y2",
+        "context": "each square n ∗ n. We use y1, y2, …, yq+1 to denote the sequen"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -2876,6 +3635,7 @@
         "text": "total_number_of _step(s)_needed = number_of _intermediate_circles_you_pass + 1"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2884,6 +3644,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2900,6 +3661,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2916,6 +3678,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2924,6 +3687,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2932,6 +3696,28 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "x1",
+        "context": "braic expression of the form (x1 + x2 + x3 + . . . + xn) ∗ (y1"
+      },
+      {
+        "match": "x2",
+        "context": "expression of the form (x1 + x2 + x3 + . . . + xn) ∗ (y1 + y2"
+      },
+      {
+        "match": "x3",
+        "context": "ession of the form (x1 + x2 + x3 + . . . + xn) ∗ (y1 + y2 + ."
+      },
+      {
+        "match": "y1",
+        "context": "x1 + x2 + x3 + . . . + xn) ∗ (y1 + y2 + . . . + ym) and (n + m"
+      },
+      {
+        "match": "y2",
+        "context": "x2 + x3 + . . . + xn) ∗ (y1 + y2 + . . . + ym) and (n + m) int"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -2940,6 +3726,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2948,6 +3735,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2964,6 +3752,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2980,6 +3769,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2988,6 +3778,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -2996,6 +3787,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3012,6 +3804,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3020,6 +3813,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3036,6 +3830,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3052,6 +3847,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3068,6 +3864,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3084,6 +3881,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3092,6 +3890,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3108,6 +3907,24 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "p1",
+        "context": "me, a line follows containing p1, m1, p2, m2. 1 ≤ p1 ≤ n and 1"
+      },
+      {
+        "match": "m1",
+        "context": "a line follows containing p1, m1, p2, m2. 1 ≤ p1 ≤ n and 1 ≤ p"
+      },
+      {
+        "match": "p2",
+        "context": "ne follows containing p1, m1, p2, m2. 1 ≤ p1 ≤ n and 1 ≤ p2 ≤"
+      },
+      {
+        "match": "m2",
+        "context": "ollows containing p1, m1, p2, m2. 1 ≤ p1 ≤ n and 1 ≤ p2 ≤ n ar"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3116,6 +3933,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3124,6 +3942,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3132,6 +3951,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3140,6 +3960,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3148,6 +3969,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3156,6 +3978,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3164,6 +3987,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3172,6 +3996,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3180,6 +4005,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3188,6 +4014,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3196,6 +4023,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3204,6 +4032,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3220,6 +4049,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3228,6 +4058,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3236,6 +4067,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3244,6 +4076,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "S1",
+        "context": "a sequence of integers S = \\{S1, S2, . . . , Sn\\}, you should"
+      },
+      {
+        "match": "S2",
+        "context": "equence of integers S = \\{S1, S2, . . . , Sn\\}, you should det"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3252,6 +4094,24 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "B2",
+        "context": "A B2-Sequence is a sequence of pos"
+      },
+      {
+        "match": "b1",
+        "context": "ence of positive integers 1 ≤ b1 \\< b2 \\< b3 . . . such that a"
+      },
+      {
+        "match": "b2",
+        "context": "f positive integers 1 ≤ b1 \\< b2 \\< b3 . . . such that all pai"
+      },
+      {
+        "match": "b3",
+        "context": "tive integers 1 ≤ b1 \\< b2 \\< b3 . . . such that all pairwise"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3268,6 +4128,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3276,6 +4137,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3284,6 +4146,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3292,6 +4155,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "R1",
+        "context": "sists of moving a queen from (R1, C) to (R2, C) where 1 ≤ R1,"
+      },
+      {
+        "match": "R2",
+        "context": "ving a queen from (R1, C) to (R2, C) where 1 ≤ R1, R2 ≤ 8 and"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3300,6 +4173,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3308,6 +4182,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3324,6 +4199,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3340,6 +4216,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3348,6 +4225,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3356,6 +4234,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3364,6 +4243,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3372,6 +4252,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3380,6 +4261,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3403,6 +4285,7 @@
         "text": "n F red[0] F red[1] F red[2] . . . F red[n − 1]."
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3411,6 +4294,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3419,6 +4303,20 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "C1",
+        "context": "Next line contains n integers C1, C2, …, Cn the value of each"
+      },
+      {
+        "match": "C2",
+        "context": "line contains n integers C1, C2, …, Cn the value of each coin"
+      },
+      {
+        "match": "C3",
+        "context": "f each coin type. C1 \\< C2 \\< C3 \\< . . . \\< Cn \\< 1000000000."
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3435,6 +4333,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3451,6 +4350,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3467,6 +4367,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3475,6 +4376,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3491,6 +4393,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3499,6 +4402,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "u0",
+        "context": "ce b is a sequence of places ⟨u0, u1, ..., un⟩ such that a = u"
+      },
+      {
+        "match": "u1",
+        "context": "is a sequence of places ⟨u0, u1, ..., un⟩ such that a = u0, b"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3507,6 +4420,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3515,6 +4429,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3523,6 +4438,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3539,6 +4455,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3547,6 +4464,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3563,6 +4481,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3571,6 +4490,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3579,6 +4499,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3587,6 +4508,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3595,6 +4517,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3603,6 +4526,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3611,6 +4535,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3619,6 +4544,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3627,6 +4553,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3635,6 +4562,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3643,6 +4571,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "X1",
+        "context": "by the initial sequence P = (X1, X2, . . . , XN ) of N distin"
+      },
+      {
+        "match": "X2",
+        "context": "the initial sequence P = (X1, X2, . . . , XN ) of N distinct i"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3659,6 +4597,12 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "G7",
+        "context": ", with mediation by UN, NATO, G7 and SBC, it was at last agree"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3667,6 +4611,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3675,6 +4620,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3683,6 +4629,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3706,6 +4653,7 @@
         "text": "Figure: in a (2 × 2) chessboard 2 queens can be in attacking position in 12 ways"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3714,6 +4662,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3722,6 +4671,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3738,6 +4688,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3754,6 +4705,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3762,6 +4714,12 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "y1",
+        "context": "t case consists of n integers y1, …, yn (1 ≤ yi ≤ 100), where"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3770,6 +4728,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "a0",
+        "context": "s: We choose an initial value a0, which has a decimal represen"
+      },
+      {
+        "match": "a1",
+        "context": ": a0 = 5555, a0^2 = 30858025, a1 = 8580, ... Example 2: a0 ="
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3786,6 +4754,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3802,6 +4771,24 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "x1",
+        "context": "n for guards by four integers x1, y1, x2, y2. Here (x1, y1) is"
+      },
+      {
+        "match": "y1",
+        "context": "r guards by four integers x1, y1, x2, y2. Here (x1, y1) is the"
+      },
+      {
+        "match": "x2",
+        "context": "ards by four integers x1, y1, x2, y2. Here (x1, y1) is the low"
+      },
+      {
+        "match": "y2",
+        "context": "by four integers x1, y1, x2, y2. Here (x1, y1) is the lower l"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3810,6 +4797,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3818,6 +4806,24 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "H1",
+        "context": "ine, containing four integers H1, M1, H2 and M2, with H1 : M1"
+      },
+      {
+        "match": "M1",
+        "context": "containing four integers H1, M1, H2 and M2, with H1 : M1 repr"
+      },
+      {
+        "match": "H2",
+        "context": "taining four integers H1, M1, H2 and M2, with H1 : M1 represen"
+      },
+      {
+        "match": "M2",
+        "context": "four integers H1, M1, H2 and M2, with H1 : M1 representing th"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3826,6 +4832,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3842,6 +4849,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3850,6 +4858,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3858,6 +4867,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3874,6 +4884,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3897,6 +4908,12 @@
         "text": "– remove edge e from T where e has the heaviest weight in C"
       }
     ],
+    "subscriptCandidates": [
+      {
+        "match": "e1",
+        "context": "ly empty - consider the edges e1, . . . , em in increasing ord"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -3913,6 +4930,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3929,6 +4947,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3945,6 +4964,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3960,6 +4980,7 @@
         "text": "(2 × 7) + (2 × 22 ) + (2 × 103 ) = 2022 millions baht"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3968,6 +4989,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -3984,6 +5006,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4007,6 +5030,7 @@
         "text": "f (x) = ax2 + bx + c"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4015,6 +5039,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4023,6 +5048,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4031,6 +5057,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4039,6 +5066,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4047,6 +5075,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4055,6 +5084,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4063,6 +5093,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4071,6 +5102,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4079,6 +5111,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4087,6 +5120,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4103,6 +5137,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4126,6 +5161,7 @@
         "text": "/HH/QQQQ/XXXTXTEQH/W/HW/"
       }
     ],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4142,6 +5178,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4150,6 +5187,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4158,6 +5196,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4174,6 +5213,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4197,6 +5237,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4205,6 +5246,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4213,6 +5255,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4221,6 +5264,24 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "x1",
+        "context": "equence of integer numbers \\< x1, x2, . . . , xn \\>, a contigu"
+      },
+      {
+        "match": "x2",
+        "context": "nce of integer numbers \\< x1, x2, . . . , xn \\>, a contiguous"
+      },
+      {
+        "match": "S1",
+        "context": "Two interesting subsequences S1 =\\< xi, xi+1, . . . , xj \\> a"
+      },
+      {
+        "match": "S2",
+        "context": "< xi, xi+1, . . . , xj \\> and S2 =\\< xa, xa+1, . . . , xb \\> a"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -4237,6 +5298,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4245,6 +5307,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4253,6 +5316,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4261,6 +5325,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4269,6 +5334,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "X1",
+        "context": "you a sequence of N integers X1, X2, . . . , XN . Then, there"
+      },
+      {
+        "match": "X2",
+        "context": "a sequence of N integers X1, X2, . . . , XN . Then, there wil"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -4277,6 +5352,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4285,6 +5361,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "X1",
+        "context": "tes of a cell are denoted as (X1, X2, . . . , XN ). Any hyper"
+      },
+      {
+        "match": "X2",
+        "context": "of a cell are denoted as (X1, X2, . . . , XN ). Any hyper cell"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -4293,6 +5379,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4309,6 +5396,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4325,6 +5413,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4333,6 +5422,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4341,6 +5431,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "T1",
+        "context": "contains four integers N , C, T1 e T2. Integer N indicates the"
+      },
+      {
+        "match": "T2",
+        "context": "ins four integers N , C, T1 e T2. Integer N indicates the numb"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -4349,6 +5449,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4357,6 +5458,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4365,6 +5467,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4373,6 +5476,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": true,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4396,6 +5500,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4404,6 +5509,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4412,6 +5518,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4420,6 +5527,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4428,6 +5536,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4436,6 +5545,24 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "v1",
+        "context": "ns 4 space-separated integers v1, d1, v2 and d2 (1 ≤ v1, d1, v"
+      },
+      {
+        "match": "d1",
+        "context": "space-separated integers v1, d1, v2 and d2 (1 ≤ v1, d1, v2, d"
+      },
+      {
+        "match": "v2",
+        "context": "ce-separated integers v1, d1, v2 and d2 (1 ≤ v1, d1, v2, d2 ≤"
+      },
+      {
+        "match": "d2",
+        "context": "rated integers v1, d1, v2 and d2 (1 ≤ v1, d1, v2, d2 ≤ 10^9):"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -4444,6 +5571,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4452,6 +5580,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4468,6 +5597,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4491,6 +5621,7 @@
     ],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4499,6 +5630,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4507,6 +5639,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4522,6 +5655,16 @@
         "text": "|a1 –1| + |a2 –2| + · · · + |an –n| = ⌊n2 /2⌋"
       }
     ],
+    "subscriptCandidates": [
+      {
+        "match": "a1",
+        "context": "t the number of permutations (a1, a2, . . . , an) of (1, 2, ."
+      },
+      {
+        "match": "a2",
+        "context": "e number of permutations (a1, a2, . . . , an) of (1, 2, . . ."
+      }
+    ],
     "fetchError": null
   },
   {
@@ -4530,6 +5673,16 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [
+      {
+        "match": "x1",
+        "context": "ntaining n distinct integers: x1, x2, . . . , xn (0 ≤ xi \\< n)"
+      },
+      {
+        "match": "x2",
+        "context": "ning n distinct integers: x1, x2, . . . , xn (0 ≤ xi \\< n), th"
+      }
+    ],
     "fetchError": null
   },
   {
@@ -4538,6 +5691,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   },
   {
@@ -4546,6 +5700,7 @@
     "imageObjects": [],
     "hasVectorDiagramCandidate": false,
     "centerCandidates": [],
+    "subscriptCandidates": [],
     "fetchError": null
   }
 ]

@@ -9,7 +9,8 @@
  *
  * <batch.json> is an array of:
  *   { slug: string; statementMd?: string; inputSpecMd?: string; outputSpecMd?: string;
- *     imagesAdded?: string[]; centeredBlocksAdded?: number; issue?: string; fixApplied?: string }
+ *     imagesAdded?: string[]; centeredBlocksAdded?: number; subscriptsFixed?: number;
+ *     issue?: string; fixApplied?: string }
  * A row with none of statementMd/inputSpecMd/outputSpecMd set is treated as "checked, no media
  * work needed" — only the progress.json row is updated.
  *
@@ -32,6 +33,7 @@ interface BatchItem {
   outputSpecMd?: string;
   imagesAdded?: string[];
   centeredBlocksAdded?: number;
+  subscriptsFixed?: number;
   issue?: string;
   fixApplied?: string;
 }
@@ -45,9 +47,11 @@ interface ProgressRow {
   hasImageCandidate: boolean;
   hasVectorCandidate: boolean;
   hasCenterCandidate: boolean;
+  hasSubscriptCandidate: boolean;
   status: Status;
   imagesAdded: string[];
   centeredBlocksAdded: number;
+  subscriptsFixed: number;
   issue: string | null;
   fixApplied: string | null;
   verifiedLocal: boolean;
@@ -95,6 +99,7 @@ async function main() {
     row.status = status as Status;
     row.imagesAdded = item.imagesAdded ?? row.imagesAdded;
     row.centeredBlocksAdded = item.centeredBlocksAdded ?? row.centeredBlocksAdded;
+    row.subscriptsFixed = item.subscriptsFixed ?? row.subscriptsFixed;
     row.issue = item.issue ?? row.issue;
     row.fixApplied = item.fixApplied ?? row.fixApplied;
     row.checkedAt = new Date().toISOString();

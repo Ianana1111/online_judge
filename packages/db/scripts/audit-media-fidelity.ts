@@ -65,6 +65,7 @@ interface MediaTriageRow {
   imageObjects: ImageObjectRow[];
   hasVectorDiagramCandidate: boolean;
   centerCandidates: CenterCandidateRow[];
+  subscriptCandidates: SubscriptCandidateRow[];
   fetchError: string | null;
 }
 
@@ -139,6 +140,40 @@ function findCenterCandidates(pdfLayoutText: string): CenterCandidateRow[] {
   return candidates;
 }
 
+// A single letter immediately followed by 1-2 digits (v1, c2, x12) is a near-unambiguous flattened
+// subscript in this corpus — PDF math typesetting renders v_1/c_2 as a proper subscript, but plain
+// text extraction drops the visual distinction entirely, leaving them looking like typos ("v1")
+// next to ordinary prose. Deliberately NOT extended to letter+letter pairs (Li, Hi, Ri are also
+// flattened subscripts — L_i, H_i, R_i in the source — but two adjacent letters are far too common
+// as ordinary words/abbreviations for a regex to tell apart reliably; those get caught by hand
+// during the same PDF read-through as the image/centering work, not by this mechanical scan).
+const SUBSCRIPT_CANDIDATE_RE = /\b([A-Za-z])(\d{1,2})\b/g;
+
+interface SubscriptCandidateRow {
+  match: string;
+  context: string;
+}
+
+/** Strips fenced code blocks and inline code spans before scanning — a variable named v1 inside
+ * actual sample code/pseudocode is real code, not flattened math notation, and must never be
+ * touched. */
+function findSubscriptCandidates(statementMd: string): SubscriptCandidateRow[] {
+  const withoutFences = statementMd.replace(/```[\s\S]*?```/g, (m) => " ".repeat(m.length));
+  const withoutInlineCode = withoutFences.replace(/`[^`\n]*`/g, (m) => " ".repeat(m.length));
+
+  const results: SubscriptCandidateRow[] = [];
+  const seen = new Set<string>();
+  for (const m of withoutInlineCode.matchAll(SUBSCRIPT_CANDIDATE_RE)) {
+    const match = m[0];
+    if (seen.has(match)) continue; // report each distinct token once per problem, not every occurrence
+    seen.add(match);
+    const start = Math.max(0, (m.index ?? 0) - 30);
+    const end = Math.min(withoutInlineCode.length, (m.index ?? 0) + match.length + 30);
+    results.push({ match, context: withoutInlineCode.slice(start, end).replace(/\s+/g, " ").trim() });
+  }
+  return results;
+}
+
 async function main() {
   const problems = await prisma.problem.findMany({
     where: { uvaId: { not: null } },
@@ -153,6 +188,7 @@ async function main() {
     process.stdout.write(`[${i + 1}/${problems.length}] ${p.slug}... `);
     const uvaId = p.uvaId!;
     const cachedPath = path.join(CACHE_DIR, `${uvaId}.pdf`);
+    const subscriptCandidates = findSubscriptCandidates(p.statementMd); // doesn't need the PDF at all
     try {
       await access(cachedPath);
     } catch {
@@ -163,6 +199,7 @@ async function main() {
         imageObjects: [],
         hasVectorDiagramCandidate: false,
         centerCandidates: [],
+        subscriptCandidates,
         fetchError: "not in pdf-cache — run audit-statement-fidelity.ts first to populate the cache",
       });
       console.log("NOT CACHED");
@@ -172,8 +209,10 @@ async function main() {
       const [imageObjects, layoutText] = await Promise.all([pdfImagesList(cachedPath), pdfToLayoutText(cachedPath)]);
       const hasVectorDiagramCandidate = imageObjects.length === 0 && VECTOR_DIAGRAM_KEYWORDS.test(p.statementMd);
       const centerCandidates = findCenterCandidates(layoutText);
-      rows.push({ slug: p.slug, uvaId, imageObjects, hasVectorDiagramCandidate, centerCandidates, fetchError: null });
-      console.log(`images=${imageObjects.length} vectorCandidate=${hasVectorDiagramCandidate} centerCandidates=${centerCandidates.length}`);
+      rows.push({ slug: p.slug, uvaId, imageObjects, hasVectorDiagramCandidate, centerCandidates, subscriptCandidates, fetchError: null });
+      console.log(
+        `images=${imageObjects.length} vectorCandidate=${hasVectorDiagramCandidate} centerCandidates=${centerCandidates.length} subscriptCandidates=${subscriptCandidates.length}`,
+      );
     } catch (err) {
       rows.push({
         slug: p.slug,
@@ -181,6 +220,7 @@ async function main() {
         imageObjects: [],
         hasVectorDiagramCandidate: false,
         centerCandidates: [],
+        subscriptCandidates,
         fetchError: (err as Error).message,
       });
       console.log(`ERROR: ${(err as Error).message}`);
@@ -193,11 +233,13 @@ async function main() {
   const withImages = rows.filter((r) => r.imageObjects.length > 0).length;
   const withVectorCandidate = rows.filter((r) => r.hasVectorDiagramCandidate).length;
   const withCenterCandidate = rows.filter((r) => r.centerCandidates.length > 0).length;
+  const withSubscriptCandidate = rows.filter((r) => r.subscriptCandidates.length > 0).length;
   console.log(
     `\nDone. ${rows.length} problems triaged (${missingPdf} not cached).\n` +
       `With embedded raster image(s): ${withImages}\n` +
       `Vector-diagram keyword candidates: ${withVectorCandidate}\n` +
       `Centering candidates: ${withCenterCandidate}\n` +
+      `Subscript candidates: ${withSubscriptCandidate}\n` +
       `Wrote media-triage-report.json.`,
   );
 }
