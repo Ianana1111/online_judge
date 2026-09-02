@@ -1735,7 +1735,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-855-lunch-in-grid-city.png"
     ],
@@ -1743,8 +1743,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced as /problem-images/uva-855-lunch-in-grid-city.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T16:41:10.022Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T16:46:01.135Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -1773,7 +1773,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "gpe-10500-brick-wall-patterns.png"
     ],
@@ -1781,8 +1781,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced as /problem-images/gpe-10500-brick-wall-patterns.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T16:41:10.026Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T16:46:01.419Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -1800,7 +1800,7 @@
     "fixApplied": "Skipped — not meaningful content to embed.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": "2026-09-02T16:41:10.819Z",
+    "checkedAt": "2026-09-02T16:46:03.766Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -1818,7 +1818,7 @@
     "fixApplied": "Skipped — not meaningful content to embed.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": "2026-09-02T16:41:10.820Z",
+    "checkedAt": "2026-09-02T16:46:03.767Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -1829,7 +1829,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "gpe-10601-eternal-truths.png"
     ],
@@ -1837,8 +1837,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced as /problem-images/gpe-10601-eternal-truths.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T16:41:10.029Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T16:46:01.702Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -1849,7 +1849,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-929-number-maze.png"
     ],
@@ -1857,8 +1857,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced as /problem-images/uva-929-number-maze.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T16:41:10.032Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T16:46:01.980Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -1923,7 +1923,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "gpe-10501-safe-salutations.png"
     ],
@@ -1931,8 +1931,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced as /problem-images/gpe-10501-safe-salutations.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T16:41:10.035Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T16:46:02.256Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -2051,7 +2051,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-1193-radar-installation.png"
     ],
@@ -2059,8 +2059,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced as /problem-images/uva-1193-radar-installation.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T16:41:10.038Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T16:46:02.545Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -2125,7 +2125,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-1208-oreon.png"
     ],
@@ -2133,8 +2133,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced as /problem-images/uva-1208-oreon.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T16:41:10.041Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T16:46:02.839Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -2181,7 +2181,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-1234-racing.png"
     ],
@@ -2189,8 +2189,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced as /problem-images/uva-1234-racing.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T16:41:10.043Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T16:46:03.134Z",
     "notes": "",
     "hasSubscriptCandidate": true,
     "subscriptsFixed": 0
