@@ -1,0 +1,9 @@
+[
+  {
+    "slug": "uva-105-the-skyline-problem",
+    "imagesAdded": ["uva-105-skyline.png"],
+    "centeredBlocksAdded": 2,
+    "issue": "PDF page 1 has an embedded diagram (buildings + resulting skyline) that was dropped during the original PDF-to-markdown import; the two tuple-list lines right below it are PDF-centered but were left-aligned plain text.",
+    "fixApplied": "Extracted the diagram via pdftoppm+crop (predates the pdfimages-based pipeline used for the rest of this pass) into apps/web/public/problem-images/uva-105-skyline.png, referenced it right after the sentence introducing it. Wrapped the two tuple-list lines in <div class=\"oj-center\"> to match their PDF-centered layout. Verified locally and on production, light and dark mode."
+  }
+]
