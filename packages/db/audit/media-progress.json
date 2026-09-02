@@ -3982,7 +3982,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "gpe-11130-the-priest-mathematician.png"
     ],
@@ -3990,8 +3990,8 @@
     "issue": "PDF has embedded diagram(s) and/or flattened subscripts dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced where the text introduces it.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:50:25.909Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T17:54:42.331Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -4056,14 +4056,14 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [],
     "centeredBlocksAdded": 0,
     "issue": "Ti/Mj subscripts were flattened during the original import.",
     "fixApplied": "Wrapped in <sub>.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:50:25.912Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T17:54:42.614Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -4074,7 +4074,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "gpe-10432-mine-sweeper-1.png",
       "gpe-10432-mine-sweeper-2.png",
@@ -4084,8 +4084,8 @@
     "issue": "PDF has embedded diagram(s) and/or flattened subscripts dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced where the text introduces it.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:50:25.914Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T17:54:42.923Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -4103,7 +4103,7 @@
     "fixApplied": "Skipped — not meaningful content to embed.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:50:26.530Z",
+    "checkedAt": "2026-09-02T17:54:43.819Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -4121,7 +4121,7 @@
     "fixApplied": "Skipped — not meaningful content to embed.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:50:26.531Z",
+    "checkedAt": "2026-09-02T17:54:43.820Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -4265,7 +4265,7 @@
     "fixApplied": "Skipped — not meaningful content to embed.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:50:26.531Z",
+    "checkedAt": "2026-09-02T17:54:43.820Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -4283,7 +4283,7 @@
     "fixApplied": "Skipped — not meaningful content to embed.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:50:26.532Z",
+    "checkedAt": "2026-09-02T17:54:43.820Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -4301,7 +4301,7 @@
     "fixApplied": "Skipped — not meaningful content to embed.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:50:26.532Z",
+    "checkedAt": "2026-09-02T17:54:43.820Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -4312,7 +4312,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-10382-watering-grass.png"
     ],
@@ -4320,8 +4320,8 @@
     "issue": "PDF has embedded diagram(s) and/or flattened subscripts dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced where the text introduces it.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:50:25.916Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T17:54:43.201Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -4339,7 +4339,7 @@
     "fixApplied": "Skipped — not meaningful content to embed.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:50:26.532Z",
+    "checkedAt": "2026-09-02T17:54:43.820Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
