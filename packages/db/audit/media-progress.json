@@ -23,7 +23,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-105-skyline.png"
     ],
@@ -32,7 +32,7 @@
     "fixApplied": "Wrapped in <sub>. Also fixed the missing bottom margin on .oj-center blocks (globals.css) that was cramping this problem's spacing.",
     "verifiedLocal": true,
     "verifiedProd": true,
-    "checkedAt": "2026-09-02T16:23:18.957Z",
+    "checkedAt": "2026-09-02T16:24:54.128Z",
     "notes": "",
     "hasSubscriptCandidate": true,
     "subscriptsFixed": 8
@@ -1039,7 +1039,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-514-rails.png"
     ],
@@ -1048,7 +1048,7 @@
     "fixApplied": "Wrapped in <sub>.",
     "verifiedLocal": true,
     "verifiedProd": true,
-    "checkedAt": "2026-09-02T16:23:18.958Z",
+    "checkedAt": "2026-09-02T16:24:54.129Z",
     "notes": "",
     "hasSubscriptCandidate": true,
     "subscriptsFixed": 3
@@ -1351,7 +1351,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-657-the-die-is-cast.png"
     ],
@@ -1360,7 +1360,7 @@
     "fixApplied": "Wrapped in <sub>.",
     "verifiedLocal": true,
     "verifiedProd": true,
-    "checkedAt": "2026-09-02T16:23:18.958Z",
+    "checkedAt": "2026-09-02T16:24:54.129Z",
     "notes": "",
     "hasSubscriptCandidate": true,
     "subscriptsFixed": 6
@@ -1425,7 +1425,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-679-dropping-balls.png"
     ],
@@ -1434,7 +1434,7 @@
     "fixApplied": "Wrapped in <sub> inside the table cells.",
     "verifiedLocal": true,
     "verifiedProd": true,
-    "checkedAt": "2026-09-02T16:23:18.958Z",
+    "checkedAt": "2026-09-02T16:24:54.129Z",
     "notes": "",
     "hasSubscriptCandidate": true,
     "subscriptsFixed": 6
@@ -1625,7 +1625,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-798-title-puzzle.png"
     ],
@@ -1634,7 +1634,7 @@
     "fixApplied": "Wrapped in <sub>.",
     "verifiedLocal": true,
     "verifiedProd": true,
-    "checkedAt": "2026-09-02T16:23:18.959Z",
+    "checkedAt": "2026-09-02T16:24:54.129Z",
     "notes": "",
     "hasSubscriptCandidate": true,
     "subscriptsFixed": 8
