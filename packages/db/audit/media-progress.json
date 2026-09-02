@@ -87,7 +87,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-122-trees-on-the-level.png"
     ],
@@ -95,8 +95,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-122-trees-on-the-level.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T15:32:59.589Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T15:42:48.422Z",
     "notes": ""
   },
   {
@@ -105,7 +105,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-141-the-spot-game.png"
     ],
@@ -113,8 +113,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-141-the-spot-game.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T15:32:59.595Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T15:42:48.719Z",
     "notes": ""
   },
   {
@@ -379,7 +379,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-297-quadtrees.png"
     ],
@@ -387,8 +387,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-297-quadtrees.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T15:32:59.600Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T15:42:49.021Z",
     "notes": ""
   },
   {
@@ -925,7 +925,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-514-rails.png"
     ],
@@ -933,8 +933,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-514-rails.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T15:32:59.603Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T15:42:49.325Z",
     "notes": ""
   },
   {
@@ -1135,7 +1135,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-591-box-of-bricks.png"
     ],
@@ -1143,8 +1143,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-591-box-of-bricks.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T15:32:59.606Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T15:42:49.633Z",
     "notes": ""
   },
   {
@@ -1169,7 +1169,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-615-is-it-a-tree.png"
     ],
@@ -1177,8 +1177,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-615-is-it-a-tree.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T15:32:59.611Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T15:42:49.917Z",
     "notes": ""
   },
   {
@@ -1203,7 +1203,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-657-the-die-is-cast.png"
     ],
@@ -1211,8 +1211,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-657-the-die-is-cast.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T15:32:59.615Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T15:42:50.239Z",
     "notes": ""
   },
   {
@@ -1228,7 +1228,7 @@
     "fixApplied": "Skipped — not meaningful content to embed.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": "2026-09-02T15:33:00.219Z",
+    "checkedAt": "2026-09-02T15:42:51.863Z",
     "notes": ""
   },
   {
@@ -1269,7 +1269,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-679-dropping-balls.png"
     ],
@@ -1277,8 +1277,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-679-dropping-balls.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T15:32:59.617Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T15:42:50.540Z",
     "notes": ""
   },
   {
@@ -1447,7 +1447,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-798-title-puzzle.png"
     ],
@@ -1455,8 +1455,8 @@
     "issue": "PDF has an embedded diagram dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-798-title-puzzle.png.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T15:32:59.619Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T15:42:50.963Z",
     "notes": ""
   },
   {
