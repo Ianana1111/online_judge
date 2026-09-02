@@ -3254,7 +3254,7 @@
     "fixApplied": "Skipped — not meaningful content to embed, and copyright-watermarked.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:29:53.900Z",
+    "checkedAt": "2026-09-02T17:35:54.309Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -3283,7 +3283,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-10082-wertyu.png"
     ],
@@ -3291,8 +3291,8 @@
     "issue": "PDF has embedded diagram(s) dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:29:53.209Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T17:35:51.973Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -3321,7 +3321,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-10099-the-tourist-guide.png"
     ],
@@ -3329,8 +3329,8 @@
     "issue": "PDF has embedded diagram(s) dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:29:53.215Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T17:35:52.260Z",
     "notes": "",
     "hasSubscriptCandidate": true,
     "subscriptsFixed": 0
@@ -3431,7 +3431,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "gpe-10655-sumsets.png"
     ],
@@ -3439,8 +3439,8 @@
     "issue": "PDF has embedded diagram(s) dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:29:53.217Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T17:35:52.537Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -3451,7 +3451,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "gpe-10531-zipf-s-law.png"
     ],
@@ -3459,8 +3459,8 @@
     "issue": "PDF has embedded diagram(s) dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:29:53.220Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T17:35:52.819Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -3651,7 +3651,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "gpe-10551-bee-maja-1.png",
       "gpe-10551-bee-maja-2.png"
@@ -3660,8 +3660,8 @@
     "issue": "PDF has embedded diagram(s) dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:29:53.225Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T17:35:53.106Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -3787,7 +3787,7 @@
     "fixApplied": "Skipped — not meaningful content to embed.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:29:53.901Z",
+    "checkedAt": "2026-09-02T17:35:54.310Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -3798,7 +3798,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "gpe-10422-is-this-integration.png"
     ],
@@ -3806,8 +3806,8 @@
     "issue": "PDF has embedded diagram(s) dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:29:53.227Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T17:35:53.393Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -3836,7 +3836,7 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "fixed-local",
+    "status": "fixed-prod",
     "imagesAdded": [
       "uva-10221-satellites.png"
     ],
@@ -3844,8 +3844,8 @@
     "issue": "PDF has embedded diagram(s) dropped during the original import.",
     "fixApplied": "Extracted via pdfimages, referenced right where the text introduces it.",
     "verifiedLocal": true,
-    "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:29:53.229Z",
+    "verifiedProd": true,
+    "checkedAt": "2026-09-02T17:35:53.678Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
@@ -3881,7 +3881,7 @@
     "fixApplied": "Skipped — not meaningful content to embed.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": "2026-09-02T17:29:53.901Z",
+    "checkedAt": "2026-09-02T17:35:54.310Z",
     "notes": "",
     "hasSubscriptCandidate": false,
     "subscriptsFixed": 0
