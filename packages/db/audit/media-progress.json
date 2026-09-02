@@ -87,14 +87,16 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "unchecked",
-    "imagesAdded": [],
+    "status": "fixed-local",
+    "imagesAdded": [
+      "uva-122-trees-on-the-level.png"
+    ],
     "centeredBlocksAdded": 0,
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
+    "issue": "PDF has an embedded diagram dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-122-trees-on-the-level.png.",
+    "verifiedLocal": true,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-09-02T15:32:59.589Z",
     "notes": ""
   },
   {
@@ -103,14 +105,16 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "unchecked",
-    "imagesAdded": [],
+    "status": "fixed-local",
+    "imagesAdded": [
+      "uva-141-the-spot-game.png"
+    ],
     "centeredBlocksAdded": 0,
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
+    "issue": "PDF has an embedded diagram dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-141-the-spot-game.png.",
+    "verifiedLocal": true,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-09-02T15:32:59.595Z",
     "notes": ""
   },
   {
@@ -375,14 +379,16 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "unchecked",
-    "imagesAdded": [],
+    "status": "fixed-local",
+    "imagesAdded": [
+      "uva-297-quadtrees.png"
+    ],
     "centeredBlocksAdded": 0,
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
+    "issue": "PDF has an embedded diagram dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-297-quadtrees.png.",
+    "verifiedLocal": true,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-09-02T15:32:59.600Z",
     "notes": ""
   },
   {
@@ -919,14 +925,16 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "unchecked",
-    "imagesAdded": [],
+    "status": "fixed-local",
+    "imagesAdded": [
+      "uva-514-rails.png"
+    ],
     "centeredBlocksAdded": 0,
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
+    "issue": "PDF has an embedded diagram dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-514-rails.png.",
+    "verifiedLocal": true,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-09-02T15:32:59.603Z",
     "notes": ""
   },
   {
@@ -1127,14 +1135,16 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "unchecked",
-    "imagesAdded": [],
+    "status": "fixed-local",
+    "imagesAdded": [
+      "uva-591-box-of-bricks.png"
+    ],
     "centeredBlocksAdded": 0,
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
+    "issue": "PDF has an embedded diagram dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-591-box-of-bricks.png.",
+    "verifiedLocal": true,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-09-02T15:32:59.606Z",
     "notes": ""
   },
   {
@@ -1159,14 +1169,16 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "unchecked",
-    "imagesAdded": [],
+    "status": "fixed-local",
+    "imagesAdded": [
+      "uva-615-is-it-a-tree.png"
+    ],
     "centeredBlocksAdded": 0,
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
+    "issue": "PDF has an embedded diagram dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-615-is-it-a-tree.png.",
+    "verifiedLocal": true,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-09-02T15:32:59.611Z",
     "notes": ""
   },
   {
@@ -1191,14 +1203,16 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "unchecked",
-    "imagesAdded": [],
+    "status": "fixed-local",
+    "imagesAdded": [
+      "uva-657-the-die-is-cast.png"
+    ],
     "centeredBlocksAdded": 0,
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
+    "issue": "PDF has an embedded diagram dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-657-the-die-is-cast.png.",
+    "verifiedLocal": true,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-09-02T15:32:59.615Z",
     "notes": ""
   },
   {
@@ -1207,14 +1221,14 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": false,
-    "status": "unchecked",
+    "status": "no-media-needed",
     "imagesAdded": [],
     "centeredBlocksAdded": 0,
-    "issue": null,
-    "fixApplied": null,
+    "issue": "PDF page 1 has an embedded image, but it is a generic decorative balance-scale clip-art icon, not a problem-specific diagram.",
+    "fixApplied": "Skipped — not meaningful content to embed.",
     "verifiedLocal": false,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-09-02T15:33:00.219Z",
     "notes": ""
   },
   {
@@ -1255,14 +1269,16 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "unchecked",
-    "imagesAdded": [],
+    "status": "fixed-local",
+    "imagesAdded": [
+      "uva-679-dropping-balls.png"
+    ],
     "centeredBlocksAdded": 0,
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
+    "issue": "PDF has an embedded diagram dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-679-dropping-balls.png.",
+    "verifiedLocal": true,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-09-02T15:32:59.617Z",
     "notes": ""
   },
   {
@@ -1431,14 +1447,16 @@
     "hasImageCandidate": true,
     "hasVectorCandidate": false,
     "hasCenterCandidate": true,
-    "status": "unchecked",
-    "imagesAdded": [],
+    "status": "fixed-local",
+    "imagesAdded": [
+      "uva-798-title-puzzle.png"
+    ],
     "centeredBlocksAdded": 0,
-    "issue": null,
-    "fixApplied": null,
-    "verifiedLocal": false,
+    "issue": "PDF has an embedded diagram dropped during the original import.",
+    "fixApplied": "Extracted via pdfimages, palette-quantized, referenced as /problem-images/uva-798-title-puzzle.png.",
+    "verifiedLocal": true,
     "verifiedProd": false,
-    "checkedAt": null,
+    "checkedAt": "2026-09-02T15:32:59.619Z",
     "notes": ""
   },
   {
