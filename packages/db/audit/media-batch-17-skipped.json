@@ -1,0 +1,6 @@
+[
+  { "slug": "uva-10193-all-you-need-is-love", "issue": "The subscript-candidate signal was a false positive; no actual subscript notation in the statement (L and S are single-letter binary strings, not subscripted variables).", "fixApplied": "No change needed." },
+  { "slug": "uva-10267-graphical-editor", "issue": "The subscript-candidate signal was a false positive (from \"M x N\" table dimension); the command table (IM N, C, LX Y C, etc.) is literal command syntax, not subscript notation.", "fixApplied": "No change needed." },
+  { "slug": "uva-11495-bubbles-and-buckets", "issue": "The subscript-candidate signal was a false positive; no actual subscript notation in the statement.", "fixApplied": "No change needed." },
+  { "slug": "uva-11633-food-portion-size", "issue": "The subscript-candidate signal was a false positive; a, b, x, y, S are all single-letter variables, not subscripted.", "fixApplied": "No change needed." }
+]
