@@ -1,0 +1,12 @@
+[
+  { "slug": "uva-10004-bicoloring", "issue": "The vector-diagram-keyword match (\"print it as shown below\") refers to sample output formatting, not a visual diagram.", "fixApplied": "No change needed." },
+  { "slug": "uva-10035-primary-arithmetic", "issue": "The vector-diagram-keyword match (\"format shown below\") refers to sample output formatting, not a visual diagram.", "fixApplied": "No change needed." },
+  { "slug": "uva-10056-what-is-the-probability", "issue": "The vector-diagram-keyword match (\"shown in the sample output\") refers to sample output formatting, not a visual diagram.", "fixApplied": "No change needed." },
+  { "slug": "uva-10633-rare-easy-problem", "issue": "The vector-diagram-keyword match (\"figure out\") is a verb phrase. Also checked the \"10^18\" constraint -- already correctly using caret notation from the earlier text-fidelity audit.", "fixApplied": "No change needed — already correctly handled." },
+  { "slug": "uva-10800-not-that-kind-of-graph", "issue": "The vector-diagram-keyword match refers to an ASCII stock-price graph that is part of the sample output section (not statementMd body content), already correctly rendered separately by the site.", "fixApplied": "No change needed." },
+  { "slug": "uva-11078-open-credit-system", "issue": "The vector-diagram-keyword match (\"figure out\") is a verb phrase. Checked i'th/j'th notation -- already written with apostrophe-th, not requiring subscripts.", "fixApplied": "No change needed." },
+  { "slug": "uva-11576-scrolling-sign", "issue": "The vector-diagram-keyword match does not correspond to any visual diagram reference.", "fixApplied": "No change needed." },
+  { "slug": "uva-11728-alternate-task", "issue": "The vector-diagram-keyword match (\"format shown in sample output\") refers to sample output formatting, not a visual diagram.", "fixApplied": "No change needed." },
+  { "slug": "uva-12063-zeros-and-ones", "issue": "PDF has a genuinely referenced illustration table, but statementMd already has it correctly as a GFM table from the earlier text-fidelity audit.", "fixApplied": "No change needed — already correctly handled." },
+  { "slug": "uva-12223-moving-to-nuremberg", "issue": "The vector-diagram-keyword match (\"figure out\") is a verb phrase.", "fixApplied": "No change needed." }
+]
