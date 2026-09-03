@@ -1,0 +1,58 @@
+[
+  {
+    "slug": "gpe-22151-big-mod",
+    "statementMd": "Calculate\n\n<div class=\"oj-center\">R := B^P mod M</div>\n\nfor large values of B, P , and M using an efficient algorithm. (That’s right, this problem has a time\ndependency !!!.)\n\n### Input\n\nThe input will contain several test cases, each of them as described below. Consecutive test cases are\nseparated by a single blank line.\nThree integer values (in the order B, P , M ) will be read one number per line. B and P are integers\nin the range 0 to 2147483647 inclusive. M is an integer in the range 1 to 46340 inclusive.\n\n### Output\n\nFor each test, the result of the computation. A single integer on a line by itself.",
+    "centeredBlocksAdded": 1,
+    "issue": "The formula R := B^P mod M is a PDF-centered display line wrapped in a code block.",
+    "fixApplied": "Replaced code block with a centered div."
+  },
+  {
+    "slug": "gpe-22351-quirksome-squares",
+    "statementMd": "The number 3025 has a remarkable quirk: if you split its decimal representation in two strings of equal\nlength (30 and 25) and square the sum of the numbers so obtained, you obtain the original number:\n\n<div class=\"oj-center\">(30 + 25)^2 = 3025</div>\n\nThe problem is to determine all numbers with this property having a given even number of digits.\n\nFor example, 4-digit numbers run from 0000 to 9999. Note that leading zeroes should be taken\ninto account. This means that 0001 which is equal to (00 + 01)^2 is a quirksome number of 4 digits.\nThe number of digits may be 2,4,6 or 8. Although maxint is only 32767 and numbers of eight digits\nare asked for, a well-versed programmer can keep his numbers in the range of the integers. However\nefficiency should be given a thought.\n\n### Input\n\nThe input of your program is a textfile containing numbers of digits (taken from 2,4,6,8), each number\non a line of its own.\n\n### Output\n\nThe output is a textfile consisting of lines containing the quirksome numbers (ordered according to the\ninput numbers and for each input number in increasing order).\n\nWarning: Please note that the number of digits in the output is equal to the number in the corresponding input line : leading zeroes may not be suppressed.",
+    "centeredBlocksAdded": 1,
+    "issue": "The equation (30+25)^2=3025 is a PDF-centered display line, was plain paragraph text.",
+    "fixApplied": "Wrapped it in a centered div."
+  },
+  {
+    "slug": "uva-437-the-tower-of-babylon",
+    "statementMd": "Perhaps you have heard of the legend of the Tower of Babylon. Nowadays many details of this tale\nhave been forgotten. So now, in line with the educational nature of this contest, we will tell you the\nwhole story:\n\nThe babylonians had n types of blocks, and an unlimited supply of blocks of each type.\n\nEach type-i block was a rectangular solid with linear dimensions (x<sub>i</sub>, y<sub>i</sub>, z<sub>i</sub>). A block could\nbe reoriented so that any two of its three dimensions determined the dimensions of the base\nand the other dimension was the height.\n\nThey wanted to construct the tallest tower possible by stacking blocks. The problem was\nthat, in building a tower, one block could only be placed on top of another block as long as\nthe two base dimensions of the upper block were both strictly smaller than the corresponding\nbase dimensions of the lower block. This meant, for example, that blocks oriented to have\nequal-sized bases couldn’t be stacked.\n\nYour job is to write a program that determines the height of the tallest tower the babylonians can\nbuild with a given set of blocks.\n\n### Input\n\nThe input file will contain one or more test cases. The first line of each test case contains an integer n,\nrepresenting the number of different blocks in the following data set. The maximum value for n is 30.\n\nEach of the next n lines contains three integers representing the values x<sub>i</sub>, y<sub>i</sub> and z<sub>i</sub>.\n\nInput is terminated by a value of zero (0) for n.\n\n### Output\n\nFor each test case, print one line containing the case number (they are numbered sequentially starting\nfrom 1) and the height of the tallest possible tower in the format\n\n`Case case: maximum height = height`",
+    "subscriptsFixed": 6,
+    "issue": "xi/yi/zi subscripts were plain text (in both the body paragraph and the Input section).",
+    "fixApplied": "Wrapped all occurrences in <sub>, including the Input section instance missed in the first pass."
+  },
+  {
+    "slug": "uva-482-permutation-arrays",
+    "statementMd": "In many computer problems, it is necessary to permute data arrays. That is, the data in an array must\nbe re-arranged in some specified order. One way to permute arbitrary data arrays is to specify the\npermutations with an index array to point out the position of the elements in the new array. Let x\nbe an array that is to be permuted and let x′ be the permuted array. Then, we have the relationship\nbetween x and x′ that x′<sub>pi</sub> = x<sub>i</sub>.\n\n### Input\n\nThe input begins with a single positive integer on a line by itself indicating the number of the cases\nfollowing, each of them as described below. This line is followed by a blank line, and there is also a\nblank line between two consecutive inputs.\n\nEach input set will contain two lines of numbers. The first line will be an index array p containing\nthe integers 1 . . . n, where n is the number of integers in the list. The numbers in the first line will have\nbeen permuted in some fashion. The second line will contain a list numbers in floating point format.\n\n### Output\n\nFor each test case, the output must follow the description below. The outputs of two consecutive cases\nwill be separated by a blank line.\n\nThe output for this program will be the list of floating point numbers from the input set, ordered\naccording to the permutation array from the input file. The output numbers must be printed one per\nline in the same format in which they each appeared in the input file.",
+    "subscriptsFixed": 2,
+    "issue": "The x_pi = x_i relationship (compound letter+letter subscript) was plain text.",
+    "fixApplied": "Wrapped in <sub> (compound pi subscript kept as a single token per the no-nested-tags convention)."
+  },
+  {
+    "slug": "gpe-10608-minimal-coverage",
+    "statementMd": "Given several segments of line (int the X axis) with coordinates \\[L<sub>i</sub>, R<sub>i</sub>\\]. You are to choose the minimal\namount of them, such they would completely cover the segment \\[0, M \\].\n\n### Input\n\nThe first line is the number of test cases, followed by a blank line.\n\nEach test case in the input should contains an integer M (1 ≤ M ≤ 5000), followed by pairs \"L<sub>i</sub> R<sub>i</sub>\"\n(\\|L<sub>i</sub>\\|, \\|R<sub>i</sub>\\| ≤ 50000, i ≤ 100000), each on a separate line. Each test case of input is terminated by pair\n'0 0'.\n\nEach test case will be separated by a single line.\n\n### Output\n\nFor each test case, in the first line of output your programm should print the minimal number of line\nsegments which can cover segment \\[0, M \\]. In the following lines, the coordinates of segments, sorted\nby their left end (L<sub>i</sub>), should be printed in the same format as in the input. Pair '0 0' should not be\nprinted. If \\[0, M \\] can not be covered by given line segments, your programm should print '0' (without\nquotes).\n\nPrint a blank line between the outputs for two consecutive test cases.",
+    "subscriptsFixed": 7,
+    "issue": "Li/Ri subscripts were plain text throughout.",
+    "fixApplied": "Wrapped all in <sub>."
+  },
+  {
+    "slug": "uva-10025-the-1-2-n-k-problem",
+    "statementMd": "Given the following formula, one can set operators ‘+’ or ‘-’ instead of each ‘?’, in order to obtain a\ngiven k\n\n<div class=\"oj-center\">?1?2? . . .?n = k</div>\n\nFor example: to obtain k = 12, the expression to be used will be:\n\n```\n- 1 + 2 + 3 + 4 + 5 + 6 - 7 = 12\n```\n\nwith n = 7\n\n### Input\n\nThe first line is the number of test cases, followed by a blank line.\n\nEach test case of the input contains an integer k (0 ≤ \\|k\\| ≤ 1000000000).\n\nEach test case will be separated by a single line.\n\n### Output\n\nFor each test case, your program should print the minimal possible n (1 ≤ n) to obtain k with the\nabove formula.\n\nPrint a blank line between the outputs for two consecutive test cases.",
+    "centeredBlocksAdded": 1,
+    "issue": "The formula ?1?2?...?n=k is a PDF-centered display line in regular math font wrapped in a code block; the second worked example (-1+2+...) is genuinely monospace-styled in the PDF and was correctly left as a code block.",
+    "fixApplied": "Replaced only the first code block with a centered div."
+  },
+  {
+    "slug": "uva-10026-shoemaker-s-problem",
+    "statementMd": "Shoemaker has N jobs (orders from customers) which he must make. Shoemaker can work on only\none job in each day. For each i-th job, it is known the integer T<sub>i</sub> (1 ≤ T<sub>i</sub> ≤ 1000), the time in days it\ntakes the shoemaker to finish the job. For each day of delay before starting to work for the i-th job,\nshoemaker must pay a fine of S<sub>i</sub> (1 ≤ S<sub>i</sub> ≤ 10000) cents. Your task is to help the shoemaker, writing a\nprogramm to find the sequence of jobs with minimal total fine.\n\n### Input\n\nThe input begins with a single positive integer on a line by itself indicating the number\nof the cases following, each of them as described below. This line is followed by a blank\nline, and there is also a blank line between two consecutive inputs.\n\nFirst line of input contains an integer N (1 ≤ N ≤ 1000). The next N lines each contain two\nnumbers: the time and fine of each task in order.\n\n### Output\n\nFor each test case, the output must follow the description below. The outputs of two\nconsecutive cases will be separated by a blank line.\n\nYou programm should print the sequence of jobs with minimal fine. Each job should be represented\nby its number in input. All integers should be placed on only one output line and separated by one\nspace. If multiple solutions are possible, print the first lexicographically.",
+    "subscriptsFixed": 4,
+    "issue": "Ti/Si subscripts were plain text.",
+    "fixApplied": "Wrapped all in <sub>."
+  },
+  {
+    "slug": "uva-1730-sum-of-mslcm",
+    "statementMd": "A positive integer N can be the LCM (Least Common Multiple) of different set of numbers. For\nexample, LCM (6, 24) = 24, LCM (12, 8) = 24, LCM (1, 2, 3, 4, 8) = 24, etc. For a given number N ,\nmaximum sum LCM indicates the set of numbers whose LCM is N and summation is maximum. Let,\nMSLCM(N) denote this maximum sum of numbers. Given the value of N you will have to find the\nvalue:\n\n<div class=\"oj-center\">Σ<sub>i=2</sub><sup>N</sup> MSLCM(i)</div>\n\nObviously, in a set the same value never comes twice.\n\n### Input\n\nInput file contains at most 200 lines. Each line contains a positive integer which denotes the value of\nN (1 \\< N \\< 20000001). Input is terminated by a line containing a single zero, which should not be\nprocessed.\n\n### Output\n\nFor each positive number N in the input, produce one line of output. This line contains an integer\nwhich denotes the value\n\n<div class=\"oj-center\">Σ<sub>i=2</sub><sup>N</sup> MSLCM(i)</div>",
+    "centeredBlocksAdded": 2,
+    "issue": "The summation formula (with a real Σ symbol in the PDF) appears twice, flattened to ASCII code blocks.",
+    "fixApplied": "Replaced both code blocks with centered divs using the actual Σ symbol with sub/sup."
+  }
+]
