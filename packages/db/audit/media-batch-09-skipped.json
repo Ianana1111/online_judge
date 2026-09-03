@@ -1,0 +1,8 @@
+[
+  { "slug": "gpe-10471-counting-chaos", "issue": "PDF page 1 has an embedded decorative photo of a marble cake, thematic flavor for the culinary framing, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-11332-summing-digits", "issue": "PDF page 1 has an embedded decorative photo of \"A Million Random Digits\" book, thematic pun on digit-summing, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-11364-parking", "issue": "PDF page 1 has an embedded decorative parking-sign icon, thematic flavor only, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-11401-triangle-counting", "issue": "PDF page 1 has an embedded decorative graphic of three generic unlabeled triangle outlines, not referenced by the problem text and carries no information beyond what the text already states.", "fixApplied": "Skipped — not meaningful content to embed." },
+  { "slug": "uva-11584-partitioning-by-palindromes", "issue": "PDF page 1 has an embedded decorative sheet-music image (a Mozart palindromic duet, with a third-party attribution URL printed on it), thematic pun on \"palindromes\", not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed, and carries third-party attribution." },
+  { "slug": "uva-11624-fire", "issue": "PDF page 1 has an embedded decorative campfire clip-art, thematic flavor for the title, not referenced by the problem text.", "fixApplied": "Skipped — not meaningful content to embed." }
+]
