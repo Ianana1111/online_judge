@@ -1,0 +1,5 @@
+[
+  { "slug": "uva-108-maximum-sum", "issue": "The subscript-candidate signal was a false positive (from \"3-SAT\"/\"2-SAT\"); the matrix example is already correctly a code block from the earlier text-fidelity audit.", "fixApplied": "No change needed." },
+  { "slug": "uva-544-heavy-cargo", "issue": "The subscript-candidate signal was a false positive (from \"Godzilla V12\"); no actual subscript notation in the statement.", "fixApplied": "No change needed." },
+  { "slug": "gpe-10038-disk-tree", "issue": "The subscript-candidate signal was a false positive (from \"CERTCO~1\" in an example directory path); no actual subscript notation in the statement.", "fixApplied": "No change needed." }
+]
