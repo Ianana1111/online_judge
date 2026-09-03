@@ -1,0 +1,6 @@
+[
+  { "slug": "uva-573-the-snail", "issue": "The vector-diagram-keyword match refers to a genuine data table (Day/Height/Distance) that statementMd already has correctly as a GFM table from the earlier text-fidelity audit.", "fixApplied": "No change needed — already correctly handled." },
+  { "slug": "uva-696-how-many-knights", "issue": "PDF has a genuinely referenced ASCII knight-attack diagram (X's and N with spacing), but statementMd already has it correctly as a monospace code block from the earlier text-fidelity audit.", "fixApplied": "No change needed — already correctly handled." },
+  { "slug": "uva-948-fibonaccimal-base", "issue": "PDF has two genuinely referenced figures (a Fibonacci-sequence table and a Fibonaccimal-base breakdown table), but statementMd already has both correctly as GFM tables with $...$ / $$...$$ KaTeX math notation and italic figure captions from an earlier pass.", "fixApplied": "No change needed — already correctly handled." },
+  { "slug": "uva-1207-agtc", "issue": "PDF has a genuinely referenced sequence-alignment ASCII diagram (letters with | match markers), but statementMd already has it correctly as monospace code blocks from the earlier text-fidelity audit.", "fixApplied": "No change needed — already correctly handled." }
+]
