@@ -1,0 +1,242 @@
+[
+  {
+    "slug": "uva-11957-checkers",
+    "issue": "Plain narrative prose with inline (x,y) coordinate notation; no subscript/center patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11219-basic-wall-maze",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11220-decoding-the-message",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11233-deli-deli",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11258-string-partition",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11321-sort-sort-and-sort",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11344-the-huge-one",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11389-the-bus-driver-problem",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "gpe-21964-fill-the-containers",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11455-behold-my-quadrangle",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11456-trainsorting",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11461-square-numbers",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11472-beautiful-numbers",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "gpe-24931-extend-to-palindromes",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11481-square-sums",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11489-integer-game",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11518-dominos-2",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11541-decoding",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11659-informants",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11730-number-transformation",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11908-skyscraper",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11942-lumberjack-sequencing",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11960-divisor-game",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12019-doom-s-day-algorithm",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12041-bfs-binary-fibonacci-string",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12218-an-industrial-spy",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12442-forwarding-emails",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12455-bars",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "gpe-24911-robot-instructions",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12592-slogan-learning-of-princess",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12650-dangerous-dive",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12694-meeting-room-arrangement",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12820-cool-word",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12918-lucky-thief",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12959-strategy-game",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "gpe-10642-marbles",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-13055-inception",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-13185-dpa-numbers-i",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-13190-rockabye-tobby",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-13257-license-plates",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11526-h-n",
+    "issue": "Genuine fixed-width ASCII-art/matrix/table content or real source code, correctly kept as a code block / GFM table matching the PDF layout.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11956-brainfuck",
+    "issue": "Genuine fixed-width ASCII-art/matrix/table content or real source code, correctly kept as a code block / GFM table matching the PDF layout.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11987-almost-union-find",
+    "issue": "Genuine fixed-width ASCII-art/matrix/table content or real source code, correctly kept as a code block / GFM table matching the PDF layout.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-11995-i-can-guess-the-data-structure",
+    "issue": "Genuine fixed-width ASCII-art/matrix/table content or real source code, correctly kept as a code block / GFM table matching the PDF layout.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "gpe-23771-lexicographic-order",
+    "issue": "Genuine fixed-width ASCII-art/matrix/table content or real source code, correctly kept as a code block / GFM table matching the PDF layout.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12382-grid-of-lamps",
+    "issue": "Genuine fixed-width ASCII-art/matrix/table content or real source code, correctly kept as a code block / GFM table matching the PDF layout.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-12797-letters",
+    "issue": "Genuine fixed-width ASCII-art/matrix/table content or real source code, correctly kept as a code block / GFM table matching the PDF layout.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-13242-pool-filling",
+    "issue": "Genuine fixed-width ASCII-art/matrix/table content or real source code, correctly kept as a code block / GFM table matching the PDF layout.",
+    "fixApplied": "No change needed."
+  }
+]
