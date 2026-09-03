@@ -1,0 +1,137 @@
+[
+  {
+    "slug": "uva-10106-product",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10107-what-is-the-median",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10110-light-more-light",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10130-supersale",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "gpe-10533-the-trip",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10142-australian-voting",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10150-doublets",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "gpe-10675-urn-ball-probabilities",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10170-the-hotel-with-infinite-rooms",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10188-automated-judge-script",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10191-longest-nap",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "gpe-10559-i-love-big-numbers",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10222-decode-the-mad-man",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10235-simply-emirp",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10242-fourth-point",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10252-common-permutation",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "gpe-10429-contest-scoreboard",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "gpe-24731-roads-in-the-north",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10327-flip-sort",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "gpe-11009-all-in-all",
+    "issue": "Checked against pdftotext -layout output; no image/vector-diagram references, no isolated centered content beyond baseline indentation, and no letter+digit or letter+letter subscript/superscript patterns found.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10161-ant-on-a-chessboard",
+    "issue": "Numeric grid is a genuine fixed-width-alignment matrix (chessboard-like); already correctly kept as a code block from an earlier audit pass.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "gpe-10679-irreducible-basic-fractions",
+    "issue": "Fraction lists are already real LaTeX ($$\\frac{...}{...}$$, KaTeX-renderable) from an earlier process; out of scope to touch per the established real-LaTeX exception.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10189-minesweeper",
+    "issue": "Grid examples are genuine fixed-width ASCII-art content; already correctly kept as code blocks.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10190-divide-but-not-quite-conquer",
+    "issue": "a[1]/a[i]/a[i-1] use the PDF's own bracket-index notation, not a flattened subscript; no change needed.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10200-prime-time",
+    "issue": "n^2 already uses the accepted caret-notation-for-exponents convention (out of scope to convert to <sup>).",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10309-turn-the-lights-off",
+    "issue": "Grid examples (###/OOO) are genuine fixed-width ASCII-art content; already correctly kept as code blocks.",
+    "fixApplied": "No change needed."
+  },
+  {
+    "slug": "uva-10336-rank-the-languages",
+    "issue": "Map examples are genuine fixed-width grid content; already correctly kept as code blocks.",
+    "fixApplied": "No change needed."
+  }
+]
