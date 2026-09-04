@@ -328,6 +328,18 @@ export interface ContestParticipant {
   attemptNumber: number;
 }
 
+export interface ContestAttemptSummary {
+  attemptNumber: number;
+  startedAt: string;
+  endsAt: string;
+  status: "RUNNING" | "FINISHED";
+  solvedCount: number;
+  penalty: number;
+  /** True when the participant closed this attempt via the "end exam" action before its timer
+   * would have naturally run out. */
+  endedEarly: boolean;
+}
+
 export interface ContestDetail extends ContestListItem {
   problems: ContestProblemRef[];
   myParticipant: ContestParticipant | null;
@@ -338,8 +350,19 @@ export interface ContestDetail extends ContestListItem {
    * registered. Scoped to the current attempt, not the user's best one (see Scoreboard), so a
    * fresh re-attempt starts with none marked solved even if an earlier attempt solved them. */
   solvedProblemIds: string[];
+  /** Every attempt this caller has made at this contest, oldest first — lets the page show a full
+   * "your attempts" history instead of only ever exposing the latest one. */
+  myAttempts: ContestAttemptSummary[];
   freezeMin: number;
   penaltyMin: number;
+}
+
+/** Body of the 409 thrown by POST /contests/:id/register when the caller already has a different
+ * contest's attempt live right now — see ContestsService.register's one-live-attempt-at-a-time
+ * check. */
+export interface ContestConflictBody {
+  message: string;
+  conflictingContest: { id: string; slug: string; title: string; endsAt: string };
 }
 
 export interface MyContest {
@@ -368,6 +391,11 @@ export interface ScoreboardRow {
    * their own row (see ContestsService.computeScoreboard). */
   attemptNumber: number;
   problems: Record<string, { solved: boolean; attempts: number; solveMin: number | null }>;
+  /** This user's currently-running attempt, if any, with its true right-now solvedCount/penalty —
+   * present regardless of whether that attempt is the one shown as this row (attemptNumber above).
+   * Lets the UI show real-time progress for someone re-attempting even while their best-scoring
+   * attempt is an older, already-finished one. Null once no attempt of theirs is still running. */
+  liveAttempt: { attemptNumber: number; solvedCount: number; penalty: number } | null;
 }
 
 export interface Scoreboard {

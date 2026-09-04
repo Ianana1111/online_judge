@@ -111,8 +111,11 @@ export const batch5Dictionary: Record<string, string> = {
   "page and the countdown begins — the same problems and time limit as the real sitting that year, visible only to you and counted only in your own record. Start whenever you're ready; there's no need to run it alongside anyone else.":
     "頁面挑一場開始，倒數計時就會啟動，題目、時限都跟當年正式考試一樣，全程只有你自己看得到、只計入你自己的紀錄，隨時可以開始，不需要跟別人同場。",
   "Can I leave partway through a virtual exam?": "虛擬模擬考中途可以離開嗎？",
-  "Yes — the countdown doesn't pause when you leave the page, but it doesn't disappear either. Coming back resumes the same countdown, and it auto-submits when time runs out, so make sure you actually have the full block of time available before you start.":
-    "可以，倒數計時不會因為你離開頁面而暫停，但也不會消失——回來的時候會接續原本的倒數，時間到就會自動結算，所以建議開始前先確保接下來有完整的時間可以應考。",
+  "Yes — the countdown doesn't pause when you leave the page, but it doesn't disappear either. Coming back resumes the same countdown. If you want to stop for good, the \"End exam\" button finalizes your score right away instead of waiting for time to run out — useful if you want to go start a different exam.":
+    "可以，倒數計時不會因為你離開頁面而暫停，但也不會消失——回來的時候會接續原本的倒數。如果你想直接結束，畫面上的「結束測驗」按鈕可以立刻以目前成績結算，不用等時間到，適合想馬上換去挑戰別場的時候使用。",
+  "Can I run more than one virtual exam at the same time?": "可以同時開好幾場虛擬模擬考嗎？",
+  "No — only one exam can be in progress at a time, so you can give it your full attention. If you try to start a second one while another is still running, you'll be offered a one-click way to end the first and jump straight into the new one.":
+    "不行——同時間只能有一場正在進行，確保你能專心應付這一場。如果在另一場還在倒數時嘗試開始新的一場，系統會提供一鍵「結束前一場、直接開始這一場」的選項。",
   "Can Free accounts only start one virtual exam per month?": "免費方案一個月只能開一次虛擬模擬考嗎？",
   "Yes — Free accounts get 1 per calendar month, resetting automatically at the start of each month; Pro has no limit.":
     "是的，免費方案每個日曆月可以開 1 場，額度在月初自動重置；Pro 方案沒有次數限制。",
@@ -121,6 +124,34 @@ export const batch5Dictionary: Record<string, string> = {
     "會，每場模擬考都有自己的計分（含罰時），可以在該場比賽頁面看到即時排名；平常的單題練習也會累計進整體排行榜與你的個人 Activity 頁面。",
 
   "Frequently asked questions. Can't find your answer? Email us at": "常見問題整理。找不到答案的話，歡迎寄信到",
+
+  // --- Virtual contest: one-live-attempt limit, end-early, live scoreboard badge, attempt history ---
+  "You already have a virtual exam in progress.": "你已經有一場虛擬測驗正在進行中。",
+  "You're already in the middle of": "你目前正在進行",
+  "only one exam can run at a time.": "同時間只能專心應付一場。",
+  "Go finish it": "回去繼續作答",
+  "End that one & start this instead": "結束那一場，改考這一場",
+  "Switching…": "切換中…",
+  "Could not end that exam": "無法結束那場測驗",
+  "Could not end this exam": "無法結束這場測驗",
+  "End exam": "結束測驗",
+  "End this exam now?": "現在要結束這場測驗嗎？",
+  "You've solved {solved}/{total} with {remaining} left on the clock. This finalizes your score for this attempt and can't be undone.":
+    "你目前解出 {solved}/{total} 題，還剩 {remaining}。結束後會直接以這個結果計分，且無法復原。",
+  "This finalizes your score for this attempt and can't be undone.": "結束後會直接以這個結果計分，且無法復原。",
+  "Keep going": "繼續作答",
+  "Ending…": "結束中…",
+  "Attempt #{n}": "第 {n} 次挑戰",
+  "Ended early": "提前結束",
+  "Time expired": "時間到",
+  "vs. previous": "較上次",
+  "Your attempts": "你的挑戰紀錄",
+  "live": "進行中",
+  "in progress": "進行中",
+  "Currently re-attempting": "目前正在重新挑戰",
+  "{title} is still running — {remaining} left unanswered.": "《{title}》還在倒數中——還有 {remaining} 未作答。",
+  "Resume": "繼續作答",
+  "End it": "結束測驗",
 
   // --- accessibility: keyboard-operable table rows (Phase 6.9) ---
   "View submission from {when}": "查看 {when} 的提交",
