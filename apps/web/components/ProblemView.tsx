@@ -107,7 +107,7 @@ export default function ProblemView({
   const leftBody = (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="font-display text-3xl font-bold text-ink-50">
+        <h1 className="font-statement text-3xl font-bold text-ink-50">
           {problem.uvaId != null && (
             <span className="mr-2 align-middle font-mono text-lg font-normal text-ink-500">#{problem.uvaId}</span>
           )}
