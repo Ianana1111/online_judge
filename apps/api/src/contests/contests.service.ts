@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { prisma, Prisma } from "@oj/db";
 import type { CreateContestDto } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
@@ -67,20 +67,12 @@ export class ContestsService {
     const now = Date.now();
     return participants.map((p) => {
       const subs = submissionsByParticipant.get(p.id) ?? [];
-      const bySubs = subs.filter((s) => s.verdict !== "PENDING" && s.verdict !== "JUDGING");
-
-      let solvedCount = 0;
-      let penalty = 0;
-      for (const cp of p.contest.problems) {
-        const forProblem = bySubs.filter((s) => s.problemId === cp.problemId);
-        const firstAc = forProblem.find((s) => s.verdict === "AC");
-        if (firstAc) {
-          const wrongBefore = forProblem.filter((s) => s.verdict !== "AC" && s.createdAt < firstAc.createdAt).length;
-          const solveMin = Math.max(0, Math.round((firstAc.createdAt.getTime() - p.startedAt.getTime()) / 60_000));
-          solvedCount += 1;
-          penalty += solveMin + p.contest.penaltyMin * wrongBefore;
-        }
-      }
+      const { solvedCount, penalty } = scoreAttempt(
+        p.startedAt,
+        p.contest.penaltyMin,
+        p.contest.problems.map((cp) => cp.problemId),
+        subs,
+      );
 
       return {
         id: p.contest.id,
@@ -122,6 +114,18 @@ export class ContestsService {
     // contestParticipantId (not just userId), same reasoning as the scoreboard: a re-attempt must
     // never inherit a "solved" mark from a different attempt's submissions.
     let solvedProblemIds: string[] = [];
+    // Every attempt this requester has made at this specific contest (not just the latest) — lets
+    // the frontend show a "your attempt history" list so someone re-attempting can see whether
+    // they're actually improving, instead of the latest attempt being the only trace of past runs.
+    let myAttempts: Array<{
+      attemptNumber: number;
+      startedAt: Date;
+      endsAt: Date;
+      status: "RUNNING" | "FINISHED";
+      solvedCount: number;
+      penalty: number;
+      endedEarly: boolean;
+    }> = [];
     if (requester) {
       const participant = await this.latestParticipant(id, requester.id);
       if (participant) {
@@ -138,6 +142,43 @@ export class ContestsService {
           distinct: ["problemId"],
         });
         solvedProblemIds = solved.map((s) => s.problemId);
+
+        const allAttempts = await prisma.contestParticipant.findMany({
+          where: { contestId: id, userId: requester.id },
+          orderBy: { attemptNumber: "asc" },
+        });
+        const attemptSubs = await prisma.submission.findMany({
+          where: { contestParticipantId: { in: allAttempts.map((a) => a.id) } },
+          select: { ...SCOREBOARD_SUBMISSION_SELECT, contestParticipantId: true },
+          orderBy: { createdAt: "asc" },
+        });
+        const subsByAttempt = new Map<string, typeof attemptSubs>();
+        for (const s of attemptSubs) {
+          const list = subsByAttempt.get(s.contestParticipantId!) ?? [];
+          list.push(s);
+          subsByAttempt.set(s.contestParticipantId!, list);
+        }
+        const problemIds = contest.problems.map((cp) => cp.problemId);
+        const nowMs = Date.now();
+        myAttempts = allAttempts.map((a) => {
+          const { solvedCount, penalty } = scoreAttempt(a.startedAt, contest.penaltyMin, problemIds, subsByAttempt.get(a.id) ?? []);
+          // The originally-scheduled end of this attempt, recomputed rather than stored — contests
+          // have no edit endpoint, so contest.durationMin has been stable since this attempt began
+          // and this is always safe. Comparing it against the actual (possibly shortened) endsAt is
+          // how "did they end this one early" is known without a dedicated column.
+          const plannedEndsAt = contest.startAt
+            ? contest.startAt.getTime() + contest.durationMin * 60_000
+            : a.startedAt.getTime() + contest.durationMin * 60_000;
+          return {
+            attemptNumber: a.attemptNumber,
+            startedAt: a.startedAt,
+            endsAt: a.endsAt,
+            status: nowMs < a.endsAt.getTime() ? ("RUNNING" as const) : ("FINISHED" as const),
+            solvedCount,
+            penalty,
+            endedEarly: a.endsAt.getTime() < plannedEndsAt - 1000,
+          };
+        });
       } else {
         canStartNewAttempt = true;
       }
@@ -178,6 +219,7 @@ export class ContestsService {
       myParticipant,
       canStartNewAttempt,
       solvedProblemIds,
+      myAttempts,
       problems: contest.problems.map((cp) => ({
         label: cp.label,
         ord: cp.ord,
@@ -238,6 +280,33 @@ export class ContestsService {
       const already = await this.latestParticipant(id, userId, tx);
       if (already && (contest.startAt || Date.now() < already.endsAt.getTime())) return already;
 
+      // Only one contest window may be live for a user at a time — starting a second one while
+      // another is still running would split attention across two independent clocks and leave
+      // the first one silently ticking in the background. The advisory lock above already
+      // serializes every register() call this user makes (for any contest), so this read is race
+      // -free the same way the quota check below is. endAttempt() is the deliberate way out.
+      const nowForConflictCheck = new Date();
+      const conflict = await tx.contestParticipant.findFirst({
+        where: {
+          userId,
+          contestId: { not: id },
+          startedAt: { lte: nowForConflictCheck },
+          endsAt: { gt: nowForConflictCheck },
+        },
+        include: { contest: { select: { id: true, slug: true, title: true } } },
+      });
+      if (conflict) {
+        throw new ConflictException({
+          message: "You already have a virtual exam in progress.",
+          conflictingContest: {
+            id: conflict.contest.id,
+            slug: conflict.contest.slug,
+            title: conflict.contest.title,
+            endsAt: conflict.endsAt,
+          },
+        });
+      }
+
       await this.billing.assertCanStartVirtual(userId, tx);
 
       const now = new Date();
@@ -272,6 +341,31 @@ export class ContestsService {
       // safe to call even when `already` short-circuited above (re-registering isn't a new event).
       await this.achievements.awardDirect(userId, "first_virtual_exam");
       return participant;
+    });
+  }
+
+  /** Lets a user voluntarily close out their own currently-running individual/virtual attempt
+   * before its timer would naturally expire — the deliberate way to free up the one-live-attempt
+   * slot enforced in register() so they can start a different contest right away, instead of
+   * leaving this one ticking in the background unattended. Scheduled group sessions share one
+   * clock for everyone and can't be shortened by a single participant, so this only applies to
+   * individual/virtual contests (Contest.startAt is null). */
+  async endAttempt(id: string, userId: string) {
+    const contest = await prisma.contest.findUnique({ where: { id } });
+    if (!contest) throw new NotFoundException("Contest not found");
+    if (contest.startAt) {
+      throw new BadRequestException("Scheduled sessions share one clock and can't be ended early.");
+    }
+
+    const participant = await this.latestParticipant(id, userId);
+    const now = new Date();
+    if (!participant || now < participant.startedAt || now >= participant.endsAt) {
+      throw new BadRequestException("You don't have an exam in progress for this contest.");
+    }
+
+    return prisma.contestParticipant.update({
+      where: { id: participant.id },
+      data: { endsAt: now, status: "FINISHED" },
     });
   }
 
@@ -385,6 +479,12 @@ export class ContestsService {
         solvedCount,
         penalty,
         problems: problemCells,
+        // Whether *this specific attempt* is still ticking right now — a user can only ever have
+        // one live attempt at once (enforced in register()), so at most one attemptRow per user
+        // has this set. Stripped back off before the row is returned from the endpoint (see
+        // `liveAttempt` below); kept internal so the standings JSON never grows an ambiguous
+        // "live: true/false" boolean sitting next to the real liveAttempt object.
+        isLiveNow: stillRunning,
       };
     });
 
@@ -402,6 +502,16 @@ export class ContestsService {
 
     rows.sort((a, b) => (b.solvedCount - a.solvedCount) || (a.penalty - b.penalty));
 
+    // A user's currently-running attempt, if any — regardless of whether it's the one shown as
+    // their standings row above. Re-attempting someone who hasn't yet beaten their historical
+    // best would otherwise look "frozen" (the board keeps showing the old score while they're
+    // actively solving) since the row above only ever reflects whichever attempt scored best.
+    // This surfaces the true, live-right-now numbers separately without disturbing that ranking.
+    const liveByUser = new Map<string, (typeof attemptRows)[number]>();
+    for (const row of attemptRows) {
+      if (row.isLiveNow) liveByUser.set(row.userId, row);
+    }
+
     let rank = 0;
     let lastKey: string | null = null;
     const standings = rows.map((row, idx) => {
@@ -410,7 +520,13 @@ export class ContestsService {
         rank = idx + 1;
         lastKey = key;
       }
-      return { ...row, rank };
+      const live = liveByUser.get(row.userId);
+      const { isLiveNow: _isLiveNow, ...publicRow } = row;
+      return {
+        ...publicRow,
+        rank,
+        liveAttempt: live ? { attemptNumber: live.attemptNumber, solvedCount: live.solvedCount, penalty: live.penalty } : null,
+      };
     });
 
     return { standings, frozen: anyFrozen };
@@ -419,4 +535,30 @@ export class ContestsService {
 
 function isTerminal(verdict: string): boolean {
   return verdict !== "PENDING" && verdict !== "JUDGING";
+}
+
+/** ICPC-style solved-count/penalty for one attempt against one set of problems — shared by
+ * myContests() and detail()'s per-attempt history so the scoring math can't drift between the
+ * two places it's computed (computeScoreboard() has its own copy since it also needs the
+ * per-problem cell breakdown for the table, not just the totals). */
+function scoreAttempt(
+  startedAt: Date,
+  penaltyMin: number,
+  problemIds: string[],
+  submissions: { problemId: string; verdict: string; createdAt: Date }[],
+): { solvedCount: number; penalty: number } {
+  const terminal = submissions.filter((s) => isTerminal(s.verdict));
+  let solvedCount = 0;
+  let penalty = 0;
+  for (const problemId of problemIds) {
+    const forProblem = terminal.filter((s) => s.problemId === problemId);
+    const firstAc = forProblem.find((s) => s.verdict === "AC");
+    if (firstAc) {
+      const wrongBefore = forProblem.filter((s) => s.verdict !== "AC" && s.createdAt < firstAc.createdAt).length;
+      const solveMin = Math.max(0, Math.round((firstAc.createdAt.getTime() - startedAt.getTime()) / 60_000));
+      solvedCount += 1;
+      penalty += solveMin + penaltyMin * wrongBefore;
+    }
+  }
+  return { solvedCount, penalty };
 }

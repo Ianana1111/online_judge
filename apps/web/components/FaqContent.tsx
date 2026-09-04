@@ -181,7 +181,13 @@ export default function FaqContent() {
         {
           q: t("Can I leave partway through a virtual exam?"),
           a: t(
-            "Yes — the countdown doesn't pause when you leave the page, but it doesn't disappear either. Coming back resumes the same countdown, and it auto-submits when time runs out, so make sure you actually have the full block of time available before you start.",
+            "Yes — the countdown doesn't pause when you leave the page, but it doesn't disappear either. Coming back resumes the same countdown. If you want to stop for good, the \"End exam\" button finalizes your score right away instead of waiting for time to run out — useful if you want to go start a different exam.",
+          ),
+        },
+        {
+          q: t("Can I run more than one virtual exam at the same time?"),
+          a: t(
+            "No — only one exam can be in progress at a time, so you can give it your full attention. If you try to start a second one while another is still running, you'll be offered a one-click way to end the first and jump straight into the new one.",
           ),
         },
         {

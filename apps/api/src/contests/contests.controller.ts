@@ -38,6 +38,12 @@ export class ContestsController {
     return this.contests.register(id, user.id);
   }
 
+  @HttpCode(200)
+  @Post(":id/end")
+  end(@Param("id") id: string, @CurrentUser() user: RequestUser) {
+    return this.contests.endAttempt(id, user.id);
+  }
+
   @OptionalAuth()
   @Get(":id/scoreboard")
   scoreboard(@Param("id") id: string) {

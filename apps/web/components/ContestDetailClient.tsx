@@ -5,7 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
-import type { ContestDetail } from "@/lib/types";
+import type { ContestConflictBody, ContestDetail } from "@/lib/types";
 import { useAuthStore } from "@/store/auth";
 import Scoreboard from "@/components/Scoreboard";
 import ExamModeShell from "@/components/ExamModeShell";
@@ -88,6 +88,8 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
   const { user } = useAuthStore();
   const [registering, setRegistering] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [conflict, setConflict] = useState<ContestConflictBody["conflictingContest"] | null>(null);
+  const [switching, setSwitching] = useState(false);
   const [activeProblemSlug, setActiveProblemSlug] = useState<string | null>(null);
   const [now, setNow] = useState(Date.now());
 
@@ -104,14 +106,51 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
 
   async function register() {
     setError(null);
+    setConflict(null);
     setRegistering(true);
     try {
       await apiFetch(`/contests/${contestId}/register`, { method: "POST" });
       await qc.invalidateQueries({ queryKey: ["contest", contestId] });
+      await qc.invalidateQueries({ queryKey: ["contests", "me"] });
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : t("Could not join the contest"));
+      if (e instanceof ApiError && e.status === 409 && e.body && typeof e.body === "object" && "conflictingContest" in e.body) {
+        setConflict((e.body as ContestConflictBody).conflictingContest);
+      } else {
+        setError(e instanceof ApiError ? e.message : t("Could not join the contest"));
+      }
     } finally {
       setRegistering(false);
+    }
+  }
+
+  // The one-click resolution offered on the conflict card: end the other exam that's currently
+  // live, then immediately continue into this one — the guided version of "end early, then go
+  // start what I actually wanted," so the user never has to make two separate trips.
+  async function endConflictAndRegister() {
+    if (!conflict) return;
+    setError(null);
+    setSwitching(true);
+    try {
+      await apiFetch(`/contests/${conflict.id}/end`, { method: "POST" });
+      setConflict(null);
+      await qc.invalidateQueries({ queryKey: ["contest", conflict.id] });
+      await qc.invalidateQueries({ queryKey: ["contests", "me"] });
+      await register();
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : t("Could not end that exam"));
+    } finally {
+      setSwitching(false);
+    }
+  }
+
+  async function endThisAttempt() {
+    setError(null);
+    try {
+      await apiFetch(`/contests/${contestId}/end`, { method: "POST" });
+      await qc.invalidateQueries({ queryKey: ["contest", contestId] });
+      await qc.invalidateQueries({ queryKey: ["contests", "me"] });
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : t("Could not end this exam"));
     }
   }
 
@@ -248,6 +287,9 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
         endsAtIso={contest.myParticipant.endsAt}
         homeHref={contest.kind === "GPE" ? "/gpe" : "/cpe"}
         fullHeight={!!activeProblem}
+        solvedCount={contest.solvedProblemIds.length}
+        totalProblems={contest.problems.length}
+        onEnd={endThisAttempt}
       >
         {buildInner(contest, !!activeProblem)}
       </ExamModeShell>
@@ -268,6 +310,25 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
           )}
         </p>
       </div>
+
+      {conflict && (
+        <div className="oj-card border-verdict-wa/40 p-4">
+          <p className="mb-3 text-sm text-ink-300">
+            {t("You're already in the middle of")} <span className="font-medium text-ink-50">{conflict.title}</span>
+            {" — "}
+            {t("only one exam can run at a time.")}
+          </p>
+          {error && <p className="mb-2 text-sm text-verdict-wa">{error}</p>}
+          <div className="flex flex-wrap gap-2">
+            <Link href={`/contests/${conflict.id}`} className="oj-btn-secondary px-4 py-1.5 text-sm">
+              {t("Go finish it")}
+            </Link>
+            <button onClick={endConflictAndRegister} disabled={switching} className="oj-btn-primary px-4 py-1.5 text-sm">
+              {switching ? t("Switching…") : t("End that one & start this instead")}
+            </button>
+          </div>
+        </div>
+      )}
 
       {!contest.myParticipant && (
         <div className="oj-card p-4">
@@ -317,6 +378,46 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
           <p className="mt-1 text-xs text-ink-500">
             {t("This page refreshes automatically — come back here once the start time arrives.")}
           </p>
+        </div>
+      )}
+
+      {contest.myAttempts.length > 0 && (
+        <div>
+          <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Your attempts")}</h2>
+          <div className="oj-card divide-y divide-ink-800">
+            {contest.myAttempts.map((a, idx) => {
+              const prev = idx > 0 ? contest.myAttempts[idx - 1] : null;
+              const delta = prev ? a.solvedCount - prev.solvedCount : null;
+              return (
+                <div key={a.attemptNumber} className="flex items-center justify-between gap-3 p-3">
+                  <div className="min-w-0">
+                    <p className="text-sm text-ink-100">
+                      {t("Attempt #{n}", { n: a.attemptNumber })}{" "}
+                      <span className="font-mono text-xs text-ink-500">{new Date(a.startedAt).toLocaleString()}</span>
+                    </p>
+                    <p className="mt-0.5 text-xs text-ink-500">
+                      {a.status === "RUNNING"
+                        ? t("In progress")
+                        : a.endedEarly
+                          ? t("Ended early")
+                          : t("Time expired")}
+                      {delta !== null && delta !== 0 && (
+                        <span className={delta > 0 ? "text-verdict-ac" : "text-verdict-wa"}>
+                          {" · "}
+                          {delta > 0 ? `+${delta}` : delta} {t("vs. previous")}
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                  <div className="shrink-0 text-right font-mono text-sm">
+                    <span className="text-ink-100">{a.solvedCount}</span>
+                    <span className="text-ink-500"> {t("solved")}</span>
+                    <span className="ml-2 text-ink-400">{a.penalty}p</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 

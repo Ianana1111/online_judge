@@ -13,10 +13,12 @@ export default function Scoreboard({
   contestId: string;
   problems: ContestProblemRef[];
   /** The viewer's own userId, but only while their own attempt is still running — set to null once
-   * it ends or when browsing someone else's/a past attempt. Solved cells in that one row get a
-   * green highlight for the duration, matching the same live-only highlight on the problem list
-   * (ContestDetailClient); the underlying +/attempts/time record itself is unaffected and stays
-   * visible either way, this only toggles the highlight. */
+   * it ends or when browsing someone else's/a past attempt. Solved cells in that row get a green
+   * highlight for the duration, matching the same live-only highlight on the problem list
+   * (ContestDetailClient) — but only when the displayed row actually IS the live attempt (see
+   * `rowIsLive` below); if the viewer is re-attempting and their best-scoring row is an older,
+   * already-finished attempt, that row's cells stay unhighlighted and the `liveAttempt` badge
+   * carries the real-time numbers instead, so nothing here ever implies a stale row is updating. */
   liveUserId?: string | null;
 }) {
   const t = useT();
@@ -52,7 +54,14 @@ export default function Scoreboard({
           </tr>
         </thead>
         <tbody>
-          {data.standings.map((row) => (
+          {data.standings.map((row) => {
+            // The displayed row (best attempt) is only "truthfully live" when the currently-
+            // running attempt IS that best attempt — otherwise the row's own cells are frozen at
+            // an older, already-finished attempt and must not be green-highlighted as if they were
+            // updating in real time (see ContestsService.computeScoreboard's liveAttempt field).
+            const rowIsLive = row.liveAttempt?.attemptNumber === row.attemptNumber;
+            const liveElsewhere = row.liveAttempt && !rowIsLive ? row.liveAttempt : null;
+            return (
             <tr key={row.userId}>
               <td className="font-mono">{row.rank}</td>
               <td className="font-medium text-ink-50">
@@ -60,12 +69,23 @@ export default function Scoreboard({
                 {row.attemptNumber > 1 && (
                   <span className="ml-1.5 font-mono text-[10px] font-normal text-ink-500">#{row.attemptNumber}</span>
                 )}
+                {rowIsLive && (
+                  <span className="ml-1.5 inline-flex items-center gap-1 text-[10px] font-normal text-verdict-tle">
+                    <span className="h-1.5 w-1.5 animate-pulse-soft rounded-full bg-verdict-tle" aria-hidden />
+                    {t("live")}
+                  </span>
+                )}
+                {liveElsewhere && (
+                  <span className="ml-1.5 font-mono text-[10px] font-normal text-verdict-tle" title={t("Currently re-attempting")}>
+                    🔴 #{liveElsewhere.attemptNumber} {t("in progress")}: {liveElsewhere.solvedCount}/{problems.length}
+                  </span>
+                )}
               </td>
               <td className="font-mono">{row.solvedCount}</td>
               <td className="font-mono text-ink-400">{row.penalty}</td>
               {problems.map((p) => {
                 const cell = row.problems[p.label];
-                const live = cell?.solved && row.userId === liveUserId;
+                const live = cell?.solved && rowIsLive && row.userId === liveUserId;
                 return (
                   <td key={p.label} className={`text-center font-mono text-xs ${live ? "bg-verdict-ac/10" : ""}`}>
                     {cell?.solved ? (
@@ -82,7 +102,8 @@ export default function Scoreboard({
                 );
               })}
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </div>

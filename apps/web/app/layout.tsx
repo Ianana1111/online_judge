@@ -8,6 +8,7 @@ import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import PageviewTracker from "@/components/PageviewTracker";
 import PromoBanner from "@/components/PromoBanner";
+import ActiveExamBanner from "@/components/ActiveExamBanner";
 import ProfileSetupGate from "@/components/ProfileSetupGate";
 import PendingDeletionGate from "@/components/PendingDeletionGate";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
@@ -98,6 +99,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Providers>
           <PageviewTracker />
           <PromoBanner />
+          <ActiveExamBanner />
           <NavBar />
           <ProfileSetupGate />
           <PendingDeletionGate />
