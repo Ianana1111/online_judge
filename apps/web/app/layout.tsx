@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { Space_Grotesk, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, IBM_Plex_Sans, JetBrains_Mono, STIX_Two_Text } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Providers from "@/components/Providers";
@@ -30,6 +30,20 @@ const mono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-mono",
+});
+
+// Used only for problem statements and their title — the source PDFs are LaTeX-typeset in
+// Computer Modern/Latin Modern (confirmed via pdffonts on the cached PDFs), which isn't itself
+// a Google Font; STIX Two Text is the closest widely-available match (same Times-derived,
+// scientific-publishing lineage, and — unlike a generic serif — properly supports the
+// sub/superscript-heavy math notation these statements actually contain). Deliberately its own
+// variable rather than replacing --font-body/--font-display: this is scoped to statement/title
+// rendering only, the rest of the site's chrome keeps its existing sans-serif look.
+const statement = STIX_Two_Text({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-statement",
 });
 
 const DEFAULT_TITLE = "judge. — online judge for CPE & UVa practice";
@@ -89,7 +103,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // for why the nonce can't just live in a static config.
   const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
-    <html lang="zh-TW" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html lang="zh-TW" className={`${display.variable} ${body.variable} ${mono.variable} ${statement.variable}`}>
       <head>
         <script nonce={nonce} dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(ORGANIZATION_JSON_LD) }} />

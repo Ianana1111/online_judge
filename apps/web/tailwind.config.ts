@@ -60,6 +60,9 @@ const config: Config = {
         display: ["var(--font-display)", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "sans-serif"],
         body: ["var(--font-body)", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "sans-serif"],
         mono: ["var(--font-mono)", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "monospace"],
+        // Problem statements + their title only (see the STIX_Two_Text comment in app/layout.tsx)
+        // — a serif stack so it still reads as a paper even before the web font loads.
+        statement: ["var(--font-statement)", "Noto Serif TC", "Times New Roman", "PingFang TC", "serif"],
       },
       borderRadius: {
         DEFAULT: "6px",
