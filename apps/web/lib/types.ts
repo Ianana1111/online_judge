@@ -133,6 +133,17 @@ export interface RecommendedProblem {
   difficulty: number;
 }
 
+export interface InProgressProblem {
+  id: string;
+  uvaId: number | null;
+  slug: string;
+  title: string;
+  difficulty: number;
+  source: "UVA" | "CPE" | "GPE" | "CUSTOM";
+  lastAttemptAt: string;
+  lastVerdict: Verdict | null;
+}
+
 export interface RecommendedCollectionProblem extends RecommendedProblem {
   collectionTitle: string;
   collectionSlug: string;

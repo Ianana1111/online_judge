@@ -28,6 +28,12 @@ export class ProblemsController {
     return this.problems.dailyPick(user);
   }
 
+  // Same ordering requirement as "recommended" above — must come before ":slug".
+  @Get("in-progress")
+  inProgress(@CurrentUser() user: RequestUser) {
+    return this.problems.inProgress(user.id);
+  }
+
   @OptionalAuth()
   @Get(":slug")
   detail(@Param("slug") slug: string, @CurrentUser() user: RequestUser | null) {
