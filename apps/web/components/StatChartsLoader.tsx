@@ -9,13 +9,7 @@ import type { UserStats } from "@/lib/types";
 // the page importing this is a Server Component.
 const StatCharts = dynamic(() => import("@/components/StatCharts"), {
   ssr: false,
-  loading: () => (
-    <div className="grid gap-4 sm:grid-cols-3">
-      <div className="oj-card h-64 animate-pulse bg-ink-900" />
-      <div className="oj-card h-64 animate-pulse bg-ink-900" />
-      <div className="oj-card h-64 animate-pulse bg-ink-900" />
-    </div>
-  ),
+  loading: () => <div className="oj-card h-64 animate-pulse bg-ink-900" />,
 });
 
 export default function StatChartsLoader({ stats }: { stats: UserStats }) {
