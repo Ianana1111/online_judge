@@ -3,11 +3,11 @@ export const batch5Dictionary: Record<string, string> = {
   "Join our Discord": "加入我們的 Discord",
 
   // --- components/LoggedOutHome.tsx ---
-  "CPE/GPE Judge": "CPE/GPE Judge",
-  "This is CPE/GPE Judge.": "這裡就是 CPE/GPE Judge。",
-  "Train like it's exam day.": "練習，就照考場的節奏來。",
-  "{total}+ practice problems, timed CPE/GPE virtual exams, and a live scoreboard with real ICPC-style penalties — prepare at the exact pace of the real thing.":
-    "{total}+ 題練習庫、限時的 CPE / GPE 虛擬模擬考，還有跟正式賽事一模一樣的即時計分板與 ICPC 罰時規則——照考場的節奏準備，考試當天不會是你第一次感受這個壓力。",
+  "Judge online · {total}+ problems indexed": "判題系統運作中 · 已收錄 {total}+ 題",
+  "Judged exactly": "跟正式考試",
+  "like the real exam.": "同一套判題邏輯。",
+  "Timed CPE/GPE virtual exams, an ICPC-style scoreboard with real penalty minutes — the same pressure you'll feel on exam day, not a simplified stand-in.":
+    "限時的 CPE / GPE 虛擬模擬考，搭配跟正式賽事同一套 ICPC 罰時規則——考試當天會感受到的壓力，這裡先讓你適應過一次。",
   "Start a virtual exam": "開始一場虛擬測驗",
   "contest clock · 02:57:12": "考試倒數 · 02:57:12",
   "Judged like the real exam": "考場等級的判題",
