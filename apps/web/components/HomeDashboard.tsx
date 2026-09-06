@@ -28,6 +28,7 @@ import {
 import type {
   Achievement,
   DailyStats,
+  InProgressProblem,
   LeaderboardRow,
   RecommendedProblems,
   SubmissionListItem,
@@ -227,6 +228,11 @@ export default function HomeDashboard() {
     queryFn: () => apiFetch<RecommendedProblems>("/problems/recommended"),
     enabled: !!user,
   });
+  const inProgressQuery = useQuery({
+    queryKey: ["in-progress"],
+    queryFn: () => apiFetch<InProgressProblem[]>("/problems/in-progress"),
+    enabled: !!user,
+  });
   const recentQuery = useQuery({
     queryKey: ["recent-submissions"],
     queryFn: () => apiFetch<{ items: SubmissionListItem[] }>("/submissions?user=me&pageSize=5"),
@@ -257,6 +263,7 @@ export default function HomeDashboard() {
   });
   const { data: daily } = dailyQuery;
   const { data: recommended } = recommendedQuery;
+  const { data: inProgress } = inProgressQuery;
   const { data: recent } = recentQuery;
   const { data: profile } = profileQuery;
   const { data: achievements } = achievementsQuery;
@@ -274,6 +281,7 @@ export default function HomeDashboard() {
   const anyDashboardQueryFailed = [
     dailyQuery,
     recommendedQuery,
+    inProgressQuery,
     recentQuery,
     profileQuery,
     achievementsQuery,
@@ -302,6 +310,10 @@ export default function HomeDashboard() {
 
   const { text: greetText, Icon: GreetIcon } = greeting(user.handle, t);
   const hasTrophies = !!achievements && achievements.length > 0;
+  // Resuming unfinished work beats a fresh recommendation — the hero's one primary CTA points at
+  // whichever the user more recently cared about, falling back to a new suggestion only once
+  // nothing is left in progress.
+  const continueSlug = inProgress?.[0]?.slug ?? suggestions[0]?.slug ?? null;
 
   return (
     <div className="space-y-8 py-6">
@@ -351,7 +363,7 @@ export default function HomeDashboard() {
               </p>
             )}
             <Link
-              href={suggestions[0] ? `/problems/${suggestions[0].slug}` : "/problems"}
+              href={continueSlug ? `/problems/${continueSlug}` : "/problems"}
               className="oj-btn-primary mt-3 inline-flex items-center gap-1.5 px-4 py-2 text-sm"
             >
               {t("Continue solving")} <span aria-hidden>→</span>
@@ -411,6 +423,38 @@ export default function HomeDashboard() {
           </div>
         </div>
       </section>
+
+      {/* Only rendered once there's actually something unfinished — unlike "Recent activity",
+          there's nothing useful to say in an empty state here, so the section just doesn't exist
+          rather than showing "nothing in progress." Sits right below the hero (ahead of Recent
+          activity/Recommended) since resuming something already started is the single most
+          actionable thing this page can point at. */}
+      {inProgress && inProgress.length > 0 && (
+        <div className="oj-panel p-5">
+          <h2 className="mb-4 font-display text-base font-bold text-ink-50">{t("Pick up where you left off")}</h2>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {inProgress.map((p) => (
+              <Link
+                key={p.id}
+                href={`/problems/${p.slug}`}
+                className="group flex flex-col gap-2 rounded-lg border border-ink-800 bg-ink-900/70 p-3 transition-colors hover:border-brand/50"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-ink-500">{p.source}</span>
+                  <DifficultyStars d={p.difficulty} />
+                </div>
+                <h3 className="text-sm font-medium leading-snug text-ink-50 transition-colors group-hover:text-brand">
+                  {stripProblemNumber(p.title)}
+                </h3>
+                <div className="mt-auto flex items-center justify-between gap-2 pt-1">
+                  <span className="font-mono text-[10px] text-ink-500">{timeAgo(p.lastAttemptAt, t)}</span>
+                  {p.lastVerdict && <VerdictBadge verdict={p.lastVerdict} size="sm" />}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Your log and your trophies sit side by side on a wide screen; the log takes the wider
           share since it's the one with real content in it. With nothing earned yet the trophy

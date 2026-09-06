@@ -248,6 +248,66 @@ export class ProblemsService {
   }
 
   /**
+   * Problems this user has submitted to but never gotten AC on — a "pick up where you left off"
+   * list for the dashboard, most-recently-attempted first. Two lightweight queries instead of
+   * loading full submission history: which problems already have an AC (to exclude), then the
+   * latest attempt timestamp per remaining problem via groupBy — never materializes more than a
+   * handful of rows regardless of how many total submissions the user has made.
+   */
+  async inProgress(userId: string) {
+    const solved = await prisma.submission.findMany({
+      where: { userId, verdict: "AC" },
+      select: { problemId: true },
+      distinct: ["problemId"],
+    });
+    const solvedIds = solved.map((s) => s.problemId);
+
+    const attempts = await prisma.submission.groupBy({
+      by: ["problemId"],
+      where: { userId, problemId: { notIn: solvedIds } },
+      _max: { createdAt: true },
+      orderBy: { _max: { createdAt: "desc" } },
+      take: 3,
+    });
+    if (attempts.length === 0) return [];
+
+    const [problems, latestSubs] = await Promise.all([
+      prisma.problem.findMany({
+        where: { id: { in: attempts.map((a) => a.problemId) }, visibility: true },
+        select: { id: true, uvaId: true, slug: true, title: true, difficulty: true, source: true },
+      }),
+      // groupBy's _max only returns the aggregated createdAt, not the rest of that row — one
+      // small indexed findFirst per (already-capped-at-3) problem is the simplest way to also
+      // surface what the last attempt's verdict actually was.
+      Promise.all(
+        attempts.map((a) =>
+          prisma.submission.findFirst({
+            where: { userId, problemId: a.problemId },
+            orderBy: { createdAt: "desc" },
+            select: { verdict: true },
+          }),
+        ),
+      ),
+    ]);
+    const byId = new Map(problems.map((p) => [p.id, p]));
+    const verdictByProblemId = new Map(attempts.map((a, i) => [a.problemId, latestSubs[i]?.verdict ?? null]));
+
+    return attempts
+      .map((a) => {
+        const problem = byId.get(a.problemId);
+        // A since-hidden problem (visibility: false) shouldn't surface here even if it was
+        // attempted while still visible — nothing else on this list would be clickable either.
+        if (!problem || !a._max.createdAt) return null;
+        return {
+          ...problem,
+          lastAttemptAt: a._max.createdAt.toISOString(),
+          lastVerdict: verdictByProblemId.get(a.problemId) ?? null,
+        };
+      })
+      .filter((x): x is NonNullable<typeof x> => x !== null);
+  }
+
+  /**
    * Today's featured problem — the same one for everyone, all day, so it works as a shared "did
    * you do today's?" reference point rather than a private recommendation. Picked deterministically
    * from today's UTC date (no state to store or a cron to rotate it): hash the date string, index
