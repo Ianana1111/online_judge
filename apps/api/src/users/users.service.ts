@@ -550,13 +550,18 @@ export class UsersService {
     return { ok: true };
   }
 
-  async stats(handle: string) {
+  // `year` selects a specific Jan 1 – Dec 31 calendar year (the profile page's heatmap year
+  // picker) instead of the default rolling `HEATMAP_DAYS`-day window ("current") — same shape of
+  // response either way, just a different date range, so every other consumer of this endpoint
+  // (language/verdict breakdowns, difficulty badges) is unaffected unless it starts passing `year`.
+  async stats(handle: string, year?: number) {
     const user = await prisma.user.findUnique({ where: { handle } });
     if (!user) throw new NotFoundException("User not found");
 
-    const since = new Date(Date.now() - HEATMAP_DAYS * 24 * 3600 * 1000);
+    const since = year ? new Date(Date.UTC(year, 0, 1)) : new Date(Date.now() - HEATMAP_DAYS * 24 * 3600 * 1000);
+    const until = year ? new Date(Date.UTC(year + 1, 0, 1)) : undefined;
     const submissions = await prisma.submission.findMany({
-      where: { userId: user.id, createdAt: { gte: since } },
+      where: { userId: user.id, createdAt: { gte: since, ...(until ? { lt: until } : {}) } },
       select: {
         createdAt: true,
         languageKey: true,

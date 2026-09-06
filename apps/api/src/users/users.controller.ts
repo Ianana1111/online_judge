@@ -159,7 +159,13 @@ export class UsersController {
 
   @Public()
   @Get(":handle/stats")
-  stats(@Param("handle") handle: string) {
-    return this.users.stats(handle);
+  stats(@Param("handle") handle: string, @Query("year") year?: string) {
+    // Bound to a sane calendar range rather than trusting the raw string straight into a date
+    // range query — an out-of-range or non-numeric value falls back to the default rolling
+    // window (undefined) instead of either erroring or building a wildly wide/invalid range.
+    const parsedYear = year ? Number(year) : NaN;
+    const currentYear = new Date().getFullYear();
+    const validYear = Number.isInteger(parsedYear) && parsedYear >= 2000 && parsedYear <= currentYear ? parsedYear : undefined;
+    return this.users.stats(handle, validYear);
   }
 }

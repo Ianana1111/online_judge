@@ -99,6 +99,23 @@ export const batch1Dictionary: Record<string, string> = {
   // --- components/Heatmap.tsx ---
   "Less": "較少",
   "More": "較多",
+  "submissions in the past year": "次提交（近一年）",
+  "submissions in {year}": "次提交（{year} 年）",
+  "Total active days: {n}": "活躍天數：{n}",
+  "Max streak: {n}": "最長連續：{n} 天",
+  "Current": "近一年",
+  "Jan": "1月",
+  "Feb": "2月",
+  "Mar": "3月",
+  "Apr": "4月",
+  "May": "5月",
+  "Jun": "6月",
+  "Jul": "7月",
+  "Aug": "8月",
+  "Sep": "9月",
+  "Oct": "10月",
+  "Nov": "11月",
+  "Dec": "12月",
 
   // --- components/NavBar.tsx ---
   "Admin": "管理員",

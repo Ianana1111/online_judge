@@ -1,7 +1,7 @@
 "use client";
 
 import type { Achievement, ProblemListResponse, UserProfile, UserStats } from "@/lib/types";
-import Heatmap from "@/components/Heatmap";
+import Heatmap, { computeMaxStreak } from "@/components/Heatmap";
 import StatChartsLoader from "@/components/StatChartsLoader";
 import SolvedRing from "@/components/SolvedRing";
 import Avatar from "@/components/Avatar";
@@ -24,19 +24,10 @@ export default function UserProfileClient({
   const t = useT();
   const totalProblems = problemList?.total ?? 0;
   const solvedByDifficulty = new Map(stats?.solvedByDifficulty.map((d) => [d.difficulty, d.count]) ?? []);
-  const maxStreak =
-    stats?.heatmap.reduce(
-      (best, cur) => {
-        if (cur.count > 0) {
-          best.running += 1;
-          best.max = Math.max(best.max, best.running);
-        } else {
-          best.running = 0;
-        }
-        return best;
-      },
-      { running: 0, max: 0 },
-    ).max ?? 0;
+  // computeMaxStreak walks actual calendar-day gaps rather than array position — `heatmap` only
+  // contains days with count > 0, so two active days that aren't actually consecutive (e.g. Mon
+  // and Thu, with a silent gap on Tue/Wed) must not count as a 2-day streak.
+  const maxStreak = computeMaxStreak(stats?.heatmap ?? []);
 
   return (
     <div className="space-y-8">
@@ -89,7 +80,7 @@ export default function UserProfileClient({
 
       <div className="oj-card p-4">
         <h2 className="mb-3 text-sm font-semibold text-ink-200">{t("Activity")}</h2>
-        <Heatmap data={stats?.heatmap ?? []} />
+        <Heatmap handle={profile.handle} initialHeatmap={stats?.heatmap ?? []} joinDate={profile.createdAt} />
       </div>
 
       {achievements && achievements.length > 0 && (
