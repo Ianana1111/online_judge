@@ -51,6 +51,20 @@ export default function FaqContent() {
           ),
         },
         {
+          q: t("I already unsubscribed, but I was still charged — what do I do?"),
+          a: (
+            <>
+              {t(
+                "This shouldn't happen, but if it does: email us right away at",
+              )}
+              <span className="text-brand"> judges0801@gmail.com </span>
+              {t(
+                "with what happened (when you unsubscribed, and when/how much you were charged) — we'll look into it and refund you promptly.",
+              )}
+            </>
+          ),
+        },
+        {
           q: t("Can I get a refund?"),
           a: (
             <>
