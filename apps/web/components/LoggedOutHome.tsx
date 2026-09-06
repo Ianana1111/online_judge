@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useAuthStore } from "@/store/auth";
-import type { ProblemListItem } from "@/lib/types";
+import type { DailyProblem } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
 const FEATURES = [
@@ -24,7 +24,7 @@ const FEATURES = [
  * confirmed — HomeDashboard takes over for logged-in visitors. Both pieces render from the server
  * component and toggle client-side on the same auth check NavBar already uses, so there's no
  * server/client branching needed in the page itself. */
-export default function LoggedOutHome({ items, total }: { items: ProblemListItem[]; total: number }) {
+export default function LoggedOutHome({ total, daily }: { total: number; daily: DailyProblem | null }) {
   const t = useT();
   const { user, status } = useAuthStore();
   if (status === "ready" && user) return null;
@@ -41,7 +41,9 @@ export default function LoggedOutHome({ items, total }: { items: ProblemListItem
           looks ugly." The serif pair already reads as intentional here (see ProblemView.tsx),
           and doubles as a nod to "these are real past exam papers." tracking-normal overrides the
           sitewide tracking-tight on h1 (globals.css), which is tuned for Latin type and just
-          cramps full-width CJK glyphs. */}
+          cramps full-width CJK glyphs.
+          "Welcome to Judge." is deliberately never run through t() — like the "judge." wordmark
+          in NavBar, it's a brand moment, not content, so it stays fixed in every locale. */}
       <section className="relative overflow-hidden rounded-2xl border border-brand/20 bg-ink-900 p-6 sm:p-10">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.11]"
@@ -58,10 +60,8 @@ export default function LoggedOutHome({ items, total }: { items: ProblemListItem
               <span className="h-1.5 w-1.5 rounded-full bg-verdict-ac" />
               {t("Judge online · {total}+ problems indexed", { total })}
             </p>
-            <h1 className="mt-4 font-statement text-4xl font-bold leading-[1.2] tracking-normal text-ink-50 sm:text-5xl">
-              {t("Judged exactly")}
-              <br />
-              {t("like the real exam.")}
+            <h1 className="mt-4 font-statement text-4xl font-bold tracking-normal text-ink-50 sm:text-5xl">
+              Welcome to Judge.
             </h1>
             <p className="mt-5 max-w-md text-ink-300">
               {t(
@@ -119,26 +119,45 @@ penalty: +0 min`}</pre>
         ))}
       </section>
 
-      <section>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-ink-50">{t("Recent problems")}</h2>
-          <Link href="/problems" className="text-sm text-brand hover:underline">
-            {t("View all →")}
-          </Link>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {items.length === 0 && <p className="text-sm text-ink-400">{t("No problems yet — check back soon.")}</p>}
-          {items.map((p) => (
-            <Link key={p.id} href={`/problems/${p.slug}`} className="oj-card p-4 transition-colors hover:border-brand">
-              <div className="mb-1 flex items-center justify-between">
-                <span className="font-mono text-xs text-ink-500">{p.source}</span>
-                <span className="font-mono text-xs text-brand">{"★".repeat(p.difficulty)}</span>
-              </div>
-              <h3 className="font-medium text-ink-50">{p.title}</h3>
+      {/* A single concrete problem to try right now beats a "recent problems" list an anonymous
+          visitor has no reason to care about — recency isn't a meaningful axis on a first visit.
+          This is the same daily pick every visitor sees today (ProblemsService.dailyPick, no
+          login required to read it) — a shared, low-friction hook, and one the product doesn't
+          surface anywhere else yet. The statement itself is fully public; SubmissionPanel is what
+          actually gates on login (its own "log in to submit" prompt), so this naturally funnels
+          someone who's already invested time reading the problem straight into that prompt. */}
+      {daily && (
+        <section>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-ink-50">{t("Today's problem")}</h2>
+            <Link href="/problems" className="text-sm text-brand hover:underline">
+              {t("Browse all {total}+ →", { total })}
             </Link>
-          ))}
-        </div>
-      </section>
+          </div>
+          <Link
+            href={`/problems/${daily.slug}`}
+            className="oj-card flex flex-col gap-4 p-6 transition-colors hover:border-brand sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <div className="flex items-center gap-2 text-xs text-ink-400">
+                <span className="h-1.5 w-1.5 rounded-full bg-verdict-pending" />
+                {t("The same one for everyone, all day.")}
+              </div>
+              <h3 className="mt-2 font-statement text-2xl font-semibold text-ink-50">{daily.title}</h3>
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-ink-500">
+                <span className="font-mono">{daily.source}</span>
+                <span className="font-mono text-brand">{"★".repeat(daily.difficulty)}</span>
+                {daily.tags.slice(0, 3).map((tag) => (
+                  <span key={tag} className="rounded border border-ink-700 px-1.5 py-0.5 font-mono">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <span className="oj-btn-primary shrink-0 px-5 py-2.5 text-sm">{t("Take today's challenge →")}</span>
+          </Link>
+        </section>
+      )}
     </div>
   );
 }

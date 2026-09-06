@@ -4,11 +4,13 @@ export const batch5Dictionary: Record<string, string> = {
 
   // --- components/LoggedOutHome.tsx ---
   "Judge online · {total}+ problems indexed": "判題系統運作中 · 已收錄 {total}+ 題",
-  "Judged exactly": "跟正式考試",
-  "like the real exam.": "同一套判題邏輯。",
   "Timed CPE/GPE virtual exams, an ICPC-style scoreboard with real penalty minutes — the same pressure you'll feel on exam day, not a simplified stand-in.":
     "限時的 CPE / GPE 虛擬模擬考，搭配跟正式賽事同一套 ICPC 罰時規則——考試當天會感受到的壓力，這裡先讓你適應過一次。",
   "Start a virtual exam": "開始一場虛擬測驗",
+  "Today's problem": "今日一題",
+  "Browse all {total}+ →": "瀏覽全部 {total}+ 題 →",
+  "The same one for everyone, all day.": "今天，每個人看到的都是同一題。",
+  "Take today's challenge →": "挑戰今天的題目 →",
   "contest clock · 02:57:12": "考試倒數 · 02:57:12",
   "Judged like the real exam": "考場等級的判題",
   "Every problem is calibrated against what the exam itself actually accepts — the result you see here is the result you'd see on exam day, not a guess.":
