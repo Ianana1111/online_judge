@@ -31,42 +31,70 @@ export default function LoggedOutHome({ items, total }: { items: ProblemListItem
 
   return (
     <div className="space-y-16">
-      <section className="grid gap-10 py-10 sm:grid-cols-[1.25fr_1fr] sm:items-center">
-        <div>
-          <span className="inline-flex items-center gap-2 rounded-full border border-ink-700 bg-ink-900 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.15em] text-ink-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-            {t("CPE/GPE Judge")}
-          </span>
-          <h1 className="mt-4 font-display text-4xl font-bold leading-tight text-ink-50 sm:text-5xl">
-            {t("This is CPE/GPE Judge.")}
-            <br />
-            {t("Train like it's exam day.")}
-          </h1>
-          <p className="mt-4 max-w-md text-ink-300">
-            {t(
-              "{total}+ practice problems, timed CPE/GPE virtual exams, and a live scoreboard with real ICPC-style penalties — prepare at the exact pace of the real thing.",
-              { total },
-            )}
-          </p>
-          <div className="mt-6 flex gap-3">
-            <Link href="/problems" className="oj-btn-primary px-5 py-2.5">
-              {t("Browse problems")}
-            </Link>
-            <Link href="/contests" className="oj-btn-secondary px-5 py-2.5">
-              {t("Start a virtual exam")}
-            </Link>
-          </div>
-        </div>
-        <div className="oj-card p-5 font-mono text-xs leading-relaxed text-ink-400">
-          <div className="mb-2 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-verdict-ac" />
-              <span className="h-2.5 w-2.5 rounded-full bg-verdict-tle" />
-              <span className="h-2.5 w-2.5 rounded-full bg-verdict-wa" />
+      {/* Same hero-panel treatment (rounded-2xl, brand hairline, dual radial wash) as
+          HomeDashboard's logged-in hero — so the very first thing a visitor sees already looks
+          like the product they'll land in after signing up, not a bolted-on marketing page.
+          The headline uses font-statement (STIX Two Text / Noto Serif TC), not font-display
+          (Space Grotesk / Noto Sans TC): Space Grotesk's distinctive geometric letterforms have
+          no CJK glyphs, so every Chinese character was silently falling back to a plain generic
+          sans sitting right next to it — the mismatch users were reacting to as "the Chinese text
+          looks ugly." The serif pair already reads as intentional here (see ProblemView.tsx),
+          and doubles as a nod to "these are real past exam papers." tracking-normal overrides the
+          sitewide tracking-tight on h1 (globals.css), which is tuned for Latin type and just
+          cramps full-width CJK glyphs. */}
+      <section className="relative overflow-hidden rounded-2xl border border-brand/20 bg-ink-900 p-6 sm:p-10">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.11]"
+          style={{ background: "radial-gradient(circle at 6% 0%, rgb(var(--brand)) 0%, transparent 58%)" }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ background: "radial-gradient(circle at 100% 100%, rgb(var(--verdict-ac)) 0%, transparent 52%)" }}
+        />
+
+        <div className="relative grid gap-10 sm:grid-cols-[1.2fr_1fr] sm:items-center">
+          <div>
+            <p className="flex items-center gap-2 text-xs text-ink-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-verdict-ac" />
+              {t("Judge online · {total}+ problems indexed", { total })}
+            </p>
+            <h1 className="mt-4 font-statement text-4xl font-bold leading-[1.2] tracking-normal text-ink-50 sm:text-5xl">
+              {t("Judged exactly")}
+              <br />
+              {t("like the real exam.")}
+            </h1>
+            <p className="mt-5 max-w-md text-ink-300">
+              {t(
+                "Timed CPE/GPE virtual exams, an ICPC-style scoreboard with real penalty minutes — the same pressure you'll feel on exam day, not a simplified stand-in.",
+              )}
+            </p>
+            <div className="mt-7 flex gap-3">
+              <Link href="/problems" className="oj-btn-primary px-5 py-2.5">
+                {t("Browse problems")}
+              </Link>
+              <Link href="/contests" className="oj-btn-secondary px-5 py-2.5">
+                {t("Start a virtual exam")}
+              </Link>
             </div>
-            <span className="text-[10px] tracking-wide text-ink-500">{t("contest clock · 02:57:12")}</span>
           </div>
-          <pre className="whitespace-pre-wrap text-ink-300">{`$ submit C.cpp --contest cpe
+
+          {/* A graded verdict slip, not a generic dashboard screenshot: the AC stamp (styled off
+              VerdictBadge's own AC classes, just larger and rotated like an ink stamp) sits on
+              top of the same judge-terminal output the product actually produces. */}
+          <div className="relative">
+            <div className="absolute -right-2 -top-3 z-10 rotate-[-7deg] rounded border-2 border-verdict-ac/50 bg-ink-950 px-3 py-1 font-mono text-sm font-bold uppercase tracking-wide text-verdict-ac">
+              AC ✓
+            </div>
+            <div className="oj-card p-5 font-mono text-xs leading-relaxed text-ink-400">
+              <div className="mb-2 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-verdict-ac" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-verdict-tle" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-verdict-wa" />
+                </div>
+                <span className="text-[10px] tracking-wide text-ink-500">{t("contest clock · 02:57:12")}</span>
+              </div>
+              <pre className="whitespace-pre-wrap text-ink-300">{`$ submit C.cpp --contest cpe
 compiling...        ok (0.4s)
 test 01/04          AC   4ms   1.2MB
 test 02/04          AC   6ms   1.2MB
@@ -75,12 +103,16 @@ test 04/04          AC   4ms   1.2MB
 
 verdict: ACCEPTED
 penalty: +0 min`}</pre>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-3">
+      {/* One rubric sheet with internal dividers, not three identical floating cards — reads as
+          a graded breakdown of what this platform gets right, rather than a generic feature grid. */}
+      <section className="oj-panel grid divide-y divide-ink-800 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         {FEATURES.map((f) => (
-          <div key={f.title} className="oj-panel p-5">
+          <div key={f.title} className="p-6">
             <h3 className="font-medium text-ink-50">{t(f.title)}</h3>
             <p className="mt-2 text-sm text-ink-400">{t(f.body)}</p>
           </div>
