@@ -53,6 +53,10 @@ export const batch5Dictionary: Record<string, string> = {
   "How do I cancel Pro?": "Pro 方案要怎麼取消？",
   "Click \"Unsubscribe\" on the Upgrade Plan page — this stops future auto-renewal, but you keep full Pro access until your current paid period ends, then switch to Free automatically. No refund is issued for the time already paid for (unless you're within your first-month refund window — see the next question).":
     "在 Upgrade Plan 頁面按下「取消訂閱」即可——這會停止之後的自動續扣，但目前這期已付費的 Pro 權限會持續使用到到期日，之後才自動變回 Free。已扣款的當期費用不會退還（除非你還在首月退款期限內，見下一題）。",
+  "I already unsubscribed, but I was still charged — what do I do?": "我已經退訂了，卻還是被扣款，怎麼辦？",
+  "This shouldn't happen, but if it does: email us right away at": "這不應該發生，但如果真的遇到了，請馬上寄信到",
+  "with what happened (when you unsubscribed, and when/how much you were charged) — we'll look into it and refund you promptly.":
+    "說明來龍去脈（什麼時候退訂的、什麼時候被扣了多少錢），我們會盡快查明並退款給你。",
   "Can I get a refund?": "可以退款嗎？",
   "You can request a full refund within 30 days of your first charge — it cancels your subscription and switches you to Free immediately, and you can only do this once per account. Find the option on the Upgrade Plan page while it's still available. See our":
     "第一次扣款後 30 天內可以在 Upgrade Plan 頁面自助申請全額退款——會取消訂閱並立即切換回 Free，每個帳號限用一次。詳見",
