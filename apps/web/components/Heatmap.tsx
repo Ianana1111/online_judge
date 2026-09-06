@@ -52,25 +52,37 @@ function yearDays(year: number): string[] {
   return out;
 }
 
-function buildWeeks(dayList: string[], byDate: Map<string, number>): (Cell | null)[][] {
-  const cells: Cell[] = dayList.map((date) => ({ date, count: byDate.get(date) ?? 0 }));
-  const lead = new Date(cells[0].date).getDay();
-  const padded: (Cell | null)[] = Array.from({ length: lead }, (): Cell | null => null).concat(cells);
-  const weeks: (Cell | null)[][] = [];
-  for (let i = 0; i < padded.length; i += 7) weeks.push(padded.slice(i, i + 7));
-  return weeks;
-}
+type MonthBlock = { key: string; label: string; weeks: (Cell | null)[][] };
 
-function monthLabelsFor(weeks: (Cell | null)[][]): (string | null)[] {
-  let prevMonth = -1;
-  return weeks.map((week) => {
-    const first = week.find((d) => d !== null);
-    if (!first) return null;
-    const m = new Date(first.date).getMonth();
-    if (m === prevMonth) return null;
-    prevMonth = m;
-    return MONTH_KEYS[m];
-  });
+/** Each month gets its own mini-grid sized to its own day count (a 28-day month is genuinely
+ * narrower than a 31-day one) instead of one continuous week-numbered strip where a column can
+ * straddle two months — that's what made every month blur into its neighbors regardless of the
+ * gap between columns. `dayList` only contains real in-range days (the two edge months of a
+ * rolling window are naturally partial, e.g. day 1 of a leading month may already be a week
+ * before the window starts), so grouping by each day's own calendar month and padding to *that*
+ * day's actual weekday keeps every date in its correct row even when a month block is partial. */
+function buildMonthBlocks(dayList: string[], byDate: Map<string, number>): MonthBlock[] {
+  const byMonth = new Map<string, string[]>();
+  for (const date of dayList) {
+    const key = date.slice(0, 7); // "YYYY-MM"
+    if (!byMonth.has(key)) byMonth.set(key, []);
+    byMonth.get(key)!.push(date);
+  }
+
+  const blocks: MonthBlock[] = [];
+  for (const [key, monthDays] of byMonth) {
+    const lead = new Date(monthDays[0]).getDay();
+    const cells: (Cell | null)[] = Array.from({ length: lead }, (): Cell | null => null);
+    for (const date of monthDays) cells.push({ date, count: byDate.get(date) ?? 0 });
+    while (cells.length % 7 !== 0) cells.push(null);
+
+    const weeks: (Cell | null)[][] = [];
+    for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+
+    const month = Number(key.slice(5, 7)) - 1;
+    blocks.push({ key, label: MONTH_KEYS[month], weeks });
+  }
+  return blocks;
 }
 
 /** Longest run of *calendar-adjacent* dates with at least one submission — walks actual date
@@ -127,8 +139,7 @@ export default function Heatmap({
   const byDate = new Map(data.map((d) => [d.date, d.count]));
   const max = data.reduce((m, d) => Math.max(m, d.count), 0);
   const days = selected === "current" ? rollingDays() : yearDays(selected);
-  const weeks = buildWeeks(days, byDate);
-  const monthLabels = monthLabelsFor(weeks);
+  const blocks = buildMonthBlocks(days, byDate);
 
   const total = data.reduce((sum, d) => sum + d.count, 0);
   const activeDays = data.length;
@@ -169,33 +180,30 @@ export default function Heatmap({
       </div>
 
       <div ref={scrollRef} className={`overflow-x-auto transition-opacity ${isFetching ? "opacity-50" : ""}`}>
-        <div className="inline-flex gap-1">
-          {weeks.map((week, wi) => (
-            // The extra ml-1.5 exactly where a new month starts (same condition monthLabels was
-            // already computing) is what separates "Sep" from "Oct" visually — without it every
-            // week uses the same 4px gap and months run together into one solid block.
-            <div key={wi} className={`flex flex-col gap-1 ${wi > 0 && monthLabels[wi] ? "ml-1.5" : ""}`}>
-              {week.map((day, di) =>
-                day ? (
-                  <div
-                    key={di}
-                    title={t("{date}: {count} submissions", { date: day.date, count: day.count })}
-                    className={`h-3 w-3 rounded-sm ${LEVELS[levelFor(day.count, max)]}`}
-                  />
-                ) : (
-                  <div key={di} className="h-3 w-3" />
-                ),
-              )}
-            </div>
-          ))}
-        </div>
-        <div className="mt-1 inline-flex gap-1">
-          {weeks.map((_, wi) => (
-            <div
-              key={wi}
-              className={`w-3 shrink-0 text-[10px] leading-none text-ink-500 ${wi > 0 && monthLabels[wi] ? "ml-1.5" : ""}`}
-            >
-              {monthLabels[wi] ? t(monthLabels[wi]!) : ""}
+        {/* Each month is its own self-contained column group (grid + label together), laid out
+            left to right with a real gap between groups — the gap is structural here, not a
+            margin hack on whichever column happens to start a new month. */}
+        <div className="inline-flex items-start gap-3">
+          {blocks.map((block) => (
+            <div key={block.key} className="flex flex-col items-start gap-1">
+              <div className="inline-flex gap-1">
+                {block.weeks.map((week, wi) => (
+                  <div key={wi} className="flex flex-col gap-1">
+                    {week.map((day, di) =>
+                      day ? (
+                        <div
+                          key={di}
+                          title={t("{date}: {count} submissions", { date: day.date, count: day.count })}
+                          className={`h-3 w-3 rounded-sm ${LEVELS[levelFor(day.count, max)]}`}
+                        />
+                      ) : (
+                        <div key={di} className="h-3 w-3" />
+                      ),
+                    )}
+                  </div>
+                ))}
+              </div>
+              <span className="text-[10px] leading-none text-ink-500">{t(block.label)}</span>
             </div>
           ))}
         </div>
