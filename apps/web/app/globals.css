@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Unlayered on purpose: @keyframes aren't subject to cascade-layer ordering the way the .hero-
+ * typewriter rule using them is (see @layer components below), so there's no reason to nest them. */
+@keyframes hero-typewriter {
+  from { width: 0; }
+  to { width: 18.5ch; }
+}
+@keyframes hero-caret {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: currentColor; }
+}
+
 @layer base {
   /* Color tokens as "R G B" triplets (not hex) so Tailwind's opacity modifiers, e.g.
    * bg-ink-950/90, keep working via rgb(var(--x) / <alpha-value>) — see tailwind.config.ts.
@@ -283,5 +294,27 @@
 
   .prose-statement th, .prose-statement td {
     @apply border border-ink-700 px-2 py-1;
+  }
+
+  /* The hero headline's text ("Welcome to Judge.") always stays in the DOM as plain text — this
+   * class only animates its reveal via a growing clip-width, so there's no JS, no hydration-empty
+   * flash, and reduced-motion below just turns the animation off without touching the markup. */
+  .hero-typewriter {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: bottom;
+    border-right: 2px solid transparent;
+    animation:
+      hero-typewriter 1.1s steps(18, end) 0.3s 1 normal both,
+      hero-caret 0.8s step-end infinite 0.3s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-typewriter {
+      animation: none;
+      width: auto;
+      border-right: none;
+    }
   }
 }
