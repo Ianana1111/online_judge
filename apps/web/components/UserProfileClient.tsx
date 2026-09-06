@@ -28,6 +28,7 @@ export default function UserProfileClient({
   // contains days with count > 0, so two active days that aren't actually consecutive (e.g. Mon
   // and Thu, with a silent gap on Tue/Wed) must not count as a 2-day streak.
   const maxStreak = computeMaxStreak(stats?.heatmap ?? []);
+  const hasAchievements = !!achievements && achievements.length > 0;
 
   return (
     <div className="space-y-8">
@@ -83,33 +84,38 @@ export default function UserProfileClient({
         <Heatmap handle={profile.handle} initialHeatmap={stats?.heatmap ?? []} joinDate={profile.createdAt} />
       </div>
 
-      {achievements && achievements.length > 0 && (
-        <div className="oj-card p-4">
-          <h2 className="mb-3 text-sm font-semibold text-ink-200">{t("Achievements")}</h2>
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {achievements.map((a) => (
-              <div
-                key={a.code}
-                className="flex items-start gap-2 rounded border border-brand/30 bg-brand/5 px-3 py-2"
-                title={new Date(a.earnedAt).toLocaleDateString()}
-              >
-                <span className="text-brand">
-                  {(() => {
-                    const AchievementIcon = ACHIEVEMENT_ICONS[a.code] ?? TrophyIcon;
-                    return <AchievementIcon className="h-5 w-5" />;
-                  })()}
-                </span>
-                <div>
-                  <p className="text-sm font-medium text-ink-50">{a.title}</p>
-                  <p className="text-xs text-ink-400">{a.description}</p>
+      {/* Achievements left, the stat donut right — same two-surfaces-side-by-side pattern as
+          HomeDashboard's hero/trophy layout, collapsing to one column when there are no
+          achievements yet rather than leaving an empty slot beside the chart. */}
+      <div className={`grid gap-5 ${hasAchievements ? "lg:grid-cols-2 lg:items-start" : ""}`}>
+        {hasAchievements && (
+          <div className="oj-card p-4">
+            <h2 className="mb-3 text-sm font-semibold text-ink-200">{t("Achievements")}</h2>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {achievements!.map((a) => (
+                <div
+                  key={a.code}
+                  className="flex items-start gap-2 rounded border border-brand/30 bg-brand/5 px-3 py-2"
+                  title={new Date(a.earnedAt).toLocaleDateString()}
+                >
+                  <span className="text-brand">
+                    {(() => {
+                      const AchievementIcon = ACHIEVEMENT_ICONS[a.code] ?? TrophyIcon;
+                      return <AchievementIcon className="h-5 w-5" />;
+                    })()}
+                  </span>
+                  <div>
+                    <p className="text-sm font-medium text-ink-50">{a.title}</p>
+                    <p className="text-xs text-ink-400">{a.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {stats && <StatChartsLoader stats={stats} />}
+        {stats && <StatChartsLoader stats={stats} />}
+      </div>
     </div>
   );
 }

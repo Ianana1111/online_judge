@@ -1,6 +1,7 @@
 "use client";
 
-import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useState } from "react";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import type { UserStats, Verdict } from "@/lib/types";
 import { LANGUAGE_LABEL, VERDICT_LABEL } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
@@ -32,9 +33,19 @@ const VERDICT_COLOR: Record<Verdict, string> = {
   JUDGING: "#4a6fa5",
 };
 
+const DIFFICULTY_COLOR = "#e8a33d";
+const DIFFICULTY_OPACITY = [0.4, 0.6, 0.8, 1];
+
+type ChartKind = "language" | "verdict" | "difficulty";
+type Slice = { key: string; name: string; value: number; color: string; opacity?: number };
+
+/** One shared donut instead of three differently-shaped charts (pie / stacked bar / bar) — a tab
+ * strip swaps which breakdown fills it, so "language usage," "verdict breakdown," and "solved by
+ * difficulty" read as three views of the same kind of thing rather than three unrelated widgets. */
 export default function StatCharts({ stats }: { stats: UserStats }) {
   const t = useT();
   const colors = useChartColors();
+  const [kind, setKind] = useState<ChartKind>("language");
   const tooltipStyle = {
     background: colors.tooltipBg,
     border: `1px solid ${colors.tooltipBorder}`,
@@ -42,103 +53,82 @@ export default function StatCharts({ stats }: { stats: UserStats }) {
     fontSize: 12,
     color: colors.tooltipText,
   };
-  const langData = LANGUAGE_ORDER.map((key) => ({
+
+  const langData: Slice[] = LANGUAGE_ORDER.map((key) => ({
     key,
     name: t(LANGUAGE_LABEL[key] ?? key),
     value: stats.languageBreakdown.find((l) => l.languageKey === key)?.count ?? 0,
+    color: LANGUAGE_COLOR[key],
   })).filter((d) => d.value > 0);
 
-  // Only verdicts the user has actually hit — with up to 10 possible types, a fixed-height axis
-  // label column crushed everything down until even AC's own label got clipped. A stacked bar +
-  // legend list (same pattern as language usage below) stays legible no matter how many show up.
-  const verdictData = VERDICT_ORDER.map((v) => ({
-    verdict: v,
+  const verdictData: Slice[] = VERDICT_ORDER.map((v) => ({
+    key: v,
     name: t(VERDICT_LABEL[v]),
-    count: stats.verdictBreakdown.find((x) => x.verdict === v)?.count ?? 0,
+    value: stats.verdictBreakdown.find((x) => x.verdict === v)?.count ?? 0,
+    color: VERDICT_COLOR[v],
   }))
-    .filter((d) => d.count > 0)
-    .sort((a, b) => b.count - a.count);
-  const verdictTotal = verdictData.reduce((sum, d) => sum + d.count, 0);
+    .filter((d) => d.value > 0)
+    .sort((a, b) => b.value - a.value);
 
-  const difficultyData = [1, 2, 3, 4].map((d) => ({
-    difficulty: `★`.repeat(d),
-    count: stats.solvedByDifficulty.find((x) => x.difficulty === d)?.count ?? 0,
-  }));
+  const difficultyData: Slice[] = [1, 2, 3, 4]
+    .map((d, i) => ({
+      key: String(d),
+      name: "★".repeat(d),
+      value: stats.solvedByDifficulty.find((x) => x.difficulty === d)?.count ?? 0,
+      color: DIFFICULTY_COLOR,
+      opacity: DIFFICULTY_OPACITY[i],
+    }))
+    .filter((d) => d.value > 0);
+
+  const TABS: Record<ChartKind, { label: string; data: Slice[] }> = {
+    language: { label: t("Language usage"), data: langData },
+    verdict: { label: t("Verdict breakdown"), data: verdictData },
+    difficulty: { label: t("Solved by difficulty"), data: difficultyData },
+  };
+  const active = TABS[kind];
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2">
-      <div className="oj-card p-4">
-        <h3 className="mb-3 text-sm font-semibold text-ink-200">{t("Language usage")}</h3>
-        {langData.length === 0 ? (
-          <p className="text-sm text-ink-400">{t("No accepted submissions yet.")}</p>
-        ) : (
-          <div className="flex items-center gap-4">
-            <ResponsiveContainer width="50%" height={160}>
-              <PieChart>
-                <Pie data={langData} dataKey="value" nameKey="name" innerRadius={40} outerRadius={70} paddingAngle={2}>
-                  {langData.map((d) => (
-                    <Cell key={d.key} fill={LANGUAGE_COLOR[d.key]} stroke={colors.chartStroke} strokeWidth={2} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={tooltipStyle} />
-              </PieChart>
-            </ResponsiveContainer>
-            <ul className="space-y-1.5 text-xs">
-              {langData.map((d) => (
-                <li key={d.key} className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-sm" style={{ background: LANGUAGE_COLOR[d.key] }} />
-                  <span className="text-ink-300">{d.name}</span>
-                  <span className="font-mono text-ink-500">{d.value}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+    <div className="oj-card p-4">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <h3 className="text-sm font-semibold text-ink-200">{active.label}</h3>
+        <div className="flex flex-wrap gap-1.5">
+          {(Object.keys(TABS) as ChartKind[]).map((k) => (
+            <button
+              key={k}
+              type="button"
+              onClick={() => setKind(k)}
+              className={k === kind ? "oj-btn-primary px-2.5 py-1 text-xs" : "oj-btn-secondary px-2.5 py-1 text-xs"}
+            >
+              {TABS[k].label}
+            </button>
+          ))}
+        </div>
       </div>
-
-      <div className="oj-card p-4">
-        <h3 className="mb-3 text-sm font-semibold text-ink-200">{t("Verdict breakdown")}</h3>
-        {verdictData.length === 0 ? (
-          <p className="text-sm text-ink-400">{t("No submissions yet.")}</p>
-        ) : (
-          <>
-            <div className="flex h-3 w-full overflow-hidden rounded-full bg-ink-800">
-              {verdictData.map((d) => (
-                <div
-                  key={d.verdict}
-                  title={`${d.name}: ${d.count}`}
-                  style={{ width: `${(d.count / verdictTotal) * 100}%`, background: VERDICT_COLOR[d.verdict] }}
-                />
-              ))}
-            </div>
-            <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
-              {verdictData.map((d) => (
-                <li key={d.verdict} className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: VERDICT_COLOR[d.verdict] }} />
-                  <span className="flex-1 truncate text-ink-300">{d.name}</span>
-                  <span className="font-mono text-ink-500">{d.count}</span>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </div>
-
-      <div className="oj-card p-4 sm:col-span-2">
-        <h3 className="mb-3 text-sm font-semibold text-ink-200">{t("Solved by difficulty")}</h3>
-        <ResponsiveContainer width="100%" height={160}>
-          <BarChart data={difficultyData} margin={{ left: 8, right: 16 }}>
-            <XAxis dataKey="difficulty" tick={{ fill: colors.axisMain, fontSize: 12 }} axisLine={{ stroke: colors.gridLine }} />
-            <YAxis tick={{ fill: colors.axisMuted, fontSize: 11 }} axisLine={{ stroke: colors.gridLine }} allowDecimals={false} />
-            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: colors.cursorFill }} />
-            <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-              {difficultyData.map((_, i) => (
-                <Cell key={i} fill="#e8a33d" fillOpacity={0.4 + i * 0.2} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      {active.data.length === 0 ? (
+        <p className="text-sm text-ink-400">{t("No data yet.")}</p>
+      ) : (
+        <div className="flex items-center gap-4">
+          <ResponsiveContainer width="50%" height={180}>
+            <PieChart>
+              <Pie data={active.data} dataKey="value" nameKey="name" innerRadius={45} outerRadius={80} paddingAngle={2}>
+                {active.data.map((d) => (
+                  <Cell key={d.key} fill={d.color} fillOpacity={d.opacity ?? 1} stroke={colors.chartStroke} strokeWidth={2} />
+                ))}
+              </Pie>
+              <Tooltip contentStyle={tooltipStyle} />
+            </PieChart>
+          </ResponsiveContainer>
+          <ul className="min-w-0 flex-1 space-y-1.5 text-xs">
+            {active.data.map((d) => (
+              <li key={d.key} className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: d.color, opacity: d.opacity ?? 1 }} />
+                <span className="flex-1 truncate text-ink-300">{d.name}</span>
+                <span className="font-mono text-ink-500">{d.value}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

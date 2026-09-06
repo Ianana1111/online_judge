@@ -92,9 +92,7 @@ export const batch2Dictionary: Record<string, string> = {
 
   // --- components/StatCharts.tsx ---
   "Language usage": "使用語言分布",
-  "No accepted submissions yet.": "還沒有通過的送出紀錄。",
   "Verdict breakdown": "結果分布",
-  "No submissions yet.": "還沒有送出紀錄。",
   "Solved by difficulty": "依難度解題數",
   "Pending": "等待中",
   "Judging": "評測中",

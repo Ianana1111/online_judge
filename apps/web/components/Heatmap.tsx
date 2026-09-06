@@ -171,7 +171,10 @@ export default function Heatmap({
       <div ref={scrollRef} className={`overflow-x-auto transition-opacity ${isFetching ? "opacity-50" : ""}`}>
         <div className="inline-flex gap-1">
           {weeks.map((week, wi) => (
-            <div key={wi} className="flex flex-col gap-1">
+            // The extra ml-1.5 exactly where a new month starts (same condition monthLabels was
+            // already computing) is what separates "Sep" from "Oct" visually — without it every
+            // week uses the same 4px gap and months run together into one solid block.
+            <div key={wi} className={`flex flex-col gap-1 ${wi > 0 && monthLabels[wi] ? "ml-1.5" : ""}`}>
               {week.map((day, di) =>
                 day ? (
                   <div
@@ -188,7 +191,10 @@ export default function Heatmap({
         </div>
         <div className="mt-1 inline-flex gap-1">
           {weeks.map((_, wi) => (
-            <div key={wi} className="w-3 shrink-0 text-[10px] leading-none text-ink-500">
+            <div
+              key={wi}
+              className={`w-3 shrink-0 text-[10px] leading-none text-ink-500 ${wi > 0 && monthLabels[wi] ? "ml-1.5" : ""}`}
+            >
               {monthLabels[wi] ? t(monthLabels[wi]!) : ""}
             </div>
           ))}
