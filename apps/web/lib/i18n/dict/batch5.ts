@@ -7,20 +7,38 @@ export const batch5Dictionary: Record<string, string> = {
   "Timed CPE/GPE virtual exams, an ICPC-style scoreboard with real penalty minutes — the same pressure you'll feel on exam day, not a simplified stand-in.":
     "限時的 CPE / GPE 虛擬模擬考，搭配跟正式賽事同一套 ICPC 罰時規則——考試當天會感受到的壓力，這裡先讓你適應過一次。",
   "Start a virtual exam": "開始一場虛擬測驗",
-  "Today's problem": "今日一題",
-  "Browse all {total}+ →": "瀏覽全部 {total}+ 題 →",
-  "The same one for everyone, all day.": "今天，每個人看到的都是同一題。",
-  "Take today's challenge →": "挑戰今天的題目 →",
-  "contest clock · 02:57:12": "考試倒數 · 02:57:12",
-  "Judged like the real exam": "考場等級的判題",
-  "Every problem is calibrated against what the exam itself actually accepts — the result you see here is the result you'd see on exam day, not a guess.":
-    "每一題的判題標準都對齊考試本身實際會接受的結果——在這裡看到的判定，就是考場上會看到的判定，不是用猜的。",
-  "A scoreboard that behaves like contest day": "跟正式比賽同一套規則的計分板",
-  "ICPC-style scoring, penalty minutes, and a freeze period — the same rules that decide the real ranking, not a simplified stand-in.":
-    "ICPC 罰時制、封榜機制——決定正式排名的同一套規則，不是簡化版。",
+  "What you can actually do here": "來看看你能做到什麼",
+  "These are working parts of the product, not screenshots — try clicking them.": "以下都是真正能動的功能，不是截圖——動手點點看。",
+  "Judged exactly like the real exam": "跟正式考試同一套判題標準",
+  "Every problem is calibrated against what the exam itself actually accepts. Pick a verdict below — it's the exact output format a real submission produces.":
+    "每一題都對齊考試本身實際會接受的結果。點下面的判題結果試試——這就是真的送出程式碼後會看到的輸出格式。",
+  "verdict: ACCEPTED": "verdict: ACCEPTED",
+  "verdict: WRONG ANSWER\nexpected: 42\ngot:      41": "verdict: WRONG ANSWER\nexpected: 42\ngot:      41",
+  "verdict: TIME LIMIT EXCEEDED": "verdict: TIME LIMIT EXCEEDED",
+  "verdict: RUNTIME ERROR\nsignal: SIGSEGV (segmentation fault)": "verdict: RUNTIME ERROR\nsignal: SIGSEGV (segmentation fault)",
+  "verdict: COMPILE ERROR": "verdict: COMPILE ERROR",
+  "Timed virtual exams, real ICPC penalties": "限時虛擬模擬考，真的 ICPC 罰時規則",
+  "Same 3-hour, 7-problem pacing as the real CPE, and the same penalty-minute rule the actual scoreboard uses.":
+    "跟正式 CPE 一樣的 3 小時、7 題節奏，計分板用的也是同一套罰時分鐘規則。",
+  "Solved {n}/{total}": "已解出 {n}/{total} 題",
+  "+{min} min penalty": "罰時 +{min} 分鐘",
+  "Click a problem to mark it solved — the later you solve it, the more it costs.": "點一題標記為已解出——越晚解出，罰時越重。",
   "Sorted by what actually gets tested": "照真正會考的方式排序",
-  "Filter by difficulty, or by how often a problem has shown up on past CPE/GPE exams — so you know exactly where to spend your time.":
-    "依難度分級，也能看每題在歷屆 CPE/GPE 出現過幾次，讓你清楚知道時間該花在哪裡。",
+  "Every problem tracks how many times it's shown up on past CPE/GPE exams, not just how hard it is — so you know exactly where to spend your time.":
+    "每一題都記錄了在歷屆 CPE/GPE 出現過幾次，不只是難度——讓你清楚知道時間該花在哪裡。",
+  "By difficulty": "依難度",
+  "By exam appearances": "依歷屆出現次數",
+  "The 3n + 1 Problem": "The 3n + 1 Problem",
+  "Ugly Numbers": "Ugly Numbers",
+  "The Skyline Problem": "The Skyline Problem",
+  "Maximum Sum": "Maximum Sum",
+  "{n}x in past exams": "歷屆出現 {n} 次",
+  "Illustrative example — full appearance data is a Pro feature.": "示意用範例——完整數據為 Pro 方案功能。",
+  "Keep a streak, climb the leaderboard": "維持連續紀錄，往排行榜前段推進",
+  "Solve something every day to keep your streak alive, and see how you stack up against other students.":
+    "每天解一題維持連續紀錄，也能看看自己在其他同學之間排到哪裡。",
+  "{n}-day streak": "連續 {n} 天",
+  "Click a day to toggle it — break the chain and it resets, same as the real thing.": "點一天切換——中斷連續紀錄就會歸零，跟真的一樣。",
 
   // --- components/AboutContent.tsx ---
   "A CPE practice platform built for Taiwanese CS students": "為台灣資工人打造的 CPE 練習平台",
