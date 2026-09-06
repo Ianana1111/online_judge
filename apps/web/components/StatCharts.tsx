@@ -115,7 +115,11 @@ export default function StatCharts({ stats }: { stats: UserStats }) {
                   <Cell key={d.key} fill={d.color} fillOpacity={d.opacity ?? 1} stroke={colors.chartStroke} strokeWidth={2} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={tooltipStyle} />
+              {/* Recharts' default tooltip item color falls back to `entry.color || '#000'`, and
+                  a Pie slice's hover payload never carries a `color` the way a Line/Bar series
+                  does — so without an explicit itemStyle here, the label always rendered black
+                  regardless of theme, unreadable against the dark background. */}
+              <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: colors.tooltipText }} />
             </PieChart>
           </ResponsiveContainer>
           <ul className="min-w-0 flex-1 space-y-1.5 text-xs">
