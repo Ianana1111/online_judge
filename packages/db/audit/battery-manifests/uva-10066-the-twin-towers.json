@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10066-the-twin-towers",
+  "uvaId": 10066,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "LCS DP on the two tile-radius sequences; blank line printed BEFORE each dataset after the first (so it lands between datasets, never trailing after the last).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n1,n2,tc=0;\n    while (cin >> n1 >> n2 && (n1||n2)) {\n        tc++;\n        vector<int> a(n1), b(n2);\n        for (auto &x : a) cin >> x;\n        for (auto &x : b) cin >> x;\n        vector<vector<int>> dp(n1+1, vector<int>(n2+1,0));\n        for (int i=1;i<=n1;i++)\n            for (int j=1;j<=n2;j++)\n                dp[i][j] = a[i-1]==b[j-1] ? dp[i-1][j-1]+1 : max(dp[i-1][j], dp[i][j-1]);\n        if (tc>1) cout << \"\\n\";\n        cout << \"Twin Towers #\" << tc << \"\\n\";\n        cout << \"Number of Tiles : \" << dp[n1][n2] << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:10:44.906Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Wrong recurrence: uses dp[i-1][j-1] twice instead of dp[i][j-1] when radii differ, systematically underestimating the LCS length on non-trivial inputs.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n1,n2,tc=0;\n    while (cin >> n1 >> n2 && (n1||n2)) {\n        tc++;\n        vector<int> a(n1), b(n2);\n        for (auto &x : a) cin >> x;\n        for (auto &x : b) cin >> x;\n        vector<vector<int>> dp(n1+1, vector<int>(n2+1,0));\n        for (int i=1;i<=n1;i++)\n            for (int j=1;j<=n2;j++)\n                dp[i][j] = a[i-1]==b[j-1] ? dp[i-1][j-1]+1 : max(dp[i-1][j], dp[i-1][j-1]);\n        if (tc>1) cout << \"\\n\";\n        cout << \"Twin Towers #\" << tc << \"\\n\";\n        cout << \"Number of Tiles : \" << dp[n1][n2] << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:10:48.269Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Correct LCS values, but prints a trailing blank line after every dataset INCLUDING the last one, instead of only between datasets.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n1,n2,tc=0;\n    while (cin >> n1 >> n2 && (n1||n2)) {\n        tc++;\n        vector<int> a(n1), b(n2);\n        for (auto &x : a) cin >> x;\n        for (auto &x : b) cin >> x;\n        vector<vector<int>> dp(n1+1, vector<int>(n2+1,0));\n        for (int i=1;i<=n1;i++)\n            for (int j=1;j<=n2;j++)\n                dp[i][j] = a[i-1]==b[j-1] ? dp[i-1][j-1]+1 : max(dp[i-1][j], dp[i][j-1]);\n        cout << \"Twin Towers #\" << tc << \"\\n\";\n        cout << \"Number of Tiles : \" << dp[n1][n2] << \"\\n\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:10:54.023Z"
+    }
+  ]
+}

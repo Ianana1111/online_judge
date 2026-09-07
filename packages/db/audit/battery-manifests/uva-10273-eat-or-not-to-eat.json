@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10273-eat-or-not-to-eat",
+  "uvaId": 10273,
+  "authoredAt": "2026-09-07T02:12:45.618605Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Day-by-day simulation: each day find the unique-minimum-producing alive cow and eat it (ties eat nobody); stop once 2520 (=lcm(1..10)) consecutive days pass with no elimination, since every remaining cow's cycle then provably repeats forever.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int T; cin>>T;\n    while(T--){\n        int N; cin>>N;\n        vector<vector<int>> milk(N);\n        vector<char> alive(N,1);\n        for(int i=0;i<N;i++){\n            int Ti; cin>>Ti;\n            milk[i].resize(Ti);\n            for(int j=0;j<Ti;j++) cin>>milk[i][j];\n        }\n        int aliveCount = N;\n        long long day = 0, lastEatenDay = 0, sinceLast = 0;\n        const long long WINDOW = 2520;\n        while(aliveCount>0 && sinceLast<WINDOW){\n            day++; sinceLast++;\n            int minVal=INT_MAX, minIdx=-1; bool tie=false;\n            for(int i=0;i<N;i++){\n                if(!alive[i]) continue;\n                int Ti=(int)milk[i].size();\n                int val = milk[i][(day-1)%Ti];\n                if(val<minVal){ minVal=val; minIdx=i; tie=false; }\n                else if(val==minVal) tie=true;\n            }\n            if(!tie && minIdx!=-1){\n                alive[minIdx]=0; aliveCount--; lastEatenDay=day; sinceLast=0;\n            }\n        }\n        cout << aliveCount << \" \" << lastEatenDay << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:13:27.826Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Indexes each cow's production array with day%Ti instead of (day-1)%Ti, shifting every cow's cycle by one day versus the intended day-1 production value on day 1.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int T; cin>>T;\n    while(T--){\n        int N; cin>>N;\n        vector<vector<int>> milk(N);\n        vector<char> alive(N,1);\n        for(int i=0;i<N;i++){\n            int Ti; cin>>Ti;\n            milk[i].resize(Ti);\n            for(int j=0;j<Ti;j++) cin>>milk[i][j];\n        }\n        int aliveCount = N;\n        long long day = 0, lastEatenDay = 0, sinceLast = 0;\n        const long long WINDOW = 2520;\n        while(aliveCount>0 && sinceLast<WINDOW){\n            day++; sinceLast++;\n            int minVal=INT_MAX, minIdx=-1; bool tie=false;\n            for(int i=0;i<N;i++){\n                if(!alive[i]) continue;\n                int Ti=(int)milk[i].size();\n                // BUG: uses day % Ti instead of (day-1) % Ti -- shifts every cow's production\n                // cycle by one day relative to the intended day-1-indexed schedule.\n                int val = milk[i][day%Ti];\n                if(val<minVal){ minVal=val; minIdx=i; tie=false; }\n                else if(val==minVal) tie=true;\n            }\n            if(!tie && minIdx!=-1){\n                alive[minIdx]=0; aliveCount--; lastEatenDay=day; sinceLast=0;\n            }\n        }\n        cout << aliveCount << \" \" << lastEatenDay << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:13:31.043Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Drops tie detection entirely -- always eats whichever cow first reaches the running minimum that day, even when another alive cow produces the exact same amount (should instead eat nobody that day).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int T; cin>>T;\n    while(T--){\n        int N; cin>>N;\n        vector<vector<int>> milk(N);\n        vector<char> alive(N,1);\n        for(int i=0;i<N;i++){\n            int Ti; cin>>Ti;\n            milk[i].resize(Ti);\n            for(int j=0;j<Ti;j++) cin>>milk[i][j];\n        }\n        int aliveCount = N;\n        long long day = 0, lastEatenDay = 0, sinceLast = 0;\n        const long long WINDOW = 2520;\n        while(aliveCount>0 && sinceLast<WINDOW){\n            day++; sinceLast++;\n            int minVal=INT_MAX, minIdx=-1;\n            for(int i=0;i<N;i++){\n                if(!alive[i]) continue;\n                int Ti=(int)milk[i].size();\n                int val = milk[i][(day-1)%Ti];\n                // BUG: ignores ties entirely -- always eats the first cow achieving the minimum,\n                // even when another cow shares that exact value the same day.\n                if(val<minVal){ minVal=val; minIdx=i; }\n            }\n            if(minIdx!=-1){\n                alive[minIdx]=0; aliveCount--; lastEatenDay=day; sinceLast=0;\n            }\n        }\n        cout << aliveCount << \" \" << lastEatenDay << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:13:35.857Z"
+    }
+  ]
+}

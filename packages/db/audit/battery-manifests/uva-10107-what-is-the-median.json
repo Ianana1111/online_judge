@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10107-what-is-the-median",
+  "uvaId": 10107,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Running median via two heaps (max-heap of the lower half, min-heap of the upper half), rebalanced to size difference <=1 after each insert; integer division naturally floors for non-negative values.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    priority_queue<long long> lo;\n    priority_queue<long long, vector<long long>, greater<long long>> hi;\n    long long x;\n    while(cin>>x){\n        if(lo.empty() || x<=lo.top()) lo.push(x); else hi.push(x);\n        if(lo.size() > hi.size()+1){ hi.push(lo.top()); lo.pop(); }\n        else if(hi.size() > lo.size()){ lo.push(hi.top()); hi.pop(); }\n        if(lo.size() > hi.size()) cout << lo.top() << \"\\n\";\n        else cout << (lo.top()+hi.top())/2 << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:12:23.890Z"
+    },
+    {
+      "tag": "overflow",
+      "label": "Identical algorithm but the heaps and the running value hold plain int instead of long long. X can be up to 2^31-1 (fits an int alone), but summing two such values for the even-count average can reach ~4.29e9, overflowing signed 32-bit. Existing test data only uses small values (max 70), so this should escape locally.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    priority_queue<int> lo;\n    priority_queue<int, vector<int>, greater<int>> hi;\n    int x;\n    while(cin>>x){\n        if(lo.empty() || x<=lo.top()) lo.push(x); else hi.push(x);\n        if((int)lo.size() > (int)hi.size()+1){ hi.push(lo.top()); lo.pop(); }\n        else if((int)hi.size() > (int)lo.size()){ lo.push(hi.top()); hi.pop(); }\n        if(lo.size() > hi.size()) cout << lo.top() << \"\\n\";\n        else cout << (lo.top()+hi.top())/2 << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:12:27.817Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Widens the heap-balance tolerance to 2 instead of 1 (`lo.size() > hi.size()+2`), letting the two halves drift out of the size relationship the median formula assumes.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    priority_queue<long long> lo;\n    priority_queue<long long, vector<long long>, greater<long long>> hi;\n    long long x;\n    while(cin>>x){\n        if(lo.empty() || x<=lo.top()) lo.push(x); else hi.push(x);\n        if(lo.size() > hi.size()+2){ hi.push(lo.top()); lo.pop(); }\n        else if(hi.size() > lo.size()){ lo.push(hi.top()); hi.pop(); }\n        if(lo.size() > hi.size()) cout << lo.top() << \"\\n\";\n        else cout << (lo.top()+hi.top())/2 << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:12:31.730Z"
+    }
+  ]
+}

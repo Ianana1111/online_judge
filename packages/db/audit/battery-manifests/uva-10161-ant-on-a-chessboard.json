@@ -1,0 +1,39 @@
+{
+  "slug": "uva-10161-ant-on-a-chessboard",
+  "uvaId": 10161,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Square-spiral position via ring decomposition: find largest odd s with s*s<=N (top-left corner of that ring is at (1,s)), then walk the 6 fixed-length segments (up1, right s, down s, right1, up s+1, left s+1) that grow the ring to (s+2)x(s+2). Hand-verified exactly against N=8,20,25,82,121 by tracing the spiral by hand before writing this.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    long long n;\n    while (cin >> n && n != 0) {\n        long long s = (long long)floor(sqrt((double)n));\n        if (s % 2 == 0) s--;\n        if (s < 1) s = 1;\n        while (s*s > n) s -= 2;\n        while ((s+2)*(s+2) <= n) s += 2;\n        long long x = 1, y = s;\n        long long rem = n - s*s;\n        long long segLen[6] = {1, s, s, 1, s+1, s+1};\n        int dx[6] = {0,1,0,1,0,-1};\n        int dy[6] = {1,0,-1,0,1,0};\n        for (int i = 0; i < 6 && rem > 0; i++) {\n            long long take = min(rem, segLen[i]);\n            x += dx[i]*take;\n            y += dy[i]*take;\n            rem -= take;\n        }\n        cout << x << \" \" << y << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:13:00.083Z"
+    },
+    {
+      "tag": "overflow",
+      "label": "Same algorithm but s, x, y, and the squared comparisons use 32-bit int instead of long long -- N is stated up to 2*10^9, deliberately close to INT_MAX (~2.147e9), and (s+2)*(s+2) for s near sqrt(N) can exceed int32 range right at the upper bound.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    while (cin >> n && n != 0) {\n        int s = (int)floor(sqrt((double)n));\n        if (s % 2 == 0) s--;\n        if (s < 1) s = 1;\n        while (s*s > n) s -= 2;\n        while ((s+2)*(s+2) <= n) s += 2;\n        int x = 1, y = s;\n        int rem = n - s*s;\n        int segLen[6] = {1, s, s, 1, s+1, s+1};\n        int dx[6] = {0,1,0,1,0,-1};\n        int dy[6] = {1,0,-1,0,1,0};\n        for (int i = 0; i < 6 && rem > 0; i++) {\n            int take = min(rem, segLen[i]);\n            x += dx[i]*take;\n            y += dy[i]*take;\n            rem -= take;\n        }\n        cout << x << \" \" << y << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:13:04.512Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Boundary comparison uses >= instead of > when shrinking s, so an exact perfect-square N (like the sample's N=25) gets shrunk one ring too far before the offset walk starts.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    long long n;\n    while (cin >> n && n != 0) {\n        long long s = (long long)floor(sqrt((double)n));\n        if (s % 2 == 0) s--;\n        if (s < 1) s = 1;\n        while (s*s >= n) s -= 2;\n        if (s < 1) s = 1;\n        while ((s+2)*(s+2) <= n) s += 2;\n        long long x = 1, y = s;\n        long long rem = n - s*s;\n        long long segLen[6] = {1, s, s, 1, s+1, s+1};\n        int dx[6] = {0,1,0,1,0,-1};\n        int dy[6] = {1,0,-1,0,1,0};\n        for (int i = 0; i < 6 && rem > 0; i++) {\n            long long take = min(rem, segLen[i]);\n            x += dx[i]*take;\n            y += dy[i]*take;\n            rem -= take;\n        }\n        cout << x << \" \" << y << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:13:09.067Z"
+    },
+    {
+      "tag": "eof-multi-case",
+      "label": "Loop condition drops the '!= 0' sentinel check (just `while (cin >> n)`), so the terminating 0 line gets processed as a real query (s clamped to 1, producing an extra spurious output line '1 1') instead of stopping cleanly.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    long long n;\n    while (cin >> n) {\n        long long s;\n        if (n <= 1) { s = 1; } else {\n            s = (long long)floor(sqrt((double)n));\n            if (s % 2 == 0) s--;\n            while (s*s > n) s -= 2;\n            while ((s+2)*(s+2) <= n) s += 2;\n        }\n        long long x = 1, y = s;\n        long long rem = n - s*s;\n        long long segLen[6] = {1, s, s, 1, s+1, s+1};\n        int dx[6] = {0,1,0,1,0,-1};\n        int dy[6] = {1,0,-1,0,1,0};\n        for (int i = 0; i < 6 && rem > 0; i++) {\n            long long take = min(rem, segLen[i]);\n            x += dx[i]*take;\n            y += dy[i]*take;\n            rem -= take;\n        }\n        cout << x << \" \" << y << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:13:12.040Z"
+    }
+  ]
+}

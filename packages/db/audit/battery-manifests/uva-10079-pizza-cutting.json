@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10079-pizza-cutting",
+  "uvaId": 10079,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Closed-form max-pieces formula (n*n+n+2)/2 using 64-bit arithmetic throughout (n up to 210,000,000, so n*n alone is ~4.4e16), stops on the first negative value.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    long long n;\n    while (cin >> n && n >= 0) {\n        cout << (n*n+n+2)/2 << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:11:11.530Z"
+    },
+    {
+      "tag": "overflow",
+      "label": "Same formula but with n and the multiplication kept in 32-bit int -- n up to 210,000,000 makes n*n massively overflow int32 (undefined behavior / silent wraparound), giving wrong output for large n while still matching small n.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    while (cin >> n && n >= 0) {\n        cout << (long long)(n*n+n+2)/2 << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:11:14.567Z"
+    },
+    {
+      "tag": "eof-multi-case",
+      "label": "Misreads the termination rule as 'stop at the first zero' instead of 'stop at the first negative number' -- 0 is a legal input value per the spec (0 <= N), so this wrongly terminates early on any dataset that has a real 0 partway through (the existing test data's first block does: ...160508970, 0, 356499,...).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    long long n;\n    while (cin >> n && n != 0) {\n        cout << (n*n+n+2)/2 << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:11:18.669Z"
+    }
+  ]
+}

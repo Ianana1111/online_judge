@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10032-tug-of-war",
+  "uvaId": 10032,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Bitset subset-sum DP indexed by (count, sum): dp[i] tracks which sums are reachable using exactly i people; searches dp[n/2] for the sum closest to total/2. Bitset shifting keeps this fast enough for n=100.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int cases; cin>>cases;\n    for(int c=0;c<cases;c++){\n        int n; cin>>n;\n        vector<int> w(n);\n        int total=0;\n        for(int i=0;i<n;i++){ cin>>w[i]; total+=w[i]; }\n        vector<bitset<45001>> dp(n+1);\n        dp[0][0]=1;\n        for(int idx=0; idx<n; idx++){\n            for(int i=min(idx,n-1); i>=0; i--){\n                dp[i+1] |= dp[i] << w[idx];\n            }\n        }\n        int k1 = n/2;\n        int bestDiff=INT_MAX, bestS=-1;\n        for(int j=0;j<=total;j++){\n            if(dp[k1][j]){\n                int diff = abs(total-2*j);\n                if(diff<bestDiff){ bestDiff=diff; bestS=j; }\n            }\n        }\n        int a=bestS, b=total-bestS;\n        if(a>b) swap(a,b);\n        if (c) cout << \"\\n\";\n        cout << a << \" \" << b << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:03:06.880Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Ignores the equal-team-size constraint entirely: finds the closest-to-half sum reachable by a subset of ANY size, not exactly n/2 -- gives a strictly-more-balanced (and thus wrong) split whenever an unconstrained partition beats the size-constrained optimum, which is likely on the larger n=100 test cases.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int cases; cin>>cases;\n    for(int c=0;c<cases;c++){\n        int n; cin>>n;\n        vector<int> w(n);\n        int total=0;\n        for(int i=0;i<n;i++){ cin>>w[i]; total+=w[i]; }\n        vector<bitset<45001>> dp(n+1);\n        dp[0][0]=1;\n        for(int idx=0; idx<n; idx++){\n            for(int i=min(idx,n-1); i>=0; i--){\n                dp[i+1] |= dp[i] << w[idx];\n            }\n        }\n        bitset<45001> any;\n        for(int i=0;i<=n;i++) any |= dp[i];\n        int bestDiff=INT_MAX, bestS=-1;\n        for(int j=0;j<=total;j++){\n            if(any[j]){\n                int diff = abs(total-2*j);\n                if(diff<bestDiff){ bestDiff=diff; bestS=j; }\n            }\n        }\n        int a=bestS, b=total-bestS;\n        if(a>b) swap(a,b);\n        if (c) cout << \"\\n\";\n        cout << a << \" \" << b << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:03:10.487Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Correct values but omits the required blank line between consecutive case outputs.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int cases; cin>>cases;\n    for(int c=0;c<cases;c++){\n        int n; cin>>n;\n        vector<int> w(n);\n        int total=0;\n        for(int i=0;i<n;i++){ cin>>w[i]; total+=w[i]; }\n        vector<bitset<45001>> dp(n+1);\n        dp[0][0]=1;\n        for(int idx=0; idx<n; idx++){\n            for(int i=min(idx,n-1); i>=0; i--){\n                dp[i+1] |= dp[i] << w[idx];\n            }\n        }\n        int k1 = n/2;\n        int bestDiff=INT_MAX, bestS=-1;\n        for(int j=0;j<=total;j++){\n            if(dp[k1][j]){\n                int diff = abs(total-2*j);\n                if(diff<bestDiff){ bestDiff=diff; bestS=j; }\n            }\n        }\n        int a=bestS, b=total-bestS;\n        if(a>b) swap(a,b);\n        cout << a << \" \" << b << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:03:14.908Z"
+    }
+  ]
+}

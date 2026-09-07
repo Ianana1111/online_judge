@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10191-longest-nap",
+  "uvaId": 10191,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Parse each appointment's hh:mm times via sscanf (ignoring the description text), sort + merge overlapping/unsorted intervals into busy blocks, scan the gaps between them within [10:00,18:00] keeping the first (earliest) strictly-largest gap. Hand-verified day #1 and the single-appointment case2 by hand-tracing the merge and gap scan.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int s;\n    int day = 0;\n    while (cin >> s) {\n        cin.ignore();\n        vector<pair<int,int>> iv(s);\n        for (int i = 0; i < s; i++) {\n            string line; getline(cin, line);\n            int h1,m1,h2,m2;\n            sscanf(line.c_str(), \"%d:%d %d:%d\", &h1,&m1,&h2,&m2);\n            iv[i] = { h1*60+m1, h2*60+m2 };\n        }\n        sort(iv.begin(), iv.end());\n        vector<pair<int,int>> merged;\n        for (auto &p : iv) {\n            if (!merged.empty() && p.first <= merged.back().second) merged.back().second = max(merged.back().second, p.second);\n            else merged.push_back(p);\n        }\n        int dayStart = 10*60, dayEnd = 18*60;\n        int bestStart = dayStart, bestDur = -1;\n        int prevEnd = dayStart;\n        for (auto &p : merged) {\n            int gap = p.first - prevEnd;\n            if (gap > bestDur) { bestDur = gap; bestStart = prevEnd; }\n            prevEnd = max(prevEnd, p.second);\n        }\n        int gap = dayEnd - prevEnd;\n        if (gap > bestDur) { bestDur = gap; bestStart = prevEnd; }\n        day++;\n        int hh = bestStart/60, mm = bestStart%60;\n        printf(\"Day #%d: the longest nap starts at %02d:%02d and will last for \", day, hh, mm);\n        if (bestDur < 60) printf(\"%d minutes.\\n\", bestDur);\n        else printf(\"%d hours and %d minutes.\\n\", bestDur/60, bestDur%60);\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:13:32.386Z"
+    },
+    {
+      "tag": "eof-multi-case",
+      "label": "Skips the sort+merge step entirely, using the appointments in whatever order they were listed -- the problem statement explicitly warns the input may be given in ANY order, and the sample's own day #5 and #6 are deliberately unsorted, so this should diverge on data that's already in the stored test case.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int s;\n    int day = 0;\n    while (cin >> s) {\n        cin.ignore();\n        vector<pair<int,int>> merged(s);\n        for (int i = 0; i < s; i++) {\n            string line; getline(cin, line);\n            int h1,m1,h2,m2;\n            sscanf(line.c_str(), \"%d:%d %d:%d\", &h1,&m1,&h2,&m2);\n            merged[i] = { h1*60+m1, h2*60+m2 };\n        }\n        int dayStart = 10*60, dayEnd = 18*60;\n        int bestStart = dayStart, bestDur = -1;\n        int prevEnd = dayStart;\n        for (auto &p : merged) {\n            int gap = p.first - prevEnd;\n            if (gap > bestDur) { bestDur = gap; bestStart = prevEnd; }\n            prevEnd = max(prevEnd, p.second);\n        }\n        int gap = dayEnd - prevEnd;\n        if (gap > bestDur) { bestDur = gap; bestStart = prevEnd; }\n        day++;\n        int hh = bestStart/60, mm = bestStart%60;\n        printf(\"Day #%d: the longest nap starts at %02d:%02d and will last for \", day, hh, mm);\n        if (bestDur < 60) printf(\"%d minutes.\\n\", bestDur);\n        else printf(\"%d hours and %d minutes.\\n\", bestDur/60, bestDur%60);\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:13:35.350Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Tie-break uses >= instead of > when tracking the best gap, so the LATEST equal-duration gap wins instead of the earliest -- direct violation of the spec's 'print the earliest one' rule.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int s;\n    int day = 0;\n    while (cin >> s) {\n        cin.ignore();\n        vector<pair<int,int>> iv(s);\n        for (int i = 0; i < s; i++) {\n            string line; getline(cin, line);\n            int h1,m1,h2,m2;\n            sscanf(line.c_str(), \"%d:%d %d:%d\", &h1,&m1,&h2,&m2);\n            iv[i] = { h1*60+m1, h2*60+m2 };\n        }\n        sort(iv.begin(), iv.end());\n        vector<pair<int,int>> merged;\n        for (auto &p : iv) {\n            if (!merged.empty() && p.first <= merged.back().second) merged.back().second = max(merged.back().second, p.second);\n            else merged.push_back(p);\n        }\n        int dayStart = 10*60, dayEnd = 18*60;\n        int bestStart = dayStart, bestDur = -1;\n        int prevEnd = dayStart;\n        for (auto &p : merged) {\n            int gap = p.first - prevEnd;\n            if (gap >= bestDur) { bestDur = gap; bestStart = prevEnd; }\n            prevEnd = max(prevEnd, p.second);\n        }\n        int gap = dayEnd - prevEnd;\n        if (gap >= bestDur) { bestDur = gap; bestStart = prevEnd; }\n        day++;\n        int hh = bestStart/60, mm = bestStart%60;\n        printf(\"Day #%d: the longest nap starts at %02d:%02d and will last for \", day, hh, mm);\n        if (bestDur < 60) printf(\"%d minutes.\\n\", bestDur);\n        else printf(\"%d hours and %d minutes.\\n\", bestDur/60, bestDur%60);\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:13:38.862Z"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10074-take-the-land",
+  "uvaId": 10074,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Largest all-zero rectangle via per-row histogram + stack-based largest-rectangle-in-histogram, O(M*N).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nlong long largestRectHistogram(vector<int>& h){\n    stack<int> st; long long best=0; int n=h.size();\n    for (int i=0;i<=n;i++){\n        int cur = (i==n)?0:h[i];\n        while(!st.empty() && h[st.top()]>=cur){\n            int height = h[st.top()]; st.pop();\n            int width = st.empty()? i : i-st.top()-1;\n            best = max(best, (long long)height*width);\n        }\n        st.push(i);\n    }\n    return best;\n}\nint main(){\n    int m,n;\n    while (cin>>m>>n && (m||n)) {\n        vector<vector<int>> grid(m, vector<int>(n));\n        for (auto &row: grid) for (auto &x: row) cin>>x;\n        vector<int> heights(n,0);\n        long long best=0;\n        for (int i=0;i<m;i++){\n            for (int j=0;j<n;j++) heights[j] = grid[i][j]==0 ? heights[j]+1 : 0;\n            best = max(best, largestRectHistogram(heights));\n        }\n        cout << best << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:10:58.682Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Histogram stack pop condition uses strict '>' instead of '>=', mishandling plateaus of equal height and undercounting width for ties -- a genuinely common largest-rectangle-in-histogram bug.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nlong long largestRectHistogram(vector<int>& h){\n    stack<int> st; long long best=0; int n=h.size();\n    for (int i=0;i<=n;i++){\n        int cur = (i==n)?0:h[i];\n        while(!st.empty() && h[st.top()]>cur){\n            int height = h[st.top()]; st.pop();\n            int width = st.empty()? i : i-st.top()-1;\n            best = max(best, (long long)height*width);\n        }\n        st.push(i);\n    }\n    return best;\n}\nint main(){\n    int m,n;\n    while (cin>>m>>n && (m||n)) {\n        vector<vector<int>> grid(m, vector<int>(n));\n        for (auto &row: grid) for (auto &x: row) cin>>x;\n        vector<int> heights(n,0);\n        long long best=0;\n        for (int i=0;i<m;i++){\n            for (int j=0;j<n;j++) heights[j] = grid[i][j]==0 ? heights[j]+1 : 0;\n            best = max(best, largestRectHistogram(heights));\n        }\n        cout << best << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:11:03.855Z"
+    },
+    {
+      "tag": "eof-multi-case",
+      "label": "heights vector is allocated ONCE before the loop at the first test case's width and never resized for later test cases -- if a later test case has a different N, columns either go out of bounds or stale heights from a previous, differently-shaped test case leak into the new one.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nlong long largestRectHistogram(vector<int>& h){\n    stack<int> st; long long best=0; int n=h.size();\n    for (int i=0;i<=n;i++){\n        int cur = (i==n)?0:h[i];\n        while(!st.empty() && h[st.top()]>=cur){\n            int height = h[st.top()]; st.pop();\n            int width = st.empty()? i : i-st.top()-1;\n            best = max(best, (long long)height*width);\n        }\n        st.push(i);\n    }\n    return best;\n}\nint main(){\n    int m,n;\n    vector<int> heights;\n    bool first=true;\n    while (cin>>m>>n && (m||n)) {\n        vector<vector<int>> grid(m, vector<int>(n));\n        for (auto &row: grid) for (auto &x: row) cin>>x;\n        if (first) { heights.assign(n,0); first=false; }\n        long long best=0;\n        for (int i=0;i<m;i++){\n            for (int j=0;j<n && j<(int)heights.size();j++) heights[j] = grid[i][j]==0 ? heights[j]+1 : 0;\n            best = max(best, largestRectHistogram(heights));\n        }\n        cout << best << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:11:06.974Z"
+    }
+  ]
+}

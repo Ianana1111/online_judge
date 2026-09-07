@@ -1,0 +1,31 @@
+{
+  "slug": "uva-11085-back-to-the-8-queens",
+  "uvaId": 11085,
+  "authoredAt": "2026-09-07T02:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Precompute all 92 valid non-attacking 8-queens row permutations by backtracking; for each query, answer = 8 minus the max number of columns matching any one precomputed solution (moving the rest is always sufficient and necessary).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nvector<array<int,8>> solutions;\narray<int,8> cur;\nbool usedRow[9];\nvoid gen(int col){\n    if (col==8){ solutions.push_back(cur); return; }\n    for (int r=1;r<=8;r++){\n        if (usedRow[r]) continue;\n        bool ok=true;\n        for (int c=0;c<col;c++) if (abs(cur[c]-r) == abs(c-col)) { ok=false; break; }\n        if (!ok) continue;\n        usedRow[r]=true;\n        cur[col]=r;\n        gen(col+1);\n        usedRow[r]=false;\n    }\n}\nint main(){\n    gen(0);\n    int a[8];\n    int caseNum=1;\n    while (cin >> a[0]) {\n        for (int i=1;i<8;i++) cin >> a[i];\n        int best=0;\n        for (auto &sol : solutions) {\n            int match=0;\n            for (int i=0;i<8;i++) if (sol[i]==a[i]) match++;\n            best = max(best, match);\n        }\n        cout << \"Case \" << caseNum++ << \": \" << (8-best) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T01:47:39.161Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Diagonal-attack test uses <= instead of == when comparing row/column deltas, so it rejects some genuinely valid placements as attacking -- generates an incomplete/wrong set of 'valid' solutions, which can only ever make the reported minimum move count too high.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nvector<array<int,8>> solutions;\narray<int,8> cur;\nbool usedRow[9];\nvoid gen(int col){\n    if (col==8){ solutions.push_back(cur); return; }\n    for (int r=1;r<=8;r++){\n        if (usedRow[r]) continue;\n        bool ok=true;\n        for (int c=0;c<col;c++) if (abs(cur[c]-r) <= abs(c-col)) { ok=false; break; }\n        if (!ok) continue;\n        usedRow[r]=true;\n        cur[col]=r;\n        gen(col+1);\n        usedRow[r]=false;\n    }\n}\nint main(){\n    gen(0);\n    int a[8];\n    int caseNum=1;\n    while (cin >> a[0]) {\n        for (int i=1;i<8;i++) cin >> a[i];\n        int best=0;\n        for (auto &sol : solutions) {\n            int match=0;\n            for (int i=0;i<8;i++) if (sol[i]==a[i]) match++;\n            best = max(best, match);\n        }\n        cout << \"Case \" << caseNum++ << \": \" << (8-best) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T01:47:42.345Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Correct logic but the case counter starts at 0 instead of 1, so every printed 'Case N:' label is off by one -- deterministic, should fail on the very first line of any input.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nvector<array<int,8>> solutions;\narray<int,8> cur;\nbool usedRow[9];\nvoid gen(int col){\n    if (col==8){ solutions.push_back(cur); return; }\n    for (int r=1;r<=8;r++){\n        if (usedRow[r]) continue;\n        bool ok=true;\n        for (int c=0;c<col;c++) if (abs(cur[c]-r) == abs(c-col)) { ok=false; break; }\n        if (!ok) continue;\n        usedRow[r]=true;\n        cur[col]=r;\n        gen(col+1);\n        usedRow[r]=false;\n    }\n}\nint main(){\n    gen(0);\n    int a[8];\n    int caseNum=0;\n    while (cin >> a[0]) {\n        for (int i=1;i<8;i++) cin >> a[i];\n        int best=0;\n        for (auto &sol : solutions) {\n            int match=0;\n            for (int i=0;i<8;i++) if (sol[i]==a[i]) match++;\n            best = max(best, match);\n        }\n        cout << \"Case \" << caseNum++ << \": \" << (8-best) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T01:47:48.219Z"
+    }
+  ]
+}

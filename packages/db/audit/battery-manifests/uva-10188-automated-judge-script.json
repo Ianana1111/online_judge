@@ -1,0 +1,39 @@
+{
+  "slug": "uva-10188-automated-judge-script",
+  "uvaId": 10188,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Joins each block's n/m lines with '\\n' separators (no trailing newline), compares the two joined texts exactly for Accepted, else compares with ALL spaces and newlines stripped for Presentation Error, else Wrong Answer. y = sum of line lengths (spaces counted, newlines not).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    int caseNum = 0;\n    while (cin >> n && n != 0) {\n        cin.ignore();\n        vector<string> stdLines(n);\n        long long y = 0;\n        for (int i = 0; i < n; i++) { getline(cin, stdLines[i]); y += (long long)stdLines[i].size(); }\n        int m; cin >> m; cin.ignore();\n        vector<string> teamLines(m);\n        for (int i = 0; i < m; i++) getline(cin, teamLines[i]);\n        string stdText, teamText;\n        for (int i = 0; i < n; i++) { if (i) stdText += \"\\n\"; stdText += stdLines[i]; }\n        for (int i = 0; i < m; i++) { if (i) teamText += \"\\n\"; teamText += teamLines[i]; }\n        caseNum++;\n        if (stdText == teamText) {\n            cout << \"Run #\" << caseNum << \": Accepted \" << y << \"\\n\";\n        } else {\n            auto stripWs = [](const string &s){ string r; for (char c : s) if (c != ' ' && c != '\\n') r += c; return r; };\n            if (stripWs(stdText) == stripWs(teamText)) cout << \"Run #\" << caseNum << \": Presentation Error \" << y << \"\\n\";\n            else cout << \"Run #\" << caseNum << \": Wrong Answer \" << y << \"\\n\";\n        }\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:13:18.856Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "The 'visible characters' comparison only strips spaces, not newlines -- so a case where the ONLY difference is where a line break falls (one long line vs the same text split across two lines) is wrongly classified Wrong Answer instead of Presentation Error, contradicting the spec's explicit 'space or new line symbol' wording.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    int caseNum = 0;\n    while (cin >> n && n != 0) {\n        cin.ignore();\n        vector<string> stdLines(n);\n        long long y = 0;\n        for (int i = 0; i < n; i++) { getline(cin, stdLines[i]); y += (long long)stdLines[i].size(); }\n        int m; cin >> m; cin.ignore();\n        vector<string> teamLines(m);\n        for (int i = 0; i < m; i++) getline(cin, teamLines[i]);\n        string stdText, teamText;\n        for (int i = 0; i < n; i++) { if (i) stdText += \"\\n\"; stdText += stdLines[i]; }\n        for (int i = 0; i < m; i++) { if (i) teamText += \"\\n\"; teamText += teamLines[i]; }\n        caseNum++;\n        if (stdText == teamText) {\n            cout << \"Run #\" << caseNum << \": Accepted \" << y << \"\\n\";\n        } else {\n            auto stripSpacesOnly = [](const string &s){ string r; for (char c : s) if (c != ' ') r += c; return r; };\n            if (stripSpacesOnly(stdText) == stripSpacesOnly(teamText)) cout << \"Run #\" << caseNum << \": Presentation Error \" << y << \"\\n\";\n            else cout << \"Run #\" << caseNum << \": Wrong Answer \" << y << \"\\n\";\n        }\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:13:21.996Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "y counts the joining newlines too (sum of line lengths plus n-1), contradicting the spec's 'not including the symbols for new lines' -- correct only by coincidence when n==1.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    int caseNum = 0;\n    while (cin >> n && n != 0) {\n        cin.ignore();\n        vector<string> stdLines(n);\n        for (int i = 0; i < n; i++) getline(cin, stdLines[i]);\n        int m; cin >> m; cin.ignore();\n        vector<string> teamLines(m);\n        for (int i = 0; i < m; i++) getline(cin, teamLines[i]);\n        string stdText, teamText;\n        for (int i = 0; i < n; i++) { if (i) stdText += \"\\n\"; stdText += stdLines[i]; }\n        for (int i = 0; i < m; i++) { if (i) teamText += \"\\n\"; teamText += teamLines[i]; }\n        long long y = (long long)stdText.size();\n        caseNum++;\n        if (stdText == teamText) {\n            cout << \"Run #\" << caseNum << \": Accepted \" << y << \"\\n\";\n        } else {\n            auto stripWs = [](const string &s){ string r; for (char c : s) if (c != ' ' && c != '\\n') r += c; return r; };\n            if (stripWs(stdText) == stripWs(teamText)) cout << \"Run #\" << caseNum << \": Presentation Error \" << y << \"\\n\";\n            else cout << \"Run #\" << caseNum << \": Wrong Answer \" << y << \"\\n\";\n        }\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:13:25.468Z"
+    },
+    {
+      "tag": "eof-multi-case",
+      "label": "Missing cin.ignore() after reading m (only ignores after n), so the first getline of the team block reads the leftover empty rest-of-line from the '>>' extraction instead of the real first team line -- shifts every team line by one, a classic cin>>/getline mixing bug.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    int caseNum = 0;\n    while (cin >> n && n != 0) {\n        cin.ignore();\n        vector<string> stdLines(n);\n        long long y = 0;\n        for (int i = 0; i < n; i++) { getline(cin, stdLines[i]); y += (long long)stdLines[i].size(); }\n        int m; cin >> m;\n        vector<string> teamLines(m);\n        for (int i = 0; i < m; i++) getline(cin, teamLines[i]);\n        string stdText, teamText;\n        for (int i = 0; i < n; i++) { if (i) stdText += \"\\n\"; stdText += stdLines[i]; }\n        for (int i = 0; i < m; i++) { if (i) teamText += \"\\n\"; teamText += teamLines[i]; }\n        caseNum++;\n        if (stdText == teamText) {\n            cout << \"Run #\" << caseNum << \": Accepted \" << y << \"\\n\";\n        } else {\n            auto stripWs = [](const string &s){ string r; for (char c : s) if (c != ' ' && c != '\\n') r += c; return r; };\n            if (stripWs(stdText) == stripWs(teamText)) cout << \"Run #\" << caseNum << \": Presentation Error \" << y << \"\\n\";\n            else cout << \"Run #\" << caseNum << \": Wrong Answer \" << y << \"\\n\";\n        }\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:13:28.490Z"
+    }
+  ]
+}

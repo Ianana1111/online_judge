@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10309-turn-the-lights-off",
+  "uvaId": 10309,
+  "authoredAt": "2026-09-07T02:12:45.618605Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Classic row-chasing Lights Out solve: try all 1024 press patterns for row 0, force each subsequent row's presses to clear the row above, then check the last row ends all-off; take the minimum total presses over all valid starting patterns, -1 if none work.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nconst int SZ=10;\nint light[SZ][SZ];\n\nint solve(){\n    int best = INT_MAX;\n    for(int mask=0; mask<(1<<SZ); mask++){\n        int press[SZ][SZ]={{0}};\n        int cur[SZ][SZ];\n        for(int r=0;r<SZ;r++) for(int c=0;c<SZ;c++) cur[r][c]=light[r][c];\n        auto applyPress=[&](int r,int c){\n            if(r<0||r>=SZ||c<0||c>=SZ) return;\n            cur[r][c]^=1;\n        };\n        for(int c=0;c<SZ;c++) press[0][c]=(mask>>c)&1;\n        for(int c=0;c<SZ;c++) if(press[0][c]){\n            applyPress(0,c); applyPress(1,c); applyPress(0,c-1); applyPress(0,c+1);\n        }\n        for(int r=1;r<SZ;r++){\n            for(int c=0;c<SZ;c++){\n                if(cur[r-1][c]==1){\n                    press[r][c]=1;\n                    applyPress(r,c); applyPress(r-1,c); applyPress(r+1,c); applyPress(r,c-1); applyPress(r,c+1);\n                }\n            }\n        }\n        bool ok=true;\n        for(int c=0;c<SZ;c++) if(cur[SZ-1][c]!=0) ok=false;\n        if(ok){\n            int cnt=0;\n            for(int r=0;r<SZ;r++) for(int c=0;c<SZ;c++) cnt+=press[r][c];\n            best=min(best,cnt);\n        }\n    }\n    return best==INT_MAX? -1: best;\n}\n\nint main(){\n    string name;\n    while(cin>>name && name!=\"end\"){\n        for(int r=0;r<SZ;r++){\n            string row; cin>>row;\n            for(int c=0;c<SZ;c++) light[r][c] = row[c]=='O'?1:0;\n        }\n        cout << name << \" \" << solve() << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:13:39.250Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Row-0 press effect omits the right-neighbor toggle (0,c+1) -- and the same omission propagates through every forced row -- so the simulated press effect is asymmetric (self+left+up+down but never right).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nconst int SZ=10;\nint light[SZ][SZ];\n\nint solve(){\n    int best = INT_MAX;\n    for(int mask=0; mask<(1<<SZ); mask++){\n        int press[SZ][SZ]={{0}};\n        int cur[SZ][SZ];\n        for(int r=0;r<SZ;r++) for(int c=0;c<SZ;c++) cur[r][c]=light[r][c];\n        auto applyPress=[&](int r,int c){\n            if(r<0||r>=SZ||c<0||c>=SZ) return;\n            cur[r][c]^=1;\n        };\n        for(int c=0;c<SZ;c++) press[0][c]=(mask>>c)&1;\n        // BUG: forgets the right-neighbor toggle (0,c+1) when applying row-0 presses.\n        for(int c=0;c<SZ;c++) if(press[0][c]){\n            applyPress(0,c); applyPress(1,c); applyPress(0,c-1);\n        }\n        for(int r=1;r<SZ;r++){\n            for(int c=0;c<SZ;c++){\n                if(cur[r-1][c]==1){\n                    press[r][c]=1;\n                    applyPress(r,c); applyPress(r-1,c); applyPress(r+1,c); applyPress(r,c-1);\n                }\n            }\n        }\n        bool ok=true;\n        for(int c=0;c<SZ;c++) if(cur[SZ-1][c]!=0) ok=false;\n        if(ok){\n            int cnt=0;\n            for(int r=0;r<SZ;r++) for(int c=0;c<SZ;c++) cnt+=press[r][c];\n            best=min(best,cnt);\n        }\n    }\n    return best==INT_MAX? -1: best;\n}\n\nint main(){\n    string name;\n    while(cin>>name && name!=\"end\"){\n        for(int r=0;r<SZ;r++){\n            string row; cin>>row;\n            for(int c=0;c<SZ;c++) light[r][c] = row[c]=='O'?1:0;\n        }\n        cout << name << \" \" << solve() << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:13:44.248Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Never verifies the final row is actually all-off after forcing presses row by row -- just reports the press count for the mask=0 starting pattern unconditionally, so it never outputs -1 even for unsolvable grids.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nconst int SZ=10;\nint light[SZ][SZ];\n\nint solveMask(int mask){\n    int press[SZ][SZ]={{0}};\n    int cur[SZ][SZ];\n    for(int r=0;r<SZ;r++) for(int c=0;c<SZ;c++) cur[r][c]=light[r][c];\n    auto applyPress=[&](int r,int c){\n        if(r<0||r>=SZ||c<0||c>=SZ) return;\n        cur[r][c]^=1;\n    };\n    for(int c=0;c<SZ;c++) press[0][c]=(mask>>c)&1;\n    for(int c=0;c<SZ;c++) if(press[0][c]){\n        applyPress(0,c); applyPress(1,c); applyPress(0,c-1); applyPress(0,c+1);\n    }\n    for(int r=1;r<SZ;r++){\n        for(int c=0;c<SZ;c++){\n            if(cur[r-1][c]==1){\n                press[r][c]=1;\n                applyPress(r,c); applyPress(r-1,c); applyPress(r+1,c); applyPress(r,c-1); applyPress(r,c+1);\n            }\n        }\n    }\n    int cnt=0;\n    for(int r=0;r<SZ;r++) for(int c=0;c<SZ;c++) cnt+=press[r][c];\n    return cnt;\n}\n\nint main(){\n    string name;\n    while(cin>>name && name!=\"end\"){\n        for(int r=0;r<SZ;r++){\n            string row; cin>>row;\n            for(int c=0;c<SZ;c++) light[r][c] = row[c]=='O'?1:0;\n        }\n        // BUG: never checks that the last row actually ends up all-off -- just reports mask=0's\n        // press count (or the smallest count seen) without verifying solvability, so it always\n        // claims a numeric answer, never -1.\n        cout << name << \" \" << solveMask(0) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:13:47.268Z"
+    }
+  ]
+}
