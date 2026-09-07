@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10336-rank-the-languages",
+  "uvaId": 10336,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "4-directional BFS flood fill to count connected same-letter states, grouped by letter, sorted by count descending then letter ascending on ties (per spec).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int N;\n    cin >> N;\n    for (int tc=1;tc<=N;tc++){\n        int H,W;\n        cin >> H >> W;\n        vector<string> grid(H);\n        for (auto &row : grid) cin >> row;\n        vector<vector<bool>> visited(H, vector<bool>(W,false));\n        map<char,int> cnt;\n        int dx[]={-1,1,0,0}, dy[]={0,0,-1,1};\n        for (int i=0;i<H;i++) for (int j=0;j<W;j++){\n            if (visited[i][j]) continue;\n            char c = grid[i][j];\n            queue<pair<int,int>> q;\n            q.push({i,j});\n            visited[i][j]=true;\n            while(!q.empty()){\n                auto [x,y]=q.front(); q.pop();\n                for (int d=0;d<4;d++){\n                    int nx=x+dx[d], ny=y+dy[d];\n                    if (nx<0||nx>=H||ny<0||ny>=W||visited[nx][ny]) continue;\n                    if (grid[nx][ny]!=c) continue;\n                    visited[nx][ny]=true;\n                    q.push({nx,ny});\n                }\n            }\n            cnt[c]++;\n        }\n        vector<pair<char,int>> items(cnt.begin(), cnt.end());\n        sort(items.begin(), items.end(), [](const pair<char,int>&a, const pair<char,int>&b){\n            if (a.second != b.second) return a.second > b.second;\n            return a.first < b.first;\n        });\n        cout << \"World #\" << tc << \"\\n\";\n        for (auto &p : items) cout << p.first << \": \" << p.second << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:24:30.344Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Uses 8-directional flood fill (includes diagonals) instead of the spec's 4-directional adjacency -- merges states that should stay separate whenever same-letter regions only touch diagonally.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int N;\n    cin >> N;\n    for (int tc=1;tc<=N;tc++){\n        int H,W;\n        cin >> H >> W;\n        vector<string> grid(H);\n        for (auto &row : grid) cin >> row;\n        vector<vector<bool>> visited(H, vector<bool>(W,false));\n        map<char,int> cnt;\n        int dx[]={-1,-1,-1,0,0,1,1,1}, dy[]={-1,0,1,-1,1,-1,0,1};\n        for (int i=0;i<H;i++) for (int j=0;j<W;j++){\n            if (visited[i][j]) continue;\n            char c = grid[i][j];\n            queue<pair<int,int>> q;\n            q.push({i,j});\n            visited[i][j]=true;\n            while(!q.empty()){\n                auto [x,y]=q.front(); q.pop();\n                for (int d=0;d<8;d++){\n                    int nx=x+dx[d], ny=y+dy[d];\n                    if (nx<0||nx>=H||ny<0||ny>=W||visited[nx][ny]) continue;\n                    if (grid[nx][ny]!=c) continue;\n                    visited[nx][ny]=true;\n                    q.push({nx,ny});\n                }\n            }\n            cnt[c]++;\n        }\n        vector<pair<char,int>> items(cnt.begin(), cnt.end());\n        sort(items.begin(), items.end(), [](const pair<char,int>&a, const pair<char,int>&b){\n            if (a.second != b.second) return a.second > b.second;\n            return a.first < b.first;\n        });\n        cout << \"World #\" << tc << \"\\n\";\n        for (auto &p : items) cout << p.first << \": \" << p.second << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:33.468Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Reverses the tie-break to descending alphabetical order instead of ascending -- the spec explicitly says equal-count languages must appear alphabetically ascending.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int N;\n    cin >> N;\n    for (int tc=1;tc<=N;tc++){\n        int H,W;\n        cin >> H >> W;\n        vector<string> grid(H);\n        for (auto &row : grid) cin >> row;\n        vector<vector<bool>> visited(H, vector<bool>(W,false));\n        map<char,int> cnt;\n        int dx[]={-1,1,0,0}, dy[]={0,0,-1,1};\n        for (int i=0;i<H;i++) for (int j=0;j<W;j++){\n            if (visited[i][j]) continue;\n            char c = grid[i][j];\n            queue<pair<int,int>> q;\n            q.push({i,j});\n            visited[i][j]=true;\n            while(!q.empty()){\n                auto [x,y]=q.front(); q.pop();\n                for (int d=0;d<4;d++){\n                    int nx=x+dx[d], ny=y+dy[d];\n                    if (nx<0||nx>=H||ny<0||ny>=W||visited[nx][ny]) continue;\n                    if (grid[nx][ny]!=c) continue;\n                    visited[nx][ny]=true;\n                    q.push({nx,ny});\n                }\n            }\n            cnt[c]++;\n        }\n        vector<pair<char,int>> items(cnt.begin(), cnt.end());\n        sort(items.begin(), items.end(), [](const pair<char,int>&a, const pair<char,int>&b){\n            if (a.second != b.second) return a.second > b.second;\n            return a.first > b.first;\n        });\n        cout << \"World #\" << tc << \"\\n\";\n        for (auto &p : items) cout << p.first << \": \" << p.second << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:36.997Z"
+    }
+  ]
+}

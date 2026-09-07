@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10530-guessing-game",
+  "uvaId": 10530,
+  "authoredAt": "2026-09-07T02:25:06.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Track [lo,hi] candidate range, narrow via too-high/too-low (lo=max(lo,g+1), hi=min(hi,g-1)), flag dishonest if lo>hi ever or the final guess isn't in range at 'right on'. Verified natively against both stored samples (34-game and 1-game transcripts) exact match.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <iostream>\n#include <string>\n#include <algorithm>\nusing namespace std;\nint main(){\n    int g;\n    while (cin >> g && g != 0) {\n        int lo = 1, hi = 10;\n        bool dishonest = false;\n        while (true) {\n            string w1, w2;\n            cin >> w1 >> w2;\n            if (w1 == \"right\") {\n                if (g < lo || g > hi) dishonest = true;\n                break;\n            }\n            if (w2 == \"high\") hi = min(hi, g - 1);\n            else lo = max(lo, g + 1);\n            if (lo > hi) dishonest = true;\n            cin >> g;\n        }\n        cout << (dishonest ? \"Stan is dishonest\" : \"Stan may be honest\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:25:42.048Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Narrows with hi=min(hi,g) / lo=max(lo,g) instead of g-1/g+1 (doesn't exclude the guessed value itself), systematically under-detecting dishonesty.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <iostream>\n#include <string>\n#include <algorithm>\nusing namespace std;\nint main(){\n    int g;\n    while (cin >> g && g != 0) {\n        int lo = 1, hi = 10;\n        bool dishonest = false;\n        while (true) {\n            string w1, w2;\n            cin >> w1 >> w2;\n            if (w1 == \"right\") {\n                if (g < lo || g > hi) dishonest = true;\n                break;\n            }\n            if (w2 == \"high\") hi = min(hi, g);\n            else lo = max(lo, g);\n            if (lo > hi) dishonest = true;\n            cin >> g;\n        }\n        cout << (dishonest ? \"Stan is dishonest\" : \"Stan may be honest\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:25:45.632Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Correct logic, but prints 'STAN IS DISHONEST'/'STAN MAY BE HONEST' in all caps instead of the required 'Stan is dishonest'/'Stan may be honest'.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <iostream>\n#include <string>\n#include <algorithm>\nusing namespace std;\nint main(){\n    int g;\n    while (cin >> g && g != 0) {\n        int lo = 1, hi = 10;\n        bool dishonest = false;\n        while (true) {\n            string w1, w2;\n            cin >> w1 >> w2;\n            if (w1 == \"right\") {\n                if (g < lo || g > hi) dishonest = true;\n                break;\n            }\n            if (w2 == \"high\") hi = min(hi, g - 1);\n            else lo = max(lo, g + 1);\n            if (lo > hi) dishonest = true;\n            cin >> g;\n        }\n        cout << (dishonest ? \"STAN IS DISHONEST\" : \"STAN MAY BE HONEST\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:25:47.819Z"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10327-flip-sort",
+  "uvaId": 10327,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Minimum adjacent swaps to sort = number of inversions, counted via O(n^2) double loop (N<=1000, trivially fast).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    while (cin >> n) {\n        vector<long long> a(n);\n        for (auto &x : a) cin >> x;\n        long long inv = 0;\n        for (int i=0;i<n;i++)\n            for (int j=i+1;j<n;j++)\n                if (a[i] > a[j]) inv++;\n        cout << \"Minimum exchange operations : \" << inv << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:24:15.071Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Inner loop stops one short of the end (j<n-1), so inversions involving the very last element are never counted.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    while (cin >> n) {\n        vector<long long> a(n);\n        for (auto &x : a) cin >> x;\n        long long inv = 0;\n        for (int i=0;i<n;i++)\n            for (int j=i+1;j<n-1;j++)\n                if (a[i] > a[j]) inv++;\n        cout << \"Minimum exchange operations : \" << inv << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:21.720Z"
+    },
+    {
+      "tag": "eof-multi-case",
+      "label": "Uses 'if (cin >> n)' instead of 'while' -- only ever processes the first dataset in the EOF-terminated stream, silently dropping every subsequent one.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    if (cin >> n) {\n        vector<long long> a(n);\n        for (auto &x : a) cin >> x;\n        long long inv = 0;\n        for (int i=0;i<n;i++)\n            for (int j=i+1;j<n;j++)\n                if (a[i] > a[j]) inv++;\n        cout << \"Minimum exchange operations : \" << inv << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:25.174Z"
+    }
+  ]
+}

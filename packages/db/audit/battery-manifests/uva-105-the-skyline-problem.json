@@ -1,0 +1,31 @@
+{
+  "slug": "uva-105-the-skyline-problem",
+  "uvaId": 105,
+  "authoredAt": "2026-09-07T02:25:06.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Brute-force max-height array over x in [0,10000) filled per building [L,R), emit a point whenever the running max height changes; verified natively against both stored samples (single building, and the 16-building composite) exact match.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int L,H,R; vector<array<int,3>> bs; int maxX=0;\n    while(cin>>L>>H>>R){ bs.push_back({L,H,R}); maxX=max(maxX,R); }\n    vector<int> height(maxX+2,0);\n    for(auto&t:bs) for(int x=t[0];x<t[2];x++) height[x]=max(height[x],t[1]);\n    vector<int> out; int prev=0;\n    for(int x=0;x<=maxX;x++){\n        if(height[x]!=prev){ out.push_back(x); out.push_back(height[x]); prev=height[x]; }\n    }\n    for(size_t i=0;i<out.size();i++) cout<<out[i]<<(i+1<out.size()?' ':'\\n');\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:25:30.439Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Fills height[L..R] inclusive of R instead of [L,R) exclusive, so each building's right edge bleeds one extra unit into the next segment.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int L,H,R; vector<array<int,3>> bs; int maxX=0;\n    while(cin>>L>>H>>R){ bs.push_back({L,H,R}); maxX=max(maxX,R); }\n    vector<int> height(maxX+2,0);\n    for(auto&t:bs) for(int x=t[0];x<=t[2];x++) height[x]=max(height[x],t[1]);\n    vector<int> out; int prev=0;\n    for(int x=0;x<=maxX;x++){\n        if(height[x]!=prev){ out.push_back(x); out.push_back(height[x]); prev=height[x]; }\n    }\n    for(size_t i=0;i<out.size();i++) cout<<out[i]<<(i+1<out.size()?' ':'\\n');\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:25:35.624Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Emits a point at every building L/R edge coordinate directly (via a set of edges) instead of scanning for actual height changes, so edges where the visible height doesn't change (e.g. a shorter building's edge under a taller one) produce spurious/incorrectly-merged output points instead of being skipped.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int L,H,R; vector<array<int,3>> bs; int maxX=0;\n    while(cin>>L>>H>>R){ bs.push_back({L,H,R}); maxX=max(maxX,R); }\n    vector<int> height(maxX+2,0);\n    for(auto&t:bs) for(int x=t[0];x<t[2];x++) height[x]=max(height[x],t[1]);\n    set<int> edges;\n    for(auto&t:bs){ edges.insert(t[0]); edges.insert(t[2]); }\n    vector<int> out;\n    for(int x: edges){ out.push_back(x); out.push_back(height[x]); }\n    for(size_t i=0;i<out.size();i++) cout<<out[i]<<(i+1<out.size()?' ':'\\n');\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:25:39.183Z"
+    }
+  ]
+}

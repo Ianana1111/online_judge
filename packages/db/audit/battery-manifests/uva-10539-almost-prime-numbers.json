@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10539-almost-prime-numbers",
+  "uvaId": 10539,
+  "authoredAt": "2026-09-07T02:25:06.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Sieve primes up to 1e6 (since p^2<=1e12 implies p<=1e6), for each prime accumulate counts of p^k (k>=2) within [lo,hi] using long long throughout (hi up to 1e12). Verified natively against both stored samples (3-query and 2-query) exact match, including hand-traced values for [1,10]->3, [1,20]->4, [1,5]->1.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <cstdio>\n#include <vector>\nusing namespace std;\ntypedef long long ll;\nconst int LIM = 1000001;\nvector<int> primes;\nbool comp[1000001];\nint main(){\n    for(int i=2;i<LIM;i++){\n        if(!comp[i]){ primes.push_back(i); for(ll j=(ll)i*i;j<LIM;j+=i) comp[j]=true; }\n    }\n    int n; scanf(\"%d\",&n);\n    for(int i=0;i<n;i++){\n        ll lo,hi; scanf(\"%lld %lld\",&lo,&hi);\n        ll count=0;\n        for(int p: primes){\n            ll val=(ll)p*p;\n            if(val>hi) break;\n            while(val<=hi){\n                if(val>=lo) count++;\n                val*=p;\n            }\n        }\n        printf(\"%lld\\n\",count);\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:25:57.654Z"
+    },
+    {
+      "tag": "overflow",
+      "label": "Identical logic but lo/hi/val stored as 32-bit int instead of long long -- hi can be up to 1e12, far beyond INT_MAX (~2.1e9); existing test data only reaches 20, nowhere near large enough to trigger this.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <cstdio>\n#include <vector>\nusing namespace std;\nconst int LIM = 1000001;\nvector<int> primes;\nbool comp[1000001];\nint main(){\n    for(int i=2;i<LIM;i++){\n        if(!comp[i]){ primes.push_back(i); for(long long j=(long long)i*i;j<LIM;j+=i) comp[j]=true; }\n    }\n    int n; scanf(\"%d\",&n);\n    for(int i=0;i<n;i++){\n        int lo,hi; scanf(\"%d %d\",&lo,&hi);\n        int count=0;\n        for(int p: primes){\n            int val=p*p;\n            if(val>hi || val<0) break;\n            while(val<=hi && val>0){\n                if(val>=lo) count++;\n                val*=p;\n            }\n        }\n        printf(\"%d\\n\",count);\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:26:04.092Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Starts the prime-power loop at val=p (k=1, i.e. the prime itself) instead of val=p*p (k=2), incorrectly counting primes themselves as 'almost prime' in addition to true prime powers.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <cstdio>\n#include <vector>\nusing namespace std;\ntypedef long long ll;\nconst int LIM = 1000001;\nvector<int> primes;\nbool comp[1000001];\nint main(){\n    for(int i=2;i<LIM;i++){\n        if(!comp[i]){ primes.push_back(i); for(ll j=(ll)i*i;j<LIM;j+=i) comp[j]=true; }\n    }\n    int n; scanf(\"%d\",&n);\n    for(int i=0;i<n;i++){\n        ll lo,hi; scanf(\"%lld %lld\",&lo,&hi);\n        ll count=0;\n        for(int p: primes){\n            ll val=p;\n            if(val>hi) break;\n            while(val<=hi){\n                if(val>=lo) count++;\n                val*=p;\n            }\n        }\n        printf(\"%lld\\n\",count);\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:26:06.089Z"
+    }
+  ]
+}

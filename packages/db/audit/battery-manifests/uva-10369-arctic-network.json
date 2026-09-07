@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10369-arctic-network",
+  "uvaId": 10369,
+  "authoredAt": "2026-09-07T02:24:08.449142Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Prim's MST over all P outposts, then D = the (S-1)-th largest MST edge after removing the S-1 largest edges for free (S satellites act as S free-merged components); 0.00 if S-1 covers every MST edge.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n; cin >> n;\n    while(n--){\n        int s, p; cin >> s >> p;\n        vector<double> x(p), y(p);\n        for (int i=0;i<p;i++) cin >> x[i] >> y[i];\n        vector<double> dist(p, 1e18);\n        vector<bool> inMst(p,false);\n        dist[0]=0;\n        vector<double> mstEdges;\n        for (int iter=0; iter<p; iter++){\n            int u=-1;\n            for (int i=0;i<p;i++) if(!inMst[i] && (u==-1 || dist[i]<dist[u])) u=i;\n            inMst[u]=true;\n            if (dist[u] < 1e17) mstEdges.push_back(dist[u]);\n            for (int v=0;v<p;v++) if(!inMst[v]){\n                double d = hypot(x[u]-x[v], y[u]-y[v]);\n                if (d < dist[v]) dist[v]=d;\n            }\n        }\n        sort(mstEdges.rbegin(), mstEdges.rend());\n        double ans = 0;\n        if (s-1 < (int)mstEdges.size()) ans = mstEdges[s-1];\n        printf(\"%.2f\\n\", ans);\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:24:42.474Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Removes S largest MST edges instead of S-1 (indexes mstEdges[s] instead of mstEdges[s-1]) -- classic off-by-one for this exact problem's satellite-count semantics.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n; cin >> n;\n    while(n--){\n        int s, p; cin >> s >> p;\n        vector<double> x(p), y(p);\n        for (int i=0;i<p;i++) cin >> x[i] >> y[i];\n        vector<double> dist(p, 1e18);\n        vector<bool> inMst(p,false);\n        dist[0]=0;\n        vector<double> mstEdges;\n        for (int iter=0; iter<p; iter++){\n            int u=-1;\n            for (int i=0;i<p;i++) if(!inMst[i] && (u==-1 || dist[i]<dist[u])) u=i;\n            inMst[u]=true;\n            if (dist[u] < 1e17) mstEdges.push_back(dist[u]);\n            for (int v=0;v<p;v++) if(!inMst[v]){\n                double d = hypot(x[u]-x[v], y[u]-y[v]);\n                if (d < dist[v]) dist[v]=d;\n            }\n        }\n        sort(mstEdges.rbegin(), mstEdges.rend());\n        double ans = 0;\n        if (s < (int)mstEdges.size()) ans = mstEdges[s];\n        printf(\"%.2f\\n\", ans);\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:46.071Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Prints with %.1f instead of the required 2 decimal places.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n; cin >> n;\n    while(n--){\n        int s, p; cin >> s >> p;\n        vector<double> x(p), y(p);\n        for (int i=0;i<p;i++) cin >> x[i] >> y[i];\n        vector<double> dist(p, 1e18);\n        vector<bool> inMst(p,false);\n        dist[0]=0;\n        vector<double> mstEdges;\n        for (int iter=0; iter<p; iter++){\n            int u=-1;\n            for (int i=0;i<p;i++) if(!inMst[i] && (u==-1 || dist[i]<dist[u])) u=i;\n            inMst[u]=true;\n            if (dist[u] < 1e17) mstEdges.push_back(dist[u]);\n            for (int v=0;v<p;v++) if(!inMst[v]){\n                double d = hypot(x[u]-x[v], y[u]-y[v]);\n                if (d < dist[v]) dist[v]=d;\n            }\n        }\n        sort(mstEdges.rbegin(), mstEdges.rend());\n        double ans = 0;\n        if (s-1 < (int)mstEdges.size()) ans = mstEdges[s-1];\n        printf(\"%.1f\\n\", ans);\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:49.279Z"
+    }
+  ]
+}

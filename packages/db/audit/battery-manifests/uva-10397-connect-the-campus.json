@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10397-connect-the-campus",
+  "uvaId": 10397,
+  "authoredAt": "2026-09-07T02:24:08.449142Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "DSU pre-seeded with the M existing free cables, then Kruskal over all N*(N-1)/2 candidate edges by distance, summing only the ones that merge distinct components until fully connected.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint parent_[751];\nint find_(int x){ return parent_[x]==x?x:parent_[x]=find_(parent_[x]); }\nint main(){\n    int n;\n    while (cin >> n) {\n        vector<double> x(n+1), y(n+1);\n        for (int i=1;i<=n;i++) cin >> x[i] >> y[i];\n        for (int i=1;i<=n;i++) parent_[i]=i;\n        int m; cin >> m;\n        int comps = n;\n        for (int i=0;i<m;i++){\n            int a,b; cin >> a >> b;\n            int ra=find_(a), rb=find_(b);\n            if (ra!=rb){ parent_[ra]=rb; comps--; }\n        }\n        vector<tuple<double,int,int>> edges;\n        for (int i=1;i<=n;i++) for (int j=i+1;j<=n;j++) {\n            double d = hypot(x[i]-x[j], y[i]-y[j]);\n            edges.push_back(make_tuple(d,i,j));\n        }\n        sort(edges.begin(), edges.end());\n        double total=0;\n        for (auto& e : edges) {\n            if (comps==1) break;\n            double d=get<0>(e); int a=get<1>(e), b=get<2>(e);\n            int ra=find_(a), rb=find_(b);\n            if (ra!=rb){ parent_[ra]=rb; comps--; total+=d; }\n        }\n        printf(\"%.2f\\n\", total);\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:25:04.981Z"
+    },
+    {
+      "tag": "eof-multi-case",
+      "label": "Only initializes the DSU parent array before the FIRST test case, leaking unioned state into every subsequent case in a multi-case input.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint parent_[751];\nint find_(int x){ return parent_[x]==x?x:parent_[x]=find_(parent_[x]); }\nint main(){\n    int n;\n    bool first = true;\n    while (cin >> n) {\n        vector<double> x(n+1), y(n+1);\n        for (int i=1;i<=n;i++) cin >> x[i] >> y[i];\n        if (first) { for (int i=1;i<=n;i++) parent_[i]=i; first=false; }\n        int m; cin >> m;\n        int comps = n;\n        for (int i=0;i<m;i++){\n            int a,b; cin >> a >> b;\n            int ra=find_(a), rb=find_(b);\n            if (ra!=rb){ parent_[ra]=rb; comps--; }\n        }\n        vector<tuple<double,int,int>> edges;\n        for (int i=1;i<=n;i++) for (int j=i+1;j<=n;j++) {\n            double d = hypot(x[i]-x[j], y[i]-y[j]);\n            edges.push_back(make_tuple(d,i,j));\n        }\n        sort(edges.begin(), edges.end());\n        double total=0;\n        for (auto& e : edges) {\n            if (comps==1) break;\n            double d=get<0>(e); int a=get<1>(e), b=get<2>(e);\n            int ra=find_(a), rb=find_(b);\n            if (ra!=rb){ parent_[ra]=rb; comps--; total+=d; }\n        }\n        printf(\"%.2f\\n\", total);\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:25:09.464Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Reads the M existing cables but never unions them in the DSU, effectively ignoring that any cables already exist and computing a plain from-scratch MST instead.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint parent_[751];\nint find_(int x){ return parent_[x]==x?x:parent_[x]=find_(parent_[x]); }\nint main(){\n    int n;\n    while (cin >> n) {\n        vector<double> x(n+1), y(n+1);\n        for (int i=1;i<=n;i++) cin >> x[i] >> y[i];\n        for (int i=1;i<=n;i++) parent_[i]=i;\n        int m; cin >> m;\n        int a_,b_;\n        for (int i=0;i<m;i++){ cin >> a_ >> b_; }\n        int comps = n;\n        vector<tuple<double,int,int>> edges;\n        for (int i=1;i<=n;i++) for (int j=i+1;j<=n;j++) {\n            double d = hypot(x[i]-x[j], y[i]-y[j]);\n            edges.push_back(make_tuple(d,i,j));\n        }\n        sort(edges.begin(), edges.end());\n        double total=0;\n        for (auto& e : edges) {\n            if (comps==1) break;\n            double d=get<0>(e); int a=get<1>(e), b=get<2>(e);\n            int ra=find_(a), rb=find_(b);\n            if (ra!=rb){ parent_[ra]=rb; comps--; total+=d; }\n        }\n        printf(\"%.2f\\n\", total);\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:25:12.390Z"
+    }
+  ]
+}

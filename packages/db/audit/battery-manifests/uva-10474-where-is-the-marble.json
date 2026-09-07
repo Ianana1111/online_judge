@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10474-where-is-the-marble",
+  "uvaId": 10474,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Sort marbles ascending, binary search (lower_bound) the FIRST occurrence position of each query value (1-indexed), else 'not found'.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,q,cs=0;\n    while (cin >> n >> q && (n||q)) {\n        vector<int> a(n);\n        for (auto &x : a) cin >> x;\n        sort(a.begin(), a.end());\n        cout << \"CASE# \" << ++cs << \":\\n\";\n        for (int i=0;i<q;i++){\n            int x; cin >> x;\n            auto it = lower_bound(a.begin(), a.end(), x);\n            if (it != a.end() && *it == x) cout << x << \" found at \" << (it-a.begin()+1) << \"\\n\";\n            else cout << x << \" not found\\n\";\n        }\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:24:20.120Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Reports the LAST occurrence position (via upper_bound) instead of the FIRST -- wrong index whenever the query value has duplicates in the marble set (the spec explicitly asks for the first marble with that number).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,q,cs=0;\n    while (cin >> n >> q && (n||q)) {\n        vector<int> a(n);\n        for (auto &x : a) cin >> x;\n        sort(a.begin(), a.end());\n        cout << \"CASE# \" << ++cs << \":\\n\";\n        for (int i=0;i<q;i++){\n            int x; cin >> x;\n            auto it = upper_bound(a.begin(), a.end(), x);\n            if (it != a.begin() && *(prev(it)) == x) cout << x << \" found at \" << (it-a.begin()) << \"\\n\";\n            else cout << x << \" not found\\n\";\n        }\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:22.926Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Missing the space after 'CASE#' (prints 'CASE#1:' instead of 'CASE# 1:').",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,q,cs=0;\n    while (cin >> n >> q && (n||q)) {\n        vector<int> a(n);\n        for (auto &x : a) cin >> x;\n        sort(a.begin(), a.end());\n        cout << \"CASE#\" << ++cs << \":\\n\";\n        for (int i=0;i<q;i++){\n            int x; cin >> x;\n            auto it = lower_bound(a.begin(), a.end(), x);\n            if (it != a.end() && *it == x) cout << x << \" found at \" << (it-a.begin()+1) << \"\\n\";\n            else cout << x << \" not found\\n\";\n        }\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:26.095Z"
+    }
+  ]
+}
