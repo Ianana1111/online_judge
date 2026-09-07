@@ -71,3 +71,37 @@ export async function seedFromSample(slug: string, boundaries: Boundary[], sampl
   ]);
   console.log(`${slug}: seeded ${rows.length} test cases (${samples.length} from Sample + ${boundaries.length} boundary)`);
 }
+
+/** Adds ONE test case to a problem's EXISTING TestCase rows, for the judge-rigor verification
+ * audit's remediation loop (see the audit plan): when a divergence shows local test data is too
+ * weak, this is how the adversarial input that exposed it gets folded in as a permanent hidden
+ * case, on top of whatever cases the problem already has — unlike seedFromSample, which replaces
+ * everything from scratch and would throw away that existing history. Still a delete-all +
+ * recreate-all inside one transaction (same atomicity reasoning as seedFromSample: worker.ts
+ * routes a 0-TestCase problem straight to the remote UVa relay, so the DB must never observably
+ * pass through a 0-row state, not even between two separate statements). */
+export async function appendTestCase(slug: string, boundary: Boundary): Promise<void> {
+  const problem = await prisma.problem.findUniqueOrThrow({ where: { slug } });
+  const existing = await prisma.testCase.findMany({ where: { problemId: problem.id }, orderBy: { ord: "asc" } });
+
+  const cleanOutput = (s: string): string => {
+    const t = s.replace(/\r\n?/g, "\n").replace(/\s+$/, "");
+    return t === "" ? "" : t + "\n";
+  };
+
+  const rows = [
+    ...existing.map((tc) => ({ problemId: problem.id, ord: tc.ord, input: tc.input, output: tc.output })),
+    {
+      problemId: problem.id,
+      ord: existing.length + 1,
+      input: clean(boundary.input),
+      output: cleanOutput(boundary.output),
+    },
+  ];
+
+  await prisma.$transaction([
+    prisma.testCase.deleteMany({ where: { problemId: problem.id } }),
+    prisma.testCase.createMany({ data: rows }),
+  ]);
+  console.log(`${slug}: appended 1 test case (now ${rows.length} total)`);
+}
