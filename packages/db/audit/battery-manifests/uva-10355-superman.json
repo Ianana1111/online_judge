@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10355-superman",
+  "uvaId": 10355,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Parametrize the segment as P(t)=P1+t*D, solve the quadratic |P(t)-C|^2=r^2 per sphere for the intersection interval, clip to t in [0,1], sum clipped chord lengths, divide by total path length for the percentage.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    string name;\n    while (cin >> name) {\n        double x1,y1,z1,x2,y2,z2;\n        cin >> x1>>y1>>z1>>x2>>y2>>z2;\n        int m; cin >> m;\n        double dx=x2-x1, dy=y2-y1, dz=z2-z1;\n        double totalLen = sqrt(dx*dx+dy*dy+dz*dz);\n        double polluted = 0;\n        for (int i=0;i<m;i++){\n            double cx,cy,cz,r;\n            cin >> cx>>cy>>cz>>r;\n            double fx=x1-cx, fy=y1-cy, fz=z1-cz;\n            double a = dx*dx+dy*dy+dz*dz;\n            double b = 2*(fx*dx+fy*dy+fz*dz);\n            double c = fx*fx+fy*fy+fz*fz - r*r;\n            double disc = b*b-4*a*c;\n            if (disc < 0) continue;\n            double sq = sqrt(disc);\n            double t1 = (-b - sq)/(2*a);\n            double t2 = (-b + sq)/(2*a);\n            double lo = max(0.0, t1), hi = min(1.0, t2);\n            if (hi > lo) polluted += (hi-lo)*totalLen;\n        }\n        double pct = totalLen>0 ? polluted/totalLen*100.0 : 0.0;\n        cout << name << \"\\n\" << fixed << setprecision(2) << pct << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:24:40.764Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Forgets to clip the intersection interval [t1,t2] to the segment bounds [0,1] before computing chord length -- overcounts pollution whenever a sphere's true geometric intersection with the infinite line extends past either endpoint of the actual flight path.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    string name;\n    while (cin >> name) {\n        double x1,y1,z1,x2,y2,z2;\n        cin >> x1>>y1>>z1>>x2>>y2>>z2;\n        int m; cin >> m;\n        double dx=x2-x1, dy=y2-y1, dz=z2-z1;\n        double totalLen = sqrt(dx*dx+dy*dy+dz*dz);\n        double polluted = 0;\n        for (int i=0;i<m;i++){\n            double cx,cy,cz,r;\n            cin >> cx>>cy>>cz>>r;\n            double fx=x1-cx, fy=y1-cy, fz=z1-cz;\n            double a = dx*dx+dy*dy+dz*dz;\n            double b = 2*(fx*dx+fy*dy+fz*dz);\n            double c = fx*fx+fy*fy+fz*fz - r*r;\n            double disc = b*b-4*a*c;\n            if (disc < 0) continue;\n            double sq = sqrt(disc);\n            double t1 = (-b - sq)/(2*a);\n            double t2 = (-b + sq)/(2*a);\n            if (t2 > t1) polluted += (t2-t1)*totalLen;\n        }\n        double pct = totalLen>0 ? polluted/totalLen*100.0 : 0.0;\n        cout << name << \"\\n\" << fixed << setprecision(2) << pct << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:24:44.897Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Omits 'fixed << setprecision(2)' -- prints the percentage with default stream formatting instead of exactly 2 decimal places (e.g. '86.6' or scientific notation instead of '86.60').",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    string name;\n    while (cin >> name) {\n        double x1,y1,z1,x2,y2,z2;\n        cin >> x1>>y1>>z1>>x2>>y2>>z2;\n        int m; cin >> m;\n        double dx=x2-x1, dy=y2-y1, dz=z2-z1;\n        double totalLen = sqrt(dx*dx+dy*dy+dz*dz);\n        double polluted = 0;\n        for (int i=0;i<m;i++){\n            double cx,cy,cz,r;\n            cin >> cx>>cy>>cz>>r;\n            double fx=x1-cx, fy=y1-cy, fz=z1-cz;\n            double a = dx*dx+dy*dy+dz*dz;\n            double b = 2*(fx*dx+fy*dy+fz*dz);\n            double c = fx*fx+fy*fy+fz*fz - r*r;\n            double disc = b*b-4*a*c;\n            if (disc < 0) continue;\n            double sq = sqrt(disc);\n            double t1 = (-b - sq)/(2*a);\n            double t2 = (-b + sq)/(2*a);\n            double lo = max(0.0, t1), hi = min(1.0, t2);\n            if (hi > lo) polluted += (hi-lo)*totalLen;\n        }\n        double pct = totalLen>0 ? polluted/totalLen*100.0 : 0.0;\n        cout << name << \"\\n\" << pct << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:47.649Z"
+    }
+  ]
+}

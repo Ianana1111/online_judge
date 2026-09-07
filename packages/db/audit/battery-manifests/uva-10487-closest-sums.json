@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10487-closest-sums",
+  "uvaId": 10487,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Precompute all pairwise sums of DISTINCT positions (i<j), sort, binary-search the nearest value to each query.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n, cs=0;\n    while (cin >> n && n != 0) {\n        vector<long long> a(n);\n        for (auto &x : a) cin >> x;\n        vector<long long> sums;\n        for (int i=0;i<n;i++) for (int j=i+1;j<n;j++) sums.push_back(a[i]+a[j]);\n        sort(sums.begin(), sums.end());\n        int m; cin >> m;\n        cout << \"Case \" << ++cs << \":\\n\";\n        for (int k=0;k<m;k++){\n            long long q; cin >> q;\n            auto it = lower_bound(sums.begin(), sums.end(), q);\n            long long best = 0, bestDiff = LLONG_MAX;\n            if (it != sums.end()) { long long d = llabs(*it-q); if (d<bestDiff){bestDiff=d; best=*it;} }\n            if (it != sums.begin()) { auto p = prev(it); long long d = llabs(*p-q); if (d<bestDiff || (d==bestDiff && *p<best)){bestDiff=d; best=*p;} }\n            cout << \"Closest sum to \" << q << \" is \" << best << \".\\n\";\n        }\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:24:30.305Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Includes i==j pairs (a number summed with itself) as if it were a valid distinct-pair sum -- can surface a closer-looking sum that isn't actually achievable from two distinct set positions.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n, cs=0;\n    while (cin >> n && n != 0) {\n        vector<long long> a(n);\n        for (auto &x : a) cin >> x;\n        vector<long long> sums;\n        for (int i=0;i<n;i++) for (int j=i;j<n;j++) sums.push_back(a[i]+a[j]);\n        sort(sums.begin(), sums.end());\n        int m; cin >> m;\n        cout << \"Case \" << ++cs << \":\\n\";\n        for (int k=0;k<m;k++){\n            long long q; cin >> q;\n            auto it = lower_bound(sums.begin(), sums.end(), q);\n            long long best = 0, bestDiff = LLONG_MAX;\n            if (it != sums.end()) { long long d = llabs(*it-q); if (d<bestDiff){bestDiff=d; best=*it;} }\n            if (it != sums.begin()) { auto p = prev(it); long long d = llabs(*p-q); if (d<bestDiff || (d==bestDiff && *p<best)){bestDiff=d; best=*p;} }\n            cout << \"Closest sum to \" << q << \" is \" << best << \".\\n\";\n        }\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:34.649Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Missing the trailing period on each answer line ('Closest sum to 5 is 15' instead of '...15.').",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n, cs=0;\n    while (cin >> n && n != 0) {\n        vector<long long> a(n);\n        for (auto &x : a) cin >> x;\n        vector<long long> sums;\n        for (int i=0;i<n;i++) for (int j=i+1;j<n;j++) sums.push_back(a[i]+a[j]);\n        sort(sums.begin(), sums.end());\n        int m; cin >> m;\n        cout << \"Case \" << ++cs << \":\\n\";\n        for (int k=0;k<m;k++){\n            long long q; cin >> q;\n            auto it = lower_bound(sums.begin(), sums.end(), q);\n            long long best = 0, bestDiff = LLONG_MAX;\n            if (it != sums.end()) { long long d = llabs(*it-q); if (d<bestDiff){bestDiff=d; best=*it;} }\n            if (it != sums.begin()) { auto p = prev(it); long long d = llabs(*p-q); if (d<bestDiff || (d==bestDiff && *p<best)){bestDiff=d; best=*p;} }\n            cout << \"Closest sum to \" << q << \" is \" << best << \"\\n\";\n        }\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:37.346Z"
+    }
+  ]
+}

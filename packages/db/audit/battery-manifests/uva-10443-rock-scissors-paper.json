@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10443-rock-scissors-paper",
+  "uvaId": 10443,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Simultaneous simulation: each day, a cell flips to the type that beats it if any 4-neighbor has that type, computed from a snapshot (double-buffered) so same-day updates don't cascade. Blank line between test cases, none after the last.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nchar defeats(char y){\n    if (y=='R') return 'P';\n    if (y=='S') return 'R';\n    return 'S';\n}\nint main(){\n    int t; cin >> t;\n    for (int tc=0; tc<t; tc++){\n        int r,c,n; cin >> r >> c >> n;\n        vector<string> g(r);\n        for (auto &row : g) cin >> row;\n        int dx[]={-1,1,0,0}, dy[]={0,0,-1,1};\n        for (int day=0; day<n; day++){\n            vector<string> ng = g;\n            for (int i=0;i<r;i++) for (int j=0;j<c;j++){\n                char need = defeats(g[i][j]);\n                bool conquered=false;\n                for (int d=0; d<4; d++){\n                    int ni=i+dx[d], nj=j+dy[d];\n                    if (ni>=0&&ni<r&&nj>=0&&nj<c && g[ni][nj]==need) conquered=true;\n                }\n                if (conquered) ng[i][j]=need;\n            }\n            g = ng;\n        }\n        for (auto &row : g) cout << row << \"\\n\";\n        if (tc+1<t) cout << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:28:21.077Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Updates the grid in place instead of from a snapshot -- a cell conquered earlier in the same day's scan can immediately conquer its own later neighbors within that same day, cascading further than one real day of simultaneous warfare should.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nchar defeats(char y){\n    if (y=='R') return 'P';\n    if (y=='S') return 'R';\n    return 'S';\n}\nint main(){\n    int t; cin >> t;\n    for (int tc=0; tc<t; tc++){\n        int r,c,n; cin >> r >> c >> n;\n        vector<string> g(r);\n        for (auto &row : g) cin >> row;\n        int dx[]={-1,1,0,0}, dy[]={0,0,-1,1};\n        for (int day=0; day<n; day++){\n            for (int i=0;i<r;i++) for (int j=0;j<c;j++){\n                char need = defeats(g[i][j]);\n                bool conquered=false;\n                for (int d=0; d<4; d++){\n                    int ni=i+dx[d], nj=j+dy[d];\n                    if (ni>=0&&ni<r&&nj>=0&&nj<c && g[ni][nj]==need) conquered=true;\n                }\n                if (conquered) g[i][j]=need;\n            }\n        }\n        for (auto &row : g) cout << row << \"\\n\";\n        if (tc+1<t) cout << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:28:24.703Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Cyclic dominance direction swapped (defeats(R)=S instead of P) -- the war outcomes go the wrong way around the R>S>P>R cycle.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nchar defeats(char y){\n    if (y=='R') return 'S';\n    if (y=='S') return 'P';\n    return 'R';\n}\nint main(){\n    int t; cin >> t;\n    for (int tc=0; tc<t; tc++){\n        int r,c,n; cin >> r >> c >> n;\n        vector<string> g(r);\n        for (auto &row : g) cin >> row;\n        int dx[]={-1,1,0,0}, dy[]={0,0,-1,1};\n        for (int day=0; day<n; day++){\n            vector<string> ng = g;\n            for (int i=0;i<r;i++) for (int j=0;j<c;j++){\n                char need = defeats(g[i][j]);\n                bool conquered=false;\n                for (int d=0; d<4; d++){\n                    int ni=i+dx[d], nj=j+dy[d];\n                    if (ni>=0&&ni<r&&nj>=0&&nj<c && g[ni][nj]==need) conquered=true;\n                }\n                if (conquered) ng[i][j]=need;\n            }\n            g = ng;\n        }\n        for (auto &row : g) cout << row << \"\\n\";\n        if (tc+1<t) cout << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:28:28.389Z"
+    }
+  ]
+}

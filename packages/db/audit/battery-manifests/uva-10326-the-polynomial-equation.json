@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10326-the-polynomial-equation",
+  "uvaId": 10326,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Build polynomial by iteratively multiplying by (x - r) for each root using long long coefficients, then format from highest degree down (leading term always coeff 1, constant term always shown even if 0).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    while (cin >> n) {\n        vector<long long> roots(n);\n        for (auto &r : roots) cin >> r;\n        vector<long long> poly = {1};\n        for (long long r : roots) {\n            vector<long long> np(poly.size()+1, 0);\n            for (size_t i=0;i<poly.size();i++){\n                np[i] += -r*poly[i];\n                np[i+1] += poly[i];\n            }\n            poly = np;\n        }\n        ostringstream oss;\n        if (n==1) oss << \"x\"; else oss << \"x^\" << n;\n        for (int i=n-1;i>=1;i--){\n            long long c = poly[i];\n            if (c==0) continue;\n            oss << (c<0 ? \" - \" : \" + \");\n            long long ac = llabs(c);\n            if (ac!=1) oss << ac;\n            if (i==1) oss << \"x\"; else oss << \"x^\" << i;\n        }\n        long long c0 = poly[0];\n        oss << (c0<0 ? \" - \" : \" + \") << llabs(c0);\n        oss << \" = 0\";\n        cout << oss.str() << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:24:03.196Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Skips printing the constant term entirely when it's zero (treating it like the middle terms, which ARE skipped when zero) -- the spec explicitly requires '+ 0' to still be shown for a zero constant.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    while (cin >> n) {\n        vector<long long> roots(n);\n        for (auto &r : roots) cin >> r;\n        vector<long long> poly = {1};\n        for (long long r : roots) {\n            vector<long long> np(poly.size()+1, 0);\n            for (size_t i=0;i<poly.size();i++){\n                np[i] += -r*poly[i];\n                np[i+1] += poly[i];\n            }\n            poly = np;\n        }\n        ostringstream oss;\n        if (n==1) oss << \"x\"; else oss << \"x^\" << n;\n        for (int i=n-1;i>=1;i--){\n            long long c = poly[i];\n            if (c==0) continue;\n            oss << (c<0 ? \" - \" : \" + \");\n            long long ac = llabs(c);\n            if (ac!=1) oss << ac;\n            if (i==1) oss << \"x\"; else oss << \"x^\" << i;\n        }\n        long long c0 = poly[0];\n        if (c0 != 0) oss << (c0<0 ? \" - \" : \" + \") << llabs(c0);\n        oss << \" = 0\";\n        cout << oss.str() << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:07.226Z"
+    },
+    {
+      "tag": "overflow",
+      "label": "Same algorithm but coefficients stored as 32-bit int instead of long long -- several existing test cases already have intermediate/final coefficients in the billions, well past INT_MAX, so this should diverge on the existing data itself rather than escape it.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    while (cin >> n) {\n        vector<int> roots(n);\n        for (auto &r : roots) cin >> r;\n        vector<int> poly = {1};\n        for (int r : roots) {\n            vector<int> np(poly.size()+1, 0);\n            for (size_t i=0;i<poly.size();i++){\n                np[i] += -r*poly[i];\n                np[i+1] += poly[i];\n            }\n            poly = np;\n        }\n        ostringstream oss;\n        if (n==1) oss << \"x\"; else oss << \"x^\" << n;\n        for (int i=n-1;i>=1;i--){\n            int c = poly[i];\n            if (c==0) continue;\n            oss << (c<0 ? \" - \" : \" + \");\n            int ac = abs(c);\n            if (ac!=1) oss << ac;\n            if (i==1) oss << \"x\"; else oss << \"x^\" << i;\n        }\n        int c0 = poly[0];\n        oss << (c0<0 ? \" - \" : \" + \") << abs(c0);\n        oss << \" = 0\";\n        cout << oss.str() << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:10.917Z"
+    }
+  ]
+}

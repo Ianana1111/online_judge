@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10365-blocks",
+  "uvaId": 10365,
+  "authoredAt": "2026-09-07T02:24:08.449142Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Enumerate all divisor triples a<=b<=c with a*b*c=n, minimize surface area 2(ab+bc+ca).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int c;\n    cin >> c;\n    while(c--){\n        long long n; cin >> n;\n        long long best = LLONG_MAX;\n        for (long long a=1; a*a*a<=n; a++){\n            if (n % a) continue;\n            long long m = n/a;\n            for (long long b=a; b*b<=m; b++){\n                if (m % b) continue;\n                long long cc = m/b;\n                if (cc < b) continue;\n                long long area = 2*(a*b+b*cc+a*cc);\n                best = min(best, area);\n            }\n        }\n        cout << best << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:24:31.126Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Formula typo: drops the factor of 2 on the a*cc term (2*a*b + 2*b*cc + a*cc instead of 2*(ab+bc+ca)), understating area for every non-cube n.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int c;\n    cin >> c;\n    while(c--){\n        long long n; cin >> n;\n        long long best = LLONG_MAX;\n        for (long long a=1; a*a*a<=n; a++){\n            if (n % a) continue;\n            long long m = n/a;\n            for (long long b=a; b*b<=m; b++){\n                if (m % b) continue;\n                long long cc = m/b;\n                if (cc < b) continue;\n                long long area = 2*a*b+2*b*cc+a*cc;\n                best = min(best, area);\n            }\n        }\n        cout << best << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:35.353Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Returns the FIRST valid divisor triple found (in increasing-a order) instead of searching all triples for the minimum-area one -- gives a suboptimal (too large) answer for any n with multiple factorizations.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int c;\n    cin >> c;\n    while(c--){\n        long long n; cin >> n;\n        long long best = -1;\n        for (long long a=1; a<=n && best==-1; a++){\n            if (n % a) continue;\n            long long m = n/a;\n            for (long long b=1; b<=m && best==-1; b++){\n                if (m % b) continue;\n                long long cc = m/b;\n                best = 2*(a*b+b*cc+a*cc);\n            }\n        }\n        cout << best << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:38.340Z"
+    }
+  ]
+}

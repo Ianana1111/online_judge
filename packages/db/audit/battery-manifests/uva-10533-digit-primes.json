@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10533-digit-primes",
+  "uvaId": 10533,
+  "authoredAt": "2026-09-07T02:25:06.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Sieve primality up to 1e6, precompute isDigitPrime via digit-sum primality, prefix-sum for O(1) range queries, scanf/printf per the problem's explicit fast-I/O warning. Verified natively against both stored samples (34-query and 1-query) exact match.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <cstdio>\n#include <vector>\nusing namespace std;\nconst int MAXV=1000000;\nbool isPrimeSmall(int x){ if(x<2) return false; for(int i=2;i*i<=x;i++) if(x%i==0) return false; return true; }\nint main(){\n    vector<bool> comp(MAXV,false);\n    comp[0]=comp[1]=true;\n    for(long long i=2;i*i<MAXV;i++) if(!comp[i]) for(long long j=i*i;j<MAXV;j+=i) comp[j]=true;\n    vector<int> prefix(MAXV+1,0);\n    for(int i=0;i<MAXV;i++){\n        bool dp=false;\n        if(!comp[i]){\n            int s=0,t=i; while(t){s+=t%10;t/=10;}\n            if(isPrimeSmall(s)) dp=true;\n        }\n        prefix[i+1]=prefix[i]+(dp?1:0);\n    }\n    int n; scanf(\"%d\",&n);\n    for(int i=0;i<n;i++){\n        int t1,t2; scanf(\"%d %d\",&t1,&t2);\n        printf(\"%d\\n\", prefix[t2+1]-prefix[t1]);\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:25:50.917Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Queries prefix[t2]-prefix[t1] instead of prefix[t2+1]-prefix[t1], excluding t2 itself from the inclusive range whenever t2 is a digit prime.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <cstdio>\n#include <vector>\nusing namespace std;\nconst int MAXV=1000000;\nbool isPrimeSmall(int x){ if(x<2) return false; for(int i=2;i*i<=x;i++) if(x%i==0) return false; return true; }\nint main(){\n    vector<bool> comp(MAXV,false);\n    comp[0]=comp[1]=true;\n    for(long long i=2;i*i<MAXV;i++) if(!comp[i]) for(long long j=i*i;j<MAXV;j+=i) comp[j]=true;\n    vector<int> prefix(MAXV+1,0);\n    for(int i=0;i<MAXV;i++){\n        bool dp=false;\n        if(!comp[i]){\n            int s=0,t=i; while(t){s+=t%10;t/=10;}\n            if(isPrimeSmall(s)) dp=true;\n        }\n        prefix[i+1]=prefix[i]+(dp?1:0);\n    }\n    int n; scanf(\"%d\",&n);\n    for(int i=0;i<n;i++){\n        int t1,t2; scanf(\"%d %d\",&t1,&t2);\n        printf(\"%d\\n\", prefix[t2]-prefix[t1]);\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:25:52.389Z"
+    },
+    {
+      "tag": "slow-correct",
+      "label": "Identical correct algorithm but reads/writes via cin/cout without ios::sync_with_stdio(false) instead of scanf/printf -- the problem statement explicitly warns cin/cout is too slow for this problem's up-to-500000 queries; existing test data (34 and 1 queries) is far too small to actually trigger a TLE against this, so this only tests whether the local time limit is calibrated against a properly-sized stress case at all.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\nconst int MAXV=1000000;\nbool isPrimeSmall(int x){ if(x<2) return false; for(int i=2;i*i<=x;i++) if(x%i==0) return false; return true; }\nint main(){\n    vector<bool> comp(MAXV,false);\n    comp[0]=comp[1]=true;\n    for(long long i=2;i*i<MAXV;i++) if(!comp[i]) for(long long j=i*i;j<MAXV;j+=i) comp[j]=true;\n    vector<int> prefix(MAXV+1,0);\n    for(int i=0;i<MAXV;i++){\n        bool dp=false;\n        if(!comp[i]){\n            int s=0,t=i; while(t){s+=t%10;t/=10;}\n            if(isPrimeSmall(s)) dp=true;\n        }\n        prefix[i+1]=prefix[i]+(dp?1:0);\n    }\n    int n; cin >> n;\n    for(int i=0;i<n;i++){\n        int t1,t2; cin >> t1 >> t2;\n        cout << (prefix[t2+1]-prefix[t1]) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:25:55.144Z"
+    }
+  ]
+}

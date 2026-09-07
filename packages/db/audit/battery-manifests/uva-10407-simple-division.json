@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10407-simple-division",
+  "uvaId": 10407,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Largest d dividing all pairwise differences from the first number, i.e. gcd of |a_i - a_0| for i=1..n-1, using llabs for the negative-number case.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nlong long gcdll(long long a,long long b){ return b==0?a:gcdll(b,a%b); }\nint main(){\n    long long x;\n    while (cin >> x && x != 0) {\n        vector<long long> nums;\n        nums.push_back(x);\n        while (cin >> x && x != 0) nums.push_back(x);\n        long long g = 0;\n        for (size_t i=1;i<nums.size();i++) g = gcdll(g, llabs(nums[i]-nums[0]));\n        cout << g << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:23:57.730Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Drops llabs() on the difference before folding into gcd -- since C++'s % keeps the dividend's sign, an unsorted/negative-heavy sequence can drive intermediate (and potentially final) gcd values negative, printing a negative divisor instead of the required positive one.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nlong long gcdll(long long a,long long b){ return b==0?a:gcdll(b,a%b); }\nint main(){\n    long long x;\n    while (cin >> x && x != 0) {\n        vector<long long> nums;\n        nums.push_back(x);\n        while (cin >> x && x != 0) nums.push_back(x);\n        long long g = 0;\n        for (size_t i=1;i<nums.size();i++) g = gcdll(g, nums[i]-nums[0]);\n        cout << g << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:00.846Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Loop bound excludes the last number in the sequence (i < nums.size()-1), so the final element's constraint is never folded into the gcd -- can report a divisor larger than the true answer whenever the excluded number is the one that would have tightened it.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nlong long gcdll(long long a,long long b){ return b==0?a:gcdll(b,a%b); }\nint main(){\n    long long x;\n    while (cin >> x && x != 0) {\n        vector<long long> nums;\n        nums.push_back(x);\n        while (cin >> x && x != 0) nums.push_back(x);\n        long long g = 0;\n        for (size_t i=1;i+1<nums.size();i++) g = gcdll(g, llabs(nums[i]-nums[0]));\n        cout << g << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:04.656Z"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10382-watering-grass",
+  "uvaId": 10382,
+  "authoredAt": "2026-09-07T02:24:08.449142Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Sprinklers only water the strip's full width w within horizontal reach sqrt(r^2-(w/2)^2) of their position (a sprinkler with r<=w/2 covers nothing); greedy minimum interval cover of [0,l] with those effective intervals.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n; double l, w;\n    while (cin >> n >> l >> w) {\n        vector<pair<double,double>> iv;\n        double halfw = w/2.0;\n        for (int i=0;i<n;i++){\n            double pos, r; cin >> pos >> r;\n            if (r <= halfw) continue;\n            double eff = sqrt(r*r - halfw*halfw);\n            iv.push_back({pos-eff, pos+eff});\n        }\n        sort(iv.begin(), iv.end());\n        double covered = 0;\n        int count = 0, i = 0;\n        bool ok = true;\n        while (covered < l) {\n            double best = covered;\n            while (i < (int)iv.size() && iv[i].first <= covered + 1e-9) {\n                best = max(best, iv[i].second);\n                i++;\n            }\n            if (best <= covered + 1e-9) { ok = false; break; }\n            covered = best;\n            count++;\n        }\n        cout << (ok ? count : -1) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:24:53.291Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Ignores the strip width entirely, treating each sprinkler's horizontal coverage as [pos-r, pos+r] with no sqrt(r^2-(w/2)^2) adjustment -- the classic mistake for this exact problem.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n; double l, w;\n    while (cin >> n >> l >> w) {\n        vector<pair<double,double>> iv;\n        for (int i=0;i<n;i++){\n            double pos, r; cin >> pos >> r;\n            iv.push_back({pos-r, pos+r});\n        }\n        sort(iv.begin(), iv.end());\n        double covered = 0;\n        int count = 0, i = 0;\n        bool ok = true;\n        while (covered < l) {\n            double best = covered;\n            while (i < (int)iv.size() && iv[i].first <= covered + 1e-9) {\n                best = max(best, iv[i].second);\n                i++;\n            }\n            if (best <= covered + 1e-9) { ok = false; break; }\n            covered = best;\n            count++;\n        }\n        cout << (ok ? count : -1) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:24:56.794Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Applies the width adjustment but never guards r<=w/2, letting sqrt() receive a negative argument (NaN) for sprinklers too narrow to span the strip, instead of correctly excluding them.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n; double l, w;\n    while (cin >> n >> l >> w) {\n        vector<pair<double,double>> iv;\n        double halfw = w/2.0;\n        for (int i=0;i<n;i++){\n            double pos, r; cin >> pos >> r;\n            double eff = sqrt(r*r - halfw*halfw);\n            iv.push_back({pos-eff, pos+eff});\n        }\n        sort(iv.begin(), iv.end());\n        double covered = 0;\n        int count = 0, i = 0;\n        bool ok = true;\n        while (covered < l) {\n            double best = covered;\n            while (i < (int)iv.size() && iv[i].first <= covered + 1e-9) {\n                best = max(best, iv[i].second);\n                i++;\n            }\n            if (best <= covered + 1e-9) { ok = false; break; }\n            covered = best;\n            count++;\n        }\n        cout << (ok ? count : -1) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:25:01.322Z"
+    }
+  ]
+}
