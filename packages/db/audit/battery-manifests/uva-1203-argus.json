@@ -1,0 +1,25 @@
+{
+  "slug": "uva-1203-argus",
+  "uvaId": 1203,
+  "authoredAt": "2026-09-07T02:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Classic merge-of-K-arithmetic-sequences via a min-heap keyed by (nextFireTime, qnum), popping K times and pushing (time+period, qnum) back each time. NOTE: the stored Sample.output for this problem contains two blank lines in the middle for K=5 with only one dataset in the input, which does not match this straightforward reading of the spec (no multi-dataset separator is implied) -- this looks like a scraping/data artifact rather than a real formatting requirement; flagging for the parent to check the Sample row itself.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    vector<pair<long long,long long>> queries;\n    string cmd;\n    while(cin>>cmd){\n        if(cmd==\"#\") break;\n        long long qnum, period;\n        cin>>qnum>>period;\n        queries.push_back({qnum, period});\n    }\n    long long K;\n    cin>>K;\n    priority_queue<tuple<long long,long long,long long>, vector<tuple<long long,long long,long long>>, greater<>> pq;\n    for (auto& q : queries) pq.push({q.second, q.first, q.second});\n    for (long long i=0;i<K;i++){\n        auto [t, qnum, period] = pq.top(); pq.pop();\n        cout << qnum << \"\\n\";\n        pq.push({t+period, qnum, period});\n    }\n}\n"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Seeds the heap with fire time 0 instead of `period`, so every query incorrectly fires immediately at t=0 instead of waiting Period seconds for its first result.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    vector<pair<long long,long long>> queries;\n    string cmd;\n    while(cin>>cmd){\n        if(cmd==\"#\") break;\n        long long qnum, period;\n        cin>>qnum>>period;\n        queries.push_back({qnum, period});\n    }\n    long long K;\n    cin>>K;\n    priority_queue<tuple<long long,long long,long long>, vector<tuple<long long,long long,long long>>, greater<>> pq;\n    for (auto& q : queries) pq.push({0, q.first, q.second});\n    for (long long i=0;i<K;i++){\n        auto [t, qnum, period] = pq.top(); pq.pop();\n        cout << qnum << \"\\n\";\n        pq.push({t+period, qnum, period});\n    }\n}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Tie-break on simultaneous fire times uses `period` instead of `qnum` (tuple ordered (time, period, qnum) rather than (time, qnum, period)) -- only visibly wrong when two queries fire at the exact same time with period not already matching qnum order.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    vector<pair<long long,long long>> queries;\n    string cmd;\n    while(cin>>cmd){\n        if(cmd==\"#\") break;\n        long long qnum, period;\n        cin>>qnum>>period;\n        queries.push_back({qnum, period});\n    }\n    long long K;\n    cin>>K;\n    priority_queue<tuple<long long,long long,long long>, vector<tuple<long long,long long,long long>>, greater<>> pq;\n    for (auto& q : queries) pq.push({q.second, q.second, q.first});\n    for (long long i=0;i<K;i++){\n        auto [t, period, qnum] = pq.top(); pq.pop();\n        cout << qnum << \"\\n\";\n        pq.push({t+period, period, qnum});\n    }\n}\n"
+    }
+  ]
+}

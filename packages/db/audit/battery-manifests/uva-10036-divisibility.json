@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10036-divisibility",
+  "uvaId": 10036,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "DP over residues mod K: reach[r] tracks which running-sum residues are achievable so far; each new value branches into +a and -a, both reduced mod K with correct non-negative handling.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int m; cin>>m;\n    for(int c=0;c<m;c++){\n        int n,k; cin>>n>>k;\n        vector<char> reach(k,0), nreach(k,0);\n        reach[0]=1;\n        for(int i=0;i<n;i++){\n            long long a; cin>>a;\n            int am = ((a % k) + k) % k;\n            fill(nreach.begin(), nreach.end(), 0);\n            for(int r=0;r<k;r++) if(reach[r]){\n                nreach[(r+am)%k]=1;\n                nreach[((r-am)%k+k)%k]=1;\n            }\n            reach = nreach;\n        }\n        cout << (reach[0] ? \"Divisible\" : \"Not divisible\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:03:18.982Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Skips the 'am = a mod k, normalized non-negative' step and uses raw 'a' (which can itself be negative, up to -10000) directly in '(r-a)%k' -- C++'s %% on a negative operand yields a negative remainder, indexing the reach/nreach vector out of bounds (undefined behavior) instead of the intended residue.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int m; cin>>m;\n    for(int c=0;c<m;c++){\n        int n,k; cin>>n>>k;\n        vector<char> reach(k,0), nreach(k,0);\n        reach[0]=1;\n        for(int i=0;i<n;i++){\n            long long a; cin>>a;\n            fill(nreach.begin(), nreach.end(), 0);\n            for(int r=0;r<k;r++) if(reach[r]){\n                nreach[(int)((r+a)%k)]=1;\n                nreach[(int)((r-a)%k)]=1;\n            }\n            reach = nreach;\n        }\n        cout << (reach[0] ? \"Divisible\" : \"Not divisible\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "MLE",
+      "localCheckedAt": "2026-09-07T02:03:23.641Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Updates 'reach' in place instead of computing into a fresh 'nreach' array -- a residue newly set while processing element i can be read again later in the SAME pass over r, letting element i be effectively applied more than once along some paths, which can only ever make the reachable set too large (never too small), so it risks false 'Divisible' verdicts on sequences that shouldn't be.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int m; cin>>m;\n    for(int c=0;c<m;c++){\n        int n,k; cin>>n>>k;\n        vector<char> reach(k,0);\n        reach[0]=1;\n        for(int i=0;i<n;i++){\n            long long a; cin>>a;\n            int am = ((a % k) + k) % k;\n            for(int r=0;r<k;r++) if(reach[r]){\n                reach[(r+am)%k]=1;\n                reach[((r-am)%k+k)%k]=1;\n            }\n        }\n        cout << (reach[0] ? \"Divisible\" : \"Not divisible\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:03:27.425Z"
+    }
+  ]
+}

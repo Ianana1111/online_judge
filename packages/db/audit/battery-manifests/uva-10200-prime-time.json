@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10200-prime-time",
+  "uvaId": 10200,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Precompute primality of n*n+n+41 for n in [0,10000] once via trial division, then answer each (a,b) query by counting flagged n in range and dividing by (b-a+1). Hand-verified against all the given sample pairs (0-39=100.00, 0-40=97.56, 39-40=50.00, 41-41=0.00, etc) matches Euler's known formula behavior.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nbool isPrime(long long x){\n    if (x < 2) return false;\n    for (long long i = 2; i*i <= x; i++) if (x % i == 0) return false;\n    return true;\n}\nint main(){\n    vector<bool> primeFlag(10001);\n    for (int n = 0; n <= 10000; n++) primeFlag[n] = isPrime((long long)n*n + n + 41);\n    int a, b;\n    while (cin >> a >> b) {\n        int cnt = 0;\n        for (int n = a; n <= b; n++) if (primeFlag[n]) cnt++;\n        double pct = 100.0 * cnt / (b - a + 1);\n        printf(\"%.2f\\n\", pct);\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:13:43.586Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Denominator uses (b-a) instead of the inclusive-range count (b-a+1) -- correct only by coincidence when a==b.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nbool isPrime(long long x){\n    if (x < 2) return false;\n    for (long long i = 2; i*i <= x; i++) if (x % i == 0) return false;\n    return true;\n}\nint main(){\n    vector<bool> primeFlag(10001);\n    for (int n = 0; n <= 10000; n++) primeFlag[n] = isPrime((long long)n*n + n + 41);\n    int a, b;\n    while (cin >> a >> b) {\n        int cnt = 0;\n        for (int n = a; n <= b; n++) if (primeFlag[n]) cnt++;\n        int denom = (b - a == 0) ? 1 : (b - a);\n        double pct = 100.0 * cnt / denom;\n        printf(\"%.2f\\n\", pct);\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:13:46.643Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Uses cout with setprecision(2) but WITHOUT std::fixed, so whole-percentage results print without trailing zeros (e.g. '100' instead of '100.00', '0' instead of '0.00') -- correct only when the percentage happens to need exactly 2 non-trailing-zero decimal digits already.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nbool isPrime(long long x){\n    if (x < 2) return false;\n    for (long long i = 2; i*i <= x; i++) if (x % i == 0) return false;\n    return true;\n}\nint main(){\n    vector<bool> primeFlag(10001);\n    for (int n = 0; n <= 10000; n++) primeFlag[n] = isPrime((long long)n*n + n + 41);\n    int a, b;\n    cout << setprecision(4);\n    while (cin >> a >> b) {\n        int cnt = 0;\n        for (int n = a; n <= b; n++) if (primeFlag[n]) cnt++;\n        double pct = 100.0 * cnt / (b - a + 1);\n        cout << pct << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:13:49.354Z"
+    }
+  ]
+}

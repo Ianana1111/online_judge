@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10633-rare-easy-problem",
+  "uvaId": 10633,
+  "authoredAt": "2026-09-07T02:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "N - floor(N/10) = 9*M + d where M=floor(N/10), d=last digit of N; for each d in 0..9 check (V-d) divisible by 9 and M>=1, reconstruct N=10*M+d, sort and print all valid N. Uses long long throughout since V can be up to 1e18.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    long long v;\n    while (cin >> v && v != 0) {\n        vector<long long> results;\n        for (int d=0; d<=9; d++) {\n            long long rem = v - d;\n            if (rem <= 0) continue;\n            if (rem % 9 != 0) continue;\n            long long M = rem / 9;\n            if (M < 1) continue;\n            long long N = 10*M + d;\n            results.push_back(N);\n        }\n        sort(results.begin(), results.end());\n        for (size_t i=0;i<results.size();i++) {\n            if (i) cout << \" \";\n            cout << results[i];\n        }\n        cout << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T01:47:24.082Z"
+    },
+    {
+      "tag": "overflow",
+      "label": "Identical logic but V/M/N stored in 32-bit int instead of long long -- V can be up to 1e18, far beyond int range, but the existing test data (18 and 100) is far too small to trigger the overflow, so this could silently pass locally while being catastrophically wrong on real large inputs.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int v;\n    while (cin >> v && v != 0) {\n        vector<int> results;\n        for (int d=0; d<=9; d++) {\n            int rem = v - d;\n            if (rem <= 0) continue;\n            if (rem % 9 != 0) continue;\n            int M = rem / 9;\n            if (M < 1) continue;\n            int N = 10*M + d;\n            results.push_back(N);\n        }\n        sort(results.begin(), results.end());\n        for (size_t i=0;i<results.size();i++) {\n            if (i) cout << \" \";\n            cout << results[i];\n        }\n        cout << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T01:47:28.832Z"
+    },
+    {
+      "tag": "eof-multi-case",
+      "label": "Loop condition only checks stream extraction success, not the v!=0 sentinel, so the terminating '0' line is processed as a real case too -- v=0 spuriously satisfies rem%9==0 (rem=0) at d=0, producing an extra bogus output line '0' after the real answers instead of stopping cleanly.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    long long v;\n    while (cin >> v) {\n        if (v == 0) { cout << \"0\\n\"; continue; }\n        vector<long long> results;\n        for (int d=0; d<=9; d++) {\n            long long rem = v - d;\n            if (rem <= 0) continue;\n            if (rem % 9 != 0) continue;\n            long long M = rem / 9;\n            if (M < 1) continue;\n            long long N = 10*M + d;\n            results.push_back(N);\n        }\n        sort(results.begin(), results.end());\n        for (size_t i=0;i<results.size();i++) {\n            if (i) cout << \" \";\n            cout << results[i];\n        }\n        cout << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T01:47:34.506Z"
+    }
+  ]
+}

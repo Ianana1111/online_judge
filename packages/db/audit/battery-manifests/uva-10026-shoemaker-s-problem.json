@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10026-shoemaker-s-problem",
+  "uvaId": 10026,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Stable-sort jobs descending by fine/time ratio (cross-multiplied to stay exact); stability preserves original index order among ties, giving the lexicographically-first optimal schedule.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nstruct Job{int t,s,idx;};\nint main(){\n    int cases; cin>>cases;\n    for(int c=0;c<cases;c++){\n        int n; cin>>n;\n        vector<Job> jobs(n);\n        for(int i=0;i<n;i++){ cin>>jobs[i].t>>jobs[i].s; jobs[i].idx=i+1; }\n        stable_sort(jobs.begin(), jobs.end(), [](const Job&a, const Job&b){\n            return (long long)a.s*b.t > (long long)b.s*a.t;\n        });\n        if (c) cout << \"\\n\";\n        for(int i=0;i<n;i++) cout << jobs[i].idx << (i+1<n? \" \":\"\\n\");\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:02:48.889Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Wrong greedy: sorts by fine (S) descending alone, ignoring the time (T) each job takes entirely -- minimizes nothing meaningful once jobs have differing durations.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nstruct Job{int t,s,idx;};\nint main(){\n    int cases; cin>>cases;\n    for(int c=0;c<cases;c++){\n        int n; cin>>n;\n        vector<Job> jobs(n);\n        for(int i=0;i<n;i++){ cin>>jobs[i].t>>jobs[i].s; jobs[i].idx=i+1; }\n        stable_sort(jobs.begin(), jobs.end(), [](const Job&a, const Job&b){\n            return a.s > b.s;\n        });\n        if (c) cout << \"\\n\";\n        for(int i=0;i<n;i++) cout << jobs[i].idx << (i+1<n? \" \":\"\\n\");\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:02:56.192Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Uses the same correct ratio comparator but with std::sort instead of stable_sort -- total fine stays optimal, but the tie-break order among equal-ratio jobs is unspecified by the standard, so it can print a schedule that is optimal in cost but not lexicographically first, especially in the larger test cases with many tied ratios.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nstruct Job{int t,s,idx;};\nint main(){\n    int cases; cin>>cases;\n    for(int c=0;c<cases;c++){\n        int n; cin>>n;\n        vector<Job> jobs(n);\n        for(int i=0;i<n;i++){ cin>>jobs[i].t>>jobs[i].s; jobs[i].idx=i+1; }\n        sort(jobs.begin(), jobs.end(), [](const Job&a, const Job&b){\n            return (long long)a.s*b.t > (long long)b.s*a.t;\n        });\n        if (c) cout << \"\\n\";\n        for(int i=0;i<n;i++) cout << jobs[i].idx << (i+1<n? \" \":\"\\n\");\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:03:01.636Z"
+    }
+  ]
+}

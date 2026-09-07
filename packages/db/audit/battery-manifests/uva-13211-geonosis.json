@@ -1,0 +1,25 @@
+{
+  "slug": "uva-13211-geonosis",
+  "uvaId": 13211,
+  "authoredAt": "2026-09-07T02:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Floyd-Warshall once on the full original graph for all-pairs shortest paths (destroyed towers do NOT get excluded as future intermediate nodes -- only removed from the summed pairs), then maintain a running sum over active-tower ordered pairs, subtracting a tower's contribution when it's destroyed, accumulating each step's running sum into a grand total (the actual required output per the worked example: 89+7+0=96, not per-step values). Hand-verified exactly against test cases 1 and 2 of the given sample by tracing Floyd-Warshall and the running-sum bookkeeping by hand.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\ntypedef long long ll;\nint main(){\n    int t;\n    scanf(\"%d\",&t);\n    while(t--){\n        int n;\n        scanf(\"%d\",&n);\n        vector<vector<ll>> d(n, vector<ll>(n));\n        for(int i=0;i<n;i++) for(int j=0;j<n;j++) scanf(\"%lld\",&d[i][j]);\n        for(int k=0;k<n;k++)\n            for(int i=0;i<n;i++)\n                for(int j=0;j<n;j++)\n                    if(d[i][k]+d[k][j] < d[i][j]) d[i][j]=d[i][k]+d[k][j];\n        vector<int> order(n);\n        for(int i=0;i<n;i++) scanf(\"%d\",&order[i]);\n        vector<bool> active(n,true);\n        ll total=0;\n        for(int i=0;i<n;i++) for(int j=0;j<n;j++) if(i!=j) total += d[i][j];\n        ll grandTotal=0;\n        for(int step=0; step<n; step++){\n            int x=order[step];\n            grandTotal += total;\n            for(int y=0;y<n;y++){\n                if(y!=x && active[y]){\n                    total -= d[x][y];\n                    total -= d[y][x];\n                }\n            }\n            active[x]=false;\n        }\n        printf(\"%lld\\n\", grandTotal);\n    }\n}\n"
+    },
+    {
+      "tag": "overflow",
+      "label": "Identical logic but distances/totals stored as 32-bit int -- with n up to 500 and edge weights up to 1e4, the grand total can reach roughly 500 * 500^2 * 1e4 which overflows int32 by orders of magnitude, but the tiny 3-node sample stays well within int32 so this passes the given sample fine.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int t;\n    scanf(\"%d\",&t);\n    while(t--){\n        int n;\n        scanf(\"%d\",&n);\n        vector<vector<int>> d(n, vector<int>(n));\n        for(int i=0;i<n;i++) for(int j=0;j<n;j++) scanf(\"%d\",&d[i][j]);\n        for(int k=0;k<n;k++)\n            for(int i=0;i<n;i++)\n                for(int j=0;j<n;j++)\n                    if(d[i][k]+d[k][j] < d[i][j]) d[i][j]=d[i][k]+d[k][j];\n        vector<int> order(n);\n        for(int i=0;i<n;i++) scanf(\"%d\",&order[i]);\n        vector<bool> active(n,true);\n        int total=0;\n        for(int i=0;i<n;i++) for(int j=0;j<n;j++) if(i!=j) total += d[i][j];\n        int grandTotal=0;\n        for(int step=0; step<n; step++){\n            int x=order[step];\n            grandTotal += total;\n            for(int y=0;y<n;y++){\n                if(y!=x && active[y]){\n                    total -= d[x][y];\n                    total -= d[y][x];\n                }\n            }\n            active[x]=false;\n        }\n        printf(\"%d\\n\", grandTotal);\n    }\n}\n"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Forgets to set active[x]=false after destroying a tower, so every previously-destroyed tower keeps contributing to every later step's sum instead of being excluded -- inflates the grand total on any test case with more than 1 destruction step (case 1 already has 3 steps, so this should diverge on the given sample itself).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\ntypedef long long ll;\nint main(){\n    int t;\n    scanf(\"%d\",&t);\n    while(t--){\n        int n;\n        scanf(\"%d\",&n);\n        vector<vector<ll>> d(n, vector<ll>(n));\n        for(int i=0;i<n;i++) for(int j=0;j<n;j++) scanf(\"%lld\",&d[i][j]);\n        for(int k=0;k<n;k++)\n            for(int i=0;i<n;i++)\n                for(int j=0;j<n;j++)\n                    if(d[i][k]+d[k][j] < d[i][j]) d[i][j]=d[i][k]+d[k][j];\n        vector<int> order(n);\n        for(int i=0;i<n;i++) scanf(\"%d\",&order[i]);\n        ll total=0;\n        for(int i=0;i<n;i++) for(int j=0;j<n;j++) if(i!=j) total += d[i][j];\n        ll grandTotal=0;\n        for(int step=0; step<n; step++){\n            int x=order[step];\n            grandTotal += total;\n            for(int y=0;y<n;y++){\n                if(y!=x){\n                    total -= d[x][y];\n                    total -= d[y][x];\n                }\n            }\n        }\n        printf(\"%lld\\n\", grandTotal);\n    }\n}\n"
+    }
+  ]
+}

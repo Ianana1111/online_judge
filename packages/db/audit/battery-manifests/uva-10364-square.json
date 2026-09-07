@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10364-square",
+  "uvaId": 10364,
+  "authoredAt": "2026-09-07T02:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Sum-divisible-by-4 check, then backtracking partition into 4 equal-sum groups; sticks sorted descending and pruned when the largest remaining stick alone exceeds the target side length.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint m;\nlong long target;\nvector<long long> a;\nvector<bool> used;\nbool solve(int sidesLeft, int startIdx, long long cur){\n    if (sidesLeft == 1) return true;\n    if (cur == target) return solve(sidesLeft-1, 0, 0);\n    for (int i=startIdx;i<m;i++){\n        if (used[i] || cur+a[i] > target) continue;\n        used[i]=true;\n        if (solve(sidesLeft, i+1, cur+a[i])) return true;\n        used[i]=false;\n    }\n    return false;\n}\nint main(){\n    int n; cin >> n;\n    while(n--){\n        cin >> m;\n        a.assign(m,0);\n        long long sum=0;\n        for (int i=0;i<m;i++){ cin >> a[i]; sum += a[i]; }\n        if (sum % 4 != 0) { cout << \"no\\n\"; continue; }\n        target = sum/4;\n        sort(a.rbegin(), a.rend());\n        if (a[0] > target) { cout << \"no\\n\"; continue; }\n        used.assign(m,false);\n        cout << (solve(4,0,0) ? \"yes\" : \"no\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T01:47:11.648Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Correct logic but prints capitalized 'Yes'/'No' instead of the required lowercase 'yes'/'no' -- deterministic mismatch, should fail even the existing test case.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint m;\nlong long target;\nvector<long long> a;\nvector<bool> used;\nbool solve(int sidesLeft, int startIdx, long long cur){\n    if (sidesLeft == 1) return true;\n    if (cur == target) return solve(sidesLeft-1, 0, 0);\n    for (int i=startIdx;i<m;i++){\n        if (used[i] || cur+a[i] > target) continue;\n        used[i]=true;\n        if (solve(sidesLeft, i+1, cur+a[i])) return true;\n        used[i]=false;\n    }\n    return false;\n}\nint main(){\n    int n; cin >> n;\n    while(n--){\n        cin >> m;\n        a.assign(m,0);\n        long long sum=0;\n        for (int i=0;i<m;i++){ cin >> a[i]; sum += a[i]; }\n        if (sum % 4 != 0) { cout << \"No\\n\"; continue; }\n        target = sum/4;\n        sort(a.rbegin(), a.rend());\n        if (a[0] > target) { cout << \"No\\n\"; continue; }\n        used.assign(m,false);\n        cout << (solve(4,0,0) ? \"Yes\" : \"No\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T01:47:15.217Z"
+    },
+    {
+      "tag": "slow-correct",
+      "label": "Logically correct but omits the descending sort and the largest-stick pruning check -- the standard known-necessary optimization for this exact problem; without it, adversarial inputs with many similarly-sized sticks can blow up the branching factor and risk TLE even though the algorithm is not wrong.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint m;\nlong long target;\nvector<long long> a;\nvector<bool> used;\nbool solve(int sidesLeft, int startIdx, long long cur){\n    if (sidesLeft == 1) return true;\n    if (cur == target) return solve(sidesLeft-1, 0, 0);\n    for (int i=startIdx;i<m;i++){\n        if (used[i] || cur+a[i] > target) continue;\n        used[i]=true;\n        if (solve(sidesLeft, i+1, cur+a[i])) return true;\n        used[i]=false;\n    }\n    return false;\n}\nint main(){\n    int n; cin >> n;\n    while(n--){\n        cin >> m;\n        a.assign(m,0);\n        long long sum=0;\n        for (int i=0;i<m;i++){ cin >> a[i]; sum += a[i]; }\n        if (sum % 4 != 0) { cout << \"no\\n\"; continue; }\n        target = sum/4;\n        used.assign(m,false);\n        cout << (solve(4,0,0) ? \"yes\" : \"no\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T01:47:20.926Z"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10106-product",
+  "uvaId": 10106,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Schoolbook bignum string multiplication, reads pairs of digit-strings until EOF.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nstring mul(const string&a, const string&b){\n    int n=a.size(), m=b.size();\n    vector<int> res(n+m, 0);\n    for(int i=n-1;i>=0;i--){\n        for(int j=m-1;j>=0;j--){\n            int p1=i+j, p2=i+j+1;\n            int sum = (a[i]-'0')*(b[j]-'0') + res[p2];\n            res[p2] = sum % 10;\n            res[p1] += sum / 10;\n        }\n    }\n    string s;\n    for(int d : res) s += char('0'+d);\n    size_t start = s.find_first_not_of('0');\n    if(start==string::npos) return \"0\";\n    return s.substr(start);\n}\nint main(){\n    string a,b;\n    while(cin>>a>>b) cout << mul(a,b) << \"\\n\";\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:12:14.622Z"
+    },
+    {
+      "tag": "overflow",
+      "label": "Parses each number as a native long long instead of a bignum -- guaranteed wrong for the existing 250-digit test case, a sanity check that this obviously-broken approach gets rejected.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    long long a,b;\n    while(cin>>a>>b) cout << a*b << \"\\n\";\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:12:17.486Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Reuses a global result array across calls without clearing it first -- residual digits from a previous (possibly longer) multiplication can leak into a later, shorter one's low-order positions via the += accumulation. Existing test data has ~40 pairs of widely varying digit lengths in one file, so this should already be caught.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint res[600];\nstring mul(const string&a, const string&b){\n    int n=a.size(), m=b.size();\n    for(int i=n-1;i>=0;i--){\n        for(int j=m-1;j>=0;j--){\n            int p1=i+j, p2=i+j+1;\n            int sum = (a[i]-'0')*(b[j]-'0') + res[p2];\n            res[p2] = sum % 10;\n            res[p1] += sum / 10;\n        }\n    }\n    string s;\n    for(int i=0;i<n+m;i++) s += char('0'+res[i]);\n    size_t start = s.find_first_not_of('0');\n    if(start==string::npos) return \"0\";\n    return s.substr(start);\n}\nint main(){\n    string a,b;\n    while(cin>>a>>b) cout << mul(a,b) << \"\\n\";\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:12:20.504Z"
+    }
+  ]
+}

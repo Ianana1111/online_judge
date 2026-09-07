@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10025-the-1-2-n-k-problem",
+  "uvaId": 10025,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Minimal n with S(n)=n(n+1)/2 >= |k| and (S(n)-|k|) even (classic sign-flip parity argument).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int T; cin >> T;\n    for (int t=0;t<T;t++){\n        long long k; cin >> k;\n        long long ak = llabs(k);\n        long long n=1, s=1;\n        while (!(s>=ak && (s-ak)%2==0)) { n++; s+=n; }\n        if (t) cout << \"\\n\";\n        cout << n << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:02:34.937Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Uses strict s>ak instead of s>=ak, so whenever |k| is itself a triangular number the minimal n is missed by exactly one step (e.g. k=15=T(5) wrongly needs n=6, not 5).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int T; cin >> T;\n    for (int t=0;t<T;t++){\n        long long k; cin >> k;\n        long long ak = llabs(k);\n        long long n=1, s=1;\n        while (!(s>ak && (s-ak)%2==0)) { n++; s+=n; }\n        if (t) cout << \"\\n\";\n        cout << n << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:02:38.669Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Correct values but omits the required blank line between consecutive outputs.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int T; cin >> T;\n    for (int t=0;t<T;t++){\n        long long k; cin >> k;\n        long long ak = llabs(k);\n        long long n=1, s=1;\n        while (!(s>=ak && (s-ak)%2==0)) { n++; s+=n; }\n        cout << n << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:02:43.864Z"
+    }
+  ]
+}

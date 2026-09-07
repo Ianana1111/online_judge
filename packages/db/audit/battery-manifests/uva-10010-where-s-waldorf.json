@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10010-where-s-waldorf",
+  "uvaId": 10010,
+  "authoredAt": "2026-09-07T02:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Row-major scan (naturally gives uppermost-then-leftmost priority) checking all 8 directions case-insensitively; blank line printed between cases (not after the last).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int T; cin >> T;\n    int dx[8]={-1,-1,-1,0,0,1,1,1};\n    int dy[8]={-1,0,1,-1,1,-1,0,1};\n    while (T--) {\n        int m,n; cin >> m >> n;\n        vector<string> grid(m);\n        for (auto &s: grid) { cin >> s; for (auto &c: s) c = toupper(c); }\n        int k; cin >> k;\n        vector<string> results;\n        while (k--) {\n            string w; cin >> w;\n            for (auto &c: w) c = toupper(c);\n            int wl = w.size();\n            int foundR=-1, foundC=-1;\n            for (int i=0;i<m && foundR==-1;i++){\n                for (int j=0;j<n && foundR==-1;j++){\n                    if (grid[i][j] != w[0]) continue;\n                    for (int d=0; d<8 && foundR==-1; d++){\n                        int ci=i, cj=j; bool match=true;\n                        for (int p=0;p<wl;p++){\n                            if (ci<0||ci>=m||cj<0||cj>=n||grid[ci][cj]!=w[p]) { match=false; break; }\n                            ci+=dx[d]; cj+=dy[d];\n                        }\n                        if (match) { foundR=i; foundC=j; }\n                    }\n                }\n            }\n            results.push_back(to_string(foundR+1) + \" \" + to_string(foundC+1));\n        }\n        for (auto &r: results) cout << r << \"\\n\";\n        if (T) cout << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T01:54:44.024Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Scans column-major (outer loop over columns, inner over rows) instead of row-major -- breaks the 'uppermost, then leftmost' tie-break rule into 'leftmost, then uppermost' whenever a word has more than one valid start position.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int T; cin >> T;\n    int dx[8]={-1,-1,-1,0,0,1,1,1};\n    int dy[8]={-1,0,1,-1,1,-1,0,1};\n    while (T--) {\n        int m,n; cin >> m >> n;\n        vector<string> grid(m);\n        for (auto &s: grid) { cin >> s; for (auto &c: s) c = toupper(c); }\n        int k; cin >> k;\n        vector<string> results;\n        while (k--) {\n            string w; cin >> w;\n            for (auto &c: w) c = toupper(c);\n            int wl = w.size();\n            int foundR=-1, foundC=-1;\n            for (int j=0;j<n && foundR==-1;j++){\n                for (int i=0;i<m && foundR==-1;i++){\n                    if (grid[i][j] != w[0]) continue;\n                    for (int d=0; d<8 && foundR==-1; d++){\n                        int ci=i, cj=j; bool match=true;\n                        for (int p=0;p<wl;p++){\n                            if (ci<0||ci>=m||cj<0||cj>=n||grid[ci][cj]!=w[p]) { match=false; break; }\n                            ci+=dx[d]; cj+=dy[d];\n                        }\n                        if (match) { foundR=i; foundC=j; }\n                    }\n                }\n            }\n            results.push_back(to_string(foundR+1) + \" \" + to_string(foundC+1));\n        }\n        for (auto &r: results) cout << r << \"\\n\";\n        if (T) cout << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T01:54:48.315Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Only checks the 4 orthogonal directions, missing all 4 diagonals -- any word that only appears diagonally in the grid would be silently unfindable (foundR/foundC stay -1, printing '0 0').",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int T; cin >> T;\n    int dx[4]={-1,0,0,1};\n    int dy[4]={0,-1,1,0};\n    while (T--) {\n        int m,n; cin >> m >> n;\n        vector<string> grid(m);\n        for (auto &s: grid) { cin >> s; for (auto &c: s) c = toupper(c); }\n        int k; cin >> k;\n        vector<string> results;\n        while (k--) {\n            string w; cin >> w;\n            for (auto &c: w) c = toupper(c);\n            int wl = w.size();\n            int foundR=-1, foundC=-1;\n            for (int i=0;i<m && foundR==-1;i++){\n                for (int j=0;j<n && foundR==-1;j++){\n                    if (grid[i][j] != w[0]) continue;\n                    for (int d=0; d<4 && foundR==-1; d++){\n                        int ci=i, cj=j; bool match=true;\n                        for (int p=0;p<wl;p++){\n                            if (ci<0||ci>=m||cj<0||cj>=n||grid[ci][cj]!=w[p]) { match=false; break; }\n                            ci+=dx[d]; cj+=dy[d];\n                        }\n                        if (match) { foundR=i; foundC=j; }\n                    }\n                }\n            }\n            results.push_back(to_string(foundR+1) + \" \" + to_string(foundC+1));\n        }\n        for (auto &r: results) cout << r << \"\\n\";\n        if (T) cout << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T01:54:52.525Z"
+    }
+  ]
+}

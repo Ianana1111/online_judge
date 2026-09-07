@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10110-light-more-light",
+  "uvaId": 10110,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Bulb n ends on iff n has an odd number of divisors, i.e. n is a perfect square. Reads n (up to 2^32-1) as unsigned long long, checks via an integer sqrt with a correction loop.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    unsigned long long n;\n    while(cin>>n && n!=0){\n        unsigned long long root = (unsigned long long)sqrtl((long double)n);\n        while(root*root>n) root--;\n        while((root+1)*(root+1)<=n) root++;\n        cout << (root*root==n ? \"yes\" : \"no\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:12:36.347Z"
+    },
+    {
+      "tag": "overflow",
+      "label": "Computes the candidate root and its square in a plain (signed 32-bit) int, and casts n down to int for the final comparison -- both overflow/truncate for n near 2^32-1, which the existing test data already includes exactly (4294967295), so this should be caught immediately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    unsigned long long n;\n    while(cin>>n && n!=0){\n        int root = (int)sqrtl((long double)n);\n        while((long long)root*root>(long long)n) root--;\n        while((long long)(root+1)*(root+1)<=(long long)n) root++;\n        cout << (root*root==(int)n ? \"yes\" : \"no\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:12:39.613Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Checks n==0 AFTER already entering the loop body and prints an extra unwanted 'no' line for the terminating zero instead of stopping silently before it.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    unsigned long long n;\n    while(cin>>n){\n        if(n==0){ cout << \"no\\n\"; break; }\n        unsigned long long root = (unsigned long long)sqrtl((long double)n);\n        while(root*root>n) root--;\n        while((root+1)*(root+1)<=n) root++;\n        cout << (root*root==n ? \"yes\" : \"no\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:12:42.753Z"
+    }
+  ]
+}

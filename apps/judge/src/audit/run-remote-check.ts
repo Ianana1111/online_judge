@@ -77,10 +77,15 @@ async function saveProgress(rows: ProgressRow[]): Promise<void> {
 }
 
 /** A candidate needs a remote check iff Tier 1 already ran it AND (it's the reference solution, or
- * it wrongly passed locally) AND it hasn't already been remote-checked (idempotent re-runs). */
-function selectForRemote(candidates: Candidate[]): Candidate[] {
+ * it wrongly passed locally) AND it hasn't already been remote-checked (idempotent re-runs).
+ * `hasNoLocalData` bypasses the localVerdict requirement entirely: a problem with zero TestCase
+ * rows has nothing for Tier 1 to run against, so every candidate needs a real UVa verdict — that
+ * verdict set is also what eventually seeds this problem's first-ever local TestCase rows (see
+ * the plan's remediation loop), not just a rigor check. */
+function selectForRemote(candidates: Candidate[], hasNoLocalData: boolean): Candidate[] {
   return candidates.filter((c) => {
     if (c.remoteVerdict !== undefined) return false;
+    if (hasNoLocalData) return true;
     if (c.localVerdict === undefined) return false;
     return c.tag === "correct" || c.localVerdict === "AC";
   });
@@ -88,14 +93,15 @@ function selectForRemote(candidates: Candidate[]): Candidate[] {
 
 async function runOne(slug: string, progress: ProgressRow[]): Promise<void> {
   const manifest = await loadManifest(slug);
-  const problem = await prisma.problem.findUniqueOrThrow({ where: { slug } });
+  const problem = await prisma.problem.findUniqueOrThrow({ where: { slug }, include: { _count: { select: { testCases: true } } } });
   const row = progress.find((r) => r.slug === slug);
   if (!row) {
     console.log(`  no judge-verify-progress.json row for ${slug} — skipping. Seed it first via seed-judge-verify-progress.ts.`);
     return;
   }
 
-  const toCheck = selectForRemote(manifest.candidates);
+  const hasNoLocalData = problem._count.testCases === 0;
+  const toCheck = selectForRemote(manifest.candidates, hasNoLocalData);
   console.log(`\n=== ${slug} (uvaId=${problem.uvaId}) — ${toCheck.length} candidate(s) to remote-check ===`);
   if (toCheck.length === 0) {
     console.log("  nothing needs a remote check (either already checked, or Tier 1 hasn't run yet).");
@@ -107,7 +113,23 @@ async function runOne(slug: string, progress: ProgressRow[]): Promise<void> {
     c.remoteVerdict = outcome.status;
     c.remoteCheckedAt = new Date().toISOString();
     row.submissionsUsedRemote += 1;
-    console.log(`  [${c.tag}] ${c.label} -> local=${c.localVerdict} remote=${outcome.status}`);
+    console.log(
+      `  [${c.tag}] ${c.label} -> local=${c.localVerdict ?? "(no local data)"} remote=${outcome.status}` +
+        (outcome.compileError ? ` (${outcome.compileError})` : ""),
+    );
+
+    if (hasNoLocalData) {
+      // No Tier 1 verdict exists to diverge from — the remote verdict here isn't confirming a
+      // local weakness, it's the ONLY verdict this candidate has, and (once all candidates in
+      // this batch have run) becomes the raw material for seeding this problem's first-ever
+      // local TestCase rows. Just flag anything that looks wrong for manual attention.
+      if (c.tag === "correct" && outcome.status !== "AC") {
+        row.notes += `${row.notes ? " " : ""}correct candidate got ${outcome.status} on real UVa — reference solution or uvaPid may be wrong, investigate before seeding test data from it.`;
+      } else if (c.tag !== "correct" && outcome.status === "AC") {
+        row.notes += `${row.notes ? " " : ""}flawed candidate "${c.tag}" was accepted by real UVa too — oracle-weak, not usable as a distinguishing test case.`;
+      }
+      continue;
+    }
 
     if (c.tag === "correct" && outcome.status !== "AC") {
       row.divergences.push({
@@ -140,7 +162,11 @@ async function runOne(slug: string, progress: ProgressRow[]): Promise<void> {
 
   await saveManifest(manifest);
   row.lastSweptAt = new Date().toISOString();
-  row.status = row.divergences.some((d) => !d.reVerified) ? "divergence-found" : "verified-match";
+  if (hasNoLocalData) {
+    row.status = "needs-testcase-seed";
+  } else {
+    row.status = row.divergences.some((d) => !d.reVerified) ? "divergence-found" : "verified-match";
+  }
   await saveProgress(progress);
 }
 

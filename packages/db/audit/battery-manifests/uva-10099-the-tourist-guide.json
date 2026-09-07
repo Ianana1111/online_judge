@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10099-the-tourist-guide",
+  "uvaId": 10099,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Maximum-bottleneck-path (widest path) via a Dijkstra-style relaxation maximizing the minimum edge capacity along the path from S to D, then trips = ceil(T / bestMinCapacity). Blank line printed before each scenario after the first.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,r,tc=0;\n    while (cin>>n>>r && (n||r)) {\n        tc++;\n        vector<vector<int>> cap(n+1, vector<int>(n+1,0));\n        for (int i=0;i<r;i++){\n            int c1,c2,p; cin>>c1>>c2>>p;\n            cap[c1][c2] = max(cap[c1][c2], p);\n            cap[c2][c1] = max(cap[c2][c1], p);\n        }\n        int s,d,t; cin>>s>>d>>t;\n        vector<int> best(n+1,0); vector<bool> done(n+1,false);\n        best[s] = INT_MAX;\n        for (int iter=0; iter<n; iter++){\n            int u=-1;\n            for (int i=1;i<=n;i++) if(!done[i] && (u==-1||best[i]>best[u])) u=i;\n            if (u==-1 || best[u]==0) break;\n            done[u]=true;\n            for (int v=1; v<=n; v++) if(cap[u][v]>0) best[v]=max(best[v], min(best[u], cap[u][v]));\n        }\n        int trips = (t + best[d] - 1) / best[d];\n        if (tc>1) cout << \"\\n\";\n        cout << \"Scenario #\" << tc << \"\\n\";\n        cout << \"Minimum Number of Trips = \" << trips << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:11:23.216Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Overwrites (instead of max-combines) the capacity when two edges are given between the same pair of cities -- only the LAST edge read between a pair survives, which can silently keep a smaller capacity than the true best if a stronger duplicate edge was given earlier.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,r,tc=0;\n    while (cin>>n>>r && (n||r)) {\n        tc++;\n        vector<vector<int>> cap(n+1, vector<int>(n+1,0));\n        for (int i=0;i<r;i++){\n            int c1,c2,p; cin>>c1>>c2>>p;\n            cap[c1][c2] = p;\n            cap[c2][c1] = p;\n        }\n        int s,d,t; cin>>s>>d>>t;\n        vector<int> best(n+1,0); vector<bool> done(n+1,false);\n        best[s] = INT_MAX;\n        for (int iter=0; iter<n; iter++){\n            int u=-1;\n            for (int i=1;i<=n;i++) if(!done[i] && (u==-1||best[i]>best[u])) u=i;\n            if (u==-1 || best[u]==0) break;\n            done[u]=true;\n            for (int v=1; v<=n; v++) if(cap[u][v]>0) best[v]=max(best[v], min(best[u], cap[u][v]));\n        }\n        int trips = (t + best[d] - 1) / best[d];\n        if (tc>1) cout << \"\\n\";\n        cout << \"Scenario #\" << tc << \"\\n\";\n        cout << \"Minimum Number of Trips = \" << trips << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:11:28.710Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Never prints the blank line between scenarios (correct values otherwise) -- only distinguishable when a test case has more than one scenario in a single input.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,r,tc=0;\n    while (cin>>n>>r && (n||r)) {\n        tc++;\n        vector<vector<int>> cap(n+1, vector<int>(n+1,0));\n        for (int i=0;i<r;i++){\n            int c1,c2,p; cin>>c1>>c2>>p;\n            cap[c1][c2] = max(cap[c1][c2], p);\n            cap[c2][c1] = max(cap[c2][c1], p);\n        }\n        int s,d,t; cin>>s>>d>>t;\n        vector<int> best(n+1,0); vector<bool> done(n+1,false);\n        best[s] = INT_MAX;\n        for (int iter=0; iter<n; iter++){\n            int u=-1;\n            for (int i=1;i<=n;i++) if(!done[i] && (u==-1||best[i]>best[u])) u=i;\n            if (u==-1 || best[u]==0) break;\n            done[u]=true;\n            for (int v=1; v<=n; v++) if(cap[u][v]>0) best[v]=max(best[v], min(best[u], cap[u][v]));\n        }\n        int trips = (t + best[d] - 1) / best[d];\n        cout << \"Scenario #\" << tc << \"\\n\";\n        cout << \"Minimum Number of Trips = \" << trips << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:11:32.208Z"
+    }
+  ]
+}

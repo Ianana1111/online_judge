@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10018-reverse-and-add",
+  "uvaId": 10018,
+  "authoredAt": "2026-09-07T02:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "do-while: always performs at least one reverse-and-add even if the input is already a palindrome (required for the '11 -> 1 22' case), uses long long throughout since results can approach 4.29 billion.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nlong long rev(long long x){ long long r=0; while(x>0){ r=r*10+x%10; x/=10; } return r; }\nint main(){\n    int n; cin >> n;\n    while(n--){\n        long long p; cin >> p;\n        int iter=0;\n        do { p = p + rev(p); iter++; } while (p != rev(p));\n        cout << iter << \" \" << p << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T01:54:55.842Z"
+    },
+    {
+      "tag": "overflow",
+      "label": "Identical do-while logic but uses 32-bit int instead of long long -- the stated max result (4,294,967,295) exceeds INT_MAX (2,147,483,647), and slow-converging inputs (e.g. 89, 98) grow well past that during intermediate iterations even when the final answer wouldn't. The existing 20-case test data tops out at 996848699, still under INT_MAX, so this may currently go undetected.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint rev(int x){ int r=0; while(x>0){ r=r*10+x%10; x/=10; } return r; }\nint main(){\n    int n; cin >> n;\n    while(n--){\n        int p; cin >> p;\n        int iter=0;\n        do { p = p + rev(p); iter++; } while (p != rev(p));\n        cout << iter << \" \" << p << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T01:55:01.366Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Uses a plain while-loop that checks palindrome-ness of the ORIGINAL number before ever adding, instead of do-while -- for an input that's already a palindrome (e.g. 11), this outputs 0 iterations and the unchanged input instead of performing the required first addition.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nlong long rev(long long x){ long long r=0; while(x>0){ r=r*10+x%10; x/=10; } return r; }\nint main(){\n    int n; cin >> n;\n    while(n--){\n        long long p; cin >> p;\n        int iter=0;\n        while (p != rev(p)) { p = p + rev(p); iter++; }\n        cout << iter << \" \" << p << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T01:55:04.299Z"
+    }
+  ]
+}
