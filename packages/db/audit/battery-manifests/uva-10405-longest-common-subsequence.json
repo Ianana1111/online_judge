@@ -1,0 +1,25 @@
+{
+  "slug": "uva-10405-longest-common-subsequence",
+  "uvaId": 10405,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Standard O(n*m) LCS DP, reads line pairs until EOF via getline.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    string a,b;\n    while(getline(cin,a) && getline(cin,b)){\n        int n=a.size(), m=b.size();\n        vector<vector<int>> dp(n+1, vector<int>(m+1,0));\n        for(int i=1;i<=n;i++)\n            for(int j=1;j<=m;j++)\n                dp[i][j] = a[i-1]==b[j-1] ? dp[i-1][j-1]+1 : max(dp[i-1][j], dp[i][j-1]);\n        cout << dp[n][m] << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T01:30:22.618Z",
+      "remoteVerdict": "AC",
+      "remoteCheckedAt": "2026-09-07T01:34:08.418Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Wrong recurrence: uses dp[i-1][j-1] twice instead of dp[i][j-1] when characters differ, systematically underestimating LCS length on non-trivial inputs but sometimes coincidentally right on short/trivial ones.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    string a,b;\n    while(getline(cin,a) && getline(cin,b)){\n        int n=a.size(), m=b.size();\n        vector<vector<int>> dp(n+1, vector<int>(m+1,0));\n        for(int i=1;i<=n;i++)\n            for(int j=1;j<=m;j++)\n                dp[i][j] = a[i-1]==b[j-1] ? dp[i-1][j-1]+1 : max(dp[i-1][j], dp[i-1][j-1]);\n        cout << dp[n][m] << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T01:30:26.194Z"
+    }
+  ]
+}

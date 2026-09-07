@@ -1,0 +1,162 @@
+[
+  {
+    "slug": "gpe-2008-06-parser-and-evaluator",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2008-19-set-partition",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2008-28-longest-monotonically-increasing-subsequence",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2008-37-prefix-expression-evaluation",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2009-02-line-overlap-problem",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2009-17-binary-tree-traversals",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2009-24-unique-lines",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2015-01-missing-numbers",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2015-02-recursion-and-mod",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2015-03-sudoku-as-good-as-lee-hsien-loong",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2015-04-the-n-th-element",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2015-07-minimum-path-sum",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2015-08-climbing-stairs",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-2015-09-longest-increasing-subsequence",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-22261-sorting-the-alphanumeric-list-in-comma-separated-value-forma",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  },
+  {
+    "slug": "gpe-25081-solving-maze-problems",
+    "uvaId": null,
+    "source": "GPE",
+    "testCaseCount": 4,
+    "status": "unchecked",
+    "divergences": [],
+    "lastSweptAt": null,
+    "notes": ""
+  }
+]

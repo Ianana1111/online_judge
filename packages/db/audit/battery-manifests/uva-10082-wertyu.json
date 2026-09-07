@@ -1,0 +1,33 @@
+{
+  "slug": "uva-10082-wertyu",
+  "uvaId": 10082,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Shift each character one key left on its QWERTY row via a lookup table; preserves exact line structure and spacing via getline.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    string rows[4] = {\"`1234567890-=\", \"QWERTYUIOP[]\\\\\",\"ASDFGHJKL;'\", \"ZXCVBNM,./\"};\n    map<char,char> shift;\n    for (auto &r : rows) for (size_t i=1;i<r.size();i++) shift[r[i]] = r[i-1];\n    string line;\n    while (getline(cin,line)) {\n        string out;\n        for (char c : line) out += shift.count(c) ? shift[c] : c;\n        cout << out << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T01:32:58.554Z",
+      "remoteVerdict": "AC",
+      "remoteCheckedAt": "2026-09-07T01:34:16.509Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Shift map built backwards (maps each char to the one AFTER it instead of before) -- unambiguously wrong direction, should fail even the existing sample.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    string rows[4] = {\"`1234567890-=\", \"QWERTYUIOP[]\\\\\",\"ASDFGHJKL;'\", \"ZXCVBNM,./\"};\n    map<char,char> shift;\n    for (auto &r : rows) for (size_t i=1;i<r.size();i++) shift[r[i-1]] = r[i];\n    string line;\n    while (getline(cin,line)) {\n        string out;\n        for (char c : line) out += shift.count(c) ? shift[c] : c;\n        cout << out << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T01:33:03.158Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Reads word-by-word via cin>> instead of getline, collapsing multi-space runs to a single space and flattening multi-line input to one output line -- likely to pass a thin test suite that never exercises unusual spacing or multiple lines.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    string rows[4] = {\"`1234567890-=\", \"QWERTYUIOP[]\\\\\",\"ASDFGHJKL;'\", \"ZXCVBNM,./\"};\n    map<char,char> shift;\n    for (auto &r : rows) for (size_t i=1;i<r.size();i++) shift[r[i]] = r[i-1];\n    string word;\n    bool first = true;\n    while (cin >> word) {\n        if (!first) cout << \" \";\n        first = false;\n        for (char c : word) cout << (shift.count(c) ? shift[c] : c);\n    }\n    cout << \"\\n\";\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T01:33:08.765Z"
+    }
+  ]
+}
