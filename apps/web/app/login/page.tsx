@@ -3,7 +3,7 @@
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { apiFetch, ApiError } from "@/lib/api";
+import { apiFetch, ApiError, setCsrfToken } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 import { useT } from "@/lib/i18n/LocaleContext";
@@ -35,9 +35,10 @@ function LoginForm() {
     setError(null);
     setLoading(true);
     try {
-      await apiFetch("/auth/login", { method: "POST", body: { handle, password } });
+      const session = await apiFetch<{ csrfToken: string; mfaRequired?: boolean; mfaEnrollmentRequired?: boolean }>("/auth/login", { method: "POST", body: { handle, password } });
+      setCsrfToken(session.csrfToken);
       await hydrate();
-      router.push("/");
+      router.push(session.mfaRequired ? "/verify-mfa" : session.mfaEnrollmentRequired ? "/settings?section=security" : "/");
     } catch (e) {
       setError(e instanceof ApiError ? e.message : t("Log in failed"));
     } finally {
@@ -53,7 +54,7 @@ function LoginForm() {
           <label htmlFor="handle" className="mb-1 block text-sm text-ink-300">
             {t("Handle")}
           </label>
-          <input id="handle" className="oj-input" value={handle} onChange={(e) => setHandle(e.target.value)} required />
+          <input id="handle" autoComplete="username" className="oj-input" value={handle} onChange={(e) => setHandle(e.target.value)} required />
         </div>
         <div>
           <label htmlFor="password" className="mb-1 block text-sm text-ink-300">
@@ -62,6 +63,7 @@ function LoginForm() {
           <input
             id="password"
             type="password"
+            autoComplete="current-password"
             className="oj-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -73,6 +75,7 @@ function LoginForm() {
           {loading ? t("Logging in…") : t("Log in")}
         </button>
       </form>
+      <Link href="/forgot-password" className="mt-4 inline-block text-sm text-brand underline underline-offset-4">{t("Forgot password?")}</Link>
 
       <div className="my-4 flex items-center gap-3">
         <div className="h-px flex-1 bg-ink-800" />

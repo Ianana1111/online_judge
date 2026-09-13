@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-10468-maximum-product",
+  "uvaId": 11059,
+  "authoredAt": "2026-09-13T12:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent reference implementing the stored statement; adversarial outputs also computed by the Python oracle in author-iteration-batteries.py.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){int n,c=0;while(cin>>n){vector<long long>a(n);for(auto &v:a)cin>>v;long long best=0;for(int i=0;i<n;i++){long long p=1;for(int j=i;j<n;j++){p*=a[j];best=max(best,p);}}cout<<\"Case #\"<<++c<<\": The maximum product is \"<<best<<\".\\n\\n\";}}\n"
+    },
+    {
+      "tag": "overflow",
+      "label": "Uses 32-bit products; valid length-18 products reach 10^18.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){int n,c=0;while(cin>>n){vector<int>a(n);for(auto &v:a)cin>>v;int best=0;for(int i=0;i<n;i++){int p=1;for(int j=i;j<n;j++){p*=a[j];best=max(best,p);}}cout<<\"Case #\"<<++c<<\": The maximum product is \"<<best<<\".\\n\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Only considers prefixes, missing the best subarray after a zero or negative prefix.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){int n,c=0;while(cin>>n){vector<long long>a(n);for(auto &v:a)cin>>v;long long best=0;for(int i=0;i<1;i++){long long p=1;for(int j=i;j<n;j++){p*=a[j];best=max(best,p);}}cout<<\"Case #\"<<++c<<\": The maximum product is \"<<best<<\".\\n\\n\";}}\n"
+    }
+  ]
+}

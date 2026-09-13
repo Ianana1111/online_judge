@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/node";
+import { scrubTelemetryEvent } from "@oj/shared";
 
 // Unset in local dev and any environment that hasn't been given a real Sentry project yet —
 // Sentry.init no-ops safely without a dsn, so Sentry.captureException calls elsewhere in this
@@ -10,5 +11,7 @@ if (dsn) {
     dsn,
     environment: process.env.NODE_ENV ?? "development",
     tracesSampleRate: 0,
+    sendDefaultPii: false,
+    beforeSend: scrubTelemetryEvent,
   });
 }

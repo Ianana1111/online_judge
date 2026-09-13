@@ -66,6 +66,10 @@ export interface User {
   // False for Google-only accounts — no currentPassword field to re-check before deleting, so the
   // delete flow requires a fresh Google re-auth round trip instead (see PendingDeletionGate).
   hasPassword: boolean;
+  emailVerifiedAt?: string | null;
+  mfaEnabled?: boolean;
+  mfaRequired?: boolean;
+  mfaEnrollmentRequired?: boolean;
   // Set once account deletion has been requested (Settings > Account) — non-null means the account
   // is logged out and unusable until either the grace period elapses or it's cancelled. See
   // PendingDeletionGate, which is what actually enforces this in the UI.

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useIsDesktop } from "@/lib/useIsDesktop";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const MIN_PERCENT = 20;
 
@@ -26,6 +27,7 @@ export default function SplitPane({
   fullHeight?: boolean;
 }) {
   const isDesktop = useIsDesktop();
+  const t = useT();
   const containerRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
   const [leftPercent, setLeftPercent] = useState(50);
@@ -46,9 +48,12 @@ export default function SplitPane({
   useEffect(() => {
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", stopDragging);
+    window.addEventListener("pointercancel", stopDragging);
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", stopDragging);
+      window.removeEventListener("pointercancel", stopDragging);
+      if (draggingRef.current) stopDragging();
     };
   }, [onPointerMove, stopDragging]);
 
@@ -76,6 +81,16 @@ export default function SplitPane({
         onPointerDown={startDragging}
         role="separator"
         aria-orientation="vertical"
+        aria-label={t("Resize statement and editor")}
+        tabIndex={0}
+        aria-valuemin={MIN_PERCENT}
+        aria-valuemax={100 - MIN_PERCENT}
+        aria-valuenow={Math.round(leftPercent)}
+        onKeyDown={(e) => {
+          if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+          e.preventDefault();
+          setLeftPercent((value) => e.key === "Home" ? MIN_PERCENT : e.key === "End" ? 100 - MIN_PERCENT : Math.min(100 - MIN_PERCENT, Math.max(MIN_PERCENT, value + (e.key === "ArrowLeft" ? -5 : 5))));
+        }}
         className="group flex w-3 shrink-0 cursor-col-resize items-center justify-center"
       >
         <div className="h-full w-px bg-ink-800 transition-colors group-hover:bg-brand group-active:bg-brand" />

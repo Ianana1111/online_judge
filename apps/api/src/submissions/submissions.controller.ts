@@ -9,7 +9,6 @@ import {
   type SubmissionListQueryDto,
   type Verdict,
 } from "@oj/shared";
-import { createRedisConnection } from "../common/redis.providers";
 import { CurrentUser, OptionalAuth, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { serveStatusStream } from "../common/status-stream";

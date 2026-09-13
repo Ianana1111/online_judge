@@ -1,5 +1,7 @@
 # Launch readiness implementation
 
+**Latest status:** [September 13 second iteration](next-iteration.md) tracks the new account/MFA, reconciliation, school, monitoring, backup and UX work. The sections below preserve the first rollout's evidence; read historical open items with the latest record. This second batch is not yet deployed.
+
 Execution record for the approved full-site plan. An unchecked gate is not a passed check. The owner authorized production deployment and a restricted local database backup; deployment and migrations completed on **2026-09-13**. See the [deployment and verification record](deployment-20260913.md). No real charge, refund, or email was performed by these deployment checks.
 
 ## Agreed product rules

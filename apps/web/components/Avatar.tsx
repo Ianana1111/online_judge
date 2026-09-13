@@ -1,5 +1,4 @@
-/** eslint-disable-next-line @next/next/no-img-element -- avatarUrl is a base64 data: URL (see
- * users.service.updateProfile), which next/image can't optimize anyway. */
+/** Avatars are size-limited data URLs validated by users.service.updateProfile. */
 export default function Avatar({
   avatarUrl,
   handle,
@@ -11,7 +10,6 @@ export default function Avatar({
 }) {
   if (avatarUrl) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={avatarUrl}
         alt={handle}

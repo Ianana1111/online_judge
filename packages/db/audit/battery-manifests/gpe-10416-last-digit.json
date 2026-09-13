@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-10416-last-digit",
+  "uvaId": 10162,
+  "authoredAt": "2026-09-13T12:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent reference implementing the stored statement; adversarial outputs also computed by the Python oracle in author-iteration-batteries.py.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){int sums[100]={};for(int n=1;n<100;n++){int x=1;for(int j=0;j<n;j++)x=x*n%10;sums[n]=(sums[n-1]+x)%10;}string s;while(cin>>s&&s!=\"0\"){int r=0;for(char c:s)r=(r*10+c-'0')%100;cout<<sums[r]<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Incorrectly assumes the prefix sum repeats every 20, ignoring the cycle sum of 4.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){int sums[100]={};for(int n=1;n<100;n++){int x=1;for(int j=0;j<n;j++)x=x*n%10;sums[n]=(sums[n-1]+x)%10;}string s;while(cin>>s&&s!=\"0\"){int r=0;for(char c:s)r=(r*10+c-'0')%20;cout<<sums[r]<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Omits the final term N^N.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){int sums[100]={};for(int n=1;n<100;n++){int x=1;for(int j=0;j<n;j++)x=x*n%10;sums[n]=(sums[n-1]+x)%10;}string s;while(cin>>s&&s!=\"0\"){int r=0;for(char c:s)r=(r*10+c-'0')%100;cout<<sums[(r+99)%100]<<\"\\n\";}}\n"
+    }
+  ]
+}

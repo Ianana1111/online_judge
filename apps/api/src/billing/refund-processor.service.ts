@@ -26,7 +26,7 @@ export class RefundProcessorService implements OnModuleInit, OnModuleDestroy {
       // Never send that action again without reconciliation.
       const stale = await prisma.refundRequest.updateMany({
         where: { status: "PROCESSING", updatedAt: { lt: new Date(Date.now() - 5 * 60_000) } },
-        data: { status: "NEEDS_REVIEW", lastError: "Worker interrupted; verify gateway outcome before retrying" },
+        data: { status: "NEEDS_REVIEW", processingToken: null, lastError: "Worker interrupted; verify gateway outcome before retrying" },
       });
       if (stale.count) this.logger.error(`${stale.count} interrupted refunds require reconciliation`);
       const due = await prisma.refundRequest.findMany({

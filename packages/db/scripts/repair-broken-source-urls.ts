@@ -25,6 +25,7 @@ const BROKEN_UVA_IDS = [
 ];
 
 function sanitizeForPostgres(s: string): string {
+  // eslint-disable-next-line no-control-regex -- PostgreSQL text fields reject NUL bytes.
   return s.replace(/\x00/g, "");
 }
 

@@ -1,7 +1,6 @@
-import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Param, Post, Req, Res } from "@nestjs/common";
 import type { Request, Response } from "express";
 import { createRunSchema, testRunResultChannel, type CreateRunDto, type TestRunResultDto } from "@oj/shared";
-import { createRedisConnection } from "../common/redis.providers";
 import { CurrentUser, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { serveStatusStream } from "../common/status-stream";

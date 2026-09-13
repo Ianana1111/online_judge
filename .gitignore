@@ -3,6 +3,8 @@ dist
 .next
 .turbo
 *.tsbuildinfo
+__pycache__/
+*.py[cod]
 *.log
 .env
 .env.local

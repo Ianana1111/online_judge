@@ -1,0 +1,10 @@
+FROM restic/restic:0.19.1 AS restic
+FROM postgres:18-bookworm
+RUN apt-get update && apt-get install -y --no-install-recommends python3 ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=restic /usr/bin/restic /usr/local/bin/restic
+COPY scripts/backup/database_backup.py /opt/backup/database_backup.py
+USER postgres
+ENV RESTIC_CACHE_DIR=/tmp/restic-cache
+ENTRYPOINT ["python3", "/opt/backup/database_backup.py"]
+CMD ["backup"]

@@ -1,6 +1,6 @@
 "use client";
 
-import { serverNow, synchronizeServerClock } from "@/lib/serverClock";
+import { serverNow } from "@/lib/serverClock";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";

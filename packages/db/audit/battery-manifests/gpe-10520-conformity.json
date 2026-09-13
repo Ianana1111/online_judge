@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-10520-conformity",
+  "uvaId": 11286,
+  "authoredAt": "2026-09-13T12:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent reference implementing the stored statement; adversarial outputs also computed by the Python oracle in author-iteration-batteries.py.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){int n;while(cin>>n&&n){map<array<int,5>,int>m;int mx=0;for(int i=0;i<n;i++){array<int,5>a;for(int &x:a)cin>>x;sort(a.begin(),a.end());mx=max(mx,++m[a]);}int answer=0;for(auto [a,count]:m)if(count==mx)answer+=count;cout<<answer<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Treats different orderings of the same five courses as different combinations.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){int n;while(cin>>n&&n){map<array<int,5>,int>m;int mx=0;for(int i=0;i<n;i++){array<int,5>a;for(int &x:a)cin>>x;mx=max(mx,++m[a]);}int answer=0;for(auto [a,count]:m)if(count==mx)answer+=count;cout<<answer<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Returns the frequency of a single winner and ignores tied combinations.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){int n;while(cin>>n&&n){map<array<int,5>,int>m;int mx=0;for(int i=0;i<n;i++){array<int,5>a;for(int &x:a)cin>>x;sort(a.begin(),a.end());mx=max(mx,++m[a]);}int answer=0;for(auto [a,count]:m)if(count==mx)answer+=count;cout<<mx<<\"\\n\";}}\n"
+    }
+  ]
+}

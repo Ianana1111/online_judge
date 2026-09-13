@@ -21,6 +21,7 @@ import { REDIS_URL } from "./common/redis.providers";
 import { RedisModule } from "./common/redis.module";
 import { RolesGuard } from "./common/roles.guard";
 import { HealthController } from "./health.controller";
+import { OperationsModule } from "./operations/operations.module";
 import { ProblemsModule } from "./problems/problems.module";
 import { RunsModule } from "./runs/runs.module";
 import { SubmissionsModule } from "./submissions/submissions.module";
@@ -53,6 +54,7 @@ import { UsersModule } from "./users/users.module";
     NotificationsModule,
     AchievementsModule,
     PostsModule,
+    OperationsModule,
   ],
   controllers: [HealthController],
   providers: [

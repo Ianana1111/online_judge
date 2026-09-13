@@ -40,12 +40,19 @@ export class AuthGuard implements CanActivate {
     try {
       const payload = this.tokens.verifyAccessToken(token);
       if (!(await this.redis.exists(`refresh:${payload.sub}:${payload.sid}`))) throw new Error("Session revoked");
-      const user = await prisma.user.findUnique({ where: { id: payload.sub }, select: { id: true, handle: true, role: true, deletionRequestedAt: true } });
+      const user = await prisma.user.findUnique({ where: { id: payload.sub }, select: { id: true, handle: true, role: true, deletionRequestedAt: true, authVersion: true, mfaEnabledAt: true } });
       if (!user) throw new Error("Account missing");
+      if (user.authVersion !== (payload.ver ?? 0)) throw new Error("Credentials changed");
+      const mfaVerified = Boolean(await this.redis.get(`mfa:session:${user.id}:${payload.sid}`));
+      const mfaRequired = user.mfaEnabledAt && !mfaVerified;
+      const enrollmentRequired = user.role === "ADMIN" && process.env.ADMIN_MFA_REQUIRED === "true" && !user.mfaEnabledAt;
+      const bootstrap = ["/auth/me", "/auth/mfa/verify", "/auth/security", "/auth/google", "/auth/google/callback"].includes(req.path);
+      const enrollment = ["/auth/mfa/setup", "/auth/mfa/enable"].includes(req.path);
+      if ((mfaRequired && !bootstrap) || (enrollmentRequired && !bootstrap && !enrollment)) throw new ForbiddenException({ message: enrollmentRequired ? "Set up two-factor authentication to continue." : "Two-factor authentication is required.", code: enrollmentRequired ? "MFA_ENROLLMENT_REQUIRED" : "MFA_REQUIRED" });
       if (user.deletionRequestedAt && !["/auth/me", "/users/me/cancel-deletion"].includes(req.path)) {
         throw new ForbiddenException("Account deletion is pending");
       }
-      req.user = { id: user.id, handle: user.handle, role: user.role };
+      req.user = { id: user.id, handle: user.handle, role: user.role, sid: payload.sid, authVersion: user.authVersion, mfaVerified };
       return true;
     } catch (error) {
       if (error instanceof ForbiddenException) throw error;

@@ -70,11 +70,8 @@ export default async function ProblemPage({
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />
-      {/* Fixed to exactly one viewport (56px navbar + the root <main>'s 3rem of py-6) so the page
-          itself never scrolls — ProblemView's fullHeight mode gives the left/right panes their own
-          independent scrolling instead. Same h-[calc(100vh-56px-3rem)] convention already used by
-          app/upgrade/checkout/page.tsx. */}
-      <div className="h-[calc(100vh-56px-3rem)] overflow-hidden">
+      {/* Desktop panes scroll independently; stacked mobile content must remain reachable. */}
+      <div className="lg:h-[calc(100dvh-56px-3rem)] lg:overflow-hidden">
         <ProblemView
           problem={problem}
           contestId={contestId}

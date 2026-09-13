@@ -1,6 +1,6 @@
 "use client";
 
-import { serverNow, synchronizeServerClock } from "@/lib/serverClock";
+import { serverNow } from "@/lib/serverClock";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -21,6 +21,7 @@ import type { ProblemDetail, SubmissionResultTab } from "@/lib/types";
 import { useExamTimerStore } from "@/store/examTimer";
 import { stripProblemNumber } from "@/lib/problemTitle";
 import { useT } from "@/lib/i18n/LocaleContext";
+import { useIsDesktop } from "@/lib/useIsDesktop";
 
 const DIFFICULTY_EXPLANATION =
   "Estimated from official ratings where available, otherwise from worldwide solve statistics — for reference only.";
@@ -43,7 +44,7 @@ export default function ProblemView({
   statementNode,
   inputSpecNode,
   outputSpecNode,
-  fullHeight = false,
+  fullHeight: fillViewport = false,
   prevNextNode,
   hideDifficulty = false,
   attemptNumber,
@@ -80,6 +81,9 @@ export default function ProblemView({
   hideDifficulty?: boolean;
 }) {
   const t = useT();
+  const isDesktop = useIsDesktop();
+  // Stacked mobile panes need normal document flow and the editor's explicit height.
+  const fullHeight = fillViewport && isDesktop;
   const [tab, setTab] = useState<TabKey>("statement");
   const [resultTab, setResultTab] = useState<SubmissionResultTab | null>(null);
   const tabOrder: TabKey[] = resultTab ? [...TAB_ORDER, "result"] : TAB_ORDER;

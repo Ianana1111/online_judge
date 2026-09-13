@@ -10,14 +10,18 @@ export class MailService {
   private readonly logger = new Logger(MailService.name);
   private readonly client = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
-  async send(params: { to: string; subject: string; html: string }): Promise<void> {
+  assertConfigured(): void {
     if (!this.client) {
       throw new BadRequestException("Email sending isn't configured on this server yet.");
     }
+  }
+
+  async send(params: { to: string; subject: string; html: string; idempotencyKey?: string }): Promise<void> {
+    this.assertConfigured();
     const from = process.env.RESEND_FROM_EMAIL ?? "judge.tw <onboarding@resend.dev>";
-    const { error } = await this.client.emails.send({ from, to: params.to, subject: params.subject, html: params.html });
+    const { error } = await this.client!.emails.send({ from, to: params.to, subject: params.subject, html: params.html }, params.idempotencyKey ? { idempotencyKey: params.idempotencyKey } : undefined);
     if (error) {
-      this.logger.error(`Resend send failed: ${error.name} — ${error.message}`);
+      this.logger.error(`Resend send failed: ${error.name}`);
       throw new BadRequestException("Couldn't send the verification email — try again in a moment.");
     }
   }

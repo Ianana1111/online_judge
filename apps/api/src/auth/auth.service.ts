@@ -25,7 +25,7 @@ async function notifyNewUserOfLaunchPromo(notifications: NotificationsService, u
 }
 
 export interface IssuedSession {
-  user: { id: string; handle: string; email: string; role: string };
+  user: { id: string; handle: string; email: string; role: string; mfaRequired?: boolean; mfaEnrollmentRequired?: boolean };
   accessToken: string;
   accessMaxAgeMs: number;
   refreshToken: string;
@@ -59,7 +59,7 @@ export class AuthService {
       data: { handle: dto.handle, email: dto.email, passwordHash, role: "USER" },
     });
     await notifyNewUserOfLaunchPromo(this.notifications, user.id);
-    return this.issueSession(user.id, user.handle, user.email, user.role);
+    return this.issueSession(user.id, user.handle, user.email, user.role, user.authVersion);
   }
 
   async login(dto: LoginDto): Promise<IssuedSession> {
@@ -70,7 +70,7 @@ export class AuthService {
     // is exactly what makes the timing gap measurable if we skip it here).
     const ok = await argon2.verify(user?.passwordHash ?? DUMMY_PASSWORD_HASH, dto.password);
     if (!user || !user.passwordHash || !ok) throw new UnauthorizedException("Invalid handle or password");
-    return this.issueSession(user.id, user.handle, user.email, user.role);
+    return this.issueSession(user.id, user.handle, user.email, user.role, user.authVersion);
   }
 
   /** Finds the linked Google identity or creates an account. An email match never silently links
@@ -83,11 +83,12 @@ export class AuthService {
         throw new ConflictException("This email already has an account. Sign in with your existing method before linking Google.");
       } else {
         const handle = await this.uniqueHandleFrom(suggestedHandle);
-        user = await prisma.user.create({ data: { handle, email, googleId, role: "USER" } });
+        user = await prisma.user.create({ data: { handle, email, googleId, role: "USER", emailVerifiedAt: new Date() } });
         await notifyNewUserOfLaunchPromo(this.notifications, user.id);
       }
     }
-    return this.issueSession(user.id, user.handle, user.email, user.role);
+    if (!user.emailVerifiedAt && user.email === email) user = await prisma.user.update({ where: { id: user.id }, data: { emailVerifiedAt: new Date() } });
+    return this.issueSession(user.id, user.handle, user.email, user.role, user.authVersion);
   }
 
   /** Deletion reauthentication proves an existing identity without creating an account or
@@ -118,13 +119,14 @@ export class AuthService {
       throw new UnauthorizedException("Invalid or expired refresh token");
     }
 
+    const mfaAt = await this.redis.get(`mfa:session:${payload.sub}:${payload.jti}`);
     const exists = await this.redis.getdel(`refresh:${payload.sub}:${payload.jti}`);
     if (!exists) throw new UnauthorizedException("Session has been revoked");
 
     const user = await prisma.user.findUnique({ where: { id: payload.sub } });
-    if (!user) throw new UnauthorizedException("User no longer exists");
+    if (!user || user.authVersion !== (payload.ver ?? 0)) throw new UnauthorizedException("Session has been revoked");
 
-    return this.issueSession(user.id, user.handle, user.email, user.role);
+    return this.issueSession(user.id, user.handle, user.email, user.role, user.authVersion, mfaAt ? Number(mfaAt) : undefined);
   }
 
   async logout(refreshToken: string | undefined): Promise<void> {
@@ -141,7 +143,7 @@ export class AuthService {
       `refresh:${payload.sub}:${payload.jti}`, `refresh:current:${payload.sub}`, payload.jti);
   }
 
-  async me(userId: string): Promise<{
+  async me(userId: string, sid?: string): Promise<{
     id: string;
     handle: string;
     email: string;
@@ -158,6 +160,10 @@ export class AuthService {
     deletionRequestedAt: Date | null;
     csrfToken: string;
     csrfMaxAgeMs: number;
+    emailVerifiedAt: Date | null;
+    mfaEnabled: boolean;
+    mfaRequired: boolean;
+    mfaEnrollmentRequired: boolean;
   }> {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new UnauthorizedException();
@@ -173,6 +179,10 @@ export class AuthService {
       handle: user.handle,
       email: user.email,
       role: user.role,
+      emailVerifiedAt: user.emailVerifiedAt,
+      mfaEnabled: Boolean(user.mfaEnabledAt),
+      mfaRequired: Boolean(user.mfaEnabledAt && (!sid || !await this.redis.get(`mfa:session:${user.id}:${sid}`))),
+      mfaEnrollmentRequired: user.role === "ADMIN" && process.env.ADMIN_MFA_REQUIRED === "true" && !user.mfaEnabledAt,
       isStudent: user.isStudent,
       plan: unlimited ? "PRO" : "FREE",
       settings: (user.settings as Record<string, unknown>) ?? {},
@@ -202,7 +212,10 @@ export class AuthService {
    * the old password might be holding) while seamlessly re-authenticating the caller who just
    * proved they know the new password, in the same request.
    */
-  async issueSession(id: string, handle: string, email: string, role: string): Promise<IssuedSession> {
+  async issueSession(id: string, handle: string, email: string, role: string, expectedVersion?: number, mfaAt?: number): Promise<IssuedSession> {
+    const current = await prisma.user.findUnique({ where: { id } });
+    if (!current || (expectedVersion !== undefined && current.authVersion !== expectedVersion)) throw new UnauthorizedException("Credentials changed. Please log in again.");
+    const ver = current.authVersion;
     const jti = randomUUID();
     const refreshTtlSec = Math.max(1, Math.round(this.tokens.refreshTtlMs / 1000));
     await this.redis.eval(`
@@ -213,12 +226,14 @@ export class AuthService {
       return 1
     `, 2, `refresh:current:${id}`, `refresh:${id}:${jti}`, `refresh:${id}:`, jti, String(refreshTtlSec));
 
-    const accessToken = this.tokens.signAccessToken({ sub: id, handle, role, sid: jti });
-    const refreshToken = this.tokens.signRefreshToken({ sub: id, jti });
+    const remainingMfaMs = mfaAt ? mfaAt + 12 * 60 * 60_000 - Date.now() : 0;
+    if (current.mfaEnabledAt && remainingMfaMs > 0) await this.redis.set(`mfa:session:${id}:${jti}`, String(mfaAt), "PX", Math.min(remainingMfaMs, this.tokens.refreshTtlMs));
+    const accessToken = this.tokens.signAccessToken({ sub: id, handle: current.handle, role: current.role, sid: jti, ver });
+    const refreshToken = this.tokens.signRefreshToken({ sub: id, jti, ver });
     const csrfToken = generateCsrfToken();
 
     return {
-      user: { id, handle, email, role },
+      user: { id, handle: current.handle, email: current.email, role: current.role, mfaRequired: Boolean(current.mfaEnabledAt && remainingMfaMs <= 0), mfaEnrollmentRequired: current.role === "ADMIN" && process.env.ADMIN_MFA_REQUIRED === "true" && !current.mfaEnabledAt },
       accessToken,
       accessMaxAgeMs: this.tokens.accessTtlMs,
       refreshToken,

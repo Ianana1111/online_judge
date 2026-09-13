@@ -8,3 +8,4 @@ export * from "./judge.js";
 export * from "./taiwanUniversities.js";
 export * from "./taiwanUniversityDomains.js";
 export * from "./taiwanSchoolCatalog.js";
+export * from "./telemetryPrivacy.js";

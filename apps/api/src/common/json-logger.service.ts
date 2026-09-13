@@ -19,7 +19,6 @@ export class JsonLoggerService implements LoggerService {
       requestId: currentRequestId(),
       ...extra,
     };
-    // eslint-disable-next-line no-console
     console.log(JSON.stringify(line));
   }
 

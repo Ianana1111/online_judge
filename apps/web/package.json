@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --no-warn-ignored --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "postinstall": "node scripts/copy-monaco.js"
   },

@@ -2,7 +2,7 @@ name: Launch readiness
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, "readiness/**"]
 permissions:
   contents: read
 jobs:
@@ -48,7 +48,13 @@ jobs:
       - run: pnpm --filter @oj/db exec prisma migrate deploy
       - run: python3 scripts/generate-school-catalog.py --check
       - run: pnpm typecheck
+      - run: pnpm lint
       - run: pnpm test
+      - run: docker build -f docker/Dockerfile.backup -t oj-readiness-backup .
+      - run: python3 tests/backup-drill.py
+        env:
+          RUN_BACKUP_TESTS: "1"
+          BACKUP_TEST_SOURCE_CONTAINER: ${{ job.services.postgres.id }}
       - run: pnpm --filter @oj/api build
       - run: pnpm --filter @oj/judge build
       - run: pnpm test:runtime
@@ -56,8 +62,10 @@ jobs:
       - run: RUN_SANDBOX_TESTS=1 pnpm exec vitest run tests/sandbox-isolation.test.ts
       - run: pnpm --filter @oj/web build
       - run: pnpm audit --prod --audit-level high
-      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright install --with-deps chromium firefox webkit
       - run: pnpm test:e2e
+        env:
+          CROSS_BROWSER_E2E: "1"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

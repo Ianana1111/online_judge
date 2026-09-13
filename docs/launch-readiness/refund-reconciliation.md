@@ -2,7 +2,7 @@
 
 The administrator's **Billing → Refund operations** view lists open requests, individual processing states and completed history. It refreshes every 30 seconds and uses Taipei time. The API paginates all states; a deleted account is shown without restoring its personal information.
 
-This is a triage view. There is currently no audited administrator command to resolve an ambiguous external action or recalculate historical entitlements. That command and an owner-controlled gateway rehearsal remain release gates. Do not mark a request completed merely because the bank action was sent.
+The view now includes an audited operator resolution form backed by `POST /billing/admin/refunds/:id/resolve`. It requires an MFA-verified administrator, matching order and amount, an evidence reference, a reason, the version reviewed and a unique request identifier. A real owner-controlled gateway rehearsal remains outstanding. Do not mark a request completed merely because the bank action was sent.
 
 ## Investigation record
 
@@ -14,11 +14,14 @@ For each `NEEDS_REVIEW` request, record the request ID, merchant order number, E
 4. If the external result is still uncertain, keep the request in review and obtain confirmation through the merchant's support channel. Never resubmit a card action solely to test whether it already happened.
 5. If the external refund is confirmed, check the remaining subscription entitlement and any later purchases or manual grants before planning a database correction. An existing refund confirmation with an unfinished request can indicate that the entitlement transaction failed after the gateway succeeded.
 
-Before release, implement a dedicated resolution command with current administrator authorization, a required evidence reference and reason, a durable audit record, concurrency protection and idempotent entitlement adjustment. It must distinguish confirmed success, confirmed no action and unresolved outcomes. Exercise crash recovery and concurrent resolution using a fake gateway, followed by an owner-controlled live rehearsal. Directly changing a status or clearing `inFlightAction` is not an adequate resolution workflow.
+Choose one outcome in the form: confirmed full refund and cancellation; confirmed no refund; or unresolved. Only the first completes the request. The other two preserve the pause and never automatically reissue a card action. Each decision is retained in an immutable history, including the administrator identifier. Concurrent/repeated requests cannot debit entitlement twice, and a stale worker cannot overwrite a newer decision.
+
+Known payment entitlement intervals remove only their remaining attributable period. For legacy transactions without that ledger, the operator must explicitly preserve existing entitlement and explain why, or keep the case under review. The command cannot infer ownership of manual grants. Deleted account/payment rows do not prevent recording a confirmed external refund against the retained request. No resolution option sends a bank request.
 
 ## Implemented safeguards and evidence
 
 - Workers claim each request atomically. An ambiguous sent action or interrupted worker moves to review rather than automatically sending the action again.
+- Every worker claim has a unique fencing token. Delayed callbacks and error handlers cannot overwrite an operator's resolution or another worker's state.
 - The administrator view does not initiate card actions. Viewing, filtering and paging cannot trigger a refund or cancellation.
 - Real-database tests cover duplicate requests, concurrent worker claims, an ambiguous refund response, retained records, pagination after removal of a cursor row, and restricted account fields.
 - Built-API tests cover anonymous/user denial, current administrator access, query validation and immediate denial after an administrator role is removed.

@@ -5,10 +5,12 @@ import { MailService } from "../common/mail.service";
 import { AccountDeletionReaperService } from "./account-deletion-reaper.service";
 import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
+import { SchoolDomainsController } from "./school-domains.controller";
+import { SchoolDomainsService } from "./school-domains.service";
 
 @Module({
   imports: [AuthModule, BillingModule],
-  controllers: [UsersController],
-  providers: [UsersService, MailService, AccountDeletionReaperService],
+  controllers: [SchoolDomainsController, UsersController],
+  providers: [UsersService, SchoolDomainsService, MailService, AccountDeletionReaperService],
 })
 export class UsersModule {}

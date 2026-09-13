@@ -1,0 +1,27 @@
+{
+  "testedAt": "2026-09-13T13:36:20.813Z",
+  "environment": "Local macOS API with isolated PostgreSQL 16 / Redis 7; real HTTP and BullMQ; production evaluator in disposable Linux Docker, no network/host mounts. Not Railway/Vercel production capacity.",
+  "users": 100,
+  "durationSeconds": 180,
+  "targetSubmissionsPerMinute": 20,
+  "requests": 3660,
+  "submissions": 60,
+  "verdicts": {
+    "AC": 60
+  },
+  "errors": [],
+  "apiMs": {
+    "p50": 14,
+    "p95": 31,
+    "p99": 48
+  },
+  "judgeEndToEndMs": {
+    "p50": 896,
+    "p95": 1517,
+    "p99": 1713
+  },
+  "maxObservedQueue": 1,
+  "concurrentAdmission": "one accepted",
+  "lateJudgeScore": "counted",
+  "scope": "Reading/authenticated study, four-language compilation and judging, exam ownership and late score callback; excludes password hashing load, remote UVa relay, network failures and production infrastructure."
+}
