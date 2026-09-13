@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10721-bar-codes",
+  "uvaId": 10721,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "DP: dp[i][j] = ways to reach total width j using i bars, each bar width 1..m. Answer dp[k][n], long long throughout (values can reach ~1e13).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,k,m;\n    while(cin>>n>>k>>m){\n        vector<vector<long long>> dp(k+1, vector<long long>(n+1,0));\n        dp[0][0]=1;\n        for(int i=1;i<=k;i++)\n            for(int j=0;j<=n;j++)\n                for(int w=1;w<=m && w<=j;w++)\n                    dp[i][j]+=dp[i-1][j-w];\n        cout << dp[k][n] << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:34:09.304Z"
+    },
+    {
+      "tag": "overflow",
+      "label": "Identical DP but with 32-bit int accumulators -- the problem's own stated max answer (~2.8e13) vastly exceeds INT32_MAX, and the existing test data already includes that exact large value, so this should already be caught.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,k,m;\n    while(cin>>n>>k>>m){\n        vector<vector<int>> dp(k+1, vector<int>(n+1,0));\n        dp[0][0]=1;\n        for(int i=1;i<=k;i++)\n            for(int j=0;j<=n;j++)\n                for(int w=1;w<=m && w<=j;w++)\n                    dp[i][j]+=dp[i-1][j-w];\n        cout << dp[k][n] << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:34:12.143Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Bar-width loop uses w<m instead of w<=m, so the widest allowed bar width is never considered -- undercounts whenever m>1.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,k,m;\n    while(cin>>n>>k>>m){\n        vector<vector<long long>> dp(k+1, vector<long long>(n+1,0));\n        dp[0][0]=1;\n        for(int i=1;i<=k;i++)\n            for(int j=0;j<=n;j++)\n                for(int w=1;w<m && w<=j;w++)\n                    dp[i][j]+=dp[i-1][j-w];\n        cout << dp[k][n] << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:34:15.150Z"
+    }
+  ]
+}

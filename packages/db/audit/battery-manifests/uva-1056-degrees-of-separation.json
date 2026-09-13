@@ -1,0 +1,31 @@
+{
+  "slug": "uva-1056-degrees-of-separation",
+  "uvaId": 1056,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "BFS from every discovered name (unique names mapped to ids as encountered), diameter = max shortest-path distance if every node reachable from every other, else DISCONNECTED. Blank line printed BEFORE each network's line except the first (matches the sample: no trailing blank line after the very last network).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int P,R;\n    int caseNum=0;\n    while(cin>>P>>R && !(P==0&&R==0)){\n        map<string,int> id;\n        vector<vector<int>> adj;\n        auto getId=[&](const string&s)->int{\n            auto it=id.find(s);\n            if(it!=id.end()) return it->second;\n            int nid=(int)id.size();\n            id[s]=nid;\n            adj.push_back({});\n            return nid;\n        };\n        for(int i=0;i<R;i++){\n            string a,b; cin>>a>>b;\n            int ai=getId(a), bi=getId(b);\n            adj[ai].push_back(bi);\n            adj[bi].push_back(ai);\n        }\n        int n=(int)id.size();\n        int diameter=0;\n        bool disconnected=false;\n        for(int s=0;s<n;s++){\n            vector<int> dist(n,-1);\n            queue<int>q; dist[s]=0;q.push(s);\n            int reached=1;\n            while(!q.empty()){\n                int u=q.front();q.pop();\n                for(int v: adj[u]) if(dist[v]==-1){dist[v]=dist[u]+1;q.push(v);reached++;diameter=max(diameter,dist[v]);}\n            }\n            if(reached<n) disconnected=true;\n        }\n        caseNum++;\n        if(caseNum>1) cout << \"\\n\";\n        cout << \"Network \" << caseNum << \": \" << (disconnected? string(\"DISCONNECTED\") : to_string(diameter)) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:33:28.413Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Always prints a trailing blank line after every network, including the very last one -- the sample output has no blank line after the final network, so this diverges on the overall trailing whitespace even though every individual answer is numerically correct.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int P,R;\n    int caseNum=0;\n    while(cin>>P>>R && !(P==0&&R==0)){\n        map<string,int> id;\n        vector<vector<int>> adj;\n        auto getId=[&](const string&s)->int{\n            auto it=id.find(s);\n            if(it!=id.end()) return it->second;\n            int nid=(int)id.size();\n            id[s]=nid;\n            adj.push_back({});\n            return nid;\n        };\n        for(int i=0;i<R;i++){\n            string a,b; cin>>a>>b;\n            int ai=getId(a), bi=getId(b);\n            adj[ai].push_back(bi);\n            adj[bi].push_back(ai);\n        }\n        int n=(int)id.size();\n        int diameter=0;\n        bool disconnected=false;\n        for(int s=0;s<n;s++){\n            vector<int> dist(n,-1);\n            queue<int>q; dist[s]=0;q.push(s);\n            int reached=1;\n            while(!q.empty()){\n                int u=q.front();q.pop();\n                for(int v: adj[u]) if(dist[v]==-1){dist[v]=dist[u]+1;q.push(v);reached++;diameter=max(diameter,dist[v]);}\n            }\n            if(reached<n) disconnected=true;\n        }\n        caseNum++;\n        cout << \"Network \" << caseNum << \": \" << (disconnected? string(\"DISCONNECTED\") : to_string(diameter)) << \"\\n\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:33:34.997Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Treats relationships as directed (only pushes b onto a's adjacency list, not the reverse) instead of the stated symmetric relationship -- shortest paths and reachability both become wrong on any graph that isn't already symmetric-by-coincidence.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int P,R;\n    int caseNum=0;\n    while(cin>>P>>R && !(P==0&&R==0)){\n        map<string,int> id;\n        vector<vector<int>> adj;\n        auto getId=[&](const string&s)->int{\n            auto it=id.find(s);\n            if(it!=id.end()) return it->second;\n            int nid=(int)id.size();\n            id[s]=nid;\n            adj.push_back({});\n            return nid;\n        };\n        for(int i=0;i<R;i++){\n            string a,b; cin>>a>>b;\n            int ai=getId(a), bi=getId(b);\n            adj[ai].push_back(bi);\n        }\n        int n=(int)id.size();\n        int diameter=0;\n        bool disconnected=false;\n        for(int s=0;s<n;s++){\n            vector<int> dist(n,-1);\n            queue<int>q; dist[s]=0;q.push(s);\n            int reached=1;\n            while(!q.empty()){\n                int u=q.front();q.pop();\n                for(int v: adj[u]) if(dist[v]==-1){dist[v]=dist[u]+1;q.push(v);reached++;diameter=max(diameter,dist[v]);}\n            }\n            if(reached<n) disconnected=true;\n        }\n        caseNum++;\n        if(caseNum>1) cout << \"\\n\";\n        cout << \"Network \" << caseNum << \": \" << (disconnected? string(\"DISCONNECTED\") : to_string(diameter)) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:33:38.575Z"
+    }
+  ]
+}

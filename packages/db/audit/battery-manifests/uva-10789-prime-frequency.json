@@ -1,0 +1,39 @@
+{
+  "slug": "uva-10789-prime-frequency",
+  "uvaId": 10789,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Count character frequencies (0-255 covers the alphanumeric input), keep those with prime frequency, print in ascending ASCII order (naturally satisfies 'lexicographically ascending' since input is alphanumeric only), or 'empty'.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nbool isPrime(int x){\n    if(x<2) return false;\n    for(int i=2;(long long)i*i<=x;i++) if(x%i==0) return false;\n    return true;\n}\nint main(){\n    int t; cin>>t;\n    for(int tc=1;tc<=t;tc++){\n        string s; cin>>s;\n        int freq[256]={0};\n        for(unsigned char c : s) freq[c]++;\n        string res;\n        for(int c=0;c<256;c++) if(freq[c]>0 && isPrime(freq[c])) res += (char)c;\n        cout << \"Case \" << tc << \": \" << (res.empty()? \"empty\" : res) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:34:52.038Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Primality test loop uses i*i<x instead of i*i<=x, so a perfect square of a prime (e.g. frequency=9) is never actually tested against its square root and falls through as wrongly 'prime'.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nbool isPrime(int x){\n    if(x<2) return false;\n    for(int i=2;(long long)i*i<x;i++) if(x%i==0) return false;\n    return true;\n}\nint main(){\n    int t; cin>>t;\n    for(int tc=1;tc<=t;tc++){\n        string s; cin>>s;\n        int freq[256]={0};\n        for(unsigned char c : s) freq[c]++;\n        string res;\n        for(int c=0;c<256;c++) if(freq[c]>0 && isPrime(freq[c])) res += (char)c;\n        cout << \"Case \" << tc << \": \" << (res.empty()? \"empty\" : res) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:34:56.282Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Base case is x<1 instead of x<2, so a character appearing exactly once (frequency=1) is wrongly treated as having a prime frequency.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nbool isPrime(int x){\n    if(x<1) return false;\n    for(int i=2;(long long)i*i<=x;i++) if(x%i==0) return false;\n    return true;\n}\nint main(){\n    int t; cin>>t;\n    for(int tc=1;tc<=t;tc++){\n        string s; cin>>s;\n        int freq[256]={0};\n        for(unsigned char c : s) freq[c]++;\n        string res;\n        for(int c=0;c<256;c++) if(freq[c]>0 && isPrime(freq[c])) res += (char)c;\n        cout << \"Case \" << tc << \": \" << (res.empty()? \"empty\" : res) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:34:59.303Z"
+    },
+    {
+      "tag": "eof-multi-case",
+      "label": "Reads each test string via getline() without consuming the leftover newline after 'cin>>t', so case 1 reads an empty leftover line and every case after that is silently shifted back by one line.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nbool isPrime(int x){\n    if(x<2) return false;\n    for(int i=2;(long long)i*i<=x;i++) if(x%i==0) return false;\n    return true;\n}\nint main(){\n    int t; cin>>t;\n    for(int tc=1;tc<=t;tc++){\n        string s; getline(cin, s);\n        int freq[256]={0};\n        for(unsigned char c : s) freq[c]++;\n        string res;\n        for(int c=0;c<256;c++) if(freq[c]>0 && isPrime(freq[c])) res += (char)c;\n        cout << \"Case \" << tc << \": \" << (res.empty()? \"empty\" : res) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:35:02.570Z"
+    }
+  ]
+}

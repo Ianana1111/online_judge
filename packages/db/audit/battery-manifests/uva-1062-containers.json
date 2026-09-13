@@ -1,0 +1,25 @@
+{
+  "slug": "uva-1062-containers",
+  "uvaId": 1062,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Greedy multiset of stack-top letters: for each arriving container c, if some stack's top is >= c, move it onto the stack with the SMALLEST such top (erase+reinsert c); otherwise open a new stack. Final stack count is the answer (patience-sorting-style greedy for minimum non-increasing-subsequence partition). Hand-verified against all 4 given samples (1/3/1/4) and the small existing TestCase (1/4) by tracing the multiset step by step.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    string line;\n    int tc=1;\n    while (getline(cin,line)) {\n        if (line==\"end\") break;\n        multiset<char> tops;\n        for (char c : line) {\n            auto it = tops.lower_bound(c);\n            if (it != tops.end()) tops.erase(it);\n            tops.insert(c);\n        }\n        printf(\"Case %d: %d\\n\", tc++, (int)tops.size());\n    }\n}\n"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Uses upper_bound instead of lower_bound when finding a reusable stack -- misses the case where an existing stack's top EXACTLY equals the incoming letter (a valid reuse, since top>=c includes equality), forcing an unnecessary new stack whenever two consecutive containers for the same still-unloaded ship arrive with nothing smaller in between.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    string line;\n    int tc=1;\n    while (getline(cin,line)) {\n        if (line==\"end\") break;\n        multiset<char> tops;\n        for (char c : line) {\n            auto it = tops.upper_bound(c);\n            if (it != tops.end()) tops.erase(it);\n            tops.insert(c);\n        }\n        printf(\"Case %d: %d\\n\", tc++, (int)tops.size());\n    }\n}\n"
+    },
+    {
+      "tag": "eof-multi-case",
+      "label": "Never checks for the 'end' sentinel line -- reads until real EOF and processes 'end' itself as if it were a 3-character container-arrival string ('e','n','d'), printing one extra bogus Case line after the real ones.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    string line;\n    int tc=1;\n    while (getline(cin,line)) {\n        multiset<char> tops;\n        for (char c : line) {\n            auto it = tops.lower_bound(c);\n            if (it != tops.end()) tops.erase(it);\n            tops.insert(c);\n        }\n        printf(\"Case %d: %d\\n\", tc++, (int)tops.size());\n    }\n}\n"
+    }
+  ]
+}
