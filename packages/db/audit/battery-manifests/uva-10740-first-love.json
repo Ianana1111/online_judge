@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10740-first-love",
+  "uvaId": 10740,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "NOTE: this problem's stored statementMd is the k-th-shortest-walk problem (not the 'first love' romance title suggests -- a known pre-existing slug/title mismatch, out of scope here). Modified Dijkstra: a min-heap pop finalizes one occurrence of a node's distance; each node may be finalized up to k times (walks may revisit vertices/edges, not simple paths). Answer is the walk-length the k-th finalization of the target y produces, or -1 if fewer than k exist. Hand-verified against the worked example in the statement itself (pentagon graph, x=5,y=2,k=5 -> 15) via the given sample's second case.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,m;\n    while(cin>>n>>m && (n||m)){\n        int x,y,k; cin>>x>>y>>k;\n        vector<vector<pair<int,int>>> adj(n+1);\n        for(int i=0;i<m;i++){\n            int u,v,l; cin>>u>>v>>l;\n            adj[u].push_back({v,l});\n        }\n        vector<int> cnt(n+1,0);\n        priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<pair<long long,int>>> pq;\n        pq.push({0,x});\n        long long ans=-1;\n        while(!pq.empty()){\n            auto top = pq.top(); pq.pop();\n            long long d = top.first; int u = top.second;\n            if(cnt[u]>=k) continue;\n            cnt[u]++;\n            if(u==y && cnt[u]==k){ ans=d; break; }\n            for(auto& e : adj[u]) pq.push({d+e.second, e.first});\n        }\n        cout << ans << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:34:18.685Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Skip condition is cnt[u]>k instead of cnt[u]>=k, so every node is allowed one extra finalization before being cut off -- shifts which walk is reported as the k-th.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,m;\n    while(cin>>n>>m && (n||m)){\n        int x,y,k; cin>>x>>y>>k;\n        vector<vector<pair<int,int>>> adj(n+1);\n        for(int i=0;i<m;i++){\n            int u,v,l; cin>>u>>v>>l;\n            adj[u].push_back({v,l});\n        }\n        vector<int> cnt(n+1,0);\n        priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<pair<long long,int>>> pq;\n        pq.push({0,x});\n        long long ans=-1;\n        while(!pq.empty()){\n            auto top = pq.top(); pq.pop();\n            long long d = top.first; int u = top.second;\n            if(cnt[u]>k) continue;\n            cnt[u]++;\n            if(u==y && cnt[u]==k){ ans=d; break; }\n            for(auto& e : adj[u]) pq.push({d+e.second, e.first});\n        }\n        cout << ans << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:34:28.452Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Ignores k entirely and computes plain single-source shortest path to y (as if k were always 1) -- wrong whenever k>1 and multiple distinct-length walks exist.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,m;\n    while(cin>>n>>m && (n||m)){\n        int x,y,k; cin>>x>>y>>k;\n        vector<vector<pair<int,int>>> adj(n+1);\n        for(int i=0;i<m;i++){\n            int u,v,l; cin>>u>>v>>l;\n            adj[u].push_back({v,l});\n        }\n        vector<long long> dist(n+1, LLONG_MAX);\n        dist[x]=0;\n        priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<pair<long long,int>>> pq;\n        pq.push({0,x});\n        while(!pq.empty()){\n            auto top = pq.top(); pq.pop();\n            long long d = top.first; int u = top.second;\n            if(d>dist[u]) continue;\n            for(auto& e : adj[u]) if(dist[u]+e.second < dist[e.first]){ dist[e.first]=dist[u]+e.second; pq.push({dist[e.first], e.first}); }\n        }\n        cout << (dist[y]==LLONG_MAX? -1 : dist[y]) << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:34:31.211Z"
+    }
+  ]
+}

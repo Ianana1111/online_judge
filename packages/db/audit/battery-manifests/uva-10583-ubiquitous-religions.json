@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10583-ubiquitous-religions",
+  "uvaId": 10583,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Standard Union-Find (DSU with path compression), reinitialized fresh each test case; answer is the number of distinct roots among 1..n.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint parent[50005];\nint find(int x){ return parent[x]==x?x:parent[x]=find(parent[x]); }\nvoid unite(int a,int b){ a=find(a); b=find(b); if(a!=b) parent[a]=b; }\nint main(){\n    int n,m,cs=0;\n    while(cin>>n>>m && !(n==0&&m==0)){\n        for(int i=1;i<=n;i++) parent[i]=i;\n        for(int i=0;i<m;i++){ int a,b; cin>>a>>b; unite(a,b); }\n        int cnt=0;\n        for(int i=1;i<=n;i++) if(find(i)==i) cnt++;\n        cout << \"Case \" << ++cs << \": \" << cnt << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:33:45.659Z"
+    },
+    {
+      "tag": "eof-multi-case",
+      "label": "Initializes the parent[] array only ONCE before the main loop instead of once per test case -- unions from earlier (larger) test cases leak into later ones, undercounting the number of distinct religions on any case after the first.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint parent[50005];\nint find(int x){ return parent[x]==x?x:parent[x]=find(parent[x]); }\nvoid unite(int a,int b){ a=find(a); b=find(b); if(a!=b) parent[a]=b; }\nint main(){\n    for(int i=0;i<50005;i++) parent[i]=i;\n    int n,m,cs=0;\n    while(cin>>n>>m && !(n==0&&m==0)){\n        for(int i=0;i<m;i++){ int a,b; cin>>a>>b; unite(a,b); }\n        int cnt=0;\n        for(int i=1;i<=n;i++) if(find(i)==i) cnt++;\n        cout << \"Case \" << ++cs << \": \" << cnt << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:33:50.623Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Initialization loop uses 0-indexed bounds (i from 0 to n-1) while student ids from input are 1-indexed (1..n) -- student n's slot is never (re)initialized for the current case and can carry a stale parent pointer from whatever the previous test case last set index n-1... this is a genuine off-by-one that silently corrupts exactly one student's component per case.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint parent[50005];\nint find(int x){ return parent[x]==x?x:parent[x]=find(parent[x]); }\nvoid unite(int a,int b){ a=find(a); b=find(b); if(a!=b) parent[a]=b; }\nint main(){\n    int n,m,cs=0;\n    while(cin>>n>>m && !(n==0&&m==0)){\n        for(int i=0;i<n;i++) parent[i]=i;\n        for(int i=0;i<m;i++){ int a,b; cin>>a>>b; unite(a,b); }\n        int cnt=0;\n        for(int i=1;i<=n;i++) if(find(i)==i) cnt++;\n        cout << \"Case \" << ++cs << \": \" << cnt << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:33:54.946Z"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10763-foreign-exchange",
+  "uvaId": 10763,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Count occurrences of each ordered (from,to) pair per test case; program works out iff every pair's count exactly equals its reverse pair's count. Map declared fresh inside the loop so no state leaks between test cases.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    while(cin>>n && n){\n        map<pair<int,int>,int> cnt;\n        for(int i=0;i<n;i++){\n            int a,b; cin>>a>>b;\n            cnt[{a,b}]++;\n        }\n        bool ok=true;\n        for(auto& kv : cnt){\n            pair<int,int> rev(kv.first.second, kv.first.first);\n            if(cnt[rev]!=kv.second) ok=false;\n        }\n        cout << (ok? \"YES\":\"NO\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:34:38.111Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Only checks that the reverse pair EXISTS (count>0), not that its count matches -- says YES even when e.g. 2 people want A->B but only 1 wants B->A.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    while(cin>>n && n){\n        map<pair<int,int>,int> cnt;\n        for(int i=0;i<n;i++){\n            int a,b; cin>>a>>b;\n            cnt[{a,b}]++;\n        }\n        bool ok=true;\n        for(auto& kv : cnt){\n            pair<int,int> rev(kv.first.second, kv.first.first);\n            if(cnt.find(rev)==cnt.end()) ok=false;\n        }\n        cout << (ok? \"YES\":\"NO\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:34:42.823Z"
+    },
+    {
+      "tag": "eof-multi-case",
+      "label": "The pair-count map is declared OUTSIDE the loop, so entries from previous test cases silently persist and pollute later ones (state leak across datasets).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n;\n    map<pair<int,int>,int> cnt;\n    while(cin>>n && n){\n        for(int i=0;i<n;i++){\n            int a,b; cin>>a>>b;\n            cnt[{a,b}]++;\n        }\n        bool ok=true;\n        for(auto& kv : cnt){\n            pair<int,int> rev(kv.first.second, kv.first.first);\n            if(cnt[rev]!=kv.second) ok=false;\n        }\n        cout << (ok? \"YES\":\"NO\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:34:48.588Z"
+    }
+  ]
+}

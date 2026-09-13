@@ -1,0 +1,25 @@
+{
+  "slug": "uva-10664-luggage",
+  "uvaId": 10664,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Per test-case line (read via getline since no leading count of weights is given): if total weight is odd, NO; else 0/1 subset-sum DP up to total/2, backward iteration.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int m;\n    cin >> m;\n    cin.ignore();\n    while(m--){\n        string line;\n        getline(cin, line);\n        istringstream iss(line);\n        vector<int> w;\n        int x;\n        while(iss >> x) w.push_back(x);\n        int total = accumulate(w.begin(), w.end(), 0);\n        if (total % 2 != 0) { cout << \"NO\\n\"; continue; }\n        int half = total/2;\n        vector<char> dp(half+1, 0);\n        dp[0] = 1;\n        for (int wi : w) {\n            for (int s = half; s >= wi; s--) {\n                if (dp[s-wi]) dp[s] = 1;\n            }\n        }\n        cout << (dp[half] ? \"YES\" : \"NO\") << \"\\n\";\n    }\n}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Knapsack iterates the sum dimension forward (low to high) instead of backward, letting a single suitcase's weight be counted multiple times towards the same sum -- an unbounded-knapsack bug on what must be a 0/1 knapsack, which can only ever make MORE sums falsely reachable (turning some real NO into wrongly YES).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int m;\n    cin >> m;\n    cin.ignore();\n    while(m--){\n        string line;\n        getline(cin, line);\n        istringstream iss(line);\n        vector<int> w;\n        int x;\n        while(iss >> x) w.push_back(x);\n        int total = accumulate(w.begin(), w.end(), 0);\n        if (total % 2 != 0) { cout << \"NO\\n\"; continue; }\n        int half = total/2;\n        vector<char> dp(half+1, 0);\n        dp[0] = 1;\n        for (int wi : w) {\n            for (int s = wi; s <= half; s++) {\n                if (dp[s-wi]) dp[s] = 1;\n            }\n        }\n        cout << (dp[half] ? \"YES\" : \"NO\") << \"\\n\";\n    }\n}\n"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Skips the odd-total short-circuit entirely (always computes half = total/2 via integer truncation and runs the DP against that truncated half) -- for an odd total this asks the wrong question (\"can a subset sum to floor(total/2)?\") instead of correctly answering NO outright, so it's wrong whenever that truncated half happens to be achievable.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int m;\n    cin >> m;\n    cin.ignore();\n    while(m--){\n        string line;\n        getline(cin, line);\n        istringstream iss(line);\n        vector<int> w;\n        int x;\n        while(iss >> x) w.push_back(x);\n        int total = accumulate(w.begin(), w.end(), 0);\n        int half = total/2;\n        vector<char> dp(half+1, 0);\n        dp[0] = 1;\n        for (int wi : w) {\n            for (int s = half; s >= wi; s--) {\n                if (dp[s-wi]) dp[s] = 1;\n            }\n        }\n        cout << (dp[half] ? \"YES\" : \"NO\") << \"\\n\";\n    }\n}\n"
+    }
+  ]
+}

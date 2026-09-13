@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10550-combination-lock",
+  "uvaId": 10550,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Dial has 40 marks (9 deg each); clockwise = decreasing number mod 40 (verified by hand-tracing all given samples, e.g. 0->30->0->30 gives 1350 only under this convention). Total = (720 + cw(pos,a)) + (360 + ccw(a,b)) + cw(b,c).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint cwDist(int p,int q){ return ((p-q)%40+40)%40*9; }\nint ccwDist(int p,int q){ return ((q-p)%40+40)%40*9; }\nint main(){\n    int pos,a,b,c;\n    while(cin>>pos>>a>>b>>c && !(pos==0&&a==0&&b==0&&c==0)){\n        long long total=0;\n        total += 720 + cwDist(pos,a);\n        total += 360 + ccwDist(a,b);\n        total += cwDist(b,c);\n        cout << total << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:33:17.636Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Omits the '2 full turns'/'1 full turn' base rotations (just 360/0 instead of 720/360), a plausible careless misreading of the physical unlock procedure.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint cwDist(int p,int q){ return ((p-q)%40+40)%40*9; }\nint ccwDist(int p,int q){ return ((q-p)%40+40)%40*9; }\nint main(){\n    int pos,a,b,c;\n    while(cin>>pos>>a>>b>>c && !(pos==0&&a==0&&b==0&&c==0)){\n        long long total=0;\n        total += cwDist(pos,a);\n        total += ccwDist(a,b);\n        total += cwDist(b,c);\n        cout << total << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:33:20.764Z"
+    },
+    {
+      "tag": "custom",
+      "label": "Clockwise/counter-clockwise direction convention swapped (treats increasing number as clockwise instead of decreasing) -- the direction convention isn't obvious from the statement alone and has to be reverse-engineered from the samples, so this is a very plausible real mistake.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint cwDist(int p,int q){ return ((q-p)%40+40)%40*9; }\nint ccwDist(int p,int q){ return ((p-q)%40+40)%40*9; }\nint main(){\n    int pos,a,b,c;\n    while(cin>>pos>>a>>b>>c && !(pos==0&&a==0&&b==0&&c==0)){\n        long long total=0;\n        total += 720 + cwDist(pos,a);\n        total += 360 + ccwDist(a,b);\n        total += cwDist(b,c);\n        cout << total << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:33:25.024Z"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "uva-10591-happy-number",
+  "uvaId": 10591,
+  "authoredAt": "2026-09-07T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Simulate sum-of-squares-of-digits with a visited-set for cycle detection; N<10^9 shrinks to <1000 within one step so the set stays tiny.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nbool isHappy(long long n){\n    set<long long> seen;\n    while(n!=1 && !seen.count(n)){\n        seen.insert(n);\n        long long s=0;\n        while(n>0){ int d=n%10; s+=d*d; n/=10; }\n        n=s;\n    }\n    return n==1;\n}\nint main(){\n    int T; cin>>T;\n    for(int tc=1;tc<=T;tc++){\n        long long n; cin>>n;\n        cout << \"Case #\" << tc << \": \" << n << (isHappy(n)? \" is a Happy number.\" : \" is an Unhappy number.\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "AC",
+      "localCheckedAt": "2026-09-07T02:33:58.443Z"
+    },
+    {
+      "tag": "off-by-one",
+      "label": "Replaces proper cycle detection with a fixed cap of 5 iterations before giving up and declaring Unhappy -- some genuinely happy numbers with N up to 10^9 need more than 5 steps to reach 1, so this misclassifies them as Unhappy.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nbool isHappy(long long n){\n    for(int step=0; step<5 && n!=1; step++){\n        long long s=0;\n        while(n>0){ int d=n%10; s+=d*d; n/=10; }\n        n=s;\n    }\n    return n==1;\n}\nint main(){\n    int T; cin>>T;\n    for(int tc=1;tc<=T;tc++){\n        long long n; cin>>n;\n        cout << \"Case #\" << tc << \": \" << n << (isHappy(n)? \" is a Happy number.\" : \" is an Unhappy number.\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:34:01.745Z"
+    },
+    {
+      "tag": "whitespace-format",
+      "label": "Drops the article ('is Happy number.' / 'is Unhappy number.' instead of 'is a Happy number.' / 'is an Unhappy number.') -- every classification is numerically correct but the exact required wording is not.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nbool isHappy(long long n){\n    set<long long> seen;\n    while(n!=1 && !seen.count(n)){\n        seen.insert(n);\n        long long s=0;\n        while(n>0){ int d=n%10; s+=d*d; n/=10; }\n        n=s;\n    }\n    return n==1;\n}\nint main(){\n    int T; cin>>T;\n    for(int tc=1;tc<=T;tc++){\n        long long n; cin>>n;\n        cout << \"Case #\" << tc << \": \" << n << (isHappy(n)? \" is Happy number.\" : \" is Unhappy number.\") << \"\\n\";\n    }\n}\n",
+      "localVerdict": "WA",
+      "localCheckedAt": "2026-09-07T02:34:04.858Z"
+    }
+  ]
+}
