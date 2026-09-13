@@ -53,7 +53,16 @@
     "學校財團法人中華浸信會基督教台灣浸會神學院": "中華浸信會基督教台灣浸會神學院",
     "台神學校財團法人台灣神學研究學院": "台灣神學研究學院",
     "基督教華神學校財團法人中華福音神學研究學院": "中華福音神學研究學院",
-    "福智學校財團法人福智佛教學院": "福智佛教學院"
+    "福智學校財團法人福智佛教學院": "福智佛教學院",
+    "國立臺北科技大學附設進修學院": "國立臺北科技大學",
+    "國立高雄科技大學附設進修學院": "國立高雄科技大學",
+    "國立臺北商業大學附設空中進修學院": "國立臺北商業大學",
+    "國立臺中科技大學附設空中進修學院": "國立臺中科技大學",
+    "嶺東科技大學附設進修學院": "嶺東科技大學",
+    "基督教台灣浸會神學院": "中華浸信會基督教台灣浸會神學院",
+    "中華民國陸軍官校": "陸軍軍官學校",
+    "中華民國海軍官校": "海軍軍官學校",
+    "中華民國空軍官校": "空軍軍官學校"
   },
   "schools": [
     {
@@ -62,7 +71,7 @@
       "legalName": "國立政治大學",
       "englishName": "National Chengchi University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.nccu.edu.tw",
       "emailRoots": [
         "nccu.edu.tw"
@@ -78,7 +87,7 @@
       "legalName": "國立清華大學",
       "englishName": "National Tsing Hua University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.nthu.edu.tw",
       "emailRoots": [
         "nthu.edu.tw"
@@ -94,7 +103,7 @@
       "legalName": "國立臺灣大學",
       "englishName": "National Taiwan University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ntu.edu.tw",
       "emailRoots": [
         "ntu.edu.tw"
@@ -110,7 +119,7 @@
       "legalName": "國立臺灣師範大學",
       "englishName": "National Taiwan Normal University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ntnu.edu.tw",
       "emailRoots": [
         "ntnu.edu.tw"
@@ -126,7 +135,7 @@
       "legalName": "國立成功大學",
       "englishName": "National Cheng Kung University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ncku.edu.tw/",
       "emailRoots": [
         "ncku.edu.tw"
@@ -142,7 +151,7 @@
       "legalName": "國立中興大學",
       "englishName": "National Chung Hsing University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.nchu.edu.tw/index1.php",
       "emailRoots": [
         "nchu.edu.tw"
@@ -158,7 +167,7 @@
       "legalName": "國立陽明交通大學",
       "englishName": "National Yang Ming Chiao Tung University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.nycu.edu.tw/",
       "emailRoots": [
         "nycu.edu.tw"
@@ -174,7 +183,7 @@
       "legalName": "國立中央大學",
       "englishName": "National Central University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ncu.edu.tw",
       "emailRoots": [
         "ncu.edu.tw"
@@ -190,7 +199,7 @@
       "legalName": "國立中山大學",
       "englishName": "National Sun Yat-sen University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.nsysu.edu.tw",
       "emailRoots": [
         "nsysu.edu.tw"
@@ -206,7 +215,7 @@
       "legalName": "國立臺灣海洋大學",
       "englishName": "National Taiwan Ocean University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ntou.edu.tw",
       "emailRoots": [
         "ntou.edu.tw"
@@ -222,7 +231,7 @@
       "legalName": "國立中正大學",
       "englishName": "National Chung Cheng University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ccu.edu.tw/",
       "emailRoots": [
         "ccu.edu.tw"
@@ -238,7 +247,7 @@
       "legalName": "國立高雄師範大學",
       "englishName": "National Kaohsiung Normal University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.nknu.edu.tw",
       "emailRoots": [
         "nknu.edu.tw"
@@ -254,7 +263,7 @@
       "legalName": "國立彰化師範大學",
       "englishName": "National Changhua University of Education",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ncue.edu.tw",
       "emailRoots": [
         "ncue.edu.tw"
@@ -270,7 +279,7 @@
       "legalName": "國立臺北大學",
       "englishName": "National Taipei University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ntpu.edu.tw/",
       "emailRoots": [
         "ntpu.edu.tw"
@@ -286,7 +295,7 @@
       "legalName": "國立嘉義大學",
       "englishName": "National Chiayi University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ncyu.edu.tw",
       "emailRoots": [
         "ncyu.edu.tw"
@@ -302,7 +311,7 @@
       "legalName": "國立高雄大學",
       "englishName": "National University of Kaohsiung",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.nuk.edu.tw",
       "emailRoots": [
         "nuk.edu.tw"
@@ -318,7 +327,7 @@
       "legalName": "國立東華大學",
       "englishName": "National Dong Hwa University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ndhu.edu.tw",
       "emailRoots": [
         "ndhu.edu.tw"
@@ -334,7 +343,7 @@
       "legalName": "國立暨南國際大學",
       "englishName": "National Chi Nan University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ncnu.edu.tw",
       "emailRoots": [
         "ncnu.edu.tw"
@@ -350,7 +359,7 @@
       "legalName": "國立臺灣科技大學",
       "englishName": "National Taiwan University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ntust.edu.tw/home.php",
       "emailRoots": [
         "ntust.edu.tw"
@@ -366,7 +375,7 @@
       "legalName": "國立雲林科技大學",
       "englishName": "National Yunlin University of Science & Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.yuntech.edu.tw/",
       "emailRoots": [
         "yuntech.edu.tw"
@@ -382,7 +391,7 @@
       "legalName": "國立屏東科技大學",
       "englishName": "National Pingtung University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.npust.edu.tw/",
       "emailRoots": [
         "npust.edu.tw"
@@ -398,7 +407,7 @@
       "legalName": "國立臺北科技大學",
       "englishName": "National Taipei University of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ntut.edu.tw/",
       "emailRoots": [
         "ntut.edu.tw"
@@ -414,7 +423,7 @@
       "legalName": "國立臺北藝術大學",
       "englishName": "Taipei National University of the Arts",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://w3.tnua.edu.tw/",
       "emailRoots": [
         "tnua.edu.tw"
@@ -430,7 +439,7 @@
       "legalName": "國立臺灣藝術大學",
       "englishName": "National Taiwan University of Arts",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ntua.edu.tw",
       "emailRoots": [
         "ntua.edu.tw"
@@ -446,7 +455,7 @@
       "legalName": "國立臺東大學",
       "englishName": "National Taitung University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.nttu.edu.tw",
       "emailRoots": [
         "nttu.edu.tw"
@@ -462,7 +471,7 @@
       "legalName": "國立宜蘭大學",
       "englishName": "National Ilan University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.niu.edu.tw",
       "emailRoots": [
         "niu.edu.tw"
@@ -478,7 +487,7 @@
       "legalName": "國立聯合大學",
       "englishName": "National United University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.nuu.edu.tw",
       "emailRoots": [
         "nuu.edu.tw"
@@ -494,7 +503,7 @@
       "legalName": "國立虎尾科技大學",
       "englishName": "National Formosa University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.nfu.edu.tw/zh/",
       "emailRoots": [
         "nfu.edu.tw"
@@ -510,7 +519,7 @@
       "legalName": "國立臺南藝術大學",
       "englishName": "Tainan National University of the Arts",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.tnnua.edu.tw",
       "emailRoots": [
         "tnnua.edu.tw"
@@ -526,7 +535,7 @@
       "legalName": "國立臺南大學",
       "englishName": "National University of Tainan",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.nutn.edu.tw",
       "emailRoots": [
         "nutn.edu.tw"
@@ -542,7 +551,7 @@
       "legalName": "國立臺北教育大學",
       "englishName": "National Taipei University of Education",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ntue.edu.tw",
       "emailRoots": [
         "ntue.edu.tw"
@@ -558,7 +567,7 @@
       "legalName": "國立臺中教育大學",
       "englishName": "National Taichung University of Education",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ntcu.edu.tw",
       "emailRoots": [
         "ntcu.edu.tw"
@@ -574,7 +583,7 @@
       "legalName": "國立澎湖科技大學",
       "englishName": "National Penghu University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.npu.edu.tw/home.aspx",
       "emailRoots": [
         "npu.edu.tw"
@@ -590,7 +599,7 @@
       "legalName": "國立勤益科技大學",
       "englishName": "National Chin-Yi University of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ncut.edu.tw/",
       "emailRoots": [
         "ncut.edu.tw"
@@ -606,7 +615,7 @@
       "legalName": "國立體育大學",
       "englishName": "National Taiwan Sport University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ntsu.edu.tw",
       "emailRoots": [
         "ntsu.edu.tw"
@@ -622,7 +631,7 @@
       "legalName": "國立臺北護理健康大學",
       "englishName": "National Taipei University of Nursing and Health Sciences",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ntunhs.edu.tw/",
       "emailRoots": [
         "ntunhs.edu.tw"
@@ -638,7 +647,7 @@
       "legalName": "國立高雄餐旅大學",
       "englishName": "National Kaohsiung University of Hospitality and Tourism",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.nkuht.edu.tw/",
       "emailRoots": [
         "nkuht.edu.tw"
@@ -654,7 +663,7 @@
       "legalName": "國立金門大學",
       "englishName": "National Quemoy University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.nqu.edu.tw",
       "emailRoots": [
         "nqu.edu.tw"
@@ -670,7 +679,7 @@
       "legalName": "國立臺灣體育運動大學",
       "englishName": "National Taiwan University of Sport",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ntus.edu.tw",
       "emailRoots": [
         "ntus.edu.tw"
@@ -686,7 +695,7 @@
       "legalName": "國立臺中科技大學",
       "englishName": "National  Taichung University Of  Science And Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.nutc.edu.tw/",
       "emailRoots": [
         "nutc.edu.tw"
@@ -702,7 +711,7 @@
       "legalName": "國立臺北商業大學",
       "englishName": "National Taipei University of  Business",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ntub.edu.tw",
       "emailRoots": [
         "ntub.edu.tw"
@@ -718,7 +727,7 @@
       "legalName": "國立屏東大學",
       "englishName": "National Pingtung University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.nptu.edu.tw",
       "emailRoots": [
         "nptu.edu.tw"
@@ -734,7 +743,7 @@
       "legalName": "國立高雄科技大學",
       "englishName": "National Kaohsiung University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.nkust.edu.tw",
       "emailRoots": [
         "nkust.edu.tw"
@@ -750,7 +759,7 @@
       "legalName": "國立臺灣戲曲學院",
       "englishName": "National Taiwan College of Performing Arts",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.tcpa.edu.tw/",
       "emailRoots": [
         "tcpa.edu.tw"
@@ -766,7 +775,7 @@
       "legalName": "國立臺南護理專科學校",
       "englishName": "National Tainan Junior College of Nursing",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ntin.edu.tw/",
       "emailRoots": [
         "ntin.edu.tw"
@@ -782,7 +791,7 @@
       "legalName": "國立臺東專科學校",
       "englishName": "National Taitung Junior College",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ntc.edu.tw/",
       "emailRoots": [
         "ntc.edu.tw"
@@ -798,7 +807,7 @@
       "legalName": "國立空中大學",
       "englishName": "National Open University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.nou.edu.tw/",
       "emailRoots": [
         "nou.edu.tw"
@@ -814,7 +823,7 @@
       "legalName": "東海大學",
       "englishName": "Tunghai University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.thu.edu.tw",
       "emailRoots": [
         "thu.edu.tw"
@@ -830,7 +839,7 @@
       "legalName": "輔仁大學學校財團法人輔仁大學",
       "englishName": "Fu Jen Catholic University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.fju.edu.tw",
       "emailRoots": [
         "fju.edu.tw"
@@ -846,7 +855,7 @@
       "legalName": "東吳大學",
       "englishName": "Soochow University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.scu.edu.tw",
       "emailRoots": [
         "scu.edu.tw"
@@ -862,7 +871,7 @@
       "legalName": "中原大學",
       "englishName": "Chung Yuan Christian University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.cycu.edu.tw",
       "emailRoots": [
         "cycu.edu.tw"
@@ -878,7 +887,7 @@
       "legalName": "淡江大學學校財團法人淡江大學",
       "englishName": "Tamkang University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.tku.edu.tw",
       "emailRoots": [
         "tku.edu.tw"
@@ -894,7 +903,7 @@
       "legalName": "中國文化大學",
       "englishName": "Chinese Culture University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.pccu.edu.tw",
       "emailRoots": [
         "pccu.edu.tw"
@@ -910,7 +919,7 @@
       "legalName": "逢甲大學",
       "englishName": "Feng Chia University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.fcu.edu.tw/",
       "emailRoots": [
         "fcu.edu.tw"
@@ -926,7 +935,7 @@
       "legalName": "靜宜大學",
       "englishName": "Providence University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.pu.edu.tw",
       "emailRoots": [
         "pu.edu.tw"
@@ -942,7 +951,7 @@
       "legalName": "長庚大學",
       "englishName": "Chang Gung University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.cgu.edu.tw",
       "emailRoots": [
         "cgu.edu.tw"
@@ -958,7 +967,7 @@
       "legalName": "元智大學",
       "englishName": "Yuan Ze University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.yzu.edu.tw",
       "emailRoots": [
         "yzu.edu.tw"
@@ -974,7 +983,7 @@
       "legalName": "中華大學學校財團法人中華大學",
       "englishName": "Chung Hua University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www1.chu.edu.tw/",
       "emailRoots": [
         "chu.edu.tw"
@@ -990,7 +999,7 @@
       "legalName": "大葉大學",
       "englishName": "Da-Yeh University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.dyu.edu.tw/",
       "emailRoots": [
         "dyu.edu.tw"
@@ -1006,7 +1015,7 @@
       "legalName": "華梵學校財團法人華梵大學",
       "englishName": "Huafan University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.hfu.edu.tw",
       "emailRoots": [
         "hfu.edu.tw"
@@ -1022,7 +1031,7 @@
       "legalName": "義守大學",
       "englishName": "I-Shou University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.isu.edu.tw",
       "emailRoots": [
         "isu.edu.tw"
@@ -1038,7 +1047,7 @@
       "legalName": "世新大學",
       "englishName": "Shih Hsin University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.shu.edu.tw",
       "emailRoots": [
         "shu.edu.tw"
@@ -1054,7 +1063,7 @@
       "legalName": "銘傳大學",
       "englishName": "Ming Chuan University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.mcu.edu.tw",
       "emailRoots": [
         "mcu.edu.tw"
@@ -1070,7 +1079,7 @@
       "legalName": "實踐大學",
       "englishName": "Shih Chien University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.usc.edu.tw",
       "emailRoots": [
         "usc.edu.tw"
@@ -1086,7 +1095,7 @@
       "legalName": "朝陽科技大學",
       "englishName": "Chaoyang University of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://web.cyut.edu.tw",
       "emailRoots": [
         "cyut.edu.tw"
@@ -1102,7 +1111,7 @@
       "legalName": "高雄醫學大學",
       "englishName": "Kaohsiung Medical University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.kmu.edu.tw/",
       "emailRoots": [
         "kmu.edu.tw"
@@ -1118,7 +1127,7 @@
       "legalName": "南華大學",
       "englishName": "Nanhua university",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.nhu.edu.tw",
       "emailRoots": [
         "nhu.edu.tw"
@@ -1134,7 +1143,7 @@
       "legalName": "真理大學",
       "englishName": "Aletheia University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.au.edu.tw",
       "emailRoots": [
         "au.edu.tw"
@@ -1150,7 +1159,7 @@
       "legalName": "大同大學",
       "englishName": "Tatung University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ttu.edu.tw",
       "emailRoots": [
         "ttu.edu.tw"
@@ -1166,7 +1175,7 @@
       "legalName": "南臺學校財團法人南臺科技大學",
       "englishName": "Southern Taiwan University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.stust.edu.tw",
       "emailRoots": [
         "stust.edu.tw"
@@ -1182,7 +1191,7 @@
       "legalName": "崑山科技大學",
       "englishName": "Kun Shan University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ksu.edu.tw/",
       "emailRoots": [
         "ksu.edu.tw"
@@ -1198,7 +1207,7 @@
       "legalName": "嘉藥學校財團法人嘉南藥理大學",
       "englishName": "Chia Nan University of Pharmacy & Science",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.cnu.edu.tw/",
       "emailRoots": [
         "cnu.edu.tw"
@@ -1214,7 +1223,7 @@
       "legalName": "樹德科技大學",
       "englishName": "Shu-Te University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.stu.edu.tw/",
       "emailRoots": [
         "stu.edu.tw"
@@ -1230,7 +1239,7 @@
       "legalName": "慈濟學校財團法人慈濟大學",
       "englishName": "Tzu Chi University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.tcu.edu.tw",
       "emailRoots": [
         "tcu.edu.tw"
@@ -1246,7 +1255,7 @@
       "legalName": "臺北醫學大學",
       "englishName": "Taipei Medical University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.tmu.edu.tw",
       "emailRoots": [
         "tmu.edu.tw"
@@ -1262,7 +1271,7 @@
       "legalName": "中山醫學大學",
       "englishName": "Chung Shan Medical University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.csmu.edu.tw/",
       "emailRoots": [
         "csmu.edu.tw"
@@ -1278,7 +1287,7 @@
       "legalName": "龍華科技大學",
       "englishName": "Lunghwa University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.lhu.edu.tw",
       "emailRoots": [
         "lhu.edu.tw"
@@ -1294,7 +1303,7 @@
       "legalName": "輔英科技大學",
       "englishName": "Fooyin University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.fy.edu.tw/",
       "emailRoots": [
         "fy.edu.tw"
@@ -1310,7 +1319,7 @@
       "legalName": "明新學校財團法人明新科技大學",
       "englishName": "Minghsin University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.must.edu.tw/",
       "emailRoots": [
         "must.edu.tw"
@@ -1326,7 +1335,7 @@
       "legalName": "長榮大學",
       "englishName": "Chang Jung Christian University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.cjcu.edu.tw",
       "emailRoots": [
         "cjcu.edu.tw"
@@ -1342,7 +1351,7 @@
       "legalName": "弘光科技大學",
       "englishName": "Hungkuang University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.hk.edu.tw",
       "emailRoots": [
         "hk.edu.tw"
@@ -1358,7 +1367,7 @@
       "legalName": "中國醫藥大學",
       "englishName": "China Medical University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.cmu.edu.tw",
       "emailRoots": [
         "cmu.edu.tw"
@@ -1374,7 +1383,7 @@
       "legalName": "健行學校財團法人健行科技大學",
       "englishName": "Chien Hsin University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.uch.edu.tw/index.htm",
       "emailRoots": [
         "uch.edu.tw"
@@ -1390,7 +1399,7 @@
       "legalName": "正修學校財團法人正修科技大學",
       "englishName": "Cheng Shiu University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.csu.edu.tw",
       "emailRoots": [
         "csu.edu.tw"
@@ -1406,7 +1415,7 @@
       "legalName": "萬能學校財團法人萬能科技大學",
       "englishName": "Vanung University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.vnu.edu.tw/",
       "emailRoots": [
         "vnu.edu.tw"
@@ -1422,7 +1431,7 @@
       "legalName": "玄奘大學",
       "englishName": "Hsuan Chuang University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.hcu.edu.tw",
       "emailRoots": [
         "hcu.edu.tw"
@@ -1438,7 +1447,7 @@
       "legalName": "建國科技大學",
       "englishName": "Chienkuo Technology University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ctu.edu.tw/",
       "emailRoots": [
         "ctu.edu.tw"
@@ -1454,7 +1463,7 @@
       "legalName": "明志科技大學",
       "englishName": "Ming Chi University of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.mcut.edu.tw",
       "emailRoots": [
         "mcut.edu.tw"
@@ -1470,7 +1479,7 @@
       "legalName": "台鋼學校財團法人台鋼科技大學",
       "englishName": "Taiwan Steel University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.tsust.edu.tw",
       "emailRoots": [
         "tsust.edu.tw"
@@ -1486,7 +1495,7 @@
       "legalName": "大仁科技大學",
       "englishName": "Tajen University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.tajen.edu.tw/",
       "emailRoots": [
         "tajen.edu.tw"
@@ -1502,7 +1511,7 @@
       "legalName": "聖約翰科技大學",
       "englishName": "St. John’s University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.sju.edu.tw",
       "emailRoots": [
         "sju.edu.tw"
@@ -1518,7 +1527,7 @@
       "legalName": "嶺東科技大學",
       "englishName": "Ling Tung University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ltu.edu.tw/",
       "emailRoots": [
         "ltu.edu.tw"
@@ -1534,7 +1543,7 @@
       "legalName": "中國科技大學",
       "englishName": "China University of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.cute.edu.tw/",
       "emailRoots": [
         "cute.edu.tw"
@@ -1550,7 +1559,7 @@
       "legalName": "中臺科技大學",
       "englishName": "Central Taiwan University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ctust.edu.tw/",
       "emailRoots": [
         "ctust.edu.tw"
@@ -1566,7 +1575,7 @@
       "legalName": "亞洲大學",
       "englishName": "Asia University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.asia.edu.tw",
       "emailRoots": [
         "asia.edu.tw"
@@ -1582,7 +1591,7 @@
       "legalName": "開南大學",
       "englishName": "Kainan University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.knu.edu.tw",
       "emailRoots": [
         "knu.edu.tw"
@@ -1598,7 +1607,7 @@
       "legalName": "佛光大學",
       "englishName": "Fo Guang University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.fgu.edu.tw",
       "emailRoots": [
         "fgu.edu.tw"
@@ -1614,7 +1623,7 @@
       "legalName": "台南家專學校財團法人台南應用科技大學",
       "englishName": "Tainan University of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.tut.edu.tw",
       "emailRoots": [
         "tut.edu.tw"
@@ -1630,7 +1639,7 @@
       "legalName": "中信金學校財團法人中信科技大學",
       "englishName": "CTBC UNIVERSITY OF TECHNOLOGY",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ctbctech.edu.tw",
       "emailRoots": [
         "ctbctech.edu.tw",
@@ -1648,7 +1657,7 @@
       "legalName": "光宇學校財團法人元培醫事科技大學",
       "englishName": "Yuanpei University of Medical Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ypu.edu.tw/index.php",
       "emailRoots": [
         "ypu.edu.tw"
@@ -1664,7 +1673,7 @@
       "legalName": "景文科技大學",
       "englishName": "Jinwen University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.just.edu.tw",
       "emailRoots": [
         "just.edu.tw"
@@ -1680,7 +1689,7 @@
       "legalName": "中華醫事科技大學",
       "englishName": "Chung Hwa University of Medical Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.hwai.edu.tw/index.php",
       "emailRoots": [
         "hwai.edu.tw"
@@ -1696,7 +1705,7 @@
       "legalName": "東南科技大學",
       "englishName": "Tungnan University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.tnu.edu.tw/",
       "emailRoots": [
         "tnu.edu.tw"
@@ -1712,7 +1721,7 @@
       "legalName": "德明財經科技大學",
       "englishName": "Takming University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.takming.edu.tw/",
       "emailRoots": [
         "takming.edu.tw"
@@ -1728,7 +1737,7 @@
       "legalName": "南開科技大學",
       "englishName": "Nan Kai University of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.nkut.edu.tw/index.php",
       "emailRoots": [
         "nkut.edu.tw"
@@ -1744,7 +1753,7 @@
       "legalName": "中華學校財團法人中華科技大學",
       "englishName": "China University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.cust.edu.tw",
       "emailRoots": [
         "cust.edu.tw"
@@ -1760,7 +1769,7 @@
       "legalName": "僑光科技大學",
       "englishName": "Overseas Chinese University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ocu.edu.tw/index.php",
       "emailRoots": [
         "ocu.edu.tw"
@@ -1776,7 +1785,7 @@
       "legalName": "廣亞學校財團法人育達科技大學",
       "englishName": "Yu Da University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ydu.edu.tw/",
       "emailRoots": [
         "ydu.edu.tw"
@@ -1792,7 +1801,7 @@
       "legalName": "美和學校財團法人美和科技大學",
       "englishName": "Meiho University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.meiho.edu.tw/",
       "emailRoots": [
         "meiho.edu.tw"
@@ -1808,7 +1817,7 @@
       "legalName": "吳鳳科技大學",
       "englishName": "WuFeng University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.wfu.edu.tw",
       "emailRoots": [
         "wfu.edu.tw"
@@ -1824,7 +1833,7 @@
       "legalName": "修平學校財團法人修平科技大學",
       "englishName": "Hsiuping University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.hust.edu.tw/",
       "emailRoots": [
         "hust.edu.tw"
@@ -1840,7 +1849,7 @@
       "legalName": "長庚學校財團法人長庚科技大學",
       "englishName": "Chang Gung University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.cgust.edu.tw",
       "emailRoots": [
         "cgust.edu.tw"
@@ -1856,7 +1865,7 @@
       "legalName": "城市學校財團法人臺北城市科技大學",
       "englishName": "Taipei City University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.tpcu.edu.tw/bin/home.php",
       "emailRoots": [
         "tpcu.edu.tw"
@@ -1872,7 +1881,7 @@
       "legalName": "大華學校財團法人敏實科技大學",
       "englishName": "Minth University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.mitust.edu.tw/",
       "emailRoots": [
         "mitust.edu.tw"
@@ -1888,7 +1897,7 @@
       "legalName": "醒吾學校財團法人醒吾科技大學",
       "englishName": "Hsing Wu University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.hwu.edu.tw/",
       "emailRoots": [
         "hwu.edu.tw"
@@ -1904,7 +1913,7 @@
       "legalName": "文藻學校財團法人文藻外語大學",
       "englishName": "Wenzao Ursuline University of Languages",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://a001.wzu.edu.tw/",
       "emailRoots": [
         "wzu.edu.tw"
@@ -1920,7 +1929,7 @@
       "legalName": "華夏學校財團法人華夏科技大學",
       "englishName": "Hwa Hsia University of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.hwh.edu.tw/bin/hwhhome.php",
       "emailRoots": [
         "hwh.edu.tw"
@@ -1936,7 +1945,7 @@
       "legalName": "致理學校財團法人致理科技大學",
       "englishName": "Chihlee University of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.chihlee.edu.tw/",
       "emailRoots": [
         "chihlee.edu.tw"
@@ -1952,7 +1961,7 @@
       "legalName": "康寧學校財團法人康寧大學",
       "englishName": "University of Kang Ning",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ukn.edu.tw",
       "emailRoots": [
         "ukn.edu.tw"
@@ -1968,7 +1977,7 @@
       "legalName": "宏國學校財團法人宏國德霖科技大學",
       "englishName": "Hungkuo Delin University of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://w5.hdut.edu.tw/app/home.php",
       "emailRoots": [
         "hdut.edu.tw"
@@ -1984,7 +1993,7 @@
       "legalName": "崇右學校財團法人崇右影藝科技大學",
       "englishName": "Chungyu University of Film and Arts",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.cufa.edu.tw",
       "emailRoots": [
         "cufa.edu.tw"
@@ -2000,7 +2009,7 @@
       "legalName": "台北海洋學校財團法人台北海洋科技大學",
       "englishName": "Taipei University of Marine Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.tumt.edu.tw/",
       "emailRoots": [
         "tumt.edu.tw"
@@ -2016,7 +2025,7 @@
       "legalName": "亞東學校財團法人亞東科技大學",
       "englishName": "Asia Eastern University of Science and Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.aeust.edu.tw/",
       "emailRoots": [
         "aeust.edu.tw"
@@ -2032,7 +2041,7 @@
       "legalName": "馬偕學校財團法人馬偕醫學大學",
       "englishName": "MacKay Medical University",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.mmu.edu.tw",
       "emailRoots": [
         "mmu.edu.tw"
@@ -2048,7 +2057,7 @@
       "legalName": "中信學校財團法人中信金融管理學院",
       "englishName": "CTBC Business School",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ctbc.edu.tw/",
       "emailRoots": [
         "ctbc.edu.tw"
@@ -2064,7 +2073,7 @@
       "legalName": "南亞科技學校財團法人南亞技術學院",
       "englishName": "Nanya Institute of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.nanya.edu.tw",
       "emailRoots": [
         "nanya.edu.tw"
@@ -2080,7 +2089,7 @@
       "legalName": "黎明技術學院",
       "englishName": "Lee-Ming Institute of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.lit.edu.tw/",
       "emailRoots": [
         "lit.edu.tw"
@@ -2096,7 +2105,7 @@
       "legalName": "德育學校財團法人德育護理健康學院",
       "englishName": "Deh Yu College of Nursing and Health",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.dyhu.edu.tw/",
       "emailRoots": [
         "dyhu.edu.tw"
@@ -2112,7 +2121,7 @@
       "legalName": "法鼓學校財團法人法鼓文理學院",
       "englishName": "Dharma Drum Institute of Liberal Art",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.dila.edu.tw/",
       "emailRoots": [
         "dila.edu.tw"
@@ -2128,7 +2137,7 @@
       "legalName": "馬偕學校財團法人馬偕醫護管理專科學校",
       "englishName": "MacKay Junior College of Medicine, Nursing, and Management",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.mkc.edu.tw/",
       "emailRoots": [
         "mkc.edu.tw"
@@ -2144,7 +2153,7 @@
       "legalName": "仁德醫護管理專科學校",
       "englishName": "Jen-Teh Junior College of Medicine, Nursing and Management",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.jente.edu.tw/",
       "emailRoots": [
         "jente.edu.tw"
@@ -2160,7 +2169,7 @@
       "legalName": "樹人醫護管理專科學校",
       "englishName": "Shu-Zen Junior College of Medicine and Management",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.szmc.edu.tw/",
       "emailRoots": [
         "szmc.edu.tw"
@@ -2176,7 +2185,7 @@
       "legalName": "慈惠醫護管理專科學校",
       "englishName": "TZU HUI Institute of Technology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.tzuhui.edu.tw/home",
       "emailRoots": [
         "tzuhui.edu.tw"
@@ -2192,7 +2201,7 @@
       "legalName": "耕莘健康管理專科學校",
       "englishName": "Cardinal Tien Junior College of Healthcare And Management",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.ctcn.edu.tw",
       "emailRoots": [
         "ctcn.edu.tw"
@@ -2208,7 +2217,7 @@
       "legalName": "敏惠醫護管理專科學校",
       "englishName": "Min-Hwei Junior College of Health Care Management",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.mhchcm.edu.tw",
       "emailRoots": [
         "mhchcm.edu.tw"
@@ -2224,7 +2233,7 @@
       "legalName": "育英醫護管理專科學校",
       "englishName": "Yuh-Ing Junior College of Health Care & Management",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.yuhing.edu.tw",
       "emailRoots": [
         "yuhing.edu.tw"
@@ -2240,7 +2249,7 @@
       "legalName": "聖母醫護管理專科學校",
       "englishName": "St. Mary''s Junior College of Medicine, Nursing and Management",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.smc.edu.tw/nss/p/index",
       "emailRoots": [
         "smc.edu.tw"
@@ -2256,7 +2265,7 @@
       "legalName": "新生學校財團法人新生醫護管理專科學校",
       "englishName": "Hsin Sheng Junior College of Medical Care and Management",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.hsc.edu.tw",
       "emailRoots": [
         "hsc.edu.tw"
@@ -2272,7 +2281,7 @@
       "legalName": "崇仁醫護管理專科學校",
       "englishName": "Chung-Jen Junior College of Nursing, Health Sciences and Management",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.cjc.edu.tw/",
       "emailRoots": [
         "cjc.edu.tw"
@@ -2288,7 +2297,7 @@
       "legalName": "學校財團法人中華浸信會基督教台灣浸會神學院",
       "englishName": "Taiwan Baptist Christian Seminary",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.tbts.edu.tw/",
       "emailRoots": [
         "tbts.edu.tw"
@@ -2304,7 +2313,7 @@
       "legalName": "臺北基督學院",
       "englishName": "Christ''s College Taipei",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.cct.edu.tw",
       "emailRoots": [
         "cct.edu.tw"
@@ -2320,7 +2329,7 @@
       "legalName": "台神學校財團法人台灣神學研究學院",
       "englishName": "Taiwan Graduate School of Theology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.tgst.edu.tw",
       "emailRoots": [
         "tgst.edu.tw"
@@ -2336,7 +2345,7 @@
       "legalName": "一貫道崇德學院",
       "englishName": "I.K.T. Chong-De School",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.iktcds.edu.tw/",
       "emailRoots": [],
       "emailEvidence": [
@@ -2350,7 +2359,7 @@
       "legalName": "台灣基督長老教會南神神學院",
       "englishName": "Tainan Theological College",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ttcs.edu.tw/",
       "emailRoots": [
         "ttcs.edu.tw"
@@ -2366,7 +2375,7 @@
       "legalName": "基督教華神學校財團法人中華福音神學研究學院",
       "englishName": "China Evangelical Graduate School of Theology",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://wp.ces.org.tw/",
       "emailRoots": [
         "ces.org.tw"
@@ -2382,7 +2391,7 @@
       "legalName": "唯心聖教學院",
       "englishName": "Weixin Shengjiao College",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://www.wxsjc.edu.tw/",
       "emailRoots": [
         "wxsjc.edu.tw"
@@ -2398,7 +2407,7 @@
       "legalName": "福智學校財團法人福智佛教學院",
       "englishName": "Bliss and Wisdom Buddhist College",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "https://bwbc.blisswisdom.org/",
       "emailRoots": [
         "bwbc.edu.tw"
@@ -2414,7 +2423,7 @@
       "legalName": "臺北市立大學",
       "englishName": "University of Taipei",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.utaipei.edu.tw/",
       "emailRoots": [
         "utaipei.edu.tw"
@@ -2430,7 +2439,7 @@
       "legalName": "高雄市立空中大學",
       "englishName": "Open University of Kaohsiung",
       "authority": "MOE",
-      "academicYear": 114,
+      "academicYear": 115,
       "website": "http://www.ouk.edu.tw",
       "emailRoots": [
         "ouk.edu.tw"
@@ -2446,7 +2455,7 @@
       "legalName": "國防醫學大學",
       "englishName": "",
       "authority": "MND",
-      "academicYear": null,
+      "academicYear": 115,
       "website": "https://eclass.ndmutsgh.edu.tw/",
       "emailRoots": [
         "ndmutsgh.edu.tw",
@@ -2463,7 +2472,7 @@
       "legalName": "國防大學",
       "englishName": "",
       "authority": "MND",
-      "academicYear": null,
+      "academicYear": 115,
       "website": "https://www.ndu.edu.tw/data/9/61",
       "emailRoots": [
         "ndu.edu.tw"
@@ -2479,7 +2488,7 @@
       "legalName": "中央警察大學",
       "englishName": "",
       "authority": "MOI",
-      "academicYear": null,
+      "academicYear": 115,
       "website": "https://cp.cpu.edu.tw/p/404-1018-41287.php",
       "emailRoots": [
         "cpu.edu.tw"
@@ -2495,7 +2504,7 @@
       "legalName": "陸軍軍官學校",
       "englishName": "",
       "authority": "MND",
-      "academicYear": null,
+      "academicYear": 115,
       "website": "https://www.mnd.gov.tw/RelatedLinks/MilitaryAcademies",
       "emailRoots": [],
       "emailEvidence": [],
@@ -2507,7 +2516,7 @@
       "legalName": "陸軍專科學校",
       "englishName": "",
       "authority": "MND",
-      "academicYear": null,
+      "academicYear": 115,
       "website": "https://www.mnd.gov.tw/RelatedLinks/MilitaryAcademies",
       "emailRoots": [],
       "emailEvidence": [],
@@ -2519,7 +2528,7 @@
       "legalName": "海軍軍官學校",
       "englishName": "",
       "authority": "MND",
-      "academicYear": null,
+      "academicYear": 115,
       "website": "https://www.mnd.gov.tw/RelatedLinks/MilitaryAcademies",
       "emailRoots": [],
       "emailEvidence": [],
@@ -2531,7 +2540,7 @@
       "legalName": "空軍軍官學校",
       "englishName": "",
       "authority": "MND",
-      "academicYear": null,
+      "academicYear": 115,
       "website": "https://www.mnd.gov.tw/RelatedLinks/MilitaryAcademies",
       "emailRoots": [],
       "emailEvidence": [],
@@ -2543,7 +2552,7 @@
       "legalName": "空軍航空技術學院",
       "englishName": "",
       "authority": "MND",
-      "academicYear": null,
+      "academicYear": 115,
       "website": "https://www.mnd.gov.tw/RelatedLinks/MilitaryAcademies",
       "emailRoots": [],
       "emailEvidence": [],
@@ -2555,7 +2564,7 @@
       "legalName": "臺灣警察專科學校",
       "englishName": "Taiwan Police College",
       "authority": "MOI",
-      "academicYear": null,
+      "academicYear": 115,
       "website": "https://www.tpa.edu.tw/",
       "emailRoots": [
         "tpa.edu.tw"
@@ -2565,5 +2574,1009 @@
       ],
       "verification": "email"
     }
-  ]
+  ],
+  "rosterVerification": {
+    "retrievedAt": "2026-09-13",
+    "academicYear": 115,
+    "announcement": "https://depart.moe.edu.tw/ed4500/News_Content.aspx?n=63F5AB3D02A8BBAC&s=52D3798D5069E231&sms=1FF9979D10DBF9F3",
+    "sources": [
+      {
+        "url": "https://stats.moe.gov.tw/files/school/115/u1_new.ods",
+        "sha256": "11c2f5f9876dc8f1341ac123458a2b1c3152304d168b8dae8c4b684da908d6e2"
+      },
+      {
+        "url": "https://stats.moe.gov.tw/files/school/115/u2_new.ods",
+        "sha256": "db024c44b697cde74865dabf7452db6b69a1d6124b4076897a582dbbbf07ff7e"
+      },
+      {
+        "url": "https://stats.moe.gov.tw/files/school/115/u3_new.ods",
+        "sha256": "6bad3f194f6dac82d3fbfc1b0afa016367808a701e489ab7c3762178fc60c8d4"
+      },
+      {
+        "url": "https://stats.moe.gov.tw/files/school/115/school08_new.ods",
+        "sha256": "24e1b9958fb5614fee95099ca6738f37dd36ca7a19ddaed7af178c172f50bcca"
+      }
+    ],
+    "scope": "154 MOE roster entries map to 149 institutions (5 affiliated continuing colleges use parent institutions); 9 military/police entries. This validates institutional coverage, not every real mailbox.",
+    "entries": [
+      {
+        "code": "0001",
+        "name": "國立政治大學",
+        "institution": "國立政治大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0002",
+        "name": "國立清華大學",
+        "institution": "國立清華大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0003",
+        "name": "國立臺灣大學",
+        "institution": "國立臺灣大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0004",
+        "name": "國立臺灣師範大學",
+        "institution": "國立臺灣師範大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0005",
+        "name": "國立成功大學",
+        "institution": "國立成功大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0006",
+        "name": "國立中興大學",
+        "institution": "國立中興大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0007",
+        "name": "國立陽明交通大學",
+        "institution": "國立陽明交通大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0008",
+        "name": "國立中央大學",
+        "institution": "國立中央大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0009",
+        "name": "國立中山大學",
+        "institution": "國立中山大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0012",
+        "name": "國立臺灣海洋大學",
+        "institution": "國立臺灣海洋大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0013",
+        "name": "國立中正大學",
+        "institution": "國立中正大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0014",
+        "name": "國立高雄師範大學",
+        "institution": "國立高雄師範大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0015",
+        "name": "國立彰化師範大學",
+        "institution": "國立彰化師範大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0017",
+        "name": "國立臺北大學",
+        "institution": "國立臺北大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0018",
+        "name": "國立嘉義大學",
+        "institution": "國立嘉義大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0019",
+        "name": "國立高雄大學",
+        "institution": "國立高雄大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0020",
+        "name": "國立東華大學",
+        "institution": "國立東華大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0021",
+        "name": "國立暨南國際大學",
+        "institution": "國立暨南國際大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0022",
+        "name": "國立臺灣科技大學",
+        "institution": "國立臺灣科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0023",
+        "name": "國立雲林科技大學",
+        "institution": "國立雲林科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0024",
+        "name": "國立屏東科技大學",
+        "institution": "國立屏東科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0025",
+        "name": "國立臺北科技大學",
+        "institution": "國立臺北科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0028",
+        "name": "國立臺北藝術大學",
+        "institution": "國立臺北藝術大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0029",
+        "name": "國立臺灣藝術大學",
+        "institution": "國立臺灣藝術大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0030",
+        "name": "國立臺東大學",
+        "institution": "國立臺東大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0031",
+        "name": "國立宜蘭大學",
+        "institution": "國立宜蘭大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0032",
+        "name": "國立聯合大學",
+        "institution": "國立聯合大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0033",
+        "name": "國立虎尾科技大學",
+        "institution": "國立虎尾科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0035",
+        "name": "國立臺南藝術大學",
+        "institution": "國立臺南藝術大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0036",
+        "name": "國立臺南大學",
+        "institution": "國立臺南大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0037",
+        "name": "國立臺北教育大學",
+        "institution": "國立臺北教育大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0039",
+        "name": "國立臺中教育大學",
+        "institution": "國立臺中教育大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0042",
+        "name": "國立澎湖科技大學",
+        "institution": "國立澎湖科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0043",
+        "name": "國立勤益科技大學",
+        "institution": "國立勤益科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0044",
+        "name": "國立體育大學",
+        "institution": "國立體育大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0046",
+        "name": "國立臺北護理健康大學",
+        "institution": "國立臺北護理健康大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0047",
+        "name": "國立高雄餐旅大學",
+        "institution": "國立高雄餐旅大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0048",
+        "name": "國立金門大學",
+        "institution": "國立金門大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0049",
+        "name": "國立臺灣體育運動大學",
+        "institution": "國立臺灣體育運動大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0050",
+        "name": "國立臺中科技大學",
+        "institution": "國立臺中科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0051",
+        "name": "國立臺北商業大學",
+        "institution": "國立臺北商業大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0052",
+        "name": "國立屏東大學",
+        "institution": "國立屏東大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0053",
+        "name": "國立高雄科技大學",
+        "institution": "國立高雄科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0144",
+        "name": "國立臺灣戲曲學院",
+        "institution": "國立臺灣戲曲學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0221",
+        "name": "國立臺南護理專科學校",
+        "institution": "國立臺南護理專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0222",
+        "name": "國立臺東專科學校",
+        "institution": "國立臺東專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1001",
+        "name": "東海大學",
+        "institution": "東海大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1002",
+        "name": "輔仁大學",
+        "institution": "輔仁大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1003",
+        "name": "東吳大學",
+        "institution": "東吳大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1004",
+        "name": "中原大學",
+        "institution": "中原大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1005",
+        "name": "淡江大學",
+        "institution": "淡江大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1006",
+        "name": "中國文化大學",
+        "institution": "中國文化大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1007",
+        "name": "逢甲大學",
+        "institution": "逢甲大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1008",
+        "name": "靜宜大學",
+        "institution": "靜宜大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1009",
+        "name": "長庚大學",
+        "institution": "長庚大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1010",
+        "name": "元智大學",
+        "institution": "元智大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1011",
+        "name": "中華大學",
+        "institution": "中華大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1012",
+        "name": "大葉大學",
+        "institution": "大葉大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1013",
+        "name": "華梵大學",
+        "institution": "華梵大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1014",
+        "name": "義守大學",
+        "institution": "義守大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1015",
+        "name": "世新大學",
+        "institution": "世新大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1016",
+        "name": "銘傳大學",
+        "institution": "銘傳大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1017",
+        "name": "實踐大學",
+        "institution": "實踐大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1018",
+        "name": "朝陽科技大學",
+        "institution": "朝陽科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1019",
+        "name": "高雄醫學大學",
+        "institution": "高雄醫學大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1020",
+        "name": "南華大學",
+        "institution": "南華大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1021",
+        "name": "真理大學",
+        "institution": "真理大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1022",
+        "name": "大同大學",
+        "institution": "大同大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1023",
+        "name": "南臺科技大學",
+        "institution": "南臺科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1024",
+        "name": "崑山科技大學",
+        "institution": "崑山科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1025",
+        "name": "嘉南藥理大學",
+        "institution": "嘉南藥理大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1026",
+        "name": "樹德科技大學",
+        "institution": "樹德科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1027",
+        "name": "慈濟大學",
+        "institution": "慈濟大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1028",
+        "name": "臺北醫學大學",
+        "institution": "臺北醫學大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1029",
+        "name": "中山醫學大學",
+        "institution": "中山醫學大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1030",
+        "name": "龍華科技大學",
+        "institution": "龍華科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1031",
+        "name": "輔英科技大學",
+        "institution": "輔英科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1032",
+        "name": "明新科技大學",
+        "institution": "明新科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1033",
+        "name": "長榮大學",
+        "institution": "長榮大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1034",
+        "name": "弘光科技大學",
+        "institution": "弘光科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1035",
+        "name": "中國醫藥大學",
+        "institution": "中國醫藥大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1036",
+        "name": "健行科技大學",
+        "institution": "健行科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1037",
+        "name": "正修科技大學",
+        "institution": "正修科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1038",
+        "name": "萬能科技大學",
+        "institution": "萬能科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1039",
+        "name": "玄奘大學",
+        "institution": "玄奘大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1040",
+        "name": "建國科技大學",
+        "institution": "建國科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1041",
+        "name": "明志科技大學",
+        "institution": "明志科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1042",
+        "name": "台鋼科技大學",
+        "institution": "台鋼科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1043",
+        "name": "大仁科技大學",
+        "institution": "大仁科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1044",
+        "name": "聖約翰科技大學",
+        "institution": "聖約翰科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1045",
+        "name": "嶺東科技大學",
+        "institution": "嶺東科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1046",
+        "name": "中國科技大學",
+        "institution": "中國科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1047",
+        "name": "中臺科技大學",
+        "institution": "中臺科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1048",
+        "name": "亞洲大學",
+        "institution": "亞洲大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1049",
+        "name": "開南大學",
+        "institution": "開南大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1050",
+        "name": "佛光大學",
+        "institution": "佛光大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1051",
+        "name": "台南應用科技大學",
+        "institution": "台南應用科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1052",
+        "name": "中信科技大學",
+        "institution": "中信科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1053",
+        "name": "元培醫事科技大學",
+        "institution": "元培醫事科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1054",
+        "name": "景文科技大學",
+        "institution": "景文科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1055",
+        "name": "中華醫事科技大學",
+        "institution": "中華醫事科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1056",
+        "name": "東南科技大學",
+        "institution": "東南科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1057",
+        "name": "德明財經科技大學",
+        "institution": "德明財經科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1060",
+        "name": "南開科技大學",
+        "institution": "南開科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1061",
+        "name": "中華科技大學",
+        "institution": "中華科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1062",
+        "name": "僑光科技大學",
+        "institution": "僑光科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1063",
+        "name": "育達科技大學",
+        "institution": "育達科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1064",
+        "name": "美和科技大學",
+        "institution": "美和科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1065",
+        "name": "吳鳳科技大學",
+        "institution": "吳鳳科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1069",
+        "name": "修平科技大學",
+        "institution": "修平科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1070",
+        "name": "長庚科技大學",
+        "institution": "長庚科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1071",
+        "name": "臺北城市科技大學",
+        "institution": "臺北城市科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1072",
+        "name": "敏實科技大學",
+        "institution": "敏實科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1073",
+        "name": "醒吾科技大學",
+        "institution": "醒吾科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1075",
+        "name": "文藻外語大學",
+        "institution": "文藻外語大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1076",
+        "name": "華夏科技大學",
+        "institution": "華夏科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1078",
+        "name": "致理科技大學",
+        "institution": "致理科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1079",
+        "name": "康寧大學",
+        "institution": "康寧大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1080",
+        "name": "宏國德霖科技大學",
+        "institution": "宏國德霖科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1082",
+        "name": "崇右影藝科技大學",
+        "institution": "崇右影藝科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1083",
+        "name": "台北海洋科技大學",
+        "institution": "台北海洋科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1084",
+        "name": "亞東科技大學",
+        "institution": "亞東科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1085",
+        "name": "馬偕醫學大學",
+        "institution": "馬偕醫學大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1125",
+        "name": "中信金融管理學院",
+        "institution": "中信金融管理學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1168",
+        "name": "南亞技術學院",
+        "institution": "南亞技術學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1183",
+        "name": "黎明技術學院",
+        "institution": "黎明技術學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1185",
+        "name": "德育護理健康學院",
+        "institution": "德育護理健康學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1196",
+        "name": "法鼓文理學院",
+        "institution": "法鼓文理學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1282",
+        "name": "馬偕醫護管理專科學校",
+        "institution": "馬偕醫護管理專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1283",
+        "name": "仁德醫護管理專科學校",
+        "institution": "仁德醫護管理專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1284",
+        "name": "樹人醫護管理專科學校",
+        "institution": "樹人醫護管理專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1285",
+        "name": "慈惠醫護管理專科學校",
+        "institution": "慈惠醫護管理專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1286",
+        "name": "耕莘健康管理專科學校",
+        "institution": "耕莘健康管理專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1287",
+        "name": "敏惠醫護管理專科學校",
+        "institution": "敏惠醫護管理專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1289",
+        "name": "育英醫護管理專科學校",
+        "institution": "育英醫護管理專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1291",
+        "name": "聖母醫護管理專科學校",
+        "institution": "聖母醫護管理專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1292",
+        "name": "新生醫護管理專科學校",
+        "institution": "新生醫護管理專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "1293",
+        "name": "崇仁醫護管理專科學校",
+        "institution": "崇仁醫護管理專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "3002",
+        "name": "臺北市立大學",
+        "institution": "臺北市立大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u1_new.ods"
+      },
+      {
+        "code": "0A01",
+        "name": "國立空中大學",
+        "institution": "國立空中大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u2_new.ods"
+      },
+      {
+        "code": "0A12",
+        "name": "國立臺北科技大學附設進修學院",
+        "institution": "國立臺北科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u2_new.ods"
+      },
+      {
+        "code": "0A13",
+        "name": "國立高雄科技大學附設進修學院",
+        "institution": "國立高雄科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u2_new.ods"
+      },
+      {
+        "code": "0A17",
+        "name": "國立臺北商業大學附設空中進修學院",
+        "institution": "國立臺北商業大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u2_new.ods"
+      },
+      {
+        "code": "0A18",
+        "name": "國立臺中科技大學附設空中進修學院",
+        "institution": "國立臺中科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u2_new.ods"
+      },
+      {
+        "code": "1A40",
+        "name": "嶺東科技大學附設進修學院",
+        "institution": "嶺東科技大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u2_new.ods"
+      },
+      {
+        "code": "3A01",
+        "name": "高雄市立空中大學",
+        "institution": "高雄市立空中大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/u2_new.ods"
+      },
+      {
+        "code": "1R02",
+        "name": "基督教台灣浸會神學院",
+        "institution": "中華浸信會基督教台灣浸會神學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u3_new.ods"
+      },
+      {
+        "code": "1R03",
+        "name": "臺北基督學院",
+        "institution": "臺北基督學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u3_new.ods"
+      },
+      {
+        "code": "1R05",
+        "name": "台灣神學研究學院",
+        "institution": "台灣神學研究學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u3_new.ods"
+      },
+      {
+        "code": "1R06",
+        "name": "一貫道崇德學院",
+        "institution": "一貫道崇德學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u3_new.ods"
+      },
+      {
+        "code": "1R07",
+        "name": "台灣基督長老教會南神神學院",
+        "institution": "台灣基督長老教會南神神學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u3_new.ods"
+      },
+      {
+        "code": "1R08",
+        "name": "中華福音神學研究學院",
+        "institution": "中華福音神學研究學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u3_new.ods"
+      },
+      {
+        "code": "1R09",
+        "name": "唯心聖教學院",
+        "institution": "唯心聖教學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u3_new.ods"
+      },
+      {
+        "code": "1R10",
+        "name": "福智佛教學院",
+        "institution": "福智佛教學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/u3_new.ods"
+      },
+      {
+        "code": "M001",
+        "name": "中華民國陸軍官校",
+        "institution": "陸軍軍官學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/school08_new.ods"
+      },
+      {
+        "code": "M002",
+        "name": "中華民國海軍官校",
+        "institution": "海軍軍官學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/school08_new.ods"
+      },
+      {
+        "code": "M003",
+        "name": "中華民國空軍官校",
+        "institution": "空軍軍官學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/school08_new.ods"
+      },
+      {
+        "code": "M009",
+        "name": "國防大學",
+        "institution": "國防大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/school08_new.ods"
+      },
+      {
+        "code": "M010",
+        "name": "國防醫學大學",
+        "institution": "國防醫學大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/school08_new.ods"
+      },
+      {
+        "code": "M066",
+        "name": "中央警察大學",
+        "institution": "中央警察大學",
+        "source": "https://stats.moe.gov.tw/files/school/115/school08_new.ods"
+      },
+      {
+        "code": "M108",
+        "name": "空軍航空技術學院",
+        "institution": "空軍航空技術學院",
+        "source": "https://stats.moe.gov.tw/files/school/115/school08_new.ods"
+      },
+      {
+        "code": "M209",
+        "name": "陸軍專科學校",
+        "institution": "陸軍專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/school08_new.ods"
+      },
+      {
+        "code": "M267",
+        "name": "臺灣警察專科學校",
+        "institution": "臺灣警察專科學校",
+        "source": "https://stats.moe.gov.tw/files/school/115/school08_new.ods"
+      }
+    ]
+  }
 }

@@ -153,6 +153,21 @@ export const adminRefundListSchema = z.object({
 });
 export type AdminRefundListDto = z.infer<typeof adminRefundListSchema>;
 
+export const resolveRefundSchema = z.object({
+  clientRequestId: z.string().uuid(),
+  expectedUpdatedAt: z.string().datetime(),
+  merchantTradeNo: z.string().min(1).max(40),
+  amountNtd: z.number().int().positive(),
+  decision: z.enum(["CONFIRM_REFUNDED", "CONFIRM_NO_ACTION", "KEEP_REVIEW"]),
+  evidenceReference: z.string().trim().min(3).max(160),
+  reason: z.string().trim().min(10).max(1000),
+  cancellationConfirmed: z.boolean(),
+  noGatewayActionConfirmed: z.boolean(),
+  preserveUnattributedEntitlement: z.boolean().default(false),
+}).refine((value) => value.decision !== "CONFIRM_REFUNDED" || value.cancellationConfirmed, { message: "Confirm cancellation before finalizing a refund" })
+  .refine((value) => value.decision !== "CONFIRM_NO_ACTION" || value.noGatewayActionConfirmed, { message: "Confirm that the uncertain action did not occur" });
+export type ResolveRefundDto = z.infer<typeof resolveRefundSchema>;
+
 export const noteSchema = z.object({
   content: z.string().max(20_000),
 });

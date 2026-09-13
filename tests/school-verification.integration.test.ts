@@ -14,6 +14,12 @@ it("covers every current MOE institution, with source evidence for every enabled
   const moe = catalog.schools.filter((s) => s.authority === "MOE"); expect(moe).toHaveLength(149);
   expect(new Set(SCHOOL_CATALOG.map((s) => s.name)).size).toBe(SCHOOL_CATALOG.length);
   for (const s of moe) expect(TAIWAN_UNIVERSITIES).toContain(s.name);
+  expect(catalog.rosterVerification.academicYear).toBe(115);
+  expect(catalog.rosterVerification.entries).toHaveLength(163);
+  for (const entry of catalog.rosterVerification.entries) {
+    expect(TAIWAN_UNIVERSITIES).toContain(entry.institution);
+    expect(SCHOOL_NAME_ALIASES[entry.name] ?? entry.name).toBe(entry.institution);
+  }
   for (const s of catalog.schools) if (s.emailRoots.length) expect(s.emailEvidence.length).toBeGreaterThan(0);
   for (const canonical of Object.values(SCHOOL_NAME_ALIASES)) expect(TAIWAN_UNIVERSITIES).toContain(canonical);
   expect(updateProfileSchema.parse({ school: "高苑科技大學" }).school).toBe("台鋼科技大學");
@@ -30,7 +36,7 @@ it("rejects suffix tricks, shared providers, another institution and malformed a
 describe.skipIf(process.env.RUN_DB_TESTS !== "1")("school challenge transactions", () => {
   const users: string[] = [], emails: string[] = [], tokens = new Map<string, string[]>();
   const send = vi.fn(async (input: { to: string; html: string }) => {
-    const token = decodeURIComponent(input.html.match(/confirm\?token=([^"<]+)/)![1]);
+    const token = decodeURIComponent(input.html.match(/verify-school#token=([^"<]+)/)![1]);
     const sub = (jwt.decode(token) as { sub: string }).sub!; tokens.set(sub, [...(tokens.get(sub) ?? []), token]);
   });
   const service = new UsersService({ send } as never, {} as never, {} as never, {} as never);

@@ -49,8 +49,8 @@ export function startHealthServer(): void {
         };
         res.writeHead(200, { "Content-Type": "application/json" }).end(JSON.stringify(body));
       })
-      .catch((err) => {
-        res.writeHead(500, { "Content-Type": "application/json" }).end(JSON.stringify({ ok: false, error: String(err) }));
+      .catch(() => {
+        res.writeHead(503, { "Content-Type": "application/json" }).end(JSON.stringify({ ok: false, error: "Queue health check unavailable" }));
       });
   });
   server.listen(PORT, () => {

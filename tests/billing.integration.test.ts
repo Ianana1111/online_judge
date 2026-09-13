@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { prisma } from "../packages/db/src/index";
 import { BillingService } from "../apps/api/src/billing/billing.service";
+import { RefundReconciliationService } from "../apps/api/src/billing/refund-reconciliation.service";
 import { cancelEcpayPeriod, computeCheckMacValue, doCreditCardAction, queryEcpayCreditTrade, queryEcpayOrder } from "../apps/api/src/billing/ecpay.util";
 
 vi.mock("../apps/api/src/billing/ecpay.util", async (importOriginal) => ({
@@ -25,6 +26,7 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("billing with real PostgreSQL 
   });
   beforeEach(() => vi.clearAllMocks());
   afterAll(async () => {
+    await prisma.refundResolution.deleteMany({ where: { request: { userId: { in: accountIds } } } });
     await prisma.refundRequest.deleteMany({ where: { userId: { in: accountIds } } });
     await prisma.user.deleteMany({ where: { id: { in: accountIds } } });
     await prisma.$disconnect();
@@ -40,6 +42,31 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("billing with real PostgreSQL 
       TradeAmt: String(payment.amountNtd), PaymentDate: gatewayDate(paid), RtnCode: "1" });
     return { user, payment, notification };
   }
+
+  it("a late worker cannot overwrite an operator's confirmed resolution or debit twice", async () => {
+    const { user, payment, notification } = await purchase(); await billing.handleEcpayReturn(notification);
+    const request = await billing.requestRefund(user.id);
+    vi.mocked(queryEcpayOrder).mockResolvedValue(notification);
+    vi.mocked(queryEcpayCreditTrade).mockResolvedValue({ RtnMsg: "", TradeID: "AUTH123", Amount: 200, Status: "Captured" });
+    vi.mocked(cancelEcpayPeriod).mockResolvedValue({ RtnCode: 1, RtnMsg: "OK", MerchantID: "3002607", MerchantTradeNo: payment.merchantTradeNo! });
+    let notifySent!: () => void, release!: () => void;
+    const sent = new Promise<void>((resolve) => { notifySent = resolve; }), delayed = new Promise<void>((resolve) => { release = resolve; });
+    vi.mocked(doCreditCardAction).mockImplementationOnce(async () => { notifySent(); await delayed; return { ...notification, RtnCode: 1, RtnMsg: "OK" } as never; });
+    const worker = billing.processRefund(request.id);
+    await sent;
+    try {
+      const stale = await prisma.refundRequest.update({ where: { id: request.id }, data: { status: "NEEDS_REVIEW", processingToken: null } });
+      await new RefundReconciliationService().resolve(request.id, { id: "operator", role: "ADMIN", handle: "operator", mfaVerified: true }, {
+        clientRequestId: randomUUID(), expectedUpdatedAt: stale.updatedAt.toISOString(), merchantTradeNo: stale.merchantTradeNo, amountNtd: 200,
+        decision: "CONFIRM_REFUNDED", evidenceReference: "gateway-confirmed", reason: "Gateway confirms refund and recurring cancellation complete.", cancellationConfirmed: true, noGatewayActionConfirmed: false, preserveUnattributedEntitlement: false,
+      });
+      const before = await prisma.user.findUniqueOrThrow({ where: { id: user.id } });
+      release(); await worker;
+      expect((await prisma.refundRequest.findUniqueOrThrow({ where: { id: request.id } })).status).toBe("COMPLETED");
+      expect((await prisma.user.findUniqueOrThrow({ where: { id: user.id } })).planExpiresAt).toEqual(before.planExpiresAt);
+      expect(doCreditCardAction).toHaveBeenCalledTimes(1);
+    } finally { release(); await worker; }
+  });
 
   it("credits simultaneous repeated first-charge notifications exactly once", async () => {
     const { user, payment, notification } = await purchase();

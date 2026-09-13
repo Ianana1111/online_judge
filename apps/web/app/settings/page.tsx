@@ -3,11 +3,14 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import { getSchoolEmailDomains, verifySchoolEmailDomain, SCHOOL_CATALOG_ACADEMIC_YEAR } from "@oj/shared";
 import { apiFetch, apiUrl, ApiError, setCsrfToken } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import Avatar from "@/components/Avatar";
 import SchoolCombobox from "@/components/SchoolCombobox";
+import AccountSecuritySettings from "@/components/AccountSecuritySettings";
+import SchoolDomainAssistance from "@/components/SchoolDomainAssistance";
 import { resizeImageToDataUrl, AVATAR_MAX_DATA_URL_BYTES } from "@/lib/avatarUpload";
 import type { UserSettings } from "@/lib/types";
 import { useLocale, useT } from "@/lib/i18n/LocaleContext";
@@ -25,7 +28,9 @@ const RESEND_COOLDOWN_MS = 60_000;
 function SchoolEmailVerification({ school }: { school: string }) {
   const t = useT(); const { locale } = useLocale(); const zh = locale === "zh-TW";
   const { user, patchUser } = useAuthStore();
-  const domains = getSchoolEmailDomains(school), domain = domains[0];
+  const supported = useQuery({ queryKey: ["school-domains", user?.id, school], queryFn: () => apiFetch<{ roots: string[]; exact: string[] }>(`/users/me/school/domains?school=${encodeURIComponent(school)}`), enabled: !!user });
+  const approved = supported.data?.exact ?? [];
+  const domains = [...getSchoolEmailDomains(school), ...approved], domain = domains[0];
   const [email, setEmail] = useState(user?.schoolEmail ?? "");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,9 +44,9 @@ function SchoolEmailVerification({ school }: { school: string }) {
   }, [cooldownUntil, now]);
 
   if (!user) return null;
-  if (!domain) return <p className="mt-3 rounded-lg border border-ink-700 p-4 text-sm leading-6 text-ink-400">{zh ? "這所學校尚無可確認的專屬信箱網域。請聯絡我們並提供校方的信箱說明連結，我們會協助確認。" : "A dedicated email domain has not been verified for this school. Contact us with the school's official email instructions for help."} <Link className="text-brand underline" href="/about">{zh ? "聯絡方式" : "Contact us"}</Link></p>;
+  if (!domain) return <SchoolDomainAssistance school={school} />;
   const cooling = cooldownUntil > now;
-  const domainMismatch = email.length > 0 && !verifySchoolEmailDomain(email, school);
+  const domainMismatch = email.length > 0 && !verifySchoolEmailDomain(email, school) && !approved.includes(email.trim().toLowerCase().split("@")[1]);
 
   async function send() {
     setError(null);
@@ -95,6 +100,7 @@ function SchoolEmailVerification({ school }: { school: string }) {
         </p>
       )}
       {error && <p className="mt-1.5 text-xs text-verdict-wa">{error}</p>}
+      <SchoolDomainAssistance school={school} />
     </div>
   );
 }
@@ -758,6 +764,7 @@ const SECTIONS = [
     ),
   },
   { key: "password", label: "Password", render: () => <ChangePasswordForm /> },
+  { key: "security", label: "Security", render: () => <AccountSecuritySettings /> },
   { key: "preferences", label: "Preferences", render: () => <PreferencesForm /> },
 ] as const;
 
@@ -768,11 +775,11 @@ export default function SettingsPage() {
   // kicks off (?reauth=1 / ?reauthError=1) — otherwise that section, and the effect in it that
   // reopens the delete dialog, would never even mount. Read directly off window.location rather
   // than useSearchParams() so this initializer doesn't need a Suspense boundary.
-  const [active, setActive] = useState<(typeof SECTIONS)[number]["key"]>(() => {
-    if (typeof window === "undefined") return "profile";
+  const [active, setActive] = useState<(typeof SECTIONS)[number]["key"]>("profile");
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    return params.get("reauth") === "1" || params.get("reauthError") === "1" ? "account" : "profile";
-  });
+    setActive(params.get("section") === "security" ? "security" : params.get("reauth") === "1" || params.get("reauthError") === "1" ? "account" : "profile");
+  }, []);
   const activeSection = SECTIONS.find((s) => s.key === active) ?? SECTIONS[0];
 
   // Previously this rendered the heading and all four (non-functional) tabs regardless of auth

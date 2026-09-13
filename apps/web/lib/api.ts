@@ -77,7 +77,7 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
     signal: opts.signal,
   });
 
-  if (res.status === 401 && !opts.isRetry && path !== "/auth/refresh") {
+  if (res.status === 401 && !opts.isRetry && !["/auth/refresh", "/auth/login", "/auth/mfa/verify", "/auth/reset-password"].includes(path)) {
     const refreshed = await doRefresh();
     if (refreshed) {
       return apiFetch<T>(path, { ...opts, isRetry: true });
@@ -93,6 +93,11 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
     }
     const hasMessage = body !== null && typeof body === "object" && "message" in body;
     const message = hasMessage ? String((body as { message: unknown }).message) : res.statusText;
+    const code = body && typeof body === "object" && "code" in body ? String(body.code) : "";
+    if (typeof window !== "undefined" && ["MFA_REQUIRED", "MFA_ENROLLMENT_REQUIRED"].includes(code)) {
+      const target = code === "MFA_REQUIRED" ? "/verify-mfa" : "/settings?section=security";
+      if (window.location.pathname + window.location.search !== target) window.location.assign(target);
+    }
     throw new ApiError(res.status, message, body);
   }
 

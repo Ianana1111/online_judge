@@ -32,15 +32,7 @@ function normalize(s: string): string {
  * submitted or persisted. Custom cases persist in localStorage per account+problem, same pattern
  * as SubmissionPanel's own draft storage.
  */
-export default function TestPanel({
-  problemId,
-  slug,
-  userId,
-  languageKey,
-  sourceCode,
-  samples,
-  checkerType = "IGNORE_TRAILING_WS",
-}: {
+type TestPanelProps = {
   problemId: string;
   slug: string;
   userId: string;
@@ -48,7 +40,21 @@ export default function TestPanel({
   sourceCode: string;
   samples: Sample[];
   checkerType?: "EXACT" | "IGNORE_TRAILING_WS" | "FLOAT" | "SPECIAL";
-}) {
+};
+
+export default function TestPanel(props: TestPanelProps) {
+  return <TestPanelSession key={`${props.userId}:${props.slug}:${props.samples.length}`} {...props} />;
+}
+
+function TestPanelSession({
+  problemId,
+  slug,
+  userId,
+  languageKey,
+  sourceCode,
+  samples,
+  checkerType = "IGNORE_TRAILING_WS",
+}: TestPanelProps) {
   const t = useT();
   const storageKey = `oj:testcases:${userId}:${slug}`;
   const sampleCases: Case[] = useMemo(
@@ -64,6 +70,9 @@ export default function TestPanel({
   );
 
   const [customCases, setCustomCases] = useState<Case[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const [storageError, setStorageError] = useState(false);
+  const mounted = useRef(false);
   const [edits, setEdits] = useState<Record<string, string>>({}); // caseId -> edited input (samples are editable too, but never mutate the original sample)
   const [activeId, setActiveId] = useState<string | null>(null);
   const [results, setResults] = useState<Record<string, RunCaseResult>>({});
@@ -73,28 +82,29 @@ export default function TestPanel({
   const esRef = useRef<{ close: () => void } | null>(null);
 
   useEffect(() => {
-    const raw = localStorage.getItem(storageKey);
-    if (!raw) {
-      setCustomCases([]);
-      return;
-    }
     try {
-      const parsed = JSON.parse(raw) as { id: string; input: string }[];
-      setCustomCases(parsed.map((c) => ({ id: c.id, label: "", input: c.input, isSample: false })));
+      const parsed: unknown = JSON.parse(localStorage.getItem(storageKey) ?? "[]");
+      const seen = new Set<string>();
+      const valid = Array.isArray(parsed) ? parsed.filter((c): c is { id: string; input: string } => {
+        if (!c || typeof c.id !== "string" || !/^custom-[a-zA-Z0-9-]{1,100}$/.test(c.id) || typeof c.input !== "string" || c.input.length > MAX_INPUT_CHARS || seen.has(c.id)) return false;
+        seen.add(c.id); return true;
+      }).slice(0, Math.max(0, MAX_CASES - samples.length)) : [];
+      setCustomCases(valid.map((c) => ({ ...c, label: "", isSample: false })));
     } catch {
-      setCustomCases([]);
+      setStorageError(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storageKey]);
+    setLoaded(true);
+  }, [storageKey, samples.length]);
 
   useEffect(() => {
-    localStorage.setItem(
-      storageKey,
-      JSON.stringify(customCases.map((c) => ({ id: c.id, input: c.input }))),
-    );
-  }, [storageKey, customCases]);
+    if (!loaded) return;
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(customCases.map((c) => ({ id: c.id, input: c.input }))));
+      setStorageError(false);
+    } catch { setStorageError(true); }
+  }, [storageKey, customCases, loaded]);
 
-  useEffect(() => () => esRef.current?.close(), []);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; esRef.current?.close(); }; }, []);
 
   const cases = useMemo(() => [...sampleCases, ...customCases], [sampleCases, customCases]);
   // "Case N" is always this case's 1-based position among *custom* cases, recomputed on every
@@ -157,9 +167,11 @@ export default function TestPanel({
         },
       });
 
+      if (!mounted.current) return;
       const es = openRunStream(id);
       esRef.current = es;
       es.addEventListener("status", (evt) => {
+        if (!mounted.current) return;
         const payload = JSON.parse((evt as MessageEvent).data) as RunResult;
         if (payload.status === "RUNNING") return;
         if (payload.status === "DONE") {
@@ -178,10 +190,12 @@ export default function TestPanel({
       });
       es.onerror = () => {
         es.close();
+        if (!mounted.current) return;
         setRunError((prev) => prev ?? t("Lost connection while running."));
         setStatus((prev) => (prev === "running" ? "error" : prev));
       };
     } catch (e) {
+      if (!mounted.current) return;
       if (e instanceof ApiError) {
         setRunError(e.status === 429 ? t("You're running tests too fast — wait a moment and try again.") : e.message);
       } else {
@@ -239,6 +253,7 @@ export default function TestPanel({
             <button
               type="button"
               onClick={addCase}
+              disabled={!loaded}
               title={t("Add your own test case")}
               className="rounded border border-dashed border-ink-700 px-2 py-1 text-xs text-ink-400 transition-colors hover:border-brand hover:text-brand"
             >
@@ -255,6 +270,8 @@ export default function TestPanel({
           {status === "running" ? t("Running…") : t("▶ Run")}
         </button>
       </div>
+
+      {storageError && <p role="alert" className="mb-3 text-xs text-verdict-wa">{t("Your browser could not save these test cases. Copy them before leaving.")}</p>}
 
       {active ? (
         <div className="space-y-2.5">

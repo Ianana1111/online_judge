@@ -53,7 +53,7 @@ export class StuckSubmissionReaperService implements OnModuleInit, OnModuleDestr
 
   private async reapOne(submissionId: string, evaluationVersion: number): Promise<void> {
     try {
-      const { applied } = await this.submissions.applyJudgeResult(submissionId, {
+      await this.submissions.applyJudgeResult(submissionId, {
         submissionId,
         evaluationVersion,
         status: "SE",

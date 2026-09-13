@@ -41,6 +41,7 @@ test("all page entrypoints render with real API data and accessible mobile/deskt
     const login = await page.context().request.post("http://127.0.0.1:55440/auth/login", { data: { handle: user.handle, password } });
     expect(login.ok()).toBe(true);
     const routes = ["/", "/problems", `/problems/${problem.slug}`, "/collections", `/collections/${collection.slug}`, "/contests", `/contests/${contestId}`, "/cpe", "/gpe", "/leaderboard", "/submissions", `/u/${user.handle}`, "/assignments", "/classes", `/classes/${lesson.id}`, "/discussion", `/discussion/${post.id}`, "/discussion/write", "/discussion/mine", "/notifications", "/settings", "/upgrade", "/upgrade/checkout", "/pricing", "/faq", "/about", "/terms", "/privacy", "/refund", "/admin", "/admin/problems", "/admin/contests", "/admin/classes", `/admin/classes/${userId}`, `/admin/classes/${userId}/${lesson.id}`, "/admin/users", "/admin/assignments", "/admin/billing", "/admin/analytics", "/admin/moderation", "/login", "/register"];
+    routes.push("/forgot-password", "/reset-password", "/verify-email", "/verify-mfa", "/verify-school", "/settings?section=security", "/admin/schools");
     for (const theme of ["light", "dark"] as const) {
       await page.addInitScript((value) => { localStorage.setItem("theme", value); localStorage.setItem("locale", "zh-TW"); }, theme);
       for (const [index, route] of routes.entries()) {

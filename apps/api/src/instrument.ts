@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/node";
+import { scrubTelemetryEvent } from "@oj/shared";
 
 // Unset in local dev and (unless someone explicitly adds it) any environment that hasn't been
 // given a real Sentry project yet — Sentry.init no-ops safely without a dsn, so every
@@ -14,5 +15,7 @@ if (dsn) {
     // occasionally missing the one report that mattered — capture all of them at this app's scale
     // rather than trying to save quota on a service processing at most a few requests per second.
     tracesSampleRate: 0,
+    sendDefaultPii: false,
+    beforeSend: scrubTelemetryEvent,
   });
 }

@@ -4,11 +4,15 @@ import { AuthController } from "./auth.controller";
 import { AuthGuard } from "./auth.guard";
 import { AuthService } from "./auth.service";
 import { TokenService } from "./token.service";
+import { AccountSecurityController } from "./account-security.controller";
+import { AccountSecurityService } from "./account-security.service";
+import { MfaService } from "./mfa.service";
+import { MailService } from "../common/mail.service";
 
 @Module({
   imports: [NotificationsModule],
-  controllers: [AuthController],
-  providers: [AuthService, TokenService, AuthGuard],
+  controllers: [AuthController, AccountSecurityController],
+  providers: [AuthService, TokenService, AuthGuard, AccountSecurityService, MfaService, MailService],
   exports: [AuthService, TokenService, AuthGuard],
 })
 export class AuthModule {}

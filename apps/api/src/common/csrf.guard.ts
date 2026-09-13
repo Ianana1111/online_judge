@@ -8,6 +8,7 @@ const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 // (it only pollutes traffic counts, no state affecting the requester or another user changes).
 const EXEMPT_PATHS = new Set(["/auth/login", "/auth/register", "/auth/refresh", "/analytics/pageview", "/billing/ecpay/return", "/billing/ecpay/period-return"]);
 const BROWSER_BOOTSTRAP_PATHS = new Set(["/auth/login", "/auth/register", "/auth/refresh", "/analytics/pageview"]);
+for (const path of ["/auth/forgot-password", "/auth/reset-password", "/auth/email/verify", "/users/school/verify/confirm"]) { EXEMPT_PATHS.add(path); BROWSER_BOOTSTRAP_PATHS.add(path); }
 
 @Injectable()
 export class CsrfGuard implements CanActivate {

@@ -13,6 +13,7 @@ import { extractSampleFromPdfText } from "./formatStatement.js";
 const prisma = new PrismaClient();
 
 function sanitizeForPostgres(s: string): string {
+  // eslint-disable-next-line no-control-regex -- PostgreSQL text fields reject NUL bytes.
   return s.replace(/\x00/g, "");
 }
 

@@ -88,6 +88,7 @@ function slugifyTitle(title: string): string {
 // \x00 here on purpose — a literal space in this regex is a real, easy-to-miss bug (it looks
 // identical at a glance and silently strips every space out of the text instead).
 function sanitizeForPostgres(s: string): string {
+  // eslint-disable-next-line no-control-regex -- PostgreSQL text fields reject NUL bytes.
   return s.replace(/\x00/g, "");
 }
 

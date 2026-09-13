@@ -13,8 +13,16 @@ async function main() {
   const manifestDir = new URL("../packages/db/audit/battery-manifests/", import.meta.url);
   const problems = new Map(snapshot.problems.map((p) => [p.slug, p]));
   const regressions = process.argv.includes("--regressions");
+  const option = (name: string) => process.argv.find((arg) => arg.startsWith(`--${name}=`))?.slice(name.length + 3);
+  const only = option("only")?.split(",");
   const contentChanges = regressions ? JSON.parse(await readFile(new URL("../packages/db/audit/launch-regressions.json", import.meta.url), "utf8")) as { cases: { slug: string; input: string; output: string }[]; corrections: { slug: string; input: string; previousOutput: string; output: string }[] } : { cases: [], corrections: [] };
   const additions = contentChanges.cases;
+  const extra = option("extra-regressions");
+  if (extra) {
+    if (!/^packages\/db\/audit\/[a-z0-9-]+\.json$/.test(extra)) throw new Error("Additional regressions must be a reviewed audit JSON file");
+    const changes = JSON.parse(await readFile(new URL(`../${extra}`, import.meta.url), "utf8"));
+    contentChanges.cases.push(...changes.cases); contentChanges.corrections.push(...changes.corrections);
+  }
   const review = regressions ? JSON.parse(await readFile(new URL("../packages/db/audit/launch-candidate-review.json", import.meta.url), "utf8")) as { reviews: { slug: string; index: number; sourceHash: string; expected: string; reason: string }[]; additionalCandidates: (BatteryManifest["candidates"][number] & { slug: string })[] } : { reviews: [], additionalCandidates: [] };
   for (const p of snapshot.problems) if (regressions) {
     for (const correction of contentChanges.corrections.filter((c) => c.slug === p.slug)) for (const tc of p.testCases) if (tc.input === correction.input && tc.output === correction.previousOutput) tc.output = correction.output;
@@ -23,12 +31,15 @@ async function main() {
   }
   const results: { slug: string; inputOutputHash: string; candidates: unknown[] }[] = [];
   const failures: { slug: string; index: number; tag: string; verdict: string }[] = [];
-  const reportPath = new URL(`../docs/launch-readiness/${regressions ? "judge-regression-results" : "judge-battery-results"}.json`, import.meta.url);
+  const reportName = option("report") ?? (regressions ? "judge-regression-results" : "judge-battery-results");
+  if (!/^[a-z0-9-]+$/.test(reportName)) throw new Error("Invalid report name");
+  const reportPath = new URL(`../docs/launch-readiness/${reportName}.json`, import.meta.url);
   const observations = review.reviews.filter((r) => r.expected === "OBSERVE");
   const skipped: string[] = [];
   const write = async (complete: boolean) => writeFile(reportPath, JSON.stringify({ testedAt: new Date().toISOString(), contentHash: snapshot.contentHash, regressions, environment: "Disposable Debian bookworm Docker, 1 CPU, network none, no host mount. Actual production compile/run/checker code. Vercel timing/toolchain still requires separate validation.", expectations: "Baseline uses authored tags. Regression sweep applies source-hash-bound reviews and adds reviewed corrected references. OBSERVE means the candidate's alleged defect is not a proven rejection requirement, not a completed correctness proof.", complete, problems: results.length, skippedRemoteProblems: skipped, observations, failures, results }, null, 2) + "\n");
   for (const file of (await readdir(manifestDir)).filter((f) => f.endsWith(".json")).sort()) {
     const manifest = JSON.parse(await readFile(new URL(file, manifestDir), "utf8")) as BatteryManifest;
+    if (only && !only.includes(manifest.slug)) continue;
     const problem = problems.get(manifest.slug);
     if (!problem?.testCases.length) { skipped.push(manifest.slug); continue; }
     manifest.candidates.push(...review.additionalCandidates.filter((c) => c.slug === manifest.slug));

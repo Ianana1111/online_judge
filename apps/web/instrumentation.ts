@@ -9,11 +9,12 @@ export async function register(): Promise<void> {
 
   if (process.env.NEXT_RUNTIME === "nodejs") {
     const Sentry = await import("@sentry/nextjs");
-    Sentry.init({ dsn, environment: process.env.NODE_ENV ?? "development", tracesSampleRate: 0 });
+    Sentry.init({ dsn, environment: process.env.NODE_ENV ?? "development", tracesSampleRate: 0, sendDefaultPii: false, beforeSend: scrubTelemetryEvent });
   }
 
   if (process.env.NEXT_RUNTIME === "edge") {
     const Sentry = await import("@sentry/nextjs");
-    Sentry.init({ dsn, environment: process.env.NODE_ENV ?? "development", tracesSampleRate: 0 });
+    Sentry.init({ dsn, environment: process.env.NODE_ENV ?? "development", tracesSampleRate: 0, sendDefaultPii: false, beforeSend: scrubTelemetryEvent });
   }
 }
+import { scrubTelemetryEvent } from "@oj/shared/telemetryPrivacy";

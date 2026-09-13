@@ -22,13 +22,25 @@ function Editor({ userId, admin, id }: { userId: string; admin: boolean; id: str
   const query = useQuery({ queryKey: ["posts", "own", userId, id], queryFn: () => apiFetch<EditablePost>(`/posts/${id}/mine`), enabled: !!id });
   const [fields, setFields] = useState<Fields>({ title: "", bodyMd: "", category: "GENERAL", isOfficial: false });
   const [saved, setSaved] = useState<Fields | null>(null), [initialized, setInitialized] = useState(false), [preview, setPreview] = useState(false), [sending, setSending] = useState(false), [error, setError] = useState("");
+  const [saveState, setSaveState] = useState<"idle" | "saved" | "failed">("idle");
   useEffect(() => {
     if (initialized || (id && !query.data)) return;
     if (query.data) setFields({ title: query.data.title, bodyMd: query.data.bodyMd, category: query.data.category, isOfficial: query.data.isOfficial });
-    try { const data = JSON.parse(localStorage.getItem(key) ?? "null"); if (data && typeof data.title === "string" && typeof data.bodyMd === "string" && data.category in categories) setSaved(data); } catch { /* draft recovery is optional */ }
+    try {
+      const data = JSON.parse(localStorage.getItem(key) ?? "null");
+      if (data && typeof data.title === "string" && data.title.length <= 200 && typeof data.bodyMd === "string" && data.bodyMd.length <= 50000 && Object.hasOwn(categories, data.category)) {
+        setSaved({ title: data.title, bodyMd: data.bodyMd, category: !admin && data.category === "ANNOUNCEMENT" ? "GENERAL" : data.category, isOfficial: admin && data.isOfficial === true });
+      }
+    } catch { setSaveState("failed"); }
     setInitialized(true);
-  }, [initialized, id, query.data, key]);
-  function update(next: Fields) { setFields(next); try { localStorage.setItem(key, JSON.stringify(next)); } catch { /* editor stays usable when storage is full */ } }
+  }, [initialized, id, query.data, key, admin]);
+  function update(next: Fields) { setFields(next); try { localStorage.setItem(key, JSON.stringify(next)); setSaveState("saved"); } catch { setSaveState("failed"); } }
+  useEffect(() => {
+    if (saveState !== "failed" || (!fields.title && !fields.bodyMd)) return;
+    const protect = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
+    window.addEventListener("beforeunload", protect);
+    return () => window.removeEventListener("beforeunload", protect);
+  }, [saveState, fields.title, fields.bodyMd]);
   async function submit(e: React.FormEvent) {
     e.preventDefault(); setSending(true); setError("");
     try {
@@ -46,6 +58,7 @@ function Editor({ userId, admin, id }: { userId: string; admin: boolean; id: str
     {query.data?.status && <div className="rounded-lg border border-brand/30 bg-brand/5 p-4 text-sm text-ink-300"><p className="font-semibold text-brand">{reviewLabels[query.data.status][zh ? 0 : 1]}</p>{query.data.reason && <p className="mt-2 whitespace-pre-wrap">{query.data.reason}</p>}{query.data.publishedAt && <p className="mt-2">{zh ? "修改審核期間，讀者仍會看到上一個核准版本。" : "Readers will see the last approved version while your edit is reviewed."}</p>}</div>}
     {saved && <div className="oj-card flex flex-wrap items-center gap-3 p-4 text-sm"><span className="mr-auto text-ink-300">{zh ? "這個瀏覽器有尚未送出的草稿。" : "This browser has an unsent draft."}</span><button className="oj-btn-ghost" onClick={() => { update(saved); setSaved(null); }}>{zh ? "恢復草稿" : "Restore draft"}</button><button className="text-ink-400" onClick={() => { setSaved(null); try { localStorage.removeItem(key); } catch { /* optional */ } }}>{zh ? "捨棄" : "Discard"}</button></div>}
     <form onSubmit={submit} className="oj-card space-y-5 p-5 sm:p-7">
+      {saveState === "failed" ? <p role="alert" className="text-sm text-verdict-wa">{zh ? "瀏覽器無法保存草稿，離開前請先複製內容備份。你仍可繼續編輯與送審。" : "This browser cannot save your draft. Copy your text before leaving. You can still edit and submit."}</p> : saveState === "saved" && <p role="status" className="text-xs text-ink-400">{zh ? "草稿已保存在此瀏覽器，尚未送出。" : "Draft saved in this browser; not submitted yet."}</p>}
       <div><label htmlFor="post-title" className="mb-2 block text-sm font-medium text-ink-200">{zh ? "標題" : "Title"}</label><input id="post-title" className="oj-input w-full" required maxLength={200} value={fields.title} onChange={(e) => update({ ...fields, title: e.target.value })} placeholder={zh ? "一個具體的標題，讓好問題被看見" : "A specific title helps people understand your topic"} /></div>
       <div><label htmlFor="post-category" className="mb-2 block text-sm font-medium text-ink-200">{zh ? "分類" : "Category"}</label><select id="post-category" className="oj-input w-full sm:w-56" value={fields.category} onChange={(e) => update({ ...fields, category: e.target.value as PostCategory })}>{Object.entries(categories).filter(([c]) => admin || c !== "ANNOUNCEMENT").map(([c, labels]) => <option value={c} key={c}>{labels[zh ? 0 : 1]}</option>)}</select></div>
       {admin && <label className="flex items-center gap-2 text-sm text-ink-300"><input type="checkbox" checked={fields.isOfficial} onChange={(e) => update({ ...fields, isOfficial: e.target.checked })} />{zh ? "標記為官方內容（仍需審核）" : "Mark as official (review still required)"}</label>}

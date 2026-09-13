@@ -16,6 +16,8 @@ import { batch5Dictionary } from "./dict/batch5";
  * "Solved count".
  */
 const overrides: Record<string, string> = {
+  "Your browser could not save these test cases. Copy them before leaving.": "瀏覽器無法保存自訂測資，離開前請先複製備份。",
+  "Your browser could not save this draft. Copy your code before leaving.": "瀏覽器無法保存程式碼草稿，離開前請先複製備份。",
   "Refresh": "重新整理",
   "Assignments": "作業",
   "Email": "電子信箱",
@@ -25,6 +27,12 @@ const overrides: Record<string, string> = {
   "Main navigation": "主要導覽",
   "Content review": "內容審核",
   "School catalog": "學校名錄",
+  "School domain review": "學校網域審核",
+  "Resize statement and editor": "調整題目與編輯器寬度",
+  "Resize editor and test cases": "調整編輯器與測資高度",
+  "Continue your recent draft": "繼續最近編輯的題目",
+  "Security": "安全性",
+  "Forgot password?": "忘記密碼？",
   "Submission": "送出紀錄",
   "My Submissions": "提交歷史",
   "No submissions yet.": "還沒有送出紀錄。",

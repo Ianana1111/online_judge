@@ -4,6 +4,8 @@ import type { Request, Response } from "express";
 import {
   adminGrantPlanSchema,
   adminRefundListSchema,
+  resolveRefundSchema,
+  type ResolveRefundDto,
   ecpayCreateSchema,
   effectivePriceNtd,
   isLaunchPromoActive,
@@ -16,10 +18,11 @@ import {
 import { CurrentUser, Public, Roles, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { BillingService } from "./billing.service";
+import { RefundReconciliationService } from "./refund-reconciliation.service";
 
 @Controller("billing")
 export class BillingController {
-  constructor(private readonly billing: BillingService) {}
+  constructor(private readonly billing: BillingService, private readonly reconciliation: RefundReconciliationService) {}
 
   /** Static pricing. Public so the pricing page renders for logged-out visitors too. */
   @Public()
@@ -103,6 +106,15 @@ export class BillingController {
   @Get("admin/refunds")
   pendingRefunds(@Query(new ZodValidationPipe(adminRefundListSchema)) query: AdminRefundListDto) {
     return this.billing.pendingRefunds(query);
+  }
+
+  @Roles("ADMIN") @Get("admin/refunds/:id/history")
+  refundHistory(@Param("id") id: string) { return this.reconciliation.history(id); }
+
+  @Roles("ADMIN") @Post("admin/refunds/:id/resolve")
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  resolveRefund(@Param("id") id: string, @CurrentUser() user: RequestUser, @Body(new ZodValidationPipe(resolveRefundSchema)) body: ResolveRefundDto) {
+    return this.reconciliation.resolve(id, user, body);
   }
 
   // --- ECPay (綠界) automated checkout flow (credit-card subscriptions only) ---

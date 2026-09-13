@@ -4,6 +4,27 @@ import { TokenService } from "../apps/api/src/auth/token.service";
 
 afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 
+it.each([true, false])("security reauthentication is bound to the same Google identity and session (match: %s)", async (matches) => {
+  vi.stubEnv("WEB_ORIGIN", "http://127.0.0.1:55430");
+  const auth = { loginWithGoogle: vi.fn(), verifyGoogleReauthentication: vi.fn(async () => { if (!matches) throw new Error("Identity mismatch"); }) };
+  const tokens = new TokenService(), controller = new AuthController(auth as never, tokens, { set: vi.fn().mockResolvedValue("OK") } as never);
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(new Response(JSON.stringify({ access_token: "fixture-token" }))).mockResolvedValueOnce(new Response(JSON.stringify({ sub: "google-subject", email: "fixture@example.test", email_verified: true }))));
+  const res = { cookie: vi.fn(), clearCookie: vi.fn(), redirect: vi.fn() };
+  await controller.googleCallback("code", "state", { id: "current-user", role: "USER", handle: "student", sid: "current-session" }, { cookies: { google_oauth_state: "state", google_oauth_intent: "security" } } as never, res as never);
+  expect(auth.verifyGoogleReauthentication).toHaveBeenCalledWith("current-user", "google-subject");
+  expect(auth.loginWithGoogle).not.toHaveBeenCalled();
+  expect(res.redirect).toHaveBeenCalledWith(`http://127.0.0.1:55430/settings?section=security&${matches ? "securityReauth=1" : "securityReauthError=1"}`);
+  expect(res.cookie.mock.calls.map(([name]) => name)).toEqual(matches ? ["security_reauth_token"] : []);
+  if (matches) {
+    const [, proof, options] = res.cookie.mock.calls[0];
+    const claims = tokens.verifySecurityReauthToken(proof);
+    expect(claims).toMatchObject({ sub: "current-user", sid: "current-session" });
+    expect(options).toMatchObject({ httpOnly: true, path: "/auth/mfa", maxAge: 300000 });
+    expect(() => tokens.verifyDeleteReauthToken(proof)).toThrow();
+    expect(() => tokens.verifyAccessToken(proof)).toThrow();
+  }
+});
+
 it.each([true, false])("deletion OAuth callback preserves the current session (identity match: %s)", async (matches) => {
   vi.stubEnv("WEB_ORIGIN", "http://127.0.0.1:55430");
   const auth = { loginWithGoogle: vi.fn(), verifyGoogleReauthentication: vi.fn(async () => { if (!matches) throw new Error("Identity mismatch"); }) };
@@ -33,7 +54,7 @@ it("starting ordinary Google login clears a leftover deletion intent", () => {
 
 it.each([true, false])("ordinary Google sign-in requires a verified profile (verified: %s)", async (verified) => {
   vi.stubEnv("WEB_ORIGIN", "http://127.0.0.1:55430");
-  const auth = { verifyGoogleReauthentication: vi.fn(), loginWithGoogle: vi.fn().mockResolvedValue({ accessToken: "access", refreshToken: "refresh", csrfToken: "csrf", accessMaxAgeMs: 60_000, refreshMaxAgeMs: 60_000 }) };
+  const auth = { verifyGoogleReauthentication: vi.fn(), loginWithGoogle: vi.fn().mockResolvedValue({ user: { id: "fixture", handle: "fixture", email: "fixture@example.test", role: "USER" }, accessToken: "access", refreshToken: "refresh", csrfToken: "csrf", accessMaxAgeMs: 60_000, refreshMaxAgeMs: 60_000 }) };
   const controller = new AuthController(auth as never, new TokenService(), { set: vi.fn().mockResolvedValue("OK") } as never);
   vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(new Response(JSON.stringify({ access_token: "google-test-token" })))
     .mockResolvedValueOnce(new Response(JSON.stringify({ sub: "google-subject", email: "verified@example.test", email_verified: verified }))));

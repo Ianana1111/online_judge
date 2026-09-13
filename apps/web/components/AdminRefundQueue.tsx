@@ -5,6 +5,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useT } from "@/lib/i18n/LocaleContext";
 import type { AdminRefundPage, RefundStatus } from "@/lib/types";
+import RefundResolutionForm from "./RefundResolutionForm";
 
 const labels: Record<RefundStatus, string> = {
   REQUESTED: "Refund queued", PROCESSING: "Refund processing",
@@ -87,6 +88,7 @@ export default function AdminRefundQueue({ userId }: { userId: string | undefine
               <p className="break-all text-xs text-ink-400">{t("Request ID")}: {item.id}</p>
             </div>
           </details>}
+          <RefundResolutionForm item={item} onResolved={() => void query.refetch()} />
         </article>)}
       </div>
       {query.hasNextPage && <button type="button" className="oj-btn-secondary w-full" disabled={query.isFetchingNextPage} onClick={() => void query.fetchNextPage()}>{t(query.isFetchingNextPage ? "Loading refund requests…" : "Load more refunds")}</button>}

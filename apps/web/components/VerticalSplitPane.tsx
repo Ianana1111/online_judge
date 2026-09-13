@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useIsDesktop } from "@/lib/useIsDesktop";
+import { useT } from "@/lib/i18n/LocaleContext";
 
 const MIN_PERCENT = 20;
 
@@ -14,6 +15,7 @@ const MIN_PERCENT = 20;
  */
 export default function VerticalSplitPane({ top, bottom }: { top: React.ReactNode; bottom: React.ReactNode }) {
   const isDesktop = useIsDesktop();
+  const t = useT();
   const containerRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
   // Slightly favors the editor over the test panel by default — writing code is the more
@@ -36,9 +38,12 @@ export default function VerticalSplitPane({ top, bottom }: { top: React.ReactNod
   useEffect(() => {
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", stopDragging);
+    window.addEventListener("pointercancel", stopDragging);
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", stopDragging);
+      window.removeEventListener("pointercancel", stopDragging);
+      if (draggingRef.current) stopDragging();
     };
   }, [onPointerMove, stopDragging]);
 
@@ -66,6 +71,16 @@ export default function VerticalSplitPane({ top, bottom }: { top: React.ReactNod
         onPointerDown={startDragging}
         role="separator"
         aria-orientation="horizontal"
+        aria-label={t("Resize editor and test cases")}
+        tabIndex={0}
+        aria-valuemin={MIN_PERCENT}
+        aria-valuemax={100 - MIN_PERCENT}
+        aria-valuenow={Math.round(topPercent)}
+        onKeyDown={(e) => {
+          if (!["ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) return;
+          e.preventDefault();
+          setTopPercent((value) => e.key === "Home" ? MIN_PERCENT : e.key === "End" ? 100 - MIN_PERCENT : Math.min(100 - MIN_PERCENT, Math.max(MIN_PERCENT, value + (e.key === "ArrowUp" ? -5 : 5))));
+        }}
         className="group flex h-3 shrink-0 cursor-row-resize items-center justify-center"
       >
         <div className="h-px w-full bg-ink-800 transition-colors group-hover:bg-brand group-active:bg-brand" />

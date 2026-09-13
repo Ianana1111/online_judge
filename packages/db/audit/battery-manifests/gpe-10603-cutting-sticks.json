@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-10603-cutting-sticks",
+  "uvaId": 10003,
+  "authoredAt": "2026-09-13T12:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent reference implementing the stored statement; adversarial outputs also computed by the Python oracle in author-iteration-batteries.py.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){int l,n;while(cin>>l&&l){cin>>n;vector<int>a(n+2);a[n+1]=l;for(int i=1;i<=n;i++)cin>>a[i];vector<vector<int>>d(n+2,vector<int>(n+2));for(int gap=2;gap<n+2;gap++)for(int i=0;i+gap<n+2;i++){int j=i+gap;d[i][j]=INT_MAX;for(int k=i+1;k<j;k++)d[i][j]=min(d[i][j],d[i][k]+d[k][j]+a[j]-a[i]);}cout<<\"The minimum cutting is \"<<d[0][n+1]<<\".\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Always takes the leftmost remaining cut instead of optimizing the order.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){int l,n;while(cin>>l&&l){cin>>n;vector<int>a(n+2);a[n+1]=l;for(int i=1;i<=n;i++)cin>>a[i];vector<vector<int>>d(n+2,vector<int>(n+2));for(int gap=2;gap<n+2;gap++)for(int i=0;i+gap<n+2;i++){int j=i+gap;d[i][j]=INT_MAX;for(int k=i+1;k<i+2;k++)d[i][j]=min(d[i][j],d[i][k]+d[k][j]+a[j]-a[i]);}cout<<\"The minimum cutting is \"<<d[0][n+1]<<\".\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Charges the number of segments rather than stick length.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){int l,n;while(cin>>l&&l){cin>>n;vector<int>a(n+2);a[n+1]=l;for(int i=1;i<=n;i++)cin>>a[i];vector<vector<int>>d(n+2,vector<int>(n+2));for(int gap=2;gap<n+2;gap++)for(int i=0;i+gap<n+2;i++){int j=i+gap;d[i][j]=INT_MAX;for(int k=i+1;k<j;k++)d[i][j]=min(d[i][j],d[i][k]+d[k][j]+j-i);}cout<<\"The minimum cutting is \"<<d[0][n+1]<<\".\\n\";}}\n"
+    }
+  ]
+}

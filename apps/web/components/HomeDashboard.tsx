@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
@@ -36,6 +36,7 @@ import type {
   UserStats,
 } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
+import { readRecentPractice } from "@/lib/recentPractice";
 
 const REASON_ICON = { collection: BookOpenIcon, consolidate: LayersIcon, stretch: RocketIcon } as const;
 // Fills the recommendation card's left accent stripe — one color per reason a problem was
@@ -217,6 +218,8 @@ function MiniHeatmap({ data }: { data: { date: string; count: number }[] }) {
 export default function HomeDashboard() {
   const t = useT();
   const { user } = useAuthStore();
+  const [recentDraft, setRecentDraft] = useState<{ userId: string; slug: string } | null>(null);
+  useEffect(() => { const slug = user && readRecentPractice(user.id); setRecentDraft(user && slug ? { userId: user.id, slug } : null); }, [user?.id, user]);
 
   const dailyQuery = useQuery({
     queryKey: ["daily"],
@@ -313,7 +316,8 @@ export default function HomeDashboard() {
   // Resuming unfinished work beats a fresh recommendation — the hero's one primary CTA points at
   // whichever the user more recently cared about, falling back to a new suggestion only once
   // nothing is left in progress.
-  const continueSlug = inProgress?.[0]?.slug ?? suggestions[0]?.slug ?? null;
+  const draftSlug = recentDraft?.userId === user.id ? recentDraft.slug : null;
+  const continueSlug = draftSlug ?? inProgress?.[0]?.slug ?? suggestions[0]?.slug ?? null;
 
   return (
     <div className="space-y-8 py-6">
@@ -366,7 +370,7 @@ export default function HomeDashboard() {
               href={continueSlug ? `/problems/${continueSlug}` : "/problems"}
               className="oj-btn-primary mt-3 inline-flex items-center gap-1.5 px-4 py-2 text-sm"
             >
-              {t("Continue solving")} <span aria-hidden>→</span>
+              {draftSlug ? t("Continue your recent draft") : t("Continue solving")} <span aria-hidden>→</span>
             </Link>
           </div>
           <div className="hidden flex-col items-center gap-2 sm:flex">

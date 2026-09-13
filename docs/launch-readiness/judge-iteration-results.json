@@ -1,0 +1,299 @@
+{
+  "testedAt": "2026-09-13T13:22:32.958Z",
+  "contentHash": "7cf6cf0e1a0ea218eeae613ae356aeb0cb4077586a20d91edd5a8984d5f92215",
+  "regressions": true,
+  "environment": "Disposable Debian bookworm Docker, 1 CPU, network none, no host mount. Actual production compile/run/checker code. Vercel timing/toolchain still requires separate validation.",
+  "expectations": "Baseline uses authored tags. Regression sweep applies source-hash-bound reviews and adds reviewed corrected references. OBSERVE means the candidate's alleged defect is not a proven rejection requirement, not a completed correctness proof.",
+  "complete": true,
+  "problems": 6,
+  "skippedRemoteProblems": [],
+  "observations": [
+    {
+      "slug": "uva-10110-light-more-light",
+      "index": 1,
+      "sourceHash": "75471e0233e488e4b240666cd0bba9a3308724ad0be09322c496eb2b2aef4af0",
+      "expected": "OBSERVE",
+      "reason": "The variant has signed-overflow portability risk, but the final int32 comparison can still agree under the current compiler. Its tag is not a demonstrated wrong-output witness."
+    },
+    {
+      "slug": "uva-10229-modular-fibonacci",
+      "index": 1,
+      "sourceHash": "77b754b0bf6880dc34698028860cae2774db02d88976861bfb3a11e66ed1f211",
+      "expected": "OBSERVE",
+      "reason": "Signed overflow is nonportable, but the power-of-two modulus and final normalization preserve low bits with this compiler. No valid wrong-output witness has been established."
+    }
+  ],
+  "failures": [],
+  "results": [
+    {
+      "slug": "gpe-10416-last-digit",
+      "inputOutputHash": "172e77b83420ea7994ec36d2cd0d3c50c69ea1bbaefec43c9aa421402702aafa",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent reference implementing the stored statement; adversarial outputs also computed by the Python oracle in author-iteration-batteries.py.",
+          "language": "cpp17",
+          "sourceHash": "596b6e02ee1b1620d6742268284bd2ebb991c799309d83c11173359f1ff18fe0",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 5,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Incorrectly assumes the prefix sum repeats every 20, ignoring the cycle sum of 4.",
+          "language": "cpp17",
+          "sourceHash": "ec28228449cc9573264080a110488977c0827314c893826713e66579e7daff33",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2924,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Omits the final term N^N.",
+          "language": "cpp17",
+          "sourceHash": "ae1b31a66c027bd86b12593dff18e2e11e6823feef71b7c4df7b3e9ae403f2c7",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-10468-maximum-product",
+      "inputOutputHash": "941f83db6fa1e47a3db87c9309364982f0fb1aa1dda8f3fca27bc348bbd6b909",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent reference implementing the stored statement; adversarial outputs also computed by the Python oracle in author-iteration-batteries.py.",
+          "language": "cpp17",
+          "sourceHash": "0db63f3384af7044ce0848a9df8e3fb92db85724f501839417ac2da7e25b8302",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2924,
+          "lastCase": 5,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "overflow",
+          "label": "Uses 32-bit products; valid length-18 products reach 10^18.",
+          "language": "cpp17",
+          "sourceHash": "d89ee02630d9a325fee8148e452d9f85a2e9fd8844e8132542e329599ecd32f5",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Only considers prefixes, missing the best subarray after a zero or negative prefix.",
+          "language": "cpp17",
+          "sourceHash": "3381cbc315d141c34ce6903ad6f33c38ac567bb445fdfe595fa7519df1779fd3",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-10500-brick-wall-patterns",
+      "inputOutputHash": "071ffe8c353e6f44d45eacd270b8324192fa6e84ce4442e58054c27226444a3f",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent reference implementing the stored statement; adversarial outputs also computed by the Python oracle in author-iteration-batteries.py.",
+          "language": "cpp17",
+          "sourceHash": "15818b8395f66a8572cb8dd51c757012249083f5304caf3521d7cfe0751515b0",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "overflow",
+          "label": "32-bit recurrence overflows for valid wall widths.",
+          "language": "cpp17",
+          "sourceHash": "d9e889bb2838b48ec933298d20d816fc65b980d282adff1bbaeffcc8fce6c1fc",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Returns F(n), not F(n+1).",
+          "language": "cpp17",
+          "sourceHash": "5d607b2d67f55f844158395403735aed69f430d0d8d7f072eb34265a3a478ac1",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-10501-safe-salutations",
+      "inputOutputHash": "8dc5429bdccf7c5bfdd883683bb7b903199a91a0e46ceb713e42f36f9bbe6526",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent reference implementing the stored statement; adversarial outputs also computed by the Python oracle in author-iteration-batteries.py.",
+          "language": "cpp17",
+          "sourceHash": "c81a8897c22d88c400c8413b015aee1e469f7c15f1cb8a03bca577d5195f951a",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Counts only one split direction, missing most noncrossing matchings.",
+          "language": "cpp17",
+          "sourceHash": "57f2b790ba958658df0bd3173e208897fa936967b96ca135889da2ead14982f6",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2888,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Uses the Catalan number for one fewer pair.",
+          "language": "cpp17",
+          "sourceHash": "09434f3d45be44c37f1765dd3bdb80548bc712437574b8b558a4c9c8ec658631",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-10520-conformity",
+      "inputOutputHash": "8e129461993a9ff0be10ec619df4dde5eb8f08af6767a7c888a27a8640433e94",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent reference implementing the stored statement; adversarial outputs also computed by the Python oracle in author-iteration-batteries.py.",
+          "language": "cpp17",
+          "sourceHash": "2b031898360bd2bc96bd04a764c478308ceda17c169a3a31bf76a976314dfb12",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 10,
+          "memoryKb": 3076,
+          "lastCase": 5,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Treats different orderings of the same five courses as different combinations.",
+          "language": "cpp17",
+          "sourceHash": "ad67945b0a3a66fb705bf85c747580cd52cce8ac23fefd9015e3f123838f8f51",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Returns the frequency of a single winner and ignores tied combinations.",
+          "language": "cpp17",
+          "sourceHash": "a1e303be7c9e1cfd52e97a2a3d3b6c46031f3b0346e70fad43d0e8af2bc2b64d",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-10603-cutting-sticks",
+      "inputOutputHash": "3753835e79fcf058d95fae745e4edacb54d009655293d8d118bba4db3f5f38dc",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent reference implementing the stored statement; adversarial outputs also computed by the Python oracle in author-iteration-batteries.py.",
+          "language": "cpp17",
+          "sourceHash": "98f7c8737e16996e09fdae2f115ba06cda64f920aa25be214a9c049b1c0df9d0",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 5,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Always takes the leftmost remaining cut instead of optimizing the order.",
+          "language": "cpp17",
+          "sourceHash": "824112e8f1e44060598406577ca0c37ebf2cd402e24ebc687f983934560cb80c",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Charges the number of segments rather than stick length.",
+          "language": "cpp17",
+          "sourceHash": "65df5cb8ed4cc4c2948370a4f189dceede689a7e0d33cb83ec4ada5b2750e2ba",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    }
+  ]
+}

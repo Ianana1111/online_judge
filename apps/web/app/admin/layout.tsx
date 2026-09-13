@@ -15,6 +15,7 @@ const SIDEBAR_LINKS = [
   { href: "/admin/billing", label: "Billing" },
   { href: "/admin/analytics", label: "Analytics" },
   { href: "/admin/moderation", label: "Content review" },
+  { href: "/admin/schools", label: "School domain review" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

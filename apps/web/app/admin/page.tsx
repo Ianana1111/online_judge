@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useT } from "@/lib/i18n/LocaleContext";
+import OperationalStatus from "@/components/OperationalStatus";
 
 const SECTIONS = [
   { href: "/admin/problems", title: "Problems", description: "Add, edit, and manage visibility of the problem set." },
@@ -20,6 +21,7 @@ export default function AdminConsolePage() {
         <p className="mt-1 text-sm text-ink-400">{t("Pick a section from the sidebar, or jump in below.")}</p>
       </div>
 
+      <OperationalStatus />
       <div className="grid gap-4 sm:grid-cols-2">
         {SECTIONS.map((s) => (
           <Link key={s.href} href={s.href} className="oj-card block p-4 transition-colors hover:border-brand">

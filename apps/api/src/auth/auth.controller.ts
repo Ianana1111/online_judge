@@ -78,7 +78,7 @@ export class AuthController {
 
   @Get("me")
   async me(@CurrentUser() user: RequestUser, @Res({ passthrough: true }) res: Response) {
-    const { csrfMaxAgeMs, ...body } = await this.authService.me(user.id);
+    const { csrfMaxAgeMs, ...body } = await this.authService.me(user.id, user.sid);
     setCsrfCookie(res, body.csrfToken, csrfMaxAgeMs);
     return body;
   }
@@ -101,7 +101,7 @@ export class AuthController {
       throw new BadRequestException("Google sign-in isn't configured on this server yet.");
     }
     const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
-    if (intent === "delete_account" && !user) {
+    if ((intent === "delete_account" || intent === "security") && !user) {
       return res.redirect(`${webOrigin}/login`);
     }
 
@@ -114,7 +114,7 @@ export class AuthController {
       path: "/auth/google",
     };
     res.cookie("google_oauth_state", state, cookieOpts);
-    if (intent === "delete_account") res.cookie("google_oauth_intent", "delete_account", cookieOpts);
+    if (intent === "delete_account" || intent === "security") res.cookie("google_oauth_intent", intent, cookieOpts);
     else res.clearCookie("google_oauth_intent", { path: "/auth/google" });
 
     const params = new URLSearchParams({
@@ -145,11 +145,12 @@ export class AuthController {
     res.clearCookie("google_oauth_state", { path: "/auth/google" });
     res.clearCookie("google_oauth_intent", { path: "/auth/google" });
     const isDeleteReauth = intent === "delete_account";
+    const isSecurityReauth = intent === "security";
 
     if (!code || !state || !cookieState || state !== cookieState) {
       return res.redirect(`${webOrigin}/login?error=google_state_mismatch`);
     }
-    if (isDeleteReauth && !currentUser) {
+    if ((isDeleteReauth || isSecurityReauth) && !currentUser) {
       return res.redirect(`${webOrigin}/settings?reauthError=1`);
     }
 
@@ -200,6 +201,14 @@ export class AuthController {
         throw new Error("Google identity could not be verified");
       }
 
+      if (isSecurityReauth) {
+        if (!currentUser?.sid) throw new Error("Missing session");
+        await this.authService.verifyGoogleReauthentication(currentUser.id, profile.sub);
+        res.cookie("security_reauth_token", this.tokens.signSecurityReauthToken(currentUser.id, currentUser.sid), {
+          httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", maxAge: 5 * 60 * 1000, path: "/auth/mfa",
+        });
+        return res.redirect(`${webOrigin}/settings?section=security&securityReauth=1`);
+      }
       if (isDeleteReauth) {
         // Calling loginWithGoogle here would rotate the existing session, leaving the browser
         // holding revoked credentials, and could even create an unrelated selected account.
@@ -217,12 +226,12 @@ export class AuthController {
       const suggestedHandle = profile.email.split("@")[0] ?? profile.name ?? "user";
       const session = await this.authService.loginWithGoogle(profile.sub, profile.email, suggestedHandle);
       setAuthCookies(res, session);
-      res.redirect(webOrigin);
+      res.redirect(session.user.mfaRequired ? `${webOrigin}/verify-mfa` : session.user.mfaEnrollmentRequired ? `${webOrigin}/settings?section=security` : webOrigin);
     } catch (err) {
       // Previously swallowed silently — every past "Google sign-in failed" report was
       // undiagnosable because nothing was logged. Always log the real cause now.
       this.logger.error(`Google OAuth callback failed: ${err instanceof Error ? err.message : String(err)}`);
-      res.redirect(isDeleteReauth ? `${webOrigin}/settings?reauthError=1` : `${webOrigin}/login?error=google_failed`);
+      res.redirect(isSecurityReauth ? `${webOrigin}/settings?section=security&securityReauthError=1` : isDeleteReauth ? `${webOrigin}/settings?reauthError=1` : `${webOrigin}/login?error=google_failed`);
     }
   }
 }

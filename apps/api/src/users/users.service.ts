@@ -3,7 +3,8 @@ import { createHash, randomUUID } from "node:crypto";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { prisma, Prisma } from "@oj/db";
-import { canonicalSchoolName, getSchoolEmailDomains, verifySchoolEmailDomain } from "@oj/shared";
+import { canonicalSchoolName } from "@oj/shared";
+import { schoolEmailAllowed } from "./school-domains.service";
 import type {
   ChangeHandleDto,
   ChangePasswordDto,
@@ -138,8 +139,9 @@ export class UsersService {
     if (!ok) throw new UnauthorizedException("Current password is incorrect");
 
     const passwordHash = await argon2.hash(dto.newPassword, { type: argon2.argon2id });
-    await prisma.user.update({ where: { id: userId }, data: { passwordHash } });
-    return this.auth.issueSession(user.id, user.handle, user.email, user.role);
+    const updated = await prisma.user.updateMany({ where: { id: userId, passwordHash: user.passwordHash, authVersion: user.authVersion }, data: { passwordHash, authVersion: { increment: 1 } } });
+    if (!updated.count) throw new UnauthorizedException("Credentials changed. Please log in again.");
+    return this.auth.issueSession(user.id, user.handle, user.email, user.role, user.authVersion + 1);
   }
 
   /** Requests account deletion (PDPA right-to-erasure) — does NOT delete the row immediately.
@@ -442,9 +444,7 @@ export class UsersService {
       if (!user || user.deletionRequestedAt) throw new NotFoundException("User not found");
       if (!user.school) throw new BadRequestException("Pick a school first.");
       if (user.schoolVerifiedAt) throw new BadRequestException("Your school is already verified.");
-      const domains = getSchoolEmailDomains(user.school);
-      if (!domains.length) throw new BadRequestException("This school requires assistance. Please contact support with its official email instructions.");
-      if (!verifySchoolEmailDomain(email, user.school)) throw new BadRequestException(`Use an email belonging to your school (${domains.join(", ")}).`);
+      if (!await schoolEmailAllowed(email, user.school, tx)) throw new BadRequestException("Use a supported school email domain, or submit its official instructions for review.");
       if (user.schoolVerificationSentAt && Date.now() - +user.schoolVerificationSentAt < SCHOOL_VERIFY_RESEND_COOLDOWN_MS) throw new BadRequestException("Give it a moment before requesting another email.");
       const claimed = await tx.usedSchoolEmail.findUnique({ where: { email } });
       if (claimed && claimed.userId !== userId) throw new BadRequestException("That email has already been used to verify a different account.");
@@ -454,8 +454,7 @@ export class UsersService {
       return { token, school: user.school };
     });
     const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
-    const apiOrigin = (process.env.API_ORIGIN ?? "http://localhost:4000").split(",")[0].trim();
-    const verifyUrl = `${apiOrigin}/users/school/verify/confirm?token=${encodeURIComponent(challenge.token)}`;
+    const verifyUrl = `${webOrigin}/verify-school#token=${encodeURIComponent(challenge.token)}`;
     try {
       await this.mail.send({ to: email, subject: `Verify your ${challenge.school} email — judge.tw`,
         html: `<p>Confirm that <strong>${escapeMailHtml(email)}</strong> belongs to you to attach <strong>${escapeMailHtml(challenge.school)}</strong> to your judge.tw profile.</p>
@@ -484,7 +483,7 @@ export class UsersService {
       if (!user || user.deletionRequestedAt || user.school !== payload.school || user.schoolEmail !== payload.email) return { ok: false };
       // Retrying the same already-completed claim is safe and never changes its timestamp.
       if (user.schoolVerifiedAt) return { ok: true };
-      if (user.schoolVerificationTokenHash !== tokenHash(token) || !verifySchoolEmailDomain(payload.email, payload.school)) return { ok: false };
+      if (user.schoolVerificationTokenHash !== tokenHash(token) || !await schoolEmailAllowed(payload.email, payload.school, tx)) return { ok: false };
       const email = normalizeSchoolEmail(payload.email);
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('school_email'), hashtext(${email}))`;
       const claimed = await tx.usedSchoolEmail.findUnique({ where: { email } });

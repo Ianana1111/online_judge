@@ -19,7 +19,7 @@ function periodStart(period: LeaderboardPeriod): Date | undefined {
 export function computeStreak(dates: Set<string>): number {
   const toKey = (d: Date) => d.toISOString().slice(0, 10);
   const today = new Date();
-  let cursor = new Date(today);
+  const cursor = new Date(today);
   if (!dates.has(toKey(cursor))) {
     cursor.setUTCDate(cursor.getUTCDate() - 1); // today not solved yet — check if yesterday keeps the streak alive
     if (!dates.has(toKey(cursor))) return 0;

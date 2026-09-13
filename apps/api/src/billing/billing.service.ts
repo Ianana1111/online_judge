@@ -23,7 +23,6 @@ import {
   queryEcpayCreditTrade,
   queryEcpayOrder,
   refundActions,
-  redactEcpayBodyForLogging,
   verifyCheckMacValue,
 } from "./ecpay.util";
 
@@ -629,8 +628,9 @@ export class BillingService {
 
   /** One worker claim at a time across API replicas. Unknown card actions are never repeated. */
   async processRefund(id: string): Promise<void> {
+    const processingToken = randomBytes(16).toString("hex");
     const claim = await prisma.refundRequest.updateMany({ where: { id, status: "REQUESTED", nextAttemptAt: { lte: new Date() } },
-      data: { status: "PROCESSING", attempts: { increment: 1 } } });
+      data: { status: "PROCESSING", processingToken, attempts: { increment: 1 } } });
     if (!claim.count) return;
     const request = await prisma.refundRequest.findUniqueOrThrow({ where: { id } });
     const payment = await prisma.payment.findUnique({ where: { id: request.paymentId } });
@@ -647,27 +647,29 @@ export class BillingService {
       if (credit.RtnMsg || credit.Amount !== payment.amountNtd) throw new Error("Credit transaction could not be verified");
       const subscription = await prisma.subscription.findUnique({ where: { merchantTradeNo: payment.merchantTradeNo } });
       if (!request.cancellationConfirmedAt && subscription?.status === "ACTIVE") {
-        await prisma.refundRequest.update({ where: { id }, data: { inFlightAction: "CANCEL_SUBSCRIPTION" } });
+        await prisma.refundRequest.update({ where: { id, status: "PROCESSING", processingToken }, data: { inFlightAction: "CANCEL_SUBSCRIPTION" } });
         const result = await cancelEcpayPeriod(subscription.merchantTradeNo, config);
         if (result.RtnCode !== 1) throw new Error(`Cancellation declined (${result.RtnCode})`);
         await prisma.$transaction([
           prisma.subscription.update({ where: { id: subscription.id }, data: { status: "CANCELLED", cancelledAt: new Date() } }),
-          prisma.refundRequest.update({ where: { id }, data: { cancellationConfirmedAt: new Date(), inFlightAction: null } }),
+          prisma.refundRequest.update({ where: { id, status: "PROCESSING", processingToken }, data: { cancellationConfirmedAt: new Date(), inFlightAction: null } }),
         ]);
       }
       if (!request.refundConfirmedAt) {
         if ((credit.CloseData ?? []).some((row) => row.Amount < 0)) throw new Error("Existing refund activity requires reconciliation");
         const lastPositive = (credit.CloseData ?? []).filter((row) => row.Amount > 0).at(-1);
         for (const action of refundActions(lastPositive?.Status ?? credit.Status ?? "")) {
-          await prisma.refundRequest.update({ where: { id }, data: { inFlightAction: action } });
+          await prisma.refundRequest.update({ where: { id, status: "PROCESSING", processingToken }, data: { inFlightAction: action } });
           const result = await doCreditCardAction(payment.merchantTradeNo, order.TradeNo, action, payment.amountNtd, config);
           if (result.RtnCode !== 1) throw new Error(`Credit action declined (${result.RtnCode})`);
-          await prisma.refundRequest.update({ where: { id }, data: { inFlightAction: null,
+          await prisma.refundRequest.update({ where: { id, status: "PROCESSING", processingToken }, data: { inFlightAction: null,
             ...(action === "N" || action === "R" ? { refundConfirmedAt: new Date() } : {}) } });
         }
       }
       await prisma.$transaction(async (tx) => {
+        await tx.$queryRaw`SELECT id FROM refund_requests WHERE id = ${id} FOR UPDATE`;
         const current = await tx.refundRequest.findUniqueOrThrow({ where: { id } });
+        if (current.status !== "PROCESSING" || current.processingToken !== processingToken) return;
         if (!current.refundConfirmedAt) throw new Error("Refund is not confirmed");
         await tx.$executeRaw`SELECT 1 FROM users WHERE id = ${request.userId} FOR UPDATE`;
         const user = await tx.user.findUniqueOrThrow({ where: { id: request.userId } });
@@ -676,19 +678,19 @@ export class BillingService {
           const expires = new Date(Math.max(Date.now(), +user.planExpiresAt - remaining));
           await tx.user.update({ where: { id: user.id }, data: { plan: +expires > Date.now() ? "PRO" : "FREE", planExpiresAt: expires, planCancelRequested: false } });
         } else {
-          // Historical purchases have no attributable entitlement ledger. Preserve unrelated grants.
-          const other = await tx.payment.count({ where: { userId: user.id, id: { not: payment.id }, status: { in: ["APPROVED", "AUTHORIZED"] } } });
-          if (other) throw new Error("Historical entitlement allocation requires review; refund already confirmed");
-          await tx.user.update({ where: { id: user.id }, data: { plan: "FREE", planExpiresAt: null, planCancelRequested: false } });
+          // No ledger means even a single historical purchase cannot distinguish an admin grant.
+          throw new Error("Historical entitlement allocation requires review; refund already confirmed");
         }
         await tx.payment.update({ where: { id: payment.id }, data: { status: "REFUNDED", reviewedAt: new Date(), reviewedBy: "USER_REFUND" } });
-        await tx.refundRequest.update({ where: { id }, data: { status: "COMPLETED", completedAt: new Date(), lastError: null } });
+        await tx.refundRequest.update({ where: { id }, data: { status: "COMPLETED", completedAt: new Date(), lastError: null, processingToken: null } });
       });
     } catch (error) {
       const current = await prisma.refundRequest.findUniqueOrThrow({ where: { id } });
+      if (current.status !== "PROCESSING" || current.processingToken !== processingToken) return;
       const review = !!current.inFlightAction || !!current.refundConfirmedAt || current.attempts >= 3;
-      await prisma.refundRequest.update({ where: { id }, data: {
+      await prisma.refundRequest.updateMany({ where: { id, status: "PROCESSING", processingToken }, data: {
         status: review ? "NEEDS_REVIEW" : "REQUESTED", nextAttemptAt: new Date(Date.now() + 600_000),
+        processingToken: null,
         lastError: error instanceof Error ? error.message.slice(0, 300) : "Refund processing failed",
       } });
       this.logger.error(`Refund ${id} ${review ? "requires reconciliation" : "will retry"}`);

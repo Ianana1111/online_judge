@@ -100,6 +100,13 @@ model User {
   handle       String   @unique
   email        String   @unique
   passwordHash String?
+  emailVerifiedAt DateTime?
+  /// Durable credential generation: pre-reset JWTs cannot be revived by Redis races.
+  authVersion Int @default(0)
+  mfaSecretEncrypted String?
+  mfaEnabledAt DateTime?
+  mfaLastStep Int?
+  mfaRecoveryHashes String[] @default([])
   googleId     String?  @unique
   role         Role     @default(USER)
   /// Set by an admin to mark this account as one of their actual tutoring students (distinct
@@ -154,6 +161,7 @@ model User {
   /// to schoolVerifiedAt, which only ever reflects a *confirmed* click.
   schoolVerificationTokenHash String?
   schoolVerificationSentAt DateTime?
+  schoolDomainRequests SchoolDomainRequest[]
   /// Streak-freeze inventory — see users.service.ts's applyMonthlyFreezeGrant. Granted lazily (1
   /// per calendar month, capped) the same way submitQuotaUsed/submitQuotaMonth reset lazily above,
   /// rather than via a separate cron job.
@@ -192,8 +200,45 @@ model User {
   notifications        Notification[]
   streakFreezeDays      StreakFreezeDay[]
   usedSchoolEmails      UsedSchoolEmail[]
+  authChallenges        AuthChallenge[]
+  securityEvents        SecurityEvent[]
 
   @@map("users")
+}
+
+/// Only a digest validates a bearer token. The encrypted delivery copy is erased after send.
+model AuthChallenge {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purpose String
+  tokenHash String @unique
+  tokenEncrypted String?
+  targetEmail String
+  authVersion Int
+  expiresAt DateTime
+  consumedAt DateTime?
+  createdAt DateTime @default(now())
+  sentAt DateTime?
+  deliveryAttempts Int @default(0)
+  nextDeliveryAt DateTime @default(now())
+  leaseUntil DateTime?
+
+  @@unique([userId, purpose])
+  @@index([sentAt, nextDeliveryAt])
+  @@map("auth_challenges")
+}
+
+/// Security decisions only; never store passwords, OTPs, bearer tokens or request bodies.
+model SecurityEvent {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind String
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@map("security_events")
 }
 
 /// Anti-abuse ledger: one row per school email that has ever actually completed verification
@@ -203,6 +248,35 @@ model User {
 /// unconfirmed claim and gets reset on a school change) — this row is written once, on confirmed
 /// verification, and never touched again, so it survives even if the verifying user later switches
 /// schools or deletes their account.
+model SchoolDomainRequest {
+  id String @id @default(cuid())
+  userId String?
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  school String
+  domain String
+  officialUrl String
+  explanation String
+  status String @default("PENDING")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  decisions SchoolDomainDecision[]
+  @@index([userId, createdAt])
+  @@index([school, status])
+  @@map("school_domain_requests")
+}
+
+model SchoolDomainDecision {
+  id String @id @default(cuid())
+  requestId String
+  request SchoolDomainRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  actorId String
+  status String
+  note String
+  createdAt DateTime @default(now())
+  @@index([requestId, createdAt])
+  @@map("school_domain_decisions")
+}
+
 model UsedSchoolEmail {
   /// Lowercased/trimmed — see normalizeSchoolEmail in users.service.ts. The primary key itself is
   /// what makes a second confirmation for the same address fail atomically (unique violation)
@@ -369,10 +443,30 @@ model RefundRequest {
   lastError String?
   /// Written before the external action. A crash with this set needs reconciliation.
   inFlightAction String?
+  processingToken String?
   cancellationConfirmedAt DateTime?
   refundConfirmedAt DateTime?
+  resolutions RefundResolution[]
   @@index([status, nextAttemptAt])
   @@map("refund_requests")
+}
+
+model RefundResolution {
+  id String @id @default(cuid())
+  requestId String
+  request RefundRequest @relation(fields: [requestId], references: [id], onDelete: Restrict)
+  clientRequestId String @unique
+  requestHash String
+  actorId String
+  decision String
+  evidenceReference String
+  reason String
+  previousStatus String
+  resultingStatus String
+  createdAt DateTime @default(now())
+
+  @@index([requestId, createdAt])
+  @@map("refund_resolutions")
 }
 
 enum SubscriptionStatus {
@@ -572,6 +666,7 @@ model Submission {
   @@index([contestId, userId, createdAt])
   @@index([contestParticipantId])
   @@index([verdict, createdAt])
+  @@index([judgedAt])
   @@unique([userId, clientRequestId])
   @@map("submissions")
 }

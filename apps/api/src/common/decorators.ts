@@ -4,6 +4,9 @@ export interface RequestUser {
   id: string;
   handle: string;
   role: string;
+  sid?: string;
+  authVersion?: number;
+  mfaVerified?: boolean;
 }
 
 /** Route requires no authentication at all; AuthGuard never touches req.user. */

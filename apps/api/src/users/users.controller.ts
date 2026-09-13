@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, Req, Res } from "@nestjs/common";
 import { Throttle } from "@nestjs/throttler";
+import { z } from "zod";
 import type { Request, Response } from "express";
 import { clearAuthCookies, setAuthCookies } from "../common/cookies.util";
 import {
@@ -127,17 +128,18 @@ export class UsersController {
     return this.users.requestSchoolVerification(user.id, body.email);
   }
 
-  /** The link clicked from the verification email — public (no auth cookie required, see
-   * confirmSchoolVerification's own comment) and a plain top-level navigation, so it redirects
-   * back into the web app rather than returning JSON. */
+  /** Legacy email links now open the explicit confirmation page. Mail scanners never consume
+   * the challenge through a GET request. */
   @Public()
   @Get("school/verify/confirm")
-  async confirmSchoolVerification(@Query("token") token: string | undefined, @Res() res: Response) {
+  confirmSchoolVerification(@Query("token") token: string | undefined, @Res() res: Response) {
     const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
-    const result = token ? await this.users.confirmSchoolVerification(token) : { ok: false as const };
-    const status = result.ok ? "1" : result.reason === "duplicate" ? "duplicate" : "0";
-    res.redirect(`${webOrigin}/settings?schoolVerified=${status}`);
+    res.setHeader("Cache-Control", "no-store"); res.setHeader("Referrer-Policy", "no-referrer");
+    res.redirect(`${webOrigin}/verify-school#token=${encodeURIComponent(typeof token === "string" && token.length <= 4096 ? token : "")}`);
   }
+
+  @Public() @Post("school/verify/confirm") @HttpCode(200)
+  confirmSchoolVerificationPost(@Body(new ZodValidationPipe(z.object({ token: z.string().min(1).max(4096) }))) body: { token: string }) { return this.users.confirmSchoolVerification(body.token); }
 
   @Roles("ADMIN")
   @Get()

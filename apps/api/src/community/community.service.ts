@@ -142,7 +142,7 @@ export class CommunityService {
       await lock(tx, initial.postId ?? initial.discussionId!);
       const r = await tx.contentRevision.findUniqueOrThrow({ where: { id } });
       if (r.status !== "PENDING") throw new ConflictException("This revision has already been reviewed or replaced. Refresh the queue.");
-      const now = new Date(); let link = "/discussion/mine";
+      const now = new Date(); let link: string;
       if (r.postId) {
         const p = await tx.post.findFirst({ where: { id: r.postId, deletedAt: null } });
         if (!p) throw new ConflictException("This post was deleted");

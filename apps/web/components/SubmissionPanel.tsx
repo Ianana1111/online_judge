@@ -11,6 +11,7 @@ import { useAuthStore } from "@/store/auth";
 import type { BillingStatus, Sample, SubmissionDetail, SubmissionResultTab } from "@/lib/types";
 import { LANGUAGE_LABEL } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
+import { rememberPractice } from "@/lib/recentPractice";
 
 // Monaco is a large editor bundle unrelated to the rest of the problem page (statement, tabs,
 // discussion) — deferring it out of the initial page JS keeps that content interactive sooner.
@@ -87,6 +88,7 @@ export default function SubmissionPanel({
   const [languageKey, setLanguageKey] = useState("cpp17");
   const [sourceCode, setSourceCode] = useState(STUB.cpp17);
   const [loadedDraftKey, setLoadedDraftKey] = useState<string | null>(null);
+  const languageDrafts = useRef<Record<string, string>>({});
   const requestRef = useRef<{ payload: string; id: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   // True from the moment a submission is accepted until its verdict comes back over SSE — drives
@@ -112,21 +114,32 @@ export default function SubmissionPanel({
   useEffect(() => {
     setLoadedDraftKey(null);
     if (!storageKey) return;
-    let language = "cpp17"; let source = STUB.cpp17;
+    const preferred = user?.settings.defaultLanguage;
+    let language = preferred && LANGUAGES.includes(preferred) ? preferred : "cpp17";
+    let source = STUB[language];
+    const saved: Record<string, string> = {};
     try {
       const parsed = JSON.parse(localStorage.getItem(storageKey) ?? "null");
+      for (const key of LANGUAGES) if (typeof parsed?.sources?.[key] === "string") saved[key] = parsed.sources[key];
       if (parsed && LANGUAGES.includes(parsed.languageKey) && typeof parsed.sourceCode === "string") {
-        language = parsed.languageKey; source = parsed.sourceCode;
+        language = parsed.languageKey; source = parsed.sourceCode; saved[language] = source;
       }
     } catch { /* Storage may be unavailable in private mode. Keep editing usable. */ }
+    languageDrafts.current = saved;
     setLanguageKey(language); setSourceCode(source); setLoadedDraftKey(storageKey);
+  // A preference change applies to the next new draft, never resets an open editor.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storageKey]);
 
   useEffect(() => {
     if (!storageKey || loadedDraftKey !== storageKey) return;
-    try { localStorage.setItem(storageKey, JSON.stringify({ languageKey, sourceCode })); }
+    languageDrafts.current[languageKey] = sourceCode;
+    try { localStorage.setItem(storageKey, JSON.stringify({ languageKey, sourceCode, sources: languageDrafts.current })); }
     catch { setError(t("Your browser could not save this draft. Copy your code before leaving.")); }
-  }, [storageKey, loadedDraftKey, languageKey, sourceCode, t]);
+    if (user && !contestId && sourceCode.trim() && sourceCode !== STUB[languageKey]) {
+      try { rememberPractice(user.id, slug); } catch { /* The code draft has its own visible storage error above. */ }
+    }
+  }, [storageKey, loadedDraftKey, languageKey, sourceCode, t, user, contestId, slug]);
 
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 250);
@@ -231,10 +244,9 @@ export default function SubmissionPanel({
           value={languageKey}
           onChange={(e) => {
             const next = e.target.value;
+            languageDrafts.current[languageKey] = sourceCode;
             setLanguageKey(next);
-            const raw = storageKey ? localStorage.getItem(storageKey) : null;
-            const hasDraftForLang = raw && JSON.parse(raw).languageKey === next;
-            if (!hasDraftForLang) setSourceCode(STUB[next] ?? "");
+            setSourceCode(languageDrafts.current[next] ?? STUB[next] ?? "");
           }}
           className="oj-input w-40"
         >
