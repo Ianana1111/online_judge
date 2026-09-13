@@ -15,7 +15,7 @@ import type { UserSettings } from "@/lib/types";
  * see it pop up again on the next page. `visible` then only tracks the modal's local open/close
  * state for the rest of this session. */
 export default function ProfileSetupGate() {
-  const { user, setUser } = useAuthStore();
+  const { user, patchUser } = useAuthStore();
   const [visible, setVisible] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -27,10 +27,10 @@ export default function ProfileSetupGate() {
         method: "PATCH",
         body: { profileSetupDismissed: true },
       })
-        .then(({ settings }) => setUser({ ...user, settings }))
+        .then(({ settings }) => patchUser(user.id, { settings }))
         .catch(() => {});
     }
-  }, [user, visible, setUser]);
+  }, [user, visible, patchUser]);
 
   if (!visible) return null;
 

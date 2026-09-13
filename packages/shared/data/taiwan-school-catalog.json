@@ -1,0 +1,2569 @@
+{
+  "retrievedAt": "2026-09-12",
+  "source": "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv",
+  "sourceSnapshotAt": "2025-10-15",
+  "sourceExportedAt": "2026-01-08",
+  "sourceSha256": "c06b7d2e4efc740e6264133c7d72a3fe3db19c6b0a90a99dee229510b8371fe4",
+  "scope": "149 MOE institutions, plus separately sourced military/police institutions. Website alone is never mailbox evidence. Shared public or military mail providers are not accepted.",
+  "aliases": {
+    "台北醫學大學": "臺北醫學大學",
+    "南台科技大學": "南臺科技大學",
+    "高苑科技大學": "台鋼科技大學",
+    "遠東科技大學": "中信科技大學",
+    "國防醫學院": "國防醫學大學",
+    "國立中央警察大學": "中央警察大學",
+    "輔仁大學學校財團法人輔仁大學": "輔仁大學",
+    "淡江大學學校財團法人淡江大學": "淡江大學",
+    "中華大學學校財團法人中華大學": "中華大學",
+    "華梵學校財團法人華梵大學": "華梵大學",
+    "南臺學校財團法人南臺科技大學": "南臺科技大學",
+    "嘉藥學校財團法人嘉南藥理大學": "嘉南藥理大學",
+    "慈濟學校財團法人慈濟大學": "慈濟大學",
+    "明新學校財團法人明新科技大學": "明新科技大學",
+    "健行學校財團法人健行科技大學": "健行科技大學",
+    "正修學校財團法人正修科技大學": "正修科技大學",
+    "萬能學校財團法人萬能科技大學": "萬能科技大學",
+    "台鋼學校財團法人台鋼科技大學": "台鋼科技大學",
+    "台南家專學校財團法人台南應用科技大學": "台南應用科技大學",
+    "中信金學校財團法人中信科技大學": "中信科技大學",
+    "光宇學校財團法人元培醫事科技大學": "元培醫事科技大學",
+    "中華學校財團法人中華科技大學": "中華科技大學",
+    "廣亞學校財團法人育達科技大學": "育達科技大學",
+    "美和學校財團法人美和科技大學": "美和科技大學",
+    "修平學校財團法人修平科技大學": "修平科技大學",
+    "長庚學校財團法人長庚科技大學": "長庚科技大學",
+    "城市學校財團法人臺北城市科技大學": "臺北城市科技大學",
+    "大華學校財團法人敏實科技大學": "敏實科技大學",
+    "醒吾學校財團法人醒吾科技大學": "醒吾科技大學",
+    "文藻學校財團法人文藻外語大學": "文藻外語大學",
+    "華夏學校財團法人華夏科技大學": "華夏科技大學",
+    "致理學校財團法人致理科技大學": "致理科技大學",
+    "康寧學校財團法人康寧大學": "康寧大學",
+    "宏國學校財團法人宏國德霖科技大學": "宏國德霖科技大學",
+    "崇右學校財團法人崇右影藝科技大學": "崇右影藝科技大學",
+    "台北海洋學校財團法人台北海洋科技大學": "台北海洋科技大學",
+    "亞東學校財團法人亞東科技大學": "亞東科技大學",
+    "馬偕學校財團法人馬偕醫學大學": "馬偕醫學大學",
+    "中信學校財團法人中信金融管理學院": "中信金融管理學院",
+    "南亞科技學校財團法人南亞技術學院": "南亞技術學院",
+    "德育學校財團法人德育護理健康學院": "德育護理健康學院",
+    "法鼓學校財團法人法鼓文理學院": "法鼓文理學院",
+    "馬偕學校財團法人馬偕醫護管理專科學校": "馬偕醫護管理專科學校",
+    "新生學校財團法人新生醫護管理專科學校": "新生醫護管理專科學校",
+    "學校財團法人中華浸信會基督教台灣浸會神學院": "中華浸信會基督教台灣浸會神學院",
+    "台神學校財團法人台灣神學研究學院": "台灣神學研究學院",
+    "基督教華神學校財團法人中華福音神學研究學院": "中華福音神學研究學院",
+    "福智學校財團法人福智佛教學院": "福智佛教學院"
+  },
+  "schools": [
+    {
+      "code": "0001",
+      "name": "國立政治大學",
+      "legalName": "國立政治大學",
+      "englishName": "National Chengchi University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.nccu.edu.tw",
+      "emailRoots": [
+        "nccu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0002",
+      "name": "國立清華大學",
+      "legalName": "國立清華大學",
+      "englishName": "National Tsing Hua University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.nthu.edu.tw",
+      "emailRoots": [
+        "nthu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0003",
+      "name": "國立臺灣大學",
+      "legalName": "國立臺灣大學",
+      "englishName": "National Taiwan University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ntu.edu.tw",
+      "emailRoots": [
+        "ntu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0004",
+      "name": "國立臺灣師範大學",
+      "legalName": "國立臺灣師範大學",
+      "englishName": "National Taiwan Normal University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ntnu.edu.tw",
+      "emailRoots": [
+        "ntnu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0005",
+      "name": "國立成功大學",
+      "legalName": "國立成功大學",
+      "englishName": "National Cheng Kung University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ncku.edu.tw/",
+      "emailRoots": [
+        "ncku.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0006",
+      "name": "國立中興大學",
+      "legalName": "國立中興大學",
+      "englishName": "National Chung Hsing University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.nchu.edu.tw/index1.php",
+      "emailRoots": [
+        "nchu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0007",
+      "name": "國立陽明交通大學",
+      "legalName": "國立陽明交通大學",
+      "englishName": "National Yang Ming Chiao Tung University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.nycu.edu.tw/",
+      "emailRoots": [
+        "nycu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0008",
+      "name": "國立中央大學",
+      "legalName": "國立中央大學",
+      "englishName": "National Central University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ncu.edu.tw",
+      "emailRoots": [
+        "ncu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0009",
+      "name": "國立中山大學",
+      "legalName": "國立中山大學",
+      "englishName": "National Sun Yat-sen University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.nsysu.edu.tw",
+      "emailRoots": [
+        "nsysu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0012",
+      "name": "國立臺灣海洋大學",
+      "legalName": "國立臺灣海洋大學",
+      "englishName": "National Taiwan Ocean University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ntou.edu.tw",
+      "emailRoots": [
+        "ntou.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0013",
+      "name": "國立中正大學",
+      "legalName": "國立中正大學",
+      "englishName": "National Chung Cheng University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ccu.edu.tw/",
+      "emailRoots": [
+        "ccu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0014",
+      "name": "國立高雄師範大學",
+      "legalName": "國立高雄師範大學",
+      "englishName": "National Kaohsiung Normal University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.nknu.edu.tw",
+      "emailRoots": [
+        "nknu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0015",
+      "name": "國立彰化師範大學",
+      "legalName": "國立彰化師範大學",
+      "englishName": "National Changhua University of Education",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ncue.edu.tw",
+      "emailRoots": [
+        "ncue.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0017",
+      "name": "國立臺北大學",
+      "legalName": "國立臺北大學",
+      "englishName": "National Taipei University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ntpu.edu.tw/",
+      "emailRoots": [
+        "ntpu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0018",
+      "name": "國立嘉義大學",
+      "legalName": "國立嘉義大學",
+      "englishName": "National Chiayi University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ncyu.edu.tw",
+      "emailRoots": [
+        "ncyu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0019",
+      "name": "國立高雄大學",
+      "legalName": "國立高雄大學",
+      "englishName": "National University of Kaohsiung",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.nuk.edu.tw",
+      "emailRoots": [
+        "nuk.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0020",
+      "name": "國立東華大學",
+      "legalName": "國立東華大學",
+      "englishName": "National Dong Hwa University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ndhu.edu.tw",
+      "emailRoots": [
+        "ndhu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0021",
+      "name": "國立暨南國際大學",
+      "legalName": "國立暨南國際大學",
+      "englishName": "National Chi Nan University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ncnu.edu.tw",
+      "emailRoots": [
+        "ncnu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0022",
+      "name": "國立臺灣科技大學",
+      "legalName": "國立臺灣科技大學",
+      "englishName": "National Taiwan University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ntust.edu.tw/home.php",
+      "emailRoots": [
+        "ntust.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0023",
+      "name": "國立雲林科技大學",
+      "legalName": "國立雲林科技大學",
+      "englishName": "National Yunlin University of Science & Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.yuntech.edu.tw/",
+      "emailRoots": [
+        "yuntech.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0024",
+      "name": "國立屏東科技大學",
+      "legalName": "國立屏東科技大學",
+      "englishName": "National Pingtung University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.npust.edu.tw/",
+      "emailRoots": [
+        "npust.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0025",
+      "name": "國立臺北科技大學",
+      "legalName": "國立臺北科技大學",
+      "englishName": "National Taipei University of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ntut.edu.tw/",
+      "emailRoots": [
+        "ntut.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0028",
+      "name": "國立臺北藝術大學",
+      "legalName": "國立臺北藝術大學",
+      "englishName": "Taipei National University of the Arts",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://w3.tnua.edu.tw/",
+      "emailRoots": [
+        "tnua.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0029",
+      "name": "國立臺灣藝術大學",
+      "legalName": "國立臺灣藝術大學",
+      "englishName": "National Taiwan University of Arts",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ntua.edu.tw",
+      "emailRoots": [
+        "ntua.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0030",
+      "name": "國立臺東大學",
+      "legalName": "國立臺東大學",
+      "englishName": "National Taitung University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.nttu.edu.tw",
+      "emailRoots": [
+        "nttu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0031",
+      "name": "國立宜蘭大學",
+      "legalName": "國立宜蘭大學",
+      "englishName": "National Ilan University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.niu.edu.tw",
+      "emailRoots": [
+        "niu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0032",
+      "name": "國立聯合大學",
+      "legalName": "國立聯合大學",
+      "englishName": "National United University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.nuu.edu.tw",
+      "emailRoots": [
+        "nuu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0033",
+      "name": "國立虎尾科技大學",
+      "legalName": "國立虎尾科技大學",
+      "englishName": "National Formosa University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.nfu.edu.tw/zh/",
+      "emailRoots": [
+        "nfu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0035",
+      "name": "國立臺南藝術大學",
+      "legalName": "國立臺南藝術大學",
+      "englishName": "Tainan National University of the Arts",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.tnnua.edu.tw",
+      "emailRoots": [
+        "tnnua.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0036",
+      "name": "國立臺南大學",
+      "legalName": "國立臺南大學",
+      "englishName": "National University of Tainan",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.nutn.edu.tw",
+      "emailRoots": [
+        "nutn.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0037",
+      "name": "國立臺北教育大學",
+      "legalName": "國立臺北教育大學",
+      "englishName": "National Taipei University of Education",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ntue.edu.tw",
+      "emailRoots": [
+        "ntue.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0039",
+      "name": "國立臺中教育大學",
+      "legalName": "國立臺中教育大學",
+      "englishName": "National Taichung University of Education",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ntcu.edu.tw",
+      "emailRoots": [
+        "ntcu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0042",
+      "name": "國立澎湖科技大學",
+      "legalName": "國立澎湖科技大學",
+      "englishName": "National Penghu University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.npu.edu.tw/home.aspx",
+      "emailRoots": [
+        "npu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0043",
+      "name": "國立勤益科技大學",
+      "legalName": "國立勤益科技大學",
+      "englishName": "National Chin-Yi University of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ncut.edu.tw/",
+      "emailRoots": [
+        "ncut.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0044",
+      "name": "國立體育大學",
+      "legalName": "國立體育大學",
+      "englishName": "National Taiwan Sport University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ntsu.edu.tw",
+      "emailRoots": [
+        "ntsu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0046",
+      "name": "國立臺北護理健康大學",
+      "legalName": "國立臺北護理健康大學",
+      "englishName": "National Taipei University of Nursing and Health Sciences",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ntunhs.edu.tw/",
+      "emailRoots": [
+        "ntunhs.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0047",
+      "name": "國立高雄餐旅大學",
+      "legalName": "國立高雄餐旅大學",
+      "englishName": "National Kaohsiung University of Hospitality and Tourism",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.nkuht.edu.tw/",
+      "emailRoots": [
+        "nkuht.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0048",
+      "name": "國立金門大學",
+      "legalName": "國立金門大學",
+      "englishName": "National Quemoy University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.nqu.edu.tw",
+      "emailRoots": [
+        "nqu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0049",
+      "name": "國立臺灣體育運動大學",
+      "legalName": "國立臺灣體育運動大學",
+      "englishName": "National Taiwan University of Sport",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ntus.edu.tw",
+      "emailRoots": [
+        "ntus.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0050",
+      "name": "國立臺中科技大學",
+      "legalName": "國立臺中科技大學",
+      "englishName": "National  Taichung University Of  Science And Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.nutc.edu.tw/",
+      "emailRoots": [
+        "nutc.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0051",
+      "name": "國立臺北商業大學",
+      "legalName": "國立臺北商業大學",
+      "englishName": "National Taipei University of  Business",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ntub.edu.tw",
+      "emailRoots": [
+        "ntub.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0052",
+      "name": "國立屏東大學",
+      "legalName": "國立屏東大學",
+      "englishName": "National Pingtung University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.nptu.edu.tw",
+      "emailRoots": [
+        "nptu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0053",
+      "name": "國立高雄科技大學",
+      "legalName": "國立高雄科技大學",
+      "englishName": "National Kaohsiung University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.nkust.edu.tw",
+      "emailRoots": [
+        "nkust.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0144",
+      "name": "國立臺灣戲曲學院",
+      "legalName": "國立臺灣戲曲學院",
+      "englishName": "National Taiwan College of Performing Arts",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.tcpa.edu.tw/",
+      "emailRoots": [
+        "tcpa.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0221",
+      "name": "國立臺南護理專科學校",
+      "legalName": "國立臺南護理專科學校",
+      "englishName": "National Tainan Junior College of Nursing",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ntin.edu.tw/",
+      "emailRoots": [
+        "ntin.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0222",
+      "name": "國立臺東專科學校",
+      "legalName": "國立臺東專科學校",
+      "englishName": "National Taitung Junior College",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ntc.edu.tw/",
+      "emailRoots": [
+        "ntc.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "0A01",
+      "name": "國立空中大學",
+      "legalName": "國立空中大學",
+      "englishName": "National Open University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.nou.edu.tw/",
+      "emailRoots": [
+        "nou.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1001",
+      "name": "東海大學",
+      "legalName": "東海大學",
+      "englishName": "Tunghai University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.thu.edu.tw",
+      "emailRoots": [
+        "thu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1002",
+      "name": "輔仁大學",
+      "legalName": "輔仁大學學校財團法人輔仁大學",
+      "englishName": "Fu Jen Catholic University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.fju.edu.tw",
+      "emailRoots": [
+        "fju.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1003",
+      "name": "東吳大學",
+      "legalName": "東吳大學",
+      "englishName": "Soochow University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.scu.edu.tw",
+      "emailRoots": [
+        "scu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1004",
+      "name": "中原大學",
+      "legalName": "中原大學",
+      "englishName": "Chung Yuan Christian University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.cycu.edu.tw",
+      "emailRoots": [
+        "cycu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1005",
+      "name": "淡江大學",
+      "legalName": "淡江大學學校財團法人淡江大學",
+      "englishName": "Tamkang University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.tku.edu.tw",
+      "emailRoots": [
+        "tku.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1006",
+      "name": "中國文化大學",
+      "legalName": "中國文化大學",
+      "englishName": "Chinese Culture University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.pccu.edu.tw",
+      "emailRoots": [
+        "pccu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1007",
+      "name": "逢甲大學",
+      "legalName": "逢甲大學",
+      "englishName": "Feng Chia University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.fcu.edu.tw/",
+      "emailRoots": [
+        "fcu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1008",
+      "name": "靜宜大學",
+      "legalName": "靜宜大學",
+      "englishName": "Providence University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.pu.edu.tw",
+      "emailRoots": [
+        "pu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1009",
+      "name": "長庚大學",
+      "legalName": "長庚大學",
+      "englishName": "Chang Gung University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.cgu.edu.tw",
+      "emailRoots": [
+        "cgu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1010",
+      "name": "元智大學",
+      "legalName": "元智大學",
+      "englishName": "Yuan Ze University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.yzu.edu.tw",
+      "emailRoots": [
+        "yzu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1011",
+      "name": "中華大學",
+      "legalName": "中華大學學校財團法人中華大學",
+      "englishName": "Chung Hua University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www1.chu.edu.tw/",
+      "emailRoots": [
+        "chu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1012",
+      "name": "大葉大學",
+      "legalName": "大葉大學",
+      "englishName": "Da-Yeh University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.dyu.edu.tw/",
+      "emailRoots": [
+        "dyu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1013",
+      "name": "華梵大學",
+      "legalName": "華梵學校財團法人華梵大學",
+      "englishName": "Huafan University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.hfu.edu.tw",
+      "emailRoots": [
+        "hfu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://g.hfu.edu.tw/g_project/g_works/index.html"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1014",
+      "name": "義守大學",
+      "legalName": "義守大學",
+      "englishName": "I-Shou University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.isu.edu.tw",
+      "emailRoots": [
+        "isu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1015",
+      "name": "世新大學",
+      "legalName": "世新大學",
+      "englishName": "Shih Hsin University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.shu.edu.tw",
+      "emailRoots": [
+        "shu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1016",
+      "name": "銘傳大學",
+      "legalName": "銘傳大學",
+      "englishName": "Ming Chuan University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.mcu.edu.tw",
+      "emailRoots": [
+        "mcu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1017",
+      "name": "實踐大學",
+      "legalName": "實踐大學",
+      "englishName": "Shih Chien University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.usc.edu.tw",
+      "emailRoots": [
+        "usc.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1018",
+      "name": "朝陽科技大學",
+      "legalName": "朝陽科技大學",
+      "englishName": "Chaoyang University of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://web.cyut.edu.tw",
+      "emailRoots": [
+        "cyut.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1019",
+      "name": "高雄醫學大學",
+      "legalName": "高雄醫學大學",
+      "englishName": "Kaohsiung Medical University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.kmu.edu.tw/",
+      "emailRoots": [
+        "kmu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1020",
+      "name": "南華大學",
+      "legalName": "南華大學",
+      "englishName": "Nanhua university",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.nhu.edu.tw",
+      "emailRoots": [
+        "nhu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1021",
+      "name": "真理大學",
+      "legalName": "真理大學",
+      "englishName": "Aletheia University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.au.edu.tw",
+      "emailRoots": [
+        "au.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1022",
+      "name": "大同大學",
+      "legalName": "大同大學",
+      "englishName": "Tatung University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ttu.edu.tw",
+      "emailRoots": [
+        "ttu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1023",
+      "name": "南臺科技大學",
+      "legalName": "南臺學校財團法人南臺科技大學",
+      "englishName": "Southern Taiwan University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.stust.edu.tw",
+      "emailRoots": [
+        "stust.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1024",
+      "name": "崑山科技大學",
+      "legalName": "崑山科技大學",
+      "englishName": "Kun Shan University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ksu.edu.tw/",
+      "emailRoots": [
+        "ksu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1025",
+      "name": "嘉南藥理大學",
+      "legalName": "嘉藥學校財團法人嘉南藥理大學",
+      "englishName": "Chia Nan University of Pharmacy & Science",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.cnu.edu.tw/",
+      "emailRoots": [
+        "cnu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1026",
+      "name": "樹德科技大學",
+      "legalName": "樹德科技大學",
+      "englishName": "Shu-Te University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.stu.edu.tw/",
+      "emailRoots": [
+        "stu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1027",
+      "name": "慈濟大學",
+      "legalName": "慈濟學校財團法人慈濟大學",
+      "englishName": "Tzu Chi University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.tcu.edu.tw",
+      "emailRoots": [
+        "tcu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1028",
+      "name": "臺北醫學大學",
+      "legalName": "臺北醫學大學",
+      "englishName": "Taipei Medical University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.tmu.edu.tw",
+      "emailRoots": [
+        "tmu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1029",
+      "name": "中山醫學大學",
+      "legalName": "中山醫學大學",
+      "englishName": "Chung Shan Medical University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.csmu.edu.tw/",
+      "emailRoots": [
+        "csmu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1030",
+      "name": "龍華科技大學",
+      "legalName": "龍華科技大學",
+      "englishName": "Lunghwa University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.lhu.edu.tw",
+      "emailRoots": [
+        "lhu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1031",
+      "name": "輔英科技大學",
+      "legalName": "輔英科技大學",
+      "englishName": "Fooyin University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.fy.edu.tw/",
+      "emailRoots": [
+        "fy.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1032",
+      "name": "明新科技大學",
+      "legalName": "明新學校財團法人明新科技大學",
+      "englishName": "Minghsin University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.must.edu.tw/",
+      "emailRoots": [
+        "must.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1033",
+      "name": "長榮大學",
+      "legalName": "長榮大學",
+      "englishName": "Chang Jung Christian University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.cjcu.edu.tw",
+      "emailRoots": [
+        "cjcu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1034",
+      "name": "弘光科技大學",
+      "legalName": "弘光科技大學",
+      "englishName": "Hungkuang University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.hk.edu.tw",
+      "emailRoots": [
+        "hk.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1035",
+      "name": "中國醫藥大學",
+      "legalName": "中國醫藥大學",
+      "englishName": "China Medical University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.cmu.edu.tw",
+      "emailRoots": [
+        "cmu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1036",
+      "name": "健行科技大學",
+      "legalName": "健行學校財團法人健行科技大學",
+      "englishName": "Chien Hsin University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.uch.edu.tw/index.htm",
+      "emailRoots": [
+        "uch.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1037",
+      "name": "正修科技大學",
+      "legalName": "正修學校財團法人正修科技大學",
+      "englishName": "Cheng Shiu University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.csu.edu.tw",
+      "emailRoots": [
+        "csu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1038",
+      "name": "萬能科技大學",
+      "legalName": "萬能學校財團法人萬能科技大學",
+      "englishName": "Vanung University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.vnu.edu.tw/",
+      "emailRoots": [
+        "vnu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1039",
+      "name": "玄奘大學",
+      "legalName": "玄奘大學",
+      "englishName": "Hsuan Chuang University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.hcu.edu.tw",
+      "emailRoots": [
+        "hcu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1040",
+      "name": "建國科技大學",
+      "legalName": "建國科技大學",
+      "englishName": "Chienkuo Technology University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ctu.edu.tw/",
+      "emailRoots": [
+        "ctu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1041",
+      "name": "明志科技大學",
+      "legalName": "明志科技大學",
+      "englishName": "Ming Chi University of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.mcut.edu.tw",
+      "emailRoots": [
+        "mcut.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1042",
+      "name": "台鋼科技大學",
+      "legalName": "台鋼學校財團法人台鋼科技大學",
+      "englishName": "Taiwan Steel University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.tsust.edu.tw",
+      "emailRoots": [
+        "tsust.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1043",
+      "name": "大仁科技大學",
+      "legalName": "大仁科技大學",
+      "englishName": "Tajen University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.tajen.edu.tw/",
+      "emailRoots": [
+        "tajen.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1044",
+      "name": "聖約翰科技大學",
+      "legalName": "聖約翰科技大學",
+      "englishName": "St. John’s University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.sju.edu.tw",
+      "emailRoots": [
+        "sju.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1045",
+      "name": "嶺東科技大學",
+      "legalName": "嶺東科技大學",
+      "englishName": "Ling Tung University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ltu.edu.tw/",
+      "emailRoots": [
+        "ltu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1046",
+      "name": "中國科技大學",
+      "legalName": "中國科技大學",
+      "englishName": "China University of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.cute.edu.tw/",
+      "emailRoots": [
+        "cute.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1047",
+      "name": "中臺科技大學",
+      "legalName": "中臺科技大學",
+      "englishName": "Central Taiwan University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ctust.edu.tw/",
+      "emailRoots": [
+        "ctust.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1048",
+      "name": "亞洲大學",
+      "legalName": "亞洲大學",
+      "englishName": "Asia University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.asia.edu.tw",
+      "emailRoots": [
+        "asia.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1049",
+      "name": "開南大學",
+      "legalName": "開南大學",
+      "englishName": "Kainan University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.knu.edu.tw",
+      "emailRoots": [
+        "knu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1050",
+      "name": "佛光大學",
+      "legalName": "佛光大學",
+      "englishName": "Fo Guang University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.fgu.edu.tw",
+      "emailRoots": [
+        "fgu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1051",
+      "name": "台南應用科技大學",
+      "legalName": "台南家專學校財團法人台南應用科技大學",
+      "englishName": "Tainan University of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.tut.edu.tw",
+      "emailRoots": [
+        "tut.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1052",
+      "name": "中信科技大學",
+      "legalName": "中信金學校財團法人中信科技大學",
+      "englishName": "CTBC UNIVERSITY OF TECHNOLOGY",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ctbctech.edu.tw",
+      "emailRoots": [
+        "ctbctech.edu.tw",
+        "feu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv",
+        "https://library.ctbctech.edu.tw/p/404-1023-3109.php?Lang=zh-tw"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1053",
+      "name": "元培醫事科技大學",
+      "legalName": "光宇學校財團法人元培醫事科技大學",
+      "englishName": "Yuanpei University of Medical Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ypu.edu.tw/index.php",
+      "emailRoots": [
+        "ypu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1054",
+      "name": "景文科技大學",
+      "legalName": "景文科技大學",
+      "englishName": "Jinwen University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.just.edu.tw",
+      "emailRoots": [
+        "just.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1055",
+      "name": "中華醫事科技大學",
+      "legalName": "中華醫事科技大學",
+      "englishName": "Chung Hwa University of Medical Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.hwai.edu.tw/index.php",
+      "emailRoots": [
+        "hwai.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://itc.hwai.edu.tw/p/405-1002-66563%2Cc1977.php?Lang=zh-tw"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1056",
+      "name": "東南科技大學",
+      "legalName": "東南科技大學",
+      "englishName": "Tungnan University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.tnu.edu.tw/",
+      "emailRoots": [
+        "tnu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1057",
+      "name": "德明財經科技大學",
+      "legalName": "德明財經科技大學",
+      "englishName": "Takming University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.takming.edu.tw/",
+      "emailRoots": [
+        "takming.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1060",
+      "name": "南開科技大學",
+      "legalName": "南開科技大學",
+      "englishName": "Nan Kai University of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.nkut.edu.tw/index.php",
+      "emailRoots": [
+        "nkut.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1061",
+      "name": "中華科技大學",
+      "legalName": "中華學校財團法人中華科技大學",
+      "englishName": "China University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.cust.edu.tw",
+      "emailRoots": [
+        "cust.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1062",
+      "name": "僑光科技大學",
+      "legalName": "僑光科技大學",
+      "englishName": "Overseas Chinese University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ocu.edu.tw/index.php",
+      "emailRoots": [
+        "ocu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1063",
+      "name": "育達科技大學",
+      "legalName": "廣亞學校財團法人育達科技大學",
+      "englishName": "Yu Da University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ydu.edu.tw/",
+      "emailRoots": [
+        "ydu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1064",
+      "name": "美和科技大學",
+      "legalName": "美和學校財團法人美和科技大學",
+      "englishName": "Meiho University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.meiho.edu.tw/",
+      "emailRoots": [
+        "meiho.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1065",
+      "name": "吳鳳科技大學",
+      "legalName": "吳鳳科技大學",
+      "englishName": "WuFeng University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.wfu.edu.tw",
+      "emailRoots": [
+        "wfu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1069",
+      "name": "修平科技大學",
+      "legalName": "修平學校財團法人修平科技大學",
+      "englishName": "Hsiuping University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.hust.edu.tw/",
+      "emailRoots": [
+        "hust.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1070",
+      "name": "長庚科技大學",
+      "legalName": "長庚學校財團法人長庚科技大學",
+      "englishName": "Chang Gung University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.cgust.edu.tw",
+      "emailRoots": [
+        "cgust.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1071",
+      "name": "臺北城市科技大學",
+      "legalName": "城市學校財團法人臺北城市科技大學",
+      "englishName": "Taipei City University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.tpcu.edu.tw/bin/home.php",
+      "emailRoots": [
+        "tpcu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1072",
+      "name": "敏實科技大學",
+      "legalName": "大華學校財團法人敏實科技大學",
+      "englishName": "Minth University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.mitust.edu.tw/",
+      "emailRoots": [
+        "mitust.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1073",
+      "name": "醒吾科技大學",
+      "legalName": "醒吾學校財團法人醒吾科技大學",
+      "englishName": "Hsing Wu University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.hwu.edu.tw/",
+      "emailRoots": [
+        "hwu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1075",
+      "name": "文藻外語大學",
+      "legalName": "文藻學校財團法人文藻外語大學",
+      "englishName": "Wenzao Ursuline University of Languages",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://a001.wzu.edu.tw/",
+      "emailRoots": [
+        "wzu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1076",
+      "name": "華夏科技大學",
+      "legalName": "華夏學校財團法人華夏科技大學",
+      "englishName": "Hwa Hsia University of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.hwh.edu.tw/bin/hwhhome.php",
+      "emailRoots": [
+        "hwh.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1078",
+      "name": "致理科技大學",
+      "legalName": "致理學校財團法人致理科技大學",
+      "englishName": "Chihlee University of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.chihlee.edu.tw/",
+      "emailRoots": [
+        "chihlee.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1079",
+      "name": "康寧大學",
+      "legalName": "康寧學校財團法人康寧大學",
+      "englishName": "University of Kang Ning",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ukn.edu.tw",
+      "emailRoots": [
+        "ukn.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1080",
+      "name": "宏國德霖科技大學",
+      "legalName": "宏國學校財團法人宏國德霖科技大學",
+      "englishName": "Hungkuo Delin University of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://w5.hdut.edu.tw/app/home.php",
+      "emailRoots": [
+        "hdut.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1082",
+      "name": "崇右影藝科技大學",
+      "legalName": "崇右學校財團法人崇右影藝科技大學",
+      "englishName": "Chungyu University of Film and Arts",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.cufa.edu.tw",
+      "emailRoots": [
+        "cufa.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1083",
+      "name": "台北海洋科技大學",
+      "legalName": "台北海洋學校財團法人台北海洋科技大學",
+      "englishName": "Taipei University of Marine Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.tumt.edu.tw/",
+      "emailRoots": [
+        "tumt.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1084",
+      "name": "亞東科技大學",
+      "legalName": "亞東學校財團法人亞東科技大學",
+      "englishName": "Asia Eastern University of Science and Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.aeust.edu.tw/",
+      "emailRoots": [
+        "aeust.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1085",
+      "name": "馬偕醫學大學",
+      "legalName": "馬偕學校財團法人馬偕醫學大學",
+      "englishName": "MacKay Medical University",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.mmu.edu.tw",
+      "emailRoots": [
+        "mmu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1125",
+      "name": "中信金融管理學院",
+      "legalName": "中信學校財團法人中信金融管理學院",
+      "englishName": "CTBC Business School",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ctbc.edu.tw/",
+      "emailRoots": [
+        "ctbc.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1168",
+      "name": "南亞技術學院",
+      "legalName": "南亞科技學校財團法人南亞技術學院",
+      "englishName": "Nanya Institute of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.nanya.edu.tw",
+      "emailRoots": [
+        "nanya.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1183",
+      "name": "黎明技術學院",
+      "legalName": "黎明技術學院",
+      "englishName": "Lee-Ming Institute of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.lit.edu.tw/",
+      "emailRoots": [
+        "lit.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1185",
+      "name": "德育護理健康學院",
+      "legalName": "德育學校財團法人德育護理健康學院",
+      "englishName": "Deh Yu College of Nursing and Health",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.dyhu.edu.tw/",
+      "emailRoots": [
+        "dyhu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1196",
+      "name": "法鼓文理學院",
+      "legalName": "法鼓學校財團法人法鼓文理學院",
+      "englishName": "Dharma Drum Institute of Liberal Art",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.dila.edu.tw/",
+      "emailRoots": [
+        "dila.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1282",
+      "name": "馬偕醫護管理專科學校",
+      "legalName": "馬偕學校財團法人馬偕醫護管理專科學校",
+      "englishName": "MacKay Junior College of Medicine, Nursing, and Management",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.mkc.edu.tw/",
+      "emailRoots": [
+        "mkc.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1283",
+      "name": "仁德醫護管理專科學校",
+      "legalName": "仁德醫護管理專科學校",
+      "englishName": "Jen-Teh Junior College of Medicine, Nursing and Management",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.jente.edu.tw/",
+      "emailRoots": [
+        "jente.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1284",
+      "name": "樹人醫護管理專科學校",
+      "legalName": "樹人醫護管理專科學校",
+      "englishName": "Shu-Zen Junior College of Medicine and Management",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.szmc.edu.tw/",
+      "emailRoots": [
+        "szmc.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1285",
+      "name": "慈惠醫護管理專科學校",
+      "legalName": "慈惠醫護管理專科學校",
+      "englishName": "TZU HUI Institute of Technology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.tzuhui.edu.tw/home",
+      "emailRoots": [
+        "tzuhui.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://www.tzuhui.edu.tw/home?cid=664"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1286",
+      "name": "耕莘健康管理專科學校",
+      "legalName": "耕莘健康管理專科學校",
+      "englishName": "Cardinal Tien Junior College of Healthcare And Management",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.ctcn.edu.tw",
+      "emailRoots": [
+        "ctcn.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1287",
+      "name": "敏惠醫護管理專科學校",
+      "legalName": "敏惠醫護管理專科學校",
+      "englishName": "Min-Hwei Junior College of Health Care Management",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.mhchcm.edu.tw",
+      "emailRoots": [
+        "mhchcm.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1289",
+      "name": "育英醫護管理專科學校",
+      "legalName": "育英醫護管理專科學校",
+      "englishName": "Yuh-Ing Junior College of Health Care & Management",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.yuhing.edu.tw",
+      "emailRoots": [
+        "yuhing.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1291",
+      "name": "聖母醫護管理專科學校",
+      "legalName": "聖母醫護管理專科學校",
+      "englishName": "St. Mary''s Junior College of Medicine, Nursing and Management",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.smc.edu.tw/nss/p/index",
+      "emailRoots": [
+        "smc.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1292",
+      "name": "新生醫護管理專科學校",
+      "legalName": "新生學校財團法人新生醫護管理專科學校",
+      "englishName": "Hsin Sheng Junior College of Medical Care and Management",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.hsc.edu.tw",
+      "emailRoots": [
+        "hsc.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1293",
+      "name": "崇仁醫護管理專科學校",
+      "legalName": "崇仁醫護管理專科學校",
+      "englishName": "Chung-Jen Junior College of Nursing, Health Sciences and Management",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.cjc.edu.tw/",
+      "emailRoots": [
+        "cjc.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1R02",
+      "name": "中華浸信會基督教台灣浸會神學院",
+      "legalName": "學校財團法人中華浸信會基督教台灣浸會神學院",
+      "englishName": "Taiwan Baptist Christian Seminary",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.tbts.edu.tw/",
+      "emailRoots": [
+        "tbts.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1R03",
+      "name": "臺北基督學院",
+      "legalName": "臺北基督學院",
+      "englishName": "Christ''s College Taipei",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.cct.edu.tw",
+      "emailRoots": [
+        "cct.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1R05",
+      "name": "台灣神學研究學院",
+      "legalName": "台神學校財團法人台灣神學研究學院",
+      "englishName": "Taiwan Graduate School of Theology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.tgst.edu.tw",
+      "emailRoots": [
+        "tgst.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1R06",
+      "name": "一貫道崇德學院",
+      "legalName": "一貫道崇德學院",
+      "englishName": "I.K.T. Chong-De School",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.iktcds.edu.tw/",
+      "emailRoots": [],
+      "emailEvidence": [
+        "https://www.iktcds.edu.tw/Chong-De-School/index.htm"
+      ],
+      "verification": "contact-support"
+    },
+    {
+      "code": "1R07",
+      "name": "台灣基督長老教會南神神學院",
+      "legalName": "台灣基督長老教會南神神學院",
+      "englishName": "Tainan Theological College",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ttcs.edu.tw/",
+      "emailRoots": [
+        "ttcs.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1R08",
+      "name": "中華福音神學研究學院",
+      "legalName": "基督教華神學校財團法人中華福音神學研究學院",
+      "englishName": "China Evangelical Graduate School of Theology",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://wp.ces.org.tw/",
+      "emailRoots": [
+        "ces.org.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1R09",
+      "name": "唯心聖教學院",
+      "legalName": "唯心聖教學院",
+      "englishName": "Weixin Shengjiao College",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://www.wxsjc.edu.tw/",
+      "emailRoots": [
+        "wxsjc.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "1R10",
+      "name": "福智佛教學院",
+      "legalName": "福智學校財團法人福智佛教學院",
+      "englishName": "Bliss and Wisdom Buddhist College",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "https://bwbc.blisswisdom.org/",
+      "emailRoots": [
+        "bwbc.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "3002",
+      "name": "臺北市立大學",
+      "legalName": "臺北市立大學",
+      "englishName": "University of Taipei",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.utaipei.edu.tw/",
+      "emailRoots": [
+        "utaipei.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "3A01",
+      "name": "高雄市立空中大學",
+      "legalName": "高雄市立空中大學",
+      "englishName": "Open University of Kaohsiung",
+      "authority": "MOE",
+      "academicYear": 114,
+      "website": "http://www.ouk.edu.tw",
+      "emailRoots": [
+        "ouk.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://udb.moe.edu.tw/ulist/Resource/download/ulistaddress?extension=csv"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "MND-國防醫學大學",
+      "name": "國防醫學大學",
+      "legalName": "國防醫學大學",
+      "englishName": "",
+      "authority": "MND",
+      "academicYear": null,
+      "website": "https://eclass.ndmutsgh.edu.tw/",
+      "emailRoots": [
+        "ndmutsgh.edu.tw",
+        "ndmctsgh.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://eclass.ndmutsgh.edu.tw/"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "MND-國防大學",
+      "name": "國防大學",
+      "legalName": "國防大學",
+      "englishName": "",
+      "authority": "MND",
+      "academicYear": null,
+      "website": "https://www.ndu.edu.tw/data/9/61",
+      "emailRoots": [
+        "ndu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://www.ndu.edu.tw/data/9/61"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "MOI-中央警察大學",
+      "name": "中央警察大學",
+      "legalName": "中央警察大學",
+      "englishName": "",
+      "authority": "MOI",
+      "academicYear": null,
+      "website": "https://cp.cpu.edu.tw/p/404-1018-41287.php",
+      "emailRoots": [
+        "cpu.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://cp.cpu.edu.tw/p/404-1018-41287.php"
+      ],
+      "verification": "email"
+    },
+    {
+      "code": "MND-陸軍軍官學校",
+      "name": "陸軍軍官學校",
+      "legalName": "陸軍軍官學校",
+      "englishName": "",
+      "authority": "MND",
+      "academicYear": null,
+      "website": "https://www.mnd.gov.tw/RelatedLinks/MilitaryAcademies",
+      "emailRoots": [],
+      "emailEvidence": [],
+      "verification": "contact-support"
+    },
+    {
+      "code": "MND-陸軍專科學校",
+      "name": "陸軍專科學校",
+      "legalName": "陸軍專科學校",
+      "englishName": "",
+      "authority": "MND",
+      "academicYear": null,
+      "website": "https://www.mnd.gov.tw/RelatedLinks/MilitaryAcademies",
+      "emailRoots": [],
+      "emailEvidence": [],
+      "verification": "contact-support"
+    },
+    {
+      "code": "MND-海軍軍官學校",
+      "name": "海軍軍官學校",
+      "legalName": "海軍軍官學校",
+      "englishName": "",
+      "authority": "MND",
+      "academicYear": null,
+      "website": "https://www.mnd.gov.tw/RelatedLinks/MilitaryAcademies",
+      "emailRoots": [],
+      "emailEvidence": [],
+      "verification": "contact-support"
+    },
+    {
+      "code": "MND-空軍軍官學校",
+      "name": "空軍軍官學校",
+      "legalName": "空軍軍官學校",
+      "englishName": "",
+      "authority": "MND",
+      "academicYear": null,
+      "website": "https://www.mnd.gov.tw/RelatedLinks/MilitaryAcademies",
+      "emailRoots": [],
+      "emailEvidence": [],
+      "verification": "contact-support"
+    },
+    {
+      "code": "MND-空軍航空技術學院",
+      "name": "空軍航空技術學院",
+      "legalName": "空軍航空技術學院",
+      "englishName": "",
+      "authority": "MND",
+      "academicYear": null,
+      "website": "https://www.mnd.gov.tw/RelatedLinks/MilitaryAcademies",
+      "emailRoots": [],
+      "emailEvidence": [],
+      "verification": "contact-support"
+    },
+    {
+      "code": "MOI-臺灣警察專科學校",
+      "name": "臺灣警察專科學校",
+      "legalName": "臺灣警察專科學校",
+      "englishName": "Taiwan Police College",
+      "authority": "MOI",
+      "academicYear": null,
+      "website": "https://www.tpa.edu.tw/",
+      "emailRoots": [
+        "tpa.edu.tw"
+      ],
+      "emailEvidence": [
+        "https://train.tpa.edu.tw/"
+      ],
+      "verification": "email"
+    }
+  ]
+}

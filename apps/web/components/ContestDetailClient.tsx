@@ -1,5 +1,7 @@
 "use client";
 
+import { serverNow, synchronizeServerClock } from "@/lib/serverClock";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -91,16 +93,22 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
   const [conflict, setConflict] = useState<ContestConflictBody["conflictingContest"] | null>(null);
   const [switching, setSwitching] = useState(false);
   const [activeProblemSlug, setActiveProblemSlug] = useState<string | null>(null);
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(serverNow());
 
   const { data: contest, isLoading, isError, refetch } = useQuery({
-    queryKey: ["contest", contestId],
-    queryFn: () => apiFetch<ContestDetail>(`/contests/${contestId}`),
+    queryKey: ["contest", contestId, user?.id],
+    queryFn: async () => {
+      const started = performance.now();
+      const result = await apiFetch<ContestDetail>(`/contests/${contestId}`);
+      synchronizeServerClock(result.serverNow, started);
+      return result;
+    },
+    refetchOnWindowFocus: true,
     refetchInterval: 15_000,
   });
 
   useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 1000);
+    const t = setInterval(() => setNow(serverNow()), 1000);
     return () => clearInterval(t);
   }, []);
 
@@ -110,7 +118,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
     setRegistering(true);
     try {
       await apiFetch(`/contests/${contestId}/register`, { method: "POST" });
-      await qc.invalidateQueries({ queryKey: ["contest", contestId] });
+      await qc.invalidateQueries({ queryKey: ["contest", contestId, user?.id] });
       await qc.invalidateQueries({ queryKey: ["contests", "me"] });
     } catch (e) {
       if (e instanceof ApiError && e.status === 409 && e.body && typeof e.body === "object" && "conflictingContest" in e.body) {
@@ -147,7 +155,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
     setError(null);
     try {
       await apiFetch(`/contests/${contestId}/end`, { method: "POST" });
-      await qc.invalidateQueries({ queryKey: ["contest", contestId] });
+      await qc.invalidateQueries({ queryKey: ["contest", contestId, user?.id] });
       await qc.invalidateQueries({ queryKey: ["contests", "me"] });
     } catch (e) {
       setError(e instanceof ApiError ? e.message : t("Could not end this exam"));
@@ -205,6 +213,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
             <ProblemView
               problem={activeProblem}
               contestId={contestId}
+              contestParticipantId={contest.myParticipant?.id}
               statementNode={<StatementRenderer content={activeProblem.statementMd} />}
               inputSpecNode={activeProblem.inputSpecMd ? <StatementRenderer content={activeProblem.inputSpecMd} /> : null}
               outputSpecNode={activeProblem.outputSpecMd ? <StatementRenderer content={activeProblem.outputSpecMd} /> : null}
@@ -225,6 +234,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
           <ProblemView
             problem={activeProblem}
             contestId={contestId}
+              contestParticipantId={contest.myParticipant?.id}
             statementNode={<StatementRenderer content={activeProblem.statementMd} />}
             inputSpecNode={activeProblem.inputSpecMd ? <StatementRenderer content={activeProblem.inputSpecMd} /> : null}
             outputSpecNode={activeProblem.outputSpecMd ? <StatementRenderer content={activeProblem.outputSpecMd} /> : null}
@@ -396,7 +406,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
                       <span className="font-mono text-xs text-ink-500">{new Date(a.startedAt).toLocaleString()}</span>
                     </p>
                     <p className="mt-0.5 text-xs text-ink-500">
-                      {a.status === "RUNNING"
+                      {a.status === "REGISTERED" ? t("Not started") : a.status === "RUNNING"
                         ? t("In progress")
                         : a.endedEarly
                           ? t("Ended early")

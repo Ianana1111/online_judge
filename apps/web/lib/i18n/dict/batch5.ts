@@ -1,4 +1,34 @@
 export const batch5Dictionary: Record<string, string> = {
+  // --- administrator refund operations ---
+  "Refund operations": "退款處理",
+  "Requests appear here immediately. Updates refresh every 30 seconds. Times use Taipei time.": "申請受理後會立即列入，每 30 秒更新一次。時間皆為臺北時間。",
+  "Filter refunds": "篩選退款狀態",
+  "Open refunds": "尚未完成",
+  "Refund queued": "等待處理",
+  "Refund processing": "處理中",
+  "Reconciliation required": "需要人工核對",
+  "Refund completed": "已完成退款",
+  "Refunds could not be loaded. Refresh to try again.": "無法載入退款資料，請重新整理後再試。",
+  "Loading refund requests…": "正在載入退款申請…",
+  "No refunds in this view.": "目前沒有符合此狀態的退款申請。",
+  "Deleted account": "已刪除的帳號",
+  "Merchant order": "商店訂單編號",
+  "ECPay transaction": "綠界交易編號",
+  "Requested at": "申請時間",
+  "Processing attempts": "處理次數",
+  "Renewal cancellation confirmed": "已確認停止續訂",
+  "Gateway refund confirmed": "已確認綠界退款",
+  "Not recorded": "尚無確認紀錄",
+  "Next processing attempt": "下次處理時間",
+  "Completed at": "完成時間",
+  "Automatic processing is paused. Match the order and amount in ECPay, check cancellation and refund records, then record the confirmed outcome through the reconciliation runbook. An unknown outcome must be verified before another card action.": "自動處理已暫停。請先在綠界核對訂單、金額、停止續訂與退款紀錄，再依核對作業文件記錄確認結果。交易結果不明時，必須先查證才能再次操作信用卡交易。",
+  "Processing details": "查看處理細節",
+  "Unconfirmed action": "尚未確認結果的操作",
+  "Request ID": "申請編號",
+  "Load more refunds": "載入更多退款申請",
+  "Authorized payments awaiting capture": "已授權、等待請款的訂單",
+  "Loading payments…": "正在載入付款資料…",
+  "Payments could not be loaded.": "無法載入付款資料。",
   // --- components/DiscordLink.tsx ---
   "Join our Discord": "加入我們的 Discord",
 
@@ -69,15 +99,15 @@ export const batch5Dictionary: Record<string, string> = {
   "10 code submissions and 1 virtual exam per calendar month — the quota resets automatically at the start of each month, no need to request it manually.":
     "每個日曆月可以提交 10 次程式碼、開 1 場虛擬模擬考，額度會在每個月初自動重置，不需要手動申請。",
   "How do I cancel Pro?": "Pro 方案要怎麼取消？",
-  "Click \"Unsubscribe\" on the Upgrade Plan page — this stops future auto-renewal, but you keep full Pro access until your current paid period ends, then switch to Free automatically. No refund is issued for the time already paid for (unless you're within your first-month refund window — see the next question).":
-    "在 Upgrade Plan 頁面按下「取消訂閱」即可——這會停止之後的自動續扣，但目前這期已付費的 Pro 權限會持續使用到到期日，之後才自動變回 Free。已扣款的當期費用不會退還（除非你還在首月退款期限內，見下一題）。",
+  "Click \"Unsubscribe\" on the Upgrade Plan page — this stops future auto-renewal, but you keep full Pro access until your current paid period ends, then switch to Free automatically. No refund is issued for the time already paid for (unless you're within your 7-day first-payment refund window — see the next question).":
+    "在 Upgrade Plan 頁面按下「取消訂閱」即可——這會停止之後的自動續扣，但目前這期已付費的 Pro 權限會持續使用到到期日，之後才自動變回 Free。已扣款的當期費用不會退還（除非你還在7 天退款期限內，見下一題）。",
   "I already unsubscribed, but I was still charged — what do I do?": "我已經退訂了，卻還是被扣款，怎麼辦？",
   "This shouldn't happen, but if it does: email us right away at": "這不應該發生，但如果真的遇到了，請馬上寄信到",
   "with what happened (when you unsubscribed, and when/how much you were charged) — we'll look into it and refund you promptly.":
     "說明來龍去脈（什麼時候退訂的、什麼時候被扣了多少錢），我們會盡快查明並退款給你。",
   "Can I get a refund?": "可以退款嗎？",
-  "You can request a full refund within 30 days of your first charge — it cancels your subscription and switches you to Free immediately, and you can only do this once per account. Find the option on the Upgrade Plan page while it's still available. See our":
-    "第一次扣款後 30 天內可以在 Upgrade Plan 頁面自助申請全額退款——會取消訂閱並立即切換回 Free，每個帳號限用一次。詳見",
+  "You can request a full refund within 7 days of your first successful payment — it stops future renewal and removes the refunded Pro period once processed, and you can only do this once per account. Find the option on the Upgrade Plan page while it's still available. See our":
+    "首次付款成功後 7 天內可以在 Upgrade Plan 頁面自助申請全額退款——處理成功後取消續扣並撤回該筆 Pro 使用權，每個帳號限用一次。詳見",
   "for the full details.": "頁面。",
   "I forgot my password — what do I do?": "忘記密碼怎麼辦？",
   "There's no self-service password reset yet. If your account was created with Google, just use \"Continue with Google\" to skip the password entirely. If you registered with a handle and password and forgot it, email":
@@ -178,6 +208,9 @@ export const batch5Dictionary: Record<string, string> = {
   "End it": "結束測驗",
 
   // --- accessibility: keyboard-operable table rows (Phase 6.9) ---
+  "View submission": "查看提交",
+  "Submission activity": "提交活動紀錄",
+  "Year": "年份",
   "View submission from {when}": "查看 {when} 的提交",
   "View submission for {title}": "查看「{title}」的提交",
 

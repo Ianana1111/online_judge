@@ -21,7 +21,7 @@ function sittingDate(slug: string): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-function StatusBadge({ status }: { status: "RUNNING" | "FINISHED" }) {
+function StatusBadge({ status }: { status: MyContest["status"] }) {
   const t = useT();
   return (
     <span
@@ -31,7 +31,7 @@ function StatusBadge({ status }: { status: "RUNNING" | "FINISHED" }) {
           : "border-ink-600 bg-ink-800 text-ink-400"
       }`}
     >
-      {status === "RUNNING" ? t("In progress") : t("Finished")}
+      {status === "REGISTERED" ? t("Not started") : status === "RUNNING" ? t("In progress") : t("Finished")}
     </span>
   );
 }
@@ -145,7 +145,7 @@ export default function ContestsPage() {
     return { cpeSorted: cpe, gpeSorted: gpe };
   }, [all]);
 
-  const running = (mine ?? []).filter((c) => c.status === "RUNNING");
+  const running = (mine ?? []).filter((c) => c.status === "RUNNING" || c.status === "REGISTERED");
   const activeArchive = tab === "CPE" ? cpeSorted : gpeSorted;
 
   // Sittings run a few times a year, so the year is the unit people actually navigate by ("I want
@@ -201,7 +201,7 @@ export default function ContestsPage() {
                     <p className="font-mono text-sm text-brand">
                       {t("{solved} / {total} solved", { solved: c.solvedCount, total: c.totalProblems })}
                     </p>
-                    <p className="mt-0.5 font-mono text-xs text-ink-500">{t("resume before it ends")}</p>
+                    <p className="mt-0.5 font-mono text-xs text-ink-500">{c.status === "REGISTERED" ? new Date(c.startedAt).toLocaleString() : t("resume before it ends")}</p>
                   </div>
                 </div>
               </Link>

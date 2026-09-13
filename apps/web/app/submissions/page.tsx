@@ -16,20 +16,12 @@ import { useT } from "@/lib/i18n/LocaleContext";
 function SubmissionRow({ s, onOpen }: { s: SubmissionListItem; onOpen: (id: string) => void }) {
   const t = useT();
   return (
-    <tr
-      onClick={() => onOpen(s.id)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onOpen(s.id);
-        }
-      }}
-      tabIndex={0}
-      role="button"
-      aria-label={t("View submission for {title}", { title: s.problemTitle ?? "" })}
-      className="cursor-pointer transition-colors hover:bg-ink-800/50 focus:outline-none focus-visible:bg-ink-800/50 focus-visible:ring-1 focus-visible:ring-brand"
-    >
-      <td className="font-mono text-xs text-ink-400">{new Date(s.createdAt).toLocaleString()}</td>
+    <tr className="transition-colors hover:bg-ink-800/50">
+      <td className="font-mono text-xs text-ink-400">
+        <button type="button" onClick={() => onOpen(s.id)} className="text-brand underline underline-offset-4" aria-label={t("View submission for {title}", { title: s.problemTitle ?? "" })}>
+          {new Date(s.createdAt).toLocaleString()}
+        </button>
+      </td>
       <td>
         {s.problemSlug ? (
           <Link
@@ -50,6 +42,32 @@ function SubmissionRow({ s, onOpen }: { s: SubmissionListItem; onOpen: (id: stri
       <td className="font-mono text-xs text-ink-400">{s.timeMs != null ? `${s.timeMs} ms` : "—"}</td>
     </tr>
   );
+}
+
+function SubmissionList({ items, onOpen }: { items: SubmissionListItem[]; onOpen: (id: string) => void }) {
+  const t = useT();
+  return <>
+    <div className="space-y-3 sm:hidden">
+      {items.map((s) => <article key={s.id} className="oj-card space-y-3 p-4">
+        <div className="flex items-start justify-between gap-3">
+          {s.problemSlug ? <Link href={`/problems/${s.problemSlug}`} className="min-w-0 font-medium text-ink-100 [overflow-wrap:anywhere] hover:text-brand">{s.problemTitle}</Link> : <span>{s.problemTitle}</span>}
+          <VerdictBadge verdict={s.verdict} size="sm" />
+        </div>
+        <p className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-ink-400">
+          <span>{t(LANGUAGE_LABEL[s.languageKey] ?? s.languageKey)}</span>
+          <span>{s.timeMs != null ? `${s.timeMs} ms` : "—"}</span>
+          <time dateTime={s.createdAt}>{new Date(s.createdAt).toLocaleString()}</time>
+        </p>
+        <button type="button" onClick={() => onOpen(s.id)} className="oj-btn-secondary w-full" aria-label={t("View submission for {title}", { title: s.problemTitle ?? "" })}>{t("View submission")}</button>
+      </article>)}
+    </div>
+    <div className="hidden overflow-x-auto sm:block">
+      <table className="oj-table">
+        <thead><tr><th>{t("When")}</th><th>{t("Problem")}</th><th>{t("Language")}</th><th>{t("Verdict")}</th><th>{t("Time")}</th></tr></thead>
+        <tbody>{items.map((s) => <SubmissionRow key={s.id} s={s} onOpen={onOpen} />)}</tbody>
+      </table>
+    </div>
+  </>;
 }
 
 export default function MySubmissionsPage() {
@@ -138,22 +156,7 @@ export default function MySubmissionsPage() {
         {() => (
           <>
             {groupBy === "time" && data && (
-              <table className="oj-table">
-                <thead>
-                  <tr>
-                    <th>{t("When")}</th>
-                    <th>{t("Problem")}</th>
-                    <th>{t("Language")}</th>
-                    <th>{t("Verdict")}</th>
-                    <th>{t("Time")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.items.map((s) => (
-                    <SubmissionRow key={s.id} s={s} onOpen={setOpenId} />
-                  ))}
-                </tbody>
-              </table>
+              <SubmissionList items={data.items} onOpen={setOpenId} />
             )}
 
             {groupBy === "topic" && (
@@ -163,22 +166,7 @@ export default function MySubmissionsPage() {
                     <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-400">
                       {topic} <span className="font-normal normal-case text-ink-500">({items.length})</span>
                     </h2>
-                    <table className="oj-table">
-                      <thead>
-                        <tr>
-                          <th>{t("When")}</th>
-                          <th>{t("Problem")}</th>
-                          <th>{t("Language")}</th>
-                          <th>{t("Verdict")}</th>
-                          <th>{t("Time")}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {items.map((s) => (
-                          <SubmissionRow key={s.id} s={s} onOpen={setOpenId} />
-                        ))}
-                      </tbody>
-                    </table>
+                    <SubmissionList items={items} onOpen={setOpenId} />
                   </div>
                 ))}
               </div>

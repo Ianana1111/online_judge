@@ -39,6 +39,7 @@ export default function TestPanel({
   languageKey,
   sourceCode,
   samples,
+  checkerType = "IGNORE_TRAILING_WS",
 }: {
   problemId: string;
   slug: string;
@@ -46,6 +47,7 @@ export default function TestPanel({
   languageKey: string;
   sourceCode: string;
   samples: Sample[];
+  checkerType?: "EXACT" | "IGNORE_TRAILING_WS" | "FLOAT" | "SPECIAL";
 }) {
   const t = useT();
   const storageKey = `oj:testcases:${userId}:${slug}`;
@@ -68,7 +70,7 @@ export default function TestPanel({
   const [status, setStatus] = useState<"idle" | "running" | "done" | "compile_error" | "error">("idle");
   const [compileError, setCompileError] = useState<string | null>(null);
   const [runError, setRunError] = useState<string | null>(null);
-  const esRef = useRef<EventSource | null>(null);
+  const esRef = useRef<{ close: () => void } | null>(null);
 
   useEffect(() => {
     const raw = localStorage.getItem(storageKey);
@@ -189,10 +191,12 @@ export default function TestPanel({
     }
   }
 
+  const textComparison = checkerType === "EXACT" || checkerType === "IGNORE_TRAILING_WS";
+  const outputMatches = (actual: string, expected: string) => checkerType === "EXACT" ? actual === expected : normalize(actual) === normalize(expected);
   const activeResult = active ? results[active.id] : undefined;
   const activeMatch =
-    active?.isSample && activeResult && !activeResult.timedOut
-      ? normalize(activeResult.stdout) === normalize(active.expectedOutput ?? "")
+    textComparison && active?.isSample && activeResult && !activeResult.timedOut && activeResult.exitCode === 0
+      ? outputMatches(activeResult.stdout, active.expectedOutput ?? "")
       : null;
 
   return (
@@ -212,8 +216,8 @@ export default function TestPanel({
                 <span className="inline-flex items-center gap-1">
                   {c.isSample ? c.label : customLabelById.get(c.id)}
                   {results[c.id] &&
-                    (c.isSample
-                      ? normalize(results[c.id].stdout) === normalize(c.expectedOutput ?? "") && !results[c.id].timedOut
+                    (c.isSample && textComparison
+                      ? outputMatches(results[c.id].stdout, c.expectedOutput ?? "") && !results[c.id].timedOut && results[c.id].exitCode === 0
                         ? <span className="text-verdict-ac">✓</span>
                         : <span className="text-verdict-wa">✗</span>
                       : null)}
@@ -257,6 +261,7 @@ export default function TestPanel({
           <div>
             <p className="mb-1 text-xs font-medium text-ink-400">{t("Input")}</p>
             <textarea
+              aria-label={t("Input")}
               value={activeInput}
               onChange={(e) => setInputFor(active.id, e.target.value)}
               maxLength={MAX_INPUT_CHARS}
@@ -268,22 +273,23 @@ export default function TestPanel({
           {active.isSample && (
             <div>
               <p className="mb-1 text-xs font-medium text-ink-400">{t("Expected output")}</p>
-              <pre className="oj-card overflow-x-auto p-2 font-mono text-xs">{active.expectedOutput}</pre>
+              <pre tabIndex={0} className="oj-card overflow-x-auto p-2 font-mono text-xs">{active.expectedOutput}</pre>
             </div>
           )}
 
           {activeResult && (
             <div>
-              <div className="mb-1 flex items-center gap-2">
+              {!textComparison && <p className="mb-2 text-xs text-ink-400">{t("This problem uses a special comparison. Submit to check the result.")}</p>}
+              <div className="mb-1 flex flex-wrap items-center gap-2">
                 <p className="text-xs font-medium text-ink-400">{t("Output")}</p>
                 {activeMatch === true && <span className="text-xs font-medium text-verdict-ac">{t("Matches expected")}</span>}
                 {activeMatch === false && <span className="text-xs font-medium text-verdict-wa">{t("Doesn't match")}</span>}
                 {activeResult.timedOut && <span className="text-xs font-medium text-verdict-tle">{t("Timed out")}</span>}
                 <span className="ml-auto font-mono text-[11px] text-ink-500">{activeResult.timeMs} ms</span>
               </div>
-              <pre className="oj-card overflow-x-auto p-2 font-mono text-xs">{activeResult.stdout || t("(no output)")}</pre>
+              <pre tabIndex={0} className="oj-card overflow-x-auto p-2 font-mono text-xs">{activeResult.stdout || t("(no output)")}</pre>
               {activeResult.stderr && (
-                <pre className="mt-1.5 overflow-x-auto rounded bg-ink-800 p-2 font-mono text-xs text-verdict-re">
+                <pre tabIndex={0} className="mt-1.5 overflow-x-auto rounded bg-ink-800 p-2 font-mono text-xs text-verdict-re">
                   {activeResult.stderr}
                 </pre>
               )}
@@ -297,7 +303,7 @@ export default function TestPanel({
       {compileError && (
         <div className="mt-2.5">
           <p className="mb-1 text-xs font-medium text-verdict-ce">{t("Compile error")}</p>
-          <pre className="oj-card overflow-x-auto p-2 font-mono text-xs text-verdict-ce">{compileError}</pre>
+          <pre tabIndex={0} className="oj-card overflow-x-auto p-2 font-mono text-xs text-verdict-ce">{compileError}</pre>
         </div>
       )}
       {runError && <p className="mt-2.5 text-xs text-verdict-wa">{runError}</p>}

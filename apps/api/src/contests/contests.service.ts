@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { prisma, Prisma } from "@oj/db";
-import type { CreateContestDto } from "@oj/shared";
+import { problemJudgeMode, scoreAttempt, type CreateContestDto } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
 import { AchievementsService } from "../achievements/achievements.service";
 import { BillingService } from "../billing/billing.service";
@@ -10,6 +10,7 @@ import { examAppearancesFor, isRequesterPro } from "../billing/pro-gate.util";
 // Fields actually needed for scoreboard/standings math — never sourceCode, which each of these
 // queries used to pull (and immediately discard) for every submission in the contest.
 const SCOREBOARD_SUBMISSION_SELECT = {
+  id: true,
   contestId: true,
   userId: true,
   problemId: true,
@@ -26,7 +27,7 @@ export class ContestsService {
   ) {}
 
   async list() {
-    const contests = await prisma.contest.findMany({ orderBy: { createdAt: "desc" } });
+    const contests = await prisma.contest.findMany({ where: { isPublic: true, problems: { some: {} } }, orderBy: { createdAt: "desc" } });
     return contests.map((c) => ({
       id: c.id,
       title: c.title,
@@ -71,7 +72,7 @@ export class ContestsService {
         p.startedAt,
         p.contest.penaltyMin,
         p.contest.problems.map((cp) => cp.problemId),
-        subs,
+        subs, p.scoringVersion,
       );
 
       return {
@@ -83,7 +84,7 @@ export class ContestsService {
         totalProblems: p.contest.problems.length,
         startedAt: p.startedAt,
         endsAt: p.endsAt,
-        status: now < p.endsAt.getTime() ? "RUNNING" : "FINISHED",
+        status: now < p.startedAt.getTime() ? "REGISTERED" : now < p.endsAt.getTime() ? "RUNNING" : "FINISHED",
         solvedCount,
         penalty,
         attemptNumber: p.attemptNumber,
@@ -97,18 +98,18 @@ export class ContestsService {
       include: {
         problems: {
           orderBy: { ord: "asc" },
-          include: { problem: { include: { tags: { include: { tag: true } }, samples: { orderBy: { ord: "asc" } } } } },
+          include: { problem: { include: { _count: { select: { testCases: true } }, tags: { include: { tag: true } }, samples: { orderBy: { ord: "asc" } } } } },
         },
       },
     });
-    if (!contest) throw new NotFoundException("Contest not found");
+    if (!contest || (!contest.isPublic && requester?.role !== "ADMIN")) throw new NotFoundException("Contest not found");
 
     // The most recent attempt, if any — a contest can now have more than one ContestParticipant
     // row per user (see ContestParticipant.attemptNumber), so this is "the one currently relevant
     // to this caller" rather than "the" participant. canStartNewAttempt tells the frontend whether
     // clicking start again would resume this attempt or begin a fresh one: only individual/virtual
     // contests (no fixed startAt) allow more than one, and only once the latest has actually ended.
-    let myParticipant: { startedAt: Date; endsAt: Date; status: string; attemptNumber: number } | null = null;
+    let myParticipant: { id: string; scoringVersion: string; startedAt: Date; endsAt: Date; status: string; attemptNumber: number } | null = null;
     let canStartNewAttempt = false;
     // Which of this contest's problems this specific attempt has solved — scoped by
     // contestParticipantId (not just userId), same reasoning as the scoreboard: a re-attempt must
@@ -121,7 +122,7 @@ export class ContestsService {
       attemptNumber: number;
       startedAt: Date;
       endsAt: Date;
-      status: "RUNNING" | "FINISHED";
+      status: "REGISTERED" | "RUNNING" | "FINISHED";
       solvedCount: number;
       penalty: number;
       endedEarly: boolean;
@@ -130,6 +131,7 @@ export class ContestsService {
       const participant = await this.latestParticipant(id, requester.id);
       if (participant) {
         myParticipant = {
+          id: participant.id, scoringVersion: participant.scoringVersion,
           startedAt: participant.startedAt,
           endsAt: participant.endsAt,
           status: participant.status,
@@ -161,7 +163,7 @@ export class ContestsService {
         const problemIds = contest.problems.map((cp) => cp.problemId);
         const nowMs = Date.now();
         myAttempts = allAttempts.map((a) => {
-          const { solvedCount, penalty } = scoreAttempt(a.startedAt, contest.penaltyMin, problemIds, subsByAttempt.get(a.id) ?? []);
+          const { solvedCount, penalty } = scoreAttempt(a.startedAt, contest.penaltyMin, problemIds, subsByAttempt.get(a.id) ?? [], a.scoringVersion);
           // The originally-scheduled end of this attempt, recomputed rather than stored — contests
           // have no edit endpoint, so contest.durationMin has been stable since this attempt began
           // and this is always safe. Comparing it against the actual (possibly shortened) endsAt is
@@ -173,7 +175,7 @@ export class ContestsService {
             attemptNumber: a.attemptNumber,
             startedAt: a.startedAt,
             endsAt: a.endsAt,
-            status: nowMs < a.endsAt.getTime() ? ("RUNNING" as const) : ("FINISHED" as const),
+            status: nowMs < a.startedAt.getTime() ? ("REGISTERED" as const) : nowMs < a.endsAt.getTime() ? ("RUNNING" as const) : ("FINISHED" as const),
             solvedCount,
             penalty,
             endedEarly: a.endsAt.getTime() < plannedEndsAt - 1000,
@@ -196,7 +198,7 @@ export class ContestsService {
     const isAdmin = requester?.role === "ADMIN";
     const scheduledEndsAt = contest.startAt ? new Date(contest.startAt.getTime() + contest.durationMin * 60_000) : null;
     const scheduledSessionOver = !!scheduledEndsAt && Date.now() >= scheduledEndsAt.getTime();
-    const canSeeContent = isAdmin || !!myParticipant || scheduledSessionOver;
+    const canSeeContent = isAdmin || (!!myParticipant && Date.now() >= myParticipant.startedAt.getTime()) || scheduledSessionOver;
 
     // Same uvaId/sourceUrl/cpeAppearances fields the standalone /problems/:slug endpoint returns —
     // ProblemView renders identically whether it got its problem from there or from here, so a
@@ -208,6 +210,7 @@ export class ContestsService {
 
     return {
       id: contest.id,
+      serverNow: new Date(),
       title: contest.title,
       slug: contest.slug,
       kind: contest.kind,
@@ -236,6 +239,9 @@ export class ContestsService {
           difficulty: cp.problem.difficulty,
           source: cp.problem.source,
           uvaId: canSeeContent ? cp.problem.uvaId : null,
+          judgeable: canSeeContent && problemJudgeMode(cp.problem) !== "UNAVAILABLE",
+          judgeMode: problemJudgeMode(cp.problem),
+          checkerType: cp.problem.checkerType,
           cpeAppearances: canSeeContent && isPro ? (appearancesById.get(cp.problem.id) ?? 0) : null,
           tags: cp.problem.tags.map((t) => t.tag.slug),
           samples: canSeeContent ? cp.problem.samples.map((s) => ({ ord: s.ord, input: s.input, output: s.output })) : [],
@@ -256,8 +262,10 @@ export class ContestsService {
   }
 
   async register(id: string, userId: string) {
-    const contest = await prisma.contest.findUnique({ where: { id } });
-    if (!contest) throw new NotFoundException("Contest not found");
+    const contest = await prisma.contest.findUnique({ where: { id }, include: { problems: { include: { problem: { include: { _count: { select: { testCases: true } } } } } } } });
+    if (!contest || !contest.isPublic) throw new NotFoundException("Contest not found");
+    if (contest.scoring !== "ICPC" || contest.durationMin <= 0 || contest.freezeMin < 0 || contest.freezeMin > contest.durationMin || contest.penaltyMin < 0) throw new BadRequestException("This exam's scoring or timing is not configured correctly");
+    if (!contest.problems.length || contest.problems.some((cp) => !cp.problem.visibility || problemJudgeMode(cp.problem) === "UNAVAILABLE")) throw new BadRequestException("This exam contains a problem that is not ready for judging");
 
     const existing = await this.latestParticipant(id, userId);
     // Still running (or a scheduled sitting that hasn't started yet) — nothing new to create,
@@ -286,12 +294,14 @@ export class ContestsService {
       // serializes every register() call this user makes (for any contest), so this read is race
       // -free the same way the quota check below is. endAttempt() is the deliberate way out.
       const nowForConflictCheck = new Date();
+      const proposedStart = contest.startAt ?? nowForConflictCheck;
+      const proposedEnd = new Date(+proposedStart + contest.durationMin * 60_000);
       const conflict = await tx.contestParticipant.findFirst({
         where: {
           userId,
           contestId: { not: id },
-          startedAt: { lte: nowForConflictCheck },
-          endsAt: { gt: nowForConflictCheck },
+          startedAt: { lt: proposedEnd },
+          endsAt: { gt: proposedStart },
         },
         include: { contest: { select: { id: true, slug: true, title: true } } },
       });
@@ -339,7 +349,7 @@ export class ContestsService {
       // Outside the transaction: awarding an achievement doesn't need to be atomic with the
       // registration itself, and awardDirect's own unique-constraint upsert already makes it
       // safe to call even when `already` short-circuited above (re-registering isn't a new event).
-      await this.achievements.awardDirect(userId, "first_virtual_exam");
+      await this.achievements.awardDirect(userId, "first_virtual_exam").catch(() => {});
       return participant;
     });
   }
@@ -357,19 +367,18 @@ export class ContestsService {
       throw new BadRequestException("Scheduled sessions share one clock and can't be ended early.");
     }
 
-    const participant = await this.latestParticipant(id, userId);
-    const now = new Date();
-    if (!participant || now < participant.startedAt || now >= participant.endsAt) {
-      throw new BadRequestException("You don't have an exam in progress for this contest.");
-    }
-
-    return prisma.contestParticipant.update({
-      where: { id: participant.id },
-      data: { endsAt: now, status: "FINISHED" },
+    return prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${userId}))`;
+      const participant = await this.latestParticipant(id, userId, tx);
+      const now = new Date();
+      if (!participant || now < participant.startedAt || now >= participant.endsAt) throw new BadRequestException("You don't have an exam in progress for this contest.");
+      return tx.contestParticipant.update({ where: { id: participant.id }, data: { endsAt: now, status: "FINISHED" } });
     });
   }
 
   async createByAdmin(dto: CreateContestDto) {
+    const problems = await prisma.problem.findMany({ where: { id: { in: dto.problems.map((p) => p.problemId) } }, include: { _count: { select: { testCases: true } } } });
+    if (problems.length !== dto.problems.length || problems.some((p) => !p.visibility || problemJudgeMode(p) === "UNAVAILABLE")) throw new BadRequestException("Every exam problem must be visible and ready for judging");
     return prisma.contest.create({
       data: {
         title: dto.title,
@@ -389,7 +398,9 @@ export class ContestsService {
     });
   }
 
-  async scoreboard(id: string) {
+  async scoreboard(id: string, requester: RequestUser | null = null) {
+    const contest = await prisma.contest.findUnique({ where: { id }, select: { isPublic: true } });
+    if (!contest || (!contest.isPublic && requester?.role !== "ADMIN")) throw new NotFoundException("Contest not found");
     // Frozen-standings status depends on wall-clock time (freezeCutoff vs "now"), so a short TTL
     // keeps it close to real-time while still absorbing the bulk of a 12s-interval poll from every
     // connected viewer — this endpoint used to run a full per-participant query set on every call.
@@ -439,7 +450,7 @@ export class ContestsService {
     // can pad the board by attempting the same sitting over and over.
     const attemptRows = participants.map((p) => {
       const freezeCutoff = p.endsAt.getTime() - contest.freezeMin * 60_000;
-      const stillRunning = now < p.endsAt.getTime();
+      const stillRunning = now >= p.startedAt.getTime() && now < p.endsAt.getTime();
       const isFrozenForThisParticipant = stillRunning && now >= freezeCutoff;
       if (isFrozenForThisParticipant) anyFrozen = true;
 
@@ -448,29 +459,9 @@ export class ContestsService {
         ? submissions.filter((s) => s.createdAt.getTime() <= freezeCutoff)
         : submissions;
 
-      const problemCells: Record<string, { solved: boolean; attempts: number; solveMin: number | null }> = {};
-      let solvedCount = 0;
-      let penalty = 0;
-
-      for (const cp of contest.problems) {
-        const subsForProblem = visibleSubmissions.filter(
-          (s) => s.problemId === cp.problemId && isTerminal(s.verdict),
-        );
-        const firstAc = subsForProblem.find((s) => s.verdict === "AC");
-
-        if (firstAc) {
-          const wrongBefore = subsForProblem.filter(
-            (s) => s.verdict !== "AC" && s.createdAt.getTime() < firstAc.createdAt.getTime(),
-          ).length;
-          const solveMin = Math.max(0, Math.round((firstAc.createdAt.getTime() - p.startedAt.getTime()) / 60_000));
-          problemCells[cp.label] = { solved: true, attempts: wrongBefore + 1, solveMin };
-          solvedCount += 1;
-          penalty += solveMin + contest.penaltyMin * wrongBefore;
-        } else {
-          const wrongAttempts = subsForProblem.filter((s) => s.verdict !== "AC").length;
-          problemCells[cp.label] = { solved: false, attempts: wrongAttempts, solveMin: null };
-        }
-      }
+      const score = scoreAttempt(p.startedAt, contest.penaltyMin, contest.problems.map((cp) => cp.problemId), visibleSubmissions, p.scoringVersion);
+      const { solvedCount, penalty } = score;
+      const problemCells = Object.fromEntries(contest.problems.map((cp) => [cp.label, score.cells[cp.problemId]]));
 
       return {
         userId: p.user.id,
@@ -531,34 +522,4 @@ export class ContestsService {
 
     return { standings, frozen: anyFrozen };
   }
-}
-
-function isTerminal(verdict: string): boolean {
-  return verdict !== "PENDING" && verdict !== "JUDGING";
-}
-
-/** ICPC-style solved-count/penalty for one attempt against one set of problems — shared by
- * myContests() and detail()'s per-attempt history so the scoring math can't drift between the
- * two places it's computed (computeScoreboard() has its own copy since it also needs the
- * per-problem cell breakdown for the table, not just the totals). */
-function scoreAttempt(
-  startedAt: Date,
-  penaltyMin: number,
-  problemIds: string[],
-  submissions: { problemId: string; verdict: string; createdAt: Date }[],
-): { solvedCount: number; penalty: number } {
-  const terminal = submissions.filter((s) => isTerminal(s.verdict));
-  let solvedCount = 0;
-  let penalty = 0;
-  for (const problemId of problemIds) {
-    const forProblem = terminal.filter((s) => s.problemId === problemId);
-    const firstAc = forProblem.find((s) => s.verdict === "AC");
-    if (firstAc) {
-      const wrongBefore = forProblem.filter((s) => s.verdict !== "AC" && s.createdAt < firstAc.createdAt).length;
-      const solveMin = Math.max(0, Math.round((firstAc.createdAt.getTime() - startedAt.getTime()) / 60_000));
-      solvedCount += 1;
-      penalty += solveMin + penaltyMin * wrongBefore;
-    }
-  }
-  return { solvedCount, penalty };
 }

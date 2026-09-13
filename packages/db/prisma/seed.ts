@@ -11,6 +11,10 @@ const prisma = new PrismaClient();
  * UVa id to submit against.
  */
 async function main() {
+  const url = new URL(process.env.DATABASE_URL ?? "invalid:");
+  if (process.env.NODE_ENV === "production" || process.env.ALLOW_LOCAL_DEMO_SEED !== "1" || !["localhost", "127.0.0.1", "db", "postgres"].includes(url.hostname)) {
+    throw new Error("Demo credentials may only be seeded into an explicitly approved local development database (ALLOW_LOCAL_DEMO_SEED=1)");
+  }
   const adminPasswordHash = await argon2.hash("Admin123!");
   const admin = await prisma.user.upsert({
     where: { handle: "admin" },

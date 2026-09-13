@@ -1,0 +1,102 @@
+{
+  "version": "launch-20260912-v1",
+  "cases": [
+    {
+      "slug": "uva-10010-where-s-waldorf",
+      "uvaId": 10010,
+      "input": "1\n\n2 3\nzzA\nAzz\n1\na\n",
+      "output": "1 3\n",
+      "reason": "Two valid starts: row priority must win over column priority; case insensitive.",
+      "source": "https://onlinejudge.org/external/100/10010.pdf"
+    },
+    {
+      "slug": "uva-10018-reverse-and-add",
+      "uvaId": 10018,
+      "input": "1\n1000000002\n",
+      "output": "1 3000000003\n",
+      "reason": "One addition produces a palindrome above signed int32 but below the stated uint32 maximum.",
+      "source": "https://onlinejudge.org/external/100/10018.pdf"
+    },
+    {
+      "slug": "uva-10099-the-tourist-guide",
+      "uvaId": 10099,
+      "input": "2 1\n1 2 10\n1 2 9\n2 1\n1 2 3\n1 2 5\n0 0\n",
+      "output": "Scenario #1\nMinimum Number of Trips = 1\n\nScenario #2\nMinimum Number of Trips = 3\n",
+      "reason": "Two scenarios in one file require an internal blank line. Each bus reserves a seat for the guide.",
+      "source": "https://onlinejudge.org/external/100/10099.pdf"
+    },
+    {
+      "slug": "uva-10107-what-is-the-median",
+      "uvaId": 10107,
+      "input": "2147483647\n2147483647\n3\n2\n1\n0\n",
+      "output": "2147483647\n2147483647\n2147483647\n1073741825\n3\n2\n",
+      "reason": "All values satisfy X < 2^31. Sorted-prefix medians expose sum overflow and heap imbalance.",
+      "source": "https://onlinejudge.org/external/101/10107.pdf"
+    },
+    {
+      "slug": "uva-10150-doublets",
+      "uvaId": 10150,
+      "input": "cat\ncot\ncog\ndog\ndot\nzzz\n\ncat dog\ncat cat\ncat zzz\n",
+      "output": "cat\ncot\ncog\ndog\n\ncat\n\nNo solution.\n",
+      "reason": "Accept either shortest chain through cog or dot, same-word path, and disconnected query. SPECIAL checker required.",
+      "source": "https://onlinejudge.org/external/101/10150.pdf"
+    },
+    {
+      "slug": "uva-10267-graphical-editor",
+      "uvaId": 10267,
+      "input": "I 3 3\nL 1 1 A\nL 2 2 A\nL 3 3 A\nF 1 1 B\nS diagonal\nX\n",
+      "output": "diagonal\nBOO\nOAO\nOOA\n",
+      "reason": "Flood fill uses common-side adjacency; diagonal pixels remain unchanged.",
+      "source": "https://onlinejudge.org/external/102/10267.pdf"
+    },
+    {
+      "slug": "uva-10355-superman",
+      "uvaId": 10355,
+      "input": "Half\n0 0 0 10 0 0\n1\n0 0 0 5\nInside\n0 0 0 10 0 0\n1\n5 0 0 10\n",
+      "output": "Half\n50.00\nInside\n100.00\n",
+      "reason": "Clip line/sphere intersections to the actual flight segment. All coordinates/radii satisfy the input bound.",
+      "source": "https://onlinejudge.org/external/103/10355.pdf"
+    },
+    {
+      "slug": "uva-10530-guessing-game",
+      "uvaId": 10530,
+      "input": "5\ntoo high\n5\nright on\n0\n",
+      "output": "Stan is dishonest\n",
+      "reason": "A too-high guess excludes the guessed number itself.",
+      "source": "https://onlinejudge.org/external/105/10530.pdf"
+    },
+    {
+      "slug": "uva-10539-almost-prime-numbers",
+      "uvaId": 10539,
+      "input": "2\n4294967296 4294967296\n549755813888 549755813888\n",
+      "output": "1\n1\n",
+      "reason": "Singleton intervals at 2^32 and 2^39; both are prime powers and below 10^12.",
+      "source": "https://onlinejudge.org/external/105/10539.pdf"
+    },
+    {
+      "slug": "uva-10633-rare-easy-problem",
+      "uvaId": 10633,
+      "input": "1000000000000000000\n999999999999999999\n0\n",
+      "output": "1111111111111111111\n1111111111111111109 1111111111111111110\n",
+      "reason": "Derive every N from N=10M+d and V=9M+d for d=0..9. Covers one and two solutions near 10^18.",
+      "source": "https://onlinejudge.org/external/106/10633.pdf"
+    },
+    {
+      "slug": "uva-11094-continents",
+      "uvaId": 11094,
+      "input": "3 5\nabbaa\nbbbbb\naabbb\n2 0\n\n3 5\naaaaa\nbbbbb\naabbb\n0 0\n\n",
+      "output": "3\n2\n",
+      "reason": "The first map requires horizontal wrapping; the second excludes the king's larger own continent.",
+      "source": "https://onlinejudge.org/external/110/11094.pdf"
+    }
+  ],
+  "corrections": [
+    {
+      "slug": "uva-10099-the-tourist-guide",
+      "input": "4 3\n1 2 10\n2 3 5\n3 4 8\n1 4 20\n0 0\n",
+      "previousOutput": "Scenario #1\nMinimum Number of Trips = 4\n",
+      "output": "Scenario #1\nMinimum Number of Trips = 5\n",
+      "reason": "Reserve the guide seat: bottleneck 5 permits 4 tourists, so ceil(20/4)=5."
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { serverNow } from "@/lib/serverClock";
 import { create } from "zustand";
 
 interface ExamTimerState {
@@ -17,7 +18,7 @@ export const useExamTimerStore = create<ExamTimerState>((set, get) => ({
   setWindow: (contestId, endsAtIso) => set({ contestId, endsAt: new Date(endsAtIso).getTime() }),
   setActive: (active) => set({ active }),
   clear: () => set({ contestId: null, endsAt: null, active: false }),
-  remainingMs: (now = Date.now()) => {
+  remainingMs: (now = serverNow()) => {
     const { endsAt } = get();
     if (!endsAt) return 0;
     return Math.max(0, endsAt - now);

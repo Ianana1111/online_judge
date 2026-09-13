@@ -115,6 +115,7 @@ export class AuthController {
     };
     res.cookie("google_oauth_state", state, cookieOpts);
     if (intent === "delete_account") res.cookie("google_oauth_intent", "delete_account", cookieOpts);
+    else res.clearCookie("google_oauth_intent", { path: "/auth/google" });
 
     const params = new URLSearchParams({
       client_id: clientId,
@@ -173,6 +174,7 @@ export class AuthController {
 
       const tokenRes = await fetch(GOOGLE_TOKEN_URL, {
         method: "POST",
+        signal: AbortSignal.timeout(10_000),
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
           code,
@@ -186,32 +188,22 @@ export class AuthController {
       const tokenBody = (await tokenRes.json()) as { access_token: string };
 
       const userRes = await fetch(GOOGLE_USERINFO_URL, {
+        signal: AbortSignal.timeout(10_000),
         headers: { Authorization: `Bearer ${tokenBody.access_token}` },
       });
       if (!userRes.ok) throw new Error(`Google userinfo fetch failed: HTTP ${userRes.status}`);
       const profile = (await userRes.json()) as { sub: string; email: string; email_verified?: boolean; name?: string };
 
-      // loginWithGoogle auto-links this identity to any existing password account with the same
-      // email (auth.service.ts) — without this check, someone could register a password account
-      // on a victim's email address ahead of time (there's no email verification on that path
-      // either) and have it silently absorbed the moment the victim's real Google login comes
-      // through. Google marks an address unverified when it was added to the account but never
-      // confirmed, so this is the one signal available here that the caller actually owns it.
-      if (profile.email_verified === false) {
-        throw new Error(`Google account email is not verified: ${profile.email}`);
+      // Only trust a verified address and a concrete Google subject. Do not log addresses or
+      // credentials when this upstream validation fails.
+      if (profile.email_verified !== true || typeof profile.sub !== "string" || !profile.sub || typeof profile.email !== "string" || !profile.email) {
+        throw new Error("Google identity could not be verified");
       }
 
-      const suggestedHandle = profile.email.split("@")[0] ?? profile.name ?? "user";
-      const session = await this.authService.loginWithGoogle(profile.sub, profile.email, suggestedHandle);
-
       if (isDeleteReauth) {
-        // Deliberately does NOT call setAuthCookies: the point of this round trip is only to prove
-        // "you can still log into the Google account this profile is linked to," not to switch the
-        // browser's active session — doing that would silently swap the logged-in account out from
-        // under the user if they picked a different Google account at the prompt.
-        if (session.user.id !== currentUser!.id) {
-          return res.redirect(`${webOrigin}/settings?reauthError=1`);
-        }
+        // Calling loginWithGoogle here would rotate the existing session, leaving the browser
+        // holding revoked credentials, and could even create an unrelated selected account.
+        await this.authService.verifyGoogleReauthentication(currentUser!.id, profile.sub);
         res.cookie("delete_reauth_token", this.tokens.signDeleteReauthToken(currentUser!.id), {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
@@ -222,6 +214,8 @@ export class AuthController {
         return res.redirect(`${webOrigin}/settings?reauth=1`);
       }
 
+      const suggestedHandle = profile.email.split("@")[0] ?? profile.name ?? "user";
+      const session = await this.authService.loginWithGoogle(profile.sub, profile.email, suggestedHandle);
       setAuthCookies(res, session);
       res.redirect(webOrigin);
     } catch (err) {

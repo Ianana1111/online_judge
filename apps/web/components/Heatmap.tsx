@@ -25,15 +25,13 @@ const MONTH_KEYS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep
 
 type Cell = { date: string; count: number };
 
-/** Rolling 365-day window ending today — the "Current" option, unchanged from before this
- * component grew a year picker. Local-time day-stepping with a UTC-string key, same as the
- * original implementation (and as the API's own `since` default for no `year` param). */
-function rollingDays(): string[] {
-  const today = new Date();
+/** Calendar keys use UTC, matching the API's activity buckets. */
+function rollingDays(asOf: string): string[] {
+  const today = new Date(asOf);
   const out: string[] = [];
   for (let i = 363; i >= 0; i--) {
     const d = new Date(today);
-    d.setDate(d.getDate() - i);
+    d.setUTCDate(d.getUTCDate() - i);
     out.push(d.toISOString().slice(0, 10));
   }
   return out;
@@ -71,7 +69,7 @@ function buildMonthBlocks(dayList: string[], byDate: Map<string, number>): Month
 
   const blocks: MonthBlock[] = [];
   for (const [key, monthDays] of byMonth) {
-    const lead = new Date(monthDays[0]).getDay();
+    const lead = new Date(monthDays[0]).getUTCDay();
     const cells: (Cell | null)[] = Array.from({ length: lead }, (): Cell | null => null);
     for (const date of monthDays) cells.push({ date, count: byDate.get(date) ?? 0 });
     while (cells.length % 7 !== 0) cells.push(null);
@@ -108,17 +106,19 @@ export default function Heatmap({
   handle,
   initialHeatmap,
   joinDate,
+  asOf,
 }: {
   handle: string;
   initialHeatmap: Cell[];
   joinDate: string;
+  asOf: string;
 }) {
   const t = useT();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<"current" | number>("current");
 
-  const currentYear = new Date().getFullYear();
-  const joinYear = new Date(joinDate).getFullYear();
+  const currentYear = new Date(asOf).getUTCFullYear();
+  const joinYear = new Date(joinDate).getUTCFullYear();
   const pastYears = useMemo(() => {
     const years: number[] = [];
     for (let y = currentYear - 1; y >= joinYear; y--) years.push(y);
@@ -133,12 +133,13 @@ export default function Heatmap({
       return stats.heatmap;
     },
     staleTime: 60_000,
+    enabled: selected !== "current",
   });
 
-  const data = heatmapData ?? [];
+  const data = selected === "current" ? initialHeatmap : heatmapData ?? [];
   const byDate = new Map(data.map((d) => [d.date, d.count]));
   const max = data.reduce((m, d) => Math.max(m, d.count), 0);
-  const days = selected === "current" ? rollingDays() : yearDays(selected);
+  const days = selected === "current" ? rollingDays(asOf) : yearDays(selected);
   const blocks = buildMonthBlocks(days, byDate);
 
   const total = data.reduce((sum, d) => sum + d.count, 0);
@@ -164,6 +165,7 @@ export default function Heatmap({
           <span>{t("Max streak: {n}", { n: maxStreak })}</span>
           {pastYears.length > 0 && (
             <select
+              aria-label={t("Year")}
               value={String(selected)}
               onChange={(e) => setSelected(e.target.value === "current" ? "current" : Number(e.target.value))}
               className="rounded border border-ink-700 bg-ink-800 px-2 py-1 text-xs text-ink-200"
@@ -179,7 +181,7 @@ export default function Heatmap({
         </div>
       </div>
 
-      <div ref={scrollRef} className={`overflow-x-auto transition-opacity ${isFetching ? "opacity-50" : ""}`}>
+      <div ref={scrollRef} tabIndex={0} role="region" aria-label={t("Submission activity")} className={`overflow-x-auto transition-opacity ${isFetching ? "opacity-50" : ""}`}>
         {/* Each month is its own self-contained column group (grid + label together), laid out
             left to right with a real gap between groups — the gap is structural here, not a
             margin hack on whichever column happens to start a new month. */}

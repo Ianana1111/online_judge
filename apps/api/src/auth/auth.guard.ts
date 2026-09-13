@@ -1,4 +1,7 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { prisma } from "@oj/db";
+import type Redis from "ioredis";
+import { REDIS_CLIENT } from "../common/redis.providers";
 import { Reflector } from "@nestjs/core";
 import { IS_OPTIONAL_AUTH_KEY, IS_PUBLIC_KEY } from "../common/decorators";
 import { TokenService } from "./token.service";
@@ -8,9 +11,10 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly tokens: TokenService,
+    @Inject(REDIS_CLIENT) private readonly redis: Redis,
   ) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -35,9 +39,16 @@ export class AuthGuard implements CanActivate {
 
     try {
       const payload = this.tokens.verifyAccessToken(token);
-      req.user = { id: payload.sub, handle: payload.handle, role: payload.role };
+      if (!(await this.redis.exists(`refresh:${payload.sub}:${payload.sid}`))) throw new Error("Session revoked");
+      const user = await prisma.user.findUnique({ where: { id: payload.sub }, select: { id: true, handle: true, role: true, deletionRequestedAt: true } });
+      if (!user) throw new Error("Account missing");
+      if (user.deletionRequestedAt && !["/auth/me", "/users/me/cancel-deletion"].includes(req.path)) {
+        throw new ForbiddenException("Account deletion is pending");
+      }
+      req.user = { id: user.id, handle: user.handle, role: user.role };
       return true;
-    } catch {
+    } catch (error) {
+      if (error instanceof ForbiddenException) throw error;
       if (isOptional) {
         req.user = null;
         return true;

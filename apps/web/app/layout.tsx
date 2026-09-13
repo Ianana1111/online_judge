@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { Space_Grotesk, IBM_Plex_Sans, JetBrains_Mono, STIX_Two_Text } from "next/font/google";
+import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Providers from "@/components/Providers";
@@ -14,21 +14,24 @@ import PendingDeletionGate from "@/components/PendingDeletionGate";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { jsonLdScript } from "@/lib/jsonLd";
 
-const display = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+const display = localFont({
+  src: "./fonts/space-grotesk.woff2",
+  weight: "500 700",
+  display: "swap",
   variable: "--font-display",
 });
 
-const body = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const body = localFont({
+  src: "./fonts/ibm-plex-sans.woff2",
+  weight: "400 600",
+  display: "swap",
   variable: "--font-body",
 });
 
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const mono = localFont({
+  src: "./fonts/jetbrains-mono.woff2",
+  weight: "400 600",
+  display: "swap",
   variable: "--font-mono",
 });
 
@@ -39,10 +42,12 @@ const mono = JetBrains_Mono({
 // sub/superscript-heavy math notation these statements actually contain). Deliberately its own
 // variable rather than replacing --font-body/--font-display: this is scoped to statement/title
 // rendering only, the rest of the site's chrome keeps its existing sans-serif look.
-const statement = STIX_Two_Text({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+const statement = localFont({
+  src: [
+    { path: "./fonts/stix-two-text.woff2", weight: "400 700", style: "normal" },
+    { path: "./fonts/stix-two-text-italic.woff2", weight: "400 700", style: "italic" },
+  ],
+  display: "swap",
   variable: "--font-statement",
 });
 
@@ -106,18 +111,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="zh-TW" className={`${display.variable} ${body.variable} ${mono.variable} ${statement.variable}`}>
       <head>
         <script nonce={nonce} dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(ORGANIZATION_JSON_LD) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(WEBSITE_JSON_LD) }} />
+        <script nonce={nonce} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(ORGANIZATION_JSON_LD) }} />
+        <script nonce={nonce} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(WEBSITE_JSON_LD) }} />
       </head>
       <body>
         <Providers>
+          <a href="#main-content" className="sr-only z-[100] rounded-md bg-ink-900 px-4 py-3 text-ink-100 focus:not-sr-only focus:fixed focus:left-4 focus:top-3">跳到主要內容 / Skip to content</a>
           <PageviewTracker />
           <PromoBanner />
           <ActiveExamBanner />
           <NavBar />
           <ProfileSetupGate />
           <PendingDeletionGate />
-          <main className="mx-auto min-h-[calc(100vh-56px)] max-w-[1400px] px-6 py-6">{children}</main>
+          <main id="main-content" tabIndex={-1} className="mx-auto min-h-[calc(100vh-56px)] max-w-[1400px] px-4 py-6 sm:px-6">{children}</main>
           <Footer />
         </Providers>
         <Analytics />

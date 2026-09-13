@@ -46,7 +46,7 @@ export class ContestsController {
 
   @OptionalAuth()
   @Get(":id/scoreboard")
-  scoreboard(@Param("id") id: string) {
-    return this.contests.scoreboard(id);
+  scoreboard(@Param("id") id: string, @CurrentUser() user: RequestUser | null) {
+    return this.contests.scoreboard(id, user);
   }
 }

@@ -41,40 +41,49 @@ function UserMenu({
   avatarUrl: string | null;
   isAdmin: boolean;
   plan: "FREE" | "PRO";
-  onLogout: () => void;
+  onLogout: () => Promise<void>;
 }) {
   const t = useT();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [logoutError, setLogoutError] = useState(false);
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
       if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
     }
+    function escape(e: KeyboardEvent) { if (e.key === "Escape") { setOpen(false); triggerRef.current?.focus(); } }
     document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, []);
+    document.addEventListener("focusin", onClickOutside as unknown as EventListener);
+    if (open) document.addEventListener("keydown", escape);
+    return () => { document.removeEventListener("mousedown", onClickOutside); document.removeEventListener("focusin", onClickOutside as unknown as EventListener); document.removeEventListener("keydown", escape); };
+  }, [open]);
 
   return (
     <div ref={rootRef} className="relative">
       <button
         type="button"
+        ref={triggerRef}
+        aria-label={t("Account menu for {handle}", { handle })}
+        aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 text-sm text-ink-200 hover:text-brand"
+        className="flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-lg px-2 text-sm text-ink-200 hover:text-brand"
       >
         {isAdmin && (
-          <span className="rounded border border-brand/40 bg-brand/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-brand">
+          <span className="hidden whitespace-nowrap rounded border border-brand/40 bg-brand/10 md:inline-block px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-brand">
             {t("Admin")}
           </span>
         )}
         <Avatar avatarUrl={avatarUrl} handle={handle} size={22} />
-        {handle}
+        <span className="hidden max-w-28 truncate md:block">{handle}</span>
         <svg width="10" height="10" viewBox="0 0 10 10" className={`transition-transform ${open ? "rotate-180" : ""}`}>
           <path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
         </svg>
       </button>
       {open && (
-        <div className="oj-card absolute right-0 top-full mt-2 w-44 overflow-hidden p-1">
+        <div className="oj-card absolute right-0 top-full mt-2 w-56 overflow-hidden p-2">
+          <p className="truncate border-b border-ink-700 px-3 py-3 text-sm font-semibold text-ink-200">{handle}</p>
           <Link
             href="/upgrade"
             onClick={() => setOpen(false)}
@@ -102,14 +111,15 @@ function UserMenu({
           <div className="my-1 border-t border-ink-800" />
           <button
             type="button"
-            onClick={() => {
-              setOpen(false);
-              onLogout();
+            onClick={async () => {
+              setLogoutError(false);
+              try { await onLogout(); setOpen(false); } catch { setLogoutError(true); }
             }}
             className="block w-full rounded px-3 py-2 text-left text-sm text-ink-400 hover:bg-ink-800 hover:text-verdict-wa"
           >
             {t("Log out")}
           </button>
+          {logoutError && <p role="alert" className="px-3 py-2 text-xs text-verdict-wa">{t("Could not log out. Please try again.")}</p>}
         </div>
       )}
     </div>
@@ -139,7 +149,7 @@ function MobileMenu({ links, onNavigate }: { links: { href: string; label: strin
   const t = useT();
   const pathname = usePathname();
   return (
-    <nav className="oj-card absolute inset-x-4 top-full mt-2 flex flex-col gap-1 p-2 sm:hidden">
+    <nav aria-label={t("Main navigation")} className="oj-card absolute inset-x-4 top-full mt-2 flex max-h-[75vh] flex-col gap-1 overflow-y-auto p-2 xl:hidden">
       {links.map((l) => (
         <Link
           key={l.href}
@@ -164,6 +174,7 @@ export default function NavBar() {
   const examActive = useExamTimerStore((s) => s.active);
   const [mobileOpen, setMobileOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
+  const mobileTriggerRef = useRef<HTMLButtonElement>(null);
   const navLinks = useNavLinks(user);
 
   // A route change (including via a link inside the drawer) always closes it — otherwise
@@ -178,7 +189,7 @@ export default function NavBar() {
       if (headerRef.current && !headerRef.current.contains(e.target as Node)) setMobileOpen(false);
     }
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setMobileOpen(false);
+      if (e.key === "Escape") { setMobileOpen(false); mobileTriggerRef.current?.focus(); }
     }
     document.addEventListener("mousedown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
@@ -206,21 +217,21 @@ export default function NavBar() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-ink-800 bg-ink-950/90 backdrop-blur">
-      <div ref={headerRef} className="relative mx-auto flex max-w-[1400px] items-center justify-between px-6 py-3">
-        <div className="flex items-center gap-6">
+      <div ref={headerRef} className="relative mx-auto flex max-w-[1400px] items-center justify-between gap-3 px-4 py-2 sm:px-6">
+        <div className="flex min-w-0 items-center gap-2 xl:gap-5">
           <button
             type="button"
             onClick={() => setMobileOpen((o) => !o)}
             aria-label={mobileOpen ? t("Close menu") : t("Open menu")}
             aria-expanded={mobileOpen}
-            className="-ml-1.5 rounded p-1.5 text-ink-300 hover:bg-ink-800 hover:text-ink-50 sm:hidden"
+            ref={mobileTriggerRef} className="-ml-1.5 flex h-11 w-11 shrink-0 items-center justify-center rounded text-ink-300 hover:bg-ink-800 hover:text-ink-50 xl:hidden"
           >
             {mobileOpen ? <XIcon className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
           </button>
           <Link href="/" className="font-display text-lg font-bold tracking-tight text-ink-50">
             judge<span className="text-brand">.</span>
           </Link>
-          <nav className="hidden items-center gap-4 sm:flex">
+          <nav aria-label={t("Main navigation")} className="hidden whitespace-nowrap items-center gap-3 xl:flex">
             {PUBLIC_LINKS.map((l) => (
               <Link
                 key={l.href}
@@ -280,9 +291,9 @@ export default function NavBar() {
             )}
           </nav>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           {user && <NotificationBell />}
-          <DiscordLink />
+          <span className="hidden sm:block"><DiscordLink /></span>
           <ThemeToggle />
           {user ? (
             <UserMenu

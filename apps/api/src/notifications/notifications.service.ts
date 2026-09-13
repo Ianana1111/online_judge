@@ -1,5 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { prisma } from "@oj/db";
+import type { MarkNotificationsReadDto } from "@oj/shared";
 
 export interface CreateNotificationInput {
   type: string;
@@ -30,17 +31,28 @@ export class NotificationsService {
     }
   }
 
-  async list(userId: string) {
+  async list(userId: string, query: { cursor?: string; unread?: string } = {}) {
+    let cursor: { createdAt: string; id: string } | undefined;
+    if (query.cursor) {
+      try {
+        cursor = JSON.parse(Buffer.from(query.cursor, "base64url").toString());
+        if (!cursor || typeof cursor.id !== "string" || typeof cursor.createdAt !== "string" || !Number.isFinite(Date.parse(cursor.createdAt))) throw new Error();
+      } catch { throw new BadRequestException("Invalid notification cursor"); }
+    }
+    const asOf = new Date();
     const [items, unreadCount] = await Promise.all([
-      prisma.notification.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, take: 30 }),
+      prisma.notification.findMany({ where: { userId, ...(query.unread === "true" ? { readAt: null } : {}),
+        ...(cursor ? { OR: [{ createdAt: { lt: new Date(cursor.createdAt) } }, { createdAt: new Date(cursor.createdAt), id: { lt: cursor.id } }] } : {}) },
+        orderBy: [{ createdAt: "desc" }, { id: "desc" }], take: 21 }),
       prisma.notification.count({ where: { userId, readAt: null } }),
     ]);
-    return { items, unreadCount };
+    const page = items.slice(0, 20), last = page.at(-1);
+    return { items: page, unreadCount, asOf, nextCursor: items.length > 20 && last ? Buffer.from(JSON.stringify({ id: last.id, createdAt: last.createdAt })).toString("base64url") : null };
   }
 
-  async markRead(userId: string, ids?: string[]): Promise<{ ok: true }> {
+  async markRead(userId: string, input: MarkNotificationsReadDto): Promise<{ ok: true }> {
     await prisma.notification.updateMany({
-      where: { userId, readAt: null, ...(ids && ids.length > 0 ? { id: { in: ids } } : {}) },
+      where: { userId, readAt: null, ...("ids" in input ? { id: { in: input.ids } } : { createdAt: { lte: new Date(Math.min(Date.parse(input.before), Date.now())) } }) },
       data: { readAt: new Date() },
     });
     return { ok: true };

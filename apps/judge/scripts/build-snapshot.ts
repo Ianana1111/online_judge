@@ -11,17 +11,20 @@
  */
 import { Sandbox } from "@vercel/sandbox";
 
-const PACKAGES = ["gcc-c++", "java-17-amazon-corretto-devel", "python3", "time"];
+const PACKAGES = ["gcc-c++", "java-17-amazon-corretto-devel", "python3", "time", "util-linux", "procps-ng"];
 
 async function main() {
   console.log("Creating base sandbox...");
-  const sandbox = await Sandbox.create({ runtime: "node24", timeout: 300_000, persistent: false });
+  const credentials = process.env.VERCEL_TOKEN && process.env.VERCEL_TEAM_ID && process.env.VERCEL_PROJECT_ID
+    ? { token: process.env.VERCEL_TOKEN, teamId: process.env.VERCEL_TEAM_ID, projectId: process.env.VERCEL_PROJECT_ID } : {};
+  const sandbox = await Sandbox.create({ ...credentials, runtime: "node24", timeout: 300_000, persistent: false });
+  try {
 
   console.log(`Installing ${PACKAGES.join(", ")}...`);
   const install = await sandbox.runCommand({ cmd: "sudo", args: ["dnf", "install", "-y", ...PACKAGES] });
   if (install.exitCode !== 0) {
     console.error("Install failed:", await install.stderr());
-    process.exit(1);
+    throw new Error("Toolchain installation failed");
   }
 
   for (const [label, cmd, args] of [
@@ -29,16 +32,20 @@ async function main() {
     ["javac", "javac", ["--version"]],
     ["python3", "python3", ["--version"]],
     ["/usr/bin/time", "/usr/bin/time", ["--version"]],
+    ["setpriv", "setpriv", ["--version"]],
+    ["pkill", "pkill", ["--version"]],
   ] as const) {
     const r = await sandbox.runCommand(cmd, [...args]);
+    if (r.exitCode !== 0) throw new Error(`Missing required tool: ${label}`);
     console.log(`  ${label}: ${(await r.stdout()).split("\n")[0] || (await r.stderr()).split("\n")[0]}`);
   }
 
   console.log("\nTaking snapshot...");
   const snap = await sandbox.snapshot();
-  await sandbox.stop();
+
 
   console.log(`\nDone. Set this as JUDGE_SANDBOX_SNAPSHOT_ID:\n\n  ${snap.snapshotId}\n`);
+  } finally { await sandbox.stop(); }
 }
 
 main().catch((err) => {

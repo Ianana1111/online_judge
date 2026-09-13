@@ -115,7 +115,7 @@ function RequestRefundConfirmDialog({
         <h2 className="font-display text-base font-semibold text-ink-50">{t("Request a full refund?")}</h2>
         <p className="mt-2 text-sm text-ink-300">
           {t(
-            "Refunds your first charge in full, cancels your subscription, and switches you to Free right away — you won't keep Pro access for the rest of this period. You can only do this once per account.",
+            "Requests a full refund of your first payment and stops future renewal. The refunded Pro period ends after processing. Bank posting times vary. This guarantee is available once per account.",
           )}
         </p>
         {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
@@ -396,8 +396,8 @@ export default function UpgradePlanPage() {
                       <svg width="12" height="12" viewBox="0 0 16 16" className="shrink-0" fill="none">
                         <circle cx="8" cy="8" r="6" fill="currentColor" />
                       </svg>
-                      {expiresLabel
-                        ? t("Subscribed — renews on {date}", { date: expiresLabel })
+                      {status.subscription.nextChargeAt
+                        ? t("Subscribed — renews on {date}", { date: new Date(status.subscription.nextChargeAt).toLocaleDateString(undefined, { timeZone: "Asia/Taipei" }) })
                         : t("Subscribed — renews automatically")}
                     </p>
                   </>
@@ -427,7 +427,7 @@ export default function UpgradePlanPage() {
                     relevant before subscribing; an existing subscriber manages this from the
                     "Not what you expected?" refund link further down instead. */}
                 {!isPro && (
-                  <p className="mt-1 text-[11px] text-ink-500">{t("Cancel within your first month for a full refund")}</p>
+                  <p className="mt-1 text-[11px] text-ink-500">{t("Request a full refund within 7 days of your first payment")}</p>
                 )}
                 <ul className="mt-3 flex-1 space-y-1.5 sm:mt-4 sm:space-y-2">
                   <Check>{t("Unlimited submissions")}</Check>
@@ -453,20 +453,7 @@ export default function UpgradePlanPage() {
                         ? t("Stops auto-renewal — you'll keep Pro until {date}, then switch to Free automatically.", { date: expiresLabel })
                         : t("Stops auto-renewal — you'll keep Pro until your current period ends, then switch to Free automatically.")}
                     </p>
-                    {status.refundEligibleUntil && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setRefundError(null);
-                          setShowRefundConfirm(true);
-                        }}
-                        className="mt-2 w-full py-1 text-center text-[11px] text-ink-500 underline hover:text-verdict-wa"
-                      >
-                        {t("Not what you expected? Request a full refund (until {date})", {
-                          date: new Date(status.refundEligibleUntil).toLocaleDateString(),
-                        })}
-                      </button>
-                    )}
+
                   </>
                 ) : (
                   <button
@@ -477,6 +464,27 @@ export default function UpgradePlanPage() {
                   >
                     {isPro ? t("Extend Pro Plan") : t("Get Pro Plan")}
                   </button>
+                )}
+                    {status?.refundEligibleUntil && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setRefundError(null);
+                          setShowRefundConfirm(true);
+                        }}
+                        className="mt-2 w-full py-1 text-center text-[11px] text-ink-500 underline hover:text-verdict-wa"
+                      >
+                        {t("Not what you expected? Request a full refund (until {date})", {
+                          date: new Date(status?.refundEligibleUntil).toLocaleString(undefined, { timeZone: "Asia/Taipei", hour12: false }) + " (UTC+8)",
+                        })}
+                      </button>
+                    )}
+                {status?.refundRequest && (
+                  <p role="status" className="mt-4 rounded-lg border border-ink-700 bg-ink-800/50 p-3 text-sm text-ink-200">
+                    {status.refundRequest.status === "COMPLETED" ? t("Refund processed. Bank posting times vary.") :
+                      status.refundRequest.status === "NEEDS_REVIEW" ? t("Your refund request is saved and awaiting payment verification. You do not need to submit it again.") :
+                        t("Your refund request is saved. We are processing the refund and stopping future renewal.")}
+                  </p>
                 )}
               </div>
             </div>

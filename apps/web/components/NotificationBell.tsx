@@ -1,99 +1,37 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useId, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import type { NotificationList } from "@/lib/types";
-import { useT } from "@/lib/i18n/LocaleContext";
-
-function timeAgo(iso: string, t: ReturnType<typeof useT>): string {
-  const ms = Date.now() - new Date(iso).getTime();
-  const min = Math.floor(ms / 60_000);
-  if (min < 1) return t("just now");
-  if (min < 60) return t("{n}m ago", { n: min });
-  const hr = Math.floor(min / 60);
-  if (hr < 24) return t("{n}h ago", { n: hr });
-  return t("{n}d ago", { n: Math.floor(hr / 24) });
-}
+import { useLocale } from "@/lib/i18n/LocaleContext";
+import { useAuthStore } from "@/store/auth";
+import NotificationCenter from "./NotificationCenter";
 
 export default function NotificationBell() {
-  const t = useT();
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const qc = useQueryClient();
-
-  const { data } = useQuery({
-    queryKey: ["notifications"],
-    queryFn: () => apiFetch<NotificationList>("/notifications"),
-    refetchInterval: 30_000,
-  });
-
-  useEffect(() => {
-    function onClickOutside(e: MouseEvent) {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, []);
-
+  const { locale } = useLocale(); const zh = locale === "zh-TW";
+  const user = useAuthStore((s) => s.user), [open, setOpen] = useState(false);
+  const root = useRef<HTMLDivElement>(null), trigger = useRef<HTMLButtonElement>(null), panel = useRef<HTMLDivElement>(null);
+  const panelId = useId();
+  const { data } = useQuery({ queryKey: ["notifications", user?.id, "badge"], queryFn: () => apiFetch<NotificationList>("/notifications"), enabled: !!user, refetchInterval: 30_000 });
   const unread = data?.unreadCount ?? 0;
-  const items = data?.items ?? [];
-
-  async function handleOpen() {
-    const next = !open;
-    setOpen(next);
-    if (next && unread > 0) {
-      await apiFetch("/notifications/read", { method: "POST", body: {} });
-      qc.setQueryData<NotificationList | undefined>(["notifications"], (prev) =>
-        prev ? { ...prev, unreadCount: 0, items: prev.items.map((n) => ({ ...n, readAt: n.readAt ?? new Date().toISOString() })) } : prev,
-      );
-    }
-  }
-
-  return (
-    <div ref={rootRef} className="relative">
-      <button
-        type="button"
-        onClick={handleOpen}
-        aria-label={t("Notifications")}
-        className="relative flex h-8 w-8 items-center justify-center rounded text-ink-300 hover:text-brand"
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        {unread > 0 && (
-          <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-verdict-wa px-1 text-[10px] font-bold text-white">
-            {unread > 9 ? "9+" : unread}
-          </span>
-        )}
-      </button>
-      {open && (
-        <div className="oj-card absolute right-0 top-full mt-2 w-80 overflow-hidden p-1">
-          <div className="max-h-96 overflow-y-auto">
-            {items.length === 0 && <p className="p-4 text-center text-sm text-ink-400">{t("No notifications yet.")}</p>}
-            {items.map((n) => {
-              const content = (
-                <div className="rounded px-3 py-2 hover:bg-ink-800">
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="text-sm font-medium text-ink-100">{n.title}</p>
-                    <span className="shrink-0 font-mono text-[10px] text-ink-500">{timeAgo(n.createdAt, t)}</span>
-                  </div>
-                  {n.body && <p className="mt-0.5 text-xs text-ink-400">{n.body}</p>}
-                </div>
-              );
-              return n.link ? (
-                <Link key={n.id} href={n.link} onClick={() => setOpen(false)} className="block">
-                  {content}
-                </Link>
-              ) : (
-                <div key={n.id}>{content}</div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  useEffect(() => { setOpen(false); }, [user?.id]);
+  useEffect(() => {
+    if (!open) return;
+    panel.current?.focus();
+    const outside = (e: PointerEvent) => { if (!root.current?.contains(e.target as Node)) setOpen(false); };
+    const key = (e: KeyboardEvent) => { if (e.key === "Escape") { setOpen(false); trigger.current?.focus(); } };
+    document.addEventListener("pointerdown", outside); document.addEventListener("keydown", key);
+    return () => { document.removeEventListener("pointerdown", outside); document.removeEventListener("keydown", key); };
+  }, [open]);
+  return <div ref={root} className="relative">
+    <button ref={trigger} type="button" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls={panelId} aria-haspopup="dialog" aria-label={`${zh ? "通知" : "Notifications"}${unread ? ` (${unread} ${zh ? "則未讀" : "unread"})` : ""}`} className="relative flex h-10 w-10 items-center justify-center rounded-xl text-ink-300 hover:bg-ink-800 hover:text-brand">
+      <svg aria-hidden width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M10 21h4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      {unread > 0 && <span className="absolute right-0 top-0 min-w-4 rounded-full bg-brand px-1 text-[10px] font-bold text-onbrand">{unread > 99 ? "99+" : unread}</span>}
+    </button>
+    {open && <div ref={panel} id={panelId} tabIndex={-1} role="dialog" aria-label={zh ? "通知中心" : "Notification center"} className="oj-card fixed inset-x-3 top-16 z-50 overflow-hidden rounded-2xl shadow-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-3 sm:w-[25rem]">
+      <div className="flex items-center justify-between px-5 pt-5"><h2 className="text-lg font-semibold text-ink-100">{zh ? "通知中心" : "Notifications"}</h2><button type="button" onClick={() => { setOpen(false); trigger.current?.focus(); }} className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-800" aria-label={zh ? "關閉通知" : "Close notifications"}>×</button></div>
+      <NotificationCenter compact onNavigate={() => setOpen(false)} />
+    </div>}
+  </div>;
 }

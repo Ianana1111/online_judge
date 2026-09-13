@@ -1,0 +1,6906 @@
+{
+  "capturedAt": "2026-09-12T06:14:45.049Z",
+  "contentHash": "7cf6cf0e1a0ea218eeae613ae356aeb0cb4077586a20d91edd5a8984d5f92215",
+  "scope": "Local project database; one read-only repeatable-read transaction. Structural checks only, not executed verdict evidence.",
+  "totals": {
+    "problems": 430,
+    "visibleProblems": 430,
+    "cases": 1511,
+    "contests": 115,
+    "publicContests": 115,
+    "problemErrors": 0,
+    "contestErrors": 1,
+    "candidateProblems": 61
+  },
+  "problems": [
+    {
+      "slug": "gpe-10038-disk-tree",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8151c7622d260b4e49fcf745eab56523382616926eaf3344430d13bd9e1aaea3",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10416-last-digit",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4d1ff27f49622db31e34fee80660f9515417b997103e2e9738c27fdfbd2ab185",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10422-is-this-integration",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "cdfc1f0501baee533de97cbb5802f20be87e738085c3e14c0468c1ab1f143046",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10429-contest-scoreboard",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "76db8389a8b4aeb5cc46863ab54910821fd498e1fd8369bc61a31867f34f541c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10432-mine-sweeper",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fb2fb6af2516d7922b73b2a6f82351a2d8ff6e42cdc3e297eefa5692e6875814",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10465-necklace",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "71daf2e89ae48576dc58e5f2b04a9e9fc643a2696979416caf45dbd2ab1f8714",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10468-maximum-product",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ab02a0f26d097e10d6ad00b99445d5ce9bd81ef89060af4c8b93a6ce2dcfa29c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10471-counting-chaos",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "086c6c5473ac1eebbd6dcb32465efad0571bd6967f9ec52f6686063274c7567a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10500-brick-wall-patterns",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "071ffe8c353e6f44d45eacd270b8324192fa6e84ce4442e58054c27226444a3f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10501-safe-salutations",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8dc5429bdccf7c5bfdd883683bb7b903199a91a0e46ceb713e42f36f9bbe6526",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10503-show-the-sequence",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b5b270813a75311d1e3e975fdaa86104d3d491f8030319aa5e9ae181a3064051",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10505-center-of-masses",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "498f2f50e7f6ace15bbcb956671de135d06630595233094a9d0ecc66a59caf7c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10520-conformity",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "863df67e739eed0d473ab02a93800f62fe9a26c480744433736994400a854e89",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10531-zipf-s-law",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "72bbd97bc01e6563ea19e489996622892d0ad50e70eb6918a151fd3d44508b5f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10533-the-trip",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ed630aeb1184140eba78af190886a86f749648f344b5839c377790507d0753bf",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10535-prime-distance",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f9c208eecb698fed1176fa01016119e6eff9eaf22ff3aa1710285e49b4c9cd1d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10551-bee-maja",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ac3b4a156125ef6bfb58e619a020b2ca3d2765b7cc5ee24be1e15d1565a3b56a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10559-i-love-big-numbers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "3ae9e88ee218f877d9502c6250f64efa5ca064b40958aa2b8f6eff7affe5238c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10579-hay-points",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "799fd9e38bd10d75ee2119eb94d65dfe208071b52fea9f0dfcf8d89d36e7b906",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10582-power-strings",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "50c6984c14b44153b4be2b700476e6326a183b69dcca3583424c8b27ead91e1c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10600-network-connections",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4f678355ca260858124ee05c595ef70ff27a4117a769692b8259dc7694e8c524",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10601-eternal-truths",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "9960ece7f6b50e9760fbaad89995b816a10865f7f2a1ccc5ab7b621fffdb567a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10602-longest-paths",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b6146347e88484be1b5c594f5de2c6fbd4f32fd821566ade50d3e3b2ec6b20ee",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10603-cutting-sticks",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "71d1494fcf98a6cec606be9067f869e0d36095e759d22468082026cf23a72d71",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10604-packing-polygons",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "57aa8d4ca3c43c1d29d6a86e3d3d98b441ca7a2de040f8215fa76ad96ec9e573",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10605-count-the-trees",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "13f3aaf0d6eea0102be1d644fb0054d2efdb0ecc96c7cb2f9ca08f64e2792d56",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10606-how-big-is-it",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f7d4c8009a6df37774d5bad4376124a719f7be2558e51e24e0cd045112066e0a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10607-joseph-s-cousin",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6339b3f12ea3f3309cb86fe8d9a3dd06c83802417f4bd6c4188ce9013270582a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "duplicate-inputs",
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10608-minimal-coverage",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "91ea3dc0d8e5abd40d7178072e0fca6b16b1a33fc37af04707410e13ec784a4f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10609-square-root",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2d85da584fb56564eabfd7cb3fd850d3490fa872969c0e2032d9f9394ba45432",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10610-curling-up-the-cube",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6b8bf035bf8e1c49162d2024b367428ba482841bcbf85edac479c2f89a65a9fb",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10615-divisibility",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "99e5d6128aa0e9b620c898b69bb6870ca99b548b6a92adc362e9a3bc53c71b90",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10636-gopher-ii",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "789d77014c5ddeaafea04b36414f47ee6929afcabbea0b0bb29f97f26f3875ce",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10637-tight-words",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e229f8c5159414f9aae9996afb8a4050a05e58d6d945d930c397125064e21d04",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10642-marbles",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "28932e3c24c8b2854410f3dfd7d4325c939b61deb9801455c6d9e55fc98402a0",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10645-euclid-problem",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e38e8770358f0800a9fe44401161e4ec5ca5a4ac9313f5467cc6ab2ed0674d57",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10655-sumsets",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "c4fee33973673042115f8fe7bdedb6dc97bcf9e8d2b07091866c503ccaa44ff4",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10658-is-bigger-smarter",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "84cec3fb0ecfef5913fb4c0fe7776814a881c874458a59c27dbbfd6f8cef043a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10675-urn-ball-probabilities",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e4680dde986644d07f7a90dc30981fde43a6c76b654de84e53936452124fd60b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10679-irreducible-basic-fractions",
+      "visible": true,
+      "cases": 3,
+      "samples": 0,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "dc05b84691c44a0e0ae469c755b3f3fdb48ef4801436ffa53fba7045a773184f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-public-sample",
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10732-snow-clearing",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fd323f9a49474f0f4cc2f92d288dcd07f56fd074f3f5c08f44fb5829d6c45340",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10741-the-grand-dinner",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "184b4bf67638aa4397acfcd5830ba8c65b1976c01549d16a6b7257803aec3f93",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10766-antimatter-ray-clearcutting",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "37673d5a07a02b889fdbb3f56e702d2702444d6eed73a495f08e07b8e74df5b6",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-10906-matrix-decompressing",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "9b71e6ac015a5678df0ba6f00bbe5523c2b3faf19924e141dd03f236948c3f30",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-11009-all-in-all",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4b77e259e2a84cd94edaa05a9ec86f1fa1512455ca93b37a514ccc204b1eab64",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-11041-children-s-game",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "c5356e8b45a5ed2eb728e18195a7f440554ada849b52b152282c7899d0ae062a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-11058-exact-sum",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1b90c7c6ddd765ecfff9c387e5c101670e4a13fa737dbbf5e480e842fe08354d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-11130-the-priest-mathematician",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f3c8b3313c17974372484cb0c14cbcc315e4fbb4f093b587007795302499df36",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-11174-homer-simpson",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "d758a7336517948cdb46f637212716c731dcea2fccda048711dbc7ef7aeaf388",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-11179-wavio-sequence",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1bcf4b7382dc3e50c3f776e8d72f363eb6a0f7cf6e47cf4eb7dd2bc65b67c2ef",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-11184-opening-doors",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7d1db1f2cde7e75eea0c076aeac8eeec8ec492d587ca7e767c3b199dfacbe46f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-11192-simple-minded-hashing",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fdf5f512ee2f9dbe4ef1911a45cb4bb70cea2f70535bade925231f4b948eaac0",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2008-06-parser-and-evaluator",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e5c6579946a87b504261a9ef2e8d69e95a5a4818c66d84b772b35a8fa54b9087",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2008-19-set-partition",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "cc9c88414c702be535e2ffd412ca746f8f5f89d03db213d4190c0ed28052044f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2008-28-longest-monotonically-increasing-subsequence",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "91e612af4603919cf30c24b9dfe6a6411464b0bdd4fdc39e94dd80326a79cb73",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2008-37-prefix-expression-evaluation",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1e0061808275ef0e5c0e24cf750dfc03f731390f27e7d4b918e80b0345ed4352",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2009-02-line-overlap-problem",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "073fb76e25f91e7f7748c81b8bda887b61cc72775e6ede3c67e82ccec4bf3ef9",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2009-17-binary-tree-traversals",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b0cab6300a24651968f6b79cafe6bd9188a4a1240c8b356e4b25dca77f47b2cf",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2009-24-unique-lines",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ee7a7c988ff98b9989814fc77da0c47ff5acdeea1e984ea43a3ad73aee676c0c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2015-01-missing-numbers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ee2928e584bce832b664bb61dfb7835efff76dd4c538feef5ccd3947e3b353eb",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2015-02-recursion-and-mod",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "519726a0899cd785db48ac9a54a5e2d38912144e94f72fc5e3935f0960cd8d00",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2015-03-sudoku-as-good-as-lee-hsien-loong",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "0abd96695caa1d893fcab00916a5f5004942f8af899383057a25e397e0b22e86",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2015-04-the-n-th-element",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8465fb6f0ae3a023dfe558579dbf01babc04af4b411e3f1765ebeff579557160",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2015-07-minimum-path-sum",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "11d0e31bbbb48da0908b80f12e9e6be055ee75fab615a028d72e528b838a82be",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2015-08-climbing-stairs",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a102d4e3815a40e8928661100ff945988d21c3f0cf3e1fa254f5c98f596a883f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-2015-09-longest-increasing-subsequence",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2ea54a11480b4bf9530f33cd33728a81e479b71d517428529a5cfd9aa49e5fb4",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-21964-fill-the-containers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2a2ddcaf9e2329a57e1ab8e9dc91bbad4c1ed6b0628eaf189d6028a6cb72ba52",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-22151-big-mod",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "cf3f75eeede0c0ccef4f676c9cf0e2d1d21ff959e1e6e024fef82630c7a7969d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-22181-dollars",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "282eb62f3c171175735946565eb980674d1a34a861c75a338064a3cb71b38c75",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-22261-sorting-the-alphanumeric-list-in-comma-separated-value-forma",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "5998a029128266fb43a659cf93028a79904e4681899cac453e8d2f1be8a42822",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-22351-quirksome-squares",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2e50beb965e29e5fc159e08b065c4d0cf07b114d091d7ece0abf6bfc6d29c58e",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-22821-oil-deposits",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2817d6e0af8b73aacc4d62d2cd90ba4041cb418db1dcb8644fc3c45eea75d3c6",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-23571-smith-numbers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a35c878ac3940954eead866395ceea5f9981051b1c065b2f5ad73de4a5d49360",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-23581-glass-beads",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "943fe179f124c4cb4a429ab50a83f169b93ed36d0d629edc57bd72039ae9eed9",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-23651-the-jackpot",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "35146e711de19f8c6e65b48ec528ae13da4c151fbb9ca7e9350a96daf2a7dd0e",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-23661-bit-mask",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7f8aa6ee1f5d3c6f0b170e3ac512960dfbbbfec9775e3553bd8b5af7916f3586",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-23671-camel-trading",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "32a10c3e876756d95c2ef39fe5831127a687011174607e6ce38b4821c2e57615",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-23681-bachet-s-game",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2f18869bfd4ba3d4c67f63664559097917e57b94b03c8b17356512a07c048d6c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-23771-lexicographic-order",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "3bf3898e84fda8d3a10f712ddc07ad7a400360aaba10a2037a7c305696c5fa74",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-23781-making-change",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "01c610d85f7a3110db89ad0721a806fc55b3cf849fa2784ff8a62d1f7edcf44e",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-24461-sum-of-consecutive-prime-numbers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1927e400995843f4d074708a2e8097132d90bbec8ae3420c5c2bffd315f195a3",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-24731-roads-in-the-north",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "c04c3c1136ed6c33aa4d3d7d84629d3f7e3d8ff109f612c1dc003fc14ad2f0f3",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-24911-robot-instructions",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b85cdc49a4a24481fedc420f19ae77a8227080a486da8dde64c461fa8202bbb5",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-24931-extend-to-palindromes",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8e7b1c380fc62c368d9043203df460d7be331327aad7f9eb54b1bf5208cf4e7f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-24941-uncompress",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "adb7f0ed0695c4931188ae92ad14ea71e9fe29d5036e90dab8038cd45c389229",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "gpe-25081-solving-maze-problems",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "396082baf7db7d1cbf8140704b8d5933961b8b48fea86f5a68e1886e32f749a4",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-100-the-3n-1-problem",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "add3ea43227afecaa8b3efc36198f75a2be3945fb6f0bcf06b7392eeb0a210d1",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10004-bicoloring",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "164c758b183302c2abc50c6eda77790a36dd57b8c715673088503ebcc3fb3a55",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10008-what-s-cryptanalysis",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4877b8bc203f021ea313c59cffee4154c06df40e3c569b1f786a9951a8ffe075",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10010-where-s-waldorf",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "df97b2e38f72eb6fe0d449200a3d415e9bc360db858fe9a2a3d7203f73695abd",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10018-reverse-and-add",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "dd9ac21c581e3aac4b061a93e71b451f05498f430f733e77606219b0384c44ea",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10019-funny-encryption-method",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "26e0d80ed958d4c9f632941b7597f8271dfddd42c314daaf70df2c63cab28f5d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10025-the-1-2-n-k-problem",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2cc353b335f8c21f308c6a035a0aa8e6abdd8fd0dd768e4d7125e90588bf7a65",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10026-shoemaker-s-problem",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a70a2528d2af78c1528ac42089376268d118bb5872ba4352529b2fdb0ea794bf",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10032-tug-of-war",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "914bf08445cff051c016d5b694481b2190fdde9299c9561dffa6e7812e71a08e",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10035-primary-arithmetic",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a846fb0a72b42b4967bdc9ad18eb4f87cb32ce31c70cbee0b4dda8c8b493e6ca",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10036-divisibility",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ffe8bc876fc48d9e67e734c7ee2a27c18f1ab3e76f1650694bfea20a6a9de1d8",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10038-jolly-jumpers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2c84142b5bd0301fecdd890aacb2a5f6c4e9938ead4aa67c2f9217cf317202fb",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10041-vito-s-family",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "722195935eaaa61ff294b1dd444ae9d8f5cb4286bd319b74caa299b13d2f95a6",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10050-hartals",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "22a294ca2eee91ffc239cf4bf42079ba789427c8a40aec12f0f6d0ca0658c8e5",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10055-hashmat",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "be5bfd5e9a66ddf8e31b3eb1aa9d0b8974cf756fa5767bd60c7c3136655861b1",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10056-what-is-the-probability",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "FLOAT",
+      "inputOutputHash": "32f5b5929e3ebba32ba1bd701632b14910f916f3921243d7df08dc0f50033837",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10057-a-mid-summer-night-s-dream",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "04b4168e399e86adc32358c8908e8a4b60fea84afd44aa41f373a29e4423f104",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10062-tell-me-the-frequencies",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ccb29feb135d3dcdb7a583e24b5d99b1d6938ab08dc1506762f1c99a57a2a65b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10066-the-twin-towers",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "eefee9adc668f2358b1b73a30aa450e1ec06e1d74470ab04c73063fdf8a94e22",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10071-back-to-high-school-physics",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "28bf4df43f7d56d44f02d469c5d470962a4ddfbe79e2ca1cb7898eef36a260e7",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10074-take-the-land",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "88d9931a184f48ae7bccaa9bbd4fd07a597cc5b8d437a4d30cada1d40eb87fd6",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10079-pizza-cutting",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f9d04b093a2a05261aeae140d157a416a321eed6098c80fee0eb913880802d43",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10082-wertyu",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "5525bd75d0f5c9209e760789bd2290fa79a0e770f9704842bc3fc374c75533b8",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10093-an-easy-problem",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f051587414f5b0e6ad8927701fe2048f6388419e34e0347e2f211e062d88f5af",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10099-the-tourist-guide",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1c916d2827bed2f26420a8faf3996ea2e3e3c223a0c6566396e2d8f8140aa674",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10101-bangla-numbers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1da2cccc52a0495f1f5a9cac4363e5f4e66a90d023d90c4e2f31236ca7370b43",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10106-product",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "183c0af2ce9c6b084d50961f65726d58b5a8bd71139f0dd383b717a7c119e617",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10107-what-is-the-median",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e0545bcd685c2d4d1d86896111880f1ea228cb7a64d8cf5fd61fcde51a5a752b",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10110-light-more-light",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "cb34462e32a64242d54c119dd77b4f3bc1b6d65e62c4a99e391fd59eae096466",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10130-supersale",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "63401ee288e4f4a68ff1af62c491c9c29d78b4aaa2bd5d89cfe4d225e9984379",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10142-australian-voting",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f2e5d1b36e206e743bb82a53f651283bfcef5958357300451345f2611c0e3642",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10150-doublets",
+      "visible": true,
+      "cases": 1,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "89eb4f4dab775def90fea142f4f8adcb9f86ffcddf124bf0beed51634fee49e4",
+      "candidates": 4,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10161-ant-on-a-chessboard",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2cee23fecd0907de80fd2cb7b900ca5da76f324f26adf37aaf705b83df82e91f",
+      "candidates": 4,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10170-the-hotel-with-infinite-rooms",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "481b97638ddf7a342dc511aaca61f8cd9b1617352e8a427e7763e7e7529a8a11",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10188-automated-judge-script",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "0be89452eb5aefb6f3915709f4e55e952ae13531be92c82d8a806977e9cfddc2",
+      "candidates": 4,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10189-minesweeper",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a27ff590bb7fb9ff83c247123586c1bfcee1838701566aaefeb9b01b479c8a0a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10190-divide-but-not-quite-conquer",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "bcd5cc8d2bf2d5931c0a6d8951ddba3a3e07697ce7cfc4398a3ade937ded2880",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10191-longest-nap",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "59b62aeb2c30004dcf6eef3ebafaec0116ae21ddfd755e3ede91d62c243b0dbc",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10193-all-you-need-is-love",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "53373ed2d100462d711eac9ae45f9f926272c08b71828a469871f395c9b6b6ed",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10200-prime-time",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "9db8c2932c7a7d5224d8f9dc773e908b9aa194fe431838a40bf74529608c499f",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10221-satellites",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ac7bac292bcd6cb8d68bcf4b40f2d445ac5fb55c639db35deaa0f72fa84d8516",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10222-decode-the-mad-man",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2a206e7e8bb5779b1eb5a14c4b1349d05f43a2711f67e5f298b6708a1189d294",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10226-hardwood-species",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a1d6cb2069b7fdfe6203740ce138d11df2d1959320fb43c23da7fc1b0be2522d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10229-modular-fibonacci",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "374f26d347660a5620e19460259490523e2d6f3ea9f77bc39ed8db034b3fa56f",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10235-simply-emirp",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "17d51356df3bf97dd32c41ac3c9e3551308aa1b7e932ce2fde32c53f28e13176",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10242-fourth-point",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "82886eeb8f7fbd8b03faa584916142a5fa8726d705859aaa81ad3b75e816fe96",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10252-common-permutation",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "921afdd0cc2b5899f3faaf4ca7c2d481e42a3be4fe6bac36551b88c4d46c2d72",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10267-graphical-editor",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fb2182bc0c7d2e6dd9ca84336e78076b4b4f34ae62b5fb3bba2bac2acb020088",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10268-498-bis",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6bde1613faec381012c464740a6235c0baa43f8998a7bf0b5f579ef0c5a5ad67",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10273-eat-or-not-to-eat",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "0117a2043cd294193c7c56bf16328596d92e25c8571d1fdd80e8f020cdf69756",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10309-turn-the-lights-off",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "9359e78442b420f32b768ac0ee6ff7261df26893d59f4c4dc656fdcfe1f2800e",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10326-the-polynomial-equation",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "95ddfd8f51f6116293037ed397e12caaa691d000feda012146c3996cdf106561",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10327-flip-sort",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "cc2635e17deef9f19d6f973fe630a96c53c2e98161d73d518b3848e1b71caa32",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10336-rank-the-languages",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e5e7b5d5592b0aee3368412dab57c1256de3ba9b47ab30376fb9392360f93995",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10355-superman",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8fd3a3038f8b7cf75d0e34b64698c5e54d1457b9d8cfe2cd271506ff868a488c",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10364-square",
+      "visible": true,
+      "cases": 1,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "62ee624e8f4a954d1d3ca621437b407031f1a55255610293a80032153c28432e",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10365-blocks",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "77face4a6d6ebeda87c2327f0c771bc403817cbd744ce540119d1cc3ce5698b6",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10369-arctic-network",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "cdeba33b56eedb4e4c9cae3d1b1a8801f69e87a55cf908d8fc15bfba3619ed0d",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10382-watering-grass",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "c663d6ef9298423eb9607f27111508f24a443472e0b1e45e0f0bea3c1b263184",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10397-connect-the-campus",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "39ec12d7ab7e2d03933685f8462c0546f0fa09c2aa6daa532c51513fd8f6e6fd",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10405-longest-common-subsequence",
+      "visible": true,
+      "cases": 1,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "767aad1b0b6be4779a64ad034e4e82c3ebbe6d99eca1215706e86775aaebca6e",
+      "candidates": 2,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10407-simple-division",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6e20ba73dfa496089207faf9f98f07d9f58f6097caf87cb0c07abe42d393c2b3",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10409-die-game",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "505923d222d5aa2624310fad108fe03bc91f4ed716296c61944173f940e7e08e",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10415-eb-alto-saxophone-player",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "de590dd7354dff005097a8c8d9f30834fd1a27f7311abe943b48f27fe7bf9c14",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10420-list-of-conquests",
+      "visible": true,
+      "cases": 5,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1237590507d4f948893d67d382818df706938b7484a9b263a98868f4052a7780",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10443-rock-scissors-paper",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8fe098f9f2b1b027da5479fc15525cf46a68625c74f9f84feac0f9cc63aec1db",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10474-where-is-the-marble",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ad6ec5c48d82bad78f3dffae99c1d43f2eee71531ed50ec82df84744d3336581",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10487-closest-sums",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e730c8b6c278ef91bbc1bc6ea31b3e1f5f583df2277d5b834b649556acade9bf",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-105-the-skyline-problem",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "75bac8aef520f04bdd5cb7edaae2d3c5c2426e42fdcdf000008aadae03e5d1cc",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10530-guessing-game",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "d5e07b329e02a66be6e05e12f103e4f3263691347d6dc737d9dc223ec3340f91",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10533-digit-primes",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "bfbb8496206dccc3e6625606f26e16b9b1623cbe266593dac1f1d84c760773ad",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10539-almost-prime-numbers",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ba9c67f1b476118e78a75e57d3d5a889fdbb006c6ed7208820bc3838f6a5bb8b",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10550-combination-lock",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b50f83b569c32bd966bc076f9c07b915d201794eaed5311252954b66b4de579c",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-1056-degrees-of-separation",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7a22cf39df2924d3f8928399545cc729c30aad0d7bdfd05daebc524802c7eea3",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10583-ubiquitous-religions",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "797a5d6b449991216ce7a8af1edd0b777dc9231b33f5a1fdf6f6bcd56b2586ba",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10591-happy-number",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6c3ceab7ab54dcae23919573b9b247292a2596977af8104422013bc22691091b",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10603-fill",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7633c4410f05979a7f5ea178c60e2fe1e6168e100005fdbd561cd9b3befdb515",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-1062-containers",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b71c298dc93cfca190d8eec74f07b652112b5641091ce7fddca577ac796d9a1a",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10626-buying-coke",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "63a7142358691c97d744630d9ee9baf417d9dfbda897060324f316ced4824c81",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10633-rare-easy-problem",
+      "visible": true,
+      "cases": 1,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b5d2417839d5f61ef679404f307d59d887c9349957aef79e4d5837afcf2c74e2",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10635-the-art-gallery",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "580c63b3bf65cc90b7805d4cba4b41b6911a586d496f116111ef9de222d23db8",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10642-can-you-solve-it",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1a6228b88eecc4b8b3a1023b0d375fa9fdc6a91358c598b871efb4eb62133e78",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10664-luggage",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6f70a1762f51cd2142ebf225aae0bff430fbe94564f6b56403ccf9e329ba34ee",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10666-the-eurocup-is-here",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "3345135ec799d82ac440f47013bed13264d9326eab5643b9949c8c68244d7967",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10672-marbles-on-a-tree",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "31ba7772510de487c0de50a113757624d404d5a330ad108c3546946e0980f901",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10690-expression-again",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "3b772f260c8f7ee595b432e23f8e861b2dfcf6a61a153d3346f47601f25d2991",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10721-bar-codes",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "84154af44537c34f4c5e43b13748c831f48ba2bb5a2ed6f77c7e0bd5f2ec78d8",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10740-first-love",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "79cf2961746a9aa8ad30c4d42eca066eba6700e7bba53163b79ce771cca87bfc",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10763-foreign-exchange",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "518942975ef4d7dd5aaccd54fbd73bb2d11a6751c26c64a55b058311e376a24f",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-10783-odd-sum",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fb5576cc3b8fc7df855f4fdafb94fadc3d063c27e71b6ac46ee9c61f24a6cdf1",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10789-prime-frequency",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "0dbf6e0243ee5fa2b40c3a4bf23894a6c0ef6c4e8b4746e49b81a4bd3eb73fdb",
+      "candidates": 4,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-108-maximum-sum",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "532286b62eb8bd1b1c2f4e574b5480b75431f7a2edc311914902ea89e5657d99",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10800-not-that-kind-of-graph",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "14984ea9ec8c557f0728981b258e5ae8c3bd14aade14220df1a261c83b417166",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10810-ultra-quicksort",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "09485747f7e51f4f2734db2b601ca334f543b592690c3fce44c7d2ef39bd77be",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10812-beat-the-spread",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f5b765baddb5be19e7f980f0c81fceea6b396f4cb838c87a809bb7603106b8c5",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10813-traditional-bingo",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "bf57cbb561f9a96f756c7817f7528fc5f920c55bba512fa49e9d3127a74582de",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10815-andy-s-first-dictionary",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "3b9bee40e840c84bdf4022415ea43c5d24c22c31008e9032a270b6ecc307b260",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10858-unique-factorization",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "520f64278e4b27efbe428b52c04adf265f7e968f7fc7c9000839763f04212253",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10903-playing-war",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "0334487ebfcd44bfaabb0ae0cc99e6f881b0b3e30aad9d57eb08b6bbf96ee853",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10908-largest-squares",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "316046bf208c665ccc7853bbdcda26d32c3b860270724ba78471b23624960ac1",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10921-find-the-telephone",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b6ff82a0a287bd01688914da21f020dcea8a4dc5b397f9e7d412eee3ccffc2d4",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10922-2-the-9s",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "c82c3813a62c90c034b3a9d704e461aff4fa001486b7440dea47a89d086a846f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10929-you-can-say-11",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "30d266499dbe851ad4e7e5fcbbf7437d0771cab9577b22e07e702d4858f49ede",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-10931-parity",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e77c72dd046648028843b8f9ccaa6d41ed1c68c9b9791250b29355c4f2cae3c3",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11000-the-four-in-one-stadium",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a524911119a35ff7470d8b2723aa1195d02b1ed2ce826be6476cf634fe3c79ce",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11003-boxes",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f554c45d1352fc62624afb8485699018a00991e128036ee9b886f7851016e79d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11005-cheapest-base",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "dcaff54fcbbb26ac2d578041ce29db953869dd940a35c52e673606c892b6b51b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1101-addmul",
+      "visible": true,
+      "cases": 0,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "candidates": 2,
+      "errors": [],
+      "warnings": [
+        "remote-judge-required"
+      ]
+    },
+    {
+      "slug": "uva-11039-building-designing",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b93a72198d4e93ca7303bba411a9ed8a5618600112d9b21934fb1fccc0221ed2",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11040-add-bricks-in-the-wall",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "3dcd72f43917159f45b21e90afd1cfe4991a911bb30b9cc3e85bff4ee5a9aa78",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11054-wine-trading-in-gergovig",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1c7c7c97646426262e2917edf2b7fc106f4359a76da198e25609691706f35ad3",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11063-b2-sequence",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ae61a33596fba0baa2bb9dd3167b98031df61937fc3b8e1373bccaf3850c0f22",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11067-little-red-riding-hood",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ab721be9971130a1d167dfa505482a784192514b67793791446afc0f99ff0006",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11078-open-credit-system",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "67ba7256593bcc3cf5cd37b7e99d030264893890ef2d05da1df23b3919fabd0e",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11085-back-to-the-8-queens",
+      "visible": true,
+      "cases": 1,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "263e2c2d376d8105500dd7d6096aeff7ef0b5aa831be9ca2f74db2e28ddef3d0",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-11094-continents",
+      "visible": true,
+      "cases": 1,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "450be24e11f032b5e775401bee9bdc1c0a080bc02abd0fe7871aa39de5f95f04",
+      "candidates": 3,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "slug": "uva-111-history-grading",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8dea0822cce405cfa67b8b8f7da47d812c5640e0efae951bea7bb3e271e4f3f5",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11121-base-2",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ad136321539a0383941b3cbd19b7d07c457ebec827bd50f93c0874223786ada5",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11150-cola",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b8cd846caef32a1d604df9c9ebf85e319e137abe7ba7b0577792564f3bd0005b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11157-dynamic-frog",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "3508e62e8591e018d98ca9698849ff21952fb746f4d7ed3d32e6e512a500edf2",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11175-from-d-to-e-and-back",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ca0d3a2c75ddf3f836a1ca6be435873799f16ff44689ed80b98079008b450f6f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1118-binary-stirling-numbers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "91e6d1bccfb77ece3410fd874eb705ba8e30065befdcd1be8a53048607cd0524",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11192-group-reverse",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "0998f2667bc2025e6c0b87ad125b2b30487bf07fd5e7c806d2a87df607d6a0db",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11219-basic-wall-maze",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b4e7d9235bb56c567da6bb74b86f71085d8698b3ac256bba82f25dae920e0d32",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11220-decoding-the-message",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "9709a290b142246e03bb8c1d8b5bdbde50537d1fe741e0f9951f0216c573b686",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11233-deli-deli",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2bab8f03beeaf53fd1b01205bec52669243395f9b7d4b621c5b2acb46cc7423f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11240-antimonotonicity",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8006129dfbf4a01c3097bf787f28039c15ee21f8e05a15e750fcfb5b57752b14",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11258-string-partition",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f16619e5bdf79ae99e897d0d924b21d16962352ee771cf815cd07f6179f19bfc",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11264-coin-collector",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "afc94a1fe1054e12a5bbfc1f0366c6aed2675de62df5eb98d3ff1e3203363233",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11284-shopping-trip",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "57cf6555b56cd0c7b1b3930ac29fa46efc8e8871ee65bebd05806a66abd74702",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11321-sort-sort-and-sort",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "3d3154059443f7ceacd32e20504595445261a01e5a14a712aec1b2ed053c8d42",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11332-summing-digits",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "572e9aa87c35551b9bb4ac91427eb1c516d51aa4d6289146e16c5c12e1020db0",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11336-drm",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7fdabe0724759b82b28e8fa91c996c9c94f0ee30bc67cd53a2fc4914f065ab03",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11344-the-huge-one",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "875b0b0aa12d2cb222ac1e6ea5e7baa258e2661a95a8cb0f74125e1db0814b97",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11349-symmetric-matrix",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "77bb5b3d07a1a82b8159df1b75e3e7f4f76621d5f0c838d1706fc2c9d3399e2f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11360-having-fun-with-matrices",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4a5347dd9b72439483608b4a8179aeaea35b0062cf7131d875bc88b26e720c8f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11364-parking",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "416511e3275ee1981cdfd06993e1ae99147bb71270f91de9b71498be87b6f800",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11389-the-bus-driver-problem",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "893b80d7830ecc85009ce66fff927a47f8ccc24a5ba86b9ff846dad1680a55f5",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11401-triangle-counting",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e37b968d0214350897124f49ceb9594d4d4fdcf560d3dc58657ea9808af46679",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11417-gcd",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "eef4f79249ff454245f0373b581c8c45b1f1c58d3bbe30bbdfbbd0729a075104",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11455-behold-my-quadrangle",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4848480d25e39af1c1fdb4455eafbcb33a08fb1bbaa1a00744518ed199106e78",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11456-trainsorting",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "da383fab3e95d5f389b5f22272d1fb09497d4bee781f2c1a09c3337dce4fe6b5",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11461-square-numbers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2c2cf42f5133cdf51565add62929301fb33ab784ca8c2587147914a3d354a59d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11472-beautiful-numbers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "22cf9927a9eba7d166498daa99a9ab8cad8c4edcf06c88470c44030474ed1a7c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11481-square-sums",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8802d152abbda4b07775f1f02af34e40201bb3f27175e5fb860dca6ef15935ed",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11489-integer-game",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "cf9d0dbb8d46e8bb9f06d1d46b7eee922233080999f8e0ab3c3d535d83caec38",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11495-bubbles-and-buckets",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "755f12f86514eac4a54cd19575e98db9b67c8d471ea766c6933570467ad2f591",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11498-division-of-nlogonia",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "55935a3e51e00b2e444a46d39c5f8af56f1bb898be0bed79894da12dd0919d72",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11518-dominos-2",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "9972ceccc4692f9e076f640838f5d277a322d869082eb8b08a0717680e908506",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11526-h-n",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "5e1d694bccdc520e79051ce66ce59c7a553a9d2d2cc6982eb50790b648f9d758",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11536-smallest-sub-array",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ca7f2bb5f8fec1af544df31339a5270a5358ea5251ea209639a35845d48eeb85",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11538-chess-queen",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1403a26094ce9bac2730ed426a08a81a5695eda8e0c5b5f2ebe84ef18832612c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11541-decoding",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "77e8eb789b5d31c07f44895d6ea9ccb3ba6dcc2f9fa096a250bcc5ad4b67a89a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11576-scrolling-sign",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a5dc607a16b98c64152e43488e805e0acd249b3ef86001057e7e873e251921c1",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11584-partitioning-by-palindromes",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "09fe9f8f2987c59b18c4fd15933bb3596e1a09859be194e1903036d5d0962ac8",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11624-fire",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4dbdd8dbda0a832d75935e7fa57256e8454d2a9479f5d54dcd597ae34bc71cc5",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11633-food-portion-size",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "eb99657760b1f10860c2942227e77e208f0301b4aa7b92f7327981c052a6d9ce",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11634-generate-random-numbers",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "cbaa10f43c47df1a848c569f47c7f99b26b238aac74a0217a3305dff0de16329",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11636-hello-world",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "bc7d5f46af4d55cc511ad8bbda8a6944fe2ea53ebb89435a2f34ccbf428bf6ac",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11639-guard-the-land",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "cc88705f804f41ebc50bb79700f348686ba44430940e4f78956bf8a6a8522514",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11659-informants",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e33f03cd4246d26da87bc52f94c7b46cd42853ab4dea66f4722abe1f0cb9a5f2",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11677-alarm-clock",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "3e5c24d336957409cae5c3e3d03d38fb2df13bb7ef1991170d9a93f5dcea6569",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11678-cards-exchange",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "39369976fe684253cac99d110a1a04ef4978e1de6123645431ff87b1f8887bb4",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11689-soda-surpler",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "5a0a929a010e931caa568167a56faa34ad9754b382925061e790e288e6954230",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11728-alternate-task",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "c0390dfda8f5487527b6439bf700c0677c05096f71cd166fc4b8511ffff8d04f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11730-number-transformation",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "290a4a0f49d9217e4344ec4f9750ba898fdc5951a049bbfa1103c231e741cf8f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11743-credit-check",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "500a09d8f58f0d82abc32fe4a9b3a15dc16f4dca173e8450c9c2b35300b5b1bc",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11747-heavy-cycle-edges",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "cac49a943f0eb38595ccbf1ff6e92adf2fa744753096012a0c577793c56f8cee",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11764-cricket-field",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8d5a484c564081b048a78186160b93b9bbc6dcb48830421a3e6d0d5bef8ed672",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11792-krochanska-is-here",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6aa39f79f99e4ddd3cb2d0290911b2045f298afc8efae43239fe05aa6e88387d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-118-mutant-flatworld-explorers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6caf24caa6cf9511a60713b47e24f5d839eecfadf17a05c282580ddc3a242f15",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11806-cheerleaders",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2849c5e905088f749d46a54867b21698b7995fc068c0a7dcecee5e6bfc09ac98",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11824-a-minimum-land-price",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "959ac99e21b199c5f509c474a1ada7b6edab507a4294edcac257b2b06928b032",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11908-skyscraper",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f37c6d22121ee33ed54a60935b31db2c884cc1ffbe25964908e1a534260b8822",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11917-do-your-own-homework",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "d073e356561dd57d128adc4d0d5dfd88dd1802c8599c2aebb1a12d46093dc473",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1193-radar-installation",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "c46ddeb78ca4fe781b3826f726abe79490ad00d4307d7269361b551abcc06bcd",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11934-magic-formula",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "112a929de543aea2ef291c5094d5b4642b37d8ce6f62ba3ef78767c22240bc1f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11942-lumberjack-sequencing",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "641462eb2f46a113afb73f718ac82594dc730437592712b5032b30b409e14a0c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11956-brainfuck",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "9ef3661d80c5115a09ab7d935f9cd131937374f185a853c9306af9d9366451b9",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11957-checkers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a4c3e25108a7e235585734b59958912027001ad8d0ea550f2f49ec7bb1cd6569",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11960-divisor-game",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "03a6d6024dda381235333c5127292617607974c621890ffb1a59d0f9f19a608d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11987-almost-union-find",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "eb7992e28f90eddbcdee850268207b05a8bda0d77ee0e519b8b583cbe659894b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-11995-i-can-guess-the-data-structure",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "50df84d8b99ae94595cbcd2c62a62bbd3e337a74fe7f7928fd0319baaab6e0af",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1200-a-dp-problem",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "150a67f012fcc5f069df9fd23989f92c8f37c1978538d9853f079876884fb441",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12015-google-is-feeling-lucky",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "5d7f2712db1859a43ee45e7f288f85f80897b2344025d3dd71842203b4d073bd",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12019-doom-s-day-algorithm",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "708cee3b1e25baddacdd4c698370691ba848ff182de6544a2694ec89bb2639f5",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1203-argus",
+      "visible": true,
+      "cases": 0,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "candidates": 3,
+      "errors": [],
+      "warnings": [
+        "remote-judge-required"
+      ]
+    },
+    {
+      "slug": "uva-12041-bfs-binary-fibonacci-string",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "66e6cb5a7ab6902f5b30f6815f9763e814dddb49028dd8aaa8dcaf842e5faf7e",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12063-zeros-and-ones",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "857682e8f6333161284036f1005610e8dc415cab9c6297e98238923e80fbc406",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1207-agtc",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1c0a8eddf97dc7cde60f041a702568d6645005c6377b9cd13bca8ecdbd9fd32f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1208-oreon",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1be086743eebd1337ccb59d4ef346cfce578a1becba9ed0f9725650eff398de9",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12096-the-setstack-computer",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fabf0ebf4253c392375a3b4624a4e4a53b3ca29278ef5be77abeb9f1dd48ce9b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12195-jingle-composing",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fbb16d4d2e46457c9d4f39d0e2b62d989b78d66bd75c4e060f0a8e19472f095d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-122-trees-on-the-level",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e1eb4ccb8a267b790086415c9ba8ac3e96a3a906ba944718702a81261958df2d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12208-how-many-ones-needed",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e0a4ea261c36b4220b738530dd3e47ed2cbcc8a2849217e7245e1894a349f365",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12218-an-industrial-spy",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fd5bf15dd30ab8810e13426dee951d4e074826fec499f4abf24c64cc23f78646",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12223-moving-to-nuremberg",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4e8fac9f47b3eff1c39154fd5e5f46193d370a6e16834779ee0df523dc14a6f1",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1225-digit-counting",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4c9dc375df76a231b582c19e8ec07ba2af2f48033eb8c09b92426d2dfacf50ca",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12250-language-detection",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6ec7eca66203f22e2039a8a0882e823f9cd592d0e6401ff7027659ae6107287e",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12319-edgetown-s-traffic-jams",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "d0e5fcd932127e9b926fd2e48913193c2ba545a5159e3cf1abb30e42f2c68c14",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1234-racing",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ab4b03fc9025e11a4578724875625aae7316190ef76dbce707255eeab7cd556d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1237-expert-enough",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e231dfcb8adda1312e375518f96ae8678c75f008259526515d2bfbd795f2a7a1",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12382-grid-of-lamps",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8daa303dc5875269be638a3db6aca8c806157c0e6d5302d59703d829cef923b5",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12385-interesting-sequences",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "eba868554be5e412a8294926d5180781ae430c1ed32f489d03d2473e297b0eaf",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12428-enemy-at-the-gates",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "d59b0b1141036cbf382ce5518db17b82877f055f4fbf61602d0183fe8320f975",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "duplicate-inputs",
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12442-forwarding-emails",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "9a4f7a6e0f23e29e49912717b1827e05882b9ce92420decd249c9d9ae2bfc582",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12455-bars",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7ed6249efcd4ed41dd30a67b10ae3458ea5c7b4bc58cbbbaa876eaa8c3ac3756",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12532-interval-product",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "102355307b30faba0eba689cc891a355b4139ab66b3471b6f679a33d18d401a4",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12546-lcm-pair-sum",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "490071a80e6c872cea4b2fb11d82d41ecaded8c44a155f92b3323c572fba91aa",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12592-slogan-learning-of-princess",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "444dbf15efe67c013e4627623d81ca7b2cb6f4aa52bce648b931e8de1112649c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1260-sales",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "143d561e47e7fac7bb8b846e7798c3846b0a094f566e7f6acc75c8700f4a1df7",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12602-nice-licence-plates",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "10d9856198e3b451dbac0a285ed711f8cc74b57bf56c424fb3a0aedf6e5825e9",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1262-password",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2dc7d310e80e6656c3152e605ed047731bb30f6f05a5d2807aecee542d398dd1",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12627-erratic-expansion",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4739f30aac57d9075927a03921b09426e11b3a73147326e759cf090692ef914a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12650-dangerous-dive",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fd4ed3e5225ace4f405032957e74888a00b1d58ec90919b6b3fbbb30a983d16a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12654-patches",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7eae4c84b5ec569c9df45131972ec6aaf92f3c88000f2bccc1843444139e469b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12694-meeting-room-arrangement",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "9b62659d8e711bc7d9c25e1ce10c06a320527638ae13a350233fa4a2ac01ca7b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12797-letters",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8af26a97e3538a33337a74405829956e636f1faccf11e366b7d896c79a8488d9",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12820-cool-word",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "07435432630ecc9fbbccc4fc36aa4fc1228c2ac151ad489a426177e30b6d2121",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12869-zeroes",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "3563372f8c9705f539795c543ebb3e48f2cf6b4b95c4b8ad58a314a317d4e770",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12882-city-park",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "98cc2121471cc49e5254437e83c93e8c9a6816d0afaff23444eb090006e04f00",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "duplicate-inputs",
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12908-the-book-thief",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "eb4b872a31d3aecb333395e876fd723fe4b112ff7556a924c27f0239b118a3b6",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12911-subset-sum",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "bdb767af1d6d7b71ecc60f20f3e260dfcf0879143e55cb7ee71777dda7b49795",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12918-lucky-thief",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "5ae5e813f0c22b234d6b74a2cdf7bd6c2fca3ffe942d7b2f68cc8b7866efe7f3",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1292-strategic-game",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e60ae185857d159096a9594bc3c8955851c16135dd4eb74cddc4ddd05f9125cf",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12959-strategy-game",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7f9bb5e2821bc70d8d1eec22430d3a7e6b5d4330d3ff1b00ab7d018d238b0804",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-12970-alcoholic-pilots",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "0dcbe451b363b5b0086f7eec1885195cdd3d3b44023b495866581b939ffdf5a7",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-13055-inception",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "5f0fe02cd24b218f7e5c8da96d2ee145a2443270079aa9104d0fe58ba8a4bc91",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1316-supermarket",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6120d97e8322b21fb0d25ec37777a0bfce067d0dbcf60f4f584205c54df573e0",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-13171-pixel-art",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4a597e13d82219fc72164cb5c5aba1b03539561d6a7a202092947847911fa328",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-13185-dpa-numbers-i",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "30b8be912fff026d94dd3b25f7709bb0f06def6550442e50142480c54f14950e",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-13190-rockabye-tobby",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4799a010937c72437de70d8e05b8b5cf99492e021b2c6a77b1a13b990ae5e78a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-13204-count-these-permutations",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a826262a05f7e2124eeb9763203fe784d20a85d9f308409b1f15cc544843d40a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-13211-geonosis",
+      "visible": true,
+      "cases": 0,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "candidates": 3,
+      "errors": [],
+      "warnings": [
+        "remote-judge-required"
+      ]
+    },
+    {
+      "slug": "uva-13242-pool-filling",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "50db9de3453a8d9a6e3f088089d7d8db1369de4559533c559f91f3f9a0ce91eb",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-13257-license-plates",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "bea57529295f57d33d80fa3262f90a507b4f4de3b694db167f219bd182212230",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1339-ancient-cipher",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7c9047645e7c30a8f66dc58329ffc826e3908519155dbbad73b4da3f2aeeb20d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1366-martian-mining",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b3b000355198e8fdc9ed6c56eaf4e50ba56c0139cc54fbb5da9bc983cbd20242",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1368-dna-consensus-string",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "798c73f1aac913c8da77d917b536e455edfbb6914850b5dc7936bb4f359c8879",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1371-period",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e56e2ab212fe45dc78a1654e9d40711637fd2fdb295be4ea6affc11eb1b9081d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-141-the-spot-game",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fa002efcd19a01370c3e96fe057de8b2e7179b23c095c54f0dd4c7fcea327c47",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-145-gondwanaland-telecom",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "283052cd7b1cbbadcb47cb4449f57448baec4e9fba8ca68ede7e74869c73d610",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-151-power-crisis",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "c32faedfd941d50003f38ca11e3f137fbfce1f08ff6e4bb8ab2cebfe132ebff4",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1513-movie-collection",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b1d33eb5fc897f311558d24faa7ec6b66e181c538860dd85ed2e521e6d274d46",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1583-digit-generator",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8404f14e444f2d14d1fee63668bdd8899008d53577472dac271fb3aeb2b5a0d5",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1585-score",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "31d238391ec7d33ec77aac1f522b6b333f406ee4095ec66de08c3b4f584a773f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1587-box",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7b4bd3435c875eefe9c82306fe551bbec8e977c3de9f5406956aa2de0b2c56eb",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1594-ducci-sequence",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "3fa1b84a7d5f0c66dd108f1e56a8ab43567f5dda04ecde03689712457f174a8c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-160-factors-and-factorials",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ce855018211c32a72327b4b058d26448bddb07069ca61aab4b76dc8acb0fd686",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1632-alibaba",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "dff623a0e7227d1a988a01f41037d10a2860aa3cd95990cb5298b7268a26b739",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1640-the-counting-problem",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "69afa90047fd42e2636aeeab4e7ed8a011949ed02a1ae43c0b7556c6c226d52f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1644-prime-gap",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "98e3014da5f75aa9fbc9bddc27f97b04dec5a5feb5ccd12e7762b8b6c30bc12e",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-165-stamps",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "363fa107e587c21600bb3d6a220403691b467ddf570ffaff0633f456f1b24981",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1650-number-string",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f6fbd94e9f50264b49d6ffb79eb0af10c00737a2090441a1119e6f7ca3da8db5",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1657-game",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1ef7f3c9afcbe9f2c05c53de9da1ede694a8201f96def4f257bb9c542a45317b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1660-cable-tv-network",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "dd79950501038b89d14fe15204d6d08caa41afc701938c7143f952d9c7cc1932",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1714-keyboarding",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "590f0875461f66d1e1d72aacb084ab9f713eed55407a6a22ad884f5141ea01c6",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1730-sum-of-mslcm",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "47601538920a1a24a11837c727d3820d651dc6827c3435fcbadbea754b0d7810",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-1746-string-theory",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7e5071a7c830f81b76fc4d318e9bbaf1a952bacfceb7589422e327d7cbe8130e",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-240-variable-radix-huffman-encoding",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b733d9627c4cf3a64431b8cb7d19658c6ae84b1130a0970a1440eea7dc99b693",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-242-stamps-and-envelope-size",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a07e43b2ba99efc5c71a829e389159c728e8114981a0b1edfd8adfb83ed51030",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-255-correct-move",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f9a84bdbb4babd1674b51d40872c72c2c75e4054e21613c39c3a6356c6ccc9d4",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-263-number-chains",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "0ac50fda5f6cfd84d54a0d8bc45c245e7f802fec12ee0061e0ac55b4ff47e148",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-264-count-on-cantor",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7abe6c89853015af7ae5d5d0ebdbfd2c58e55eeef7b74f3e1345f501b5c5ad25",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-272-tex-quotes",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1ac382d11cb3559de863f913aac523fc09a9d09909e89bb1f92b28e8902249d6",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-288-arithmetic-operations-with-large-integers",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8c2e788ba7ca1fd630a8c71ba0d69dcd22371bac318c36cb904d64eafa15c155",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-294-divisors",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "229c5b79632564ad0185816bcd349e686fc7421adf057186246b39a40eacc354",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-297-quadtrees",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "5eff212513c87cdcdcf5f2387b6f6cf2431d22c2f65651c4d7064f262f949aa7",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-299-train-swapping",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "d9a75757de97bc71119e4fbcd70cd8bb1b0a109fc0d6f9ce5a9334149d85b9a6",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-300-maya-calendar",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f43bfb9a19019dd2a5ca93637e847950c30bf96480dcb60e72b1c29566050be4",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-302-john-s-trip",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a8b24a89908b3362ad8355983e55486f4068e4c67810c3b31c4ec0845aa552eb",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-315-network",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "d45f0115152c3937d9a1e7f3e09a14aecd6aaa062fb5c164d320a46b515b4154",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-337-interpreting-control-sequence",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fc41892afa78429955b1b16563cd2a800e3da87e476cb6966e1547c979116bd3",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-340-master-mind-hints",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "c0994821704a2d3939c9e8b1e8920fc4de6918be9790428d0f582b3f0e4de282",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-357-let-me-count-the-ways",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "d35b2f9e0cae9a5768e844813e43a2969755d079c3b34fdf0498754b895fd041",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-378-intersecting-lines",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "94c25286043703ef84d9d667e11a86d2913b18d714d4b84de86a92e85770ed29",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-380-call-forwarding",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "bf08b655e8dacb6de583ddb64dc48213fb640fb41dce2d9b1f5a151ba005a5a1",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-382-perfection",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a16e6d38b2f81d717ec00e4a063467ea08ed0918cb2d91c19e5e6fc67db149ac",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-389-basically-speaking",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a9f6d40dd533ef4d05d1d552b9af653af247df8a1366afeb1449fb6a8da455cb",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-392-polynomial-showdown",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "db47cd7d8092bd3f16f4aa75e7dc3cba7e404fa3ee1577c92692c7e7cba15b26",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-397-equation-elation",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "d6f5994235d550dc28a189e56add70ea06e93e8a46bb16963ddf159f0f78777b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-401-palindromes",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "896f17f93b677a39de4f2ad829b278896dabb3a83092440330ec95d5b6b10948",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-406-prime-cuts",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ff39e9cdf4a05b8ca29eaa47c86f5489545deb4fbc76ebd20201e1bb387ce528",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-409-exeuses-excuses",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e0fdfe3a32f23cdbd0c69884853b4e0eb4486c401ee3615ec46a0a610798ff65",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-417-word-index",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "77b9505c4964a5791dc066d38ee59670331dd62308f886b8777d7c02e5c8c78b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-437-the-tower-of-babylon",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "9a958acc294184aa4de44fc5b17cc88f1d2893ef63ff9fbf3458b4677d847b2c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-439-knight-moves",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "77e33d54820eac95fb0fb3f5c872ac1051b93ab192f3e3d7abfddd3fc5e9b622",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-441-lotto",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b211110eb00f0e0be510d9f70e8332b893b6b2efa53113f75883feb56a9b85ef",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-442-matrix-chain-multiplication",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "420faa4eca0c071f95936b7db61b69d30708215eca44432589db7008e449973a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-455-periodic-strings",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "88139405c716bc12bbc7ec101d65caf030a2a10281622c1b0ddec90162e394a4",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-458-the-decoder",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f1c56cbee346dd7b7f1675f2ae6f534bed3e818f19d67ce50600e250872dd0c9",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-482-permutation-arrays",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "64bf49e8bd40f54de622ab0bdedd2db06ac9341fd685bb69b87751e7a8918b80",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-483-word-scramble",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "8329baebc75bc24a67c573d8d91ff65ff68462e0226501822f36a50698a5894c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-488-triangle-wave",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fa1a8e00b90bff678e5e33cf281de94ecba790fded46da60fb06d59871c921b7",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-490-rotating-sentences",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "0917805ae937b6253e9f55865c0d455d1fde9ceb424486c2b88feffde9e9c5cb",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-494-kindergarten-counting-game",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "68ca0f829a801515bd877cf7e02a0dd23649bd826f6c376e67f90e8b93956e46",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-496-simply-subsets",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ec56bf558008e80f7b0ab9f5f622e7ada5f5b20e3ef07447ab663d18277ce433",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-499-what-s-the-frequency-kenneth",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f3f6e6533f110e352f8be127e4986d15b076ffc4f831290334e5757da20deac7",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-501-black-box",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "95e5648e7650380a850b2d5f285656a5a3e64aab51229740435c27ebfab55a4d",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-512-spreadsheet-tracking",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "17d09d857efe2e677fd25cc899a62f4e62eabe52b806539eb2866efdc09e0aec",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-514-rails",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "7cef64586e04f1e6a98401b4a2c3db31abd29cbb3c36ea95fa496351974138b8",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-516-prime-land",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6d1bc0223978df1be82451a1ba35d9863e7e32b522b7da3fa967d9cb61041973",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-532-dungeon-master",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "0af90d01581ca33823487b848a4bcfe88aa173aece97fe65d957c402497f01e4",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-534-frogger",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2285703e84d573d21a4bdfc94dfd48eb66fd31328222be2bf68ca829e9d31772",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-536-tree-recovery",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "c84ff4d19673ab3eb551388913bfacc6f89958b687a47c125a87283f9567dbca",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-540-team-queue",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "deba0beff3af74963fbfff1410b0399d27e8c25e00cf59ae1b85d824128eb161",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-541-error-correction",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "de991d6bd43b58ccc76d1f5a7bcc77de20b1e924c7e0eb5721213aca05c0b2d7",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-543-goldbach-s-conjecture",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "17ba3a7972e421644bd075c1e89264f01df2931913e5e2b34dd9c3fc20e9ff9f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-544-heavy-cargo",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "caec22842f9a163aa52fb1adc209f29bdd7691959174135f9b1165748e0449d3",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-573-the-snail",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f0055565ca6a6fa1f224ce960fa2269af4cf4a1e977e553a2cceb4d47b20363e",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-579-clockhands",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1d2671abc6db5dbaf3146e64c07977be05a079c815489392f31a29211448dc7b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-580-critical-mass",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "14508b8c779a2cc2759d8ffaeb263df1109b5365f97af39a575ebd448832c2f0",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-591-box-of-bricks",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "d4ebf7257db0464c4de8793f89ec6e3b3db549dcdae746d24761f489ba063ff3",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-612-dna-sorting",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1627a7d0c8470f8708697cf1f52756605987b545fda84b8d048edc9f9bc04de3",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-615-is-it-a-tree",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e4b22c49c06c85e04a3c0ad603cc2ec3421dd23ba508072a55e420bbdf166368",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-630-anagrams-ii",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "e6bf8896cb1f66859dc99c4f3489e3e35aded53eabd5b96edff8c12f39be4ce3",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-657-the-die-is-cast",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "9bd571a3742046047d38ee1063160d7cbff292f1ffddf83111e24f88c37dae95",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-665-false-coin",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "914427eec60e85e08735176cc6418c31b84841171c6d526d0ccae83e74f2d383",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-673-parentheses-balance",
+      "visible": true,
+      "cases": 3,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "1059a81415d126d6daca54b1a2f45dbfac0e4ff87f7915e4d6735c0e395130fb",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-674-coin-change",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6a3c9c4f6e906e46da812b81ea720f3ab410760a032ce1845955bfe089d56cb7",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-679-dropping-balls",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4a22f0791e6e7f78e11ec7aebb474db7ecb6ae9a5e983c726bb37b397008dd88",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-686-goldbach-s-conjecture-ii",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6774b42918964592b16d6d2a8df90ee76acade22c779c37070127c605bfc7f5f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-696-how-many-knights",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4ee04015dcb216cdcb9e9e551b2553baba8cf51cb9c0aecaa2a7355327904826",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-706-lc-display",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "87cad3313778ab69e124efa38a0037f1a56102841b13120f273285dcecfc2fe2",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-709-formatting-text",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "809edd75e786500dbfd621b51ac1b281508b0ad62690d399322f6199a4e38a57",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-714-copying-books",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "6dc3e3fc14080b8d761a61cca5112f8cf6d7e7eb7160ec66fa53d8215cb6448f",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-725-division",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "df555fcfdf3ebb9fb40ed397b9cfeb6e3cf444132916978a249e441ede6c3341",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-748-exponentiation",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "2ef21ec5c32eb383098c1cca44be3baa9cce35a10d6ad23ca937548836726c4e",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-753-a-plug-for-unix",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "c024e7ec05ffbf9e2d0dc0748d9107a4db0a3135991b846dc93a8943a19694df",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-798-title-puzzle",
+      "visible": true,
+      "cases": 0,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "candidates": 2,
+      "errors": [],
+      "warnings": [
+        "remote-judge-required"
+      ]
+    },
+    {
+      "slug": "uva-815-flooded",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "ac027044699eef68a5732538d7eddd4d2471e87a00e9f1161354f4697a2ea191",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-820-internet-bandwidth",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "38dff9f2201409be2b041089036023473a76c7ab5204c6c154518510ebed1a2c",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-828-deciphering-messages",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "0c14ed017132f956cd73121cdbcdb3001c3c26348f3b6a53e68890f7fd3aba2b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-834-continued-fractions",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "03f43817fbb297db1e2bbde3b63c3933f37610b0070948ca6dc430ae87303918",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-846-steps",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b355375cd5df7c6cd6d518eea41c7494906bcbdc4a09613ef8df962c81dc34da",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-855-lunch-in-grid-city",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "b62407fb68c658c2441e53301651e0b4d1b9088ef491acf0c276753437021342",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-865-substitution-cypher",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "f7ed59d3fc6c46a20b5e0e96d78f92bfd283ee42f8bf97114df61ae587ba9e4a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-907-winterim-backpacking-trip",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "a69a43908624537e114f8040e2064d3ef4868479a98159c519eac97e2a5993b1",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-913-joana-and-the-odd-numbers",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "fa6639dc050893659a7431509ec3751324f2fa09c0acf4187b53c7159bd656e6",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-929-number-maze",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "57ec5f8eedbdbf5a3759091ef88975a01e815a2904080971c04c4c57940cd495",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-941-permutations",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "384bd82c02ba13dfe5473d81fc28df92aeca77bdda53f526315ea0e5e38d186a",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-948-fibonaccimal-base",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "57def9fcf3aa50fc703d50307736564f63550e9c75c73d1b9c412fceb7f73f0b",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-967-circular",
+      "visible": true,
+      "cases": 4,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "51e1280506451cf8d01d52c6a1c4c8a442d39b2b1a9d7bce9b1c68f8a850c785",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    },
+    {
+      "slug": "uva-993-product-of-digits",
+      "visible": true,
+      "cases": 2,
+      "samples": 1,
+      "checker": "IGNORE_TRAILING_WS",
+      "inputOutputHash": "5bdc7759c4970e94416ae1ec2202df5bbf48dcf8783a65d762d6881bf3debdba",
+      "candidates": 0,
+      "errors": [],
+      "warnings": [
+        "no-reference-candidate",
+        "no-wrong-solution-candidate"
+      ]
+    }
+  ],
+  "contests": [
+    {
+      "slug": "cpe-2013-10-01",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2013-12-17",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2014-03-25",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2014-05-27",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2014-09-23",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2014-12-23",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2015-03-24",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2015-05-26",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2015-10-06",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2015-12-22",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2016-03-22",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2016-05-24",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2016-10-04",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2016-12-20",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2017-03-28",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2017-05-23",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2017-09-26",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2017-12-19",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2018-03-27",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2018-05-29",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2018-10-02",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2018-12-18",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2019-03-26",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2019-05-28",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2019-09-24",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2019-12-17",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2020-05-26",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2020-06-09",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2020-10-20",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2020-12-22",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2021-03-23",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2021-10-19",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2021-12-21",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2022-03-22",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2022-05-24",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2022-10-18",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2022-12-13",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2023-03-21",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2023-05-23",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2023-10-17",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2023-12-12",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2024-04-23",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2024-05-21",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2024-10-15",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2024-12-10",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2025-03-25",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2025-05-20",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2025-09-30",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2025-12-09",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2026-03-24",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "cpe-2026-05-26",
+      "public": true,
+      "kind": "CPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-01-03-9781",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-02-26-9801",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-03-14-9811",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-03-28-9821",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-04-11-9831",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-04-30-9841",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-05-16-9851",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-05-28-9861",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-06-13-9871",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-07-16-9895",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-07-23-9905",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-08-31-9915",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-09-07-9925",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-09-26-9935",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-10-08-9945",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-10-24-9955",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-11-14-9965",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-11-26-9975",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-12-12-9985",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2018-12-26-9995",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-03-04-10015",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-03-20-10025",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-04-10-10035",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-04-29-10045",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-05-15-10055",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-05-29-10065",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-06-10-10075",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-06-26-10085",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-07-15-10095",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-07-22-10105",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 7,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-08-30-10115",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-09-06-10125",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-10-02-10135",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-10-16-10145",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-10-28-10155",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-11-20-10165",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-12-04-10175",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-12-18-10185",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2019-12-30-10195",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-03-18-10215",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-04-15-10235",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-05-06-10245",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-05-20-10255",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-06-03-10265",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-06-13-10225",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-06-17-10275",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-07-01-10285",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-07-13-10295",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-07-20-10305",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-09-04-10315",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-09-11-10325",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-10-07-10335",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-10-21-10345",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-11-11-10355",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-11-30-10365",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 5,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2020-12-16-10375",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2021-01-06-10385",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2021-01-18-10395",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2021-03-10-10415",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2021-03-22-10425",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2021-04-07-10435",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2021-04-26-10445",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "gpe-2021-05-12-10455",
+      "public": true,
+      "kind": "GPE",
+      "scheduled": false,
+      "problems": 6,
+      "durationMin": 180,
+      "errors": []
+    },
+    {
+      "slug": "group-test-session",
+      "public": true,
+      "kind": "PUBLIC",
+      "scheduled": true,
+      "problems": 0,
+      "durationMin": 30,
+      "errors": [
+        "empty-exam",
+        "invalid-exam-timing"
+      ]
+    }
+  ]
+}

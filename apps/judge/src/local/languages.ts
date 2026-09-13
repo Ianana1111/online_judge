@@ -47,7 +47,7 @@ export const LANGUAGES: Record<string, LanguageSpec> = {
     // Class name must be `Main` — matches the site's own default template
     // (apps/web/components/SubmissionPanel.tsx's STUB.java17).
     sourceFileName: "Main.java",
-    compile: { cmd: "javac", args: ["Main.java"] },
+    compile: { cmd: "javac", args: ["-J-Xmx256m", "-J-XX:CompressedClassSpaceSize=64m", "-J-XX:ReservedCodeCacheSize=64m", "-J-XX:+UseSerialGC", "Main.java"] },
     runCmd: ({ memKb }) => ({ cmd: "java", args: [`-Xmx${Math.max(16, Math.floor(memKb / 1024))}m`, "Main"] }),
     timeMultiplier: 3,
     ulimitMemory: false,

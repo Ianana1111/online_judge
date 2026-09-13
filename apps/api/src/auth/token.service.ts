@@ -6,6 +6,7 @@ export interface AccessTokenPayload {
   sub: string;
   handle: string;
   role: string;
+  sid: string;
 }
 
 export interface RefreshTokenPayload {
@@ -34,19 +35,24 @@ export class TokenService {
   }
 
   signAccessToken(payload: AccessTokenPayload): string {
-    return jwt.sign(payload, this.accessSecret, { expiresIn: this.accessTtl as jwt.SignOptions["expiresIn"] });
+    return jwt.sign({ ...payload, purpose: "access" }, this.accessSecret, { algorithm: "HS256", issuer: "judge.tw", audience: "judge.tw:access", expiresIn: this.accessTtl as jwt.SignOptions["expiresIn"] });
   }
 
   signRefreshToken(payload: RefreshTokenPayload): string {
-    return jwt.sign(payload, this.refreshSecret, { expiresIn: this.refreshTtl as jwt.SignOptions["expiresIn"] });
+    return jwt.sign({ ...payload, purpose: "refresh" }, this.refreshSecret, { algorithm: "HS256", issuer: "judge.tw", audience: "judge.tw:refresh", expiresIn: this.refreshTtl as jwt.SignOptions["expiresIn"] });
   }
 
   verifyAccessToken(token: string): AccessTokenPayload {
-    return jwt.verify(token, this.accessSecret) as unknown as AccessTokenPayload;
+    const payload = jwt.verify(token, this.accessSecret, { algorithms: ["HS256"], issuer: "judge.tw", audience: "judge.tw:access" });
+    if (typeof payload === "string" || payload.purpose !== "access" || typeof payload.sub !== "string" ||
+      typeof payload.handle !== "string" || !["USER", "ADMIN"].includes(payload.role) || typeof payload.sid !== "string") throw new Error("Invalid access token");
+    return payload as unknown as AccessTokenPayload;
   }
 
   verifyRefreshToken(token: string): RefreshTokenPayload {
-    return jwt.verify(token, this.refreshSecret) as unknown as RefreshTokenPayload;
+    const payload = jwt.verify(token, this.refreshSecret, { algorithms: ["HS256"], issuer: "judge.tw", audience: "judge.tw:refresh" });
+    if (typeof payload === "string" || payload.purpose !== "refresh" || typeof payload.sub !== "string" || typeof payload.jti !== "string") throw new Error("Invalid refresh token");
+    return payload as unknown as RefreshTokenPayload;
   }
 
   /** Proves "this browser just re-authenticated with Google" for a Google-only (no password)
@@ -56,11 +62,12 @@ export class TokenService {
   signDeleteReauthToken(userId: string): string {
     return jwt.sign({ sub: userId, purpose: "delete-reauth" } satisfies DeleteReauthTokenPayload, this.accessSecret, {
       expiresIn: "5m",
+      algorithm: "HS256", issuer: "judge.tw", audience: "judge.tw:delete-reauth",
     });
   }
 
   verifyDeleteReauthToken(token: string): DeleteReauthTokenPayload {
-    const payload = jwt.verify(token, this.accessSecret) as unknown as DeleteReauthTokenPayload;
+    const payload = jwt.verify(token, this.accessSecret, { algorithms: ["HS256"], issuer: "judge.tw", audience: "judge.tw:delete-reauth" }) as unknown as DeleteReauthTokenPayload;
     if (payload.purpose !== "delete-reauth") throw new Error("Wrong token purpose");
     return payload;
   }

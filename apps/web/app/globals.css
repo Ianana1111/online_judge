@@ -24,8 +24,8 @@
     --ink-800: 20 26 34;
     --ink-700: 28 37 48;
     --ink-600: 42 52 65;
-    --ink-500: 71 84 99;
-    --ink-400: 107 122 139;
+    --ink-500: 122 137 152;
+    --ink-400: 139 153 167;
     --ink-300: 154 168 181;
     --ink-200: 199 208 216;
     --ink-100: 232 236 239;
@@ -34,21 +34,20 @@
     --brand: 232 163 61;
     --brand-light: 240 182 96;
     --brand-dark: 200 132 42;
-    /* Fixed, not theme-aware: text sitting directly on the brand color (e.g. primary button
-     * labels) always wants a strong dark tone for contrast, in both themes. */
+    /* Foreground paired with the brand background; light mode overrides both together. */
     --onbrand: 13 17 23;
 
-    --verdict-ac: 47 174 94;
-    --verdict-wa: 217 83 79;
+    --verdict-ac: 49 181 98;
+    --verdict-wa: 228 132 129;
     --verdict-tle: 224 138 47;
-    --verdict-mle: 201 119 47;
-    --verdict-re: 196 79 107;
-    --verdict-rf: 179 74 158;
-    --verdict-ce: 139 143 155;
+    --verdict-mle: 214 143 80;
+    --verdict-re: 215 137 155;
+    --verdict-rf: 206 137 192;
+    --verdict-ce: 156 160 170;
     --verdict-pe: 201 161 59;
-    --verdict-ole: 179 103 47;
-    --verdict-se: 122 92 201;
-    --verdict-pending: 74 111 165;
+    --verdict-ole: 212 144 93;
+    --verdict-se: 168 149 220;
+    --verdict-pending: 135 162 201;
 
     color-scheme: dark;
   }
@@ -62,28 +61,29 @@
       --ink-800: 227 230 233;
       --ink-700: 210 215 220;
       --ink-600: 183 191 198;
-      --ink-500: 100 111 123;
+      --ink-500: 89 101 113;
       --ink-400: 78 89 100;
       --ink-300: 72 84 95;
       --ink-200: 49 60 70;
       --ink-100: 28 37 46;
       --ink-50: 14 21 27;
 
-      --brand: 184 121 31;
-      --brand-light: 217 154 53;
+      --brand: 143 92 22;
+      --onbrand: 255 255 255;
+      --brand-light: 120 77 18;
       --brand-dark: 143 92 22;
 
-      --verdict-ac: 31 143 73;
-      --verdict-wa: 194 61 57;
-      --verdict-tle: 194 111 26;
-      --verdict-mle: 168 95 26;
-      --verdict-re: 168 53 83;
-      --verdict-rf: 148 51 130;
-      --verdict-ce: 102 107 120;
-      --verdict-pe: 163 128 31;
-      --verdict-ole: 148 80 26;
-      --verdict-se: 95 63 176;
-      --verdict-pending: 52 86 138;
+      --verdict-ac: 18 91 44;
+      --verdict-wa: 141 44 41;
+      --verdict-tle: 117 67 16;
+      --verdict-mle: 117 66 18;
+      --verdict-re: 139 44 68;
+      --verdict-rf: 129 44 113;
+      --verdict-ce: 76 79 89;
+      --verdict-pe: 97 77 19;
+      --verdict-ole: 120 65 21;
+      --verdict-se: 88 58 163;
+      --verdict-pending: 48 79 127;
 
       color-scheme: light;
     }
@@ -92,13 +92,14 @@
   /* Explicit toggle (see ThemeToggle.tsx) — a stamped [data-theme] always overrides system
    * preference in either direction, since [data-theme="..."] out-specifies a plain :root. */
   :root[data-theme="dark"] {
+    --onbrand: 13 17 23;
     --ink-950: 10 13 18;
     --ink-900: 14 18 24;
     --ink-800: 20 26 34;
     --ink-700: 28 37 48;
     --ink-600: 42 52 65;
-    --ink-500: 71 84 99;
-    --ink-400: 107 122 139;
+    --ink-500: 122 137 152;
+    --ink-400: 139 153 167;
     --ink-300: 154 168 181;
     --ink-200: 199 208 216;
     --ink-100: 232 236 239;
@@ -108,17 +109,17 @@
     --brand-light: 240 182 96;
     --brand-dark: 200 132 42;
 
-    --verdict-ac: 47 174 94;
-    --verdict-wa: 217 83 79;
+    --verdict-ac: 49 181 98;
+    --verdict-wa: 228 132 129;
     --verdict-tle: 224 138 47;
-    --verdict-mle: 201 119 47;
-    --verdict-re: 196 79 107;
-    --verdict-rf: 179 74 158;
-    --verdict-ce: 139 143 155;
+    --verdict-mle: 214 143 80;
+    --verdict-re: 215 137 155;
+    --verdict-rf: 206 137 192;
+    --verdict-ce: 156 160 170;
     --verdict-pe: 201 161 59;
-    --verdict-ole: 179 103 47;
-    --verdict-se: 122 92 201;
-    --verdict-pending: 74 111 165;
+    --verdict-ole: 212 144 93;
+    --verdict-se: 168 149 220;
+    --verdict-pending: 135 162 201;
 
     color-scheme: dark;
   }
@@ -129,28 +130,29 @@
     --ink-800: 227 230 233;
     --ink-700: 210 215 220;
     --ink-600: 183 191 198;
-    --ink-500: 100 111 123;
+    --ink-500: 89 101 113;
     --ink-400: 78 89 100;
     --ink-300: 72 84 95;
     --ink-200: 49 60 70;
     --ink-100: 28 37 46;
     --ink-50: 14 21 27;
 
-    --brand: 184 121 31;
-    --brand-light: 217 154 53;
+    --brand: 143 92 22;
+    --onbrand: 255 255 255;
+    --brand-light: 120 77 18;
     --brand-dark: 143 92 22;
 
-    --verdict-ac: 31 143 73;
-    --verdict-wa: 194 61 57;
-    --verdict-tle: 194 111 26;
-    --verdict-mle: 168 95 26;
-    --verdict-re: 168 53 83;
-    --verdict-rf: 148 51 130;
-    --verdict-ce: 102 107 120;
-    --verdict-pe: 163 128 31;
-    --verdict-ole: 148 80 26;
-    --verdict-se: 95 63 176;
-    --verdict-pending: 52 86 138;
+    --verdict-ac: 18 91 44;
+    --verdict-wa: 141 44 41;
+    --verdict-tle: 117 67 16;
+    --verdict-mle: 117 66 18;
+    --verdict-re: 139 44 68;
+    --verdict-rf: 129 44 113;
+    --verdict-ce: 76 79 89;
+    --verdict-pe: 97 77 19;
+    --verdict-ole: 120 65 21;
+    --verdict-se: 88 58 163;
+    --verdict-pending: 48 79 127;
 
     color-scheme: light;
   }
@@ -220,7 +222,9 @@
   }
 
   .oj-btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded bg-brand px-4 py-2 text-sm font-semibold text-onbrand transition-colors hover:bg-brand-light disabled:cursor-not-allowed disabled:bg-ink-600 disabled:text-ink-400;
+    /* Interpolating disabled/enabled foregrounds and backgrounds creates unreadable midpoint
+     * colors. Change the pair together, including when the site's theme changes. */
+    @apply inline-flex items-center justify-center gap-2 rounded bg-brand px-4 py-2 text-sm font-semibold text-onbrand hover:bg-brand-light disabled:cursor-not-allowed disabled:bg-ink-600 disabled:text-ink-400;
   }
 
   .oj-btn-secondary {

@@ -4,6 +4,7 @@ import { createRunSchema, testRunResultChannel, type CreateRunDto, type TestRunR
 import { createRedisConnection } from "../common/redis.providers";
 import { CurrentUser, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
+import { serveStatusStream } from "../common/status-stream";
 import { RunsService } from "./runs.service";
 
 function isTerminal(status: TestRunResultDto["status"]): boolean {
@@ -23,72 +24,12 @@ export class RunsController {
   @Get(":id/stream")
   async stream(@Param("id") id: string, @CurrentUser() user: RequestUser, @Req() req: Request, @Res() res: Response) {
     await this.runs.assertOwner(id, user.id);
+    return serveStatusStream(req, res, testRunResultChannel(id), () => this.runs.getResult(id), (value) => isTerminal(value.status));
+  }
 
-    let initial: TestRunResultDto;
-    try {
-      initial = await this.runs.getResult(id);
-    } catch {
-      throw new NotFoundException("Run not found or expired");
-    }
-
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache, no-transform");
-    res.setHeader("Connection", "keep-alive");
-    res.setHeader("X-Accel-Buffering", "no"); // disable buffering on nginx-style proxies
-    res.flushHeaders();
-
-    let closed = false;
-    const write = (payload: unknown) => {
-      if (closed) return;
-      res.write(`event: status\ndata: ${JSON.stringify(payload)}\n\n`);
-    };
-
-    write(initial);
-
-    if (isTerminal(initial.status)) {
-      res.end();
-      return;
-    }
-
-    const subscriber = createRedisConnection();
-    const channel = testRunResultChannel(id);
-
-    const cleanup = async () => {
-      if (closed) return;
-      closed = true;
-      try {
-        await subscriber.unsubscribe(channel);
-      } catch {
-        /* ignore */
-      }
-      subscriber.disconnect();
-    };
-
-    subscriber.on("message", (_channel, message) => {
-      let payload: TestRunResultDto;
-      try {
-        payload = JSON.parse(message);
-      } catch {
-        return;
-      }
-      write(payload);
-      if (isTerminal(payload.status)) {
-        res.end();
-        void cleanup();
-      }
-    });
-
-    try {
-      await subscriber.subscribe(channel);
-    } catch {
-      // If we can't subscribe, at least the initial snapshot was already sent.
-      res.end();
-      void cleanup();
-      return;
-    }
-
-    req.on("close", () => {
-      void cleanup();
-    });
+  @Get(":id")
+  async detail(@Param("id") id: string, @CurrentUser() user: RequestUser) {
+    await this.runs.assertOwner(id, user.id);
+    return this.runs.getResult(id);
   }
 }

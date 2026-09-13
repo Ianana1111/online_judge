@@ -1,6 +1,5 @@
 import { Injectable, Logger, type OnModuleDestroy, type OnModuleInit } from "@nestjs/common";
-import { prisma } from "@oj/db";
-import { BillingService } from "../billing/billing.service";
+import { prisma, Prisma } from "@oj/db";
 import { SubmissionsService } from "./submissions.service";
 
 const CHECK_INTERVAL_MS = 5 * 60 * 1000;
@@ -19,11 +18,11 @@ export class StuckSubmissionReaperService implements OnModuleInit, OnModuleDestr
   private running = false;
 
   constructor(
-    private readonly billing: BillingService,
     private readonly submissions: SubmissionsService,
   ) {}
 
   onModuleInit(): void {
+    if (process.env.NODE_ENV === "test") return;
     this.timer = setInterval(() => void this.reapOnce(), CHECK_INTERVAL_MS);
     void this.reapOnce();
   }
@@ -38,11 +37,11 @@ export class StuckSubmissionReaperService implements OnModuleInit, OnModuleDestr
     try {
       const cutoff = new Date(Date.now() - STUCK_THRESHOLD_MS);
       const stuck = await prisma.submission.findMany({
-        where: { verdict: { in: ["PENDING", "JUDGING"] }, createdAt: { lt: cutoff } },
-        select: { id: true, userId: true },
+        where: { verdict: { in: ["PENDING", "JUDGING"] }, pendingJudgeResult: { equals: Prisma.DbNull }, createdAt: { lt: cutoff } },
+        select: { id: true, evaluationVersion: true },
       });
       for (const s of stuck) {
-        await this.reapOne(s.id, s.userId);
+        await this.reapOne(s.id, s.evaluationVersion);
       }
       if (stuck.length > 0) this.logger.warn(`Reaped ${stuck.length} stuck submission(s).`);
     } catch (err) {
@@ -52,17 +51,18 @@ export class StuckSubmissionReaperService implements OnModuleInit, OnModuleDestr
     }
   }
 
-  private async reapOne(submissionId: string, userId: string): Promise<void> {
+  private async reapOne(submissionId: string, evaluationVersion: number): Promise<void> {
     try {
       const { applied } = await this.submissions.applyJudgeResult(submissionId, {
         submissionId,
+        evaluationVersion,
         status: "SE",
         compileError: "Judging timed out and was automatically cancelled. Your submission quota for this attempt has been refunded — please try submitting again.",
-      });
+      }, true);
       // applied === false means a real judge result actually landed between this reaper pass's
       // query and this specific update (applyJudgeResult's own conditional update lost the race)
       // — that submission judged fine, so it must NOT be refunded.
-      if (applied) await this.billing.refundSubmitQuota(userId);
+      // SE quota refunds are applied atomically by applyJudgeResult.
     } catch (err) {
       this.logger.warn(`Failed to reap submission ${submissionId}: ${String(err)}`);
     }

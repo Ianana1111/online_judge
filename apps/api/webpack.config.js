@@ -50,6 +50,9 @@ module.exports = function (options) {
       ],
     },
     externals: [
+      // Prisma must resolve its native engine relative to the installed package, not dist/.
+      ({ request }, callback) => request === "@prisma/client"
+        ? callback(null, "commonjs @prisma/client") : callback(),
       nodeExternals({
         allowlist: [/^@oj\//],
       }),

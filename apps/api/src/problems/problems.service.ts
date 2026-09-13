@@ -1,3 +1,4 @@
+import { problemJudgeMode } from "@oj/shared";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import type { CreateProblemDto } from "@oj/shared";
 import { prisma } from "@oj/db";
@@ -351,6 +352,7 @@ export class ProblemsService {
     const problem = await prisma.problem.findUnique({
       where: { slug },
       include: {
+        _count: { select: { testCases: true } },
         tags: { include: { tag: true } },
         samples: { orderBy: { ord: "asc" } },
       },
@@ -376,6 +378,9 @@ export class ProblemsService {
       // — the frontend uses this to disable submission instead of letting it burn quota for a
       // guaranteed system-error verdict.
       uvaId: problem.uvaId,
+      judgeable: problemJudgeMode(problem) !== "UNAVAILABLE",
+      judgeMode: problemJudgeMode(problem),
+      checkerType: problem.checkerType,
       // Pro-only "appeared in N past CPE sittings" — null (not 0) for non-Pro so the frontend can
       // tell "not Pro" apart from "genuinely never appeared".
       cpeAppearances,

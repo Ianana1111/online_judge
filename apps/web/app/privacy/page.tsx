@@ -33,7 +33,7 @@ export default function PrivacyPage() {
             <strong className="text-ink-100">個人檔案（選填）：</strong>大頭貼、一句話簡介（座右銘）、就讀學校。大頭貼與簡介會顯示在你的公開個人頁面；學校若經過驗證會顯示在排行榜的學校分組上。
           </li>
           <li>
-            <strong className="text-ink-100">學校信箱驗證：</strong>若你選擇驗證學校身分，我們會將驗證信寄到你提供的學校網域信箱（如 xxx@ntu.edu.tw），並記錄驗證時間。未驗證前這個信箱不會公開顯示。
+            <strong className="text-ink-100">學校信箱驗證：</strong>若你選擇驗證學校身分，我們會將驗證信寄到你提供的學校網域信箱（如 xxx@ntu.edu.tw），並記錄驗證時間。這個信箱不會公開顯示。為防止同一信箱被重複用於不同帳號，完成驗證的信箱及學校紀錄會在帳號刪除後繼續保留，並移除與原帳號的關聯；僅限驗證防濫用用途。如需提出資料處理請求，請透過下方方式聯絡我們。
           </li>
           <li>
             <strong className="text-ink-100">解題與學習紀錄：</strong>你提交的原始碼、判題結果、提交時間、使用的程式語言、每日練習紀錄、成就徽章、虛擬模擬考的作答與計時紀錄。
@@ -112,7 +112,7 @@ export default function PrivacyPage() {
         <h2 className="font-display text-lg font-semibold text-ink-50">如何刪除你的資料</h2>
         <p className="mt-2">
           你可以在
-          <Link href="/settings" className="text-brand hover:underline">
+          <Link href="/settings" className="text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">
             設定 → 帳號
           </Link>
           頁面的「危險區域」自行永久刪除帳號。刪除後，你的提交紀錄、討論留言、筆記、成就、個人檔案等資料會被永久移除，此操作無法復原；若你當時有進行中的 Pro 訂閱，系統會先為你取消，之後不會再扣款。
@@ -145,7 +145,7 @@ export default function PrivacyPage() {
         <h2 className="font-display text-lg font-semibold text-ink-50">聯絡方式</h2>
         <p className="mt-2">
           對本政策或你的個人資料有任何問題，歡迎寄信到{" "}
-          <a href="mailto:judges0801@gmail.com" className="text-brand hover:underline">
+          <a href="mailto:judges0801@gmail.com" className="text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">
             judges0801@gmail.com
           </a>
           。

@@ -20,6 +20,7 @@ export default function AdminContestsPage() {
   const [scheduled, setScheduled] = useState(false);
   const [startAt, setStartAt] = useState("");
   const [durationMin, setDurationMin] = useState(180);
+  const [freezeMin, setFreezeMin] = useState(0);
   const [problemQuery, setProblemQuery] = useState("");
   const [selectedProblems, setSelectedProblems] = useState<{ id: string; title: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -74,6 +75,7 @@ export default function AdminContestsPage() {
           kind,
           startAt: scheduled ? new Date(startAt).toISOString() : undefined,
           durationMin,
+          freezeMin,
           problems: selectedProblems.map((p, i) => ({ problemId: p.id, label: LABELS[i] })),
         },
       });
@@ -123,6 +125,12 @@ export default function AdminContestsPage() {
               max={600}
             />
           </div>
+        </div>
+
+        <div>
+          <label htmlFor="contest-freeze" className="mb-1 block text-sm text-ink-300">{t("Scoreboard freeze (minutes)")}</label>
+          <input id="contest-freeze" type="number" min={0} max={durationMin} value={freezeMin} onChange={(e) => setFreezeMin(Number(e.target.value))} className="oj-input max-w-xs" required />
+          <p className="mt-1 text-xs text-ink-500">{t("Set 0 to keep standings live throughout the exam.")}</p>
         </div>
 
         <div>

@@ -1,0 +1,133 @@
+{
+  "reviewedAt": "2026-09-12",
+  "reviews": [
+    {
+      "slug": "uva-10066-the-twin-towers",
+      "index": 2,
+      "sourceHash": "07018b8bb6ca90761ddc1ed3ffc0daf0acf75ece46d377536073fbec8c17b613",
+      "expected": "AC",
+      "reason": "The configured whitespace policy intentionally ignores trailing blank lines. This is not an incorrect solution."
+    },
+    {
+      "slug": "uva-10074-take-the-land",
+      "index": 1,
+      "sourceHash": "b7be25af0bd9c33459d13bf66662654c2b17b22c0de5c3a91a8fe5d0d216acd7",
+      "expected": "AC",
+      "reason": "A monotone stack may retain equal heights; popping them later still measures the complete plateau. Both > and >= variants are valid."
+    },
+    {
+      "slug": "uva-10110-light-more-light",
+      "index": 1,
+      "sourceHash": "75471e0233e488e4b240666cd0bba9a3308724ad0be09322c496eb2b2aef4af0",
+      "expected": "OBSERVE",
+      "reason": "The variant has signed-overflow portability risk, but the final int32 comparison can still agree under the current compiler. Its tag is not a demonstrated wrong-output witness."
+    },
+    {
+      "slug": "uva-10161-ant-on-a-chessboard",
+      "index": 1,
+      "sourceHash": "a151480c8cff36c114d13d13efa117560c1b4e5c6bb62a9cff735d349ef7268a",
+      "expected": "AC",
+      "reason": "N <= 2e9; the largest tested square is 44723^2 = 2000190729, below INT_MAX. The claimed int32 overflow cannot occur within the specified range."
+    },
+    {
+      "slug": "uva-10161-ant-on-a-chessboard",
+      "index": 2,
+      "sourceHash": "0a47ac5bb0ca9bdefb0b1b236e7e478052e5f368d30f33253421de36f6193b5d",
+      "expected": "AC",
+      "reason": "The subsequent (s+2)^2 <= N loop restores an exact odd-square boundary. The changed first comparison does not change the final ring."
+    },
+    {
+      "slug": "uva-10229-modular-fibonacci",
+      "index": 1,
+      "sourceHash": "77b754b0bf6880dc34698028860cae2774db02d88976861bfb3a11e66ed1f211",
+      "expected": "OBSERVE",
+      "reason": "Signed overflow is nonportable, but the power-of-two modulus and final normalization preserve low bits with this compiler. No valid wrong-output witness has been established."
+    },
+    {
+      "slug": "uva-10364-square",
+      "index": 2,
+      "sourceHash": "4c852a00ab6ef2510e46f7edd3eb465a3e2f62c1ca9cc2fbc2a9c246cffe68bf",
+      "expected": "AC",
+      "reason": "The complete backtracking search is logically valid. Slower code that finishes within the time budget must be accepted; worst-case performance remains a separate audit."
+    },
+    {
+      "slug": "uva-10533-digit-primes",
+      "index": 2,
+      "sourceHash": "98cc6467fc3c41ea595c18dc8c43f7a505b78e1cd921cfe0f5aec05057b3fa93",
+      "expected": "AC",
+      "reason": "Synchronized iostreams are still semantically correct. The judge cannot require a particular I/O library; stress calibration remains a separate gate."
+    },
+    {
+      "slug": "uva-1056-degrees-of-separation",
+      "index": 0,
+      "sourceHash": "ca7bcd3148075f1fcb78ef3e17ec558aae1747a0dbbf1c17bbaf7e626126aba2",
+      "expected": "REJECT",
+      "reason": "Discovered names can be fewer than the declared population P. This candidate omits unnamed isolated people and is not a correct reference."
+    },
+    {
+      "slug": "uva-10603-fill",
+      "index": 2,
+      "sourceHash": "22e356178edfc4597a7ee78f8337c672dc7b3db4be6cf653f040004dc4c4c6dd",
+      "expected": "AC",
+      "reason": "The FIFO implementation re-enqueues every improved distance until convergence. It is a label-correcting shortest-path algorithm, not one-pass BFS."
+    },
+    {
+      "slug": "uva-10740-first-love",
+      "index": 1,
+      "sourceHash": "1247294b3f11cc20339e32aa2fdafaffe65209a35e05c4ca8e3b10a72290ce7f",
+      "expected": "AC",
+      "reason": "The target still returns at cnt[target] == k. Allowing one extra expansion elsewhere does not shift the kth distance with nonnegative edge weights."
+    },
+    {
+      "slug": "uva-10150-doublets",
+      "index": 2,
+      "sourceHash": "3db10de0b6ec77401f794d96762937bc2ef683e3952cc3340e9237f558e69a00",
+      "expected": "AC",
+      "reason": "Although it does not exit BFS early for equal endpoints, prev[start] is already -1, so final reconstruction still emits the valid one-word path."
+    },
+    {
+      "slug": "uva-10099-the-tourist-guide",
+      "index": 0,
+      "sourceHash": "dfd9eb80bb955c9a16087e5add1854366a6668afbc9f0fdca9cd18d0b4e9e02f",
+      "expected": "REJECT",
+      "reason": "The candidate fails to reserve a seat for the guide. The original first hidden expected answer was also wrong; the guarded correction restores ceil(20/(5-1))=5."
+    },
+    {
+      "slug": "uva-10099-the-tourist-guide",
+      "index": 1,
+      "sourceHash": "e02836fb70d95d8583665eee99c9fb98e7c88fdc30fc585bce1625be58f5fb9d",
+      "expected": "REJECT",
+      "reason": "Independent of unresolved parallel-road semantics, this candidate also omits the guide seat and fails valid unambiguous inputs."
+    },
+    {
+      "slug": "uva-11094-continents",
+      "index": 0,
+      "sourceHash": "db19ad0ee039676c2a3dc14e5935af5de420a909975aeb414b8217efb556e6f1",
+      "expected": "REJECT",
+      "reason": "Land is the character at the king's starting location; the statement permits any two map letters. This candidate incorrectly hardcodes l."
+    }
+  ],
+  "additionalCandidates": [
+    {
+      "slug": "uva-1056-degrees-of-separation",
+      "tag": "correct",
+      "label": "Corrected independent BFS reference accounts for unnamed isolated nodes by comparing discovered names with P.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int P,R;\n    int caseNum=0;\n    while(cin>>P>>R && !(P==0&&R==0)){\n        map<string,int> id;\n        vector<vector<int>> adj;\n        auto getId=[&](const string&s)->int{\n            auto it=id.find(s);\n            if(it!=id.end()) return it->second;\n            int nid=(int)id.size();\n            id[s]=nid;\n            adj.push_back({});\n            return nid;\n        };\n        for(int i=0;i<R;i++){\n            string a,b; cin>>a>>b;\n            int ai=getId(a), bi=getId(b);\n            adj[ai].push_back(bi);\n            adj[bi].push_back(ai);\n        }\n        int n=(int)id.size();\n        int diameter=0;\n        bool disconnected=(n<P);\n        for(int s=0;s<n;s++){\n            vector<int> dist(n,-1);\n            queue<int>q; dist[s]=0;q.push(s);\n            int reached=1;\n            while(!q.empty()){\n                int u=q.front();q.pop();\n                for(int v: adj[u]) if(dist[v]==-1){dist[v]=dist[u]+1;q.push(v);reached++;diameter=max(diameter,dist[v]);}\n            }\n            if(reached<n) disconnected=true;\n        }\n        caseNum++;\n        if(caseNum>1) cout << \"\\n\";\n        cout << \"Network \" << caseNum << \": \" << (disconnected? string(\"DISCONNECTED\") : to_string(diameter)) << \"\\n\";\n    }\n}\n"
+    },
+    {
+      "slug": "uva-10099-the-tourist-guide",
+      "tag": "correct",
+      "label": "Corrected widest-path reference reserves one seat for the guide, uses wide arithmetic for tourist counts and handles equal endpoints.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int n,r,tc=0;\n    while (cin>>n>>r && (n||r)) {\n        tc++;\n        vector<vector<int>> cap(n+1, vector<int>(n+1,0));\n        for (int i=0;i<r;i++){\n            int c1,c2,p; cin>>c1>>c2>>p;\n            cap[c1][c2] = max(cap[c1][c2], p);\n            cap[c2][c1] = max(cap[c2][c1], p);\n        }\n        int s,d; long long t; cin>>s>>d>>t;\n        vector<int> best(n+1,0); vector<bool> done(n+1,false);\n        best[s] = INT_MAX;\n        for (int iter=0; iter<n; iter++){\n            int u=-1;\n            for (int i=1;i<=n;i++) if(!done[i] && (u==-1||best[i]>best[u])) u=i;\n            if (u==-1 || best[u]==0) break;\n            done[u]=true;\n            for (int v=1; v<=n; v++) if(cap[u][v]>0) best[v]=max(best[v], min(best[u], cap[u][v]));\n        }\n        long long trips = s == d ? 0 : (t + best[d] - 2) / (best[d] - 1);\n        if (tc>1) cout << \"\\n\";\n        cout << \"Scenario #\" << tc << \"\\n\";\n        cout << \"Minimum Number of Trips = \" << trips << \"\\n\";\n    }\n}\n"
+    },
+    {
+      "slug": "uva-11094-continents",
+      "tag": "correct",
+      "label": "Corrected flood-fill reference derives the land character from grid[X][Y], includes horizontal wrapping and excludes the king's continent.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int M,N;\n    while (cin >> M >> N) {\n        vector<string> grid(M);\n        for (auto &s: grid) cin >> s;\n        int X,Y; cin >> X >> Y;\n        char land=grid[X][Y];\n        int dx[4]={-1,1,0,0}, dy[4]={0,0,-1,1};\n        vector<vector<bool>> kingVis(M, vector<bool>(N,false));\n        {\n            queue<pair<int,int>> q; q.push({X,Y}); kingVis[X][Y]=true;\n            while(!q.empty()){\n                auto [x,y]=q.front(); q.pop();\n                for(int d=0;d<4;d++){\n                    int nx=x+dx[d], ny=(y+dy[d]+N)%N;\n                    if(nx<0||nx>=M) continue;\n                    if(kingVis[nx][ny]) continue;\n                    if(grid[nx][ny]!=land) continue;\n                    kingVis[nx][ny]=true; q.push({nx,ny});\n                }\n            }\n        }\n        vector<vector<bool>> seen(M, vector<bool>(N,false));\n        int best=0;\n        for(int i=0;i<M;i++) for(int j=0;j<N;j++){\n            if (grid[i][j]!=land || seen[i][j] || kingVis[i][j]) continue;\n            queue<pair<int,int>> q; q.push({i,j}); seen[i][j]=true;\n            int size=0;\n            while(!q.empty()){\n                auto [x,y]=q.front(); q.pop(); size++;\n                for(int d=0;d<4;d++){\n                    int nx=x+dx[d], ny=(y+dy[d]+N)%N;\n                    if(nx<0||nx>=M) continue;\n                    if(seen[nx][ny]) continue;\n                    if(grid[nx][ny]!=land) continue;\n                    seen[nx][ny]=true; q.push({nx,ny});\n                }\n            }\n            best=max(best,size);\n        }\n        cout << best << \"\\n\";\n    }\n}\n"
+    }
+  ]
+}

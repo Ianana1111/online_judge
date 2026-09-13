@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import type { SubmissionDetail } from "@/lib/types";
@@ -19,6 +19,7 @@ export default function SubmissionCodeModal({
   onClose: () => void;
 }) {
   const t = useT();
+  const titleId = useId();
   const { data, isLoading, error } = useQuery({
     queryKey: ["submission", submissionId],
     queryFn: () => apiFetch<SubmissionDetail>(`/submissions/${submissionId}`),
@@ -44,6 +45,7 @@ export default function SubmissionCodeModal({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
       role="dialog"
       aria-modal="true"
+      aria-labelledby={titleId}
       onClick={onClose}
     >
       <div
@@ -54,7 +56,7 @@ export default function SubmissionCodeModal({
       >
         <div className="flex items-center justify-between border-b border-ink-800 px-4 py-3">
           <div className="flex flex-wrap items-center gap-3">
-            <h2 className="font-display text-sm font-semibold text-ink-100">{t("Submission")}</h2>
+            <h2 id={titleId} className="font-display text-sm font-semibold text-ink-100">{t("Submission")}</h2>
             {data && (
               <>
                 <VerdictBadge verdict={data.verdict} size="sm" />
@@ -82,7 +84,7 @@ export default function SubmissionCodeModal({
           {data?.compileError && (
             <div className="mb-4">
               <p className="mb-1 text-xs font-medium text-verdict-ce">{t("Compiler / judge message")}</p>
-              <pre className="oj-card overflow-x-auto p-3 font-mono text-xs text-verdict-wa">{data.compileError}</pre>
+              <pre tabIndex={0} className="oj-card overflow-x-auto p-3 font-mono text-xs text-verdict-wa">{data.compileError}</pre>
             </div>
           )}
 
@@ -92,7 +94,7 @@ export default function SubmissionCodeModal({
                 <p className="text-xs font-medium text-ink-400">{t("Source code")}</p>
                 <CopyButton text={data.sourceCode} />
               </div>
-              <pre className="oj-card overflow-x-auto p-3 font-mono text-xs leading-relaxed text-ink-100">
+              <pre tabIndex={0} className="oj-card overflow-x-auto p-3 font-mono text-xs leading-relaxed text-ink-100">
                 {data.sourceCode}
               </pre>
             </div>

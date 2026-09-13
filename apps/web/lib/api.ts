@@ -57,6 +57,7 @@ interface RequestOptions {
   method?: string;
   body?: unknown;
   isRetry?: boolean;
+  signal?: AbortSignal;
 }
 
 export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Promise<T> {
@@ -73,6 +74,7 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
     credentials: "include",
     headers,
     body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
+    signal: opts.signal,
   });
 
   if (res.status === 401 && !opts.isRetry && path !== "/auth/refresh") {
@@ -102,10 +104,50 @@ export function apiUrl(path: string): string {
   return `${API_URL}${path}`;
 }
 
-export function openSubmissionStream(submissionId: string): EventSource {
-  return new EventSource(apiUrl(`/submissions/${submissionId}/stream`), { withCredentials: true });
+class RecoverableStatusStream extends EventTarget {
+  onerror: ((event: Event) => void) | null = null;
+  private readonly source: EventSource;
+  private readonly abort = new AbortController();
+  private readonly timer: ReturnType<typeof setInterval>;
+  private readonly timeout: ReturnType<typeof setTimeout>;
+  private closed = false;
+  private polling = false;
+
+  constructor(private readonly path: string, private readonly terminal: (value: Record<string, unknown>) => boolean) {
+    super();
+    this.source = new EventSource(apiUrl(`${path}/stream`), { withCredentials: true });
+    this.source.addEventListener("status", (event) => {
+      try { this.accept(JSON.parse((event as MessageEvent).data)); } catch { void this.poll(); }
+    });
+    this.source.onerror = () => void this.poll();
+    this.timer = setInterval(() => void this.poll(), 5_000);
+    this.timeout = setTimeout(() => { this.onerror?.(new Event("error")); this.close(); }, 16 * 60_000);
+  }
+
+  private accept(value: Record<string, unknown>) {
+    if (this.closed) return;
+    this.dispatchEvent(new MessageEvent("status", { data: JSON.stringify(value) }));
+    if (this.terminal(value)) this.close();
+  }
+
+  private async poll() {
+    if (this.closed || this.polling) return;
+    this.polling = true;
+    try { this.accept(await apiFetch<Record<string, unknown>>(this.path, { signal: this.abort.signal })); }
+    catch (error) {
+      if (error instanceof ApiError && [401, 403, 404].includes(error.status)) {
+        this.onerror?.(new Event("error")); this.close();
+      }
+    } finally { this.polling = false; }
+  }
+
+  close() { this.closed = true; this.source.close(); this.abort.abort(); clearInterval(this.timer); clearTimeout(this.timeout); }
 }
 
-export function openRunStream(runId: string): EventSource {
-  return new EventSource(apiUrl(`/runs/${runId}/stream`), { withCredentials: true });
+export function openSubmissionStream(submissionId: string) {
+  return new RecoverableStatusStream(`/submissions/${submissionId}`, (value) => !["PENDING", "JUDGING"].includes(String(value.verdict)));
+}
+
+export function openRunStream(runId: string) {
+  return new RecoverableStatusStream(`/runs/${runId}`, (value) => ["DONE", "COMPILE_ERROR", "ERROR"].includes(String(value.status)));
 }

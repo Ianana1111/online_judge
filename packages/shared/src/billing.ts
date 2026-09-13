@@ -13,10 +13,7 @@ export const FREE_RUN_QUOTA = 300; // test runs a FREE account may start per cal
 
 export type BillingPeriod = "MONTHLY" | "YEARLY";
 
-// Real launch prices. `days` is each plan's NORMAL per-charge length — a brand new YEARLY
-// subscription's first charge additionally grants a one-time +30-day bonus on top of this
-// (see billing.service's FIRST_YEARLY_SUBSCRIPTION_BONUS_DAYS), so the "2000 NTD for 13 months"
-// promise doesn't need its own separate constant here.
+// Prices and legacy one-time grant durations. Recurring subscriptions use calendar periods.
 export const PLAN_PRICING: Record<BillingPeriod, { amountNtd: number; days: number; label: string }> = {
   MONTHLY: { amountNtd: 200, days: 30, label: "月方案" },
   YEARLY: { amountNtd: 2000, days: 365, label: "年方案" },
@@ -24,7 +21,7 @@ export const PLAN_PRICING: Record<BillingPeriod, { amountNtd: number; days: numb
 
 /** Launch promo: 50% off the monthly plan for judge.tw's first month of real operation. A fixed
  * end date (not "30 days from whenever the server happens to restart") so the discount doesn't
- * silently extend itself on every deploy. Currently inactive — the first-month refund guarantee
+ * silently extend itself on every deploy. Currently inactive — the first-payment refund guarantee
  * (billing.service.requestRefund) is judge.tw's actual new-user incentive now; leaving this false
  * rather than deleting it in case a separate future promo period wants the same mechanism. */
 export const LAUNCH_PROMO = {

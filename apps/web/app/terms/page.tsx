@@ -80,7 +80,7 @@ export default function TermsPage() {
         <h2 className="font-display text-lg font-semibold text-ink-50">6. Pro 訂閱與付款</h2>
         <p className="mt-2">
           Pro 方案的計價、扣款、取消規則請見
-          <Link href="/refund" className="text-brand hover:underline">
+          <Link href="/refund" className="text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">
             退款與訂閱政策
           </Link>
           。付款透過綠界科技（ECPay）處理，本站不會直接接觸或儲存你的完整卡號。
@@ -119,7 +119,7 @@ export default function TermsPage() {
         <h2 className="font-display text-lg font-semibold text-ink-50">11. 聯絡方式</h2>
         <p className="mt-2">
           對本條款有任何問題，歡迎寄信到{" "}
-          <a href="mailto:judges0801@gmail.com" className="text-brand hover:underline">
+          <a href="mailto:judges0801@gmail.com" className="text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">
             judges0801@gmail.com
           </a>
           。

@@ -19,7 +19,7 @@ export default function ThemeToggle() {
 
   // Avoid a server/client mismatch flash: render an empty placeholder until mounted.
   if (!mounted) {
-    return <span className="block h-7 w-7" />;
+    return <span className="block h-11 w-11" />;
   }
 
   return (
@@ -28,7 +28,7 @@ export default function ThemeToggle() {
       onClick={toggle}
       aria-label={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")}
       title={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")}
-      className="flex h-7 w-7 items-center justify-center rounded text-ink-400 transition-colors hover:bg-ink-800 hover:text-ink-50"
+      className="flex h-11 w-11 items-center justify-center rounded text-ink-400 transition-colors hover:bg-ink-800 hover:text-ink-50"
     >
       {theme === "dark" ? (
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

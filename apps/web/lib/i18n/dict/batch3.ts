@@ -145,10 +145,10 @@ export const batch3Dictionary: Record<string, string> = {
   "Cancels immediately — you'll switch to Free right away and won't be charged again.": "立即取消——你會馬上切換回免費方案，之後也不會再被扣款。",
   "Extend Pro Plan": "延長 Pro 方案",
   "Get Pro Plan": "取得 Pro 方案",
-  "Cancel within your first month for a full refund": "首月內取消可全額退款",
+  "Request a full refund within 7 days of your first payment": "首次付款後 7 天內可申請全額退款",
   "Not what you expected? Request a full refund (until {date})": "不符合期待？可在 {date} 前申請全額退款",
   "Request a full refund?": "確定要申請全額退款嗎？",
-  "Refunds your first charge in full, cancels your subscription, and switches you to Free right away — you won't keep Pro access for the rest of this period. You can only do this once per account.":
+  "Requests a full refund of your first payment and stops future renewal. The refunded Pro period ends after processing. Bank posting times vary. This guarantee is available once per account.":
     "會全額退還你的第一筆扣款、取消訂閱，並立即切換回免費方案——不會保留這期剩餘的 Pro 權限。每個帳號只能申請一次。",
   "Processing…": "處理中…",
   "Refund me": "申請退款",
@@ -183,8 +183,8 @@ export const batch3Dictionary: Record<string, string> = {
   "judge. Pro ({period})": "judge. Pro（{period}）",
   "Launch promo ({pct}% off)": "上線優惠（{pct}% 折扣）",
   "Total due today": "今日應付金額",
-  "Billed every {period} · renews automatically until you cancel from your account. Cancel within your first month for a full refund.":
-    "每{period}扣款一次，會自動續訂，直到你在帳號中取消為止。首月內取消可全額退款。",
+  "Billed every {period} · renews automatically until you cancel from your account. Request a full refund within 7 days of your first payment.":
+    "每{period}扣款一次，會自動續訂，直到你在帳號中取消為止。首次付款後 7 天內可申請全額退款。",
   "Redirecting to ECPay…": "正在導向 ECPay…",
   "Subscribe — NT${amount}/{period}": "訂閱 — NT${amount}/{period}",
   "Secure checkout via ECPay — Taiwan's leading payment gateway": "透過 ECPay 安全結帳——台灣領先的金流服務",

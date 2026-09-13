@@ -1,64 +1,21 @@
 "use client";
-
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, ApiError } from "@/lib/api";
 import { Skeleton } from "@/components/Skeleton";
 import Avatar from "@/components/Avatar";
 import { estimateReadMinutes } from "@/lib/readTime";
 import type { PostDetail } from "@/lib/types";
-import { useT } from "@/lib/i18n/LocaleContext";
-
-// Markdown/KaTeX parsing is a large chunk unrelated to the rest of this page — deferring it out
-// of the initial page JS keeps the surrounding content interactive sooner.
-const StatementRenderer = dynamic(() => import("@/components/StatementRenderer"), {
-  loading: () => <Skeleton className="h-64 w-full" />,
-});
-
+import { categories } from "@/lib/community";
+import { useLocale } from "@/lib/i18n/LocaleContext";
+import { useAuthStore } from "@/store/auth";
+import CommunityMarkdown from "./CommunityMarkdown";
+import DiscussionPanel from "./DiscussionPanel";
 export default function PostDetailClient({ id }: { id: string }) {
-  const t = useT();
-  const { data, isLoading } = useQuery({
-    queryKey: ["posts", id],
-    queryFn: () => apiFetch<PostDetail>(`/posts/${id}`),
-  });
-
-  if (isLoading) {
-    return (
-      <div className="mx-auto max-w-2xl space-y-3">
-        <Skeleton className="h-6 w-2/3" />
-        <Skeleton className="h-4 w-1/3" />
-        <Skeleton className="h-64 w-full" />
-      </div>
-    );
-  }
-
-  if (!data) return <p className="text-sm text-verdict-wa">{t("Post not found.")}</p>;
-
-  return (
-    <div className="mx-auto max-w-2xl space-y-4">
-      <Link href="/discussion" className="text-xs text-ink-500 hover:text-brand">
-        {t("← back to Discussion")}
-      </Link>
-
-      <div>
-        {data.isOfficial && (
-          <span className="inline-flex items-center gap-1 rounded border border-brand/40 bg-brand/10 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-brand">
-            官方公告
-          </span>
-        )}
-        <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-ink-50 sm:text-4xl">{data.title}</h1>
-        <div className="mt-5 flex items-center gap-2 border-b border-ink-800 pb-6 text-sm text-ink-400">
-          <Avatar avatarUrl={data.authorAvatarUrl} handle={data.authorHandle} size={32} />
-          <span className="font-medium text-ink-200">{data.authorHandle}</span>
-          <span className="text-ink-500">·</span>
-          <span className="font-mono">{new Date(data.createdAt).toLocaleDateString()}</span>
-          <span className="text-ink-500">·</span>
-          <span>{estimateReadMinutes(data.bodyMd)} 分鐘閱讀</span>
-        </div>
-      </div>
-
-      <StatementRenderer content={data.bodyMd} />
-    </div>
-  );
+  const { locale } = useLocale(), zh = locale === "zh-TW", user = useAuthStore((s) => s.user);
+  const query = useQuery({ queryKey: ["posts", "detail", id], queryFn: () => apiFetch<PostDetail>(`/posts/${id}`) });
+  if (query.isPending) return <div className="mx-auto max-w-3xl space-y-4"><Skeleton className="h-10 w-2/3" /><Skeleton className="h-5 w-1/3" /><Skeleton className="h-72 w-full" /></div>;
+  const data = query.data;
+  if (!data) return <div role="alert" className="oj-card mx-auto max-w-3xl space-y-4 p-8"><p>{query.error instanceof ApiError && query.error.status === 404 ? (zh ? "找不到已公開的文章。若這是你的投稿，請到「我的投稿」查看審核進度。" : "No published post was found. If this is your post, check My posts for its review status.") : (zh ? "暫時無法載入文章。" : "Could not load the post.")}</p><div className="flex flex-wrap gap-3"><button className="oj-btn-ghost" onClick={() => query.refetch()}>{zh ? "重試" : "Retry"}</button><Link href="/discussion/mine" className="oj-btn-ghost">{zh ? "我的投稿" : "My posts"}</Link><Link href="/discussion" className="oj-btn-ghost">{zh ? "返回討論区" : "Back to discussions"}</Link></div></div>;
+  return <article className="mx-auto max-w-3xl space-y-8"><Link href="/discussion" className="text-sm text-brand">{zh ? "← 返回討論區" : "← Back to discussions"}</Link><header><div className="flex flex-wrap gap-3 text-xs"><span className="rounded bg-ink-800 px-2 py-1 text-ink-300">{categories[data.category]?.[zh ? 0 : 1]}</span>{data.isOfficial && <span className="py-1 font-semibold text-brand">{zh ? "官方公告" : "Official"}</span>}</div><h1 className="mt-4 break-words font-display text-3xl font-bold leading-tight text-ink-100 sm:text-4xl">{data.title}</h1><div className="mt-6 flex flex-wrap items-center gap-3 border-b border-ink-700 pb-6 text-sm text-ink-400"><Avatar avatarUrl={data.authorAvatarUrl} handle={data.authorHandle} size={32} /><Link href={`/u/${data.authorHandle}`} className="font-medium text-ink-200 hover:text-brand">{data.authorHandle}</Link><time dateTime={data.publishedAt ?? data.createdAt}>{new Date(data.publishedAt ?? data.createdAt).toLocaleDateString(locale)}</time><span>{estimateReadMinutes(data.bodyMd)} {zh ? "分鐘閱讀" : "min read"}</span>{user?.id === data.authorId && <Link href={`/discussion/write?id=${id}`} className="sm:ml-auto text-brand">{zh ? "修改文章" : "Edit post"}</Link>}</div></header><CommunityMarkdown content={data.bodyMd} /><div className="border-t border-ink-700 pt-8"><DiscussionPanel postId={id} /></div></article>;
 }

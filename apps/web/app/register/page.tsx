@@ -89,8 +89,8 @@ export default function RegisterPage() {
             required
           />
           <span>
-            {t("I agree to the")} <Link href="/terms" className="text-brand hover:underline">{t("Terms of Service")}</Link>{" "}
-            {t("and")} <Link href="/privacy" className="text-brand hover:underline">{t("Privacy Policy")}</Link>.
+            {t("I agree to the")} <Link href="/terms" className="text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">{t("Terms of Service")}</Link>{" "}
+            {t("and")} <Link href="/privacy" className="text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">{t("Privacy Policy")}</Link>.
           </span>
         </label>
         {error && <p className="text-sm text-verdict-wa">{error}</p>}
@@ -108,7 +108,7 @@ export default function RegisterPage() {
 
       <p className="mt-4 text-sm text-ink-400">
         {t("Already have an account?")}{" "}
-        <Link href="/login" className="text-brand hover:underline">
+        <Link href="/login" className="text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">
           {t("Log in")}
         </Link>
       </p>

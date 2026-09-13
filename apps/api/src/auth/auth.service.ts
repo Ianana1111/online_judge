@@ -73,14 +73,14 @@ export class AuthService {
     return this.issueSession(user.id, user.handle, user.email, user.role);
   }
 
-  /** Finds an existing account by googleId, links Google to an existing password account with
-   * the same email, or creates a brand new account — then issues a normal session either way. */
+  /** Finds the linked Google identity or creates an account. An email match never silently links
+   * an identity to an existing account. */
   async loginWithGoogle(googleId: string, email: string, suggestedHandle: string): Promise<IssuedSession> {
     let user = await prisma.user.findUnique({ where: { googleId } });
     if (!user) {
       const byEmail = await prisma.user.findUnique({ where: { email } });
       if (byEmail) {
-        user = await prisma.user.update({ where: { id: byEmail.id }, data: { googleId } });
+        throw new ConflictException("This email already has an account. Sign in with your existing method before linking Google.");
       } else {
         const handle = await this.uniqueHandleFrom(suggestedHandle);
         user = await prisma.user.create({ data: { handle, email, googleId, role: "USER" } });
@@ -88,6 +88,13 @@ export class AuthService {
       }
     }
     return this.issueSession(user.id, user.handle, user.email, user.role);
+  }
+
+  /** Deletion reauthentication proves an existing identity without creating an account or
+   * rotating anyone's session. Google sub, rather than email, is the stable identity key. */
+  async verifyGoogleReauthentication(userId: string, googleId: string): Promise<void> {
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { googleId: true } });
+    if (!user?.googleId || user.googleId !== googleId) throw new UnauthorizedException("Google reauthentication did not match the current account");
   }
 
   private async uniqueHandleFrom(base: string): Promise<string> {
@@ -111,7 +118,7 @@ export class AuthService {
       throw new UnauthorizedException("Invalid or expired refresh token");
     }
 
-    const exists = await this.redis.exists(`refresh:${payload.sub}:${payload.jti}`);
+    const exists = await this.redis.getdel(`refresh:${payload.sub}:${payload.jti}`);
     if (!exists) throw new UnauthorizedException("Session has been revoked");
 
     const user = await prisma.user.findUnique({ where: { id: payload.sub } });
@@ -122,16 +129,16 @@ export class AuthService {
 
   async logout(refreshToken: string | undefined): Promise<void> {
     if (!refreshToken) return;
+    let payload;
     try {
-      const payload = this.tokens.verifyRefreshToken(refreshToken);
-      await this.redis.del(`refresh:${payload.sub}:${payload.jti}`);
-      const current = await this.redis.get(`refresh:current:${payload.sub}`);
-      if (current === payload.jti) {
-        await this.redis.del(`refresh:current:${payload.sub}`);
-      }
+      payload = this.tokens.verifyRefreshToken(refreshToken);
     } catch {
-      // Best-effort cleanup; an invalid/expired refresh token on logout is not an error.
+      return; // An invalid/expired refresh credential has no live session to revoke.
     }
+    // Only invalid credentials are best-effort. A Redis failure must let the caller retry,
+    // and an old logout must never erase a newer session's current-session pointer.
+    await this.redis.eval(`redis.call('DEL', KEYS[1]); if redis.call('GET', KEYS[2]) == ARGV[1] then redis.call('DEL', KEYS[2]); end; return 1`, 2,
+      `refresh:${payload.sub}:${payload.jti}`, `refresh:current:${payload.sub}`, payload.jti);
   }
 
   async me(userId: string): Promise<{
@@ -196,17 +203,17 @@ export class AuthService {
    * proved they know the new password, in the same request.
    */
   async issueSession(id: string, handle: string, email: string, role: string): Promise<IssuedSession> {
-    const previousJti = await this.redis.get(`refresh:current:${id}`);
-    if (previousJti) {
-      await this.redis.del(`refresh:${id}:${previousJti}`);
-    }
-
     const jti = randomUUID();
     const refreshTtlSec = Math.max(1, Math.round(this.tokens.refreshTtlMs / 1000));
-    await this.redis.set(`refresh:${id}:${jti}`, "1", "EX", refreshTtlSec);
-    await this.redis.set(`refresh:current:${id}`, jti, "EX", refreshTtlSec);
+    await this.redis.eval(`
+      local previous = redis.call('GET', KEYS[1])
+      if previous then redis.call('DEL', ARGV[1] .. previous) end
+      redis.call('SET', KEYS[2], '1', 'EX', ARGV[3])
+      redis.call('SET', KEYS[1], ARGV[2], 'EX', ARGV[3])
+      return 1
+    `, 2, `refresh:current:${id}`, `refresh:${id}:${jti}`, `refresh:${id}:`, jti, String(refreshTtlSec));
 
-    const accessToken = this.tokens.signAccessToken({ sub: id, handle, role });
+    const accessToken = this.tokens.signAccessToken({ sub: id, handle, role, sid: jti });
     const refreshToken = this.tokens.signRefreshToken({ sub: id, jti });
     const csrfToken = generateCsrfToken();
 

@@ -41,8 +41,11 @@ export async function fetchWithJar(
   let currentInit: RequestInit = init;
 
   for (let hop = 0; hop < 6; hop++) {
+    const destination = new URL(currentUrl);
+    if (destination.origin !== BASE) throw new Error("UVa redirected to an unexpected origin");
     const res = await fetch(currentUrl, {
       ...currentInit,
+      signal: AbortSignal.timeout(15_000),
       redirect: "manual",
       headers: { ...currentInit.headers, Cookie: cookieHeader(jar), "User-Agent": USER_AGENT },
     });
@@ -349,7 +352,7 @@ export function mapUvaVerdictText(text: string): string | null {
   if (t.includes("wrong answer")) return "WA";
   if (t.includes("time limit")) return "TLE";
   if (t.includes("memory limit")) return "MLE";
-  if (t.includes("compil")) return "CE";
+  if (/compil(?:ation|e) error/.test(t)) return "CE";
   if (t.includes("presentation")) return "PE";
   if (t.includes("output limit")) return "OLE";
   if (t.includes("restricted function")) return "RF";

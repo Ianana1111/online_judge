@@ -1,0 +1,1596 @@
+{
+  "checkedAt": "2026-09-12T08:23:03.260805+00:00",
+  "suite": "Production Next.js + built local API + disposable PostgreSQL/Redis",
+  "browser": "Chromium",
+  "routeCount": 42,
+  "routeThemeViewportChecks": 168,
+  "fullBrowserSuite": {
+    "passed": 18,
+    "failed": 0
+  },
+  "sourceReportSha256": {
+    "desktop": "36afaa23aa9d9d45aff3038e71193529d2503c89d1095f551d43706253c7f988",
+    "mobile": "2183bb11951bbab118d091d80f4d783182b6e041f6afeb88b39ea57c0905dccd"
+  },
+  "limits": [
+    "Synthetic local account/content/payment records; no real payment, email or deployed judge was exercised.",
+    "Automated axe WCAG 2 A/AA and WCAG 2.1 AA checks are not complete accessibility certification.",
+    "This full-site pass preceded the final administrator translation refinements; focused refund tests validate the final build."
+  ],
+  "routes": [
+    {
+      "route": "/",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/problems",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/problems/[slug]",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/collections",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/collections/[slug]",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/contests",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/contests/[id]",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/cpe",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/gpe",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/leaderboard",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/submissions",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/u/[handle]",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/assignments",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/classes",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/classes/[id]",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/discussion",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/discussion/[id]",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/discussion/write",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/discussion/mine",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/notifications",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/settings",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/upgrade",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/upgrade/checkout",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/pricing",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/faq",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/about",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/terms",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/privacy",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/refund",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/admin",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/admin/problems",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/admin/contests",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/admin/classes",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/admin/classes/[userId]",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/admin/classes/[userId]/[classId]",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/admin/users",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/admin/assignments",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/admin/billing",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/admin/analytics",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/admin/moderation",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/login",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    },
+    {
+      "route": "/register",
+      "checks": [
+        {
+          "project": "desktop",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "desktop",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "light",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        },
+        {
+          "project": "mobile",
+          "theme": "dark",
+          "httpStatus": 200,
+          "pageErrors": 0,
+          "horizontalOverflow": false,
+          "axeViolations": 0
+        }
+      ]
+    }
+  ],
+  "finalBuildFocusedRefundChecks": {
+    "passed": 4,
+    "failed": 0,
+    "projects": [
+      "desktop",
+      "mobile"
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "covers": [
+      "fetch failure and recovery",
+      "pagination",
+      "deleted-account records",
+      "empty history",
+      "axe checks",
+      "no bank mutation requests"
+    ]
+  }
+}

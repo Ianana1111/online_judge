@@ -13,18 +13,11 @@
  *   strictness: a strictly-decreasing array and an all-duplicate array both must give LIS length 1,
  *   confirming duplicates don't extend the subsequence (a real ambiguity risk for an unsourced
  *   problem with no external judge to fall back on).
- * - uva-10099-the-tourist-guide: maximum-bottleneck ("widest") path via modified Dijkstra, then
- *   answer = ceil(tourists / bottleneck). Verified scenarios 2-6 of the scraped sample match this
- *   algorithm exactly (8, 5, 3, 28, 13) — but scenario 1 does not (algorithm gives 4 trips via the
- *   widest path 1-2-4-7 with bottleneck 25, while the official output says 5). The problem's own
- *   prose narrates that exact route "will require at least 5 trips," which is only consistent with
- *   a bottleneck of 20, not 25 — strongly suggesting the scraped edge "2 4 25" is a corrupted digit
- *   (should read "2 4 20"; re-solving with that single correction reproduces bottleneck=20 and
- *   trips=5 exactly). Since I can't be sure that's the *only* corrupted number in that scenario,
- *   the whole scraped Sample is discarded (sampleLimit: 0, same precedent as uva-10405) and replaced
- *   with two fully hand-verified scenarios: one exercising an exact-division bottleneck (20/5 = 4,
- *   no remainder) and one exercising the "prefer the wider indirect path over the narrower direct
- *   edge" core algorithmic point (1-3-2 at bottleneck 10 beats the direct 1-2 edge at 4).
+ * - uva-10099-the-tourist-guide: widest path, then ceil(tourists / (bottleneck - 1)).
+ *   The guide occupies one seat. The original interpretation omitted that seat and wrongly
+ *   discarded the official sample as corrupted; the official sample's 99 tourists over a
+ *   capacity-25 bottleneck correctly require ceil(99/24)=5 trips. Preserve the explicit fixture
+ *   set below and correct the exact-division case to ceil(20/4)=5.
  * - gpe-10675-urn-ball-probabilities: derived per-pick probabilities analytically (pick i has
  *   p_i = 1/(i*(i+1)) chance of drawing red from both urns, since urn A holds i balls with 1 red and
  *   urn B holds i+1 balls with 1 red by pick i) and confirmed against all 3 official values,
@@ -73,7 +66,7 @@ async function main() {
   await seedFromSample(
     "uva-10099-the-tourist-guide",
     [
-      { input: "4 3\n1 2 10\n2 3 5\n3 4 8\n1 4 20\n0 0\n", output: "Scenario #1\nMinimum Number of Trips = 4\n" },
+      { input: "4 3\n1 2 10\n2 3 5\n3 4 8\n1 4 20\n0 0\n", output: "Scenario #1\nMinimum Number of Trips = 5\n" },
       { input: "3 3\n1 2 4\n1 3 10\n3 2 10\n1 2 25\n0 0\n", output: "Scenario #1\nMinimum Number of Trips = 3\n" },
     ],
     0,

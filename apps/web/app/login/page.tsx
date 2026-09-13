@@ -82,7 +82,7 @@ function LoginForm() {
       <GoogleLoginButton />
       <p className="mt-4 text-sm text-ink-400">
         {t("No account yet?")}{" "}
-        <Link href="/register" className="text-brand hover:underline">
+        <Link href="/register" className="text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">
           {t("Register")}
         </Link>
       </p>

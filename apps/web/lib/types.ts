@@ -80,9 +80,10 @@ export interface BillingStatus {
   // (see POST /billing/refund/request) — null once used, expired, or never applicable (no credit
   // subscription on file). Replaces the old free-trial mechanism.
   refundEligibleUntil: string | null;
+  refundRequest?: { id: string; status: "REQUESTED" | "PROCESSING" | "NEEDS_REVIEW" | "COMPLETED"; requestedAt: string; completedAt: string | null } | null;
   // Present only while an ECPay recurring (定期定額) subscription is ACTIVE — planExpiresAt
   // doubles as "renews on" for this case, since it auto-extends every successful auto-charge.
-  subscription: { period: "MONTHLY" | "YEARLY"; amountNtd: number } | null;
+  subscription: { period: "MONTHLY" | "YEARLY"; amountNtd: number; nextChargeAt: string | null } | null;
   submits: { used: number; limit: number | null };
   virtualContests: { used: number; limit: number | null };
   pendingPayment: {
@@ -191,6 +192,9 @@ export interface Sample {
 }
 
 export interface ProblemDetail {
+  checkerType?: "EXACT" | "IGNORE_TRAILING_WS" | "FLOAT" | "SPECIAL";
+  judgeable: boolean;
+  judgeMode: "LOCAL" | "REMOTE" | "UNAVAILABLE";
   id: string;
   slug: string;
   title: string;
@@ -333,6 +337,8 @@ export interface ContestProblemRef {
 }
 
 export interface ContestParticipant {
+  id: string;
+  scoringVersion: string;
   startedAt: string;
   endsAt: string;
   status: "REGISTERED" | "RUNNING" | "FINISHED";
@@ -343,7 +349,7 @@ export interface ContestAttemptSummary {
   attemptNumber: number;
   startedAt: string;
   endsAt: string;
-  status: "RUNNING" | "FINISHED";
+  status: "REGISTERED" | "RUNNING" | "FINISHED";
   solvedCount: number;
   penalty: number;
   /** True when the participant closed this attempt via the "end exam" action before its timer
@@ -352,6 +358,7 @@ export interface ContestAttemptSummary {
 }
 
 export interface ContestDetail extends ContestListItem {
+  serverNow: string;
   problems: ContestProblemRef[];
   myParticipant: ContestParticipant | null;
   /** True once this attempt (if any) has ended and another one can be started — always false for
@@ -385,7 +392,7 @@ export interface MyContest {
   totalProblems: number;
   startedAt: string;
   endsAt: string;
-  status: "RUNNING" | "FINISHED";
+  status: "REGISTERED" | "RUNNING" | "FINISHED";
   solvedCount: number;
   penalty: number;
   attemptNumber: number;
@@ -425,6 +432,10 @@ export interface UserProfile {
 }
 
 export interface Discussion {
+  userId: string;
+  publishedAt: string | null;
+  status?: import("./community").ReviewStatus;
+  reason?: string | null;
   id: string;
   body: string;
   createdAt: string;
@@ -433,6 +444,10 @@ export interface Discussion {
 }
 
 export interface PostListItem {
+  authorId: string;
+  category: import("./community").PostCategory;
+  commentCount: number;
+  publishedAt: string | null;
   id: string;
   title: string;
   excerpt: string;
@@ -444,6 +459,9 @@ export interface PostListItem {
 }
 
 export interface PostDetail {
+  authorId: string;
+  category: import("./community").PostCategory;
+  publishedAt: string | null;
   id: string;
   title: string;
   bodyMd: string;
@@ -478,6 +496,32 @@ export interface AdminAuthorizedPayment {
   merchantTradeNo: string | null;
   reference: string;
   createdAt: string;
+}
+
+export type RefundStatus = "REQUESTED" | "PROCESSING" | "NEEDS_REVIEW" | "COMPLETED";
+export interface AdminRefund {
+  id: string;
+  userId: string;
+  paymentId: string;
+  user: { id: string; handle: string; email: string } | null;
+  amountNtd: number;
+  merchantTradeNo: string;
+  ecpayTradeNo: string | null;
+  status: RefundStatus;
+  requestedAt: string;
+  updatedAt: string;
+  completedAt: string | null;
+  nextAttemptAt: string;
+  attempts: number;
+  lastError: string | null;
+  inFlightAction: string | null;
+  cancellationConfirmedAt: string | null;
+  refundConfirmedAt: string | null;
+}
+export interface AdminRefundPage {
+  items: AdminRefund[];
+  nextCursor: string | null;
+  counts: Record<RefundStatus, number>;
 }
 
 export interface AssignmentProblemRef {
@@ -682,4 +726,6 @@ export interface Notification {
 export interface NotificationList {
   items: Notification[];
   unreadCount: number;
+  nextCursor: string | null;
+  asOf: string;
 }
