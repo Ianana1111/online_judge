@@ -152,6 +152,7 @@ model User {
   schoolVerifiedAt        DateTime?
   /// Last time a verification email actually went out, for a simple resend cooldown — unrelated
   /// to schoolVerifiedAt, which only ever reflects a *confirmed* click.
+  schoolVerificationTokenHash String?
   schoolVerificationSentAt DateTime?
   /// Streak-freeze inventory — see users.service.ts's applyMonthlyFreezeGrant. Granted lazily (1
   /// per calendar month, capped) the same way submitQuotaUsed/submitQuotaMonth reset lazily above,
@@ -207,8 +208,8 @@ model UsedSchoolEmail {
   /// what makes a second confirmation for the same address fail atomically (unique violation)
   /// rather than needing a separate check-then-write.
   email      String   @id
-  userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   school     String
   verifiedAt DateTime @default(now())
 
@@ -300,6 +301,13 @@ model Payment {
   createdAt  DateTime      @default(now())
   reviewedAt DateTime?
   reviewedBy String?
+  paidAt DateTime?
+  refundPolicyVersion String @default("first-charge-7d-v1")
+  refundDeadlineAt DateTime?
+  ecpayTradeNo String? @unique
+  cycleNumber Int?
+  entitlementStartsAt DateTime?
+  entitlementEndsAt DateTime?
   /// The ECPay ChoosePayment channel the user picked on our checkout page ("Credit" | "ATM"),
   /// set only for method=ECPAY. Lets the pending-payment UI show the right message (bank
   /// transfer details vs. "confirming your card") instead of guessing from vAccount presence.
@@ -332,7 +340,39 @@ model Payment {
 
   @@index([status, createdAt])
   @@index([userId, status])
+  @@unique([subscriptionId, cycleNumber])
   @@map("payments")
+}
+
+enum RefundRequestStatus {
+  REQUESTED
+  PROCESSING
+  NEEDS_REVIEW
+  COMPLETED
+}
+
+/// Durable first-purchase refund; userId uniqueness prevents reusing the guarantee.
+/// Unknown external outcomes require reconciliation, never a blind repeat of a card action.
+model RefundRequest {
+  id String @id @default(cuid())
+  userId String @unique
+  paymentId String @unique
+  /// Opaque references survive account removal for transaction audit, without retaining email.
+  amountNtd Int
+  merchantTradeNo String
+  status RefundRequestStatus @default(REQUESTED)
+  requestedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  completedAt DateTime?
+  nextAttemptAt DateTime @default(now())
+  attempts Int @default(0)
+  lastError String?
+  /// Written before the external action. A crash with this set needs reconciliation.
+  inFlightAction String?
+  cancellationConfirmedAt DateTime?
+  refundConfirmedAt DateTime?
+  @@index([status, nextAttemptAt])
+  @@map("refund_requests")
 }
 
 enum SubscriptionStatus {
@@ -519,6 +559,12 @@ model Submission {
   judgedOn    JudgedOn @default(REMOTE)
   createdAt   DateTime @default(now())
   judgedAt    DateTime?
+  clientRequestId String?
+  queuedAt DateTime?
+  quotaMonth String?
+  quotaRefundedAt DateTime?
+  evaluationVersion Int @default(1)
+  pendingJudgeResult Json?
 
   @@index([userId, createdAt])
   @@index([userId, verdict, createdAt])
@@ -526,6 +572,7 @@ model Submission {
   @@index([contestId, userId, createdAt])
   @@index([contestParticipantId])
   @@index([verdict, createdAt])
+  @@unique([userId, clientRequestId])
   @@map("submissions")
 }
 
@@ -585,6 +632,7 @@ model ContestParticipant {
   /// still stops at attemptNumber 1 (see ContestsService.register). Re-attempts are only possible
   /// once the previous attempt's endsAt has passed, so a user never has two live attempts at once.
   attemptNumber Int            @default(1)
+  scoringVersion String @default("icpc-v2")
   startedAt DateTime          @default(now())
   endsAt    DateTime
   status    ParticipantStatus @default(RUNNING)
@@ -598,20 +646,24 @@ model ContestParticipant {
 
 model Discussion {
   id        String   @id @default(cuid())
-  problemId String
-  problem   Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  problemId String?
+  problem   Problem? @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   body      String
   createdAt DateTime @default(now())
+  publishedAt DateTime?
+  deletedAt DateTime?
+  revisions ContentRevision[]
 
   @@index([problemId, createdAt])
+  @@index([postId, createdAt])
   @@map("discussions")
 }
 
-/// Site-wide news/discussion feed (nav "Discussion") — distinct from the per-problem Discussion
-/// model above. Currently admin-authored only (see posts.service); isOfficial drives the "[官方]"
-/// badge so readers can tell platform announcements apart from anything opened up to users later.
+/// Only approved content lives in title/bodyMd. Pending edits are immutable ContentRevision rows.
 model Post {
   id         String   @id @default(cuid())
   title      String
@@ -621,9 +673,48 @@ model Post {
   isOfficial Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  category   String   @default("GENERAL")
+  publishedAt DateTime?
+  deletedAt DateTime?
+  revisions ContentRevision[]
+  comments Discussion[]
 
   @@index([createdAt])
+  @@index([publishedAt, id])
   @@map("posts")
+}
+
+enum ContentReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUPERSEDED
+}
+
+/// Exactly one target, enforced by a database CHECK. Content never changes after submission;
+/// review updates only decision metadata. Target deletion/account erasure cascades the text.
+model ContentRevision {
+  id String @id @default(cuid())
+  postId String?
+  post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  discussionId String?
+  discussion Discussion? @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  submittedById String
+  title String?
+  body String
+  category String?
+  isOfficial Boolean @default(false)
+  status ContentReviewStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  reviewedAt DateTime?
+  reviewedById String?
+  reason String?
+
+  @@index([status, createdAt, id])
+  @@index([postId, createdAt])
+  @@index([discussionId, createdAt])
+  @@index([submittedById, createdAt])
+  @@map("content_revisions")
 }
 
 model Assignment {

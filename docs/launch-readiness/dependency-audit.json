@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-09-12",
+  "tool": "pnpm audit --prod",
+  "before": {
+    "info": 0,
+    "low": 2,
+    "moderate": 20,
+    "high": 22,
+    "critical": 2
+  },
+  "after": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0
+  },
+  "versions": {
+    "next": "15.5.25",
+    "nest": "11.2.3"
+  },
+  "scope": "Known production-dependency advisories only; not an application penetration test.",
+  "latestVerifiedAt": "2026-09-12T08:23:03.263625+00:00",
+  "productionDependenciesScanned": 657
+}

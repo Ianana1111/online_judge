@@ -14,7 +14,7 @@ const GRACE_DAYS = 3;
  * period. Unlike ProfileSetupGate, this isn't dismissable: the only ways out are cancelling the
  * deletion or logging out again. */
 export default function PendingDeletionGate() {
-  const { user, setUser, logout } = useAuthStore();
+  const { user, patchUser, logout } = useAuthStore();
   const t = useT();
   const [cancelling, setCancelling] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +28,7 @@ export default function PendingDeletionGate() {
     setCancelling(true);
     try {
       await apiFetch("/users/me/cancel-deletion", { method: "POST" });
-      setUser({ ...user!, deletionRequestedAt: null });
+      patchUser(user!.id, { deletionRequestedAt: null });
     } catch (e) {
       setError(e instanceof ApiError ? e.message : t("Couldn't cancel — try again in a moment."));
       setCancelling(false);

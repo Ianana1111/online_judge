@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { VERDICTS } from "./verdicts.js";
+import { canonicalSchoolName } from "./taiwanUniversityDomains.js";
 import { TAIWAN_UNIVERSITIES } from "./taiwanUniversities.js";
 
 export const registerSchema = z.object({
@@ -22,13 +23,16 @@ export type LoginDto = z.infer<typeof loginSchema>;
 export const createSubmissionSchema = z.object({
   problemId: z.string().cuid(),
   contestId: z.string().cuid().optional(),
+  contestParticipantId: z.string().cuid().optional(),
+  clientRequestId: z.string().uuid().optional(),
   languageKey: z.enum(["cpp17", "c11", "python3", "java17"]),
   sourceCode: z.string().min(1).max(65536),
-});
+}).refine((value) => Boolean(value.contestId) === Boolean(value.contestParticipantId), { message: "A contest submission must identify its attempt", path: ["contestParticipantId"] });
 export type CreateSubmissionDto = z.infer<typeof createSubmissionSchema>;
 
 export const judgeResultSchema = z.object({
   submissionId: z.string().cuid(),
+  evaluationVersion: z.number().int().positive().optional(),
   status: z.enum(VERDICTS),
   timeMs: z.number().int().min(0).optional(),
   memoryKb: z.number().int().min(0).optional(),
@@ -119,7 +123,7 @@ export const updateProfileSchema = z.object({
   // A closed set (see taiwanUniversities.ts), not free text — enforced here too, not just in the
   // picker UI, since the leaderboard's school filter only works if every row's value is exactly
   // one of these strings. null clears it back to unset.
-  school: z.union([z.enum(TAIWAN_UNIVERSITIES), z.null()]).optional(),
+  school: z.preprocess((value) => typeof value === "string" ? canonicalSchoolName(value) : value, z.union([z.enum(TAIWAN_UNIVERSITIES), z.null()])).optional(),
 });
 export type UpdateProfileDto = z.infer<typeof updateProfileSchema>;
 
@@ -143,22 +147,43 @@ export const ecpayCreateSchema = z.object({
 });
 export type EcpayCreateDto = z.infer<typeof ecpayCreateSchema>;
 
+export const adminRefundListSchema = z.object({
+  cursor: z.string().min(1).max(300).optional(),
+  status: z.enum(["REQUESTED", "PROCESSING", "NEEDS_REVIEW", "COMPLETED"]).optional(),
+});
+export type AdminRefundListDto = z.infer<typeof adminRefundListSchema>;
+
 export const noteSchema = z.object({
   content: z.string().max(20_000),
 });
 export type NoteDto = z.infer<typeof noteSchema>;
 
 export const createDiscussionSchema = z.object({
-  body: z.string().min(1).max(4000),
+  body: z.string().trim().min(1).max(4000),
 });
 export type CreateDiscussionDto = z.infer<typeof createDiscussionSchema>;
 
+export const postCategorySchema = z.enum(["GENERAL", "QUESTION", "EDITORIAL", "ANNOUNCEMENT"]);
 export const createPostSchema = z.object({
-  title: z.string().min(1).max(200),
-  bodyMd: z.string().min(1).max(50_000),
+  title: z.string().trim().min(1).max(200),
+  bodyMd: z.string().trim().min(1).max(50_000),
+  category: postCategorySchema.default("GENERAL"),
   isOfficial: z.boolean().default(false),
-});
+}).strict();
 export type CreatePostDto = z.infer<typeof createPostSchema>;
+export const communityListSchema = z.object({
+  cursor: z.string().max(500).optional(),
+  q: z.string().trim().max(100).optional(),
+  category: postCategorySchema.optional(),
+});
+export type CommunityListDto = z.infer<typeof communityListSchema>;
+export const reviewContentSchema = z.object({
+  decision: z.enum(["APPROVED", "REJECTED"]),
+  reason: z.string().trim().max(1000).optional(),
+}).strict().refine((v) => v.decision !== "REJECTED" || !!v.reason, { message: "Please explain what needs to change", path: ["reason"] });
+export type ReviewContentDto = z.infer<typeof reviewContentSchema>;
+export const moderationListSchema = communityListSchema.extend({ state: z.enum(["pending", "reviewed"]).default("pending") });
+export type ModerationListDto = z.infer<typeof moderationListSchema>;
 
 export const createAssignmentSchema = z.object({
   title: z.string().min(1).max(200),
@@ -171,18 +196,22 @@ export const createAssignmentSchema = z.object({
 export type CreateAssignmentDto = z.infer<typeof createAssignmentSchema>;
 
 export const createContestSchema = z.object({
-  title: z.string().min(1).max(200),
-  slug: z.string().min(1).max(80),
+  title: z.string().trim().min(1).max(200),
+  slug: z.string().min(1).max(80).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   kind: z.enum(["CPE", "GPE", "VIRTUAL", "PUBLIC"]).default("PUBLIC"),
   startAt: z.string().datetime().optional(),
   durationMin: z.number().int().min(10).max(600).default(180),
   freezeMin: z.number().int().min(0).max(600).default(60),
   penaltyMin: z.number().int().min(0).max(120).default(20),
-  scoring: z.enum(["ICPC", "SUBTASK"]).default("ICPC"),
+  scoring: z.literal("ICPC").default("ICPC"),
   isPublic: z.boolean().default(true),
   problems: z
-    .array(z.object({ problemId: z.string().cuid(), label: z.string().min(1).max(4) }))
-    .min(1),
+    .array(z.object({ problemId: z.string().cuid(), label: z.string().trim().min(1).max(4) }))
+    .min(1).max(26),
+}).strict().superRefine((value, ctx) => {
+  if (value.freezeMin > value.durationMin) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["freezeMin"], message: "Freeze duration cannot exceed exam duration" });
+  if (new Set(value.problems.map((p) => p.problemId)).size !== value.problems.length) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["problems"], message: "Each problem may appear only once" });
+  if (new Set(value.problems.map((p) => p.label)).size !== value.problems.length) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["problems"], message: "Problem labels must be unique" });
 });
 export type CreateContestDto = z.infer<typeof createContestSchema>;
 
@@ -219,7 +248,7 @@ export const updateClassSessionSchema = z.object({
 export type UpdateClassSessionDto = z.infer<typeof updateClassSessionSchema>;
 
 export const createClassCommentSchema = z.object({
-  body: z.string().min(1).max(4000),
+  body: z.string().trim().min(1).max(4000),
 });
 export type CreateClassCommentDto = z.infer<typeof createClassCommentSchema>;
 
@@ -229,9 +258,11 @@ export const recordPageviewSchema = z.object({
 });
 export type RecordPageviewDto = z.infer<typeof recordPageviewSchema>;
 
-export const markNotificationsReadSchema = z.object({
-  ids: z.array(z.string().cuid()).optional(), // omitted = mark everything read
-});
+export const notificationListSchema = z.object({ cursor: z.string().max(500).optional(), unread: z.enum(["true", "false"]).optional() });
+export const markNotificationsReadSchema = z.union([
+  z.object({ ids: z.array(z.string().cuid()).min(1).max(100) }).strict(),
+  z.object({ all: z.literal(true), before: z.string().datetime() }).strict(),
+]);
 export type MarkNotificationsReadDto = z.infer<typeof markNotificationsReadSchema>;
 
 // Merge-patched into User.settings (Json) — only known keys are accepted so this stays a real

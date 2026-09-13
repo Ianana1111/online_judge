@@ -1,7 +1,9 @@
+import type { CommunityPage } from "@/lib/community";
 import type { MetadataRoute } from "next";
 import { serverFetchDetailed } from "@/lib/serverApi";
 import { SITE_URL } from "@/lib/site";
-import type { ProblemListResponse, CollectionListItem, PostListItem } from "@/lib/types";
+import type { ProblemListResponse, CollectionListItem } from "@/lib/types";
+type SitemapPost = { id: string; createdAt: string; updatedAt: string };
 
 // Crawlers re-fetch this on their own schedule; an hour of staleness on "did a new problem/post
 // get added" is a non-issue, and it saves hammering the API every time a bot requests it.
@@ -35,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [problemsResult, collectionsResult, postsResult] = await Promise.all([
     serverFetchDetailed<ProblemListResponse>("/problems?pageSize=1000"),
     serverFetchDetailed<CollectionListItem[]>("/collections"),
-    serverFetchDetailed<PostListItem[]>("/posts"),
+    serverFetchDetailed<CommunityPage<SitemapPost>>("/posts/sitemap"),
   ]);
   for (const [name, result] of [
     ["problems", problemsResult],
@@ -59,14 +61,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ? collectionsResult.data.map((c) => ({ url: `${SITE_URL}/collections/${c.slug}`, changeFrequency: "weekly" as const, priority: 0.6 }))
     : [];
 
-  const postEntries: MetadataRoute.Sitemap = postsResult.ok
-    ? postsResult.data.map((p) => ({
-        url: `${SITE_URL}/discussion/${p.id}`,
-        lastModified: new Date(p.createdAt),
-        changeFrequency: "monthly" as const,
-        priority: 0.5,
-      }))
-    : [];
-
-  return [...staticEntries, ...problemEntries, ...collectionEntries, ...postEntries];
+  const entries = [...staticEntries, ...problemEntries, ...collectionEntries];
+  const seen = new Set<string>();
+  const cursors = new Set<string>();
+  let current = postsResult;
+  // A sitemap has a 50,000 URL limit. Fetch metadata in bounded pages, without post bodies.
+  // Split this route into a sitemap index before the catalog reaches that limit.
+  while (current.ok) {
+    for (const p of current.data.items) {
+      if (seen.has(p.id)) continue;
+      if (entries.length >= 50_000) { console.error("sitemap: URL limit reached; split into a sitemap index"); return entries; }
+      seen.add(p.id);
+      entries.push({ url: `${SITE_URL}/discussion/${p.id}`, lastModified: new Date(p.updatedAt), changeFrequency: "monthly", priority: 0.5 });
+    }
+    const cursor = current.data.nextCursor;
+    if (!cursor) break;
+    if (cursors.has(cursor)) { console.error("sitemap: repeated page cursor"); break; }
+    cursors.add(cursor);
+    current = await serverFetchDetailed<CommunityPage<SitemapPost>>(`/posts/sitemap?cursor=${encodeURIComponent(cursor)}`);
+    if (!current.ok) console.error("sitemap: failed to fetch the next post page");
+  }
+  return entries;
 }

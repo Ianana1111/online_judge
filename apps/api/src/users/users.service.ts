@@ -1,8 +1,9 @@
 import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { createHash, randomUUID } from "node:crypto";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { prisma, Prisma } from "@oj/db";
-import { TAIWAN_UNIVERSITY_DOMAINS, verifySchoolEmailDomain } from "@oj/shared";
+import { canonicalSchoolName, getSchoolEmailDomains, verifySchoolEmailDomain } from "@oj/shared";
 import type {
   ChangeHandleDto,
   ChangePasswordDto,
@@ -16,16 +17,21 @@ import type { IssuedSession } from "../auth/auth.service";
 import { AuthService } from "../auth/auth.service";
 import { TokenService } from "../auth/token.service";
 import { computeStreak } from "../leaderboard/leaderboard.service";
-import { MailService } from "../common/mail.service";
+import { escapeMailHtml, MailService } from "../common/mail.service";
 
 const SCHOOL_VERIFY_SECRET = process.env.SCHOOL_VERIFY_SECRET ?? "dev_school_verify_secret_change_me";
 const SCHOOL_VERIFY_TOKEN_TTL = "30m";
+const SCHOOL_TOKEN_ISSUER = "judge.tw";
+const SCHOOL_TOKEN_AUDIENCE = "school-verification";
+const tokenHash = (token: string) => createHash("sha256").update(token).digest("hex");
+async function lockSchool(tx: Prisma.TransactionClient, userId: string) { await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('school_verify'), hashtext(${userId}))`; }
 // Long enough that a user who fat-fingers "resend" a couple times isn't rate-limited into
 // frustration, short enough that it isn't a meaningful spam vector against someone else's inbox.
 const SCHOOL_VERIFY_RESEND_COOLDOWN_MS = 60_000;
 
 interface SchoolVerifyTokenPayload {
   purpose: "school-verify";
+  jti: string;
   sub: string;
   school: string;
   email: string;
@@ -411,143 +417,82 @@ export class UsersService {
   /** Public-facing profile fields only (bio/avatar/school) — never handle/password/plan, those go
    * through their own dedicated endpoints. */
   async updateProfile(userId: string, patch: UpdateProfileDto) {
-    const data: {
-      bio?: string;
-      avatarUrl?: string | null;
-      school?: string | null;
-      schoolEmail?: null;
-      schoolVerifiedAt?: null;
-      schoolVerificationSentAt?: null;
-    } = {};
-    if (patch.bio !== undefined) data.bio = patch.bio;
-    if (patch.avatarUrl !== undefined) data.avatarUrl = patch.avatarUrl;
-    if (patch.school !== undefined) {
-      const current = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { school: true, schoolVerifiedAt: true },
-      });
-      if (patch.school !== current?.school) {
-        // A confirmed school is permanent. Letting it be edited afterwards would make the
-        // leaderboard's school grouping meaningless — anyone could verify one school, then swap
-        // the label to a different one and keep the credibility that came with verifying.
-        if (current?.schoolVerifiedAt) {
-          throw new BadRequestException("Your school is verified and can't be changed.");
-        }
-        // Not verified yet, so nothing is being vouched for — switching schools just starts the
-        // verification story over from scratch.
-        data.schoolEmail = null;
-        data.schoolVerifiedAt = null;
-        data.schoolVerificationSentAt = null;
-      }
-      data.school = patch.school;
-    }
-    const user = await prisma.user.update({
-      where: { id: userId },
-      data,
-      select: { bio: true, avatarUrl: true, school: true, schoolEmail: true, schoolVerifiedAt: true },
+    return prisma.$transaction(async (tx) => {
+      await lockSchool(tx, userId);
+      const current = await tx.user.findUnique({ where: { id: userId }, select: { school: true, schoolVerifiedAt: true } });
+      if (!current) throw new NotFoundException("User not found");
+      const school = patch.school ? canonicalSchoolName(patch.school) : patch.school;
+      const changed = school !== undefined && school !== current.school;
+      if (changed && current.schoolVerifiedAt) throw new BadRequestException("Your school is verified and can't be changed.");
+      return tx.user.update({ where: { id: userId }, data: {
+        ...(patch.bio !== undefined ? { bio: patch.bio } : {}), ...(patch.avatarUrl !== undefined ? { avatarUrl: patch.avatarUrl } : {}),
+        ...(school !== undefined ? { school } : {}),
+        ...(changed ? { schoolEmail: null, schoolVerifiedAt: null, schoolVerificationSentAt: null, schoolVerificationTokenHash: null } : {}),
+      }, select: { bio: true, avatarUrl: true, school: true, schoolEmail: true, schoolVerifiedAt: true } });
     });
-    return user;
   }
 
-  /** Sends a one-time verification link to `email`, only if it's actually on the domain that
-   * `school` (the user's current, already-saved claim) is known to use — see
-   * TAIWAN_UNIVERSITY_DOMAINS. The email itself carries the token; nothing pending is otherwise
-   * stored server-side beyond the resend cooldown and the "which address is this for" record. */
-  async requestSchoolVerification(userId: string, email: string) {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { school: true, schoolVerifiedAt: true, schoolVerificationSentAt: true },
-    });
-    if (!user) throw new NotFoundException("User not found");
-    if (!user.school) throw new BadRequestException("Pick a school first.");
-    if (!(user.school in TAIWAN_UNIVERSITY_DOMAINS)) {
-      throw new BadRequestException("This school doesn't support email verification yet.");
-    }
-    if (user.schoolVerifiedAt) throw new BadRequestException("Your school is already verified.");
-    if (!verifySchoolEmailDomain(email, user.school)) {
-      const domain = TAIWAN_UNIVERSITY_DOMAINS[user.school as keyof typeof TAIWAN_UNIVERSITY_DOMAINS];
-      throw new BadRequestException(`That address doesn't look like a @${domain} address.`);
-    }
-    if (user.schoolVerificationSentAt && Date.now() - user.schoolVerificationSentAt.getTime() < SCHOOL_VERIFY_RESEND_COOLDOWN_MS) {
-      throw new BadRequestException("Give it a moment before requesting another email.");
-    }
-    // Early, friendly rejection — the authoritative check (immune to the TOCTOU race this alone
-    // can't close) happens atomically in confirmSchoolVerification when the link is actually
-    // clicked. This just saves sending an email that could never succeed.
-    const alreadyUsed = await prisma.usedSchoolEmail.findUnique({ where: { email: normalizeSchoolEmail(email) } });
-    if (alreadyUsed && alreadyUsed.userId !== userId) {
-      throw new BadRequestException("That email has already been used to verify a different account.");
-    }
-
-    const token = jwt.sign({ purpose: "school-verify", sub: userId, school: user.school, email } satisfies SchoolVerifyTokenPayload, SCHOOL_VERIFY_SECRET, {
-      expiresIn: SCHOOL_VERIFY_TOKEN_TTL,
+  /** Reserve the resend window and exact challenge before sending. The same user lock is also
+   * used for school changes and confirmation, closing their check-then-update races. */
+  async requestSchoolVerification(userId: string, rawEmail: string) {
+    const email = normalizeSchoolEmail(rawEmail);
+    const challenge = await prisma.$transaction(async (tx) => {
+      await lockSchool(tx, userId);
+      const user = await tx.user.findUnique({ where: { id: userId } });
+      if (!user || user.deletionRequestedAt) throw new NotFoundException("User not found");
+      if (!user.school) throw new BadRequestException("Pick a school first.");
+      if (user.schoolVerifiedAt) throw new BadRequestException("Your school is already verified.");
+      const domains = getSchoolEmailDomains(user.school);
+      if (!domains.length) throw new BadRequestException("This school requires assistance. Please contact support with its official email instructions.");
+      if (!verifySchoolEmailDomain(email, user.school)) throw new BadRequestException(`Use an email belonging to your school (${domains.join(", ")}).`);
+      if (user.schoolVerificationSentAt && Date.now() - +user.schoolVerificationSentAt < SCHOOL_VERIFY_RESEND_COOLDOWN_MS) throw new BadRequestException("Give it a moment before requesting another email.");
+      const claimed = await tx.usedSchoolEmail.findUnique({ where: { email } });
+      if (claimed && claimed.userId !== userId) throw new BadRequestException("That email has already been used to verify a different account.");
+      const token = jwt.sign({ purpose: "school-verify", sub: userId, school: user.school, email, jti: randomUUID() } satisfies SchoolVerifyTokenPayload,
+        SCHOOL_VERIFY_SECRET, { algorithm: "HS256", issuer: SCHOOL_TOKEN_ISSUER, audience: SCHOOL_TOKEN_AUDIENCE, expiresIn: SCHOOL_VERIFY_TOKEN_TTL });
+      await tx.user.update({ where: { id: userId }, data: { schoolEmail: email, schoolVerificationSentAt: new Date(), schoolVerificationTokenHash: tokenHash(token) } });
+      return { token, school: user.school };
     });
     const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
     const apiOrigin = (process.env.API_ORIGIN ?? "http://localhost:4000").split(",")[0].trim();
-    const verifyUrl = `${apiOrigin}/users/school/verify/confirm?token=${encodeURIComponent(token)}`;
-
-    await this.mail.send({
-      to: email,
-      subject: `Verify your ${user.school} email — judge.tw`,
-      html: `
-        <p>Confirm that <strong>${email}</strong> belongs to you to attach <strong>${user.school}</strong> to your judge.tw leaderboard entry.</p>
-        <p><a href="${verifyUrl}">Verify my school email</a></p>
-        <p>This link expires in 30 minutes. If you didn't request this, you can ignore this email.</p>
-        <p><a href="${webOrigin}">judge.tw</a></p>
-      `,
-    });
-
-    await prisma.user.update({ where: { id: userId }, data: { schoolEmail: email, schoolVerificationSentAt: new Date() } });
+    const verifyUrl = `${apiOrigin}/users/school/verify/confirm?token=${encodeURIComponent(challenge.token)}`;
+    try {
+      await this.mail.send({ to: email, subject: `Verify your ${challenge.school} email — judge.tw`,
+        html: `<p>Confirm that <strong>${escapeMailHtml(email)}</strong> belongs to you to attach <strong>${escapeMailHtml(challenge.school)}</strong> to your judge.tw profile.</p>
+          <p><a href="${escapeMailHtml(verifyUrl)}">Verify my school email</a></p>
+          <p>This link expires in 30 minutes. If you did not request it, ignore this email.</p><p><a href="${escapeMailHtml(webOrigin)}">judge.tw</a></p>` });
+    } catch (error) {
+      // A late failure must not clear a newer request or a completed verification.
+      await prisma.user.updateMany({ where: { id: userId, schoolVerificationTokenHash: tokenHash(challenge.token), schoolVerifiedAt: null },
+        data: { schoolVerificationSentAt: null, schoolVerificationTokenHash: null, schoolEmail: null } });
+      throw error;
+    }
     return { ok: true as const };
   }
 
-  /** The link clicked from the verification email — deliberately identity-free (no auth cookie
-   * required): the signed token itself carries who this is for, so it works from any device/
-   * browser the email happens to be opened in, not just the one the request originated from. Both
-   * the claimed school and email are re-checked against the user's *current* row (not just
-   * trusted from the token) so a stale link from before a school change can't silently verify the
-   * wrong thing. */
   async confirmSchoolVerification(token: string): Promise<{ ok: boolean; reason?: "duplicate" }> {
     let payload: SchoolVerifyTokenPayload;
     try {
-      payload = jwt.verify(token, SCHOOL_VERIFY_SECRET) as unknown as SchoolVerifyTokenPayload;
-    } catch {
-      return { ok: false };
-    }
-    if (payload.purpose !== "school-verify") return { ok: false };
-
-    const user = await prisma.user.findUnique({ where: { id: payload.sub }, select: { school: true, schoolEmail: true } });
-    if (!user || user.school !== payload.school || user.schoolEmail !== payload.email) return { ok: false };
-
-    const normalizedEmail = normalizeSchoolEmail(payload.email);
-    const claimedBy = await prisma.usedSchoolEmail.findUnique({ where: { email: normalizedEmail } });
-    // Already claimed by this same account — a double-clicked link, or the tab was left open from
-    // before and clicked again. Treat as an idempotent success rather than a false "duplicate"
-    // rejection; there's nothing left to insert, but schoolVerifiedAt is worth re-affirming anyway.
-    if (claimedBy && claimedBy.userId === payload.sub) {
-      await prisma.user.update({ where: { id: payload.sub }, data: { schoolVerifiedAt: new Date() } });
+      if (token.length > 4096) return { ok: false };
+      const decoded = jwt.verify(token, SCHOOL_VERIFY_SECRET, { algorithms: ["HS256"], issuer: SCHOOL_TOKEN_ISSUER, audience: SCHOOL_TOKEN_AUDIENCE });
+      if (typeof decoded === "string" || decoded.purpose !== "school-verify" || typeof decoded.sub !== "string" || typeof decoded.school !== "string" || typeof decoded.email !== "string" || typeof decoded.jti !== "string") return { ok: false };
+      payload = decoded as unknown as SchoolVerifyTokenPayload;
+    } catch { return { ok: false }; }
+    return prisma.$transaction(async (tx) => {
+      await lockSchool(tx, payload.sub);
+      const user = await tx.user.findUnique({ where: { id: payload.sub } });
+      if (!user || user.deletionRequestedAt || user.school !== payload.school || user.schoolEmail !== payload.email) return { ok: false };
+      // Retrying the same already-completed claim is safe and never changes its timestamp.
+      if (user.schoolVerifiedAt) return { ok: true };
+      if (user.schoolVerificationTokenHash !== tokenHash(token) || !verifySchoolEmailDomain(payload.email, payload.school)) return { ok: false };
+      const email = normalizeSchoolEmail(payload.email);
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('school_email'), hashtext(${email}))`;
+      const claimed = await tx.usedSchoolEmail.findUnique({ where: { email } });
+      if (claimed && claimed.userId !== payload.sub) return { ok: false, reason: "duplicate" as const };
+      if (!claimed) await tx.usedSchoolEmail.create({ data: { email, userId: payload.sub, school: payload.school } });
+      await tx.user.update({ where: { id: payload.sub }, data: { schoolVerifiedAt: new Date(), schoolVerificationTokenHash: null } });
       return { ok: true };
-    }
-    if (claimedBy) return { ok: false, reason: "duplicate" };
-
-    // Claiming the UsedSchoolEmail row and marking the user verified happen in one transaction —
-    // the insert's primary-key uniqueness is what actually enforces "one account per email",
-    // atomically, even against two different accounts racing to confirm the same address right
-    // after the check above (which is not itself atomic with this transaction).
-    try {
-      await prisma.$transaction([
-        prisma.usedSchoolEmail.create({
-          data: { email: normalizedEmail, userId: payload.sub, school: payload.school },
-        }),
-        prisma.user.update({ where: { id: payload.sub }, data: { schoolVerifiedAt: new Date() } }),
-      ]);
-    } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
-        return { ok: false, reason: "duplicate" };
-      }
-      throw err;
-    }
-    return { ok: true };
+    });
   }
 
   // `year` selects a specific Jan 1 – Dec 31 calendar year (the profile page's heatmap year

@@ -1,12 +1,19 @@
+import { randomBytes } from "node:crypto";
 import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { prisma, Prisma } from "@oj/db";
 import type { User } from "@oj/db";
 import {
   effectivePriceNtd,
+  billingCycleEnd,
+  parseEcpayPaymentDate,
+  refundDeadline,
+  withinRefundWindow,
+  REFUND_POLICY_VERSION,
   FREE_SUBMIT_QUOTA,
   FREE_VIRTUAL_ATTEMPTS,
   PLAN_PRICING,
   type BillingPeriod,
+  type AdminRefundListDto,
 } from "@oj/shared";
 import {
   cancelEcpayPeriod,
@@ -14,6 +21,8 @@ import {
   doCreditCardAction,
   ecpayConfig,
   queryEcpayCreditTrade,
+  queryEcpayOrder,
+  refundActions,
   redactEcpayBodyForLogging,
   verifyCheckMacValue,
 } from "./ecpay.util";
@@ -23,22 +32,6 @@ import {
 // indefinite for any real subscriber; billing.service.cancelSubscription is how it actually ends.
 const RECURRING_EXEC_TIMES: Record<BillingPeriod, number> = { MONTHLY: 999, YEARLY: 99 };
 const RECURRING_PERIOD_TYPE: Record<BillingPeriod, "M" | "Y"> = { MONTHLY: "M", YEARLY: "Y" };
-
-// "2000 NTD for 13 months" — applied once, only on the charge that creates a brand new YEARLY
-// Subscription (ECPay's own recurring engine still charges again exactly 365 days later,
-// regardless of this bonus; extendPlan's own "extend from the later of now or existing expiry"
-// logic means this 30-day head start compounds forward forever rather than being clawed back).
-// Deliberately NOT applied to one-time ATM yearly purchases or admin grants — those aren't a
-// "subscription" being newly created, so there's no well-defined "first charge" to hang this on.
-const FIRST_YEARLY_SUBSCRIPTION_BONUS_DAYS = 30;
-
-// Credit-card subscribers can get a full, automatic refund of their very first charge within this
-// many days of it — replaces the old 30-day free trial (Plan A) with "pay now, guaranteed refund
-// if you back out early" instead of "don't pay until you decide to." ATM purchases are
-// deliberately excluded from this: ECPay has no API to reverse a bank transfer the way it does a
-// card charge, so those still have to go through a manual, human-initiated refund — see
-// requestRefund's own doc comment.
-const REFUND_WINDOW_MS = 30 * 24 * 3600 * 1000;
 
 /** PRO is only meaningful while it hasn't expired — a lapsed PRO account behaves as FREE until a
  * new payment extends it. Centralised so every enforcement point agrees on "is this user PRO now".
@@ -79,7 +72,7 @@ function formatEcpayDate(d: Date): string {
 
 // ECPay requires a merchant-unique order id, <=20 chars, alphanumeric.
 function generateMerchantTradeNo(): string {
-  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+  const rand = randomBytes(5).toString("hex").toUpperCase();
   return `JT${Date.now().toString(36).toUpperCase()}${rand}`.slice(0, 20);
 }
 
@@ -143,17 +136,37 @@ export class BillingService {
    * optional transaction client so requestRefund can run this same check again *inside* its
    * advisory-locked transaction, seeing any REFUNDED write a just-finished concurrent call made,
    * rather than a plain `prisma` read that could still see pre-lock state. */
-  private async findRefundableFirstPayment(userId: string, db: Prisma.TransactionClient | typeof prisma = prisma) {
-    const alreadyRefunded = await db.payment.findFirst({ where: { userId, status: "REFUNDED" } });
-    if (alreadyRefunded) return null;
-
-    const firstCreditPayment = await db.payment.findFirst({
-      where: { userId, method: "ECPAY", ecpayMethod: "CREDIT", status: { in: ["APPROVED", "AUTHORIZED"] } },
-      orderBy: { createdAt: "asc" },
+  private async findRefundableFirstPayment(userId: string, db: Prisma.TransactionClient | typeof prisma = prisma, receivedAt = new Date()) {
+    const first = await db.payment.findFirst({
+      where: { userId, method: "ECPAY", ecpayMethod: "CREDIT", paidAt: { not: null } },
+      orderBy: [{ paidAt: "asc" }, { id: "asc" }],
     });
-    if (!firstCreditPayment) return null;
-    if (Date.now() - firstCreditPayment.createdAt.getTime() > REFUND_WINDOW_MS) return null;
-    return firstCreditPayment;
+    if (!first || !["APPROVED", "AUTHORIZED"].includes(first.status)) return null;
+    return withinRefundWindow(first.paidAt, first.refundDeadlineAt, receivedAt) ? first : null;
+  }
+
+  private async grantPaymentPeriod(tx: Prisma.TransactionClient, payment: { id: string; userId: string; period: BillingPeriod }, paidAt: Date,
+    recurring?: { anchor: Date; firstEntitlementStart: Date; cycle: number }) {
+    await tx.$executeRaw`SELECT 1 FROM users WHERE id = ${payment.userId} FOR UPDATE`;
+    const user = await tx.user.findUniqueOrThrow({ where: { id: payment.userId } });
+    // Each successful cycle contributes its original calendar duration, even when callbacks
+    // arrive out of order. Starting each renewal at its own paidAt would count missing gaps twice.
+    const start = new Date(Math.max(+(recurring?.firstEntitlementStart ?? paidAt), user.planExpiresAt?.getTime() ?? 0));
+    const duration = recurring
+      ? +billingCycleEnd(recurring.anchor, payment.period, recurring.cycle) - +billingCycleEnd(recurring.anchor, payment.period, recurring.cycle - 1)
+      : +billingCycleEnd(paidAt, payment.period) - +paidAt;
+    const end = new Date(+start + duration);
+    await tx.payment.update({ where: { id: payment.id }, data: { entitlementStartsAt: start, entitlementEndsAt: end } });
+    await tx.user.update({ where: { id: payment.userId }, data: { plan: "PRO", planExpiresAt: end, planCancelRequested: false } });
+  }
+
+  private async verifyWebhook(body: Record<string, string>) {
+    const config = ecpayConfig();
+    if (body.MerchantID !== config.merchantId || !(await verifyCheckMacValue(body, config)) ||
+      (!config.isSandbox && body.SimulatePaid === "1")) {
+      throw new BadRequestException("Invalid payment notification");
+    }
+    if (!/^[a-zA-Z0-9]{1,20}$/.test(body.MerchantTradeNo ?? "")) throw new BadRequestException("Invalid payment order");
   }
 
   /** Current plan + quota snapshot for the logged-in user (drives the pricing page and quota UI). */
@@ -177,7 +190,9 @@ export class BillingService {
       orderBy: { createdAt: "desc" },
     });
     const subscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
+    const firstCharge = subscription ? await prisma.payment.findUnique({ where: { merchantTradeNo: subscription.merchantTradeNo } }) : null;
     const refundablePayment = await this.findRefundableFirstPayment(userId);
+    const refundRequest = await prisma.refundRequest.findUnique({ where: { userId } });
 
     return {
       // "plan" drives every Pro-gated UI check, so ADMIN reports "PRO" here too (see isUnlimited)
@@ -186,12 +201,11 @@ export class BillingService {
       plan: unlimited ? "PRO" : "FREE",
       planExpiresAt: pro ? user.planExpiresAt : null,
       planCancelRequested: pro && user.planCancelRequested,
-      refundEligibleUntil: refundablePayment ? new Date(refundablePayment.createdAt.getTime() + REFUND_WINDOW_MS) : null,
-      // planExpiresAt doubles as "renews on" for an active subscription — ECPay's periodic webhook
-      // never hands us an explicit next-charge date, but the paid-through date already means the
-      // same thing while a Subscription auto-extends it every cycle.
-      subscription: pro && subscription ? { period: subscription.period, amountNtd: subscription.amountNtd } : null,
-      submits: { used: unlimited ? user.submitQuotaUsed : submitsUsedThisMonth, limit: unlimited ? null : FREE_SUBMIT_QUOTA },
+      refundEligibleUntil: !refundRequest ? refundablePayment?.refundDeadlineAt ?? null : null,
+      refundRequest: refundRequest ? { id: refundRequest.id, status: refundRequest.status, requestedAt: refundRequest.requestedAt, completedAt: refundRequest.completedAt } : null,
+      subscription: subscription ? { period: subscription.period, amountNtd: subscription.amountNtd,
+        nextChargeAt: firstCharge?.paidAt ? billingCycleEnd(firstCharge.paidAt, subscription.period, subscription.totalSuccessTimes) : null } : null,
+      submits: { used: submitsUsedThisMonth, limit: unlimited ? null : FREE_SUBMIT_QUOTA },
       virtualContests: { used: virtualUsed, limit: unlimited ? null : FREE_VIRTUAL_ATTEMPTS },
       pendingPayment: pending
         ? {
@@ -315,6 +329,13 @@ export class BillingService {
    * this first charge via the ReturnURL webhook (RtnCode "1" = paid); handleEcpayReturn spins up
    * the Subscription row there. */
   async createEcpayOrder(userId: string, period: BillingPeriod) {
+    const config = ecpayConfig();
+    const apiPublicUrl = process.env.API_PUBLIC_URL || (process.env.RAILWAY_SERVICE_API_URL ? `https://${process.env.RAILWAY_SERVICE_API_URL}` : "http://localhost:4000");
+    const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
+    if (!config.isSandbox && [apiPublicUrl, webOrigin].some((value) => {
+      const url = new URL(value);
+      return url.protocol !== "https:" || ["localhost", "127.0.0.1"].includes(url.hostname);
+    })) throw new BadRequestException("Production checkout requires public HTTPS URLs");
     // The amount that actually gets charged is always derived server-side (PLAN_PRICING plus
     // any active launch promo via effectivePriceNtd), never trusted from the client — the client
     // only chooses which of these two fixed plans.
@@ -354,15 +375,10 @@ export class BillingService {
           status: "PENDING",
           merchantTradeNo,
           isRecurring: true,
+          refundPolicyVersion: REFUND_POLICY_VERSION,
         },
       });
     });
-
-    const config = ecpayConfig();
-    const apiPublicUrl =
-      process.env.API_PUBLIC_URL ||
-      (process.env.RAILWAY_SERVICE_API_URL ? `https://${process.env.RAILWAY_SERVICE_API_URL}` : "http://localhost:4000");
-    const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
 
     const params: Record<string, string | number> = {
       MerchantID: config.merchantId,
@@ -375,6 +391,8 @@ export class BillingService {
       ReturnURL: `${apiPublicUrl}/billing/ecpay/return`,
       ClientBackURL: `${webOrigin}/upgrade/checkout`,
       ChoosePayment: "Credit",
+      IgnorePayment: "ApplePay",
+      NeedExtraPaidInfo: "Y",
       EncryptType: 1,
       PeriodAmount: amountNtd,
       PeriodType: RECURRING_PERIOD_TYPE[period],
@@ -391,24 +409,16 @@ export class BillingService {
    * to 4x/day until it gets back the literal string "1|OK", so a payment already APPROVED (by an
    * earlier delivery of the same notification) is a silent no-op, not an error. */
   async handleEcpayReturn(body: Record<string, string>): Promise<void> {
-    const config = ecpayConfig();
-    if (!(await verifyCheckMacValue(body, config))) {
-      this.logger.warn(
-        `ECPay return webhook: invalid CheckMacValue for ${body.MerchantTradeNo}. ` +
-          `received=${JSON.stringify(redactEcpayBodyForLogging(body))} expected=${await computeCheckMacValue(body, config)}`,
-      );
-      return;
-    }
+    await this.verifyWebhook(body);
     if (body.RtnCode !== "1") {
       this.logger.log(`ECPay return webhook: non-success RtnCode ${body.RtnCode} for ${body.MerchantTradeNo}`);
       return;
     }
     const payment = await prisma.payment.findUnique({ where: { merchantTradeNo: body.MerchantTradeNo } });
     if (!payment) {
-      this.logger.warn(`ECPay return webhook: unknown MerchantTradeNo ${body.MerchantTradeNo}`);
-      return;
+      throw new NotFoundException("Payment order not found");
     }
-    if (payment.status === "APPROVED" || payment.status === "REJECTED") return; // already finalized — idempotent no-op
+    if (["APPROVED", "REJECTED", "REFUNDED"].includes(payment.status)) return; // already finalized — idempotent no-op
 
     // Belt-and-suspenders: TradeAmt is itself covered by the CheckMacValue signature above, so a
     // forged amount would already have failed verification — this only catches an internal bug
@@ -421,8 +431,12 @@ export class BillingService {
         `ECPay return webhook: amount mismatch for ${body.MerchantTradeNo} — expected ${payment.amountNtd}, ` +
           `TradeAmt was ${body.TradeAmt}. Payment left ${payment.status}, NOT approved.`,
       );
-      return;
+      throw new BadRequestException("Payment amount mismatch");
     }
+    if (!/^[a-zA-Z0-9]{1,20}$/.test(body.TradeNo ?? "")) throw new BadRequestException("Invalid gateway trade number");
+    const paidAt = parseEcpayPaymentDate(body.PaymentDate);
+    const deadline = payment.refundDeadlineAt ?? (payment.refundPolicyVersion === "legacy-30d"
+      ? new Date(+paidAt + 30 * 86400_000) : refundDeadline(paidAt));
 
     if (payment.status === "AUTHORIZED") {
       // Credit-card order: Pro was already granted the moment the authorization was detected (see
@@ -437,7 +451,7 @@ export class BillingService {
       // redelivery arriving a moment later sees count=0 and is a no-op instead of double-approving.
       const claimed = await prisma.payment.updateMany({
         where: { id: payment.id, status: "AUTHORIZED" },
-        data: { status: "APPROVED", reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO" },
+        data: { status: "APPROVED", paidAt: payment.paidAt ?? paidAt, refundDeadlineAt: deadline, ecpayTradeNo: body.TradeNo, reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO" },
       });
       if (claimed.count === 0) return; // already claimed by a concurrent delivery of this same webhook
       this.logger.log(`ECPay return webhook: capture confirmed for already-authorized payment ${payment.id}`);
@@ -454,10 +468,10 @@ export class BillingService {
       // is what must be race-proof.
       const claimed = await tx.payment.updateMany({
         where: { id: payment.id, status: "PENDING" },
-        data: { status: "APPROVED", reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO" },
+        data: { status: "APPROVED", paidAt: payment.paidAt ?? paidAt, refundDeadlineAt: deadline, ecpayTradeNo: body.TradeNo, reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO" },
       });
       if (claimed.count === 0) return false; // already claimed by a concurrent delivery of this same webhook
-      await this.extendPlan(tx, payment.userId, payment.period);
+      await this.grantPaymentPeriod(tx, payment, paidAt);
 
       if (payment.isRecurring) {
         // First successful charge of a recurring order — spin up the Subscription row that
@@ -465,7 +479,7 @@ export class BillingService {
         // cancelSubscription calls ECPay's Cancel action against. Guard on the unique
         // merchantTradeNo rather than an existence check first: idempotent even if ECPay somehow
         // redelivers this notification after a retry raced the transaction.
-        await tx.subscription.upsert({
+        const subscription = await tx.subscription.upsert({
           where: { merchantTradeNo: payment.merchantTradeNo! },
           create: {
             userId: payment.userId,
@@ -477,13 +491,10 @@ export class BillingService {
           },
           update: {},
         });
-        // "2000 NTD for 13 months" — see FIRST_YEARLY_SUBSCRIPTION_BONUS_DAYS's own comment for
-        // why this only applies here (a brand new YEARLY subscription's first charge) and not to
-        // one-time ATM purchases or later renewals. Safe to apply unconditionally on this branch
-        // without an extra "was this create-or-update" check: the surrounding payment.status
-        // guard above already ensures this whole block executes at most once per payment/order.
-        if (payment.period === "YEARLY") {
-          await this.extendPlanByDays(tx, payment.userId, FIRST_YEARLY_SUBSCRIPTION_BONUS_DAYS);
+        await tx.payment.update({ where: { id: payment.id }, data: { subscriptionId: subscription.id, cycleNumber: 1 } });
+        // Only pre-migration checkout orders retain an already-promised annual bonus.
+        if (payment.refundPolicyVersion === "legacy-30d" && payment.period === "YEARLY") {
+          await this.extendPlanByDays(tx, payment.userId, 30);
         }
       }
       return true;
@@ -497,18 +508,10 @@ export class BillingService {
    * ECPay's only progress marker is TotalSuccessTimes (cumulative successful-charge count), so a
    * notification is only acted on when it's strictly greater than what we've already recorded. */
   async handleEcpayPeriodReturn(body: Record<string, string>): Promise<void> {
-    const config = ecpayConfig();
-    if (!(await verifyCheckMacValue(body, config))) {
-      this.logger.warn(
-        `ECPay period-return webhook: invalid CheckMacValue for ${body.MerchantTradeNo}. ` +
-          `received=${JSON.stringify(redactEcpayBodyForLogging(body))} expected=${await computeCheckMacValue(body, config)}`,
-      );
-      return;
-    }
+    await this.verifyWebhook(body);
     const subscription = await prisma.subscription.findUnique({ where: { merchantTradeNo: body.MerchantTradeNo } });
     if (!subscription) {
-      this.logger.warn(`ECPay period-return webhook: unknown MerchantTradeNo ${body.MerchantTradeNo}`);
-      return;
+      throw new NotFoundException("Subscription notification arrived before its first payment; retry required");
     }
     if (body.RtnCode !== "1") {
       // ECPay retries on its own and auto-cancels the recurring order after 6 consecutive
@@ -516,42 +519,33 @@ export class BillingService {
       this.logger.log(`ECPay period-return webhook: non-success RtnCode ${body.RtnCode} for ${body.MerchantTradeNo}`);
       return;
     }
-    const totalSuccessTimes = Number(body.TotalSuccessTimes);
-    if (!Number.isFinite(totalSuccessTimes) || totalSuccessTimes <= subscription.totalSuccessTimes) {
-      return; // cheap fast-path for ECPay's normal retries — the real guarantee is the conditional
-      // update below, since this plain read is itself racy against a concurrent delivery.
-    }
-
-    const claimed = await prisma.$transaction(async (tx) => {
-      // Conditional on totalSuccessTimes still being less than this notification's value — not a
-      // plain update after the read above — so two near-simultaneous deliveries of the same
-      // renewal notification can't both pass that read and both extend the plan for one charge.
-      const updated = await tx.subscription.updateMany({
-        where: { id: subscription.id, totalSuccessTimes: { lt: totalSuccessTimes } },
-        data: { totalSuccessTimes },
-      });
-      if (updated.count === 0) return false; // already claimed by a concurrent delivery
-      await tx.payment.create({
-        data: {
-          userId: subscription.userId,
-          period: subscription.period,
-          amountNtd: subscription.amountNtd,
-          status: "APPROVED",
-          method: "ECPAY",
-          ecpayMethod: "CREDIT",
-          reference: `Recurring renewal #${totalSuccessTimes}`,
-          reviewedAt: new Date(),
-          reviewedBy: "ECPAY_AUTO",
-          subscriptionId: subscription.id,
-        },
-      });
-      await this.extendPlan(tx, subscription.userId, subscription.period);
-      return true;
+    const cycle = Number(body.TotalSuccessTimes);
+    const amount = Number(body.amount ?? body.PeriodAmount ?? body.TradeAmt);
+    if (!Number.isSafeInteger(cycle) || cycle < 1 || amount !== subscription.amountNtd ||
+      !/^[a-zA-Z0-9]{1,20}$/.test(body.TradeNo ?? "")) throw new BadRequestException("Invalid renewal identity or amount");
+    const paidAt = parseEcpayPaymentDate(body.PaymentDate ?? body.process_date);
+    await prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT 1 FROM subscriptions WHERE id = ${subscription.id} FOR UPDATE`;
+      const existing = await tx.payment.findFirst({ where: { OR: [
+        { ecpayTradeNo: body.TradeNo }, { subscriptionId: subscription.id, cycleNumber: cycle },
+      ] } });
+      if (existing) return;
+      // Historical renewals had no cycle identity. Do not credit their old callbacks again.
+      const original = await tx.payment.findUnique({ where: { merchantTradeNo: subscription.merchantTradeNo } });
+      if (original?.refundPolicyVersion === "legacy-30d" && cycle <= subscription.totalSuccessTimes) return;
+      if (cycle === 1) return;
+      const payment = await tx.payment.create({ data: {
+        userId: subscription.userId, period: subscription.period, amountNtd: amount,
+        status: "APPROVED", method: "ECPAY", ecpayMethod: "CREDIT", paidAt,
+        ecpayTradeNo: body.TradeNo, cycleNumber: cycle, subscriptionId: subscription.id,
+        reference: `Recurring renewal #${cycle}`, reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO",
+      } });
+      await this.grantPaymentPeriod(tx, payment, paidAt, original?.paidAt ? {
+        anchor: original.paidAt, firstEntitlementStart: original.entitlementStartsAt ?? original.paidAt, cycle,
+      } : undefined);
+      await tx.subscription.updateMany({ where: { id: subscription.id, totalSuccessTimes: { lt: cycle } }, data: { totalSuccessTimes: cycle } });
+      if (subscription.status === "CANCELLED") this.logger.error(`Charge received after cancellation: ${payment.id}; reconciliation required`);
     });
-    if (!claimed) return;
-    this.logger.log(
-      `ECPay period-return webhook: renewal #${totalSuccessTimes} approved for subscription ${subscription.id} (user ${subscription.userId})`,
-    );
   }
 
   /** User-initiated cancellation of their active Subscription: stops future ECPay auto-charges,
@@ -585,85 +579,120 @@ export class BillingService {
     return { plan: "PRO", planExpiresAt: user.planExpiresAt };
   }
 
-  /** Self-service full refund of a user's very first credit-card charge, within REFUND_WINDOW_MS
-   * of that charge, at most once per account ever (findRefundableFirstPayment blocks a repeat once
-   * any payment has status REFUNDED) — this is what replaces the old 30-day free trial. Unlike
-   * cancelSubscription/cancelPlan, which both run out the already-paid period before downgrading,
-   * this downgrades to FREE immediately: the entire point of a refund is that this period was NOT
-   * actually kept paid for.
-   *
-   * Calls ECPay's action FIRST and only touches our own records if that succeeds — same "never
-   * claim something ECPay might not have actually done" discipline as cancelSubscription. Note
-   * this whole DoAction family (queryEcpayCreditTrade included) cannot be exercised in ECPay's
-   * sandbox/stage environment per their own docs — there is no safe way to test this except
-   * against production.
-   *
-   * A pg_advisory_xact_lock scoped to this user (same pattern as createEcpayOrder, different
-   * namespace) serializes concurrent calls — without it, a rapid double-click could both pass
-   * findRefundableFirstPayment's "not already REFUNDED" check before either write commits, and
-   * both go on to fire a real ECPay refund/void call. Held across the ECPay round trips
-   * themselves, not just the DB checks, since that's exactly the window a second click could land
-   * in — hence the extended transaction timeout (ECPay's own docs give no SLA for these calls, and
-   * the default 5s is tight for two-to-three sequential HTTP round trips to another service). */
-  async requestRefund(userId: string): Promise<{ plan: "FREE"; refundedAmountNtd: number }> {
-    return prisma.$transaction(
-      async (tx) => {
-        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('billing_refund'), hashtext(${userId}))`;
-        return this.doRequestRefund(userId, tx);
-      },
-      { timeout: 20_000 },
-    );
+  /** Accept eligibility durably before contacting ECPay. Retries preserve the original deadline. */
+  async requestRefund(userId: string) {
+    const receivedAt = new Date();
+    const request = await prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('billing_refund'), hashtext(${userId}))`;
+      const existing = await tx.refundRequest.findUnique({ where: { userId } });
+      if (existing) return existing;
+      const payment = await this.findRefundableFirstPayment(userId, tx, receivedAt);
+      if (!payment?.merchantTradeNo) throw new BadRequestException("Your first-payment refund window has ended or this payment is not eligible.");
+      return tx.refundRequest.create({ data: { userId, paymentId: payment.id, requestedAt: receivedAt,
+        amountNtd: payment.amountNtd, merchantTradeNo: payment.merchantTradeNo } });
+    });
+    return { id: request.id, status: request.status };
   }
 
-  private async doRequestRefund(userId: string, tx: Prisma.TransactionClient): Promise<{ plan: "FREE"; refundedAmountNtd: number }> {
-    const payment = await this.findRefundableFirstPayment(userId, tx);
-    if (!payment || !payment.merchantTradeNo) {
-      throw new BadRequestException(
-        "You're not eligible for a refund — either the 30-day window has passed, this isn't a credit-card subscription, or you've already used your one-time refund.",
-      );
-    }
-
-    const config = ecpayConfig();
-    const trade = await queryEcpayCreditTrade(payment.merchantTradeNo, config);
-    if (!trade.TradeID) {
-      throw new BadRequestException("Couldn't verify this payment with ECPay — please contact us and we'll process the refund manually.");
-    }
-    // "Authorized"/"To be captured" (not yet actually captured) should be rare in practice —
-    // recurring orders auto-capture on ECPay's own side within the same cycle (see
-    // EcpayAuthPollService's own doc comment on why it skips these entirely) — but costs nothing
-    // to handle correctly: voiding money that was never actually taken needs Action "E", not a
-    // "R" refund.
-    const action = trade.Status === "Captured" ? "R" : "E";
-    const result = await doCreditCardAction(payment.merchantTradeNo, trade.TradeID, action, payment.amountNtd, config);
-    if (result.RtnCode !== 1) {
-      throw new BadRequestException(`ECPay declined the refund: ${result.RtnMsg}. Please contact us and we'll process it manually.`);
-    }
-
-    // Best-effort: the refund itself already succeeded (money is going back) regardless of whether
-    // this also succeeds, so a failure here is logged for manual follow-up rather than thrown —
-    // the alternative (throwing) would falsely tell the user their refund failed when it didn't.
-    const subscription = await tx.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
-    if (subscription) {
+  async pendingRefunds(query: AdminRefundListDto = {}) {
+    let after: Prisma.RefundRequestWhereInput = {};
+    if (query.cursor) {
       try {
-        const cancelResult = await cancelEcpayPeriod(subscription.merchantTradeNo, config);
-        if (cancelResult.RtnCode === 1) {
-          await tx.subscription.update({ where: { id: subscription.id }, data: { status: "CANCELLED", cancelledAt: new Date() } });
-        } else {
-          this.logger.error(
-            `requestRefund: refunded payment ${payment.id} but ECPay declined to cancel subscription ${subscription.id}: ${cancelResult.RtnMsg} — it will keep auto-renewing, needs manual follow-up.`,
-          );
-        }
-      } catch (err) {
-        this.logger.error(
-          `requestRefund: refunded payment ${payment.id} but failed to cancel subscription ${subscription.id}: ${String(err)} — it will keep auto-renewing, needs manual follow-up.`,
-        );
-      }
+        const cursor = JSON.parse(Buffer.from(query.cursor, "base64url").toString());
+        if (typeof cursor.id !== "string" || !/^[a-z0-9]{1,100}$/.test(cursor.id) || typeof cursor.at !== "string") throw new Error();
+        const at = new Date(cursor.at);
+        if (!Number.isFinite(+at) || at.toISOString() !== cursor.at) throw new Error();
+        after = { OR: [{ requestedAt: { gt: at } }, { requestedAt: at, id: { gt: cursor.id } }] };
+      } catch { throw new BadRequestException("Invalid page cursor"); }
     }
+    const [rows, grouped] = await Promise.all([
+      prisma.refundRequest.findMany({ where: { status: query.status ?? { not: "COMPLETED" }, ...after },
+        orderBy: [{ requestedAt: "asc" }, { id: "asc" }], take: 26 }),
+      prisma.refundRequest.groupBy({ by: ["status"], _count: { _all: true } }),
+    ]);
+    const items = rows.slice(0, 25);
+    // Refund references survive deletion. Join only currently existing accounts/payments;
+    // don't add personal information to the retained financial ledger.
+    const [users, payments] = await Promise.all([
+      prisma.user.findMany({ where: { id: { in: items.map((item) => item.userId) } }, select: { id: true, handle: true, email: true } }),
+      prisma.payment.findMany({ where: { id: { in: items.map((item) => item.paymentId) } }, select: { id: true, ecpayTradeNo: true } }),
+    ]);
+    const accounts = new Map(users.map((user) => [user.id, user]));
+    const trades = new Map(payments.map((payment) => [payment.id, payment.ecpayTradeNo]));
+    const last = items.at(-1);
+    return {
+      items: items.map((item) => ({ ...item, user: accounts.get(item.userId) ?? null, ecpayTradeNo: trades.get(item.paymentId) ?? null })),
+      nextCursor: rows.length > 25 && last ? Buffer.from(JSON.stringify({ at: last.requestedAt.toISOString(), id: last.id })).toString("base64url") : null,
+      counts: Object.fromEntries(["REQUESTED", "PROCESSING", "NEEDS_REVIEW", "COMPLETED"].map((status) => [status, grouped.find((group) => group.status === status)?._count._all ?? 0])),
+    };
+  }
 
-    await tx.payment.update({ where: { id: payment.id }, data: { status: "REFUNDED", reviewedAt: new Date(), reviewedBy: "USER_REFUND" } });
-    await tx.user.update({ where: { id: userId }, data: { plan: "FREE", planExpiresAt: null, planCancelRequested: false } });
-    this.logger.log(`Refunded payment ${payment.id} (NT$${payment.amountNtd}) for user ${userId} and downgraded to Free.`);
-    return { plan: "FREE", refundedAmountNtd: payment.amountNtd };
+  /** One worker claim at a time across API replicas. Unknown card actions are never repeated. */
+  async processRefund(id: string): Promise<void> {
+    const claim = await prisma.refundRequest.updateMany({ where: { id, status: "REQUESTED", nextAttemptAt: { lte: new Date() } },
+      data: { status: "PROCESSING", attempts: { increment: 1 } } });
+    if (!claim.count) return;
+    const request = await prisma.refundRequest.findUniqueOrThrow({ where: { id } });
+    const payment = await prisma.payment.findUnique({ where: { id: request.paymentId } });
+    try {
+      if (!payment?.merchantTradeNo) throw new Error("Payment missing; manual reconciliation required");
+      const config = ecpayConfig();
+      if (config.isSandbox) throw new Error("Real credit refunds cannot be verified in the ECPay test environment");
+      // Confirm the gateway identity independently; TradeID is an authorization number, not TradeNo.
+      const order = await queryEcpayOrder(payment.merchantTradeNo, config);
+      if (Number(order.TradeAmt) !== payment.amountNtd || !order.TradeNo || (payment.ecpayTradeNo && payment.ecpayTradeNo !== order.TradeNo)) {
+        throw new Error("Gateway amount or transaction mismatch");
+      }
+      const credit = await queryEcpayCreditTrade(payment.merchantTradeNo, config);
+      if (credit.RtnMsg || credit.Amount !== payment.amountNtd) throw new Error("Credit transaction could not be verified");
+      const subscription = await prisma.subscription.findUnique({ where: { merchantTradeNo: payment.merchantTradeNo } });
+      if (!request.cancellationConfirmedAt && subscription?.status === "ACTIVE") {
+        await prisma.refundRequest.update({ where: { id }, data: { inFlightAction: "CANCEL_SUBSCRIPTION" } });
+        const result = await cancelEcpayPeriod(subscription.merchantTradeNo, config);
+        if (result.RtnCode !== 1) throw new Error(`Cancellation declined (${result.RtnCode})`);
+        await prisma.$transaction([
+          prisma.subscription.update({ where: { id: subscription.id }, data: { status: "CANCELLED", cancelledAt: new Date() } }),
+          prisma.refundRequest.update({ where: { id }, data: { cancellationConfirmedAt: new Date(), inFlightAction: null } }),
+        ]);
+      }
+      if (!request.refundConfirmedAt) {
+        if ((credit.CloseData ?? []).some((row) => row.Amount < 0)) throw new Error("Existing refund activity requires reconciliation");
+        const lastPositive = (credit.CloseData ?? []).filter((row) => row.Amount > 0).at(-1);
+        for (const action of refundActions(lastPositive?.Status ?? credit.Status ?? "")) {
+          await prisma.refundRequest.update({ where: { id }, data: { inFlightAction: action } });
+          const result = await doCreditCardAction(payment.merchantTradeNo, order.TradeNo, action, payment.amountNtd, config);
+          if (result.RtnCode !== 1) throw new Error(`Credit action declined (${result.RtnCode})`);
+          await prisma.refundRequest.update({ where: { id }, data: { inFlightAction: null,
+            ...(action === "N" || action === "R" ? { refundConfirmedAt: new Date() } : {}) } });
+        }
+      }
+      await prisma.$transaction(async (tx) => {
+        const current = await tx.refundRequest.findUniqueOrThrow({ where: { id } });
+        if (!current.refundConfirmedAt) throw new Error("Refund is not confirmed");
+        await tx.$executeRaw`SELECT 1 FROM users WHERE id = ${request.userId} FOR UPDATE`;
+        const user = await tx.user.findUniqueOrThrow({ where: { id: request.userId } });
+        if (payment.entitlementStartsAt && payment.entitlementEndsAt && user.planExpiresAt) {
+          const remaining = Math.min(+payment.entitlementEndsAt - +payment.entitlementStartsAt, Math.max(0, +payment.entitlementEndsAt - Date.now()));
+          const expires = new Date(Math.max(Date.now(), +user.planExpiresAt - remaining));
+          await tx.user.update({ where: { id: user.id }, data: { plan: +expires > Date.now() ? "PRO" : "FREE", planExpiresAt: expires, planCancelRequested: false } });
+        } else {
+          // Historical purchases have no attributable entitlement ledger. Preserve unrelated grants.
+          const other = await tx.payment.count({ where: { userId: user.id, id: { not: payment.id }, status: { in: ["APPROVED", "AUTHORIZED"] } } });
+          if (other) throw new Error("Historical entitlement allocation requires review; refund already confirmed");
+          await tx.user.update({ where: { id: user.id }, data: { plan: "FREE", planExpiresAt: null, planCancelRequested: false } });
+        }
+        await tx.payment.update({ where: { id: payment.id }, data: { status: "REFUNDED", reviewedAt: new Date(), reviewedBy: "USER_REFUND" } });
+        await tx.refundRequest.update({ where: { id }, data: { status: "COMPLETED", completedAt: new Date(), lastError: null } });
+      });
+    } catch (error) {
+      const current = await prisma.refundRequest.findUniqueOrThrow({ where: { id } });
+      const review = !!current.inFlightAction || !!current.refundConfirmedAt || current.attempts >= 3;
+      await prisma.refundRequest.update({ where: { id }, data: {
+        status: review ? "NEEDS_REVIEW" : "REQUESTED", nextAttemptAt: new Date(Date.now() + 600_000),
+        lastError: error instanceof Error ? error.message.slice(0, 300) : "Refund processing failed",
+      } });
+      this.logger.error(`Refund ${id} ${review ? "requires reconciliation" : "will retry"}`);
+    }
   }
 
   /** Called by EcpayAuthPollService the moment ECPay confirms a credit-card order's authorization
@@ -677,16 +706,18 @@ export class BillingService {
     if (!payment || payment.status !== "PENDING") return;
 
     await prisma.$transaction(async (tx) => {
-      await tx.payment.update({
-        where: { id: payment.id },
+      const claimed = await tx.payment.updateMany({
+        where: { id: payment.id, status: "PENDING" },
         data: {
           status: "AUTHORIZED",
+          paidAt: new Date(),
+          refundDeadlineAt: refundDeadline(new Date()),
           reviewedAt: new Date(),
           reviewedBy: "ECPAY_AUTO_AUTH",
           reference: `ECPay TradeID: ${tradeId}`,
         },
       });
-      await this.extendPlan(tx, payment.userId, payment.period);
+      if (claimed.count) await this.grantPaymentPeriod(tx, payment, new Date());
     });
     this.logger.log(`ECPay auth poll: granted Pro on authorization for payment ${payment.id} (user ${payment.userId})`);
   }
@@ -727,22 +758,17 @@ export class BillingService {
    * to forget to run) at the start of each month. PRO/admin/student accounts still get the
    * counter bumped (for stats) but are never gated by it.
    */
-  async assertCanSubmit(userId: string): Promise<void> {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+  async assertCanSubmit(userId: string, tx: Prisma.TransactionClient = prisma): Promise<void> {
+    const user = await tx.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException("User not found");
 
-    if (isUnlimited(user)) {
-      await prisma.user.update({ where: { id: userId }, data: { submitQuotaUsed: { increment: 1 } } });
-      return;
-    }
-
     const monthKey = currentMonthKey();
-    const rows = await prisma.$executeRaw`
+    const rows = await tx.$executeRaw`
       UPDATE users
       SET "submitQuotaUsed" = CASE WHEN "submitQuotaMonth" = ${monthKey} THEN "submitQuotaUsed" + 1 ELSE 1 END,
           "submitQuotaMonth" = ${monthKey}
       WHERE id = ${userId}
-        AND ("submitQuotaMonth" IS DISTINCT FROM ${monthKey} OR "submitQuotaUsed" < ${FREE_SUBMIT_QUOTA})
+        AND (${isUnlimited(user)} OR "submitQuotaMonth" IS DISTINCT FROM ${monthKey} OR "submitQuotaUsed" < ${FREE_SUBMIT_QUOTA})
     `;
     if (rows === 0) {
       throw new ForbiddenException(
@@ -761,9 +787,8 @@ export class BillingService {
    * need to sit stuck for the reaper's 15-minute threshold to still be open right at a month
    * boundary) — not worth a more complex mechanism to close.
    */
-  async refundSubmitQuota(userId: string): Promise<void> {
-    const monthKey = currentMonthKey();
-    await prisma.$executeRaw`
+  async refundSubmitQuota(userId: string, monthKey = currentMonthKey(), tx: Prisma.TransactionClient = prisma): Promise<void> {
+    await tx.$executeRaw`
       UPDATE users
       SET "submitQuotaUsed" = "submitQuotaUsed" - 1
       WHERE id = ${userId} AND "submitQuotaMonth" = ${monthKey} AND "submitQuotaUsed" > 0

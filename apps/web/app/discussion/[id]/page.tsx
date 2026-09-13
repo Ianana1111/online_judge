@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { serverFetch } from "@/lib/serverApi";
 import { SITE_URL } from "@/lib/site";
@@ -34,14 +35,14 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
         headline: post.title,
         description: previewText(post.bodyMd, 300),
         url: `${SITE_URL}/discussion/${id}`,
-        datePublished: post.createdAt,
+        datePublished: post.publishedAt ?? post.createdAt,
         author: { "@type": post.isOfficial ? "Organization" : "Person", name: post.authorHandle },
       }
     : null;
 
   return (
     <>
-      {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />}
+      {jsonLd && <script nonce={(await headers()).get("x-nonce") ?? undefined} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />}
       <PostDetailClient id={id} />
     </>
   );

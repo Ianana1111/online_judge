@@ -1,14 +1,16 @@
-import { Body, Controller, Get, Param, Post, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query, Req, Res } from "@nestjs/common";
 import { Throttle } from "@nestjs/throttler";
 import type { Request, Response } from "express";
 import {
   adminGrantPlanSchema,
+  adminRefundListSchema,
   ecpayCreateSchema,
   effectivePriceNtd,
   isLaunchPromoActive,
   LAUNCH_PROMO,
   PLAN_PRICING,
   type AdminGrantPlanDto,
+  type AdminRefundListDto,
   type EcpayCreateDto,
 } from "@oj/shared";
 import { CurrentUser, Public, Roles, type RequestUser } from "../common/decorators";
@@ -95,6 +97,12 @@ export class BillingController {
   @Get("admin/authorized-pending")
   authorizedPending() {
     return this.billing.listAuthorizedPending();
+  }
+
+  @Roles("ADMIN")
+  @Get("admin/refunds")
+  pendingRefunds(@Query(new ZodValidationPipe(adminRefundListSchema)) query: AdminRefundListDto) {
+    return this.billing.pendingRefunds(query);
   }
 
   // --- ECPay (綠界) automated checkout flow (credit-card subscriptions only) ---

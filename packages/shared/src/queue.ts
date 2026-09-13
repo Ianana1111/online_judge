@@ -10,6 +10,7 @@ export const JUDGE_REMOTE_QUEUE_NAME = "judge-submissions-remote";
 
 export interface JudgeJobData {
   submissionId: string;
+  evaluationVersion?: number;
 }
 
 export function submissionResultChannel(submissionId: string): string {

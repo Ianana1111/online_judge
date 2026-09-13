@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/refund` },
 };
 
-const LAST_UPDATED = "2026-08-29";
+const LAST_UPDATED = "2026-09-12";
 
 // Server Component, zh-TW only — see terms/page.tsx's file-level comment for why this isn't run
 // through useT()/split into a client component like about/faq.
@@ -22,10 +22,10 @@ export default function RefundPolicyPage() {
       </div>
 
       <section>
-        <h2 className="font-display text-lg font-semibold text-ink-50">首月退款保證</h2>
+        <h2 className="font-display text-lg font-semibold text-ink-50">7 天首次付款退款保證</h2>
         <p className="mt-2">
-          訂閱 Pro 後，在第一次扣款後 <strong className="text-ink-100">30 天內</strong>，可以在「升級方案」頁面自助申請
-          <strong className="text-ink-100">全額退款</strong>——系統會立即退還第一筆扣款、取消訂閱，並將帳號切換回 Free 方案。每個帳號只能使用這個退款資格一次。
+          訂閱 Pro 後，在第一次扣款後 <strong className="text-ink-100">7 天（168 小時）內</strong>，可以在「升級方案」頁面自助申請
+          <strong className="text-ink-100">全額退款</strong>——系統會受理申請，停止後續續扣並辦理第一筆付款的全額退款；退款確認後撤回該筆 Pro 使用權。信用卡實際入帳時間依發卡銀行作業為準。每個帳號只能使用這個退款資格一次。
         </p>
       </section>
 
@@ -36,7 +36,7 @@ export default function RefundPolicyPage() {
             <strong className="text-ink-100">月繳方案：</strong>新台幣 200 元／月，透過綠界科技（ECPay）信用卡定期定額扣款，每月自動續扣一次。
           </li>
           <li>
-            <strong className="text-ink-100">年繳方案：</strong>新台幣 2,000 元，第一次付款後即可使用 Pro 共 13 個月（比照月繳等值約 6.4 折），之後每滿週期自動續扣新台幣 2,000 元，續扣週期為 12 個月。
+            <strong className="text-ink-100">年繳方案：</strong>新台幣 2,000 元，第一次付款後即可使用 Pro 12 個月，之後每滿週期自動續扣新台幣 2,000 元，續扣週期為 12 個月。
           </li>
         </ul>
         <p className="mt-2">
@@ -74,9 +74,9 @@ export default function RefundPolicyPage() {
       <section>
         <h2 className="font-display text-lg font-semibold text-ink-50">退款規則</h2>
         <p className="mt-2">
-          除了上方「首月退款保證」的範圍（扣款後 30 天內、每帳號限一次）之外，
+          除了上方「7 天首次付款退款保證」的範圍（首次付款成功後 7 天內、每帳號限一次）之外，
           <strong className="text-ink-100">已扣款的費用原則上不予退還</strong>
-          ，包含但不限於：超過首月退款期限才決定取消、忘記取消導致的續扣、對判題結果或功能不滿意等情形。取消訂閱只會停止未來續扣，不會退還當期已付費用（但如上所述，當期 Pro 權限仍可使用到到期日）。
+          ，包含但不限於：超過7 天退款期限才決定取消、忘記取消導致的續扣、對判題結果或功能不滿意等情形。取消訂閱只會停止未來續扣，不會退還當期已付費用（但如上所述，當期 Pro 權限仍可使用到到期日）。
         </p>
         <p className="mt-2">以下情形本站會主動處理退款或補償：</p>
         <ul className="mt-2 list-disc space-y-1.5 pl-5">
@@ -100,7 +100,7 @@ export default function RefundPolicyPage() {
         <h2 className="font-display text-lg font-semibold text-ink-50">與帳號刪除的關係</h2>
         <p className="mt-2">
           若你在有進行中的 Pro 訂閱時刪除帳號，系統會在刪除前自動為你取消 ECPay 定期定額扣款，確保帳號刪除後不會再被扣款；但依上方退款規則，已扣款的費用不會因帳號刪除而退還。詳見
-          <Link href="/privacy" className="text-brand hover:underline">
+          <Link href="/privacy" className="text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">
             隱私權政策
           </Link>
           。
@@ -118,7 +118,7 @@ export default function RefundPolicyPage() {
         <h2 className="font-display text-lg font-semibold text-ink-50">聯絡方式</h2>
         <p className="mt-2">
           對訂閱或扣款有任何問題，歡迎寄信到{" "}
-          <a href="mailto:judges0801@gmail.com" className="text-brand hover:underline">
+          <a href="mailto:judges0801@gmail.com" className="text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">
             judges0801@gmail.com
           </a>
           。

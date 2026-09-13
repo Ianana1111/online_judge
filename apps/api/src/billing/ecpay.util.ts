@@ -5,7 +5,7 @@
  * ECPAY_ENV=production on Railway once it is, no code changes needed.
  * Docs: https://developers.ecpay.com.tw/
  */
-import { webcrypto, createCipheriv, createDecipheriv } from "node:crypto";
+import { webcrypto, createCipheriv, createDecipheriv, timingSafeEqual } from "node:crypto";
 
 const SANDBOX = {
   merchantId: "3002607",
@@ -27,6 +27,9 @@ export function ecpayConfig() {
       "ECPAY_ENV is production but ECPAY_MERCHANT_ID/ECPAY_HASH_KEY/ECPAY_HASH_IV are not all set — " +
         "refusing to fall back to ECPay's publicly-known sandbox credentials against the real checkout endpoint.",
     );
+  }
+  if (isProduction && (process.env.ECPAY_MERCHANT_ID === SANDBOX.merchantId || process.env.ECPAY_HASH_KEY === SANDBOX.hashKey || process.env.ECPAY_HASH_IV === SANDBOX.hashIv)) {
+    throw new Error("Public ECPay test credentials cannot be used in production");
   }
   return {
     merchantId: process.env.ECPAY_MERCHANT_ID || SANDBOX.merchantId,
@@ -96,9 +99,9 @@ export async function verifyCheckMacValue(
   config: { hashKey: string; hashIv: string },
 ): Promise<boolean> {
   const provided = params.CheckMacValue;
-  if (typeof provided !== "string" || !provided) return false;
+  if (typeof provided !== "string" || !/^[a-fA-F0-9]{64}$/.test(provided)) return false;
   const expected = await computeCheckMacValue(params, config);
-  return expected === provided.toUpperCase();
+  return timingSafeEqual(Buffer.from(expected, "hex"), Buffer.from(provided, "hex"));
 }
 
 // Deliberately an allow-list, not a deny-list: a webhook body ECPay sends can carry payer/card
@@ -178,7 +181,10 @@ async function callEcpayAesApi<TResponseData>(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+    signal: AbortSignal.timeout(10_000),
+    redirect: "error",
   });
+  if (!res.ok) throw new Error(`ECPay query failed (HTTP ${res.status})`);
   const json = (await res.json()) as { TransCode?: number; TransMsg?: string; Data?: string };
   if (json.TransCode !== 1 || !json.Data) {
     throw new Error(`ECPay API ${path} transport failure: ${json.TransMsg ?? "unknown"}`);
@@ -193,17 +199,83 @@ export interface EcpayCreditQueryResult {
   ClsAmt?: number;
   /** "Authorized" | "To be captured" | "Captured" | "Canceled" (ECPay's own English enum values). */
   Status?: string;
+  CloseData?: { Status: string; Amount: number }[];
 }
+
+export function parseCreditQuery(data: unknown): EcpayCreditQueryResult {
+  if (!data || typeof data !== "object") throw new Error("Invalid ECPay credit response");
+  const envelope = data as Record<string, unknown>;
+  if (typeof envelope.RtnMsg !== "string") throw new Error("Missing ECPay query result");
+  if (envelope.RtnMsg !== "") return { RtnMsg: envelope.RtnMsg };
+  if (!envelope.RtnValue || typeof envelope.RtnValue !== "object") throw new Error("Missing ECPay RtnValue");
+  const value = Object.fromEntries(Object.entries(envelope.RtnValue).map(([key, val]) => [key.trim(), val]));
+  const closeData = envelope.CloseData ?? value.CloseData ?? value.close_data;
+  const close = Array.isArray(closeData) ? closeData.map((row) => ({
+    Status: String(row.Status ?? row.status ?? ""), Amount: Number(row.Amount ?? row.amount),
+  })) : [];
+  const amount = Number(value.Amount ?? value.amount);
+  const tradeId = value.TradeID;
+  if ((typeof tradeId !== "string" && typeof tradeId !== "number") || !Number.isSafeInteger(amount) || amount <= 0) {
+    throw new Error("Invalid ECPay credit identity or amount");
+  }
+  return { RtnMsg: "", TradeID: String(tradeId), Amount: amount,
+    ClsAmt: Number(value.ClsAmt ?? value.clsamt),
+    Status: String(value.Status ?? value.status ?? ""), CloseData: close };
+}
+
+/** Documented by the AIO detail-query page as the MerchantTradeNo fallback. */
 
 /** Looks up a credit-card order's real-time authorization/capture state by our own MerchantTradeNo
  * — no need to have captured its ECPay-assigned TradeNo from an earlier webhook, since none fires
  * until capture completes anyway (the entire reason this polling path exists). */
 export async function queryEcpayCreditTrade(merchantTradeNo: string, config: EcpayApiConfig): Promise<EcpayCreditQueryResult> {
-  return callEcpayAesApi<EcpayCreditQueryResult>(
+  return parseCreditQuery(await callEcpayAesApi<unknown>(
     "/1.0.0/CreditDetail/QueryTrade",
     { MerchantTradeNo: merchantTradeNo },
     config,
-  );
+  ));
+}
+
+async function callEcpayFormApi(path: string, fields: Record<string, string | number>, config: EcpayApiConfig): Promise<Record<string, string>> {
+  const params = { MerchantID: config.merchantId, ...fields };
+  const mac = await computeCheckMacValue(params, config);
+  const base = config.isSandbox ? "https://payment-stage.ecpay.com.tw" : "https://payment.ecpay.com.tw";
+  const response = await fetch(`${base}${path}`, {
+    method: "POST", redirect: "error", signal: AbortSignal.timeout(10_000),
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams(Object.entries({ ...params, CheckMacValue: mac }).map(([k, v]): [string, string] => [k, String(v)])),
+  });
+  if (!response.ok) throw new Error(`ECPay operation failed (HTTP ${response.status})`);
+  const raw = (await response.text()).trim();
+  const decoded = raw.startsWith("{") ? JSON.parse(raw) : Object.fromEntries(new URLSearchParams(raw));
+  if (!decoded || typeof decoded !== "object" || Array.isArray(decoded)) throw new Error("Invalid ECPay response");
+  const result: Record<string, string> = {};
+  for (const [key, value] of Object.entries(decoded)) {
+    if (typeof value !== "string" && typeof value !== "number") throw new Error("Invalid ECPay response field");
+    result[key] = String(value);
+  }
+  if (result.CheckMacValue && !(await verifyCheckMacValue(result, config))) throw new Error("Invalid ECPay response signature");
+  if (result.MerchantID !== config.merchantId || result.MerchantTradeNo !== String(fields.MerchantTradeNo)) {
+    throw new Error("ECPay response identity mismatch");
+  }
+  return result;
+}
+
+export async function queryEcpayOrder(merchantTradeNo: string, config: EcpayApiConfig) {
+  const result = await callEcpayFormApi("/Cashier/QueryTradeInfo/V5", {
+    MerchantTradeNo: merchantTradeNo, TimeStamp: Math.floor(Date.now() / 1000),
+  }, config);
+  if (!result.CheckMacValue || !(await verifyCheckMacValue(result, config))) throw new Error("Unsigned ECPay order query");
+  return result;
+}
+
+export function refundActions(status: string): ("N" | "E" | "R")[] {
+  switch (status) {
+    case "Authorized": case "已授權": case "操作取消": return ["N"];
+    case "To be captured": case "要關帳": return ["E", "N"];
+    case "Captured": case "已關帳": return ["R"];
+    default: throw new Error("Credit transaction requires reconciliation before refund");
+  }
 }
 
 export interface EcpayDoActionResult {
@@ -223,15 +295,19 @@ export interface EcpayDoActionResult {
 export async function doCreditCardAction(
   merchantTradeNo: string,
   tradeNo: string,
-  action: "R" | "E",
+  action: "R" | "E" | "N",
   totalAmount: number,
   config: EcpayApiConfig,
 ): Promise<EcpayDoActionResult> {
-  return callEcpayAesApi<EcpayDoActionResult>(
-    "/1.0.0/CreditDetail/DoAction",
+  if (!Number.isSafeInteger(totalAmount) || totalAmount <= 0) throw new Error("Invalid refund amount");
+  const result = await callEcpayFormApi(
+    "/CreditDetail/DoAction",
     { MerchantTradeNo: merchantTradeNo, TradeNo: tradeNo, Action: action, TotalAmount: totalAmount },
     config,
   );
+  if (result.TradeNo !== tradeNo) throw new Error("ECPay refund transaction mismatch");
+  if (!/^\d+$/.test(result.RtnCode ?? "")) throw new Error("Missing ECPay action result");
+  return { ...result, RtnCode: Number(result.RtnCode) } as unknown as EcpayDoActionResult;
 }
 
 export interface EcpayPeriodActionResult {
@@ -246,10 +322,11 @@ export interface EcpayPeriodActionResult {
  * billing.service.cancelSubscription only ever marks our own Subscription row CANCELLED after this
  * call actually succeeds, never before. */
 export async function cancelEcpayPeriod(merchantTradeNo: string, config: EcpayApiConfig): Promise<EcpayPeriodActionResult> {
-  return callEcpayAesApi<EcpayPeriodActionResult>(
-    "/1.0.0/Cashier/CreditCardPeriodAction",
-    { MerchantTradeNo: merchantTradeNo, Action: "Cancel" },
+  const result = await callEcpayFormApi(
+    "/Cashier/CreditCardPeriodAction",
+    { MerchantTradeNo: merchantTradeNo, Action: "Cancel", TimeStamp: Math.floor(Date.now() / 1000) },
     config,
   );
+  if (!/^\d+$/.test(result.RtnCode ?? "")) throw new Error("Missing ECPay cancellation result");
+  return { ...result, RtnCode: Number(result.RtnCode) } as unknown as EcpayPeriodActionResult;
 }
-

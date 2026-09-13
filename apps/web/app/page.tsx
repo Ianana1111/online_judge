@@ -5,7 +5,7 @@ import LoggedOutHome from "@/components/LoggedOutHome";
 
 export default async function HomePage() {
   const problems = await serverFetch<ProblemListResponse>("/problems?page=1");
-  const total = problems?.total ?? 430;
+  const total = problems?.total ?? null;
 
   return (
     <>

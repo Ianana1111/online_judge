@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { TAIWAN_UNIVERSITY_DOMAINS } from "@oj/shared";
+import { getSchoolEmailDomains, verifySchoolEmailDomain, SCHOOL_CATALOG_ACADEMIC_YEAR } from "@oj/shared";
 import { apiFetch, apiUrl, ApiError, setCsrfToken } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import Avatar from "@/components/Avatar";
@@ -23,9 +23,9 @@ const RESEND_COOLDOWN_MS = 60_000;
  * instead of anyone typing in a prestigious name. "其他" (the catch-all option) has no known
  * domain and so never gets this section at all. */
 function SchoolEmailVerification({ school }: { school: string }) {
-  const t = useT();
-  const { user, setUser } = useAuthStore();
-  const domain = (TAIWAN_UNIVERSITY_DOMAINS as Record<string, string | undefined>)[school];
+  const t = useT(); const { locale } = useLocale(); const zh = locale === "zh-TW";
+  const { user, patchUser } = useAuthStore();
+  const domains = getSchoolEmailDomains(school), domain = domains[0];
   const [email, setEmail] = useState(user?.schoolEmail ?? "");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,17 +38,18 @@ function SchoolEmailVerification({ school }: { school: string }) {
     return () => clearInterval(id);
   }, [cooldownUntil, now]);
 
-  if (!user || !domain) return null;
+  if (!user) return null;
+  if (!domain) return <p className="mt-3 rounded-lg border border-ink-700 p-4 text-sm leading-6 text-ink-400">{zh ? "這所學校尚無可確認的專屬信箱網域。請聯絡我們並提供校方的信箱說明連結，我們會協助確認。" : "A dedicated email domain has not been verified for this school. Contact us with the school's official email instructions for help."} <Link className="text-brand underline" href="/about">{zh ? "聯絡方式" : "Contact us"}</Link></p>;
   const cooling = cooldownUntil > now;
-  const domainMismatch = email.length > 0 && !email.toLowerCase().endsWith(`@${domain}`) && !email.toLowerCase().endsWith(`.${domain}`);
+  const domainMismatch = email.length > 0 && !verifySchoolEmailDomain(email, school);
 
   async function send() {
     setError(null);
     setSending(true);
     try {
-      await apiFetch("/users/me/school/verify/request", { method: "POST", body: { email } });
+      await apiFetch("/users/me/school/verify/request", { method: "POST", body: { email: email.trim().toLowerCase() } });
       setCooldownUntil(Date.now() + RESEND_COOLDOWN_MS);
-      if (user) setUser({ ...user, schoolEmail: email });
+      if (user) patchUser(user.id, { schoolEmail: email.trim().toLowerCase() });
     } catch (e) {
       setError(e instanceof ApiError ? e.message : t("Couldn't send the verification email — try again in a moment."));
     } finally {
@@ -65,6 +66,8 @@ function SchoolEmailVerification({ school }: { school: string }) {
         <input
           className="oj-input min-w-0 flex-1 text-sm"
           type="email"
+          aria-label={zh ? "學校電子信箱" : "School email address"}
+          maxLength={254}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder={`you@${domain}`}
@@ -84,6 +87,7 @@ function SchoolEmailVerification({ school }: { school: string }) {
                 : t("Send verification email")}
         </button>
       </div>
+      {domains.length > 1 && <p className="mt-2 text-xs text-ink-400">{zh ? "支援的網域：" : "Supported domains: "}{domains.join(", ")}</p>}
       {domainMismatch && <p className="mt-1.5 text-xs text-verdict-wa">{t("That doesn't look like a @{domain} address.", { domain })}</p>}
       {!domainMismatch && user.schoolEmail && !error && (
         <p className="mt-1.5 text-xs text-ink-500">
@@ -132,7 +136,7 @@ function SchoolVerifiedBanner() {
 
 function ProfileSettingsForm() {
   const t = useT();
-  const { user, setUser } = useAuthStore();
+  const { user, patchUser } = useAuthStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [bio, setBio] = useState(user?.bio ?? "");
   const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatarUrl ?? null);
@@ -162,7 +166,7 @@ function ProfileSettingsForm() {
       // A school change resets verification server-side (see users.service.updateProfile) —
       // carry that reset into the store too, not just the new school name, so the verification
       // section doesn't keep showing the previous school's "verified" state for a stale beat.
-      setUser({ ...user, school: updated.school, schoolEmail: updated.schoolEmail, schoolVerifiedAt: updated.schoolVerifiedAt });
+      patchUser(user.id, { school: updated.school, schoolEmail: updated.schoolEmail, schoolVerifiedAt: updated.schoolVerifiedAt });
     } catch (e) {
       setError(e instanceof ApiError ? e.message : t("Could not update school"));
     } finally {
@@ -187,7 +191,7 @@ function ProfileSettingsForm() {
         method: "PATCH",
         body: { avatarUrl: dataUrl },
       });
-      if (user) setUser({ ...user, avatarUrl });
+      if (user) patchUser(user.id, { avatarUrl });
     } catch (e) {
       setError(e instanceof ApiError ? e.message : t("Could not upload avatar"));
     } finally {
@@ -204,7 +208,7 @@ function ProfileSettingsForm() {
         body: { avatarUrl: null },
       });
       setAvatarPreview(avatarUrl);
-      if (user) setUser({ ...user, avatarUrl });
+      if (user) patchUser(user.id, { avatarUrl });
     } catch (e) {
       setError(e instanceof ApiError ? e.message : t("Could not remove avatar"));
     } finally {
@@ -220,7 +224,7 @@ function ProfileSettingsForm() {
         method: "PATCH",
         body: { bio },
       });
-      if (user) setUser({ ...user, bio: savedBio });
+      if (user) patchUser(user.id, { bio: savedBio });
       setSaved(true);
       setTimeout(() => setSaved(false), 1500);
     } catch (e) {
@@ -298,6 +302,7 @@ function ProfileSettingsForm() {
           </>
         ) : (
           <>
+            <p className="mb-2 text-xs leading-5 text-ink-400">{t("School catalog")} · {SCHOOL_CATALOG_ACADEMIC_YEAR} 學年度 · <a href="https://udb.moe.edu.tw/ulist/Resource" target="_blank" rel="noopener noreferrer" className="text-brand underline">教育部名錄</a></p>
             <SchoolCombobox id="settings-school" value={user.school} onChange={onSchoolChange} />
             <p className="mt-1 text-xs text-ink-500">
               {schoolSaving ? t("Saving…") : t("Shown on your public profile and the leaderboard.")}
@@ -317,7 +322,7 @@ function ProfileSettingsForm() {
 
 function ChangeHandleForm() {
   const t = useT();
-  const { user, setUser } = useAuthStore();
+  const { user, patchUser } = useAuthStore();
   const [handle, setHandle] = useState(user?.handle ?? "");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -333,7 +338,7 @@ function ChangeHandleForm() {
         method: "PATCH",
         body: { handle },
       });
-      if (user) setUser({ ...user, handle: updated.handle });
+      if (user) patchUser(user.id, { handle: updated.handle });
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (e) {
@@ -661,7 +666,7 @@ function LanguageToggle() {
 
 function PreferencesForm() {
   const t = useT();
-  const { user, setUser } = useAuthStore();
+  const { user, patchUser } = useAuthStore();
   const [defaultLanguage, setDefaultLanguage] = useState("cpp17");
   const [dailyGoal, setDailyGoal] = useState(1);
   const [saving, setSaving] = useState(false);
@@ -685,7 +690,7 @@ function PreferencesForm() {
         body: { defaultLanguage, dailyGoal },
       });
       localStorage.setItem("oj:settings:language", defaultLanguage);
-      if (user) setUser({ ...user, settings });
+      if (user) patchUser(user.id, { settings });
       setSaved(true);
       setTimeout(() => setSaved(false), 1500);
     } catch (e) {

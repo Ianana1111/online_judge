@@ -1,308 +1,73 @@
 "use client";
 
-import { useState, type ReactElement } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/store/auth";
-import { useT } from "@/lib/i18n/LocaleContext";
-import { TerminalIcon, ClockIcon, LayersIcon, FlameIcon } from "@/components/icons";
+import { useLocale } from "@/lib/i18n/LocaleContext";
 
-type DemoVerdict = "AC" | "WA" | "TLE" | "RE" | "CE";
-
-// Reuses the same verdict color tokens as VerdictBadge.tsx, just spelled out locally — this is a
-// one-off marketing demo, not worth threading a shared export through for four color strings.
-const VERDICT_DEMO: Record<DemoVerdict, { chip: string; color: string; lines: string[]; result: string }> = {
-  AC: {
-    chip: "border-verdict-ac/50 bg-verdict-ac/15 text-verdict-ac",
-    color: "text-verdict-ac",
-    lines: ["test 01/04   AC    4ms    1.2MB", "test 02/04   AC    6ms    1.2MB", "test 03/04   AC    5ms    1.2MB", "test 04/04   AC    4ms    1.2MB"],
-    result: "verdict: ACCEPTED",
-  },
-  WA: {
-    chip: "border-verdict-wa/50 bg-verdict-wa/15 text-verdict-wa",
-    color: "text-verdict-wa",
-    lines: ["test 01/04   AC    4ms   1.2MB", "test 02/04   WA    5ms   1.2MB"],
-    result: "verdict: WRONG ANSWER\nexpected: 42\ngot:      41",
-  },
-  TLE: {
-    chip: "border-verdict-tle/50 bg-verdict-tle/15 text-verdict-tle",
-    color: "text-verdict-tle",
-    lines: ["test 01/04   AC    4ms      1.2MB", "test 02/04   AC    6ms      1.2MB", "test 03/04   TLE   2000ms   1.4MB"],
-    result: "verdict: TIME LIMIT EXCEEDED",
-  },
-  RE: {
-    chip: "border-verdict-re/50 bg-verdict-re/15 text-verdict-re",
-    color: "text-verdict-re",
-    lines: ["test 01/04   AC    4ms   1.2MB", "test 02/04   RE    3ms   1.1MB"],
-    result: "verdict: RUNTIME ERROR\nsignal: SIGSEGV (segmentation fault)",
-  },
-  CE: {
-    chip: "border-verdict-ce/50 bg-verdict-ce/15 text-verdict-ce",
-    color: "text-verdict-ce",
-    lines: ["compiling...   failed", "", "main.cpp:14:5: error: expected ';' before 'return'"],
-    result: "verdict: COMPILE ERROR",
-  },
-};
-
-/** Click a verdict, watch the terminal output change to match — the exact output format a real
- * submission produces, not a static screenshot. */
-function JudgeDemo() {
-  const [verdict, setVerdict] = useState<DemoVerdict>("AC");
-  const demo = VERDICT_DEMO[verdict];
-  return (
-    <div>
-      <div className="mb-3 flex flex-wrap gap-1.5">
-        {(Object.keys(VERDICT_DEMO) as DemoVerdict[]).map((key) => (
-          <button
-            key={key}
-            type="button"
-            onClick={() => setVerdict(key)}
-            className={`rounded border px-2 py-1 font-mono text-[11px] font-semibold uppercase tracking-wide transition-colors ${
-              verdict === key ? VERDICT_DEMO[key].chip : "border-ink-700 text-ink-500 hover:border-ink-500"
-            }`}
-          >
-            {key}
-          </button>
-        ))}
-      </div>
-      <div className="oj-card p-4 font-mono text-[11px] leading-relaxed text-ink-400">
-        <pre className="whitespace-pre-wrap">{demo.lines.join("\n")}</pre>
-        <pre className={`mt-2 whitespace-pre-wrap font-semibold ${demo.color}`}>{demo.result}</pre>
-      </div>
-    </div>
-  );
-}
-
-const EXAM_PROBLEMS: { label: string; minute: number }[] = [
-  { label: "A", minute: 4 },
-  { label: "B", minute: 12 },
-  { label: "C", minute: 27 },
-  { label: "D", minute: 41 },
-];
-
-/** Mark problems solved and watch the penalty clock run — the same ICPC rule the real scoreboard
- * uses: a problem you solve late costs more than one you solve early. */
-function ExamDemo() {
-  const t = useT();
-  const [solved, setSolved] = useState<Record<string, boolean>>({ A: true });
-  const solvedList = EXAM_PROBLEMS.filter((p) => solved[p.label]);
-  const penalty = solvedList.reduce((sum, p) => sum + p.minute, 0);
-  return (
-    <div>
-      <div className="mb-3 flex gap-2">
-        {EXAM_PROBLEMS.map((p) => {
-          const on = !!solved[p.label];
-          return (
-            <button
-              key={p.label}
-              type="button"
-              onClick={() => setSolved((s) => ({ ...s, [p.label]: !s[p.label] }))}
-              className={`flex h-10 w-10 items-center justify-center rounded border font-mono text-sm font-bold transition-colors ${
-                on ? "border-verdict-ac/50 bg-verdict-ac/15 text-verdict-ac" : "border-ink-700 text-ink-400 hover:border-brand"
-              }`}
-            >
-              {p.label}
-            </button>
-          );
-        })}
-      </div>
-      <div className="oj-card flex items-center justify-between p-4 font-mono text-sm">
-        <span className="text-ink-300">{t("Solved {n}/{total}", { n: solvedList.length, total: EXAM_PROBLEMS.length })}</span>
-        <span className="text-brand">{t("+{min} min penalty", { min: penalty })}</span>
-      </div>
-      <p className="mt-2 text-xs text-ink-500">{t("Click a problem to mark it solved — the later you solve it, the more it costs.")}</p>
-    </div>
-  );
-}
-
-const SAMPLE_PROBLEMS = [
-  { title: "The 3n + 1 Problem", difficulty: 1, appearances: 2 },
-  { title: "Ugly Numbers", difficulty: 2, appearances: 5 },
-  { title: "The Skyline Problem", difficulty: 3, appearances: 1 },
-  { title: "Maximum Sum", difficulty: 4, appearances: 4 },
-];
-
-/** Toggle the sort order and watch the same four problems reshuffle — difficulty alone doesn't
- * tell you what's worth grinding; how often it's actually shown up on a real exam does. */
-function AppearanceDemo() {
-  const t = useT();
-  const [sortBy, setSortBy] = useState<"difficulty" | "appearances">("appearances");
-  const rows = [...SAMPLE_PROBLEMS].sort((a, b) =>
-    sortBy === "difficulty" ? a.difficulty - b.difficulty : b.appearances - a.appearances,
-  );
-  return (
-    <div>
-      <div className="mb-3 flex gap-2">
-        <button
-          type="button"
-          onClick={() => setSortBy("difficulty")}
-          className={sortBy === "difficulty" ? "oj-btn-primary px-3 py-1 text-xs" : "oj-btn-secondary px-3 py-1 text-xs"}
-        >
-          {t("By difficulty")}
-        </button>
-        <button
-          type="button"
-          onClick={() => setSortBy("appearances")}
-          className={sortBy === "appearances" ? "oj-btn-primary px-3 py-1 text-xs" : "oj-btn-secondary px-3 py-1 text-xs"}
-        >
-          {t("By exam appearances")}
-        </button>
-      </div>
-      <div className="oj-card divide-y divide-ink-800">
-        {rows.map((p) => (
-          <div key={p.title} className="flex items-center justify-between px-3 py-2 text-sm">
-            <span className="text-ink-200">{t(p.title)}</span>
-            <span className="font-mono text-xs text-ink-500">
-              {sortBy === "difficulty" ? "★".repeat(p.difficulty) : t("{n}x in past exams", { n: p.appearances })}
-            </span>
-          </div>
-        ))}
-      </div>
-      <p className="mt-2 text-xs text-ink-500">{t("Illustrative example — full appearance data is a Pro feature.")}</p>
-    </div>
-  );
-}
-
-/** Click a day to toggle it, same as a real solve — miss one and the streak breaks, exactly like
- * the tracker on your own dashboard. */
-function StreakDemo() {
-  const t = useT();
-  const [days, setDays] = useState<boolean[]>([true, true, false, true, true, true, false]);
-  let streak = 0;
-  for (let i = days.length - 1; i >= 0; i--) {
-    if (!days[i]) break;
-    streak++;
+const CASES = [{ values: [2, 4, 6], target: 6, expected: 2 }, { values: [2], target: 2, expected: 0 }, { values: [2, 4, 6], target: 5, expected: -1 }];
+function search(values: number[], target: number, inclusive: boolean) {
+  let left = 0, right = values.length - 1;
+  while (inclusive ? left <= right : left < right) {
+    const mid = Math.floor((left + right) / 2);
+    if (values[mid] === target) return mid;
+    if (values[mid] < target) left = mid + 1; else right = mid - 1;
   }
-  return (
-    <div>
-      <div className="mb-3 flex gap-1.5">
-        {days.map((on, i) => (
-          <button
-            key={i}
-            type="button"
-            aria-pressed={on}
-            onClick={() => setDays((d) => d.map((v, j) => (j === i ? !v : v)))}
-            className={`h-8 w-8 rounded transition-colors ${on ? "bg-verdict-ac" : "bg-ink-800 hover:bg-ink-700"}`}
-          />
-        ))}
-      </div>
-      <div className="oj-card flex items-center gap-2 p-4">
-        <FlameIcon className={`h-5 w-5 ${streak > 0 ? "text-verdict-tle" : "text-ink-600"}`} />
-        <span className="font-mono text-sm text-ink-200">{t("{n}-day streak", { n: streak })}</span>
-      </div>
-      <p className="mt-2 text-xs text-ink-500">{t("Click a day to toggle it — break the chain and it resets, same as the real thing.")}</p>
-    </div>
-  );
+  return -1;
 }
 
-const FEATURES: { icon: typeof TerminalIcon; title: string; body: string; Demo: () => ReactElement }[] = [
-  {
-    icon: TerminalIcon,
-    title: "Judged exactly like the real exam",
-    body: "Every problem is calibrated against what the exam itself actually accepts. Pick a verdict below — it's the exact output format a real submission produces.",
-    Demo: JudgeDemo,
-  },
-  {
-    icon: ClockIcon,
-    title: "Timed virtual exams, real ICPC penalties",
-    body: "Same 3-hour, 7-problem pacing as the real CPE, and the same penalty-minute rule the actual scoreboard uses.",
-    Demo: ExamDemo,
-  },
-  {
-    icon: LayersIcon,
-    title: "Sorted by what actually gets tested",
-    body: "Every problem tracks how many times it's shown up on past CPE/GPE exams, not just how hard it is — so you know exactly where to spend your time.",
-    Demo: AppearanceDemo,
-  },
-  {
-    icon: FlameIcon,
-    title: "Keep a streak, climb the leaderboard",
-    body: "Solve something every day to keep your streak alive, and see how you stack up against other students.",
-    Demo: StreakDemo,
-  },
-];
-
-/** The original marketing homepage, self-gated to hide once a session is confirmed —
- * HomeDashboard takes over for logged-in visitors. Renders from the server component and toggles
- * client-side on the same auth check NavBar already uses, so there's no server/client branching
- * needed in the page itself. */
-export default function LoggedOutHome({ total }: { total: number }) {
-  const t = useT();
-  const { user, status } = useAuthStore();
-  if (status === "ready" && user) return null;
-
-  return (
-    <div className="space-y-16">
-      {/* Just the welcome row — no terminal mockup here anymore, that idea now lives inside the
-          first feature demo below instead of being shown twice. The headline uses font-statement
-          (STIX Two Text / Noto Serif TC), not font-display (Space Grotesk / Noto Sans TC):
-          Space Grotesk's geometric letterforms have no CJK glyphs, so Chinese text elsewhere on
-          this page falls back to a plain generic sans — a mismatch that doesn't apply here since
-          "Welcome to Judge." is always English (see below), but the serif is kept for visual
-          continuity with the rest of the page's headings. tracking-normal overrides the sitewide
-          tracking-tight on h1 (globals.css), tuned for Latin type and too cramped for CJK
-          headings elsewhere on this page. */}
-      <section className="relative overflow-hidden rounded-2xl border border-brand/20 bg-ink-900 p-6 sm:p-10">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.11]"
-          style={{ background: "radial-gradient(circle at 6% 0%, rgb(var(--brand)) 0%, transparent 58%)" }}
-        />
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.07]"
-          style={{ background: "radial-gradient(circle at 100% 100%, rgb(var(--verdict-ac)) 0%, transparent 52%)" }}
-        />
-
-        <div className="relative max-w-xl">
-          <p className="flex items-center gap-2 text-xs text-ink-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-verdict-ac" />
-            {t("Judge online · {total}+ problems indexed", { total })}
-          </p>
-          {/* Never run through t() — like the "judge." wordmark in NavBar, this is a fixed brand
-              moment, not translated content. The text itself is always in the DOM (see
-              .hero-typewriter in globals.css); only the reveal is animated. */}
-          <h1 className="mt-4 font-statement text-4xl font-bold tracking-normal text-ink-50 sm:text-5xl">
-            <span className="hero-typewriter">Welcome to Judge.</span>
-          </h1>
-          <p className="mt-5 max-w-md text-ink-300">
-            {t(
-              "Timed CPE/GPE virtual exams, an ICPC-style scoreboard with real penalty minutes — the same pressure you'll feel on exam day, not a simplified stand-in.",
-            )}
-          </p>
-          <div className="mt-7 flex gap-3">
-            <Link href="/problems" className="oj-btn-primary px-5 py-2.5">
-              {t("Browse problems")}
-            </Link>
-            <Link href="/contests" className="oj-btn-secondary px-5 py-2.5">
-              {t("Start a virtual exam")}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Four real, working parts of the product, alternating sides so the row itself signals
-          "these are four distinct things," not a repeated template. Each demo is the actual
-          interaction pattern used elsewhere in the app (verdict colors, ICPC penalty math,
-          appearance-count sorting, streak tracking) — a visitor can act on all four before ever
-          creating an account. */}
-      <section className="space-y-6">
-        <div>
-          <h2 className="font-statement text-2xl font-bold text-ink-50">{t("What you can actually do here")}</h2>
-          <p className="mt-1 text-sm text-ink-400">{t("These are working parts of the product, not screenshots — try clicking them.")}</p>
-        </div>
-        <div className="space-y-4">
-          {FEATURES.map((f, i) => (
-            <div key={f.title} className="oj-panel grid gap-6 p-6 sm:grid-cols-2 sm:items-center">
-              <div className={i % 2 === 1 ? "sm:order-2" : ""}>
-                <f.icon className="h-6 w-6 text-brand" />
-                <h3 className="mt-3 text-lg font-semibold text-ink-50">{t(f.title)}</h3>
-                <p className="mt-2 text-sm text-ink-400">{t(f.body)}</p>
-              </div>
-              <div className={i % 2 === 1 ? "sm:order-1" : ""}>
-                <f.Demo />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+function FirstChallenge({ zh }: { zh: boolean }) {
+  const [inclusive, setInclusive] = useState(false), [ran, setRan] = useState(false);
+  const results = CASES.map((c) => search(c.values, c.target, inclusive));
+  const passed = results.filter((r, i) => r === CASES[i].expected).length;
+  return <div className="relative min-w-0 rounded-2xl border border-ink-600/70 bg-ink-900 shadow-2xl shadow-black/10">
+    <div className="flex items-center justify-between gap-3 border-b border-ink-700 px-5 py-4">
+      <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-brand" aria-hidden /><span className="font-mono text-xs text-ink-300">first_accepted.cpp</span></div>
+      <span className="rounded-full border border-ink-600 px-2.5 py-1 text-[10px] font-medium text-ink-300">{zh ? "互動練習 · 約 1 分鐘" : "1-minute challenge"}</span>
     </div>
-  );
+    <div className="px-5 pt-5 sm:px-6"><h2 className="text-lg font-semibold text-ink-100">{zh ? "最後一個數字，為什麼找不到？" : "Why can't it find the last number?"}</h2><p className="mt-2 text-sm leading-relaxed text-ink-300">{zh ? "陣列 [2, 4, 6] 中找 6。試著修改迴圈條件，再執行測試。" : "Find 6 in [2, 4, 6]. Change the loop condition, then run the tests."}</p></div>
+    <div className="m-4 overflow-x-auto rounded-xl bg-ink-950 py-4 font-mono text-[12px] leading-7 sm:m-5 sm:text-sm" aria-label={zh ? "二分搜尋程式範例" : "Binary search example"}>
+      <div className="px-4 text-ink-300"><span className="mr-5 select-none text-ink-400" aria-hidden>01</span>int l = 0, r = n - 1;</div>
+      <div className="flex items-center whitespace-nowrap border-l-2 border-brand bg-brand/10 pl-[14px] pr-4"><span className="mr-5 select-none text-brand" aria-hidden>02</span><span className="text-brand">while</span><span className="ml-2 text-ink-100">(l</span>
+        <select aria-label={zh ? "修改搜尋邊界條件" : "Change the search boundary"} value={inclusive ? "inclusive" : "exclusive"} onChange={(e) => { setInclusive(e.target.value === "inclusive"); setRan(false); }} className="mx-2 min-h-9 rounded-md border border-brand bg-ink-900 px-2 font-bold text-brand"><option value="exclusive">&lt;</option><option value="inclusive">&lt;=</option></select>
+        <span className="text-ink-100">r) {"{"}</span><span className="ml-auto pl-4 font-body text-[10px] text-brand">{zh ? "← 試著改這裡" : "← edit me"}</span>
+      </div>
+      {["  int m = (l + r) / 2;", "  if (a[m] == target) return m;", "  if (a[m] < target) l = m + 1;", "  else r = m - 1;", "}", "return -1;"].map((line, i) => <div key={line} className="whitespace-pre px-4 text-ink-200"><span className="mr-5 select-none text-ink-400" aria-hidden>{String(i + 3).padStart(2, "0")}</span>{line}</div>)}
+    </div>
+    <div className="px-5 pb-5 sm:px-6"><div className="flex flex-wrap items-center justify-between gap-3"><p className="text-xs text-ink-400">{zh ? "3 個邊界案例 · 在瀏覽器中示範" : "3 edge cases · browser demo"}</p><button type="button" onClick={() => setRan(true)} className="oj-btn-primary min-h-11 rounded-lg px-5"><span aria-hidden>▷</span> {zh ? "執行測試" : "Run tests"}</button></div>
+      <div className="mt-4 min-h-[105px] rounded-xl border border-ink-700 p-4" role="status" aria-live="polite" aria-atomic="true">
+        {ran ? <><div className="flex items-center justify-between"><p className={`font-mono text-sm font-semibold ${passed === 3 ? "text-verdict-ac" : "text-verdict-wa"}`}>{passed === 3 ? "✓ Accepted" : "× Wrong Answer"}</p><span className="font-mono text-xs text-ink-300">{passed} / 3</span></div><p className="mt-2 text-xs leading-relaxed text-ink-300">{passed === 3 ? (zh ? "答對了！只剩一個候選值時，也需要檢查。把這次發現，帶進下一道題。" : "Accepted! The last remaining candidate still needs checking. Take that insight to your next problem.") : (zh ? "當 l 與 r 相等，還有一個數字沒檢查。試試把 < 換成 <=。" : "When l equals r, one candidate remains. Try changing < to <=.")}</p></> : <><p className="text-sm text-ink-200">{zh ? "從一個小小的邊界，找到解題的手感。" : "Small edge cases. Real progress."}</p><p className="mt-2 text-xs text-ink-400">{zh ? "不用註冊，先試一次。這是教學示範，不會建立提交紀錄。" : "Try it without signing up. This demo does not create a submission."}</p></>}
+      </div>
+    </div>
+  </div>;
+}
+
+export default function LoggedOutHome({ total }: { total: number | null }) {
+  const { locale } = useLocale(); const zh = locale === "zh-TW";
+  const { user, status } = useAuthStore(); const [path, setPath] = useState(0);
+  const paths = [
+    { title: zh ? "從第一題開始" : "Build your foundation", tag: "01 / PRACTICE", body: zh ? "先練基本輸入輸出，再走向排序、搜尋與資料結構。每次提交的結果，都幫你找到下一個需要釐清的地方。" : "Start with input and output, then explore sorting, search and data structures. Learn from every submission.", href: "/problems", action: zh ? "探索題庫" : "Explore problems", notes: zh ? ["依難度與主題找題", "程式編輯與自訂測試", "保留自己的作答紀錄"] : ["Browse by difficulty and topic", "Editor and custom tests", "Review your submission history"] },
+    { title: zh ? "為下一場考試準備" : "Practice under pressure", tag: "02 / SIMULATE", body: zh ? "挑一份 CPE／GPE 歷屆試題，進入自己的限時測驗。練習分配時間，也練習在卡住時做選擇。" : "Choose a past CPE or GPE exam and start your own timed attempt. Practice pacing and deciding when to move on.", href: "/contests", action: zh ? "選一場虛擬測驗" : "Find a virtual exam", notes: zh ? ["每人獨立的作答時段", "伺服器校準倒數計時", "題目、成績與罰時紀錄"] : ["Your own exam window", "Server-synchronized timer", "Results and penalty history"] },
+    { title: zh ? "把解法練得更紮實" : "Go beyond accepted", tag: "03 / REFLECT", body: zh ? "用主題題目集整理觀念，回看做過的題目與作答紀錄。把一次答對，變成下次也能解出來的能力。" : "Explore curated collections and revisit your solutions. Turn a one-time success into a skill you can use again.", href: "/collections", action: zh ? "看看題目集" : "Browse collections", notes: zh ? ["主題式練習路徑", "個人學習與解題紀錄", "社群中的不同解題觀點"] : ["Curated practice paths", "Personal progress history", "Different perspectives from the community"] },
+  ];
+  if (status === "ready" && user) return null;
+  const selected = paths[path];
+  return <div className="mx-auto max-w-6xl space-y-20 pb-10 sm:space-y-28">
+    <section className="grid items-center gap-10 pb-5 pt-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14 lg:pt-12">
+      <div><p className="mb-6 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-brand"><span className="h-px w-8 bg-brand" aria-hidden /> YOUR NEXT ACCEPTED STARTS HERE</p>
+        <h1 className="text-[2.65rem] font-semibold leading-[1.22] tracking-normal text-ink-50 sm:text-6xl">{zh ? <>把每一次練習，<br />寫成<span className="text-brand">你的實力。</span></> : <>Make every<br />practice<br /><span className="text-brand">count.</span></>}</h1>
+        <p className="mt-6 max-w-md text-base leading-8 text-ink-300">{zh ? "從第一個 Accepted，到從容面對整場考試。題庫練習、限時模擬、解題紀錄，在 judge. 一步步累積。" : "From your first Accepted to your next exam. Practice problems, take timed exams and see how far you've come."}</p>
+        <div className="mt-8 flex flex-wrap gap-3"><Link href="/register" className="oj-btn-primary min-h-12 rounded-xl px-6">{zh ? "開始免費練習" : "Start practicing free"}<span aria-hidden>↗</span></Link><Link href="/problems" className="oj-btn-secondary min-h-12 rounded-xl px-6">{zh ? "先逛逛題庫" : "Explore problems"}</Link></div>
+        <p className="mt-4 text-xs text-ink-400">{zh ? "免費開始，不需要信用卡。依自己的步調進步。" : "No credit card needed. Learn at your own pace."}</p>
+        <div className="mt-10 grid grid-cols-3 gap-4 border-t border-ink-700 pt-6"><div><p className="font-mono text-xl font-semibold text-ink-100">{total === null ? "CPE / GPE" : total.toLocaleString()}</p><p className="mt-1 text-xs text-ink-400">{zh ? "歷屆與程式練習題" : "Past exams & problems"}</p></div><div><p className="font-mono text-xl font-semibold text-ink-100">4</p><p className="mt-1 text-xs text-ink-400">{zh ? "程式語言" : "Languages"}</p></div><div><p className="font-mono text-xl font-semibold text-ink-100">1 → AC</p><p className="mt-1 text-xs text-ink-400">{zh ? "從今天這一題開始" : "One problem at a time"}</p></div></div>
+      </div>
+      <FirstChallenge zh={zh} />
+    </section>
+    <section aria-labelledby="practice-path-heading"><div className="mb-8 flex flex-wrap items-end justify-between gap-4"><div><p className="mb-3 font-mono text-xs tracking-widest text-brand">A LITTLE BETTER, EVERY DAY</p><h2 id="practice-path-heading" className="text-3xl font-semibold tracking-normal text-ink-100">{zh ? "現在的你，想挑戰什麼？" : "What would you like to work on?"}</h2></div><p className="text-sm text-ink-400">{zh ? "沒有唯一的起點，只有適合你的下一步。" : "Find the next step that works for you."}</p></div>
+      <div className="grid overflow-hidden rounded-2xl border border-ink-700 bg-ink-900 md:grid-cols-[0.8fr_1.2fr]"><div className="flex flex-col border-b border-ink-700 md:border-b-0 md:border-r" role="tablist" aria-label={zh ? "練習方向" : "Practice paths"} aria-orientation="vertical">
+        {paths.map((p, i) => <button key={p.tag} type="button" id={`path-tab-${i}`} role="tab" aria-selected={path === i} aria-controls="path-panel" tabIndex={path === i ? 0 : -1} onClick={() => setPath(i)} onKeyDown={(e) => { if (["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) { e.preventDefault(); const next = e.key === "Home" ? 0 : e.key === "End" ? 2 : (i + (e.key === "ArrowDown" ? 1 : 2)) % 3; setPath(next); document.getElementById(`path-tab-${next}`)?.focus(); } }} className={`border-l-2 p-6 text-left transition-colors ${path === i ? "border-brand bg-brand/5" : "border-transparent hover:bg-ink-800"}`}><span className={`font-mono text-[10px] tracking-widest ${path === i ? "text-brand" : "text-ink-400"}`}>{p.tag}</span><span className="mt-2 flex items-center justify-between text-lg font-medium text-ink-100">{p.title}<span aria-hidden className={path === i ? "text-brand" : "text-ink-500"}>↗</span></span></button>)}
+      </div><div id="path-panel" role="tabpanel" aria-labelledby={`path-tab-${path}`} tabIndex={0} className="flex flex-col justify-center p-7 sm:p-10"><p className="text-base leading-8 text-ink-200">{selected.body}</p><ul className="my-6 space-y-3">{selected.notes.map((n) => <li key={n} className="flex gap-3 text-sm text-ink-300"><span aria-hidden className="text-brand">✓</span>{n}</li>)}</ul><Link href={selected.href} className="inline-flex min-h-11 items-center gap-3 font-medium text-brand hover:underline">{selected.action}<span aria-hidden>→</span></Link></div></div>
+    </section>
+    <section className="relative overflow-hidden rounded-2xl border border-brand/30 bg-brand/[0.04] px-6 py-12 text-center sm:py-16"><p className="font-mono text-xs tracking-widest text-brand">ONE MORE TRY.</p><h2 className="mt-4 text-3xl font-semibold tracking-normal text-ink-100 sm:text-4xl">{zh ? "下一個 Accepted，從這裡開始。" : "Your next Accepted is waiting."}</h2><p className="mx-auto mt-4 max-w-lg text-sm leading-7 text-ink-300">{zh ? "今天不用解完所有題目。先選一題，寫下你的想法，再往前走一步。" : "You don't have to solve everything today. Pick one problem, try an idea and take the next step."}</p><Link href="/problems" className="oj-btn-primary mt-7 min-h-12 rounded-xl px-7">{zh ? "找到我的第一題 →" : "Find my first problem →"}</Link><div className="mt-5 flex justify-center gap-6 text-xs text-ink-400"><Link href="/faq" className="hover:text-brand">{zh ? "有問題？看看 FAQ" : "Questions? Read the FAQ"}</Link><Link href="/upgrade" className="hover:text-brand">{zh ? "了解 Free 與 Pro" : "Compare Free & Pro"}</Link></div></section>
+  </div>;
 }

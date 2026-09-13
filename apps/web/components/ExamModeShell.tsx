@@ -1,5 +1,7 @@
 "use client";
 
+import { serverNow, synchronizeServerClock } from "@/lib/serverClock";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useExamTimerStore, formatDuration } from "@/store/examTimer";
@@ -37,7 +39,7 @@ export default function ExamModeShell({
 }) {
   const t = useT();
   const { setWindow, setActive, remainingMs } = useExamTimerStore();
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(serverNow());
   const [confirmingEnd, setConfirmingEnd] = useState(false);
   const [ending, setEnding] = useState(false);
 
@@ -48,7 +50,7 @@ export default function ExamModeShell({
   }, [contestId, endsAtIso, setWindow, setActive]);
 
   useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 1000);
+    const t = setInterval(() => setNow(serverNow()), 1000);
     return () => clearInterval(t);
   }, []);
 

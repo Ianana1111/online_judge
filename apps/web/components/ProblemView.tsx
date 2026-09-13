@@ -1,5 +1,7 @@
 "use client";
 
+import { serverNow, synchronizeServerClock } from "@/lib/serverClock";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import SubmissionPanel from "@/components/SubmissionPanel";
@@ -37,6 +39,7 @@ const TAB_LABEL: Record<TabKey, string> = {
 export default function ProblemView({
   problem,
   contestId,
+  contestParticipantId,
   statementNode,
   inputSpecNode,
   outputSpecNode,
@@ -47,6 +50,7 @@ export default function ProblemView({
 }: {
   problem: ProblemDetail;
   contestId?: string;
+  contestParticipantId?: string;
   /** Set by ContestDetailClient to the current attempt's number — namespaces the code draft (see
    * SubmissionPanel's storageKey) so a fresh re-attempt never inherits code left over from a
    * previous attempt (or from standalone practice on the same problem outside any contest), which
@@ -87,16 +91,16 @@ export default function ProblemView({
   const examActive = useExamTimerStore((s) => s.active);
   // endsAt is a plain epoch-ms number in the store — a stable, idempotent selector. Computing
   // "remaining" from it requires the current time, which must live in local state instead of
-  // being read (via Date.now()) inside the selector itself: a zustand/useSyncExternalStore
+  // being read (via serverNow()) inside the selector itself: a zustand/useSyncExternalStore
   // selector must return the same value for the same store state on every call, and one that
   // doesn't (like calling remainingMs() here used to) makes React retry the render forever and
   // crash with "Maximum update depth exceeded" — exactly what happened opening any problem
   // during a running exam.
   const endsAt = useExamTimerStore((s) => s.endsAt);
-  const [now, setNow] = useState(() => Date.now());
+  const [now, setNow] = useState(() => serverNow());
   useEffect(() => {
     if (!examActive) return;
-    const interval = setInterval(() => setNow(Date.now()), 1000);
+    const interval = setInterval(() => setNow(serverNow()), 1000);
     return () => clearInterval(interval);
   }, [examActive]);
   const remaining = endsAt ? Math.max(0, endsAt - now) : 0;
@@ -298,9 +302,11 @@ export default function ProblemView({
       problemId={problem.id}
       slug={problem.slug}
       contestId={contestId}
+      contestParticipantId={contestParticipantId}
       locked={locked}
-      judgeable={problem.uvaId != null}
+      judgeable={problem.judgeable}
       samples={problem.samples}
+      checkerType={problem.checkerType}
       fullHeight={fullHeight}
       attemptNumber={attemptNumber}
       onResult={(result) => {

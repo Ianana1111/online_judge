@@ -5,11 +5,12 @@ import { InternalSubmissionsController } from "./internal.controller";
 import { StuckSubmissionReaperService } from "./stuck-submission-reaper.service";
 import { SubmissionsController } from "./submissions.controller";
 import { SubmissionsService } from "./submissions.service";
+import { SubmissionDispatcherService } from "./submission-dispatcher.service";
 
 @Module({
   imports: [BillingModule, AchievementsModule],
   controllers: [SubmissionsController, InternalSubmissionsController],
-  providers: [SubmissionsService, StuckSubmissionReaperService],
+  providers: [SubmissionsService, StuckSubmissionReaperService, SubmissionDispatcherService],
   exports: [SubmissionsService],
 })
 export class SubmissionsModule {}

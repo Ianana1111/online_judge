@@ -52,6 +52,11 @@ export class AccountDeletionReaperService implements OnModuleInit, OnModuleDestr
 
   private async reapOne(userId: string): Promise<void> {
     try {
+      const refund = await prisma.refundRequest.findUnique({ where: { userId } });
+      if (refund && refund.status !== "COMPLETED") {
+        this.logger.warn(`Account ${userId} deletion waiting for refund ${refund.id}`);
+        return;
+      }
       // deleteAccount already cancels the subscription up front, but re-check here too in case one
       // was somehow re-created (or the earlier cancel silently no-opped) during the grace window —
       // a permanently deleted account must never leave a live recurring charge behind.

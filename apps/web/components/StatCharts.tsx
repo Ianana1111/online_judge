@@ -96,6 +96,7 @@ export default function StatCharts({ stats }: { stats: UserStats }) {
             <button
               key={k}
               type="button"
+              aria-pressed={k === kind}
               onClick={() => setKind(k)}
               className={k === kind ? "oj-btn-primary px-2.5 py-1 text-xs" : "oj-btn-secondary px-2.5 py-1 text-xs"}
             >
@@ -112,7 +113,7 @@ export default function StatCharts({ stats }: { stats: UserStats }) {
             <PieChart>
               <Pie data={active.data} dataKey="value" nameKey="name" innerRadius={45} outerRadius={80} paddingAngle={2}>
                 {active.data.map((d) => (
-                  <Cell key={d.key} fill={d.color} fillOpacity={d.opacity ?? 1} stroke={colors.chartStroke} strokeWidth={2} />
+                  <Cell key={d.key} aria-label={`${d.name}: ${d.value}`} fill={d.color} fillOpacity={d.opacity ?? 1} stroke={colors.chartStroke} strokeWidth={2} />
                 ))}
               </Pie>
               {/* Recharts' default tooltip item color falls back to `entry.color || '#000'`, and

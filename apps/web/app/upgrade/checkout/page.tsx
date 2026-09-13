@@ -276,7 +276,7 @@ export default function CheckoutPage() {
                   </div>
 
                   <p className="rounded border border-ink-700 bg-ink-800/50 px-2.5 py-1.5 text-xs text-ink-400">
-                    {t("Billed every {period} · renews automatically until you cancel from your account. Cancel within your first month for a full refund.", {
+                    {t("Billed every {period} · renews automatically until you cancel from your account. Request a full refund within 7 days of your first payment.", {
                       period: period === "MONTHLY" ? t("month") : t("year"),
                     })}
                   </p>

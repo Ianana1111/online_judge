@@ -16,6 +16,15 @@ import { batch5Dictionary } from "./dict/batch5";
  * "Solved count".
  */
 const overrides: Record<string, string> = {
+  "Refresh": "重新整理",
+  "Assignments": "作業",
+  "Email": "電子信箱",
+  "{count} days ago": "{count} 天前",
+  "Account menu for {handle}": "{handle} 的帳號選單",
+  "Could not log out. Please try again.": "登出未完成，請再試一次。",
+  "Main navigation": "主要導覽",
+  "Content review": "內容審核",
+  "School catalog": "學校名錄",
   "Submission": "送出紀錄",
   "My Submissions": "提交歷史",
   "No submissions yet.": "還沒有送出紀錄。",
@@ -175,5 +184,9 @@ export const dictionary: Record<string, string> = {
   ...batch5Dictionary,
 
   // --- conflict resolutions (must stay last so they win) ---
+  "This problem uses a special comparison. Submit to check the result.": "這題會檢查數值誤差或答案是否符合題意，請正式提交以取得判定。",
+  "Not started": "尚未開始",
+  "Scoreboard freeze (minutes)": "封榜時間（分鐘）",
+  "Set 0 to keep standings live throughout the exam.": "設為 0，排行榜將在整場測驗中即時更新。",
   ...overrides,
 };

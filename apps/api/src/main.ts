@@ -7,54 +7,16 @@ import type { NestExpressApplication } from "@nestjs/platform-express";
 import cookieParser from "cookie-parser";
 import { json, urlencoded } from "express";
 import helmet from "helmet";
+import { assertRuntimeConfig } from "./common/runtime-config";
+import { ecpayConfig } from "./billing/ecpay.util";
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./common/all-exceptions.filter";
 import { JsonLoggerService } from "./common/json-logger.service";
 import { requestIdMiddleware } from "./common/request-id.middleware";
 
-// Every one of these has a hardcoded "dev_..._change_me" fallback where it's actually read
-// (token.service.ts, csrf.util.ts, internal-token.guard.ts) so local dev works with zero setup.
-// That fallback is a real risk if it's ever silently hit in production instead — a publicly
-// known, hardcoded secret would let anyone forge access/refresh tokens, CSRF tokens, or the
-// judge-worker's internal callback auth. Fail loudly at startup instead of failing open.
-const REQUIRED_PROD_SECRETS = [
-  "JWT_ACCESS_SECRET",
-  "JWT_REFRESH_SECRET",
-  "CSRF_SECRET",
-  "INTERNAL_SERVICE_TOKEN",
-  "SCHOOL_VERIFY_SECRET",
-];
-
-function assertProdSecretsConfigured(): void {
-  if (process.env.NODE_ENV !== "production") return;
-  const missing = REQUIRED_PROD_SECRETS.filter((name) => !process.env[name]);
-  if (missing.length > 0) {
-    throw new Error(
-      `Refusing to start in production without required secret(s): ${missing.join(", ")}. ` +
-        "These fall back to publicly-known dev defaults if unset — that is not safe outside local development.",
-    );
-  }
-}
-
-// Gated on ECPAY_ENV specifically (not NODE_ENV, which assertProdSecretsConfigured above already
-// checks) — the two are logically independent: a deploy could have NODE_ENV=production while
-// deliberately still pointed at ECPay's sandbox, or vice versa. Missing keys here fall back to
-// ECPay's own publicly-published sandbox credentials (see ecpayConfig), which would let anyone
-// forge a valid CheckMacValue against the real checkout endpoint and grant themselves free Pro.
-function assertEcpayConfigured(): void {
-  if (process.env.ECPAY_ENV !== "production") return;
-  const missing = ["ECPAY_MERCHANT_ID", "ECPAY_HASH_KEY", "ECPAY_HASH_IV"].filter((name) => !process.env[name]);
-  if (missing.length > 0) {
-    throw new Error(
-      `Refusing to start with ECPAY_ENV=production and missing ECPay credential(s): ${missing.join(", ")}. ` +
-        "Without them, ECPay's real checkout endpoint would still be verified against publicly-known sandbox keys.",
-    );
-  }
-}
-
 async function bootstrap() {
-  assertProdSecretsConfigured();
-  assertEcpayConfigured();
+  assertRuntimeConfig();
+  ecpayConfig();
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bodyParser: false,
     logger: new JsonLoggerService(),
@@ -96,7 +58,7 @@ async function bootstrap() {
   });
 
   const port = Number(process.env.API_PORT ?? 4000);
-  await app.listen(port);
+  await app.listen(port, process.env.API_HOST ?? "0.0.0.0");
   // eslint-disable-next-line no-console
   console.log(`[api] listening on port ${port}`);
 }

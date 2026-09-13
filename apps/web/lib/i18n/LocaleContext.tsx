@@ -25,7 +25,7 @@ const LocaleContext = createContext<LocaleContextValue | null>(null);
  */
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("zh-TW");
-  const { user, setUser } = useAuthStore();
+  const { user, patchUser } = useAuthStore();
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -56,7 +56,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
         method: "PATCH",
         body: { uiLocale: next },
       })
-        .then(({ settings }) => setUser({ ...user, settings }))
+        .then(({ settings }) => patchUser(user.id, { settings }))
         .catch(() => {
           /* best-effort — the local choice above already applies regardless */
         });

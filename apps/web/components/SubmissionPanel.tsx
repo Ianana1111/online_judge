@@ -36,9 +36,11 @@ export default function SubmissionPanel({
   problemId,
   slug,
   contestId,
+  contestParticipantId,
   locked = false,
   judgeable = true,
   samples = [],
+  checkerType = "IGNORE_TRAILING_WS",
   fullHeight = false,
   attemptNumber,
   onResult,
@@ -46,6 +48,7 @@ export default function SubmissionPanel({
   problemId: string;
   slug: string;
   contestId?: string;
+  contestParticipantId?: string;
   /** See ProblemView's own comment — namespaces the draft key below per contest attempt. */
   attemptNumber?: number;
   locked?: boolean;
@@ -55,6 +58,7 @@ export default function SubmissionPanel({
   judgeable?: boolean;
   /** This problem's sample input/output pairs — seeds the Run panel's default test cases. */
   samples?: Sample[];
+  checkerType?: "EXACT" | "IGNORE_TRAILING_WS" | "FLOAT" | "SPECIAL";
   /** Standalone problem page only (see ProblemView/SplitPane) — splits the editor and TestPanel
    * into their own independently-resizable, independently-scrolling halves instead of the normal
    * one-after-another stack a contest-embedded ProblemView still uses. */
@@ -82,6 +86,8 @@ export default function SubmissionPanel({
     : null;
   const [languageKey, setLanguageKey] = useState("cpp17");
   const [sourceCode, setSourceCode] = useState(STUB.cpp17);
+  const [loadedDraftKey, setLoadedDraftKey] = useState<string | null>(null);
+  const requestRef = useRef<{ payload: string; id: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   // True from the moment a submission is accepted until its verdict comes back over SSE — drives
   // the submit button's "Pending…" state. Distinct from `submitting`, which only covers the POST
@@ -90,7 +96,7 @@ export default function SubmissionPanel({
   const [error, setError] = useState<string | null>(null);
   const [cooldownUntil, setCooldownUntil] = useState(0);
   const [now, setNow] = useState(Date.now());
-  const esRef = useRef<EventSource | null>(null);
+  const esRef = useRef<{ close: () => void } | null>(null);
   const qc = useQueryClient();
 
   // FREE-plan submit quota, shown proactively so a user finds out they're capped before they hit
@@ -104,26 +110,23 @@ export default function SubmissionPanel({
   });
 
   useEffect(() => {
+    setLoadedDraftKey(null);
     if (!storageKey) return;
-    const raw = localStorage.getItem(storageKey);
-    if (raw) {
-      try {
-        const parsed = JSON.parse(raw);
-        if (parsed.languageKey) setLanguageKey(parsed.languageKey);
-        if (parsed.sourceCode) setSourceCode(parsed.sourceCode);
-        return;
-      } catch {
-        /* ignore */
+    let language = "cpp17"; let source = STUB.cpp17;
+    try {
+      const parsed = JSON.parse(localStorage.getItem(storageKey) ?? "null");
+      if (parsed && LANGUAGES.includes(parsed.languageKey) && typeof parsed.sourceCode === "string") {
+        language = parsed.languageKey; source = parsed.sourceCode;
       }
-    }
-    setSourceCode(STUB.cpp17);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    } catch { /* Storage may be unavailable in private mode. Keep editing usable. */ }
+    setLanguageKey(language); setSourceCode(source); setLoadedDraftKey(storageKey);
   }, [storageKey]);
 
   useEffect(() => {
-    if (!storageKey) return;
-    localStorage.setItem(storageKey, JSON.stringify({ languageKey, sourceCode }));
-  }, [storageKey, languageKey, sourceCode]);
+    if (!storageKey || loadedDraftKey !== storageKey) return;
+    try { localStorage.setItem(storageKey, JSON.stringify({ languageKey, sourceCode })); }
+    catch { setError(t("Your browser could not save this draft. Copy your code before leaving.")); }
+  }, [storageKey, loadedDraftKey, languageKey, sourceCode, t]);
 
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 250);
@@ -145,10 +148,13 @@ export default function SubmissionPanel({
     const submittedSourceCode = sourceCode;
     const submittedLanguageKey = languageKey;
     try {
+      const payload = JSON.stringify({ problemId, contestId, contestParticipantId, languageKey, sourceCode });
+      if (requestRef.current?.payload !== payload) requestRef.current = { payload, id: crypto.randomUUID() };
       const { id } = await apiFetch<{ id: string }>("/submissions", {
         method: "POST",
-        body: { problemId, contestId, languageKey, sourceCode },
+        body: { problemId, contestId, contestParticipantId, languageKey, sourceCode, clientRequestId: requestRef.current.id },
       });
+      requestRef.current = null;
       setCooldownUntil(Date.now() + COOLDOWN_MS);
       setJudging(true);
       // A successful submission just consumed one unit of a FREE user's quota server-side —
@@ -295,6 +301,7 @@ export default function SubmissionPanel({
       languageKey={languageKey}
       sourceCode={sourceCode}
       samples={samples}
+      checkerType={checkerType}
     />
   );
 

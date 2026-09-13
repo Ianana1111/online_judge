@@ -18,7 +18,7 @@ import { useFocusTrap } from "@/lib/useFocusTrap";
  */
 export default function ProfileSetupModal({ onClose }: { onClose: () => void }) {
   const t = useT();
-  const { user, setUser } = useAuthStore();
+  const { user, patchUser } = useAuthStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [handle, setHandle] = useState(user?.handle ?? "");
   const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatarUrl ?? null);
@@ -53,7 +53,7 @@ export default function ProfileSetupModal({ onClose }: { onClose: () => void }) 
         method: "PATCH",
         body: { profileSetupDismissed: true },
       });
-      setUser({ ...user, settings });
+      patchUser(user.id, { settings });
     } catch {
       /* best-effort — closing the modal client-side still works even if this fails */
     }
@@ -77,7 +77,7 @@ export default function ProfileSetupModal({ onClose }: { onClose: () => void }) 
         method: "PATCH",
         body: { avatarUrl: dataUrl },
       });
-      setUser({ ...user, avatarUrl });
+      patchUser(user.id, { avatarUrl });
     } catch (e) {
       setError(e instanceof ApiError ? e.message : t("Could not upload avatar"));
     } finally {
@@ -95,14 +95,14 @@ export default function ProfileSetupModal({ onClose }: { onClose: () => void }) 
           "/users/me/handle",
           { method: "PATCH", body: { handle } },
         );
-        setUser({ ...user, handle: updated.handle });
+        patchUser(user.id, { handle: updated.handle });
       }
       if (school !== user.school) {
         const updated = await apiFetch<{ bio: string; avatarUrl: string | null; school: string | null }>(
           "/users/me/profile",
           { method: "PATCH", body: { school } },
         );
-        setUser({ ...user, school: updated.school });
+        patchUser(user.id, { school: updated.school });
       }
       await dismiss();
     } catch (e) {

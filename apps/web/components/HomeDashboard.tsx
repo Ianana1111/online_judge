@@ -336,11 +336,11 @@ export default function HomeDashboard() {
           style={{ background: "radial-gradient(circle at 100% 100%, rgb(var(--verdict-ac)) 0%, transparent 52%)" }}
         />
 
-        <div className="relative flex flex-wrap items-center gap-6 sm:gap-8">
+        <div className="relative flex flex-col items-start gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-8">
           <DailyGoalRing solvedToday={daily?.solvedToday ?? 0} goal={daily?.goal ?? 1} />
-          <div className="flex min-w-0 flex-1 flex-col items-start">
-            <h1 className="flex items-center gap-2.5 font-display text-3xl font-bold tracking-tight text-ink-50">
-              {greetText} <GreetIcon className="h-6 w-6 text-brand" />
+          <div className="flex w-full min-w-0 flex-1 flex-col items-start">
+            <h1 className="flex w-full min-w-0 items-start gap-2.5 font-display text-2xl font-bold tracking-tight text-ink-50 sm:text-3xl">
+              <span className="min-w-0 [overflow-wrap:anywhere]">{greetText}</span> <GreetIcon className="mt-1 h-6 w-6 shrink-0 text-brand" />
             </h1>
             {/* Only a verified school appears — an unconfirmed claim gets no badge anywhere, same
                 rule the public profile and leaderboard follow. */}
@@ -351,7 +351,7 @@ export default function HomeDashboard() {
               </span>
             )}
             {latestAchievement && (
-              <Link href={`/u/${user.handle}`} className="mt-1 inline-flex items-center gap-1 text-xs text-brand hover:underline">
+              <Link href={`/u/${user.handle}`} className="mt-1 inline-flex items-center gap-1 text-xs text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">
                 <TrophyIcon className="h-3.5 w-3.5" /> {t("Latest: {title}", { title: latestAchievement.title })}
               </Link>
             )}
@@ -551,7 +551,7 @@ export default function HomeDashboard() {
         {suggestions.length === 0 ? (
           <p className="oj-panel p-5 text-sm text-ink-400">
             {t("No new recommendations yet —")}{" "}
-            <Link href="/problems" className="text-brand hover:underline">
+            <Link href="/problems" className="text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">
               {t("browse the problem list")}
             </Link>{" "}
             {t("to get started.")}

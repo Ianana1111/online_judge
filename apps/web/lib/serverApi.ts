@@ -11,7 +11,7 @@ const API_URL = process.env.API_INTERNAL_URL ?? process.env.NEXT_PUBLIC_API_URL 
  * serverFetchAuthed below). */
 export async function serverFetch<T>(path: string): Promise<T | null> {
   try {
-    const res = await fetch(`${API_URL}${path}`, { next: { revalidate: 15 } });
+    const res = await fetch(`${API_URL}${path}`, { next: { revalidate: 15 }, signal: AbortSignal.timeout(8000) });
     if (!res.ok) return null;
     return (await res.json()) as T;
   } catch {
@@ -31,6 +31,7 @@ export async function serverFetchAuthed<T>(path: string): Promise<T | null> {
     const res = await fetch(`${API_URL}${path}`, {
       headers: { Cookie: cookieStore.toString() },
       cache: "no-store",
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return null;
     return (await res.json()) as T;
@@ -52,7 +53,7 @@ export type DetailedFetchResult<T> = { ok: true; data: T } | { ok: false; notFou
  * to tell a real 404 apart from a transient failure — see `DetailedFetchResult`. */
 export async function serverFetchDetailed<T>(path: string): Promise<DetailedFetchResult<T>> {
   try {
-    const res = await fetch(`${API_URL}${path}`, { next: { revalidate: 15 } });
+    const res = await fetch(`${API_URL}${path}`, { next: { revalidate: 15 }, signal: AbortSignal.timeout(8000) });
     if (res.status === 404) return { ok: false, notFound: true };
     if (!res.ok) return { ok: false, notFound: false };
     return { ok: true, data: (await res.json()) as T };
@@ -68,6 +69,7 @@ export async function serverFetchAuthedDetailed<T>(path: string): Promise<Detail
     const res = await fetch(`${API_URL}${path}`, {
       headers: { Cookie: cookieStore.toString() },
       cache: "no-store",
+      signal: AbortSignal.timeout(8000),
     });
     if (res.status === 404) return { ok: false, notFound: true };
     if (!res.ok) return { ok: false, notFound: false };

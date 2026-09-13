@@ -1,0 +1,2 @@
+# Preserve upstream font licenses byte for byte, including their original whitespace.
+apps/web/app/fonts/*-OFL.txt whitespace=-blank-at-eol,cr-at-eol

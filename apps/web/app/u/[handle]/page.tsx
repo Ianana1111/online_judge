@@ -46,6 +46,6 @@ export default async function DashboardPage({ params }: { params: Promise<{ hand
   }
 
   return (
-    <UserProfileClient profile={profileResult.data} stats={stats} problemList={problemList} achievements={achievements} />
+    <UserProfileClient profile={profileResult.data} stats={stats} problemList={problemList} achievements={achievements} asOf={new Date().toISOString()} />
   );
 }

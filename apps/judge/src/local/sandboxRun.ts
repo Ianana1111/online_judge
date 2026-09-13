@@ -6,6 +6,17 @@ export const OUTPUT_CAP_BYTES = 8 * 1024 * 1024; // 8MB — well above any sane 
 // against a runaway-output submission ballooning memory in this worker process while we read its
 // output back.
 const COMPILE_TIMEOUT_SEC = 20;
+const PROGRAM_DIR = `${WORKDIR}/program`;
+const CONTROL_DIR = `${WORKDIR}/.oj-control`;
+const RUNNER_UID = 60001;
+function shellQuote(value: string) { return "'" + value.replace(/'/g, "'\\''") + "'"; }
+function unprivileged(command: string) {
+  return `env -i PATH=/usr/local/bin:/usr/bin:/bin HOME=/nonexistent LANG=C.UTF-8 TMPDIR=/tmp setpriv --reuid=${RUNNER_UID} --regid=${RUNNER_UID} --clear-groups --no-new-privs --bounding-set=-all bash -c ${shellQuote(command)}`;
+}
+async function runTrusted(sandbox: Sandbox, script: string) {
+  return sandbox.runCommand({ cmd: "bash", args: ["-c", script], cwd: WORKDIR, sudo: true });
+}
+
 // Generous relative to any legitimate CP-sized single-file submission (a few hundred MB at most,
 // even for template-heavy C++) — this exists purely to cap a memory-bomb compile (a submission
 // deliberately written to exhaust the compiler's own memory, e.g. via runaway template
@@ -112,29 +123,39 @@ export async function runOneCase(
   // the obvious way to write this, not the fastest one).
   const writeInput = await inlineWriteOrFallback(sandbox, "in.txt", Buffer.from(input));
 
-  const timeLimitSec = Math.max(1, Math.ceil(timeLimitMs / 1000));
-  const ulimitPrefix = ulimitMemory ? `ulimit -v ${memoryLimitKb}; ` : "";
-  // `ulimit -f` is in 512-byte blocks and, unlike `-v`, is safe for every language including Java
-  // (the JVM needs a large virtual address space but never needs to write huge files) — applying
-  // it unconditionally caps out.txt/err.txt at the source (SIGXFSZ kills the offending process),
-  // so a runaway-output submission can no longer make this worker read a multi-GB buffer into its
-  // own memory via readFileToBuffer below.
-  const fileSizeLimitBlocks = Math.ceil(OUTPUT_CAP_BYTES / 512);
-  // A fork bomb (`:(){ :|:& };:`) or any runaway-forking submission has nothing to gain from more
-  // than a handful of processes — no supported language's normal single-process CP solution needs
-  // anywhere close to this many. `-u` is a per-user (not per-process-tree) limit, which is exactly
-  // right here since each sandbox is a disposable microVM dedicated to one submission.
-  const MAX_PROCESSES = 64;
-  const fullCmd = [runCmd.cmd, ...runCmd.args].join(" ");
-  const script = `${writeInput}ulimit -f ${fileSizeLimitBlocks}; ulimit -u ${MAX_PROCESSES}; ${ulimitPrefix}/usr/bin/time -v -o time.log timeout ${timeLimitSec}s ${fullCmd} < in.txt > out.txt 2> err.txt; echo $? > exit.txt`;
+  if (!Number.isFinite(timeLimitMs) || timeLimitMs <= 0 || !Number.isSafeInteger(memoryLimitKb) || memoryLimitKb < 1024) throw new Error("Invalid judge resource limits");
+  const timeLimitSec = timeLimitMs / 1000;
+  const memory = ulimitMemory ? `ulimit -v ${memoryLimitKb}; ` : "";
+  // Bash uses KiB for -f. Limits are inherited, and NNP blocks setuid/sudo escalation.
+  const limits = `ulimit -f ${Math.ceil(OUTPUT_CAP_BYTES / 1024)}; ulimit -u 64; ulimit -c 0; ${memory}`;
+  const command = [runCmd.cmd, ...runCmd.args].map(shellQuote).join(" ");
+  // Keep timeout's own diagnostic separate from the student's stderr. An intentional exit 124
+  // or self-SIGKILL 137 is a runtime error, not evidence that the deadline fired.
+  const childCommand = `exec ${unprivileged(limits + "exec " + command)} 2> ${CONTROL_DIR}/err.txt`;
+  // The trusted parent owns timing, exit status and output paths. Student code has a fresh
+  // writable cwd each case, frozen program files, no shared group and no control-file access.
+  const script = `${writeInput}set -eu; mv in.txt ${CONTROL_DIR}/in.txt;
+case_dir=$(mktemp -d /tmp/oj-case.XXXXXX);
+cp -a ${PROGRAM_DIR}/. "$case_dir/"; chown ${RUNNER_UID}:${RUNNER_UID} "$case_dir"; chmod 700 "$case_dir";
+cd "$case_dir";
+set +e;
+LC_ALL=C /usr/bin/time -v -o ${CONTROL_DIR}/time.log timeout --verbose --kill-after=0.2s ${timeLimitSec}s bash -c ${shellQuote(childCommand)} < ${CONTROL_DIR}/in.txt > ${CONTROL_DIR}/out.txt 2> ${CONTROL_DIR}/timeout.log;
+status=$?;
+pkill -KILL -u ${RUNNER_UID} 2>/dev/null || true;
+set -e;
+printf '%s' "$status" > ${CONTROL_DIR}/exit.txt;
+cd ${WORKDIR}; rm -rf -- "$case_dir";
+for scratch in /tmp /var/tmp /dev/shm /run/lock; do if [ -d "$scratch" ]; then find "$scratch" -xdev -depth -uid ${RUNNER_UID} -delete; fi; done;
+for name in exit.txt out.txt err.txt time.log timeout.log; do cp ${CONTROL_DIR}/"$name" ${WORKDIR}/"$name"; chmod 644 ${WORKDIR}/"$name"; done`;
+  const execution = await runTrusted(sandbox, script);
+  if (execution.exitCode !== 0) throw new Error("Trusted judge runner failed");
 
-  await sandbox.runCommand({ cmd: "bash", args: ["-c", script], cwd: WORKDIR });
-
-  const [exitBuf, outBuf, errBuf, timeBuf] = await Promise.all([
+  const [exitBuf, outBuf, errBuf, timeBuf, timeoutBuf] = await Promise.all([
     sandbox.readFileToBuffer({ path: `${WORKDIR}/exit.txt` }),
     sandbox.readFileToBuffer({ path: `${WORKDIR}/out.txt` }),
     sandbox.readFileToBuffer({ path: `${WORKDIR}/err.txt` }),
     sandbox.readFileToBuffer({ path: `${WORKDIR}/time.log` }),
+    sandbox.readFileToBuffer({ path: `${WORKDIR}/timeout.log` }),
   ]);
 
   // `parseInt(...) || 1` would be wrong here: a legitimate exit code of 0 is falsy in JS and would
@@ -142,7 +163,7 @@ export async function runOneCase(
   const parsedExit = parseInt(exitBuf?.toString().trim() ?? "", 10);
   const exitCode = Number.isNaN(parsedExit) ? 1 : parsedExit;
   const stdout = (outBuf ?? Buffer.alloc(0)).subarray(0, OUTPUT_CAP_BYTES).toString();
-  const stderr = (errBuf ?? Buffer.alloc(0)).toString();
+  const stderr = (errBuf ?? Buffer.alloc(0)).subarray(0, OUTPUT_CAP_BYTES).toString();
   const { wallMs, memoryKb } = parseTimeLog(timeBuf?.toString() ?? "");
 
   return {
@@ -151,7 +172,7 @@ export async function runOneCase(
     stderr,
     timeMs: wallMs ?? timeLimitMs,
     memoryKb,
-    timedOut: exitCode === 124,
+    timedOut: /timeout: sending signal/.test(timeoutBuf?.toString() ?? ""),
   };
 }
 
@@ -188,28 +209,24 @@ export async function compileInSandbox(
   lang: LanguageSpec,
   sourceCode: string,
 ): Promise<{ ok: true } | { ok: false; compileError: string }> {
-  // Same round-trip fold as runOneCase's input — the source write rides along with the compile
-  // command instead of needing its own writeFiles call first.
   const writeSource = await inlineWriteOrFallback(sandbox, lang.sourceFileName, Buffer.from(sourceCode));
-
-  if (!lang.compile) {
-    // Interpreted language: nothing to compile, but the source still needs to land on disk before
-    // judge.ts's run loop starts — inlineWriteOrFallback already did that via writeFiles if the
-    // source was too big to inline; otherwise the snippet it returned still needs to actually run.
-    if (writeSource) await sandbox.runCommand({ cmd: "bash", args: ["-c", writeSource], cwd: WORKDIR });
-    return { ok: true };
+  const setup = `${writeSource}set -eu; command -v setpriv; command -v pkill;
+install -d -m 700 ${CONTROL_DIR}; install -d -m 700 -o ${RUNNER_UID} -g ${RUNNER_UID} ${PROGRAM_DIR};
+install -m 600 -o ${RUNNER_UID} -g ${RUNNER_UID} ${shellQuote(lang.sourceFileName)} ${PROGRAM_DIR}/${shellQuote(lang.sourceFileName)};
+rm -f ${shellQuote(lang.sourceFileName)};`;
+  const prepared = await runTrusted(sandbox, setup);
+  if (prepared.exitCode !== 0) throw new Error("Judge snapshot is missing isolation prerequisites");
+  let ok = true, compileError = "";
+  if (lang.compile) {
+    const command = [lang.compile.cmd, ...lang.compile.args].map(shellQuote).join(" ");
+    const memoryKb = lang.compile.cmd === "javac" ? COMPILE_MEMORY_LIMIT_KB * 2 : COMPILE_MEMORY_LIMIT_KB;
+    const compile = await runTrusted(sandbox, `cd ${PROGRAM_DIR}; ${unprivileged(`ulimit -v ${memoryKb}; ulimit -u 64; ulimit -f 65536; ulimit -c 0; exec timeout --kill-after=0.2s ${COMPILE_TIMEOUT_SEC}s ${command}`)} > ${CONTROL_DIR}/compile.txt 2>&1;
+status=$?; pkill -KILL -u ${RUNNER_UID} 2>/dev/null || true; set -e;
+head -c 8000 ${CONTROL_DIR}/compile.txt > ${WORKDIR}/compile.txt; chmod 644 ${WORKDIR}/compile.txt; exit "$status"`);
+    ok = compile.exitCode === 0;
+    if (!ok) compileError = (await sandbox.readFileToBuffer({ path: `${WORKDIR}/compile.txt` }))?.subarray(0, 8000).toString() ?? "Compilation failed";
   }
-
-  const compile = await sandbox.runCommand({
-    cmd: "bash",
-    args: [
-      "-c",
-      `${writeSource}ulimit -v ${COMPILE_MEMORY_LIMIT_KB}; timeout ${COMPILE_TIMEOUT_SEC}s ${lang.compile.cmd} ${lang.compile.args.join(" ")}`,
-    ],
-    cwd: WORKDIR,
-  });
-  if (compile.exitCode !== 0) {
-    return { ok: false, compileError: (await compile.stderr()).slice(0, 8000) };
-  }
-  return { ok: true };
+  const frozen = await runTrusted(sandbox, `chown -R root:root ${PROGRAM_DIR}; chmod -R a-w,a+rX ${PROGRAM_DIR}`);
+  if (frozen.exitCode !== 0) throw new Error("Could not freeze the compiled program");
+  return ok ? { ok: true } : { ok: false, compileError };
 }

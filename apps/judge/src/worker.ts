@@ -1,6 +1,6 @@
 // Must be the very first import — see instrument.ts's own comment.
 import "./instrument.js";
-import { Worker, type Job } from "bullmq";
+import { Queue, Worker, type Job } from "bullmq";
 import * as Sentry from "@sentry/node";
 import { prisma } from "@oj/db";
 import {
@@ -16,28 +16,34 @@ import { runTestCases } from "./local/testRun.js";
 import { reportResult, reportTestRunResult } from "./reportResult.js";
 import { recordJudgeCompleted, startHealthServer } from "./health.js";
 import { drainSandboxPool } from "./local/sandboxPool.js";
+import { configureRemoteQueue } from "./remote/queue-policy.js";
+import { judgeRuntimeConfig } from "./runtime-config.js";
 
+const runtime = judgeRuntimeConfig();
 const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 // Local sandbox judging has no cross-submission shared state to serialize around — every
 // submission gets its own disposable, isolated microVM — so this can run with real concurrency.
 // The default (6) is a starting point, not a measured ceiling: raise it if Vercel Sandbox is
 // comfortably keeping up and queue depth is the bottleneck; lower it if sandbox creation starts
 // erroring under load (account-level concurrent-sandbox limits).
-const LOCAL_CONCURRENCY = parseInt(process.env.JUDGE_LOCAL_CONCURRENCY ?? "6", 10);
+const LOCAL_CONCURRENCY = runtime.localConcurrency;
 // Default 1: every submission proxies through a single shared UVa bot account, and we identify our
 // verdict row by "smallest new submission id" (see remote/uva.ts) — which is only unambiguous if
 // submissions go out strictly one at a time. Parallel submits through one account would also raise
 // rate-limit/ban risk on a community-run judge for no real throughput gain.
-const REMOTE_CONCURRENCY = parseInt(process.env.JUDGE_CONCURRENCY ?? "1", 10);
+const REMOTE_CONCURRENCY = 1;
 // The "Run" feature has no such constraint — each run gets its own disposable sandbox and never
 // touches UVa — so it can afford more headroom to stay snappy under concurrent site usage.
-const TEST_RUN_CONCURRENCY = parseInt(process.env.TEST_RUN_CONCURRENCY ?? "3", 10);
+const TEST_RUN_CONCURRENCY = runtime.testRunConcurrency;
 
 // Pass a plain options object rather than constructing our own `Redis` instance: bullmq bundles
 // its own ioredis internally, and a separately-installed ioredis copy (even the "same" version
 // range) can resolve to a structurally distinct class in a pnpm store, which then fails
 // `Worker`'s ConnectionOptions type check. Letting BullMQ build the client itself sidesteps that.
 const connection = { url: REDIS_URL, maxRetriesPerRequest: null };
+const remoteQueue = new Queue(JUDGE_REMOTE_QUEUE_NAME, { connection });
+await configureRemoteQueue(remoteQueue);
+await remoteQueue.close();
 
 // Which queue a submission landed in was already decided at enqueue time (see
 // submissions.service.ts, keyed off whether the problem has TestCase rows) — these two processors
@@ -46,7 +52,9 @@ const connection = { url: REDIS_URL, maxRetriesPerRequest: null };
 // re-check still runs here too (judgeLocally itself returns SE if testCases turns out empty) in
 // case test data was deleted between submit and judge.
 async function processLocalJob(job: Job<JudgeJobData>): Promise<void> {
-  const { submissionId } = job.data;
+  const { submissionId, evaluationVersion = 1 } = job.data;
+  const claim = await prisma.submission.updateMany({ where: { id: submissionId, evaluationVersion, verdict: "PENDING" }, data: { verdict: "JUDGING", status: "JUDGING" } });
+  if (!claim.count) return;
 
   const submission = await prisma.submission.findUniqueOrThrow({
     where: { id: submissionId },
@@ -55,27 +63,29 @@ async function processLocalJob(job: Job<JudgeJobData>): Promise<void> {
 
   // Interim status so the live SSE stream shows "Judging..." while we wait on the verdict, rather
   // than sitting at PENDING for the whole judge duration.
-  await reportResult({ submissionId, status: "JUDGING" }).catch(() => {});
+  await reportResult({ submissionId, evaluationVersion, status: "JUDGING" }).catch(() => {});
 
   const { problem } = submission;
   const outcome = await judgeLocally(problem, problem.testCases, submission.languageKey, submission.sourceCode);
 
-  await reportResult({ submissionId, judgedOn: "SELF", ...outcome });
+  await reportResult({ submissionId, evaluationVersion, judgedOn: "SELF", ...outcome });
 }
 
 async function processRemoteJob(job: Job<JudgeJobData>): Promise<void> {
-  const { submissionId } = job.data;
+  const { submissionId, evaluationVersion = 1 } = job.data;
+  const claim = await prisma.submission.updateMany({ where: { id: submissionId, evaluationVersion, verdict: "PENDING" }, data: { verdict: "JUDGING", status: "JUDGING" } });
+  if (!claim.count) return;
 
   const submission = await prisma.submission.findUniqueOrThrow({
     where: { id: submissionId },
     include: { problem: true },
   });
 
-  await reportResult({ submissionId, status: "JUDGING" }).catch(() => {});
+  await reportResult({ submissionId, evaluationVersion, status: "JUDGING" }).catch(() => {});
 
   const outcome = await judgeViaUva(submission.problem, submission.languageKey, submission.sourceCode);
 
-  await reportResult({ submissionId, judgedOn: "REMOTE", ...outcome });
+  await reportResult({ submissionId, evaluationVersion, judgedOn: "REMOTE", ...outcome });
 }
 
 function makeJudgeFailureHandler(processFn: (job: Job<JudgeJobData>) => Promise<void>) {
@@ -86,6 +96,7 @@ function makeJudgeFailureHandler(processFn: (job: Job<JudgeJobData>) => Promise<
       console.error(`Job ${job.id} (submission ${job.data.submissionId}) failed:`, err);
       await reportResult({
         submissionId: job.data.submissionId,
+        evaluationVersion: job.data.evaluationVersion ?? 1,
         status: "SE",
         compileError: err instanceof Error ? err.message : String(err),
       }).catch((reportErr) => {

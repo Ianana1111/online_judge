@@ -45,7 +45,7 @@ const ITEMS = [
  */
 export default function OnboardingChecklist() {
   const t = useT();
-  const { user, setUser } = useAuthStore();
+  const { user, patchUser } = useAuthStore();
   // Starts tucked into its tab and only springs open on a wide screen: at phone widths an open
   // panel would cover most of the page, so there it waits to be tapped instead.
   const [collapsed, setCollapsed] = useState(true);
@@ -77,7 +77,7 @@ export default function OnboardingChecklist() {
       method: "PATCH",
       body: { onboardingDismissed: true },
     });
-    setUser({ ...user, settings });
+    patchUser(user.id, { settings });
   }
 
   useEffect(() => {

@@ -27,6 +27,7 @@ export default function StatementRenderer({ content }: { content: string }) {
         remarkPlugins={[remarkMath, remarkGfm]}
         rehypePlugins={[rehypeRaw, [rehypeSanitize, statementSanitizeSchema], rehypeKatex]}
         components={{
+        pre: ({ children, ...props }) => <pre {...props} tabIndex={0}>{children}</pre>,
           // Statements link out to original source PDFs (e.g. UVa/CPE) — open in a new tab so
           // the reader never loses their place in the editor/submission panel.
           a: ({ children, ...props }) => (
@@ -39,7 +40,7 @@ export default function StatementRenderer({ content }: { content: string }) {
           // on a narrow screen it forced the whole page to scroll horizontally instead of just the
           // table, the same class of bug already fixed for ProblemFilterTable.
           table: ({ children, ...props }) => (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto" tabIndex={0}>
               <table {...props}>{children}</table>
             </div>
           ),

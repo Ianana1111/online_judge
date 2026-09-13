@@ -1,0 +1,2692 @@
+{
+  "testedAt": "2026-09-12T06:45:45.718Z",
+  "contentHash": "7cf6cf0e1a0ea218eeae613ae356aeb0cb4077586a20d91edd5a8984d5f92215",
+  "regressions": true,
+  "environment": "Disposable Debian bookworm Docker, 1 CPU, network none, no host mount. Actual production compile/run/checker code. Vercel timing/toolchain still requires separate validation.",
+  "expectations": "Baseline uses authored tags. Regression sweep applies source-hash-bound reviews and adds reviewed corrected references. OBSERVE means the candidate's alleged defect is not a proven rejection requirement, not a completed correctness proof.",
+  "complete": true,
+  "problems": 57,
+  "skippedRemoteProblems": [
+    "uva-1101-addmul",
+    "uva-1203-argus",
+    "uva-13211-geonosis",
+    "uva-798-title-puzzle"
+  ],
+  "observations": [
+    {
+      "slug": "uva-10110-light-more-light",
+      "index": 1,
+      "sourceHash": "75471e0233e488e4b240666cd0bba9a3308724ad0be09322c496eb2b2aef4af0",
+      "expected": "OBSERVE",
+      "reason": "The variant has signed-overflow portability risk, but the final int32 comparison can still agree under the current compiler. Its tag is not a demonstrated wrong-output witness."
+    },
+    {
+      "slug": "uva-10229-modular-fibonacci",
+      "index": 1,
+      "sourceHash": "77b754b0bf6880dc34698028860cae2774db02d88976861bfb3a11e66ed1f211",
+      "expected": "OBSERVE",
+      "reason": "Signed overflow is nonportable, but the power-of-two modulus and final normalization preserve low bits with this compiler. No valid wrong-output witness has been established."
+    }
+  ],
+  "failures": [],
+  "results": [
+    {
+      "slug": "uva-10004-bicoloring",
+      "inputOutputHash": "164c758b183302c2abc50c6eda77790a36dd57b8c715673088503ebcc3fb3a55",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Standard 2-coloring via BFS from node 0 (graph guaranteed connected); conflict detected when a visited neighbor already has the same color.",
+          "language": "cpp17",
+          "sourceHash": "f8bcae8a85512242ccbfd06207240e6efa0c7c3f93171b82d84ef7b128d5bd7b",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Never checks for a same-color conflict on an already-colored neighbor -- always reports BICOLORABLE. This is blatant (should fail on the very first NOT BICOLORABLE. case) but confirms the checker/data at least catches an obviously-wrong solution.",
+          "language": "cpp17",
+          "sourceHash": "b6f9eff6ea696516a56903016748a36fe7d7881ef931002d5f83112ca96a9aa2",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Correct logic but prints without the trailing period and in mixed case ('Bicolorable' / 'Not bicolorable') -- checks whether IGNORE_TRAILING_WS is (correctly) not lenient about exact text/case, only whitespace.",
+          "language": "cpp17",
+          "sourceHash": "d73b1c6d188ecfd086a0562991aa472a03af73abc2c5147d2838e1d4d240cb53",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10010-where-s-waldorf",
+      "inputOutputHash": "c26f80211afa5e83438b9d2c83fcd142f1fdcfbc49ae2661629c8d443120b66c",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Row-major scan (naturally gives uppermost-then-leftmost priority) checking all 8 directions case-insensitively; blank line printed between cases (not after the last).",
+          "language": "cpp17",
+          "sourceHash": "646244729f9b63cd93a7dc2230dec032726fb4bd6eafdc5e4cc75df5faa35afb",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Scans column-major (outer loop over columns, inner over rows) instead of row-major -- breaks the 'uppermost, then leftmost' tie-break rule into 'leftmost, then uppermost' whenever a word has more than one valid start position.",
+          "language": "cpp17",
+          "sourceHash": "824dab59454883fba0942d7170f8d2a0a65af1b549828325cf5d4e41804fe92d",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Only checks the 4 orthogonal directions, missing all 4 diagonals -- any word that only appears diagonally in the grid would be silently unfindable (foundR/foundC stay -1, printing '0 0').",
+          "language": "cpp17",
+          "sourceHash": "097146141352c0e04b52dd34eb95974d5e56b73a011be1ebf329694413fd2537",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2896,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10018-reverse-and-add",
+      "inputOutputHash": "1ab4f97593f028d212f1bc51660073600010b36a80d62cb4522285ce951526e8",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "do-while: always performs at least one reverse-and-add even if the input is already a palindrome (required for the '11 -> 1 22' case), uses long long throughout since results can approach 4.29 billion.",
+          "language": "cpp17",
+          "sourceHash": "3e3580e34ea91ae1cae091fc229f4d170185069cd5ff7f059737a49bf3137aee",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "overflow",
+          "label": "Identical do-while logic but uses 32-bit int instead of long long -- the stated max result (4,294,967,295) exceeds INT_MAX (2,147,483,647), and slow-converging inputs (e.g. 89, 98) grow well past that during intermediate iterations even when the final answer wouldn't. The existing 20-case test data tops out at 996848699, still under INT_MAX, so this may currently go undetected.",
+          "language": "cpp17",
+          "sourceHash": "ff693abef8b989ba26b52a0314e4fabebc8a939fa9fd715cf59a60d6626a886e",
+          "expectation": "REJECT",
+          "verdict": "TLE",
+          "timeMs": 2000,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Uses a plain while-loop that checks palindrome-ness of the ORIGINAL number before ever adding, instead of do-while -- for an input that's already a palindrome (e.g. 11), this outputs 0 iterations and the unchanged input instead of performing the required first addition.",
+          "language": "cpp17",
+          "sourceHash": "3040c85029873fff578ba55d8f74bc179d94601de1512874d1289d34c898d040",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10025-the-1-2-n-k-problem",
+      "inputOutputHash": "2cc353b335f8c21f308c6a035a0aa8e6abdd8fd0dd768e4d7125e90588bf7a65",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Minimal n with S(n)=n(n+1)/2 >= |k| and (S(n)-|k|) even (classic sign-flip parity argument).",
+          "language": "cpp17",
+          "sourceHash": "f21a89b34fa6e5d1d9badb004dbf26e4d71794354ef6371fd0f68d8308d9d2d9",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Uses strict s>ak instead of s>=ak, so whenever |k| is itself a triangular number the minimal n is missed by exactly one step (e.g. k=15=T(5) wrongly needs n=6, not 5).",
+          "language": "cpp17",
+          "sourceHash": "b6ed773654fe88209977e6fe12a138a3fc8673d34019a4a1eb1310c6f4c4cb41",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2892,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Correct values but omits the required blank line between consecutive outputs.",
+          "language": "cpp17",
+          "sourceHash": "5d03f04edf56425543aff8f207774eef216f0a5d38c8111eba9b1ef81e96c31a",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10026-shoemaker-s-problem",
+      "inputOutputHash": "a70a2528d2af78c1528ac42089376268d118bb5872ba4352529b2fdb0ea794bf",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Stable-sort jobs descending by fine/time ratio (cross-multiplied to stay exact); stability preserves original index order among ties, giving the lexicographically-first optimal schedule.",
+          "language": "cpp17",
+          "sourceHash": "4d60a1638ae262c237141a54ef45a47c52c99f382de534ca4f4fe315c69c66bd",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Wrong greedy: sorts by fine (S) descending alone, ignoring the time (T) each job takes entirely -- minimizes nothing meaningful once jobs have differing durations.",
+          "language": "cpp17",
+          "sourceHash": "af3f6f485cfac30f453706f7beeb2f2238d805f4bf318995e349eafb46dda3f3",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Uses the same correct ratio comparator but with std::sort instead of stable_sort -- total fine stays optimal, but the tie-break order among equal-ratio jobs is unspecified by the standard, so it can print a schedule that is optimal in cost but not lexicographically first, especially in the larger test cases with many tied ratios.",
+          "language": "cpp17",
+          "sourceHash": "79d4f7c50e5db6518fb1dfdba46d3f5fa583f077e1abf4d11241858dc0f30a30",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2892,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10032-tug-of-war",
+      "inputOutputHash": "914bf08445cff051c016d5b694481b2190fdde9299c9561dffa6e7812e71a08e",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Bitset subset-sum DP indexed by (count, sum): dp[i] tracks which sums are reachable using exactly i people; searches dp[n/2] for the sum closest to total/2. Bitset shifting keeps this fast enough for n=100.",
+          "language": "cpp17",
+          "sourceHash": "1678329344e861f9ae2d980736a7e1cc7f1d19e8116c7b714896300d8277cdfa",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 10,
+          "memoryKb": 3424,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Ignores the equal-team-size constraint entirely: finds the closest-to-half sum reachable by a subset of ANY size, not exactly n/2 -- gives a strictly-more-balanced (and thus wrong) split whenever an unconstrained partition beats the size-constrained optimum, which is likely on the larger n=100 test cases.",
+          "language": "cpp17",
+          "sourceHash": "f86ce8f19c6cac7baa1bf8ab488cb479d4f039a02fa62b79afc09802dcb0548b",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 10,
+          "memoryKb": 3416,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Correct values but omits the required blank line between consecutive case outputs.",
+          "language": "cpp17",
+          "sourceHash": "30eeebe62181c4db13037f16d430435836ddc0945ef3666b6da34bf3ef81f49a",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 10,
+          "memoryKb": 3412,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10036-divisibility",
+      "inputOutputHash": "ffe8bc876fc48d9e67e734c7ee2a27c18f1ab3e76f1650694bfea20a6a9de1d8",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "DP over residues mod K: reach[r] tracks which running-sum residues are achievable so far; each new value branches into +a and -a, both reduced mod K with correct non-negative handling.",
+          "language": "cpp17",
+          "sourceHash": "31889310fb27056c52e95ea616421e1941b43f3b9553a182d408c3256bdec722",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Skips the 'am = a mod k, normalized non-negative' step and uses raw 'a' (which can itself be negative, up to -10000) directly in '(r-a)%k' -- C++'s %% on a negative operand yields a negative remainder, indexing the reach/nreach vector out of bounds (undefined behavior) instead of the intended residue.",
+          "language": "cpp17",
+          "sourceHash": "7da6e3054531445a5b23aace7c5fbbc7b867c39ff264b322bfb3be7cf5b79c4a",
+          "expectation": "REJECT",
+          "verdict": "RE",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Updates 'reach' in place instead of computing into a fresh 'nreach' array -- a residue newly set while processing element i can be read again later in the SAME pass over r, letting element i be effectively applied more than once along some paths, which can only ever make the reachable set too large (never too small), so it risks false 'Divisible' verdicts on sequences that shouldn't be.",
+          "language": "cpp17",
+          "sourceHash": "78ce44f49dbfdc2c903704171d2315cc558fb987cd849e0495e4df12ee5a9b01",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10066-the-twin-towers",
+      "inputOutputHash": "eefee9adc668f2358b1b73a30aa450e1ec06e1d74470ab04c73063fdf8a94e22",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "LCS DP on the two tile-radius sequences; blank line printed BEFORE each dataset after the first (so it lands between datasets, never trailing after the last).",
+          "language": "cpp17",
+          "sourceHash": "ee7de02f29a9e11d2d9e13a5d9d901edea20850efadc5137943aaa6cab499bb6",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2948,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Wrong recurrence: uses dp[i-1][j-1] twice instead of dp[i][j-1] when radii differ, systematically underestimating the LCS length on non-trivial inputs.",
+          "language": "cpp17",
+          "sourceHash": "eea81f9d98a0b02dce2668c4f2111510ebd08e7e9144312669ffbbe92551829b",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2936,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Correct LCS values, but prints a trailing blank line after every dataset INCLUDING the last one, instead of only between datasets.",
+          "language": "cpp17",
+          "sourceHash": "07018b8bb6ca90761ddc1ed3ffc0daf0acf75ece46d377536073fbec8c17b613",
+          "expectation": "AC",
+          "reviewReason": "The configured whitespace policy intentionally ignores trailing blank lines. This is not an incorrect solution.",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2948,
+          "lastCase": 2,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10074-take-the-land",
+      "inputOutputHash": "88d9931a184f48ae7bccaa9bbd4fd07a597cc5b8d437a4d30cada1d40eb87fd6",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Largest all-zero rectangle via per-row histogram + stack-based largest-rectangle-in-histogram, O(M*N).",
+          "language": "cpp17",
+          "sourceHash": "27378d848923693d3fea9c8f8ba06487513f922a77f7540576d0b45f8c750169",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Histogram stack pop condition uses strict '>' instead of '>=', mishandling plateaus of equal height and undercounting width for ties -- a genuinely common largest-rectangle-in-histogram bug.",
+          "language": "cpp17",
+          "sourceHash": "b7be25af0bd9c33459d13bf66662654c2b17b22c0de5c3a91a8fe5d0d216acd7",
+          "expectation": "AC",
+          "reviewReason": "A monotone stack may retain equal heights; popping them later still measures the complete plateau. Both > and >= variants are valid.",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "eof-multi-case",
+          "label": "heights vector is allocated ONCE before the loop at the first test case's width and never resized for later test cases -- if a later test case has a different N, columns either go out of bounds or stale heights from a previous, differently-shaped test case leak into the new one.",
+          "language": "cpp17",
+          "sourceHash": "fdc0d27c8692f09ee79fa05a5ac9214d755fe13174cf7b045be27e653aed1fe5",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10079-pizza-cutting",
+      "inputOutputHash": "f9d04b093a2a05261aeae140d157a416a321eed6098c80fee0eb913880802d43",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Closed-form max-pieces formula (n*n+n+2)/2 using 64-bit arithmetic throughout (n up to 210,000,000, so n*n alone is ~4.4e16), stops on the first negative value.",
+          "language": "cpp17",
+          "sourceHash": "b0fda4990d3a72b7e897f56079bbadfb1bff5a43590f8ce40f90674cab953264",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "overflow",
+          "label": "Same formula but with n and the multiplication kept in 32-bit int -- n up to 210,000,000 makes n*n massively overflow int32 (undefined behavior / silent wraparound), giving wrong output for large n while still matching small n.",
+          "language": "cpp17",
+          "sourceHash": "0c473c056aa6712d37df119d3895d6287b5eba50d0536734ff764d420de06f7b",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "eof-multi-case",
+          "label": "Misreads the termination rule as 'stop at the first zero' instead of 'stop at the first negative number' -- 0 is a legal input value per the spec (0 <= N), so this wrongly terminates early on any dataset that has a real 0 partway through (the existing test data's first block does: ...160508970, 0, 356499,...).",
+          "language": "cpp17",
+          "sourceHash": "8cb934a9926f78abb6532bab80e876b0ed3f1be59979c2c02e9e42a763c7124c",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10082-wertyu",
+      "inputOutputHash": "5525bd75d0f5c9209e760789bd2290fa79a0e770f9704842bc3fc374c75533b8",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Shift each character one key left on its QWERTY row via a lookup table; preserves exact line structure and spacing via getline.",
+          "language": "cpp17",
+          "sourceHash": "1e95a1cbfeddafdfb49cfc2d0a01f46e87279aeb0640447218639cf4cfd68fe3",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Shift map built backwards (maps each char to the one AFTER it instead of before) -- unambiguously wrong direction, should fail even the existing sample.",
+          "language": "cpp17",
+          "sourceHash": "3d9698c5566355f1ec3e8d3bfb75da4391c5dc2d36fda147d70ec03d580bd448",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Reads word-by-word via cin>> instead of getline, collapsing multi-space runs to a single space and flattening multi-line input to one output line -- likely to pass a thin test suite that never exercises unusual spacing or multiple lines.",
+          "language": "cpp17",
+          "sourceHash": "6ea5e3f9469272745e1484991efca2984508c2db9226ce5f7a1516ef808ebdea",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10099-the-tourist-guide",
+      "inputOutputHash": "be49a532751ce6a91849b8f11ebcf3e3234cae8d34e23fed658ccf1773ae91fe",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Maximum-bottleneck-path (widest path) via a Dijkstra-style relaxation maximizing the minimum edge capacity along the path from S to D, then trips = ceil(T / bestMinCapacity). Blank line printed before each scenario after the first.",
+          "language": "cpp17",
+          "sourceHash": "dfd9eb80bb955c9a16087e5add1854366a6668afbc9f0fdca9cd18d0b4e9e02f",
+          "expectation": "REJECT",
+          "reviewReason": "The candidate fails to reserve a seat for the guide. The original first hidden expected answer was also wrong; the guarded correction restores ceil(20/(5-1))=5.",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2888,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Overwrites (instead of max-combines) the capacity when two edges are given between the same pair of cities -- only the LAST edge read between a pair survives, which can silently keep a smaller capacity than the true best if a stronger duplicate edge was given earlier.",
+          "language": "cpp17",
+          "sourceHash": "e02836fb70d95d8583665eee99c9fb98e7c88fdc30fc585bce1625be58f5fb9d",
+          "expectation": "REJECT",
+          "reviewReason": "Independent of unresolved parallel-road semantics, this candidate also omits the guide seat and fails valid unambiguous inputs.",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Never prints the blank line between scenarios (correct values otherwise) -- only distinguishable when a test case has more than one scenario in a single input.",
+          "language": "cpp17",
+          "sourceHash": "a5746180b6d6b46187bd119376f5836f0b7e479790255447819fc1ddd898d83c",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 3,
+          "tag": "correct",
+          "label": "Corrected widest-path reference reserves one seat for the guide, uses wide arithmetic for tourist counts and handles equal endpoints.",
+          "language": "cpp17",
+          "sourceHash": "9edb5b45a92356d6428996898bfde9fe85e290e22b70a9d52602b7190197b55a",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10106-product",
+      "inputOutputHash": "183c0af2ce9c6b084d50961f65726d58b5a8bd71139f0dd383b717a7c119e617",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Schoolbook bignum string multiplication, reads pairs of digit-strings until EOF.",
+          "language": "cpp17",
+          "sourceHash": "fc322359566a6d8772b305e67eb7a144c16995932e40c35e2e8edda8814d3dcc",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "overflow",
+          "label": "Parses each number as a native long long instead of a bignum -- guaranteed wrong for the existing 250-digit test case, a sanity check that this obviously-broken approach gets rejected.",
+          "language": "cpp17",
+          "sourceHash": "c57a3ee835e8975eb12f5de49e44af607ee6e26c9b0d778bab1f4713378a23ab",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Reuses a global result array across calls without clearing it first -- residual digits from a previous (possibly longer) multiplication can leak into a later, shorter one's low-order positions via the += accumulation. Existing test data has ~40 pairs of widely varying digit lengths in one file, so this should already be caught.",
+          "language": "cpp17",
+          "sourceHash": "8c9b15577b4b372632622982cd7dd5ea49250c0a3ea50ee5041c56f07dad6b9f",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10107-what-is-the-median",
+      "inputOutputHash": "60672938579db337098fd9065d6f9dd6794ae8487d9da23128ed1eeef312a242",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Running median via two heaps (max-heap of the lower half, min-heap of the upper half), rebalanced to size difference <=1 after each insert; integer division naturally floors for non-negative values.",
+          "language": "cpp17",
+          "sourceHash": "66af895ebe15c9afa4fe7ff48327961edbdb3b4efd8c5df724b05f4b07e02bd1",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "overflow",
+          "label": "Identical algorithm but the heaps and the running value hold plain int instead of long long. X can be up to 2^31-1 (fits an int alone), but summing two such values for the even-count average can reach ~4.29e9, overflowing signed 32-bit. Existing test data only uses small values (max 70), so this should escape locally.",
+          "language": "cpp17",
+          "sourceHash": "5f368666e7947e66ba597c72527632fae49c6edbdae447403825bda06f2f0d00",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Widens the heap-balance tolerance to 2 instead of 1 (`lo.size() > hi.size()+2`), letting the two halves drift out of the size relationship the median formula assumes.",
+          "language": "cpp17",
+          "sourceHash": "b98757391d3537227c61af15e2f49cf42ab4353b59e503928c93d245184e1be0",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10110-light-more-light",
+      "inputOutputHash": "cb34462e32a64242d54c119dd77b4f3bc1b6d65e62c4a99e391fd59eae096466",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Bulb n ends on iff n has an odd number of divisors, i.e. n is a perfect square. Reads n (up to 2^32-1) as unsigned long long, checks via an integer sqrt with a correction loop.",
+          "language": "cpp17",
+          "sourceHash": "5a524747f2e479f672b4275f2af63c834bf706737ab628136c9a6264319e4786",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2920,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "overflow",
+          "label": "Computes the candidate root and its square in a plain (signed 32-bit) int, and casts n down to int for the final comparison -- both overflow/truncate for n near 2^32-1, which the existing test data already includes exactly (4294967295), so this should be caught immediately.",
+          "language": "cpp17",
+          "sourceHash": "75471e0233e488e4b240666cd0bba9a3308724ad0be09322c496eb2b2aef4af0",
+          "expectation": "OBSERVE",
+          "reviewReason": "The variant has signed-overflow portability risk, but the final int32 comparison can still agree under the current compiler. Its tag is not a demonstrated wrong-output witness.",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2920,
+          "lastCase": 2,
+          "matched": null
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Checks n==0 AFTER already entering the loop body and prints an extra unwanted 'no' line for the terminating zero instead of stopping silently before it.",
+          "language": "cpp17",
+          "sourceHash": "0fb603e0c202d03b5c56537f4bde49f28486b06ed9c6ab01028dc18af7f2e88a",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2920,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10130-supersale",
+      "inputOutputHash": "63401ee288e4f4a68ff1af62c491c9c29d78b4aaa2bd5d89cfe4d225e9984379",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Each person independently solves their own 0/1 knapsack over the FULL item pool (the 'one object of each kind' rule is per-person only -- item supply is effectively unlimited across different people); total = sum of each person's independent optimal value. Verified by directly re-implementing in Python and diffing against both existing stored TestCase rows byte-for-byte (all 11 sub-cases of case 1, and case 2) before writing this C++ version -- my first instinct (a shared, removed-once-used item pool) numerically failed 6 of the 11 sub-cases and was discarded.",
+          "language": "cpp17",
+          "sourceHash": "3b0b1de8fa1e5768b2b341193fd061a3d200d766ff2b2c958eefe91f1db2b634",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "The tempting-but-wrong interpretation: items form ONE shared pool, consumed once assigned to any person (descending-capacity greedy with explicit removal). Numerically confirmed via Python to diverge from the expected output on 6 of 11 sub-cases in the existing stored test case, so this should already be caught locally.",
+          "language": "cpp17",
+          "sourceHash": "46bf2eb5eafa5ffb0820de00486c90c619ba25a1fad303f10ca0624a780a4ad9",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2952,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Knapsack inner loop uses `c>weight[i]` instead of `c>=weight[i]`, silently skipping the case where an item exactly fills the remaining capacity. Numerically confirmed via Python to diverge on 4 of 11 sub-cases (the larger ones), so should already be caught locally.",
+          "language": "cpp17",
+          "sourceHash": "73e74b0edd1cbbb6bd2c0099cd553609caede9c9f8335de907daa6fdd1eaa472",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2884,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10150-doublets",
+      "inputOutputHash": "3c6b5d87071084839de4d673cdf0afcb30c3448a6084fe2ad48358ce22c0c51b",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "BFS shortest word-ladder path using wildcard-pattern buckets (O(n*L) adjacency instead of O(n^2*L), needed since dictionary can have up to 25143 words) with a blank line between cases.",
+          "language": "cpp17",
+          "sourceHash": "12530c314d1722bb64bbf8ec77d3856089f7600d27529f61494ecb187bd605fe",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Wildcard-pattern loop skips the LAST character position (k < w.size()-1), so any adjacency that only differs at the final letter is never connected -- could falsely report No solution or a longer-than-minimal path whenever the true shortest chain needs a last-letter edge.",
+          "language": "cpp17",
+          "sourceHash": "a5a2f17c3f1190efeb48676264fef349b40593bd4ced5b01e27ccec9144a5568",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "eof-multi-case",
+          "label": "Never short-circuits when the start and end word of a pair are identical (drops the s==t special case) -- BFS from a word to itself never marks the target found, so an identical-word pair (a trivial doublet chain of length one) is wrongly reported as No solution.",
+          "language": "cpp17",
+          "sourceHash": "3db10de0b6ec77401f794d96762937bc2ef683e3952cc3340e9237f558e69a00",
+          "expectation": "AC",
+          "reviewReason": "Although it does not exit BFS early for equal endpoints, prev[start] is already -1, so final reconstruction still emits the valid one-word path.",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 3,
+          "tag": "whitespace-format",
+          "label": "Correct BFS logic but never prints the required blank line between cases -- a classic UVa output-formatting gotcha that a checker/testdata not stressing multi-pair input would miss entirely.",
+          "language": "cpp17",
+          "sourceHash": "03840530c41891592cce0a1385bf27dff2d8e85a8e8c1834a952c86b5e3b4cad",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10161-ant-on-a-chessboard",
+      "inputOutputHash": "2cee23fecd0907de80fd2cb7b900ca5da76f324f26adf37aaf705b83df82e91f",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Square-spiral position via ring decomposition: find largest odd s with s*s<=N (top-left corner of that ring is at (1,s)), then walk the 6 fixed-length segments (up1, right s, down s, right1, up s+1, left s+1) that grow the ring to (s+2)x(s+2). Hand-verified exactly against N=8,20,25,82,121 by tracing the spiral by hand before writing this.",
+          "language": "cpp17",
+          "sourceHash": "a02aac4b1f69e3700dee9cab9451d4d72a76f2e5caf6e123f74afb4311ae3126",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "overflow",
+          "label": "Same algorithm but s, x, y, and the squared comparisons use 32-bit int instead of long long -- N is stated up to 2*10^9, deliberately close to INT_MAX (~2.147e9), and (s+2)*(s+2) for s near sqrt(N) can exceed int32 range right at the upper bound.",
+          "language": "cpp17",
+          "sourceHash": "a151480c8cff36c114d13d13efa117560c1b4e5c6bb62a9cff735d349ef7268a",
+          "expectation": "AC",
+          "reviewReason": "N <= 2e9; the largest tested square is 44723^2 = 2000190729, below INT_MAX. The claimed int32 overflow cannot occur within the specified range.",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Boundary comparison uses >= instead of > when shrinking s, so an exact perfect-square N (like the sample's N=25) gets shrunk one ring too far before the offset walk starts.",
+          "language": "cpp17",
+          "sourceHash": "0a47ac5bb0ca9bdefb0b1b236e7e478052e5f368d30f33253421de36f6193b5d",
+          "expectation": "AC",
+          "reviewReason": "The subsequent (s+2)^2 <= N loop restores an exact odd-square boundary. The changed first comparison does not change the final ring.",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 3,
+          "tag": "eof-multi-case",
+          "label": "Loop condition drops the '!= 0' sentinel check (just `while (cin >> n)`), so the terminating 0 line gets processed as a real query (s clamped to 1, producing an extra spurious output line '1 1') instead of stopping cleanly.",
+          "language": "cpp17",
+          "sourceHash": "47332cca04cca88b5f18cbc36d22bc5b7261306d9e6f479393afd2940b90ccea",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2888,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10188-automated-judge-script",
+      "inputOutputHash": "0be89452eb5aefb6f3915709f4e55e952ae13531be92c82d8a806977e9cfddc2",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Joins each block's n/m lines with '\\n' separators (no trailing newline), compares the two joined texts exactly for Accepted, else compares with ALL spaces and newlines stripped for Presentation Error, else Wrong Answer. y = sum of line lengths (spaces counted, newlines not).",
+          "language": "cpp17",
+          "sourceHash": "8091930698e9358e3c4f30cbd96431b3c6b669eaa3dbfccd04491cbc47595e18",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "whitespace-format",
+          "label": "The 'visible characters' comparison only strips spaces, not newlines -- so a case where the ONLY difference is where a line break falls (one long line vs the same text split across two lines) is wrongly classified Wrong Answer instead of Presentation Error, contradicting the spec's explicit 'space or new line symbol' wording.",
+          "language": "cpp17",
+          "sourceHash": "59a699c0bf4f8b242dedf7290173189adc866fdd76188d15bed1bd302b4729e3",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "y counts the joining newlines too (sum of line lengths plus n-1), contradicting the spec's 'not including the symbols for new lines' -- correct only by coincidence when n==1.",
+          "language": "cpp17",
+          "sourceHash": "c5ef7fdde6206ee79bda6e0ec9c197ab147b7fb530b7cbd5844a188d66f607bd",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 3,
+          "tag": "eof-multi-case",
+          "label": "Missing cin.ignore() after reading m (only ignores after n), so the first getline of the team block reads the leftover empty rest-of-line from the '>>' extraction instead of the real first team line -- shifts every team line by one, a classic cin>>/getline mixing bug.",
+          "language": "cpp17",
+          "sourceHash": "c03938b7506331b8f2d98d67381e821b4c577068e2c78d2b2e06e5b282170e16",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2928,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10191-longest-nap",
+      "inputOutputHash": "59b62aeb2c30004dcf6eef3ebafaec0116ae21ddfd755e3ede91d62c243b0dbc",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Parse each appointment's hh:mm times via sscanf (ignoring the description text), sort + merge overlapping/unsorted intervals into busy blocks, scan the gaps between them within [10:00,18:00] keeping the first (earliest) strictly-largest gap. Hand-verified day #1 and the single-appointment case2 by hand-tracing the merge and gap scan.",
+          "language": "cpp17",
+          "sourceHash": "03c4c72d4c8eb5679d219b9ef81bd13fb6f21626cd6b22e4cef66313da9fb022",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2996,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "eof-multi-case",
+          "label": "Skips the sort+merge step entirely, using the appointments in whatever order they were listed -- the problem statement explicitly warns the input may be given in ANY order, and the sample's own day #5 and #6 are deliberately unsorted, so this should diverge on data that's already in the stored test case.",
+          "language": "cpp17",
+          "sourceHash": "a366ee871567a40cfdb2f992fb6d6d0bad5905f0f9dd1d48c1592b541840313c",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2996,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Tie-break uses >= instead of > when tracking the best gap, so the LATEST equal-duration gap wins instead of the earliest -- direct violation of the spec's 'print the earliest one' rule.",
+          "language": "cpp17",
+          "sourceHash": "fddd901e6b322f67373f33f037aed207f72e1eb7e5560433257a1f0b6e48ac92",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2996,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10200-prime-time",
+      "inputOutputHash": "9db8c2932c7a7d5224d8f9dc773e908b9aa194fe431838a40bf74529608c499f",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Precompute primality of n*n+n+41 for n in [0,10000] once via trial division, then answer each (a,b) query by counting flagged n in range and dividing by (b-a+1). Hand-verified against all the given sample pairs (0-39=100.00, 0-40=97.56, 39-40=50.00, 41-41=0.00, etc) matches Euler's known formula behavior.",
+          "language": "cpp17",
+          "sourceHash": "7ed1383a3f7279dfc0c87e7f9ca218a6976296c4f3b3c11ef3e48a0a961837a8",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 20,
+          "memoryKb": 2996,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Denominator uses (b-a) instead of the inclusive-range count (b-a+1) -- correct only by coincidence when a==b.",
+          "language": "cpp17",
+          "sourceHash": "1ccb6d8114b0ac33a54346ef00b28d6d4a7d6c40a83553d79928181bcb878452",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 20,
+          "memoryKb": 2980,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Uses cout with setprecision(2) but WITHOUT std::fixed, so whole-percentage results print without trailing zeros (e.g. '100' instead of '100.00', '0' instead of '0.00') -- correct only when the percentage happens to need exactly 2 non-trailing-zero decimal digits already.",
+          "language": "cpp17",
+          "sourceHash": "9519822acdf44f74ec2bc433f363163aeed3d9d22d6ee0c5d7569b654bc6f278",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 20,
+          "memoryKb": 3040,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10229-modular-fibonacci",
+      "inputOutputHash": "374f26d347660a5620e19460259490523e2d6f3ea9f77bc39ed8db034b3fa56f",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Matrix fast exponentiation of [[1,1],[1,0]]^(n-1) mod 2^m, unsigned long long throughout; explicit n=0 -> 0.",
+          "language": "cpp17",
+          "sourceHash": "9e3cdb3af91de3fe6ebc39a36770490ab36fd98333ec4c83cc5122930c87f2ec",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "overflow",
+          "label": "Identical algorithm but matrix entries and MOD are plain 32-bit int -- since m can be up to 19 (MOD up to 2^19), intermediate products during matrix multiply can reach ~2^38 and overflow int32, corrupting results for larger m/n even though the small sample values (m<=7) never trigger it.",
+          "language": "cpp17",
+          "sourceHash": "77b754b0bf6880dc34698028860cae2774db02d88976861bfb3a11e66ed1f211",
+          "expectation": "OBSERVE",
+          "reviewReason": "Signed overflow is nonportable, but the power-of-two modulus and final normalization preserve low bits with this compiler. No valid wrong-output witness has been established.",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": null
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Uses matpow(base, n) instead of matpow(base, n-1) and drops the explicit n=0 special case, so it computes F(n+1) instead of F(n) for every n (and F(1)=1 instead of F(0)=0 when n=0).",
+          "language": "cpp17",
+          "sourceHash": "9fc3a17aa62f604b374508be026103a4a71bb339462c753d0f2a0af6eed6e544",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10267-graphical-editor",
+      "inputOutputHash": "22383420cc1f46cd7659e7acc0c97d0b54af1499422cd7a7d3c978307c0cb120",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Direct simulation: I/C reset an M(cols) x N(rows) grid, L/V/H/K paint, F does a 4-directional BFS flood fill, S prints the current grid, unknown commands ignored, X terminates. Segment endpoints normalized (swap if reversed) before drawing.",
+          "language": "cpp17",
+          "sourceHash": "c6e5abca3772ccd008b422dc5e3e1f8a7f0e5e3062cdf2c4514728a6a0ab1057",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "V (vertical segment) command never normalizes y1>y2 -- if a test gives the segment endpoints in descending order the whole segment is silently skipped instead of drawn.",
+          "language": "cpp17",
+          "sourceHash": "5879d954a6e364113b744b6f4a4d159b9c9d6bb655591192b36ef8ba0b668bbf",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2884,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Flood fill (F command) uses 8-directional adjacency (diagonals included) instead of the spec's 4-directional common-side adjacency, so diagonally-touching same-colour regions get merged when they should stay separate.",
+          "language": "cpp17",
+          "sourceHash": "d2172620787ece00dde5d7301f91f00161f3bc48ccbb19f212a13eab1300d010",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10273-eat-or-not-to-eat",
+      "inputOutputHash": "0117a2043cd294193c7c56bf16328596d92e25c8571d1fdd80e8f020cdf69756",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Day-by-day simulation: each day find the unique-minimum-producing alive cow and eat it (ties eat nobody); stop once 2520 (=lcm(1..10)) consecutive days pass with no elimination, since every remaining cow's cycle then provably repeats forever.",
+          "language": "cpp17",
+          "sourceHash": "fac90b76046b9ae2ad4789a5da22f00488d0d869a3b30c5de631c8d6ad65a72f",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Indexes each cow's production array with day%Ti instead of (day-1)%Ti, shifting every cow's cycle by one day versus the intended day-1 production value on day 1.",
+          "language": "cpp17",
+          "sourceHash": "41158b9bab3928cffcbe7a2c194540003e7d9a8bedfa00459f18b6f17a9eb3a9",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Drops tie detection entirely -- always eats whichever cow first reaches the running minimum that day, even when another alive cow produces the exact same amount (should instead eat nobody that day).",
+          "language": "cpp17",
+          "sourceHash": "cbcfd6b92456c6a44430245169e76db9b03b7b8f7b0efb348da29443a386f993",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10309-turn-the-lights-off",
+      "inputOutputHash": "9359e78442b420f32b768ac0ee6ff7261df26893d59f4c4dc656fdcfe1f2800e",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Classic row-chasing Lights Out solve: try all 1024 press patterns for row 0, force each subsequent row's presses to clear the row above, then check the last row ends all-off; take the minimum total presses over all valid starting patterns, -1 if none work.",
+          "language": "cpp17",
+          "sourceHash": "32360f26568a8724350db04ae9de6785d4bac239d712611ae8afb1114d7b559a",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 10,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Row-0 press effect omits the right-neighbor toggle (0,c+1) -- and the same omission propagates through every forced row -- so the simulated press effect is asymmetric (self+left+up+down but never right).",
+          "language": "cpp17",
+          "sourceHash": "4359a1a18dfb64f222ace48a77620a39b837ffc5096ab93d01c3791de7626c45",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2896,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Never verifies the final row is actually all-off after forcing presses row by row -- just reports the press count for the mask=0 starting pattern unconditionally, so it never outputs -1 even for unsolvable grids.",
+          "language": "cpp17",
+          "sourceHash": "4f0724a9047834c4fa79708e70e359b785c3346629c938af372daa31d3c679da",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10326-the-polynomial-equation",
+      "inputOutputHash": "95ddfd8f51f6116293037ed397e12caaa691d000feda012146c3996cdf106561",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Build polynomial by iteratively multiplying by (x - r) for each root using long long coefficients, then format from highest degree down (leading term always coeff 1, constant term always shown even if 0).",
+          "language": "cpp17",
+          "sourceHash": "e75951692340555a60d559881edb90e03e4dc724578c2f5ee8ae78660cbbb969",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2928,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Skips printing the constant term entirely when it's zero (treating it like the middle terms, which ARE skipped when zero) -- the spec explicitly requires '+ 0' to still be shown for a zero constant.",
+          "language": "cpp17",
+          "sourceHash": "5e073a6662a140431bc647064cc2c2c9e33324237365dd2b41f3df1a0775cf3c",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "overflow",
+          "label": "Same algorithm but coefficients stored as 32-bit int instead of long long -- several existing test cases already have intermediate/final coefficients in the billions, well past INT_MAX, so this should diverge on the existing data itself rather than escape it.",
+          "language": "cpp17",
+          "sourceHash": "0f12d7758cece6d7ad20b7fcbfe0424edbf835c4237ebda05d827deacf01f0f5",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10327-flip-sort",
+      "inputOutputHash": "cc2635e17deef9f19d6f973fe630a96c53c2e98161d73d518b3848e1b71caa32",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Minimum adjacent swaps to sort = number of inversions, counted via O(n^2) double loop (N<=1000, trivially fast).",
+          "language": "cpp17",
+          "sourceHash": "5eefc771c82ee474523e38ed90586189250a26887ab886a7bcd27ceba13ea49d",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2924,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Inner loop stops one short of the end (j<n-1), so inversions involving the very last element are never counted.",
+          "language": "cpp17",
+          "sourceHash": "211adfaaf7eb5cf793925f9025bbfaf38488f3a84359d980903b98d46c2e80b9",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "eof-multi-case",
+          "label": "Uses 'if (cin >> n)' instead of 'while' -- only ever processes the first dataset in the EOF-terminated stream, silently dropping every subsequent one.",
+          "language": "cpp17",
+          "sourceHash": "d8c57f0608c444881d53943721e39dde927c8558823a152fbd507935eb8c8000",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10336-rank-the-languages",
+      "inputOutputHash": "e5e7b5d5592b0aee3368412dab57c1256de3ba9b47ab30376fb9392360f93995",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "4-directional BFS flood fill to count connected same-letter states, grouped by letter, sorted by count descending then letter ascending on ties (per spec).",
+          "language": "cpp17",
+          "sourceHash": "1447311381d984482b7a9c1039f2657b5e66f601c249098279bd7b6f42662218",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Uses 8-directional flood fill (includes diagonals) instead of the spec's 4-directional adjacency -- merges states that should stay separate whenever same-letter regions only touch diagonally.",
+          "language": "cpp17",
+          "sourceHash": "ee06d3a0c14700a4e582d9ffa6998968e8ee12494738948c6be1a54a6ec80b2d",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Reverses the tie-break to descending alphabetical order instead of ascending -- the spec explicitly says equal-count languages must appear alphabetically ascending.",
+          "language": "cpp17",
+          "sourceHash": "488ffca9e09ab67e4a05a29907cda29a81acc927e8b9bdfd3eebc300261f120d",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2888,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10355-superman",
+      "inputOutputHash": "af9526d32a2c94a8fe53a368d145034b311690e662080acf71702ff9c70756fe",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Parametrize the segment as P(t)=P1+t*D, solve the quadratic |P(t)-C|^2=r^2 per sphere for the intersection interval, clip to t in [0,1], sum clipped chord lengths, divide by total path length for the percentage.",
+          "language": "cpp17",
+          "sourceHash": "3fa14ff32e4cf41dc12125c8ee38f5ddf3e3fb4092835ab1a7368b1ce55ad380",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 3040,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Forgets to clip the intersection interval [t1,t2] to the segment bounds [0,1] before computing chord length -- overcounts pollution whenever a sphere's true geometric intersection with the infinite line extends past either endpoint of the actual flight path.",
+          "language": "cpp17",
+          "sourceHash": "b5a3d8a1f210a916ab922b3b9a518295b38b5a47d678c388249ad6268f045ae5",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 3040,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Omits 'fixed << setprecision(2)' -- prints the percentage with default stream formatting instead of exactly 2 decimal places (e.g. '86.6' or scientific notation instead of '86.60').",
+          "language": "cpp17",
+          "sourceHash": "bbb8a3ee4cfcdda1540b9f6c66c6be7c4756468d504553c8c4a4dd2933e3cad6",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 3040,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10364-square",
+      "inputOutputHash": "62ee624e8f4a954d1d3ca621437b407031f1a55255610293a80032153c28432e",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Sum-divisible-by-4 check, then backtracking partition into 4 equal-sum groups; sticks sorted descending and pruned when the largest remaining stick alone exceeds the target side length.",
+          "language": "cpp17",
+          "sourceHash": "d851b2c02e16245c104836fc9ec134386fdff96bc877101e423771f6a2c47dec",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "whitespace-format",
+          "label": "Correct logic but prints capitalized 'Yes'/'No' instead of the required lowercase 'yes'/'no' -- deterministic mismatch, should fail even the existing test case.",
+          "language": "cpp17",
+          "sourceHash": "5e082e03cfd5ff30dff18d1c283be3c2ac1736bca588f502fdf207a4eb832ec7",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "slow-correct",
+          "label": "Logically correct but omits the descending sort and the largest-stick pruning check -- the standard known-necessary optimization for this exact problem; without it, adversarial inputs with many similarly-sized sticks can blow up the branching factor and risk TLE even though the algorithm is not wrong.",
+          "language": "cpp17",
+          "sourceHash": "4c852a00ab6ef2510e46f7edd3eb465a3e2f62c1ca9cc2fbc2a9c246cffe68bf",
+          "expectation": "AC",
+          "reviewReason": "The complete backtracking search is logically valid. Slower code that finishes within the time budget must be accepted; worst-case performance remains a separate audit.",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10365-blocks",
+      "inputOutputHash": "77face4a6d6ebeda87c2327f0c771bc403817cbd744ce540119d1cc3ce5698b6",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Enumerate all divisor triples a<=b<=c with a*b*c=n, minimize surface area 2(ab+bc+ca).",
+          "language": "cpp17",
+          "sourceHash": "52fa50b9f869dff5f0a6f43586cec449385bbd0833c1ddddb4db7df5bcaa04af",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Formula typo: drops the factor of 2 on the a*cc term (2*a*b + 2*b*cc + a*cc instead of 2*(ab+bc+ca)), understating area for every non-cube n.",
+          "language": "cpp17",
+          "sourceHash": "b2597a380ec6607bc63ee7fa18c5e9f0aae13c35bcec199cf5674b45f4d30403",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Returns the FIRST valid divisor triple found (in increasing-a order) instead of searching all triples for the minimum-area one -- gives a suboptimal (too large) answer for any n with multiple factorizations.",
+          "language": "cpp17",
+          "sourceHash": "b09c95d2277e515d2756238de3c126cdcab45cc76accd442c667a41ddd968e59",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10369-arctic-network",
+      "inputOutputHash": "cdeba33b56eedb4e4c9cae3d1b1a8801f69e87a55cf908d8fc15bfba3619ed0d",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Prim's MST over all P outposts, then D = the (S-1)-th largest MST edge after removing the S-1 largest edges for free (S satellites act as S free-merged components); 0.00 if S-1 covers every MST edge.",
+          "language": "cpp17",
+          "sourceHash": "32d3ee16b89e7d919496da4e78b496a68a36ccaf4e915930edf6b7906aa7e092",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 3164,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Removes S largest MST edges instead of S-1 (indexes mstEdges[s] instead of mstEdges[s-1]) -- classic off-by-one for this exact problem's satellite-count semantics.",
+          "language": "cpp17",
+          "sourceHash": "1bf9e24e8bf9ac955cca7789781f1a96e0fe1c0f0277624c10d356f0099c02b1",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 10,
+          "memoryKb": 3164,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Prints with %.1f instead of the required 2 decimal places.",
+          "language": "cpp17",
+          "sourceHash": "59151e50d4bd291feab19d9c510bafbe6c944319b8b3c14f2b77dc813868b3e6",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 3164,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10382-watering-grass",
+      "inputOutputHash": "c663d6ef9298423eb9607f27111508f24a443472e0b1e45e0f0bea3c1b263184",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Sprinklers only water the strip's full width w within horizontal reach sqrt(r^2-(w/2)^2) of their position (a sprinkler with r<=w/2 covers nothing); greedy minimum interval cover of [0,l] with those effective intervals.",
+          "language": "cpp17",
+          "sourceHash": "f0d2d15a4b34820567b8a7ddf293c6730e2d5d3a1a065910e63ba8678ff0c3f6",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 10,
+          "memoryKb": 3284,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Ignores the strip width entirely, treating each sprinkler's horizontal coverage as [pos-r, pos+r] with no sqrt(r^2-(w/2)^2) adjustment -- the classic mistake for this exact problem.",
+          "language": "cpp17",
+          "sourceHash": "a7be8e0a13a5acb8dc8ab7cea9eb3734cdd3855c8809c3b148ede3de0a7346ed",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 3248,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Applies the width adjustment but never guards r<=w/2, letting sqrt() receive a negative argument (NaN) for sprinklers too narrow to span the strip, instead of correctly excluding them.",
+          "language": "cpp17",
+          "sourceHash": "a64b991c67ffbad56e18d3f23ae32407a1cd6564e4a1e4d9f733790bb8d71f0d",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 3352,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10397-connect-the-campus",
+      "inputOutputHash": "39ec12d7ab7e2d03933685f8462c0546f0fa09c2aa6daa532c51513fd8f6e6fd",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "DSU pre-seeded with the M existing free cables, then Kruskal over all N*(N-1)/2 candidate edges by distance, summing only the ones that merge distinct components until fully connected.",
+          "language": "cpp17",
+          "sourceHash": "7d93427ebe177035bb0d87fae8d766499b9d377459518c25d9473cae816ca64c",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 50,
+          "memoryKb": 13300,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "eof-multi-case",
+          "label": "Only initializes the DSU parent array before the FIRST test case, leaking unioned state into every subsequent case in a multi-case input.",
+          "language": "cpp17",
+          "sourceHash": "09859785e9b9ef4ef25e5b9400a91e4e4096945210ffad86a873848243e1d096",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 60,
+          "memoryKb": 13320,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Reads the M existing cables but never unions them in the DSU, effectively ignoring that any cables already exist and computing a plain from-scratch MST instead.",
+          "language": "cpp17",
+          "sourceHash": "3deee61f2b55c0ca14780d31a429b8e31e9fc3adc1a889ecc4db4f4bde2a27d3",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 60,
+          "memoryKb": 13304,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10405-longest-common-subsequence",
+      "inputOutputHash": "767aad1b0b6be4779a64ad034e4e82c3ebbe6d99eca1215706e86775aaebca6e",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Standard O(n*m) LCS DP, reads line pairs until EOF via getline.",
+          "language": "cpp17",
+          "sourceHash": "f216ec89b886c0085bb104f8d4c95cf0d3f1f9d3879cd5b91029678a89dbc408",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2888,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Wrong recurrence: uses dp[i-1][j-1] twice instead of dp[i][j-1] when characters differ, systematically underestimating LCS length on non-trivial inputs but sometimes coincidentally right on short/trivial ones.",
+          "language": "cpp17",
+          "sourceHash": "67513bfddf2fe3e5c3e19b62a888dca6ad3cc0bbac5c7ff33d157698714b9a08",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10407-simple-division",
+      "inputOutputHash": "6e20ba73dfa496089207faf9f98f07d9f58f6097caf87cb0c07abe42d393c2b3",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Largest d dividing all pairwise differences from the first number, i.e. gcd of |a_i - a_0| for i=1..n-1, using llabs for the negative-number case.",
+          "language": "cpp17",
+          "sourceHash": "f103050f81abbf6a8d49d0faa59d98a221777d8bb3f3829fef3b01e0a152e360",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Drops llabs() on the difference before folding into gcd -- since C++'s % keeps the dividend's sign, an unsorted/negative-heavy sequence can drive intermediate (and potentially final) gcd values negative, printing a negative divisor instead of the required positive one.",
+          "language": "cpp17",
+          "sourceHash": "7accbb392b31d19800ebffdb04271807fcdb273cd3baa11cffca9d9a4cbc23b6",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2928,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Loop bound excludes the last number in the sequence (i < nums.size()-1), so the final element's constraint is never folded into the gcd -- can report a divisor larger than the true answer whenever the excluded number is the one that would have tightened it.",
+          "language": "cpp17",
+          "sourceHash": "ed4df88381674a5a04f4c412b24af998c1926b97cfe176840ec49deaed4c36fd",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10443-rock-scissors-paper",
+      "inputOutputHash": "8fe098f9f2b1b027da5479fc15525cf46a68625c74f9f84feac0f9cc63aec1db",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Simultaneous simulation: each day, a cell flips to the type that beats it if any 4-neighbor has that type, computed from a snapshot (double-buffered) so same-day updates don't cascade. Blank line between test cases, none after the last.",
+          "language": "cpp17",
+          "sourceHash": "b36d93a90a121049b89ce9f93eaaa394a4d2f41551828fd01b3bb0f36bae3b7d",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Updates the grid in place instead of from a snapshot -- a cell conquered earlier in the same day's scan can immediately conquer its own later neighbors within that same day, cascading further than one real day of simultaneous warfare should.",
+          "language": "cpp17",
+          "sourceHash": "1f88c3596afa5df7310db91a12a1aeb2c561d8d3aa82e6e3449eea1cc982468e",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Cyclic dominance direction swapped (defeats(R)=S instead of P) -- the war outcomes go the wrong way around the R>S>P>R cycle.",
+          "language": "cpp17",
+          "sourceHash": "efffb975e83323698c254fc56d982aa382030cc7e21b96a0df19f8f8ccbf46c3",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10474-where-is-the-marble",
+      "inputOutputHash": "ad6ec5c48d82bad78f3dffae99c1d43f2eee71531ed50ec82df84744d3336581",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Sort marbles ascending, binary search (lower_bound) the FIRST occurrence position of each query value (1-indexed), else 'not found'.",
+          "language": "cpp17",
+          "sourceHash": "7406946c978b3f65b6358fc590ae1b205ee547216bb8c0f9ae42519dc74fafc2",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Reports the LAST occurrence position (via upper_bound) instead of the FIRST -- wrong index whenever the query value has duplicates in the marble set (the spec explicitly asks for the first marble with that number).",
+          "language": "cpp17",
+          "sourceHash": "1c2f20401b45b10f63036af7fe36f723a814b5ca258747364e419ee95953aa40",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Missing the space after 'CASE#' (prints 'CASE#1:' instead of 'CASE# 1:').",
+          "language": "cpp17",
+          "sourceHash": "9d5fff382465092ea11555856ec095c028f3b4810178ea64d31a558107b54c18",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2884,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10487-closest-sums",
+      "inputOutputHash": "e730c8b6c278ef91bbc1bc6ea31b3e1f5f583df2277d5b834b649556acade9bf",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Precompute all pairwise sums of DISTINCT positions (i<j), sort, binary-search the nearest value to each query.",
+          "language": "cpp17",
+          "sourceHash": "6001f97c2957b9233aabc3b43649c45338c1f0c915d75bde6c12f1336a7d0ea1",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 50,
+          "memoryKb": 8908,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Includes i==j pairs (a number summed with itself) as if it were a valid distinct-pair sum -- can surface a closer-looking sum that isn't actually achievable from two distinct set positions.",
+          "language": "cpp17",
+          "sourceHash": "66f42c6e801b06d7a8b5d8aa30efca94877f7881da5dd04905506602f60bb6e3",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 50,
+          "memoryKb": 8908,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Missing the trailing period on each answer line ('Closest sum to 5 is 15' instead of '...15.').",
+          "language": "cpp17",
+          "sourceHash": "0f6f223b8546a42e144d58ae2b77cd1312a9bfca33bd87b02daeab2eeb8a55d0",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 50,
+          "memoryKb": 8892,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-105-the-skyline-problem",
+      "inputOutputHash": "75bac8aef520f04bdd5cb7edaae2d3c5c2426e42fdcdf000008aadae03e5d1cc",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Brute-force max-height array over x in [0,10000) filled per building [L,R), emit a point whenever the running max height changes; verified natively against both stored samples (single building, and the 16-building composite) exact match.",
+          "language": "cpp17",
+          "sourceHash": "25af18c66ace24c10ebdd8135bab9730647fc7d9f3431415333ccd48c1f31ebf",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Fills height[L..R] inclusive of R instead of [L,R) exclusive, so each building's right edge bleeds one extra unit into the next segment.",
+          "language": "cpp17",
+          "sourceHash": "3c6a5fc9a10abe5d1c6481dc7730800a5f4e40ccc6b76d20fd538ac0bbd1ad66",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Emits a point at every building L/R edge coordinate directly (via a set of edges) instead of scanning for actual height changes, so edges where the visible height doesn't change (e.g. a shorter building's edge under a taller one) produce spurious/incorrectly-merged output points instead of being skipped.",
+          "language": "cpp17",
+          "sourceHash": "cc15d04492d1756f95bbc00bb618a7c8b4d87bd2ae5f417150c5c56705efee0c",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2920,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10530-guessing-game",
+      "inputOutputHash": "7e5db03d0964cae79ccceba235b31d64c5f3f2fa510e4c15beaecf04c2c1d152",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Track [lo,hi] candidate range, narrow via too-high/too-low (lo=max(lo,g+1), hi=min(hi,g-1)), flag dishonest if lo>hi ever or the final guess isn't in range at 'right on'. Verified natively against both stored samples (34-game and 1-game transcripts) exact match.",
+          "language": "cpp17",
+          "sourceHash": "d501a5508604842480408787150f7e3f432ae97805e79d9969df4d4b1276620a",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Narrows with hi=min(hi,g) / lo=max(lo,g) instead of g-1/g+1 (doesn't exclude the guessed value itself), systematically under-detecting dishonesty.",
+          "language": "cpp17",
+          "sourceHash": "2543bb8c30c911be952eda410b2c290b37a4174d3566200181ae067b464cd173",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Correct logic, but prints 'STAN IS DISHONEST'/'STAN MAY BE HONEST' in all caps instead of the required 'Stan is dishonest'/'Stan may be honest'.",
+          "language": "cpp17",
+          "sourceHash": "62e9fd2b76ffd9042bd72007946c630516b03feca4ac8d1ca0a2cd55ca23aa54",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10533-digit-primes",
+      "inputOutputHash": "bfbb8496206dccc3e6625606f26e16b9b1623cbe266593dac1f1d84c760773ad",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Sieve primality up to 1e6, precompute isDigitPrime via digit-sum primality, prefix-sum for O(1) range queries, scanf/printf per the problem's explicit fast-I/O warning. Verified natively against both stored samples (34-query and 1-query) exact match.",
+          "language": "cpp17",
+          "sourceHash": "c6cd2f530515805fdaed36b086a41447ef52208f0719a0a143e5926db2440cb4",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 10,
+          "memoryKb": 6164,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Queries prefix[t2]-prefix[t1] instead of prefix[t2+1]-prefix[t1], excluding t2 itself from the inclusive range whenever t2 is a digit prime.",
+          "language": "cpp17",
+          "sourceHash": "642b778ebbbabdf5d846cb3048e15924911a2f32ee9eb4d562b822138a68b1d1",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 10,
+          "memoryKb": 6156,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "slow-correct",
+          "label": "Identical correct algorithm but reads/writes via cin/cout without ios::sync_with_stdio(false) instead of scanf/printf -- the problem statement explicitly warns cin/cout is too slow for this problem's up-to-500000 queries; existing test data (34 and 1 queries) is far too small to actually trigger a TLE against this, so this only tests whether the local time limit is calibrated against a properly-sized stress case at all.",
+          "language": "cpp17",
+          "sourceHash": "98cc6467fc3c41ea595c18dc8c43f7a505b78e1cd921cfe0f5aec05057b3fa93",
+          "expectation": "AC",
+          "reviewReason": "Synchronized iostreams are still semantically correct. The judge cannot require a particular I/O library; stress calibration remains a separate gate.",
+          "verdict": "AC",
+          "timeMs": 10,
+          "memoryKb": 6580,
+          "lastCase": 2,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10539-almost-prime-numbers",
+      "inputOutputHash": "c35d3bdab79586b85eea5920a89516969d6ea6cb576bc5e83db0fe58ac1c6ce5",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Sieve primes up to 1e6 (since p^2<=1e12 implies p<=1e6), for each prime accumulate counts of p^k (k>=2) within [lo,hi] using long long throughout (hi up to 1e12). Verified natively against both stored samples (3-query and 2-query) exact match, including hand-traced values for [1,10]->3, [1,20]->4, [1,5]->1.",
+          "language": "cpp17",
+          "sourceHash": "a93f6e8f02f5ea5ee18d8ef0290fdd1113c6d2fc7619af4e05bed0ccac8c442e",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 3712,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "overflow",
+          "label": "Identical logic but lo/hi/val stored as 32-bit int instead of long long -- hi can be up to 1e12, far beyond INT_MAX (~2.1e9); existing test data only reaches 20, nowhere near large enough to trigger this.",
+          "language": "cpp17",
+          "sourceHash": "9ad99eb45dfb3c4122bd0561a9d7ea348aa8dff3d0d4327f72d480801e3e34eb",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 3696,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Starts the prime-power loop at val=p (k=1, i.e. the prime itself) instead of val=p*p (k=2), incorrectly counting primes themselves as 'almost prime' in addition to true prime powers.",
+          "language": "cpp17",
+          "sourceHash": "1a99fcf273969b11ad3e4b38039bad5e5dea9f760cbd72dc6938feca425a3f8a",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 3600,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10550-combination-lock",
+      "inputOutputHash": "b50f83b569c32bd966bc076f9c07b915d201794eaed5311252954b66b4de579c",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Dial has 40 marks (9 deg each); clockwise = decreasing number mod 40 (verified by hand-tracing all given samples, e.g. 0->30->0->30 gives 1350 only under this convention). Total = (720 + cw(pos,a)) + (360 + ccw(a,b)) + cw(b,c).",
+          "language": "cpp17",
+          "sourceHash": "c79ba9cb08df65c109a931a773515d8bf160c0d900f8f835e6c1a32a933deb34",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Omits the '2 full turns'/'1 full turn' base rotations (just 360/0 instead of 720/360), a plausible careless misreading of the physical unlock procedure.",
+          "language": "cpp17",
+          "sourceHash": "a077d2f13aca0da012805093b96d8e0eb5567251bbc8944dca825425c93cb60c",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Clockwise/counter-clockwise direction convention swapped (treats increasing number as clockwise instead of decreasing) -- the direction convention isn't obvious from the statement alone and has to be reverse-engineered from the samples, so this is a very plausible real mistake.",
+          "language": "cpp17",
+          "sourceHash": "62df111b65d7f2bf50a2b7ba15a83391cb11faed5fd90ae64e46c70585513bb6",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-1056-degrees-of-separation",
+      "inputOutputHash": "7a22cf39df2924d3f8928399545cc729c30aad0d7bdfd05daebc524802c7eea3",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "BFS from every discovered name (unique names mapped to ids as encountered), diameter = max shortest-path distance if every node reachable from every other, else DISCONNECTED. Blank line printed BEFORE each network's line except the first (matches the sample: no trailing blank line after the very last network).",
+          "language": "cpp17",
+          "sourceHash": "ca7bcd3148075f1fcb78ef3e17ec558aae1747a0dbbf1c17bbaf7e626126aba2",
+          "expectation": "REJECT",
+          "reviewReason": "Discovered names can be fewer than the declared population P. This candidate omits unnamed isolated people and is not a correct reference.",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2884,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "whitespace-format",
+          "label": "Always prints a trailing blank line after every network, including the very last one -- the sample output has no blank line after the final network, so this diverges on the overall trailing whitespace even though every individual answer is numerically correct.",
+          "language": "cpp17",
+          "sourceHash": "db2e3796aaa35f35472a7b557bc994228157193131f9e85fe06565eb4597de81",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Treats relationships as directed (only pushes b onto a's adjacency list, not the reverse) instead of the stated symmetric relationship -- shortest paths and reachability both become wrong on any graph that isn't already symmetric-by-coincidence.",
+          "language": "cpp17",
+          "sourceHash": "d4982e39c76e7f5de7029cda6ce083eb1576ba8a880f5a9b57e1f82cd4d48073",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 3,
+          "tag": "correct",
+          "label": "Corrected independent BFS reference accounts for unnamed isolated nodes by comparing discovered names with P.",
+          "language": "cpp17",
+          "sourceHash": "2e190d48329969336bf4566474d7be2a349b6c519e26f10f2b46490be008eb07",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10583-ubiquitous-religions",
+      "inputOutputHash": "797a5d6b449991216ce7a8af1edd0b777dc9231b33f5a1fdf6f6bcd56b2586ba",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Standard Union-Find (DSU with path compression), reinitialized fresh each test case; answer is the number of distinct roots among 1..n.",
+          "language": "cpp17",
+          "sourceHash": "a721891fe1cbb96d4ac7a369e764ef745cbaa40d2131ef4a4ad5c706f9588aa3",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 40,
+          "memoryKb": 3120,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "eof-multi-case",
+          "label": "Initializes the parent[] array only ONCE before the main loop instead of once per test case -- unions from earlier (larger) test cases leak into later ones, undercounting the number of distinct religions on any case after the first.",
+          "language": "cpp17",
+          "sourceHash": "b0c061b0abdc3c6228953cf0732d9e770aa58310737d000996444efed56275d5",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 40,
+          "memoryKb": 3120,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Initialization loop uses 0-indexed bounds (i from 0 to n-1) while student ids from input are 1-indexed (1..n) -- student n's slot is never (re)initialized for the current case and can carry a stale parent pointer from whatever the previous test case last set index n-1... this is a genuine off-by-one that silently corrupts exactly one student's component per case.",
+          "language": "cpp17",
+          "sourceHash": "d669f9d352e431312f2bc83c6c69006f097dc36ca11068641bfd5f61bc74fb54",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 40,
+          "memoryKb": 3120,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10591-happy-number",
+      "inputOutputHash": "6c3ceab7ab54dcae23919573b9b247292a2596977af8104422013bc22691091b",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Simulate sum-of-squares-of-digits with a visited-set for cycle detection; N<10^9 shrinks to <1000 within one step so the set stays tiny.",
+          "language": "cpp17",
+          "sourceHash": "9a33bdf11d98507dfa1e9568640eebc5589e6b93afaa363b29c97a747baec557",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Replaces proper cycle detection with a fixed cap of 5 iterations before giving up and declaring Unhappy -- some genuinely happy numbers with N up to 10^9 need more than 5 steps to reach 1, so this misclassifies them as Unhappy.",
+          "language": "cpp17",
+          "sourceHash": "edeb0eb370dfe39cdbab819a150d915f814ba6a568553229cd3c5cf7b8ec65a6",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2888,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Drops the article ('is Happy number.' / 'is Unhappy number.' instead of 'is a Happy number.' / 'is an Unhappy number.') -- every classification is numerically correct but the exact required wording is not.",
+          "language": "cpp17",
+          "sourceHash": "fe9cb470807690a1a610b4b8842042c51fba7f852b75013bdf66dd43e6c7a24d",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2896,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10603-fill",
+      "inputOutputHash": "7633c4410f05979a7f5ea178c60e2fe1e6168e100005fdbd561cd9b3befdb515",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Dijkstra over (amtA,amtB) states (amtC derived), edge weight = amount poured per transfer, tracking the best (largest) achievable amount <= d and its minimum cost across all three jugs at every visited state. Hand-verified against sample 1 (a=2,b=3,c=4,d=2 -> '2 2').",
+          "language": "cpp17",
+          "sourceHash": "9db28d4d037d16c0b82d973ee974007c7f62a717b9d57525b764fc5e8c27dc5f",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 3144,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Only ever considers the pour target's exact fill or the source's exact empty, but incorrectly bounds the pour transitions to `nx<=a && ny<=b` while forgetting the >=0 lower-bound check on the state array index -- with negative pours excluded elsewhere this rarely triggers, so instead: swaps `consider` to only check amtA and amtB, never amtC, missing any solution that only appears in the largest jug.",
+          "language": "cpp17",
+          "sourceHash": "1b1fdc72365b9e300516ebb85fc1c2f089a8dcd29dc565c97e1bf1c3b14ffbe6",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 3144,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "slow-correct",
+          "label": "Same correct logic, but using a FIFO queue (plain BFS) instead of Dijkstra's priority queue -- since pour amounts are non-uniform edge weights, BFS processes states out of true cost order and can settle on a suboptimal (non-minimum) cost for a given state before a cheaper path arrives, silently giving a wrong (too-high) minimum cost on inputs where a costlier path happens to be explored first.",
+          "language": "cpp17",
+          "sourceHash": "22e356178edfc4597a7ee78f8337c672dc7b3db4be6cf653f040004dc4c4c6dd",
+          "expectation": "AC",
+          "reviewReason": "The FIFO implementation re-enqueues every improved distance until convergence. It is a label-correcting shortest-path algorithm, not one-pass BFS.",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 3136,
+          "lastCase": 2,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-1062-containers",
+      "inputOutputHash": "b71c298dc93cfca190d8eec74f07b652112b5641091ce7fddca577ac796d9a1a",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Greedy multiset of stack-top letters: for each arriving container c, if some stack's top is >= c, move it onto the stack with the SMALLEST such top (erase+reinsert c); otherwise open a new stack. Final stack count is the answer (patience-sorting-style greedy for minimum non-increasing-subsequence partition). Hand-verified against all 4 given samples (1/3/1/4) and the small existing TestCase (1/4) by tracing the multiset step by step.",
+          "language": "cpp17",
+          "sourceHash": "c514ca1dbce92b6f02da8a0a9eed2e0373bbd21471d5f2f463ab7a97b19d133e",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2996,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Uses upper_bound instead of lower_bound when finding a reusable stack -- misses the case where an existing stack's top EXACTLY equals the incoming letter (a valid reuse, since top>=c includes equality), forcing an unnecessary new stack whenever two consecutive containers for the same still-unloaded ship arrive with nothing smaller in between.",
+          "language": "cpp17",
+          "sourceHash": "11cad9bed4c0bb15b37dffaf9120227ce0d7f91440397fea7ac4e0755c86ac7c",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2996,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "eof-multi-case",
+          "label": "Never checks for the 'end' sentinel line -- reads until real EOF and processes 'end' itself as if it were a 3-character container-arrival string ('e','n','d'), printing one extra bogus Case line after the real ones.",
+          "language": "cpp17",
+          "sourceHash": "02436703a9a4cdf22ce9d299eefe3911661b6122944dffe2c1cdf05b7195d617",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2988,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10633-rare-easy-problem",
+      "inputOutputHash": "50f8b9f65fadc10069e835517cb112628518840cd6292ef1facc29f29f43b7f7",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "N - floor(N/10) = 9*M + d where M=floor(N/10), d=last digit of N; for each d in 0..9 check (V-d) divisible by 9 and M>=1, reconstruct N=10*M+d, sort and print all valid N. Uses long long throughout since V can be up to 1e18.",
+          "language": "cpp17",
+          "sourceHash": "925b125e4b8e6f13b22796a3bd0f1ce8f4f600db332f770c146b3a4990becf3d",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2928,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "overflow",
+          "label": "Identical logic but V/M/N stored in 32-bit int instead of long long -- V can be up to 1e18, far beyond int range, but the existing test data (18 and 100) is far too small to trigger the overflow, so this could silently pass locally while being catastrophically wrong on real large inputs.",
+          "language": "cpp17",
+          "sourceHash": "fe722c11d39723e09f4b3aec700a38837623e650ff8e6e08876feb7a5c0afcee",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "eof-multi-case",
+          "label": "Loop condition only checks stream extraction success, not the v!=0 sentinel, so the terminating '0' line is processed as a real case too -- v=0 spuriously satisfies rem%9==0 (rem=0) at d=0, producing an extra bogus output line '0' after the real answers instead of stopping cleanly.",
+          "language": "cpp17",
+          "sourceHash": "804146b31b0eae0db020b67dbb15cb0ff843c7f40d305d70b0bf1f0e63851f37",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2896,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10664-luggage",
+      "inputOutputHash": "6f70a1762f51cd2142ebf225aae0bff430fbe94564f6b56403ccf9e329ba34ee",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Per test-case line (read via getline since no leading count of weights is given): if total weight is odd, NO; else 0/1 subset-sum DP up to total/2, backward iteration.",
+          "language": "cpp17",
+          "sourceHash": "780d5fcd3d3d7836646656ff8ca682eecf551045651b8f82a409849838344011",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Knapsack iterates the sum dimension forward (low to high) instead of backward, letting a single suitcase's weight be counted multiple times towards the same sum -- an unbounded-knapsack bug on what must be a 0/1 knapsack, which can only ever make MORE sums falsely reachable (turning some real NO into wrongly YES).",
+          "language": "cpp17",
+          "sourceHash": "32b3bf089bb0f1319fbdc99cac93b691a516bc34482a92d428e8c1d101a32405",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Skips the odd-total short-circuit entirely (always computes half = total/2 via integer truncation and runs the DP against that truncated half) -- for an odd total this asks the wrong question (\"can a subset sum to floor(total/2)?\") instead of correctly answering NO outright, so it's wrong whenever that truncated half happens to be achievable.",
+          "language": "cpp17",
+          "sourceHash": "425313146d429d5c5ae0ae16f035220ab4eaacdc3f19197d7d40a127a7b3d4da",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10721-bar-codes",
+      "inputOutputHash": "84154af44537c34f4c5e43b13748c831f48ba2bb5a2ed6f77c7e0bd5f2ec78d8",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "DP: dp[i][j] = ways to reach total width j using i bars, each bar width 1..m. Answer dp[k][n], long long throughout (values can reach ~1e13).",
+          "language": "cpp17",
+          "sourceHash": "457f55fa23799b8bde2fc2491b7cb3d13b2ee44b6ce2b609c68c2942d9640a31",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "overflow",
+          "label": "Identical DP but with 32-bit int accumulators -- the problem's own stated max answer (~2.8e13) vastly exceeds INT32_MAX, and the existing test data already includes that exact large value, so this should already be caught.",
+          "language": "cpp17",
+          "sourceHash": "413be1ee37fbe8f9caa25ee269e633c90d06c646ff5666d0d94967d6f92df4fd",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2892,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "off-by-one",
+          "label": "Bar-width loop uses w<m instead of w<=m, so the widest allowed bar width is never considered -- undercounts whenever m>1.",
+          "language": "cpp17",
+          "sourceHash": "23ab8ed7774243bd8d26ca2229292add1eacb4fccca002c103ac29d776699329",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10740-first-love",
+      "inputOutputHash": "79cf2961746a9aa8ad30c4d42eca066eba6700e7bba53163b79ce771cca87bfc",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "NOTE: this problem's stored statementMd is the k-th-shortest-walk problem (not the 'first love' romance title suggests -- a known pre-existing slug/title mismatch, out of scope here). Modified Dijkstra: a min-heap pop finalizes one occurrence of a node's distance; each node may be finalized up to k times (walks may revisit vertices/edges, not simple paths). Answer is the walk-length the k-th finalization of the target y produces, or -1 if fewer than k exist. Hand-verified against the worked example in the statement itself (pentagon graph, x=5,y=2,k=5 -> 15) via the given sample's second case.",
+          "language": "cpp17",
+          "sourceHash": "bafb8416270c517dccdffd1c0e40d55a474c881335023ef93ac3fa1536e65c5c",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Skip condition is cnt[u]>k instead of cnt[u]>=k, so every node is allowed one extra finalization before being cut off -- shifts which walk is reported as the k-th.",
+          "language": "cpp17",
+          "sourceHash": "1247294b3f11cc20339e32aa2fdafaffe65209a35e05c4ca8e3b10a72290ce7f",
+          "expectation": "AC",
+          "reviewReason": "The target still returns at cnt[target] == k. Allowing one extra expansion elsewhere does not shift the kth distance with nonnegative edge weights.",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Ignores k entirely and computes plain single-source shortest path to y (as if k were always 1) -- wrong whenever k>1 and multiple distinct-length walks exist.",
+          "language": "cpp17",
+          "sourceHash": "01fdafc56a21cfed5af26b3618e1c19f146b16862be25c8a4a3c32fe356ab317",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10763-foreign-exchange",
+      "inputOutputHash": "518942975ef4d7dd5aaccd54fbd73bb2d11a6751c26c64a55b058311e376a24f",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Count occurrences of each ordered (from,to) pair per test case; program works out iff every pair's count exactly equals its reverse pair's count. Map declared fresh inside the loop so no state leaks between test cases.",
+          "language": "cpp17",
+          "sourceHash": "349534744f770bd6e6c4c0dfe195ff8108fc62519e00bfbc94d951d5c426f89c",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 90,
+          "memoryKb": 3844,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Only checks that the reverse pair EXISTS (count>0), not that its count matches -- says YES even when e.g. 2 people want A->B but only 1 wants B->A.",
+          "language": "cpp17",
+          "sourceHash": "dfe8a4c3305e3dbbafe409237a0fb95b3ce0709f2e52e58d64f01cbc4f02330a",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 90,
+          "memoryKb": 3700,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "eof-multi-case",
+          "label": "The pair-count map is declared OUTSIDE the loop, so entries from previous test cases silently persist and pollute later ones (state leak across datasets).",
+          "language": "cpp17",
+          "sourceHash": "d38d5d4f629f4822e0d28104c6ccd00992da972f3f017681dcbe92fdc5998b7e",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 110,
+          "memoryKb": 5124,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-10789-prime-frequency",
+      "inputOutputHash": "0dbf6e0243ee5fa2b40c3a4bf23894a6c0ef6c4e8b4746e49b81a4bd3eb73fdb",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Count character frequencies (0-255 covers the alphanumeric input), keep those with prime frequency, print in ascending ASCII order (naturally satisfies 'lexicographically ascending' since input is alphanumeric only), or 'empty'.",
+          "language": "cpp17",
+          "sourceHash": "84c561b0aeec108ea457ddb2113b3caaf40731a4e42103769d70f22d991bdcaa",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Primality test loop uses i*i<x instead of i*i<=x, so a perfect square of a prime (e.g. frequency=9) is never actually tested against its square root and falls through as wrongly 'prime'.",
+          "language": "cpp17",
+          "sourceHash": "3a8faac868068e18aa4ddda2fbc95f3eb940d5e77fce0870c2b4f0e726acd9f8",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2896,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Base case is x<1 instead of x<2, so a character appearing exactly once (frequency=1) is wrongly treated as having a prime frequency.",
+          "language": "cpp17",
+          "sourceHash": "5db7e839309626f6f95b610a40af7c8006c1a70a7c160e8f34dd4ff5502110d8",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 3,
+          "tag": "eof-multi-case",
+          "label": "Reads each test string via getline() without consuming the leftover newline after 'cin>>t', so case 1 reads an empty leftover line and every case after that is silently shifted back by one line.",
+          "language": "cpp17",
+          "sourceHash": "2327a8ecbbdc31003592c8375524a6df19648ea053a213ffee647ca0dc857b36",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-11085-back-to-the-8-queens",
+      "inputOutputHash": "263e2c2d376d8105500dd7d6096aeff7ef0b5aa831be9ca2f74db2e28ddef3d0",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Precompute all 92 valid non-attacking 8-queens row permutations by backtracking; for each query, answer = 8 minus the max number of columns matching any one precomputed solution (moving the rest is always sufficient and necessary).",
+          "language": "cpp17",
+          "sourceHash": "a3492cb48ee7111fcebf8cc42f7c29a31a57614a4ed0667ede455572eaad7457",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "off-by-one",
+          "label": "Diagonal-attack test uses <= instead of == when comparing row/column deltas, so it rejects some genuinely valid placements as attacking -- generates an incomplete/wrong set of 'valid' solutions, which can only ever make the reported minimum move count too high.",
+          "language": "cpp17",
+          "sourceHash": "1bd2b495d989764b945aeded7d012a22890f1784f98cc26c0056f1d21cce6fc0",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2888,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "whitespace-format",
+          "label": "Correct logic but the case counter starts at 0 instead of 1, so every printed 'Case N:' label is off by one -- deterministic, should fail on the very first line of any input.",
+          "language": "cpp17",
+          "sourceHash": "8d8a491daa87ec804323a8e8d7eed086a5cbbb25076d6d1ef8494739c5e126a4",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "uva-11094-continents",
+      "inputOutputHash": "7288ab7d59522af1d4a7fca7c219b0841a5fcd61ed708aec5402a2b8ec314756",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Flood-fill continents ('l'=land), horizontal wraparound (col N-1 adjacent to col 0, no row wrap), excludes the king's own continent, outputs biggest remaining continent size (0 if none).",
+          "language": "cpp17",
+          "sourceHash": "db19ad0ee039676c2a3dc14e5935af5de420a909975aeb414b8217efb556e6f1",
+          "expectation": "REJECT",
+          "reviewReason": "Land is the character at the king's starting location; the statement permits any two map letters. This candidate incorrectly hardcodes l.",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Forgets the horizontal wraparound entirely (treats grid as a plain non-wrapping grid) -- both existing samples happen to give the same answer with or without wrap, so this is a real candidate for exposing a coverage gap.",
+          "language": "cpp17",
+          "sourceHash": "d74cef8afa56b8d4c13fb00999326907101310902fa042324b6fae6677974045",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Never excludes the king's own continent -- just outputs the single largest continent overall. On both existing cases the king's own continent happens to be tied-or-smaller than the true answer, so this bug is also currently undetectable.",
+          "language": "cpp17",
+          "sourceHash": "1a3ddc2eea6df6a62768878efaccb7fc32e0bdc0246c3a6e7283029b0b963d65",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2892,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 3,
+          "tag": "correct",
+          "label": "Corrected flood-fill reference derives the land character from grid[X][Y], includes horizontal wrapping and excludes the king's continent.",
+          "language": "cpp17",
+          "sourceHash": "9aa48ccea178f44029b1c08c4d843ddf4e6a2f35c427fb0026e9357b0fe88f4c",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        }
+      ]
+    }
+  ]
+}

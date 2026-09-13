@@ -1,4 +1,10 @@
 import type { CheckerType } from "@oj/db";
+import { checkDoublets } from "./doubletsChecker.js";
+
+export function checkProblemOutput(problem: { checkerType: CheckerType; uvaId?: number | null; floatEps: number | null }, input: string, expected: string, actual: string): boolean {
+  if (problem.checkerType === "SPECIAL" && problem.uvaId === 10150) return checkDoublets(input, actual);
+  return checkOutput(problem.checkerType, expected, actual, problem.floatEps);
+}
 
 /** Trims trailing whitespace per line and collapses leading/trailing blank lines — the de facto
  * standard "don't fail on whitespace" comparison most judges use by default (matches this
@@ -29,13 +35,16 @@ function tokenize(s: string): string[] {
  * accept a token-count mismatch or wrong non-numeric output as long as the numbers happened to
  * parse from leftover text. */
 function compareFloat(expected: string, actual: string, floatEps: number): boolean {
+  if (!Number.isFinite(floatEps) || floatEps < 0) throw new Error("Invalid FLOAT checker tolerance");
+  const decimal = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/;
   const e = tokenize(expected);
   const a = tokenize(actual);
   if (e.length !== a.length) return false;
   for (let i = 0; i < e.length; i++) {
     const en = Number(e[i]);
     const an = Number(a[i]);
-    if (Number.isFinite(en) && Number.isFinite(an)) {
+    if (decimal.test(e[i]) && Number.isFinite(en)) {
+      if (!decimal.test(a[i]) || !Number.isFinite(an)) return false;
       if (Math.abs(en - an) > floatEps) return false;
     } else if (e[i] !== a[i]) {
       return false;
@@ -53,10 +62,6 @@ export function checkOutput(checkerType: CheckerType, expected: string, actual: 
     case "FLOAT":
       return compareFloat(expected, actual, floatEps ?? 1e-6);
     case "SPECIAL":
-      // Not supported yet — a special checker is itself untrusted code that would need its own
-      // sandboxed run. No pilot problem needs one; surfaced as a hard error rather than silently
-      // falling back to exact-match, which could accept wrong output on a genuinely special-judge
-      // problem (multiple valid answers).
-      throw new Error("SPECIAL checkerType has no local judge implementation yet");
+      throw new Error("SPECIAL checker requires an explicitly registered problem checker");
   }
 }
