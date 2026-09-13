@@ -2,7 +2,7 @@ import { expect, it } from "vitest";
 import { scrubTelemetryEvent, sentryIngestOrigin } from "../packages/shared/src/telemetryPrivacy";
 
 it("keeps error stacks while removing credentials, submitted code and recovery links", () => {
-  const event = { exception: { values: [{ type: "Error", value: "Invalid request", stacktrace: { frames: [{ filename: "service.ts", lineno: 42 }] } }] },
+  const event = { message: "Bearer secret", logentry: { message: "private-code" }, exception: { values: [{ type: "Error", value: "postgresql://user:secret@database/private-code", stacktrace: { frames: [{ filename: "service.ts", lineno: 42 }] } }] },
     user: { email: "private@example.test" }, extra: { secret: "private-value" }, breadcrumbs: [{ message: "secret-token" }],
     request: { url: "https://user:secret@judge.tw/reset-password?token=secret#token=secret", data: { password: "secret", sourceCode: "private-code" }, headers: { authorization: "Bearer secret" }, cookies: "secret", query_string: "token=secret" } };
   const scrubbed = scrubTelemetryEvent(event), serialized = JSON.stringify(scrubbed);

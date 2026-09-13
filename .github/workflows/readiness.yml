@@ -57,6 +57,8 @@ jobs:
           BACKUP_TEST_SOURCE_CONTAINER: ${{ job.services.postgres.id }}
       - run: pnpm --filter @oj/api build
       - run: pnpm --filter @oj/judge build
+      - run: docker build -f docker/Dockerfile.api -t oj-readiness-api .
+      - run: docker build -f docker/Dockerfile.judge -t oj-readiness-judge .
       - run: pnpm test:runtime
       - run: docker build --tag oj-readiness-sandbox-fixture tests/sandbox
       - run: RUN_SANDBOX_TESTS=1 pnpm exec vitest run tests/sandbox-isolation.test.ts

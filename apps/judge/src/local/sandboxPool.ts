@@ -75,8 +75,8 @@ export async function tryClaimPooledSandbox(timeoutMs: number): Promise<Sandbox 
 
   try {
     await member.sandbox.extendTimeout(timeoutMs);
-  } catch (err) {
-    console.error("[sandboxPool] claimed sandbox failed to extend (discarding, falling back):", err);
+  } catch {
+    console.error("[sandboxPool] claimed sandbox failed to extend; discarding and falling back");
     void stopSafely(member.sandbox);
     return null;
   }
@@ -99,11 +99,11 @@ async function replenish(snapshotId: string): Promise<void> {
       try {
         const sandbox = await createJudgeSandbox(snapshotId, MEMBER_INITIAL_TIMEOUT_MS);
         pool.push({ sandbox, createdAt: Date.now() });
-      } catch (err) {
+      } catch {
         // Don't spin on a persistent failure (e.g. a transient rate limit) — the next real job's
         // notePoolActivity call will trigger another attempt. Real judging never depends on this
         // succeeding (see tryClaimPooledSandbox's own contract).
-        console.error("[sandboxPool] failed to prewarm a spare sandbox:", err);
+        console.error("[sandboxPool] failed to prewarm a spare sandbox");
         break;
       }
     }

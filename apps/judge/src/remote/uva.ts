@@ -88,12 +88,13 @@ export async function judgeViaUva(problem: Problem, languageKey: string, sourceC
     await submitSolution(session, problem.uvaPid, hints, sourceCode);
 
     return await pollForVerdict(session, maxExistingId);
-  } catch (err) {
+  } catch {
     // Most failure modes here (bad session, markup drift, stale localId) look the same from the
     // caller's side — drop the cached session so the next attempt starts clean instead of
     // repeating whatever just broke.
     cachedSession = null;
-    return { status: "SE", compileError: `Remote judge error: ${err instanceof Error ? err.message : String(err)}` };
+    console.error("Remote judge request failed; its cached session was discarded");
+    return { status: "SE", compileError: "The remote judging service is temporarily unavailable. Please try again." };
   }
 }
 

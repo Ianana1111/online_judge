@@ -92,7 +92,7 @@ export async function runTestCases(
     return { runId, status: "DONE", cases: results };
   } catch (err) {
     logSandboxApiError(`runTestCases problem=${problemId}`, err);
-    return { runId, status: "ERROR", compileError: err instanceof Error ? err.message : String(err) };
+    return { runId, status: "ERROR", compileError: "The judging service could not complete this run. Please try again." };
   } finally {
     // See judge.ts's identical fix for why this fires in the background instead of being awaited
     // — measured in production, this single call was routinely 6-7 seconds, dwarfing everything
@@ -102,7 +102,7 @@ export async function runTestCases(
       const s = sandbox;
       void s
         .stop()
-        .catch((err) => console.error(`[runTestCases] background sandbox.stop failed:`, err))
+        .catch((err) => logSandboxApiError("runTestCases cleanup", err))
         .finally(() => console.log(`[runTestCases] problem=${problemId} backgroundStopMs=${Date.now() - tDone}`));
     }
     console.log(

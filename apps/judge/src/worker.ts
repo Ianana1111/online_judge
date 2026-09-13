@@ -93,14 +93,14 @@ function makeJudgeFailureHandler(processFn: (job: Job<JudgeJobData>) => Promise<
     try {
       await processFn(job);
     } catch (err) {
-      console.error(`Job ${job.id} (submission ${job.data.submissionId}) failed:`, err);
+      console.error(`Job ${job.id} (submission ${job.data.submissionId}) failed; see sanitized error telemetry`);
       await reportResult({
         submissionId: job.data.submissionId,
         evaluationVersion: job.data.evaluationVersion ?? 1,
         status: "SE",
-        compileError: err instanceof Error ? err.message : String(err),
-      }).catch((reportErr) => {
-        console.error("Additionally failed to report SE result:", reportErr);
+        compileError: "The judging service could not complete this submission. Please try again.",
+      }).catch(() => {
+        console.error("Additionally failed to report SE result");
       });
       throw err;
     }
@@ -122,7 +122,7 @@ for (const w of [localWorker, remoteWorker]) {
     console.log(`Judged submission ${job.data.submissionId}`);
   });
   w.on("failed", (job, err) => {
-    console.error(`Judge failed for job ${job?.id}:`, err.message);
+    console.error(`Judge failed for job ${job?.id}; see sanitized error telemetry`);
     // Not also captured in the inner catch above — that block re-throws, so this event always
     // fires for the same failure too; capturing in both places would double-report every failure.
     Sentry.captureException(err, { tags: { submissionId: job?.data.submissionId } });
@@ -144,13 +144,13 @@ const testRunWorker = new Worker<TestRunJobData>(
     try {
       await processTestRunJob(job);
     } catch (err) {
-      console.error(`Test-run job ${job.id} (run ${job.data.runId}) failed:`, err);
+      console.error(`Test-run job ${job.id} (run ${job.data.runId}) failed; see sanitized error telemetry`);
       await reportTestRunResult({
         runId: job.data.runId,
         status: "ERROR",
-        compileError: err instanceof Error ? err.message : String(err),
-      }).catch((reportErr) => {
-        console.error("Additionally failed to report test-run error:", reportErr);
+        compileError: "The judging service could not complete this run. Please try again.",
+      }).catch(() => {
+        console.error("Additionally failed to report test-run error");
       });
       throw err;
     }
@@ -160,7 +160,7 @@ const testRunWorker = new Worker<TestRunJobData>(
 
 testRunWorker.on("completed", (job) => console.log(`Ran test cases for run ${job.data.runId}`));
 testRunWorker.on("failed", (job, err) => {
-  console.error(`Test run failed for job ${job?.id}:`, err.message);
+  console.error(`Test run failed for job ${job?.id}; see sanitized error telemetry`);
   Sentry.captureException(err, { tags: { runId: job?.data.runId } });
 });
 

@@ -1,6 +1,11 @@
 /** Preserve diagnostic stacks and correlation IDs without exporting credentials or source code. */
 export function scrubTelemetryEvent<T>(event: T): T {
-  const value = event as { user?: unknown; extra?: unknown; breadcrumbs?: unknown; request?: { url?: string; data?: unknown; cookies?: unknown; headers?: unknown; query_string?: unknown } };
+  const value = event as { message?: unknown; logentry?: unknown; exception?: { values?: { value?: string }[] }; user?: unknown; extra?: unknown; breadcrumbs?: unknown; request?: { url?: string; data?: unknown; cookies?: unknown; headers?: unknown; query_string?: unknown } };
+  // Provider/ORM error messages can embed submitted code, connection strings or bearer tokens.
+  // Keep error types and stack locations for diagnosis, but never export unstructured messages.
+  delete value.message;
+  delete value.logentry;
+  for (const exception of value.exception?.values ?? []) delete exception.value;
   delete value.user;
   delete value.extra;
   delete value.breadcrumbs;
