@@ -30,8 +30,7 @@ const COMPILE_MEMORY_LIMIT_KB = 1_048_576; // 1 GB
 // wrong: a real 169596-byte stress-test input (uva-10193, "All You Need Is Love!") stayed under
 // that 256KB ceiling and still got embedded inline, and the resulting ~226KB command body got
 // rejected by the Sandbox API with a bare "Status code 400 is not ok" (no size-specific error
-// surfaced client-side — see judge.ts/testRun.ts's catch blocks, which now log the API's raw
-// response body for exactly this kind of case). Every real CP problem's test data can include a
+// surfaced client-side). Every real CP problem's test data can include a
 // stress-test input in the hundreds of KB, so this needs to stay well clear of wherever the actual
 // limit is, not just "seem generous" — 32KB keeps the inline fast path for the overwhelming
 // majority of real inputs while routing anything sizeable through the always-safe writeFiles path.
@@ -53,17 +52,11 @@ async function inlineWriteOrFallback(sandbox: Sandbox, relPath: string, content:
   return `printf '%s' '${content.toString("base64")}' | base64 -d > ${relPath}; `;
 }
 
-/** @vercel/sandbox's APIError carries the actual response body on .text/.json, which its own
- * .message never includes (every API failure just says "Status code {n} is not ok") — diagnosing
- * a real one of these (a 400 from a too-large inlined command, see INLINE_WRITE_MAX_BYTES above)
- * required manually reconstructing the cause from submission data since nothing logged the body.
- * Call from a judge/testRun catch block so the next infra failure is diagnosable from Railway logs
- * alone. */
+/** Provider response bodies can contain commands, source code or credentials. Keep only a
+ * numeric HTTP status and our own operation context in production logs. */
 export function logSandboxApiError(context: string, err: unknown): void {
-  const apiErr = err as { text?: string; json?: unknown } | undefined;
-  if (apiErr?.text || apiErr?.json) {
-    console.error(`[${context}] sandbox API error detail:`, apiErr.text ?? apiErr.json);
-  }
+  const status = (err as { status?: unknown; statusCode?: unknown } | null)?.status ?? (err as { statusCode?: unknown } | null)?.statusCode;
+  console.error(`[${context}] sandbox operation failed`, { status: typeof status === "number" && Number.isInteger(status) && status >= 100 && status <= 599 ? status : null });
 }
 
 export interface RunResult {

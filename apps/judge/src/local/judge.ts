@@ -65,7 +65,7 @@ export async function judgeLocally(
     logSandboxApiError(`judgeLocally problem=${problem.uvaId ?? problem.id}`, err);
     return {
       status: "SE" as Verdict,
-      compileError: `Local judge error: ${err instanceof Error ? err.message : String(err)}`,
+      compileError: "The judging service could not complete this submission. Please try again.",
     };
   } finally {
     // The verdict above is already fully decided by this point — stopping the sandbox is pure
@@ -81,7 +81,7 @@ export async function judgeLocally(
       const s = sandbox;
       void s
         .stop()
-        .catch((err) => console.error(`[judgeLocally] background sandbox.stop failed:`, err))
+        .catch((err) => logSandboxApiError("judgeLocally cleanup", err))
         .finally(() => console.log(`[judgeLocally] problem=${problem.uvaId ?? problem.id} backgroundStopMs=${Date.now() - tDone}`));
     }
     console.log(

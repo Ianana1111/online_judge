@@ -26,8 +26,8 @@ export async function reportResult(payload: JudgeResultDto): Promise<void> {
     signal: AbortSignal.timeout(10_000),
   });
   if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Failed to report submission result (${res.status}): ${text}`);
+    await res.body?.cancel().catch(() => {});
+    throw new Error(`Failed to report submission result (${res.status})`);
   }
   } catch (error) {
     if (!terminal) throw error;
@@ -47,7 +47,7 @@ export async function reportTestRunResult(payload: TestRunResultDto): Promise<vo
     signal: AbortSignal.timeout(10_000),
   });
   if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Failed to report test-run result (${res.status}): ${text}`);
+    await res.body?.cancel().catch(() => {});
+    throw new Error(`Failed to report test-run result (${res.status})`);
   }
 }
