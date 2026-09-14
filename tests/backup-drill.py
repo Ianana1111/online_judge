@@ -65,12 +65,15 @@ class RestoreDrill(unittest.TestCase):
                 time.sleep(0.25)
             else: raise AssertionError("Disposable restore database did not become ready")
             with tempfile.TemporaryDirectory(prefix="oj-backup-test-") as temp:
-                root = Path(temp); repository = root / "repository"; repository.mkdir(mode=0o777); repository.chmod(0o777)
+                root = Path(temp); repository = root / "repository"; repository.mkdir(mode=0o700)
                 env = root / "test.env"
                 config = {"NODE_ENV": "test", "BACKUP_ALLOW_LOCAL_TEST": "1", "RESTIC_REPOSITORY": "/repository", "RESTIC_PASSWORD": secrets.token_hex(32), "DATABASE_URL": f"postgresql://oj_test:oj_test_local_only@{source_host}:5432/oj_test", "RESTORE_DATABASE_URL": f"postgresql://oj_test:oj_test_local_only@restore-db:5432/{database}"}
                 env.write_text("\n".join(f"{key}={value}" for key, value in config.items())); env.chmod(0o600)
-                docker = ["docker", "run", "--rm", "--network", network, "--user", "1000:1000", "--env-file", str(env), "-v", f"{repository}:/repository", "oj-readiness-backup"]
+                # GitHub's runner UID differs from 1000. Match the host owner so private restic
+                # directories remain readable and TemporaryDirectory can remove them on Linux.
+                docker = ["docker", "run", "--rm", "--network", network, "--user", f"{os.getuid()}:{os.getgid()}", "--env-file", str(env), "-v", f"{repository}:/repository", "oj-readiness-backup"]
                 self.assertTrue(json.loads(call(docker + ["init"]))["ok"])
+                self.assertTrue(os.access(repository / "keys", os.R_OK | os.W_OK | os.X_OK))
                 saved = json.loads(call(docker + ["backup"])); self.assertTrue(saved["ok"])
                 self.assertTrue(json.loads(call(docker + ["freshness"]))["ok"])
                 self.assertTrue(json.loads(call(docker + ["check"]))["ok"])
