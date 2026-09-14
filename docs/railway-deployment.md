@@ -1,7 +1,7 @@
 # Railway deployment reference
 
 This documents the production Railway project's actual configuration (captured
-2026-08-23 via `railway status --json` / `railway variables`), so the deploy
+2026-09-14 via deployment manifests and transient variable checks), so the deploy
 setup can be reconstructed from the repo instead of living only in Railway's
 dashboard. **This is documentation, not a config file Railway reads** —
 deliberately not a `railway.json`/`railway.toml`, since a file Railway actively
@@ -21,27 +21,26 @@ environment `production`, region `sfo`, 1 replica per service.
   starts. A schema change only needs its migration file committed; no separate
   manual `prisma migrate deploy` step against production is needed.
 - Restart policy: `ON_FAILURE`, max 10 retries
-- No healthcheck path configured
+- Deployment healthcheck: `/health`, 180-second timeout, port 4000.
+- Zero configured overlap and 60-second draining; production deployments wait for CI.
 
 ### `judge`
 - Builder: Dockerfile at `/docker/Dockerfile.judge`
 - Start command: image default (`pnpm exec tsx src/worker.ts`)
 - Restart policy: `ON_FAILURE`, max 10 retries
-- No healthcheck path configured. A `GET /health` endpoint exists on port
-  `JUDGE_HEALTH_PORT` (default 4100) reporting queue depth and time since the
-  last completed judge — see `apps/judge/src/health.ts`. Not currently wired
-  into Railway's own healthcheck/restart mechanism: doing so needs a deliberate
-  decision about what "unhealthy" should mean here, since a false positive
-  would restart a judge worker that's actually still mid-task.
+- Deployment healthcheck: `/health`, 180-second timeout, port 4100.
+- Zero configured overlap and 60-second draining; production deployments wait for CI.
+- The health endpoint reports Redis/worker state. Railway's deployment check
+  controls rollout readiness; it is not a continuous restart or alerting service.
 
 ### `Redis`
-- Managed Railway Redis (Railpack-built), persisted volume, `--save 60 1`
+- Managed Railway Redis 8.2.9, persisted volume, `--save 60 1`
 - Reachable via `REDIS_URL` (embeds auth) from `api` and `judge`
 
 ### `Postgres`
-- Managed Railway Postgres (Railpack-built), persisted volume
+- Managed Railway PostgreSQL 18, persisted volume
 - Reachable via `DATABASE_URL` from `api` and `judge`
-- 500MB plan tier — see the storage-growth notes below
+- Check current volume allocation and growth in Railway before changing retention.
 
 ### `web`
 Not on Railway — deployed separately on Vercel (Next.js). Not covered by this
@@ -52,7 +51,7 @@ document.
 Values live only in Railway's dashboard (`railway variables --service <name>`
 to inspect, never printed here). Names, for reference:
 
-**api**: `API_INTERNAL_URL`, `API_ORIGIN`, `API_PORT`, `COOKIE_DOMAIN`,
+**api**: `ACCOUNT_SECURITY_KEY`, `API_INTERNAL_URL`, `API_ORIGIN`, `API_PORT`, `COOKIE_DOMAIN`,
 `CSRF_SECRET`, `DATABASE_URL`, `ECPAY_ENV`, `ECPAY_HASH_IV`, `ECPAY_HASH_KEY`,
 `ECPAY_MERCHANT_ID`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`,
 `GOOGLE_REDIRECT_URI`, `INTERNAL_SERVICE_TOKEN`, `JUDGE_CONCURRENCY`,
@@ -64,46 +63,41 @@ to inspect, never printed here). Names, for reference:
 **judge**: `API_INTERNAL_URL`, `API_PORT`, `CSRF_SECRET`, `DATABASE_URL`,
 `INTERNAL_SERVICE_TOKEN`, `JUDGE_CONCURRENCY`, `JUDGE_SANDBOX_SNAPSHOT_ID`,
 `JWT_ACCESS_SECRET`, `JWT_ACCESS_TTL`, `JWT_REFRESH_SECRET`, `JWT_REFRESH_TTL`,
-`NEXT_PUBLIC_API_URL`, `POSTGRES_DB`, `POSTGRES_PASSWORD`, `POSTGRES_USER`,
+`NEXT_PUBLIC_API_URL`, `NODE_ENV`, `POSTGRES_DB`, `POSTGRES_PASSWORD`, `POSTGRES_USER`,
 `REDIS_URL`, `UVA_BOT_PASSWORD`, `UVA_BOT_USERNAME`, `VERCEL_PROJECT_ID`,
 `VERCEL_TEAM_ID`, `VERCEL_TOKEN`, `WEB_ORIGIN`
 
-**New, optional, not yet set on either service**: `SENTRY_DSN` (error tracking
-— see "Known gaps" below), `JUDGE_HEALTH_PORT` (judge only, defaults to 4100 if
-unset). `web` (on Vercel, not Railway) additionally takes `NEXT_PUBLIC_SENTRY_DSN`.
+**Operational options**: `ADMIN_MFA_REQUIRED` (enable only after owner enrollment),
+`TRUSTED_PROXY_CIDRS`, `SENTRY_DSN`, `JUDGE_HEALTH_PORT` (judge only, default 4100).
+`web` additionally takes `NEXT_PUBLIC_SENTRY_DSN`. An implemented integration
+does not prove that its external delivery is active.
+
+The API encryption key was configured on September 14 without printing it or
+rotating an existing key. Keep an owner-controlled recovery copy; changing it
+can invalidate encrypted MFA secrets and pending email material. Mandatory
+administrator MFA remains off until the owner enrolls and saves recovery codes.
 
 See `.env.example` at the repo root for what each of these is for and a safe
 local-dev value where one exists — this list exists to say *which secrets need
 to be recreated on a new Railway project*, not to explain them.
 
-## Known gaps (tracked from the pre-launch audit)
+## Operations and remaining acceptance
 
-- **Error tracking (Sentry) is wired in code but not yet active anywhere** —
-  `api`, `judge`, and `web` all call `Sentry.init()` gated on `SENTRY_DSN` /
-  `NEXT_PUBLIC_SENTRY_DSN` being set, and safely no-op without one. Creating
-  the actual Sentry account/project and setting those env vars is a manual
-  step (an AI agent can't sign up for third-party services on your behalf).
-  Once a real DSN exists, `middleware.ts`'s CSP `connect-src` also needs that
-  DSN's ingest host added, or browser-side error reports will be silently
-  dropped by CSP — see the TODO comment already left there.
-- No `healthcheckPath` configured on any service — a hung `api` process has no
-  automatic-restart signal beyond BullMQ/Postgres connections eventually
-  erroring out. `judge` now exposes `GET /health` (queue depth + time since
-  last completed judge, see `apps/judge/src/health.ts`) but it's deliberately
-  not wired into Railway's own healthcheck/auto-restart yet — "stuck" vs.
-  "genuinely idle" isn't reliably distinguishable from those numbers alone,
-  and a false positive would restart a worker that's actually still mid-task.
-  Revisit once real usage patterns make a safe threshold clearer.
-- Postgres and Redis are both on Railway's 500MB tier. See the audit's storage
-  findings (avatars stored inline as base64 on the `users` row, `page_views`
-  growth — now bounded by `PageviewRetentionService` — and BullMQ job
-  retention — now bounded via `defaultJobOptions` in `redis.providers.ts`).
-- **No documented database restore drill has been performed**, and this
-  couldn't be verified or completed from the CLI in this pass — Railway
-  exposes Postgres backup/restore only through its web dashboard, not the
-  `railway` CLI (no `railway backup` subcommand exists) or the GraphQL surface
-  `railway status --json` reads from. Someone with dashboard access needs to
-  confirm backups are actually enabled for this project (the Hobby plan does
-  not necessarily include them by default) and, ideally, actually restore one
-  into a separate throwaway database to confirm it works — a backup that has
-  never been restored is not a confirmed backup.
+- Both services are connected to GitHub `main` with Wait for CI enabled. The
+  Vercel production alias also requires the `verify` check. See
+  [deployment gates](launch-readiness/deployment-gates.md).
+- Fresh production backups were restored successfully on September 13 and 14.
+  The September 14 rehearsal and production rollout preserve 28 original
+  business-table fingerprints and apply 57 migrations. This does not establish
+  scheduled offsite backups or an application rollback after new writes. See
+  [backup operations](launch-readiness/backup-operations.md).
+- Structured monitoring, privacy-filtered telemetry and a scheduled public
+  health workflow are implemented. External alert delivery and sustained
+  production capacity still require acceptance.
+- `TRUSTED_PROXY_CIDRS` remains unset until a trusted socket-peer allowlist is
+  established. Anonymous clients sharing a proxy peer can share rate budgets.
+- Real email, school-inbox, charge, renewal, cancellation and refund acceptance
+  remain separate from deployment smoke tests.
+- Review [production content gaps](launch-readiness/production-content-gaps.json):
+  16 existing GPE problems have no judge route, blocking 42 archive exams.
+  Earlier local-corpus lifecycle results do not certify this production corpus.

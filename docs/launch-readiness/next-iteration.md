@@ -1,6 +1,6 @@
 # Production hardening and experience iteration — 2026-09-13
 
-Authorized: implement all remaining recommendations. This is the second batch after production commit `2a6a5f7`. Code, local tests, CI and live acceptance are separate states. This batch has not replaced production.
+Authorized: implement all remaining recommendations. This is the second batch after production commit `2a6a5f7`, now deployed from `a5134a4`. Code, CI, live checks and remaining acceptance gaps are recorded separately in the [September 14 deployment record](deployment-20260914.md).
 
 | Workstream | Status | Acceptance |
 | --- | --- | --- |
@@ -10,7 +10,7 @@ Authorized: implement all remaining recommendations. This is the second batch af
 | MFA | Implemented; production encryption key configured | Encrypted TOTP, replay rejection, one-use recovery codes, password/Google reauthentication and restricted sessions. Owner enrollment and mandatory administrator enforcement remain. |
 | Payment reconciliation | Implemented and tested locally | Exact order/amount/provider evidence, immutable operator decisions, stale-state checks, idempotency and worker fencing. Real charge, renewal, cancellation and refund acceptance remain. |
 | Judge coverage | Six more problems validated | Six independent references and twelve wrong variants produce 18 expected Docker verdicts, zero mismatches. Six regression inputs and guarded Maximum Product formatting correction. **67/430 manifests; 363 still missing**, plus four remote-only and two OBSERVE investigations. |
-| Exam lifecycle | Historical state tests and real fixture judging pass | All 114 historical lifecycle tests use synthetic verdicts. Real HTTP/BullMQ load drill separately proves admission exclusivity and late score callbacks for a fixture exam; it does not certify all historical corpora. |
+| Exam lifecycle | Local corpus passes; production corpus has missing cases | The earlier 114 historical lifecycle passes used the local corpus and synthetic verdicts. The fresh production-copy run passes 72 archives but rejects 42 GPE archives because 16 problems have no judge route. See [affected exams](production-content-gaps.json). Real fixture load checks do not certify these missing corpora. |
 | School verification | Implemented and tested locally | Assisted exact-domain approval/rejection/revocation, audit history, applicant notifications and explicit confirmation. Official 115 roster: 163 records map to 158 institutions, including five continuing-college parent mappings. Name coverage does not prove every real mailbox. |
 | Load and monitoring | Local load completed; monitoring implemented | 100 users / 180s: 3,660 requests, 60/60 AC, zero errors, API P95 31ms, judge P95 1,517ms. Admin dashboard, queue/SE/mail/refund alerts, private diagnostics and public health workflow. Production capacity, trusted edge CIDRs and external alert delivery remain. |
 | Cross-browser and lint | Enforced in CI | Real ESLint with zero warnings, Chromium desktop/mobile and Firefox/WebKit/iPhone-sized workflow projects. Physical iPhone testing remains separate. |
@@ -37,18 +37,18 @@ External acceptance dependencies: real payment instruments, real owner mailboxes
 
 ## Production activation
 
-The owner explicitly authorized public GitHub publication, then approved the scoped production backup, encryption configuration and deployment on September 14. The earlier approval-review blockers are resolved. The readiness branch is pushed; production activation still requires the final corrected revision's CI and live checks.
+The owner explicitly authorized public GitHub publication, then approved the scoped production backup, encryption configuration and deployment on September 14. The earlier authorization blockers are resolved. The corrected revision passed readiness and main CI, was pushed to `main`, and is deployed. See the [deployment record](deployment-20260914.md) for exact IDs, executed checks and unresolved acceptance.
 
 - Configured a new random 32-byte `ACCOUNT_SECURITY_KEY` through Railway stdin with deployment disabled. Readback matched; no existing key was rotated, and no value was printed or stored in the repository. Required administrator MFA remains disabled pending owner enrollment.
 - Fresh authorized backup: `/private/tmp/oj-iteration-prod-backup-20260913/before.dump`, created September 14 at 06:15 UTC, 27,995,001 bytes, SHA-256 `437b03ae80ad227bd6b997c61b60eed9a8edd44cba61c5aa75b524126793f028`. Directory 0700, file 0600. Restored from scratch into disposable PostgreSQL 18; six pending migrations produce 57 total, preserve 28 business-table fingerprints, 10 users and 430 problems, and increase cases from 1,181 to 1,188. Existing case inputs/outputs are unchanged on this production snapshot; the conditional Maximum Product corrections do not match its existing rows.
 - Executing the six new batteries against this fresh production restore found an order-sensitive Conformity mutant that the earlier local corpus rejected but production still accepted. The original permutation-only dataset returned the same total for ordered and unordered grouping. An additional append-only migration mixes reordered duplicates with singleton groups. After applying it, [all six references and twelve wrong variants meet expectations](judge-production-rehearsal-results.json), with zero mismatches. The new migration's idempotency/preservation check and all 16 sandbox/checker cases pass locally; the three Conformity variants now run in required CI as well.
 
 1. Keep the verified backup and encryption key available through owner-controlled storage; configure independent encrypted offsite storage separately.
-2. Require CI success on the corrected revision before rollout. Deploy the exact Git commit to the API and judge, verify health/migrations, then promote it to `main` for the web release.
-3. Verify deployment IDs and real-domain smoke checks, then remove only synthetic fixtures.
+2. Completed: the corrected revision passed CI before the API/judge rollout and `main` promotion; health, migrations and automatic release gates were verified.
+3. Completed: deployment IDs and real-domain smoke checks passed, both synthetic accounts and the disposable restore container were removed, and final production data/queue checks passed.
 4. Owner confirms real mail receipt, enrolls an authenticator and saves recovery codes; enable required administrator MFA afterward.
 5. Provision private offsite storage plus an independent freshness alert, and complete real payment/renewal/cancel/refund and school-inbox acceptance.
 
-The remaining 363 judge batteries, actual judging across historical corpora, four remote UVa cases and two OBSERVE variants are unfinished engineering work, not external-credential blockers.
+The 16 production problems missing all judge cases (blocking 42 GPE archives), remaining 363 judge batteries, actual judging across historical corpora, four remote UVa cases and two OBSERVE variants are unfinished engineering work, not external-credential blockers. The missing production cases predate this rollout; do not bypass admission guards or bulk-run existing seed scripts without verifying their answers.
 
 Runbooks: [account security](account-security.md), [refund reconciliation](refund-reconciliation.md), [school review](school-domain-review.md), [backup operations](backup-operations.md), [deployment gates](deployment-gates.md), [monitoring](monitoring.md), [wallet analysis](wallet-analysis.md).
