@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-2008-19-set-partition",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){string line;bool first=true;while(getline(cin,line)){if(line==\".\")break;if(line.empty())continue;\n for(char &c:line)if(c=='{'||c=='}')c=' ';stringstream ss(line);vector<ll>a;ll x;while(ss>>x)a.push_back(x);sort(a.begin(),a.end());\n ll total=accumulate(a.begin(),a.end(),0LL);vector<vector<ll>>out;\n if(total%2==0){int k=a.size()/2,h=a.size()-k;map<ll,vector<int>>right;\n  for(int mask=0;mask<(1<<h);mask++){ll sum=0;for(int j=0;j<h;j++)if(mask>>j&1)sum+=a[k+j];right[sum].push_back(mask);}\n  for(int mask=0;mask<(1<<k);mask++){ll sum=0;for(int j=0;j<k;j++)if(mask>>j&1)sum+=a[j];auto it=right.find(total/2-sum);if(it==right.end())continue;\n   for(int other:it->second){vector<ll>v;for(int j=0;j<k;j++)if(mask>>j&1)v.push_back(a[j]);for(int j=0;j<h;j++)if(other>>j&1)v.push_back(a[k+j]);out.push_back(v);}}}\n sort(out.begin(),out.end(),[](const auto&a,const auto&b){return a.size()!=b.size()?a.size()<b.size():a<b;});\n if(!first)cout<<\"\\n\";first=false;if(out.empty())cout<<\"No such subset\\n\";else{cout<<out.size()<<\" subsets.\\n\";for(auto &v:out){cout<<\"{\";for(int i=0;i<(int)v.size();i++)cout<<(i?\" \":\"\")<<v[i];cout<<\"}\\n\";}}}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Counts only one side of each complementary partition.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){string line;bool first=true;while(getline(cin,line)){if(line==\".\")break;if(line.empty())continue;\n for(char &c:line)if(c=='{'||c=='}')c=' ';stringstream ss(line);vector<ll>a;ll x;while(ss>>x)a.push_back(x);sort(a.begin(),a.end());\n ll total=accumulate(a.begin(),a.end(),0LL);vector<vector<ll>>out;\n if(total%2==0){int k=a.size()/2,h=a.size()-k;map<ll,vector<int>>right;\n  for(int mask=0;mask<(1<<h);mask++){ll sum=0;for(int j=0;j<h;j++)if(mask>>j&1)sum+=a[k+j];right[sum].push_back(mask);}\n  for(int mask=0;mask<(1<<k);mask++){ll sum=0;for(int j=0;j<k;j++)if(mask>>j&1)sum+=a[j];auto it=right.find(total/2-sum);if(it==right.end())continue;\n   for(int other:it->second){vector<ll>v;for(int j=0;j<k;j++)if(mask>>j&1)v.push_back(a[j]);for(int j=0;j<h;j++)if(other>>j&1)v.push_back(a[k+j]);if(find(v.begin(),v.end(),a[0])!=v.end())out.push_back(v);}}}\n sort(out.begin(),out.end(),[](const auto&a,const auto&b){return a.size()!=b.size()?a.size()<b.size():a<b;});\n if(!first)cout<<\"\\n\";first=false;if(out.empty())cout<<\"No such subset\\n\";else{cout<<out.size()<<\" subsets.\\n\";for(auto &v:out){cout<<\"{\";for(int i=0;i<(int)v.size();i++)cout<<(i?\" \":\"\")<<v[i];cout<<\"}\\n\";}}}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Accepts subsets summing to floor(total/2) even when the total is odd.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){string line;bool first=true;while(getline(cin,line)){if(line==\".\")break;if(line.empty())continue;\n for(char &c:line)if(c=='{'||c=='}')c=' ';stringstream ss(line);vector<ll>a;ll x;while(ss>>x)a.push_back(x);sort(a.begin(),a.end());\n ll total=accumulate(a.begin(),a.end(),0LL);vector<vector<ll>>out;\n if(true){int k=a.size()/2,h=a.size()-k;map<ll,vector<int>>right;\n  for(int mask=0;mask<(1<<h);mask++){ll sum=0;for(int j=0;j<h;j++)if(mask>>j&1)sum+=a[k+j];right[sum].push_back(mask);}\n  for(int mask=0;mask<(1<<k);mask++){ll sum=0;for(int j=0;j<k;j++)if(mask>>j&1)sum+=a[j];auto it=right.find(total/2-sum);if(it==right.end())continue;\n   for(int other:it->second){vector<ll>v;for(int j=0;j<k;j++)if(mask>>j&1)v.push_back(a[j]);for(int j=0;j<h;j++)if(other>>j&1)v.push_back(a[k+j]);out.push_back(v);}}}\n sort(out.begin(),out.end(),[](const auto&a,const auto&b){return a.size()!=b.size()?a.size()<b.size():a<b;});\n if(!first)cout<<\"\\n\";first=false;if(out.empty())cout<<\"No such subset\\n\";else{cout<<out.size()<<\" subsets.\\n\";for(auto &v:out){cout<<\"{\";for(int i=0;i<(int)v.size();i++)cout<<(i?\" \":\"\")<<v[i];cout<<\"}\\n\";}}}}\n"
+    }
+  ]
+}

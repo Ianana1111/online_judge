@@ -1,28 +1,29 @@
 {
-  "capturedAt": "2026-09-12T06:14:45.049Z",
-  "contentHash": "7cf6cf0e1a0ea218eeae613ae356aeb0cb4077586a20d91edd5a8984d5f92215",
+  "capturedAt": "2026-09-14T16:50:35.645Z",
+  "contentHash": "937383ee5d84a67467a5b272986363578001dea763342a85e146b9dc22c6b257",
   "scope": "Local project database; one read-only repeatable-read transaction. Structural checks only, not executed verdict evidence.",
   "totals": {
     "problems": 430,
     "visibleProblems": 430,
-    "cases": 1511,
+    "cases": 1257,
     "contests": 115,
     "publicContests": 115,
     "problemErrors": 0,
     "contestErrors": 1,
-    "candidateProblems": 61
+    "candidateProblems": 83
   },
   "problems": [
     {
       "slug": "gpe-10038-disk-tree",
       "visible": true,
-      "cases": 3,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "8151c7622d260b4e49fcf745eab56523382616926eaf3344430d13bd9e1aaea3",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -30,27 +31,25 @@
     {
       "slug": "gpe-10416-last-digit",
       "visible": true,
-      "cases": 4,
+      "cases": 1,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "4d1ff27f49622db31e34fee80660f9515417b997103e2e9738c27fdfbd2ab185",
-      "candidates": 0,
+      "inputOutputHash": "9153219850300dae2996308334fc016bfdc843c89c22b90fabab5dda7880cbfb",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-10422-is-this-integration",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "cdfc1f0501baee533de97cbb5802f20be87e738085c3e14c0468c1ab1f143046",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -58,13 +57,14 @@
     {
       "slug": "gpe-10429-contest-scoreboard",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "76db8389a8b4aeb5cc46863ab54910821fd498e1fd8369bc61a31867f34f541c",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -72,13 +72,14 @@
     {
       "slug": "gpe-10432-mine-sweeper",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "fb2fb6af2516d7922b73b2a6f82351a2d8ff6e42cdc3e297eefa5692e6875814",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -86,13 +87,14 @@
     {
       "slug": "gpe-10465-necklace",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "71daf2e89ae48576dc58e5f2b04a9e9fc643a2696979416caf45dbd2ab1f8714",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -100,27 +102,25 @@
     {
       "slug": "gpe-10468-maximum-product",
       "visible": true,
-      "cases": 4,
+      "cases": 1,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "ab02a0f26d097e10d6ad00b99445d5ce9bd81ef89060af4c8b93a6ce2dcfa29c",
-      "candidates": 0,
+      "inputOutputHash": "f98ebe1bef60ef60270eb4c147837ec456986c79c110b099f1901072d5c5af07",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-10471-counting-chaos",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "086c6c5473ac1eebbd6dcb32465efad0571bd6967f9ec52f6686063274c7567a",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -128,41 +128,36 @@
     {
       "slug": "gpe-10500-brick-wall-patterns",
       "visible": true,
-      "cases": 4,
+      "cases": 1,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "071ffe8c353e6f44d45eacd270b8324192fa6e84ce4442e58054c27226444a3f",
-      "candidates": 0,
+      "inputOutputHash": "0ded1e90dbc45995a8b5fcc0c46abf07f2445123c00a01c699de5dfd151e7bbf",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-10501-safe-salutations",
       "visible": true,
-      "cases": 4,
+      "cases": 1,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "8dc5429bdccf7c5bfdd883683bb7b903199a91a0e46ceb713e42f36f9bbe6526",
-      "candidates": 0,
+      "inputOutputHash": "2e570d7f6018f54dc77f7ffad394e98958965e41c42678640bf4c1e8aad1e0c9",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-10503-show-the-sequence",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "b5b270813a75311d1e3e975fdaa86104d3d491f8030319aa5e9ae181a3064051",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -170,13 +165,14 @@
     {
       "slug": "gpe-10505-center-of-masses",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "498f2f50e7f6ace15bbcb956671de135d06630595233094a9d0ecc66a59caf7c",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -184,27 +180,25 @@
     {
       "slug": "gpe-10520-conformity",
       "visible": true,
-      "cases": 4,
+      "cases": 2,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "863df67e739eed0d473ab02a93800f62fe9a26c480744433736994400a854e89",
-      "candidates": 0,
+      "inputOutputHash": "730a578731c5fd41ff2b28cf536b3ad369316c511cff66689966373b0b4b850a",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-10531-zipf-s-law",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "72bbd97bc01e6563ea19e489996622892d0ad50e70eb6918a151fd3d44508b5f",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -212,13 +206,14 @@
     {
       "slug": "gpe-10533-the-trip",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "ed630aeb1184140eba78af190886a86f749648f344b5839c377790507d0753bf",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -226,13 +221,14 @@
     {
       "slug": "gpe-10535-prime-distance",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "f9c208eecb698fed1176fa01016119e6eff9eaf22ff3aa1710285e49b4c9cd1d",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -240,13 +236,14 @@
     {
       "slug": "gpe-10551-bee-maja",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "ac3b4a156125ef6bfb58e619a020b2ca3d2765b7cc5ee24be1e15d1565a3b56a",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -254,13 +251,14 @@
     {
       "slug": "gpe-10559-i-love-big-numbers",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "3ae9e88ee218f877d9502c6250f64efa5ca064b40958aa2b8f6eff7affe5238c",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -268,13 +266,14 @@
     {
       "slug": "gpe-10579-hay-points",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "799fd9e38bd10d75ee2119eb94d65dfe208071b52fea9f0dfcf8d89d36e7b906",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -282,13 +281,14 @@
     {
       "slug": "gpe-10582-power-strings",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "50c6984c14b44153b4be2b700476e6326a183b69dcca3583424c8b27ead91e1c",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -296,13 +296,14 @@
     {
       "slug": "gpe-10600-network-connections",
       "visible": true,
-      "cases": 3,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "4f678355ca260858124ee05c595ef70ff27a4117a769692b8259dc7694e8c524",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -310,13 +311,14 @@
     {
       "slug": "gpe-10601-eternal-truths",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "9960ece7f6b50e9760fbaad89995b816a10865f7f2a1ccc5ab7b621fffdb567a",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -324,13 +326,14 @@
     {
       "slug": "gpe-10602-longest-paths",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "b6146347e88484be1b5c594f5de2c6fbd4f32fd821566ade50d3e3b2ec6b20ee",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -338,27 +341,25 @@
     {
       "slug": "gpe-10603-cutting-sticks",
       "visible": true,
-      "cases": 4,
+      "cases": 1,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "71d1494fcf98a6cec606be9067f869e0d36095e759d22468082026cf23a72d71",
-      "candidates": 0,
+      "inputOutputHash": "ab630db79e3eae0785e63e13af5829b38e64dc7c48cc0bef3e5b14ccee219759",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-10604-packing-polygons",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "57aa8d4ca3c43c1d29d6a86e3d3d98b441ca7a2de040f8215fa76ad96ec9e573",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -366,13 +367,14 @@
     {
       "slug": "gpe-10605-count-the-trees",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "13f3aaf0d6eea0102be1d644fb0054d2efdb0ecc96c7cb2f9ca08f64e2792d56",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -380,13 +382,14 @@
     {
       "slug": "gpe-10606-how-big-is-it",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "f7d4c8009a6df37774d5bad4376124a719f7be2558e51e24e0cd045112066e0a",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -394,14 +397,14 @@
     {
       "slug": "gpe-10607-joseph-s-cousin",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "6339b3f12ea3f3309cb86fe8d9a3dd06c83802417f4bd6c4188ce9013270582a",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
-        "duplicate-inputs",
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -409,13 +412,14 @@
     {
       "slug": "gpe-10608-minimal-coverage",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "91ea3dc0d8e5abd40d7178072e0fca6b16b1a33fc37af04707410e13ec784a4f",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -423,13 +427,14 @@
     {
       "slug": "gpe-10609-square-root",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "2d85da584fb56564eabfd7cb3fd850d3490fa872969c0e2032d9f9394ba45432",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -437,13 +442,14 @@
     {
       "slug": "gpe-10610-curling-up-the-cube",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "6b8bf035bf8e1c49162d2024b367428ba482841bcbf85edac479c2f89a65a9fb",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -451,13 +457,14 @@
     {
       "slug": "gpe-10615-divisibility",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "99e5d6128aa0e9b620c898b69bb6870ca99b548b6a92adc362e9a3bc53c71b90",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -465,13 +472,14 @@
     {
       "slug": "gpe-10636-gopher-ii",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "789d77014c5ddeaafea04b36414f47ee6929afcabbea0b0bb29f97f26f3875ce",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -479,13 +487,14 @@
     {
       "slug": "gpe-10637-tight-words",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "e229f8c5159414f9aae9996afb8a4050a05e58d6d945d930c397125064e21d04",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -493,13 +502,14 @@
     {
       "slug": "gpe-10642-marbles",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "28932e3c24c8b2854410f3dfd7d4325c939b61deb9801455c6d9e55fc98402a0",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -507,13 +517,14 @@
     {
       "slug": "gpe-10645-euclid-problem",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "e38e8770358f0800a9fe44401161e4ec5ca5a4ac9313f5467cc6ab2ed0674d57",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -521,13 +532,14 @@
     {
       "slug": "gpe-10655-sumsets",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "c4fee33973673042115f8fe7bdedb6dc97bcf9e8d2b07091866c503ccaa44ff4",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -535,13 +547,14 @@
     {
       "slug": "gpe-10658-is-bigger-smarter",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "84cec3fb0ecfef5913fb4c0fe7776814a881c874458a59c27dbbfd6f8cef043a",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -549,13 +562,14 @@
     {
       "slug": "gpe-10675-urn-ball-probabilities",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "e4680dde986644d07f7a90dc30981fde43a6c76b654de84e53936452124fd60b",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -563,13 +577,14 @@
     {
       "slug": "gpe-10679-irreducible-basic-fractions",
       "visible": true,
-      "cases": 3,
+      "cases": 0,
       "samples": 0,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "dc05b84691c44a0e0ae469c755b3f3fdb48ef4801436ffa53fba7045a773184f",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-public-sample",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
@@ -578,13 +593,14 @@
     {
       "slug": "gpe-10732-snow-clearing",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "fd323f9a49474f0f4cc2f92d288dcd07f56fd074f3f5c08f44fb5829d6c45340",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -592,13 +608,14 @@
     {
       "slug": "gpe-10741-the-grand-dinner",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "184b4bf67638aa4397acfcd5830ba8c65b1976c01549d16a6b7257803aec3f93",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -606,13 +623,14 @@
     {
       "slug": "gpe-10766-antimatter-ray-clearcutting",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "37673d5a07a02b889fdbb3f56e702d2702444d6eed73a495f08e07b8e74df5b6",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -620,13 +638,14 @@
     {
       "slug": "gpe-10906-matrix-decompressing",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "9b71e6ac015a5678df0ba6f00bbe5523c2b3faf19924e141dd03f236948c3f30",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -634,13 +653,14 @@
     {
       "slug": "gpe-11009-all-in-all",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "4b77e259e2a84cd94edaa05a9ec86f1fa1512455ca93b37a514ccc204b1eab64",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -648,13 +668,14 @@
     {
       "slug": "gpe-11041-children-s-game",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "c5356e8b45a5ed2eb728e18195a7f440554ada849b52b152282c7899d0ae062a",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -662,13 +683,14 @@
     {
       "slug": "gpe-11058-exact-sum",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "1b90c7c6ddd765ecfff9c387e5c101670e4a13fa737dbbf5e480e842fe08354d",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -676,13 +698,14 @@
     {
       "slug": "gpe-11130-the-priest-mathematician",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "f3c8b3313c17974372484cb0c14cbcc315e4fbb4f093b587007795302499df36",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -690,13 +713,14 @@
     {
       "slug": "gpe-11174-homer-simpson",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "d758a7336517948cdb46f637212716c731dcea2fccda048711dbc7ef7aeaf388",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -704,13 +728,14 @@
     {
       "slug": "gpe-11179-wavio-sequence",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "1bcf4b7382dc3e50c3f776e8d72f363eb6a0f7cf6e47cf4eb7dd2bc65b67c2ef",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -718,13 +743,14 @@
     {
       "slug": "gpe-11184-opening-doors",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "7d1db1f2cde7e75eea0c076aeac8eeec8ec492d587ca7e767c3b199dfacbe46f",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -732,13 +758,14 @@
     {
       "slug": "gpe-11192-simple-minded-hashing",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "fdf5f512ee2f9dbe4ef1911a45cb4bb70cea2f70535bade925231f4b948eaac0",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -746,16 +773,13 @@
     {
       "slug": "gpe-2008-06-parser-and-evaluator",
       "visible": true,
-      "cases": 4,
+      "cases": 5,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "e5c6579946a87b504261a9ef2e8d69e95a5a4818c66d84b772b35a8fa54b9087",
-      "candidates": 0,
+      "inputOutputHash": "5fa6fc12cb6b406f84e9c71c8f56882dc13aed9afa3961330ba0b7ed246050f3",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2008-19-set-partition",
@@ -763,27 +787,21 @@
       "cases": 4,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "cc9c88414c702be535e2ffd412ca746f8f5f89d03db213d4190c0ed28052044f",
-      "candidates": 0,
+      "inputOutputHash": "95bfa9ab5a129a7c1654348aa9be7baeecfcd4c1fa6788b521505a80d6f55bc7",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2008-28-longest-monotonically-increasing-subsequence",
       "visible": true,
       "cases": 4,
       "samples": 1,
-      "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "91e612af4603919cf30c24b9dfe6a6411464b0bdd4fdc39e94dd80326a79cb73",
-      "candidates": 0,
+      "checker": "SPECIAL",
+      "inputOutputHash": "63b1f631f31de10cf3beb2d9652c4e105d7cd62059096e22ffd82139094b8d74",
+      "candidates": 4,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2008-37-prefix-expression-evaluation",
@@ -791,13 +809,10 @@
       "cases": 4,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "1e0061808275ef0e5c0e24cf750dfc03f731390f27e7d4b918e80b0345ed4352",
-      "candidates": 0,
+      "inputOutputHash": "81e31e900ef58eb7b58dc05a8c762a05080ff3f6358bbffd6d3b2ca5c277a7a5",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2009-02-line-overlap-problem",
@@ -805,13 +820,10 @@
       "cases": 4,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "073fb76e25f91e7f7748c81b8bda887b61cc72775e6ede3c67e82ccec4bf3ef9",
-      "candidates": 0,
+      "inputOutputHash": "be59ea2189e93b29beb1cf98cc0b1c70e546161e88e4a7cda6c7b38d68aeef21",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2009-17-binary-tree-traversals",
@@ -819,13 +831,10 @@
       "cases": 4,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "b0cab6300a24651968f6b79cafe6bd9188a4a1240c8b356e4b25dca77f47b2cf",
-      "candidates": 0,
+      "inputOutputHash": "cd452a0475d3e9606400f83036f64e58cfd324f4842ba80859ab3df9da21b769",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2009-24-unique-lines",
@@ -833,13 +842,10 @@
       "cases": 4,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "ee7a7c988ff98b9989814fc77da0c47ff5acdeea1e984ea43a3ad73aee676c0c",
-      "candidates": 0,
+      "inputOutputHash": "4856f6a57f197b91cb6ac39f24618df0d4d7d7c043f85677c5604834af094b91",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2015-01-missing-numbers",
@@ -847,13 +853,10 @@
       "cases": 4,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "ee2928e584bce832b664bb61dfb7835efff76dd4c538feef5ccd3947e3b353eb",
-      "candidates": 0,
+      "inputOutputHash": "c99ccd962d3910ab8923319a3453f521cf93b41e1fe9bc2da26ed2b8480d0cab",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2015-02-recursion-and-mod",
@@ -861,27 +864,21 @@
       "cases": 4,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "519726a0899cd785db48ac9a54a5e2d38912144e94f72fc5e3935f0960cd8d00",
-      "candidates": 0,
+      "inputOutputHash": "96431e8c8580d5be605f9e61540d245fb3ee0fa60cc849343c20031d0fc1912e",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2015-03-sudoku-as-good-as-lee-hsien-loong",
       "visible": true,
       "cases": 4,
       "samples": 1,
-      "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "0abd96695caa1d893fcab00916a5f5004942f8af899383057a25e397e0b22e86",
-      "candidates": 0,
+      "checker": "SPECIAL",
+      "inputOutputHash": "2d9af50e1c3dfeaec1a017c0685840ca41d156d9efc8b713e1e89d5faf6b5747",
+      "candidates": 4,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2015-04-the-n-th-element",
@@ -889,13 +886,10 @@
       "cases": 4,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "8465fb6f0ae3a023dfe558579dbf01babc04af4b411e3f1765ebeff579557160",
-      "candidates": 0,
+      "inputOutputHash": "d6f813d53656a86323318a0b40ce766d8c534e82f2cf2ff698ae938f1ad22fb3",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2015-07-minimum-path-sum",
@@ -903,13 +897,10 @@
       "cases": 4,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "11d0e31bbbb48da0908b80f12e9e6be055ee75fab615a028d72e528b838a82be",
-      "candidates": 0,
+      "inputOutputHash": "40e5b87e407005716840841fff47630e5f4d5431a978902158648aafa50a18a0",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2015-08-climbing-stairs",
@@ -917,13 +908,10 @@
       "cases": 4,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "a102d4e3815a40e8928661100ff945988d21c3f0cf3e1fa254f5c98f596a883f",
-      "candidates": 0,
+      "inputOutputHash": "3e00071eaba81651a871aa7d9fca52a71f5efee125ff198e6e4b08698f5c1fc4",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-2015-09-longest-increasing-subsequence",
@@ -931,24 +919,22 @@
       "cases": 4,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "2ea54a11480b4bf9530f33cd33728a81e479b71d517428529a5cfd9aa49e5fb4",
-      "candidates": 0,
+      "inputOutputHash": "83642b77f9d7c96c5f90132e1d790c8ba7e2380f3061c3babfea0e9b34216c7d",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-21964-fill-the-containers",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "2a2ddcaf9e2329a57e1ab8e9dc91bbad4c1ed6b0628eaf189d6028a6cb72ba52",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -956,13 +942,14 @@
     {
       "slug": "gpe-22151-big-mod",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "cf3f75eeede0c0ccef4f676c9cf0e2d1d21ff959e1e6e024fef82630c7a7969d",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -970,13 +957,14 @@
     {
       "slug": "gpe-22181-dollars",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "282eb62f3c171175735946565eb980674d1a34a861c75a338064a3cb71b38c75",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -986,25 +974,23 @@
       "visible": true,
       "cases": 4,
       "samples": 1,
-      "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "5998a029128266fb43a659cf93028a79904e4681899cac453e8d2f1be8a42822",
-      "candidates": 0,
+      "checker": "SPECIAL",
+      "inputOutputHash": "c1f9f495d14103b86b78f74eb2a65d9538ff3949601d3cb9d7faebbd7c937b3c",
+      "candidates": 4,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "gpe-22351-quirksome-squares",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "2e50beb965e29e5fc159e08b065c4d0cf07b114d091d7ece0abf6bfc6d29c58e",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1012,13 +998,14 @@
     {
       "slug": "gpe-22821-oil-deposits",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "2817d6e0af8b73aacc4d62d2cd90ba4041cb418db1dcb8644fc3c45eea75d3c6",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1026,13 +1013,14 @@
     {
       "slug": "gpe-23571-smith-numbers",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "a35c878ac3940954eead866395ceea5f9981051b1c065b2f5ad73de4a5d49360",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1040,13 +1028,14 @@
     {
       "slug": "gpe-23581-glass-beads",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "943fe179f124c4cb4a429ab50a83f169b93ed36d0d629edc57bd72039ae9eed9",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1054,13 +1043,14 @@
     {
       "slug": "gpe-23651-the-jackpot",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "35146e711de19f8c6e65b48ec528ae13da4c151fbb9ca7e9350a96daf2a7dd0e",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1068,13 +1058,14 @@
     {
       "slug": "gpe-23661-bit-mask",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "7f8aa6ee1f5d3c6f0b170e3ac512960dfbbbfec9775e3553bd8b5af7916f3586",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1082,13 +1073,14 @@
     {
       "slug": "gpe-23671-camel-trading",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "32a10c3e876756d95c2ef39fe5831127a687011174607e6ce38b4821c2e57615",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1096,13 +1088,14 @@
     {
       "slug": "gpe-23681-bachet-s-game",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "2f18869bfd4ba3d4c67f63664559097917e57b94b03c8b17356512a07c048d6c",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1110,13 +1103,14 @@
     {
       "slug": "gpe-23771-lexicographic-order",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "3bf3898e84fda8d3a10f712ddc07ad7a400360aaba10a2037a7c305696c5fa74",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1124,13 +1118,14 @@
     {
       "slug": "gpe-23781-making-change",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "01c610d85f7a3110db89ad0721a806fc55b3cf849fa2784ff8a62d1f7edcf44e",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1138,13 +1133,14 @@
     {
       "slug": "gpe-24461-sum-of-consecutive-prime-numbers",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "1927e400995843f4d074708a2e8097132d90bbec8ae3420c5c2bffd315f195a3",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1152,13 +1148,14 @@
     {
       "slug": "gpe-24731-roads-in-the-north",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "c04c3c1136ed6c33aa4d3d7d84629d3f7e3d8ff109f612c1dc003fc14ad2f0f3",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1166,13 +1163,14 @@
     {
       "slug": "gpe-24911-robot-instructions",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "b85cdc49a4a24481fedc420f19ae77a8227080a486da8dde64c461fa8202bbb5",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1180,13 +1178,14 @@
     {
       "slug": "gpe-24931-extend-to-palindromes",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "8e7b1c380fc62c368d9043203df460d7be331327aad7f9eb54b1bf5208cf4e7f",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1194,13 +1193,14 @@
     {
       "slug": "gpe-24941-uncompress",
       "visible": true,
-      "cases": 4,
+      "cases": 0,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "adb7f0ed0695c4931188ae92ad14ea71e9fe29d5036e90dab8038cd45c389229",
+      "inputOutputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
       "candidates": 0,
       "errors": [],
       "warnings": [
+        "remote-judge-required",
         "no-reference-candidate",
         "no-wrong-solution-candidate"
       ]
@@ -1208,16 +1208,13 @@
     {
       "slug": "gpe-25081-solving-maze-problems",
       "visible": true,
-      "cases": 4,
+      "cases": 8,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "396082baf7db7d1cbf8140704b8d5933961b8b48fea86f5a68e1886e32f749a4",
-      "candidates": 0,
+      "inputOutputHash": "03265b6c1c0bf57a0941b6b1198003702a5b78e5e36d0eb9015e0d5965a85065",
+      "candidates": 3,
       "errors": [],
-      "warnings": [
-        "no-reference-candidate",
-        "no-wrong-solution-candidate"
-      ]
+      "warnings": []
     },
     {
       "slug": "uva-100-the-3n-1-problem",
@@ -1261,10 +1258,10 @@
     {
       "slug": "uva-10010-where-s-waldorf",
       "visible": true,
-      "cases": 2,
+      "cases": 3,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "df97b2e38f72eb6fe0d449200a3d415e9bc360db858fe9a2a3d7203f73695abd",
+      "inputOutputHash": "c26f80211afa5e83438b9d2c83fcd142f1fdcfbc49ae2661629c8d443120b66c",
       "candidates": 3,
       "errors": [],
       "warnings": []
@@ -1272,10 +1269,10 @@
     {
       "slug": "uva-10018-reverse-and-add",
       "visible": true,
-      "cases": 2,
+      "cases": 3,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "dd9ac21c581e3aac4b061a93e71b451f05498f430f733e77606219b0384c44ea",
+      "inputOutputHash": "1ab4f97593f028d212f1bc51660073600010b36a80d62cb4522285ce951526e8",
       "candidates": 3,
       "errors": [],
       "warnings": []
@@ -1413,7 +1410,7 @@
       "visible": true,
       "cases": 4,
       "samples": 1,
-      "checker": "FLOAT",
+      "checker": "IGNORE_TRAILING_WS",
       "inputOutputHash": "32f5b5929e3ebba32ba1bd701632b14910f916f3921243d7df08dc0f50033837",
       "candidates": 0,
       "errors": [],
@@ -1525,10 +1522,10 @@
     {
       "slug": "uva-10099-the-tourist-guide",
       "visible": true,
-      "cases": 2,
+      "cases": 3,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "1c916d2827bed2f26420a8faf3996ea2e3e3c223a0c6566396e2d8f8140aa674",
+      "inputOutputHash": "be49a532751ce6a91849b8f11ebcf3e3234cae8d34e23fed658ccf1773ae91fe",
       "candidates": 3,
       "errors": [],
       "warnings": []
@@ -1561,10 +1558,10 @@
     {
       "slug": "uva-10107-what-is-the-median",
       "visible": true,
-      "cases": 2,
+      "cases": 3,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "e0545bcd685c2d4d1d86896111880f1ea228cb7a64d8cf5fd61fcde51a5a752b",
+      "inputOutputHash": "60672938579db337098fd9065d6f9dd6794ae8487d9da23128ed1eeef312a242",
       "candidates": 3,
       "errors": [],
       "warnings": []
@@ -1608,10 +1605,10 @@
     {
       "slug": "uva-10150-doublets",
       "visible": true,
-      "cases": 1,
+      "cases": 2,
       "samples": 1,
-      "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "89eb4f4dab775def90fea142f4f8adcb9f86ffcddf124bf0beed51634fee49e4",
+      "checker": "SPECIAL",
+      "inputOutputHash": "3c6b5d87071084839de4d673cdf0afcb30c3448a6084fe2ad48358ce22c0c51b",
       "candidates": 4,
       "errors": [],
       "warnings": []
@@ -1814,10 +1811,10 @@
     {
       "slug": "uva-10267-graphical-editor",
       "visible": true,
-      "cases": 2,
+      "cases": 3,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "fb2182bc0c7d2e6dd9ca84336e78076b4b4f34ae62b5fb3bba2bac2acb020088",
+      "inputOutputHash": "22383420cc1f46cd7659e7acc0c97d0b54af1499422cd7a7d3c978307c0cb120",
       "candidates": 3,
       "errors": [],
       "warnings": []
@@ -1894,10 +1891,10 @@
     {
       "slug": "uva-10355-superman",
       "visible": true,
-      "cases": 2,
+      "cases": 3,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "8fd3a3038f8b7cf75d0e34b64698c5e54d1457b9d8cfe2cd271506ff868a488c",
+      "inputOutputHash": "af9526d32a2c94a8fe53a368d145034b311690e662080acf71702ff9c70756fe",
       "candidates": 3,
       "errors": [],
       "warnings": []
@@ -2027,7 +2024,7 @@
       "cases": 2,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "8fe098f9f2b1b027da5479fc15525cf46a68625c74f9f84feac0f9cc63aec1db",
+      "inputOutputHash": "046d93faf27a58e89c4b87b415b1bf7c6eb6470794bfc8dab5d7d998c07f3de2",
       "candidates": 3,
       "errors": [],
       "warnings": []
@@ -2068,10 +2065,10 @@
     {
       "slug": "uva-10530-guessing-game",
       "visible": true,
-      "cases": 2,
+      "cases": 3,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "d5e07b329e02a66be6e05e12f103e4f3263691347d6dc737d9dc223ec3340f91",
+      "inputOutputHash": "7e5db03d0964cae79ccceba235b31d64c5f3f2fa510e4c15beaecf04c2c1d152",
       "candidates": 3,
       "errors": [],
       "warnings": []
@@ -2090,10 +2087,10 @@
     {
       "slug": "uva-10539-almost-prime-numbers",
       "visible": true,
-      "cases": 2,
+      "cases": 3,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "ba9c67f1b476118e78a75e57d3d5a889fdbb006c6ed7208820bc3838f6a5bb8b",
+      "inputOutputHash": "c35d3bdab79586b85eea5920a89516969d6ea6cb576bc5e83db0fe58ac1c6ce5",
       "candidates": 3,
       "errors": [],
       "warnings": []
@@ -2181,10 +2178,10 @@
     {
       "slug": "uva-10633-rare-easy-problem",
       "visible": true,
-      "cases": 1,
+      "cases": 2,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "b5d2417839d5f61ef679404f307d59d887c9349957aef79e4d5837afcf2c74e2",
+      "inputOutputHash": "50f8b9f65fadc10069e835517cb112628518840cd6292ef1facc29f29f43b7f7",
       "candidates": 3,
       "errors": [],
       "warnings": []
@@ -2663,10 +2660,10 @@
     {
       "slug": "uva-11094-continents",
       "visible": true,
-      "cases": 1,
+      "cases": 2,
       "samples": 1,
       "checker": "IGNORE_TRAILING_WS",
-      "inputOutputHash": "450be24e11f032b5e775401bee9bdc1c0a080bc02abd0fe7871aa39de5f95f04",
+      "inputOutputHash": "7288ab7d59522af1d4a7fca7c219b0841a5fcd61ed708aec5402a2b8ec314756",
       "candidates": 3,
       "errors": [],
       "warnings": []

@@ -3,6 +3,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { prisma, type Problem, type Contest, type ContestProblem, type TestCase } from "../packages/db/src/index";
 import { createContestSchema } from "../packages/shared/src/schemas";
+import { specialCheckerId } from "../packages/shared/src/judge";
 import { BillingService } from "../apps/api/src/billing/billing.service";
 import { ContestsService } from "../apps/api/src/contests/contests.service";
 import { SubmissionsService } from "../apps/api/src/submissions/submissions.service";
@@ -37,7 +38,8 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1" || !snapshot)("every archived e
     redis = createRedisConnection();
     const user = await prisma.user.create({ data: { handle: `history_${suffix}`, email: `${suffix}@example.test`, isStudent: true } }); userId = user.id;
     for (const p of snapshot.problems) problemIds.set(p.id, `c${randomUUID().replaceAll("-", "")}`);
-    await prisma.problem.createMany({ data: snapshot.problems.map((p) => ({ id: problemIds.get(p.id)!, slug: `${suffix}-${p.slug}`, title: p.title, statementMd: p.statementMd, inputSpecMd: p.inputSpecMd, outputSpecMd: p.outputSpecMd, source: p.source, visibility: p.visibility, timeLimitMs: p.timeLimitMs, memoryLimitKb: p.memoryLimitKb, checkerType: p.checkerType, floatEps: p.floatEps, uvaId: p.uvaId, uvaPid: p.uvaPid })) });
+    // Slug-registered GPE checkers require their exact identity in this isolated run.
+    await prisma.problem.createMany({ data: snapshot.problems.map((p) => ({ id: problemIds.get(p.id)!, slug: specialCheckerId(p)?.startsWith("gpe-") ? p.slug : `${suffix}-${p.slug}`, title: p.title, statementMd: p.statementMd, inputSpecMd: p.inputSpecMd, outputSpecMd: p.outputSpecMd, source: p.source, visibility: p.visibility, timeLimitMs: p.timeLimitMs, memoryLimitKb: p.memoryLimitKb, checkerType: p.checkerType, floatEps: p.floatEps, uvaId: p.uvaId, uvaPid: p.uvaPid })) });
     // One real case preserves the exact local/remote routing. All case bytes are separately
     // verified by the battery audit; this suite exercises registration, ownership and scoring.
     await prisma.testCase.createMany({ data: snapshot.problems.flatMap((p) => p.testCases.slice(0, 1).map((tc) => ({ problemId: problemIds.get(p.id)!, ord: tc.ord, input: tc.input, output: tc.output }))) });

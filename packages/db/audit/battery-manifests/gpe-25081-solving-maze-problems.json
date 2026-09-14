@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-25081-solving-maze-problems",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){vector<string>a(10);for(string&s:a)if(!(cin>>s))return 0;int start=-1,goal=-1;for(int i=0;i<100;i++){if(a[i/10][i%10]=='S')start=i;if(a[i/10][i%10]=='G')goal=i;}\n vector<int>parent(100,-1);queue<int>q;q.push(start);parent[start]=start;int dr[]={0,0,1,-1},dc[]={1,-1,0,0};\n while(!q.empty()){int p=q.front();q.pop();for(int d=0;d<4;d++){int r=p/10+dr[d],c=p%10+dc[d];if(r<0||r>=10||c<0||c>=10||a[r][c]=='#'||parent[r*10+c]!=-1)continue;parent[r*10+c]=p;q.push(r*10+c);}}\n if(parent[goal]==-1){cout<<\"No solution\\n\\n\";return 0;}\n for(int p=goal;;p=parent[p]){a[p/10][p%10]='+';if(p==start)break;}\n for(string&s:a)cout<<s<<\"\\n\";cout<<\"\\n\";}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Marks every reachable dead end in addition to the solution path.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){vector<string>a(10);for(string&s:a)if(!(cin>>s))return 0;int start=-1,goal=-1;for(int i=0;i<100;i++){if(a[i/10][i%10]=='S')start=i;if(a[i/10][i%10]=='G')goal=i;}\n vector<int>parent(100,-1);queue<int>q;q.push(start);parent[start]=start;int dr[]={0,0,1,-1},dc[]={1,-1,0,0};\n while(!q.empty()){int p=q.front();q.pop();for(int d=0;d<4;d++){int r=p/10+dr[d],c=p%10+dc[d];if(r<0||r>=10||c<0||c>=10||a[r][c]=='#'||parent[r*10+c]!=-1)continue;parent[r*10+c]=p;q.push(r*10+c);}}\n if(parent[goal]==-1){cout<<\"No solution\\n\\n\";return 0;}\n for(int p=goal;;p=parent[p]){a[p/10][p%10]='+';if(p==start)break;}\n for(int p=0;p<100;p++)if(parent[p]!=-1)a[p/10][p%10]='+';for(string&s:a)cout<<s<<\"\\n\";cout<<\"\\n\";}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Leaves the start and goal unmarked despite the specified sample format.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){vector<string>a(10);for(string&s:a)if(!(cin>>s))return 0;int start=-1,goal=-1;for(int i=0;i<100;i++){if(a[i/10][i%10]=='S')start=i;if(a[i/10][i%10]=='G')goal=i;}\n vector<int>parent(100,-1);queue<int>q;q.push(start);parent[start]=start;int dr[]={0,0,1,-1},dc[]={1,-1,0,0};\n while(!q.empty()){int p=q.front();q.pop();for(int d=0;d<4;d++){int r=p/10+dr[d],c=p%10+dc[d];if(r<0||r>=10||c<0||c>=10||a[r][c]=='#'||parent[r*10+c]!=-1)continue;parent[r*10+c]=p;q.push(r*10+c);}}\n if(parent[goal]==-1){cout<<\"No solution\\n\\n\";return 0;}\n for(int p=goal;;p=parent[p]){if(p!=start&&p!=goal)a[p/10][p%10]='+';if(p==start)break;}\n for(string&s:a)cout<<s<<\"\\n\";cout<<\"\\n\";}\n"
+    }
+  ]
+}

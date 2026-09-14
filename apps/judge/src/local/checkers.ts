@@ -1,8 +1,15 @@
 import type { CheckerType } from "@oj/db";
+import { specialCheckerId } from "@oj/shared";
 import { checkDoublets } from "./doubletsChecker.js";
+import { checkCsvSort, checkLmis, checkSudoku } from "./gpeCheckers.js";
 
-export function checkProblemOutput(problem: { checkerType: CheckerType; uvaId?: number | null; floatEps: number | null }, input: string, expected: string, actual: string): boolean {
-  if (problem.checkerType === "SPECIAL" && problem.uvaId === 10150) return checkDoublets(input, actual);
+export function checkProblemOutput(problem: { checkerType: CheckerType; uvaId?: number | null; slug?: string; floatEps: number | null }, input: string, expected: string, actual: string): boolean {
+  switch (specialCheckerId(problem)) {
+    case "doublets": return checkDoublets(input, actual);
+    case "gpe-csv": return checkCsvSort(input, actual);
+    case "gpe-lmis": return checkLmis(expected, actual);
+    case "gpe-sudoku": return checkSudoku(input, expected, actual);
+  }
   return checkOutput(problem.checkerType, expected, actual, problem.floatEps);
 }
 

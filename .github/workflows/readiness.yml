@@ -47,6 +47,7 @@ jobs:
       - run: pnpm db:generate
       - run: pnpm --filter @oj/db exec prisma migrate deploy
       - run: python3 scripts/generate-school-catalog.py --check
+      - run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/author-gpe-recovery.py --check
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm test
@@ -61,7 +62,7 @@ jobs:
       - run: docker build -f docker/Dockerfile.judge -t oj-readiness-judge .
       - run: pnpm test:runtime
       - run: docker build --tag oj-readiness-sandbox-fixture tests/sandbox
-      - run: RUN_SANDBOX_TESTS=1 pnpm exec vitest run tests/sandbox-isolation.test.ts
+      - run: RUN_SANDBOX_TESTS=1 pnpm exec vitest run tests/sandbox-isolation.test.ts tests/gpe-recovery-sandbox.test.ts
       - run: pnpm --filter @oj/web build
       - run: pnpm audit --prod --audit-level high
       - run: pnpm exec playwright install --with-deps chromium firefox webkit

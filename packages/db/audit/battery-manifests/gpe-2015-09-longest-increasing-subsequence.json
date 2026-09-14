@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-2015-09-longest-increasing-subsequence",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int n;while(cin>>n){vector<ll>tails;for(int i=0;i<n;i++){ll x;cin>>x;auto at=lower_bound(tails.begin(),tails.end(),x);if(at==tails.end())tails.push_back(x);else *at=x;}cout<<tails.size()<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Counts non-decreasing subsequences, allowing duplicate values to extend a sequence.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int n;while(cin>>n){vector<ll>tails;for(int i=0;i<n;i++){ll x;cin>>x;auto at=upper_bound(tails.begin(),tails.end(),x);if(at==tails.end())tails.push_back(x);else *at=x;}cout<<tails.size()<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Keeps only consecutive increasing runs rather than subsequences.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int n;while(cin>>n){vector<ll>tails;for(int i=0;i<n;i++){ll x;cin>>x;if(!tails.empty()&&x<=tails.back())tails.clear();auto at=lower_bound(tails.begin(),tails.end(),x);if(at==tails.end())tails.push_back(x);else *at=x;}cout<<tails.size()<<\"\\n\";}}\n"
+    }
+  ]
+}

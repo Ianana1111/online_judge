@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-2015-07-minimum-path-sum",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int t;cin>>t;while(t--){int r,c;cin>>r>>c;vector<ll>d(c,LLONG_MAX/4);for(int i=0;i<r;i++)for(int j=0;j<c;j++){ll x;cin>>x;if(!i&&!j)d[j]=x;else d[j]=x+min(d[j],j?d[j-1]:LLONG_MAX/4);}cout<<d[c-1]<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Omits the starting cell from the path cost.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int t;cin>>t;while(t--){int r,c;cin>>r>>c;vector<ll>d(c,LLONG_MAX/4);for(int i=0;i<r;i++)for(int j=0;j<c;j++){ll x;cin>>x;if(!i&&!j)d[j]=0;else d[j]=x+min(d[j],j?d[j-1]:LLONG_MAX/4);}cout<<d[c-1]<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Only follows the previous row, failing to account for cheaper routes from the left.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int t;cin>>t;while(t--){int r,c;cin>>r>>c;vector<ll>d(c,LLONG_MAX/4);for(int i=0;i<r;i++)for(int j=0;j<c;j++){ll x;cin>>x;if(!i&&!j)d[j]=x;else d[j]=x+(i?d[j]:d[j-1]);}cout<<d[c-1]<<\"\\n\";}}\n"
+    }
+  ]
+}
