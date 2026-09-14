@@ -1,0 +1,372 @@
+{
+  "checkedAt": "2026-09-14T07:37:53.857822+00:00",
+  "applicationCommit": "a5134a41ca066d89caca7ef5de4eff11a99aaa2c",
+  "api": {
+    "passed": [
+      "foreign-origin registration rejected",
+      "anonymous notifications denied",
+      "registration, authenticated session and secure HttpOnly cookies",
+      "regular user cannot access moderation",
+      "missing CSRF token rejected",
+      "own posts and notification pagination",
+      "python3 real worker run and callback",
+      "cpp17 real worker run and callback",
+      "c11 real worker run and callback",
+      "java17 real worker run and callback",
+      "real submission AC and duplicate request deduplication",
+      "real submission WA and duplicate request deduplication",
+      "session refresh",
+      "new administrative operations deny normal users",
+      "account security history route",
+      "invalid reset, email and school links rejected without sending mail",
+      "production MFA enrollment encrypts secret and revokes old sessions",
+      "MFA restricted login, recovery and replay rejection",
+      "synthetic account MFA disable with identity proof"
+    ],
+    "passedCount": 19
+  },
+  "conformityLive": [
+    {
+      "candidate": 0,
+      "expected": "AC",
+      "verdict": "AC"
+    },
+    {
+      "candidate": 1,
+      "expected": "WA",
+      "verdict": "WA"
+    },
+    {
+      "candidate": 2,
+      "expected": "WA",
+      "verdict": "WA"
+    }
+  ],
+  "pages": [
+    {
+      "browser": "chromium-desktop-dark",
+      "route": "/",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-desktop-dark",
+      "route": "/problems",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-desktop-dark",
+      "route": "/contests",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-desktop-dark",
+      "route": "/discussion",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-desktop-dark",
+      "route": "/faq",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-desktop-dark",
+      "route": "/forgot-password",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-desktop-dark",
+      "route": "/reset-password",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-desktop-dark",
+      "route": "/verify-email",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-desktop-dark",
+      "route": "/verify-school",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-desktop-dark",
+      "route": "/settings?section=security",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-desktop-dark",
+      "route": "/notifications",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-desktop-dark",
+      "route": "/problems/uva-100-the-3n-1-problem",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-mobile-light",
+      "route": "/",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-mobile-light",
+      "route": "/problems",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-mobile-light",
+      "route": "/contests",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-mobile-light",
+      "route": "/discussion",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-mobile-light",
+      "route": "/faq",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-mobile-light",
+      "route": "/forgot-password",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-mobile-light",
+      "route": "/reset-password",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-mobile-light",
+      "route": "/verify-email",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-mobile-light",
+      "route": "/verify-school",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-mobile-light",
+      "route": "/settings?section=security",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-mobile-light",
+      "route": "/notifications",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "chromium-mobile-light",
+      "route": "/problems/uva-100-the-3n-1-problem",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "webkit-mobile-dark",
+      "route": "/",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "webkit-mobile-dark",
+      "route": "/problems",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "webkit-mobile-dark",
+      "route": "/contests",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "webkit-mobile-dark",
+      "route": "/discussion",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "webkit-mobile-dark",
+      "route": "/faq",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "webkit-mobile-dark",
+      "route": "/forgot-password",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "webkit-mobile-dark",
+      "route": "/reset-password",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "webkit-mobile-dark",
+      "route": "/verify-email",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "webkit-mobile-dark",
+      "route": "/verify-school",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "webkit-mobile-dark",
+      "route": "/settings?section=security",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "webkit-mobile-dark",
+      "route": "/notifications",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    },
+    {
+      "browser": "webkit-mobile-dark",
+      "route": "/problems/uva-100-the-3n-1-problem",
+      "status": 200,
+      "overflow": false,
+      "errors": [],
+      "serverErrors": [],
+      "violations": []
+    }
+  ],
+  "browserNotes": "Combined executed results: Chromium desktop dark and mobile light passed initially. WebKit public pages passed, then login navigation timed out. Fresh-context diagnosis proved login/me HTTP 200. A focused retry collided with the still-completing home navigation; after waiting for the authenticated home heading and network idle, all 12 WebKit routes passed. No application change was needed for that harness correction. This is not a claim that the original unchanged script passed in one run."
+}
