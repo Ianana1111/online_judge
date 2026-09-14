@@ -4,6 +4,8 @@ import { LANGUAGES } from "../apps/judge/src/local/languages";
 import { checkOutput } from "../apps/judge/src/local/checkers";
 import { createDockerSandbox } from "./support/docker-sandbox";
 import { createVercelSandbox } from "./support/vercel-sandbox";
+import conformity from "../packages/db/audit/battery-manifests/gpe-10520-conformity.json";
+import conformityRegression from "../packages/db/audit/conformity-order-regression.json";
 
 describe("judge output contracts", () => {
   it("rejects non-finite tolerance and non-decimal numeric disguises", () => {
@@ -31,6 +33,14 @@ describe.skipIf(process.env.RUN_SANDBOX_TESTS !== "1" && !useVercel)(`untrusted 
   afterEach(async () => { if (fixture) await fixture.stop(); }, 30_000);
   async function compile(language: string, code: string) { const result = await compileInSandbox(fixture.sandbox, LANGUAGES[language], code); expect(result).toEqual({ ok: true }); }
   const run = (language = "python3", input = "", timeMs = 1000) => runOneCase(fixture.sandbox, LANGUAGES[language].runCmd({ memKb: 262144 }), input, timeMs, 262144, LANGUAGES[language].ulimitMemory);
+  it.each(conformity.candidates)("grades Conformity candidate: $label", async (candidate) => {
+    await compile(candidate.languageKey, candidate.sourceCode);
+    const regression = conformityRegression.cases[0];
+    const result = await run(candidate.languageKey, regression.input, 3000);
+    expect(result.exitCode).toBe(0);
+    expect(result.timedOut).toBe(false);
+    expect(checkOutput("IGNORE_TRAILING_WS", regression.output, result.stdout, null)).toBe(candidate.tag === "correct");
+  });
   it.each([
     ["cpp17", '#include <iostream>\nint main(){int x;std::cin>>x;std::cout<<x+1;}'],
     ["c11", '#include <stdio.h>\nint main(){int x;scanf("%d",&x);printf("%d",x+1);}'],
