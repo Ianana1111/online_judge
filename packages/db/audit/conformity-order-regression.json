@@ -1,0 +1,11 @@
+{
+  "cases": [
+    {
+      "slug": "gpe-10520-conformity",
+      "input": "3\n101 102 103 104 105\n105 104 103 102 101\n201 202 203 204 205\n5\n101 102 103 104 105\n105 104 103 102 101\n201 202 203 204 205\n205 204 203 202 201\n301 302 303 304 305\n0\n",
+      "output": "2\n4\n",
+      "reason": "Mixed reordered duplicates and singleton groups distinguish unordered course sets from ordered tuples. A second dataset also rejects counting only one tied winner. Permutations alone produce the same total in both algorithms."
+    }
+  ],
+  "corrections": []
+}
