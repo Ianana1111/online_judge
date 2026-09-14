@@ -1,0 +1,386 @@
+{
+  "checkedAt": "2026-09-14T17:17:20.433451+00:00",
+  "routes": [
+    {
+      "slug": "gpe-2008-06-parser-and-evaluator",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    },
+    {
+      "slug": "gpe-2008-19-set-partition",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    },
+    {
+      "slug": "gpe-2008-28-longest-monotonically-increasing-subsequence",
+      "judgeMode": "LOCAL",
+      "checker": "SPECIAL"
+    },
+    {
+      "slug": "gpe-2008-37-prefix-expression-evaluation",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    },
+    {
+      "slug": "gpe-2009-02-line-overlap-problem",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    },
+    {
+      "slug": "gpe-2009-17-binary-tree-traversals",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    },
+    {
+      "slug": "gpe-2009-24-unique-lines",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    },
+    {
+      "slug": "gpe-2015-01-missing-numbers",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    },
+    {
+      "slug": "gpe-2015-02-recursion-and-mod",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    },
+    {
+      "slug": "gpe-2015-03-sudoku-as-good-as-lee-hsien-loong",
+      "judgeMode": "LOCAL",
+      "checker": "SPECIAL"
+    },
+    {
+      "slug": "gpe-2015-04-the-n-th-element",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    },
+    {
+      "slug": "gpe-2015-07-minimum-path-sum",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    },
+    {
+      "slug": "gpe-2015-08-climbing-stairs",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    },
+    {
+      "slug": "gpe-2015-09-longest-increasing-subsequence",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    },
+    {
+      "slug": "gpe-22261-sorting-the-alphanumeric-list-in-comma-separated-value-forma",
+      "judgeMode": "LOCAL",
+      "checker": "SPECIAL"
+    },
+    {
+      "slug": "gpe-25081-solving-maze-problems",
+      "judgeMode": "LOCAL",
+      "checker": "IGNORE_TRAILING_WS"
+    }
+  ],
+  "archives": [
+    {
+      "slug": "gpe-2018-01-03-9781",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-02-26-9801",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-03-14-9811",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-04-11-9831",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-04-30-9841",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-05-16-9851",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-06-13-9871",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-07-16-9895",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-07-23-9905",
+      "problems": 7,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-08-31-9915",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-09-07-9925",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-09-26-9935",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-10-08-9945",
+      "problems": 7,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2018-11-14-9965",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2019-03-04-10015",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2019-04-10-10035",
+      "problems": 7,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2019-04-29-10045",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2019-05-29-10065",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2019-06-10-10075",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2019-07-15-10095",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2019-07-22-10105",
+      "problems": 7,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2019-09-06-10125",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2019-10-02-10135",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2019-10-16-10145",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2019-10-28-10155",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2019-11-20-10165",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-03-18-10215",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-04-15-10235",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-05-06-10245",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-05-20-10255",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-06-03-10265",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-06-13-10225",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-06-17-10275",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-07-13-10295",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-07-20-10305",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-09-04-10315",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-09-11-10325",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-11-11-10355",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-11-30-10365",
+      "problems": 5,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2020-12-16-10375",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2021-01-06-10385",
+      "problems": 6,
+      "allRoutesReady": true
+    },
+    {
+      "slug": "gpe-2021-04-26-10445",
+      "problems": 6,
+      "allRoutesReady": true
+    }
+  ],
+  "verdicts": [
+    {
+      "slug": "gpe-2015-03-sudoku-as-good-as-lee-hsien-loong",
+      "candidate": "Alternative legal output order, deliberately different from the canonical stored answer.",
+      "expected": "AC",
+      "verdict": "AC",
+      "inExam": false
+    },
+    {
+      "slug": "gpe-2015-03-sudoku-as-good-as-lee-hsien-loong",
+      "candidate": "Accepts a completely filled board even when its givens conflict.",
+      "expected": "WA",
+      "verdict": "WA",
+      "inExam": false
+    },
+    {
+      "slug": "gpe-2008-28-longest-monotonically-increasing-subsequence",
+      "candidate": "Alternative legal output order, deliberately different from the canonical stored answer.",
+      "expected": "AC",
+      "verdict": "AC",
+      "inExam": false
+    },
+    {
+      "slug": "gpe-2008-28-longest-monotonically-increasing-subsequence",
+      "candidate": "Prints LIS length where the required header is the number of maximal sequences.",
+      "expected": "WA",
+      "verdict": "WA",
+      "inExam": false
+    },
+    {
+      "slug": "gpe-22261-sorting-the-alphanumeric-list-in-comma-separated-value-forma",
+      "candidate": "Alternative legal output order, deliberately different from the canonical stored answer.",
+      "expected": "AC",
+      "verdict": "AC",
+      "inExam": false
+    },
+    {
+      "slug": "gpe-22261-sorting-the-alphanumeric-list-in-comma-separated-value-forma",
+      "candidate": "Sorts original row bytes, ignoring per-field whitespace and prefix ordering.",
+      "expected": "WA",
+      "verdict": "WA",
+      "inExam": false
+    },
+    {
+      "slug": "gpe-2008-06-parser-and-evaluator",
+      "candidate": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "expected": "AC",
+      "verdict": "AC",
+      "inExam": false
+    },
+    {
+      "slug": "gpe-2008-19-set-partition",
+      "candidate": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "expected": "AC",
+      "verdict": "AC",
+      "inExam": false
+    },
+    {
+      "slug": "gpe-2015-02-recursion-and-mod",
+      "candidate": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "expected": "AC",
+      "verdict": "AC",
+      "inExam": false
+    },
+    {
+      "slug": "gpe-2015-08-climbing-stairs",
+      "candidate": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "expected": "AC",
+      "verdict": "AC",
+      "inExam": true
+    }
+  ],
+  "checks": [
+    "All 16 recovered problems have the reviewed statement/checker and a LOCAL production route",
+    "All 42 affected archives expose ready judge routes and keep pre-exam content protected",
+    "Three alternative-output references accepted, three wrong solutions rejected, and three arithmetic/parsing references accepted",
+    "Previously blocked GPE starts, rejects a second active exam, keeps the server deadline, accepts the n=100 stairs reference, scores and finishes"
+  ],
+  "exam": {
+    "slug": "gpe-2019-04-29-10045",
+    "durationMin": 180,
+    "singleActiveEnforced": true,
+    "solvedCount": 1,
+    "penalty": 0,
+    "ended": true
+  },
+  "complete": true,
+  "environment": "Production https://api.judge.tw with the real Railway worker and Vercel sandbox; ordinary disposable account, 10 submissions, no payment or email.",
+  "codeCommit": "edff6178ec12d1b2194f5aac42dedf7059260ce6"
+}

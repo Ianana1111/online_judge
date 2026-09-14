@@ -255,6 +255,11 @@
     @apply mb-3;
   }
 
+  /* Archived statements sometimes display a full source URL as the link text. */
+  .prose-statement a {
+    overflow-wrap: anywhere;
+  }
+
   .prose-statement code {
     @apply rounded bg-ink-800 px-1 py-0.5 text-xs text-brand-light;
   }
