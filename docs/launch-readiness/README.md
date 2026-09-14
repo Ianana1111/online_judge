@@ -1,6 +1,6 @@
 # Launch readiness implementation
 
-**Latest status (September 15):** The [GPE recovery](gpe-recovery.md) implements the 16 missing corpora with 69 cases, restores all 114 historical lifecycle tests (including the 42 previously blocked GPE archives), and validates 19 correct / 32 wrong programs. A fresh PostgreSQL 18 production-backup rehearsal preserves all existing cases and business tables. Release verification is recorded separately; [owner payment/mail acceptance and Apple Pay prerequisites](owner-acceptance.md) remain explicit. Earlier rollout evidence below is historical.
+**Latest status (September 15):** The [GPE recovery is deployed](deployment-20260915.md): 16 missing corpora, 69 new cases, and all 42 affected archive routes restored. The 114-archive lifecycle suite passes; 19 correct / 32 wrong Docker candidates and 10 actual production submissions produce expected verdicts. Read the [owner payment/mail acceptance and Apple Pay checklist](owner-acceptance.md) for remaining external acceptance. Earlier rollout evidence below is historical.
 
 Execution record for the approved full-site plan. An unchecked gate is not a passed check. The owner authorized production deployment and a restricted local database backup; deployment and migrations completed on **2026-09-13**. See the [deployment and verification record](deployment-20260913.md). No real charge, refund, or email was performed by these deployment checks.
 
