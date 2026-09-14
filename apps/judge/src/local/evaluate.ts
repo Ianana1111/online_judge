@@ -9,7 +9,7 @@ import { OUTPUT_CAP_BYTES, compileInSandbox, runOneCase } from "./sandboxRun.js"
  * Sandbox creation/credentials/lifetime are the caller's responsibility. */
 export async function evaluateInSandbox(
   sandbox: Sandbox,
-  problem: Pick<Problem, "timeLimitMs" | "memoryLimitKb" | "checkerType" | "floatEps" | "uvaId">,
+  problem: Pick<Problem, "timeLimitMs" | "memoryLimitKb" | "checkerType" | "floatEps" | "uvaId"> & Partial<Pick<Problem, "slug">>,
   testCases: Pick<TestCase, "ord" | "input" | "output">[],
   languageKey: string,
   sourceCode: string,

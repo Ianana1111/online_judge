@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-2015-01-missing-numbers",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int m,n;if(!(cin>>m>>n))return 0;ll previous=0;for(int i=0;i<m;i++){ll current=0;for(int j=0;j<n-i;j++){ll x;cin>>x;current^=x;}if(i)cout<<(previous^current)<<\"\\n\";previous=current;}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Compares every later list against the first list instead of its immediate predecessor.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int m,n;if(!(cin>>m>>n))return 0;ll previous=0;for(int i=0;i<m;i++){ll current=0;for(int j=0;j<n-i;j++){ll x;cin>>x;current^=x;}if(i)cout<<(previous^current)<<\"\\n\";if(i==0)previous=current;}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Collapses repeated numbers before comparing adjacent lists.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int m,n;if(!(cin>>m>>n))return 0;ll previous=0;for(int i=0;i<m;i++){ll current=0,last=LLONG_MIN;for(int j=0;j<n-i;j++){ll x;cin>>x;if(j==0||x!=last)current^=x;last=x;}if(i)cout<<(previous^current)<<\"\\n\";previous=current;}}\n"
+    }
+  ]
+}

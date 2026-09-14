@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-2009-17-binary-tree-traversals",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nstring pre,in;\nstring post(int a,int l,int r){if(l==r)return \"\";char root=pre[a];int k=l;while(in[k]!=root)k++;string left=post(a+1,l,k),right=post(a+1+k-l,k+1,r);return left+right+root;}\nint main(){int t;cin>>t;while(t--){int n;cin>>n;pre.clear();in.clear();char c;for(int i=0;i<n;i++){cin>>c;pre+=c;}for(int i=0;i<n;i++){cin>>c;in+=c;}string result=post(0,0,n);for(int i=0;i<n;i++)cout<<(i?\" \":\"\")<<result[i];cout<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Emits preorder instead of postorder.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nstring pre,in;\nstring post(int a,int l,int r){if(l==r)return \"\";char root=pre[a];int k=l;while(in[k]!=root)k++;string left=post(a+1,l,k),right=post(a+1+k-l,k+1,r);return root+left+right;}\nint main(){int t;cin>>t;while(t--){int n;cin>>n;pre.clear();in.clear();char c;for(int i=0;i<n;i++){cin>>c;pre+=c;}for(int i=0;i<n;i++){cin>>c;in+=c;}string result=post(0,0,n);for(int i=0;i<n;i++)cout<<(i?\" \":\"\")<<result[i];cout<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Exchanges the left and right postorder traversals.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nstring pre,in;\nstring post(int a,int l,int r){if(l==r)return \"\";char root=pre[a];int k=l;while(in[k]!=root)k++;string left=post(a+1,l,k),right=post(a+1+k-l,k+1,r);return right+left+root;}\nint main(){int t;cin>>t;while(t--){int n;cin>>n;pre.clear();in.clear();char c;for(int i=0;i<n;i++){cin>>c;pre+=c;}for(int i=0;i<n;i++){cin>>c;in+=c;}string result=post(0,0,n);for(int i=0;i<n;i++)cout<<(i?\" \":\"\")<<result[i];cout<<\"\\n\";}}\n"
+    }
+  ]
+}

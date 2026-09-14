@@ -1,0 +1,773 @@
+{
+  "testedAt": "2026-09-14T16:37:26.889Z",
+  "contentHash": "2ab6cfe61c419e24910178e14e404b29b3451af1c54a8516b00e6efed81a9532",
+  "regressions": false,
+  "environment": "Disposable Debian bookworm Docker, 1 CPU, network none, no host mount. Actual production compile/run/checker code. Vercel timing/toolchain still requires separate validation.",
+  "expectations": "Baseline uses authored tags. Regression sweep applies source-hash-bound reviews and adds reviewed corrected references. OBSERVE means the candidate's alleged defect is not a proven rejection requirement, not a completed correctness proof.",
+  "complete": true,
+  "problems": 16,
+  "skippedRemoteProblems": [],
+  "observations": [],
+  "failures": [],
+  "results": [
+    {
+      "slug": "gpe-2008-06-parser-and-evaluator",
+      "inputOutputHash": "5fa6fc12cb6b406f84e9c71c8f56882dc13aed9afa3961330ba0b7ed246050f3",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "dbefe5163059771ddaf8c585c05c2df98f6019083681a0584659f6ccc3f2e551",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2920,
+          "lastCase": 5,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Uses C precedence for remainder instead of the stated tighter precedence.",
+          "language": "cpp17",
+          "sourceHash": "8c124e9de335e7c83972547b4535af731f272224133953cb96b5d7391b1d902a",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2920,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Rounds negative quotients downward instead of truncating toward zero.",
+          "language": "cpp17",
+          "sourceHash": "75c5f2648a95993b0aa0da391f7b88823b2a0be03d76ebd7e575476b61e51740",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2928,
+          "lastCase": 2,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2008-19-set-partition",
+      "inputOutputHash": "95bfa9ab5a129a7c1654348aa9be7baeecfcd4c1fa6788b521505a80d6f55bc7",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "3da1dd72e3ae66c783bd2294d8904c0e666fc1d3c619bbab42c429af53773265",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 10,
+          "memoryKb": 6416,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Counts only one side of each complementary partition.",
+          "language": "cpp17",
+          "sourceHash": "19899691f1151aa248d91b159b4ac556b53aa362b5943cc7a27dc13db6416a7e",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Accepts subsets summing to floor(total/2) even when the total is odd.",
+          "language": "cpp17",
+          "sourceHash": "b656adebb7db98b28b2160488c741ab8804b54cb87f23539cc4e7c1222d5d9f5",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2896,
+          "lastCase": 2,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2008-28-longest-monotonically-increasing-subsequence",
+      "inputOutputHash": "63b1f631f31de10cf3beb2d9652c4e105d7cd62059096e22ffd82139094b8d74",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "3e46077c24f0046fba5204932bf9e2a0d0f733b86781cbc0f83b531ca95c4ef6",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "correct",
+          "label": "Alternative legal output order, deliberately different from the canonical stored answer.",
+          "language": "cpp17",
+          "sourceHash": "738fbacab79d7c12ba97384485b95ca4a8fb8153bb1263018176902421f4d333",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Prints LIS length where the required header is the number of maximal sequences.",
+          "language": "cpp17",
+          "sourceHash": "348b6ddd91e9304abb3888f486ce1fdf16b8e348e2f7707242900c9e7ad78ec7",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 3,
+          "tag": "custom",
+          "label": "Reports only one longest sequence, omitting other valid answers.",
+          "language": "cpp17",
+          "sourceHash": "b7460ba3ba89dec11788b94392bfefce1687828092f61263dab10a22cabf4e6e",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2008-37-prefix-expression-evaluation",
+      "inputOutputHash": "81e31e900ef58eb7b58dc05a8c762a05080ff3f6358bbffd6d3b2ca5c277a7a5",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "636e372e6d032eb5acb0908be565822bb1ffc6fddf8d16a6faaf6fa42106446b",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 3000,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Ignores trailing tokens after an otherwise complete expression.",
+          "language": "cpp17",
+          "sourceHash": "18164e64a59594bfe5484996023c0bdf7c614d69da737940919d2fce5c47d23c",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2928,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Reverses the operand order of subtraction.",
+          "language": "cpp17",
+          "sourceHash": "853bf561025953263e69c7d9a516103007cea807757c0eab0303ad6ac4583a1b",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2888,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2009-02-line-overlap-problem",
+      "inputOutputHash": "be59ea2189e93b29beb1cf98cc0b1c70e546161e88e4a7cda6c7b38d68aeef21",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "92eab72315d6061a20bd37d845c938a6eeec5233035e09aded331cf5b54f1be3",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 110,
+          "memoryKb": 12996,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Computes union length instead of the sum of pairwise overlaps.",
+          "language": "cpp17",
+          "sourceHash": "e7424f822b7ae1891fc1e9df183bacf16c0659f7b9fb9449aa893b403e38ddf7",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Narrows the potentially 64-bit total to a 32-bit result.",
+          "language": "cpp17",
+          "sourceHash": "19091c1b6c9562038fcc16f9f3a89b34875dca42c33d49a380a6d86432cda456",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 110,
+          "memoryKb": 10948,
+          "lastCase": 4,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2009-17-binary-tree-traversals",
+      "inputOutputHash": "cd452a0475d3e9606400f83036f64e58cfd324f4842ba80859ab3df9da21b769",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "c2b94d2ce83a565580d98cdec8f91982f4b1e6284a8c25f407c5fddaaad6645c",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Emits preorder instead of postorder.",
+          "language": "cpp17",
+          "sourceHash": "2782ba3e5343ca306ac36f7c532b83d666f5bad6c2a4335f4a0aa4c5713f9aaa",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Exchanges the left and right postorder traversals.",
+          "language": "cpp17",
+          "sourceHash": "ccf633d42b50d3c74ec8cdc1da0f61fe2bb6aee542983a47dc09943e35119527",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2009-24-unique-lines",
+      "inputOutputHash": "4856f6a57f197b91cb6ac39f24618df0d4d7d7c043f85677c5604834af094b91",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "06e92826a78904bf4e6b3304373a51aa9624c23d01191fe139e5271b7fa1d68b",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2948,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Merges distinct parallel lines by retaining only their direction.",
+          "language": "cpp17",
+          "sourceHash": "dfc4abcbabff8de07d09f775822592d67a8d61565da6777870f2b48907a7e448",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Fails to normalize proportional line equations.",
+          "language": "cpp17",
+          "sourceHash": "8a3fcaf48c82f9514141ea934dd32d2334f7da6e8a132668b41053072f89ace5",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2015-01-missing-numbers",
+      "inputOutputHash": "c99ccd962d3910ab8923319a3453f521cf93b41e1fe9bc2da26ed2b8480d0cab",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "34f0458db112e3b69e59939ab68801bce9ff34312ab6851be78bb4f63efa6676",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 30,
+          "memoryKb": 2928,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Compares every later list against the first list instead of its immediate predecessor.",
+          "language": "cpp17",
+          "sourceHash": "ead766feaf80def0ee53ae2d335bbfdbfdc886b7c2e280d3e280c28ab8c12d4a",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Collapses repeated numbers before comparing adjacent lists.",
+          "language": "cpp17",
+          "sourceHash": "27c1fbd5481a378067d833eb4595657a49b99dddeca504f0307f36f832d1352f",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2015-02-recursion-and-mod",
+      "inputOutputHash": "96431e8c8580d5be605f9e61540d245fb3ee0fa60cc849343c20031d0fc1912e",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "435305b6bbc312b73522e3892bc98a3dfb961391376aec09e5f9eb6b0587589a",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Uses the more common 1e9+7 modulus instead of 1e9+9.",
+          "language": "cpp17",
+          "sourceHash": "b03094046a92ea69458da16cd06f8620f03ac430803be884c1778e7f44d163d4",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Advances the recurrence one extra time.",
+          "language": "cpp17",
+          "sourceHash": "3306356a751925471d64ab6dd7aefa0a02bc1dc32c2cea3fd6fba533bf18074c",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2015-03-sudoku-as-good-as-lee-hsien-loong",
+      "inputOutputHash": "2d9af50e1c3dfeaec1a017c0685840ca41d156d9efc8b713e1e89d5faf6b5747",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "e35b70ecf2424cdd27ecbf90a5a40f9cbc3cc50e050af5f507097520371a818e",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "correct",
+          "label": "Alternative legal output order, deliberately different from the canonical stored answer.",
+          "language": "cpp17",
+          "sourceHash": "53e89433ca7700f2c12ca9983aa27c448fe2b61f9ce489fa9beb68812b86388a",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Accepts a completely filled board even when its givens conflict.",
+          "language": "cpp17",
+          "sourceHash": "a45f58bc96f2e444467befdd6c868b6d6a7007266f6ccbbf61c4467079b2a59c",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 3,
+          "tag": "custom",
+          "label": "Omits the 3x3-box rule when choosing digits.",
+          "language": "cpp17",
+          "sourceHash": "db45cfe2b356a31808e3801708643e91bbc3a76bde97bbc94d6384db8a247fa9",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2896,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2015-04-the-n-th-element",
+      "inputOutputHash": "d6f813d53656a86323318a0b40ce766d8c534e82f2cf2ff698ae938f1ad22fb3",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "83939b5f6a6ac3fc0e6d64f8a722964d8d6df8d670a5804ac012c7b60aab1586",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Selects rank N+1 instead of rank N.",
+          "language": "cpp17",
+          "sourceHash": "a1e09462c3ec9c526aa9d4b25f9b9d384b20f5faf7291ea07c5fc4dbfd1d3ed6",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Truncates a valid 64-bit selected element to 32 bits.",
+          "language": "cpp17",
+          "sourceHash": "1ffec376fee64ffb714e40985b63b4dcc9cc2d001a9f22b9fb4b6f475b21b02d",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2015-07-minimum-path-sum",
+      "inputOutputHash": "40e5b87e407005716840841fff47630e5f4d5431a978902158648aafa50a18a0",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "f79595d75660c10c13753726940dd4b8c837d62540ea529fe919e7b9d64a4304",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Omits the starting cell from the path cost.",
+          "language": "cpp17",
+          "sourceHash": "9286e6b0fa4023c878abee6a527a1f8f6debdb6fdd98c8814bcc202d5e1988b7",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Only follows the previous row, failing to account for cheaper routes from the left.",
+          "language": "cpp17",
+          "sourceHash": "dbf395e7ddf1ede9e0580ce8da2fd89470527dd676081145f1987fbee22cce77",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2015-08-climbing-stairs",
+      "inputOutputHash": "3e00071eaba81651a871aa7d9fca52a71f5efee125ff198e6e4b08698f5c1fc4",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "a6094579b543003d8c6c4b5da4fe52c8f98437fa2e8d52e97bee2fa624754be5",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Overflows the 64-bit counter for valid values up to n=100.",
+          "language": "cpp17",
+          "sourceHash": "fc32bf96d33d00737a070c75188ab2f3e29fd0abd4d72c48b9c6e1a61c026445",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 3,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Counts Fibonacci(n) instead of Fibonacci(n+1).",
+          "language": "cpp17",
+          "sourceHash": "c30dced3e99ade0045e6dd90709d885cb0128ac3adc032068638ced95b88e1c2",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2884,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-2015-09-longest-increasing-subsequence",
+      "inputOutputHash": "83642b77f9d7c96c5f90132e1d790c8ba7e2380f3061c3babfea0e9b34216c7d",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "747609e2cc882cc67460430adb3fa2cabab3896fedf8ef217c26fab000e6f2b2",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 10,
+          "memoryKb": 3260,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Counts non-decreasing subsequences, allowing duplicate values to extend a sequence.",
+          "language": "cpp17",
+          "sourceHash": "2d970ae5af73e1b682816034c2b9706ff84aa8058a112075be14d74d425c9258",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Keeps only consecutive increasing runs rather than subsequences.",
+          "language": "cpp17",
+          "sourceHash": "b4891ac842a7cb9a7963e2e6f2150026e77a827ff0046316c7d1ccc3f10be71e",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-22261-sorting-the-alphanumeric-list-in-comma-separated-value-forma",
+      "inputOutputHash": "c1f9f495d14103b86b78f74eb2a65d9538ff3949601d3cb9d7faebbd7c937b3c",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "c59f8ab9f151820ae0412eb40d3c171349ee9c7acffeccd71115c5eaa4968eee",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 3144,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "correct",
+          "label": "Alternative legal output order, deliberately different from the canonical stored answer.",
+          "language": "cpp17",
+          "sourceHash": "bb4f4098f21367cfcbfacc45f3930c483d54b679341706c5e282f03658a66ab3",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 3144,
+          "lastCase": 4,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Sorts original row bytes, ignoring per-field whitespace and prefix ordering.",
+          "language": "cpp17",
+          "sourceHash": "dd033fd80ba3844710077fea9153122ec1dfb72c577366eb92af689ca7cdd5aa",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        },
+        {
+          "index": 3,
+          "tag": "custom",
+          "label": "Trims output rows even though original spaces must be preserved.",
+          "language": "cpp17",
+          "sourceHash": "6b1cfd164bad5ed6e3dfa3efe84cc4b9a2f7e910ddbd821383beb90688743ef0",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 2,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "slug": "gpe-25081-solving-maze-problems",
+      "inputOutputHash": "03265b6c1c0bf57a0941b6b1198003702a5b78e5e36d0eb9015e0d5965a85065",
+      "candidates": [
+        {
+          "index": 0,
+          "tag": "correct",
+          "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+          "language": "cpp17",
+          "sourceHash": "80d357175fdc5f055aaacd91da3fe8decdeef36cffac36a99e55b4cb7b047b99",
+          "expectation": "AC",
+          "verdict": "AC",
+          "timeMs": 0,
+          "memoryKb": 2900,
+          "lastCase": 8,
+          "matched": true
+        },
+        {
+          "index": 1,
+          "tag": "custom",
+          "label": "Marks every reachable dead end in addition to the solution path.",
+          "language": "cpp17",
+          "sourceHash": "f0f19e7d307fc3afe6983cc0f847dee40ef8a6d054decc504b4e343f22850c6e",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2884,
+          "lastCase": 1,
+          "matched": true
+        },
+        {
+          "index": 2,
+          "tag": "custom",
+          "label": "Leaves the start and goal unmarked despite the specified sample format.",
+          "language": "cpp17",
+          "sourceHash": "2d88c7cabb501f835e3fc231d2073bfba106c4782328d0f9361e6db441c0b3c2",
+          "expectation": "REJECT",
+          "verdict": "WA",
+          "timeMs": 0,
+          "memoryKb": 2888,
+          "lastCase": 1,
+          "matched": true
+        }
+      ]
+    }
+  ]
+}

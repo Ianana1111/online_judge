@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-2015-08-climbing-stairs",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int n;while(cin>>n){using Num=unsigned __int128;Num a=1,b=1;for(int i=1;i<n;i++){Num c=a+b;a=b;b=c;}cout<<decimal(b)<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Overflows the 64-bit counter for valid values up to n=100.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int n;while(cin>>n){using Num=unsigned long long;Num a=1,b=1;for(int i=1;i<n;i++){Num c=a+b;a=b;b=c;}cout<<decimal(b)<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Counts Fibonacci(n) instead of Fibonacci(n+1).",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int n;while(cin>>n){using Num=unsigned __int128;Num a=1,b=1;for(int i=1;i<n-1;i++){Num c=a+b;a=b;b=c;}cout<<decimal(b)<<\"\\n\";}}\n"
+    }
+  ]
+}

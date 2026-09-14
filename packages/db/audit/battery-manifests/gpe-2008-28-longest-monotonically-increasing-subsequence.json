@@ -1,0 +1,31 @@
+{
+  "slug": "gpe-2008-28-longest-monotonically-increasing-subsequence",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int t;cin>>t;while(t--){int n;cin>>n;vector<ll>a(n);for(ll &x:a)cin>>x;vector<vector<ll>>out;size_t best=0;\n for(int mask=1;mask<(1<<n);mask++){vector<ll>v;for(int i=0;i<n;i++)if(mask>>i&1)v.push_back(a[i]);bool ok=true;for(int i=1;i<(int)v.size();i++)if(v[i]<=v[i-1])ok=false;\n  if(ok&&v.size()>=best){if(v.size()>best){out.clear();best=v.size();}out.push_back(v);}}\n sort(out.rbegin(),out.rend());cout<<out.size()<<\"\\n\";for(auto &v:out){for(int i=0;i<(int)v.size();i++)cout<<(i?\" \":\"\")<<v[i];cout<<\"\\n\";}}}\n"
+    },
+    {
+      "tag": "correct",
+      "label": "Alternative legal output order, deliberately different from the canonical stored answer.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int t;cin>>t;while(t--){int n;cin>>n;vector<ll>a(n);for(ll &x:a)cin>>x;vector<vector<ll>>out;size_t best=0;\n for(int mask=1;mask<(1<<n);mask++){vector<ll>v;for(int i=0;i<n;i++)if(mask>>i&1)v.push_back(a[i]);bool ok=true;for(int i=1;i<(int)v.size();i++)if(v[i]<=v[i-1])ok=false;\n  if(ok&&v.size()>=best){if(v.size()>best){out.clear();best=v.size();}out.push_back(v);}}\n sort(out.begin(),out.end());cout<<out.size()<<\"\\n\";for(auto &v:out){for(int i=0;i<(int)v.size();i++)cout<<(i?\" \":\"\")<<v[i];cout<<\"\\n\";}}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Prints LIS length where the required header is the number of maximal sequences.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int t;cin>>t;while(t--){int n;cin>>n;vector<ll>a(n);for(ll &x:a)cin>>x;vector<vector<ll>>out;size_t best=0;\n for(int mask=1;mask<(1<<n);mask++){vector<ll>v;for(int i=0;i<n;i++)if(mask>>i&1)v.push_back(a[i]);bool ok=true;for(int i=1;i<(int)v.size();i++)if(v[i]<=v[i-1])ok=false;\n  if(ok&&v.size()>=best){if(v.size()>best){out.clear();best=v.size();}out.push_back(v);}}\n sort(out.rbegin(),out.rend());cout<<best<<\"\\n\";for(auto &v:out){for(int i=0;i<(int)v.size();i++)cout<<(i?\" \":\"\")<<v[i];cout<<\"\\n\";}}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Reports only one longest sequence, omitting other valid answers.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int t;cin>>t;while(t--){int n;cin>>n;vector<ll>a(n);for(ll &x:a)cin>>x;vector<vector<ll>>out;size_t best=0;\n for(int mask=1;mask<(1<<n);mask++){vector<ll>v;for(int i=0;i<n;i++)if(mask>>i&1)v.push_back(a[i]);bool ok=true;for(int i=1;i<(int)v.size();i++)if(v[i]<=v[i-1])ok=false;\n  if(ok&&v.size()>=best){if(v.size()>best){out.clear();best=v.size();}out.push_back(v);}}\n sort(out.rbegin(),out.rend());out.resize(1);cout<<out.size()<<\"\\n\";for(auto &v:out){for(int i=0;i<(int)v.size();i++)cout<<(i?\" \":\"\")<<v[i];cout<<\"\\n\";}}}\n"
+    }
+  ]
+}

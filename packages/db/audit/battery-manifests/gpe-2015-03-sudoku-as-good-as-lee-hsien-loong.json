@@ -1,0 +1,31 @@
+{
+  "slug": "gpe-2015-03-sudoku-as-good-as-lee-hsien-loong",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint a[81],rows[9],cols[9],boxes[9];\nint box(int k){return (k/9/3)*3+(k%9/3);}\nbool solve(){int at=-1,options=0,best=10;for(int k=0;k<81;k++)if(!a[k]){int mask=511&~(rows[k/9]|cols[k%9]|boxes[box(k)]);int count=__builtin_popcount((unsigned)mask);if(count<best){best=count;at=k;options=mask;}}\n if(at==-1)return true;while(options){int bit=options&-options;options-=bit;a[at]=__builtin_ctz((unsigned)bit)+1;rows[at/9]|=bit;cols[at%9]|=bit;boxes[box(at)]|=bit;\n  if(solve())return true;rows[at/9]^=bit;cols[at%9]^=bit;boxes[box(at)]^=bit;a[at]=0;}return false;}\nint main(){int t;cin>>t;while(t--){fill(rows,rows+9,0);fill(cols,cols+9,0);fill(boxes,boxes+9,0);bool valid=true;\n for(int k=0;k<81;k++){cin>>a[k];if(a[k]){int bit=1<<(a[k]-1);if((rows[k/9]|cols[k%9]|boxes[box(k)])&bit)valid=false;rows[k/9]|=bit;cols[k%9]|=bit;boxes[box(k)]|=bit;}}\n if(valid&&solve()){for(int k=0;k<81;k++)cout<<a[k]<<(k%9==8?\"\\n\":\" \");}else cout<<\"NO\\n\";}}\n"
+    },
+    {
+      "tag": "correct",
+      "label": "Alternative legal output order, deliberately different from the canonical stored answer.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint a[81],rows[9],cols[9],boxes[9];\nint box(int k){return (k/9/3)*3+(k%9/3);}\nbool solve(){int at=-1,options=0,best=10;for(int k=0;k<81;k++)if(!a[k]){int mask=511&~(rows[k/9]|cols[k%9]|boxes[box(k)]);int count=__builtin_popcount((unsigned)mask);if(count<best){best=count;at=k;options=mask;}}\n if(at==-1)return true;while(options){int bit=1<<(31-__builtin_clz((unsigned)options));options-=bit;a[at]=__builtin_ctz((unsigned)bit)+1;rows[at/9]|=bit;cols[at%9]|=bit;boxes[box(at)]|=bit;\n  if(solve())return true;rows[at/9]^=bit;cols[at%9]^=bit;boxes[box(at)]^=bit;a[at]=0;}return false;}\nint main(){int t;cin>>t;while(t--){fill(rows,rows+9,0);fill(cols,cols+9,0);fill(boxes,boxes+9,0);bool valid=true;\n for(int k=0;k<81;k++){cin>>a[k];if(a[k]){int bit=1<<(a[k]-1);if((rows[k/9]|cols[k%9]|boxes[box(k)])&bit)valid=false;rows[k/9]|=bit;cols[k%9]|=bit;boxes[box(k)]|=bit;}}\n if(valid&&solve()){for(int k=0;k<81;k++)cout<<a[k]<<(k%9==8?\"\\n\":\" \");}else cout<<\"NO\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Accepts a completely filled board even when its givens conflict.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint a[81],rows[9],cols[9],boxes[9];\nint box(int k){return (k/9/3)*3+(k%9/3);}\nbool solve(){int at=-1,options=0,best=10;for(int k=0;k<81;k++)if(!a[k]){int mask=511&~(rows[k/9]|cols[k%9]|boxes[box(k)]);int count=__builtin_popcount((unsigned)mask);if(count<best){best=count;at=k;options=mask;}}\n if(at==-1)return true;while(options){int bit=options&-options;options-=bit;a[at]=__builtin_ctz((unsigned)bit)+1;rows[at/9]|=bit;cols[at%9]|=bit;boxes[box(at)]|=bit;\n  if(solve())return true;rows[at/9]^=bit;cols[at%9]^=bit;boxes[box(at)]^=bit;a[at]=0;}return false;}\nint main(){int t;cin>>t;while(t--){fill(rows,rows+9,0);fill(cols,cols+9,0);fill(boxes,boxes+9,0);bool valid=true;\n for(int k=0;k<81;k++){cin>>a[k];if(a[k]){int bit=1<<(a[k]-1);if((rows[k/9]|cols[k%9]|boxes[box(k)])&bit)valid=true;rows[k/9]|=bit;cols[k%9]|=bit;boxes[box(k)]|=bit;}}\n if(valid&&solve()){for(int k=0;k<81;k++)cout<<a[k]<<(k%9==8?\"\\n\":\" \");}else cout<<\"NO\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Omits the 3x3-box rule when choosing digits.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint a[81],rows[9],cols[9],boxes[9];\nint box(int k){return (k/9/3)*3+(k%9/3);}\nbool solve(){int at=-1,options=0,best=10;for(int k=0;k<81;k++)if(!a[k]){int mask=511&~(rows[k/9]|cols[k%9]);int count=__builtin_popcount((unsigned)mask);if(count<best){best=count;at=k;options=mask;}}\n if(at==-1)return true;while(options){int bit=options&-options;options-=bit;a[at]=__builtin_ctz((unsigned)bit)+1;rows[at/9]|=bit;cols[at%9]|=bit;boxes[box(at)]|=bit;\n  if(solve())return true;rows[at/9]^=bit;cols[at%9]^=bit;boxes[box(at)]^=bit;a[at]=0;}return false;}\nint main(){int t;cin>>t;while(t--){fill(rows,rows+9,0);fill(cols,cols+9,0);fill(boxes,boxes+9,0);bool valid=true;\n for(int k=0;k<81;k++){cin>>a[k];if(a[k]){int bit=1<<(a[k]-1);if((rows[k/9]|cols[k%9]|boxes[box(k)])&bit)valid=false;rows[k/9]|=bit;cols[k%9]|=bit;boxes[box(k)]|=bit;}}\n if(valid&&solve()){for(int k=0;k<81;k++)cout<<a[k]<<(k%9==8?\"\\n\":\" \");}else cout<<\"NO\\n\";}}\n"
+    }
+  ]
+}

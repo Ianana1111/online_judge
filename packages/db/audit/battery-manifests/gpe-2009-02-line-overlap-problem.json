@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-2009-02-line-overlap-problem",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){string s;vector<pair<ll,int>>e;while(getline(cin,s)&&s!=\".\"){stringstream ss(s);ll a,b;if(ss>>a>>b){e.push_back({a,1});e.push_back({b,-1});}}\n sort(e.begin(),e.end());ll active=0,answer=0,previous=e.empty()?0:e[0].first;\n for(auto [position,delta]:e){answer+=(position-previous)*(active*(active-1)/2);active+=delta;previous=position;}\n cout<<answer<<\"\\n\";}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Computes union length instead of the sum of pairwise overlaps.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){string s;vector<pair<ll,int>>e;while(getline(cin,s)&&s!=\".\"){stringstream ss(s);ll a,b;if(ss>>a>>b){e.push_back({a,1});e.push_back({b,-1});}}\n sort(e.begin(),e.end());ll active=0,answer=0,previous=e.empty()?0:e[0].first;\n for(auto [position,delta]:e){answer+=(position-previous)*(active>0?1:0);active+=delta;previous=position;}\n cout<<answer<<\"\\n\";}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Narrows the potentially 64-bit total to a 32-bit result.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){string s;vector<pair<ll,int>>e;while(getline(cin,s)&&s!=\".\"){stringstream ss(s);ll a,b;if(ss>>a>>b){e.push_back({a,1});e.push_back({b,-1});}}\n sort(e.begin(),e.end());ll active=0,answer=0,previous=e.empty()?0:e[0].first;\n for(auto [position,delta]:e){answer+=(position-previous)*(active*(active-1)/2);active+=delta;previous=position;}\n cout<<static_cast<int>(answer)<<\"\\n\";}\n"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "gpe-22261-sorting-the-alphanumeric-list-in-comma-separated-value-forma",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nstring trim(string s){size_t a=s.find_first_not_of(' ');if(a==string::npos)return \"\";return s.substr(a,s.find_last_not_of(' ')-a+1);}\nvector<string>fields(string s){vector<string>v;size_t a=0;while(true){size_t b=s.find(',',a);v.push_back(trim(s.substr(a,b==string::npos?b:b-a)));if(b==string::npos)break;a=b+1;}return v;}\nbool compareRows(const string&a,const string&b){return fields(a)<fields(b);}\nint main(){string line;getline(cin,line);int n=stoi(line);vector<vector<string>>groups;vector<string>v;\n while(getline(cin,line)){if(!line.empty()&&line.back()=='\\r')line.pop_back();if(line.empty()){if(!v.empty()){groups.push_back(v);v.clear();}}else v.push_back(line);}if(!v.empty())groups.push_back(v);\n for(int i=0;i<n;i++){auto rows=groups[i];stable_sort(rows.begin(),rows.end(),compareRows);if(i)cout<<\"\\n\";for(const string&row:rows)cout<<row<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "correct",
+      "label": "Alternative legal output order, deliberately different from the canonical stored answer.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nstring trim(string s){size_t a=s.find_first_not_of(' ');if(a==string::npos)return \"\";return s.substr(a,s.find_last_not_of(' ')-a+1);}\nvector<string>fields(string s){vector<string>v;size_t a=0;while(true){size_t b=s.find(',',a);v.push_back(trim(s.substr(a,b==string::npos?b:b-a)));if(b==string::npos)break;a=b+1;}return v;}\nbool compareRows(const string&a,const string&b){auto x=fields(a),y=fields(b);return x==y?a>b:x<y;}\nint main(){string line;getline(cin,line);int n=stoi(line);vector<vector<string>>groups;vector<string>v;\n while(getline(cin,line)){if(!line.empty()&&line.back()=='\\r')line.pop_back();if(line.empty()){if(!v.empty()){groups.push_back(v);v.clear();}}else v.push_back(line);}if(!v.empty())groups.push_back(v);\n for(int i=0;i<n;i++){auto rows=groups[i];stable_sort(rows.begin(),rows.end(),compareRows);if(i)cout<<\"\\n\";for(const string&row:rows)cout<<row<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Sorts original row bytes, ignoring per-field whitespace and prefix ordering.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nstring trim(string s){size_t a=s.find_first_not_of(' ');if(a==string::npos)return \"\";return s.substr(a,s.find_last_not_of(' ')-a+1);}\nvector<string>fields(string s){vector<string>v;size_t a=0;while(true){size_t b=s.find(',',a);v.push_back(trim(s.substr(a,b==string::npos?b:b-a)));if(b==string::npos)break;a=b+1;}return v;}\nbool compareRows(const string&a,const string&b){return a<b;}\nint main(){string line;getline(cin,line);int n=stoi(line);vector<vector<string>>groups;vector<string>v;\n while(getline(cin,line)){if(!line.empty()&&line.back()=='\\r')line.pop_back();if(line.empty()){if(!v.empty()){groups.push_back(v);v.clear();}}else v.push_back(line);}if(!v.empty())groups.push_back(v);\n for(int i=0;i<n;i++){auto rows=groups[i];stable_sort(rows.begin(),rows.end(),compareRows);if(i)cout<<\"\\n\";for(const string&row:rows)cout<<row<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Trims output rows even though original spaces must be preserved.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nstring trim(string s){size_t a=s.find_first_not_of(' ');if(a==string::npos)return \"\";return s.substr(a,s.find_last_not_of(' ')-a+1);}\nvector<string>fields(string s){vector<string>v;size_t a=0;while(true){size_t b=s.find(',',a);v.push_back(trim(s.substr(a,b==string::npos?b:b-a)));if(b==string::npos)break;a=b+1;}return v;}\nbool compareRows(const string&a,const string&b){return fields(a)<fields(b);}\nint main(){string line;getline(cin,line);int n=stoi(line);vector<vector<string>>groups;vector<string>v;\n while(getline(cin,line)){if(!line.empty()&&line.back()=='\\r')line.pop_back();if(line.empty()){if(!v.empty()){groups.push_back(v);v.clear();}}else v.push_back(line);}if(!v.empty())groups.push_back(v);\n for(int i=0;i<n;i++){auto rows=groups[i];stable_sort(rows.begin(),rows.end(),compareRows);if(i)cout<<\"\\n\";for(const string&row:rows)cout<<trim(row)<<\"\\n\";}}\n"
+    }
+  ]
+}

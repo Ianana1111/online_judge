@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-2008-37-prefix-expression-evaluation",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nll parse(vector<string>&v,int &i){if(i==(int)v.size())throw 1;string s=v[i++];\n if(s.size()==1&&string(\"+-*/%\").find(s[0])!=string::npos){ll a=parse(v,i),b=parse(v,i);char c=s[0];if(c=='+')return a+b;if(c=='-')return a-b;if(c=='*')return a*b;if(!b)throw 1;return c=='/'?a/b:a%b;}\n if(s.empty()||!all_of(s.begin(),s.end(),[](char c){return isdigit((unsigned char)c);}))throw 1;return stoll(s);}\nint main(){string line;while(getline(cin,line)&&line!=\".\"){stringstream ss(line);vector<string>v;string s;while(ss>>s)v.push_back(s);try{int i=0;ll x=parse(v,i);if(i!=(int)v.size())throw 1;cout<<x<<\"\\n\";}catch(...){cout<<\"illegal\\n\";}}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Ignores trailing tokens after an otherwise complete expression.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nll parse(vector<string>&v,int &i){if(i==(int)v.size())throw 1;string s=v[i++];\n if(s.size()==1&&string(\"+-*/%\").find(s[0])!=string::npos){ll a=parse(v,i),b=parse(v,i);char c=s[0];if(c=='+')return a+b;if(c=='-')return a-b;if(c=='*')return a*b;if(!b)throw 1;return c=='/'?a/b:a%b;}\n if(s.empty()||!all_of(s.begin(),s.end(),[](char c){return isdigit((unsigned char)c);}))throw 1;return stoll(s);}\nint main(){string line;while(getline(cin,line)&&line!=\".\"){stringstream ss(line);vector<string>v;string s;while(ss>>s)v.push_back(s);try{int i=0;ll x=parse(v,i);cout<<x<<\"\\n\";}catch(...){cout<<\"illegal\\n\";}}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Reverses the operand order of subtraction.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nll parse(vector<string>&v,int &i){if(i==(int)v.size())throw 1;string s=v[i++];\n if(s.size()==1&&string(\"+-*/%\").find(s[0])!=string::npos){ll a=parse(v,i),b=parse(v,i);char c=s[0];if(c=='+')return a+b;if(c=='-')return b-a;if(c=='*')return a*b;if(!b)throw 1;return c=='/'?a/b:a%b;}\n if(s.empty()||!all_of(s.begin(),s.end(),[](char c){return isdigit((unsigned char)c);}))throw 1;return stoll(s);}\nint main(){string line;while(getline(cin,line)&&line!=\".\"){stringstream ss(line);vector<string>v;string s;while(ss>>s)v.push_back(s);try{int i=0;ll x=parse(v,i);if(i!=(int)v.size())throw 1;cout<<x<<\"\\n\";}catch(...){cout<<\"illegal\\n\";}}}\n"
+    }
+  ]
+}

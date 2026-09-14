@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-2009-24-unique-lines",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int t;cin>>t;while(t--){int n;cin>>n;vector<pair<ll,ll>>p(n);for(auto &v:p)cin>>v.first>>v.second;set<tuple<ll,ll,ll>>lines;\n for(int i=0;i<n;i++)for(int j=0;j<i;j++){auto [x,y]=p[i];auto [u,v]=p[j];ll a=v-y,b=x-u,c=-(a*x+b*y);ll g=gcd(gcd(abs(a),abs(b)),abs(c));a/=g;b/=g;c/=g;\n  if(a<0||(a==0&&b<0)){a=-a;b=-b;c=-c;}lines.insert({a,b,c});}\n cout<<lines.size()<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Merges distinct parallel lines by retaining only their direction.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int t;cin>>t;while(t--){int n;cin>>n;vector<pair<ll,ll>>p(n);for(auto &v:p)cin>>v.first>>v.second;set<tuple<ll,ll,ll>>lines;\n for(int i=0;i<n;i++)for(int j=0;j<i;j++){auto [x,y]=p[i];auto [u,v]=p[j];ll a=v-y,b=x-u,c=-(a*x+b*y);ll g=gcd(gcd(abs(a),abs(b)),abs(c));a/=g;b/=g;c/=g;\n  if(a<0||(a==0&&b<0)){a=-a;b=-b;c=-c;}ll d=gcd(abs(a),abs(b));lines.insert({a/d,b/d,0});}\n cout<<lines.size()<<\"\\n\";}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Fails to normalize proportional line equations.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nint main(){int t;cin>>t;while(t--){int n;cin>>n;vector<pair<ll,ll>>p(n);for(auto &v:p)cin>>v.first>>v.second;set<tuple<ll,ll,ll>>lines;\n for(int i=0;i<n;i++)for(int j=0;j<i;j++){auto [x,y]=p[i];auto [u,v]=p[j];ll a=v-y,b=x-u,c=-(a*x+b*y);ll g=gcd(gcd(abs(a),abs(b)),abs(c));(void)g;\n  if(a<0||(a==0&&b<0)){a=-a;b=-b;c=-c;}lines.insert({a,b,c});}\n cout<<lines.size()<<\"\\n\";}}\n"
+    }
+  ]
+}

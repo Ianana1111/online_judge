@@ -1,0 +1,25 @@
+{
+  "slug": "gpe-2008-06-parser-and-evaluator",
+  "uvaId": null,
+  "authoredAt": "2026-09-15T00:00:00.000Z",
+  "candidates": [
+    {
+      "tag": "correct",
+      "label": "Independent C++ reference; Python oracle and official sample checked separately.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nstruct Parser{\n string s;size_t pos=0;\n void spaces(){while(pos<s.size()&&isspace((unsigned char)s[pos]))pos++;}\n int priority(char c){if(c=='+'||c=='-')return 1;if(c=='*'||c=='/')return 2;if(c=='%')return 3;return -1;}\n ll atom(){spaces();if(pos==s.size())throw 1;char c=s[pos];\n  if(c=='+'||c=='-'){pos++;ll x=atom();return c=='-'?-x:x;}\n  if(c=='('){pos++;ll x=expr(1);spaces();if(pos==s.size()||s[pos++]!=')')throw 1;return x;}\n  if(!isdigit((unsigned char)c))throw 1;ll x=0;\n  while(pos<s.size()&&isdigit((unsigned char)s[pos]))x=x*10+s[pos++]-'0';return x;}\n ll expr(int minimum){ll a=atom();while(true){spaces();if(pos==s.size())break;char op=s[pos];int p=priority(op);if(p<minimum)break;pos++;ll b=expr(p+1);\n  if(op=='+')a+=b;else if(op=='-')a-=b;else if(op=='*')a*=b;\n  else{if(!b)throw 1;if(op=='/')a=a/b;else a=a%b;}}return a;}\n};\nint main(){string line;int n=0;while(getline(cin,line)){cout<<\"case \"<<++n<<\":\\n\";try{Parser p{line};ll x=p.expr(1);p.spaces();if(p.pos!=line.size())throw 1;cout<<x<<\"\\n\\n\";}catch(...){cout<<\"syntactically incorrect\\n\\n\";}}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Uses C precedence for remainder instead of the stated tighter precedence.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nstruct Parser{\n string s;size_t pos=0;\n void spaces(){while(pos<s.size()&&isspace((unsigned char)s[pos]))pos++;}\n int priority(char c){if(c=='+'||c=='-')return 1;if(c=='*'||c=='/')return 2;if(c=='%')return 2;return -1;}\n ll atom(){spaces();if(pos==s.size())throw 1;char c=s[pos];\n  if(c=='+'||c=='-'){pos++;ll x=atom();return c=='-'?-x:x;}\n  if(c=='('){pos++;ll x=expr(1);spaces();if(pos==s.size()||s[pos++]!=')')throw 1;return x;}\n  if(!isdigit((unsigned char)c))throw 1;ll x=0;\n  while(pos<s.size()&&isdigit((unsigned char)s[pos]))x=x*10+s[pos++]-'0';return x;}\n ll expr(int minimum){ll a=atom();while(true){spaces();if(pos==s.size())break;char op=s[pos];int p=priority(op);if(p<minimum)break;pos++;ll b=expr(p+1);\n  if(op=='+')a+=b;else if(op=='-')a-=b;else if(op=='*')a*=b;\n  else{if(!b)throw 1;if(op=='/')a=a/b;else a=a%b;}}return a;}\n};\nint main(){string line;int n=0;while(getline(cin,line)){cout<<\"case \"<<++n<<\":\\n\";try{Parser p{line};ll x=p.expr(1);p.spaces();if(p.pos!=line.size())throw 1;cout<<x<<\"\\n\\n\";}catch(...){cout<<\"syntactically incorrect\\n\\n\";}}}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Rounds negative quotients downward instead of truncating toward zero.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nstring decimal(unsigned __int128 n){if(!n)return \"0\";string s;while(n){s+=char('0'+n%10);n/=10;}reverse(s.begin(),s.end());return s;}\n\nstruct Parser{\n string s;size_t pos=0;\n void spaces(){while(pos<s.size()&&isspace((unsigned char)s[pos]))pos++;}\n int priority(char c){if(c=='+'||c=='-')return 1;if(c=='*'||c=='/')return 2;if(c=='%')return 3;return -1;}\n ll atom(){spaces();if(pos==s.size())throw 1;char c=s[pos];\n  if(c=='+'||c=='-'){pos++;ll x=atom();return c=='-'?-x:x;}\n  if(c=='('){pos++;ll x=expr(1);spaces();if(pos==s.size()||s[pos++]!=')')throw 1;return x;}\n  if(!isdigit((unsigned char)c))throw 1;ll x=0;\n  while(pos<s.size()&&isdigit((unsigned char)s[pos]))x=x*10+s[pos++]-'0';return x;}\n ll expr(int minimum){ll a=atom();while(true){spaces();if(pos==s.size())break;char op=s[pos];int p=priority(op);if(p<minimum)break;pos++;ll b=expr(p+1);\n  if(op=='+')a+=b;else if(op=='-')a-=b;else if(op=='*')a*=b;\n  else{if(!b)throw 1;if(op=='/')a=a/b-((a%b!=0)&&((a<0)!=(b<0)));else a=a%b;}}return a;}\n};\nint main(){string line;int n=0;while(getline(cin,line)){cout<<\"case \"<<++n<<\":\\n\";try{Parser p{line};ll x=p.expr(1);p.spaces();if(p.pos!=line.size())throw 1;cout<<x<<\"\\n\\n\";}catch(...){cout<<\"syntactically incorrect\\n\\n\";}}}\n"
+    }
+  ]
+}
