@@ -3,6 +3,7 @@ import { batch2Dictionary } from "./dict/batch2";
 import { batch3Dictionary } from "./dict/batch3";
 import { batch4Dictionary } from "./dict/batch4";
 import { batch5Dictionary } from "./dict/batch5";
+import { billingLaunchDictionary } from "./dict/billingLaunch";
 
 /**
  * A handful of English strings turned out to be used in more than one place with genuinely
@@ -190,6 +191,7 @@ export const dictionary: Record<string, string> = {
   ...batch3Dictionary,
   ...batch4Dictionary,
   ...batch5Dictionary,
+  ...billingLaunchDictionary,
 
   // --- conflict resolutions (must stay last so they win) ---
   "This problem uses a special comparison. Submit to check the result.": "這題會檢查數值誤差或答案是否符合題意，請正式提交以取得判定。",

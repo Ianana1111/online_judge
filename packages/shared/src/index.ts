@@ -2,6 +2,7 @@ export * from "./verdicts.js";
 export * from "./schemas.js";
 export * from "./queue.js";
 export * from "./billing.js";
+export * from "./billingPricing.js";
 export * from "./billingPolicy.js";
 export * from "./scoring.js";
 export * from "./judge.js";
