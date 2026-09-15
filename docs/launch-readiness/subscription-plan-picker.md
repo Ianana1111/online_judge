@@ -1,5 +1,11 @@
 # Monthly and annual Pro selection
 
+## Visual revision
+
+The owner requested a cleaner design inspired by the official [Claude pricing page](https://claude.com/pricing) and [OpenAI pricing page](https://chatgpt.com/zh-Hant/pricing/), visually reviewed on September 15. The revised layout uses neutral surfaces, a compact month/year selector, prominent prices, and primary actions above the feature lists. Light mode uses white cards, dark mode uses low-chroma surfaces, and the checkout shares the same styles. The Pro card keeps priority on mobile; normal page scrolling replaces nested scrolling. No competitor branding or assets are copied. The NT$350 anchor remains absent because it is not an actual offered price; annual comparison uses the real NT$2,400 monthly total.
+
+Revision validation: typecheck, lint and production web build passed; four desktop/mobile light/dark preview workflows and all **50 production-mode browser tests** passed. The screenshots were visually reviewed. Latest log: `/private/tmp/oj-pricing-design-production.log`; screenshots: `/private/tmp/oj-pricing-design-production/`. These checks use mocked payment flows and do not certify deployment or real settlement.
+
 Current product decision: NT$200/month or NT$2,000/year, with no launch deadline. No NT$350 price is approved for actual collection, so it is not shown as a comparison price. Keep all three optional campaign environment variables empty. Production already returns these ongoing prices with `pricingVersion: legacy-v1` and `promo: null`; this change does not alter charges or add a migration.
 
 ## User experience

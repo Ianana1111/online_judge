@@ -14,11 +14,12 @@ import { useT } from "@/lib/i18n/LocaleContext";
 import { useFocusTrap } from "@/lib/useFocusTrap";
 import type { BillingPeriod } from "@oj/shared";
 import { BillingPeriodPicker, BillingPriceDetails } from "@/components/BillingPeriodPicker";
+import pricingStyles from "@/components/PricingDesign.module.css";
 
 function Check({ children }: { children: React.ReactNode }) {
   return (
-    <li className="flex items-start gap-1.5 text-xs text-ink-200 sm:text-sm">
-      <svg width="14" height="14" viewBox="0 0 16 16" className="mt-0.5 shrink-0 text-verdict-ac" fill="none">
+    <li className="flex items-start gap-2.5 text-sm leading-relaxed text-ink-200">
+      <svg width="14" height="14" viewBox="0 0 16 16" className="mt-1 shrink-0 text-ink-400" fill="none">
         <path d="M3 8.5l3 3 7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
       {children}
@@ -283,16 +284,17 @@ export default function UpgradePlanPage() {
     // NavBar renders nothing on /upgrade* (see NavBar's own check) and Footer does the same (see
     // Footer's own check) — so unlike every other page, there's no 56px navbar to subtract here,
     // only <main>'s own py-6 (3rem, top+bottom).
-    <div className="mx-auto flex h-[calc(100vh-3rem)] max-w-4xl flex-col overflow-y-auto px-6 py-4">
+    <div className="mx-auto flex min-h-[calc(100svh-3rem)] max-w-5xl flex-col px-5 py-4 sm:px-8">
       <div className="shrink-0">
         <BackButton />
       </div>
 
-      <div className="flex flex-1 flex-col items-center justify-center py-2">
-        <div className="w-full max-w-3xl space-y-4">
-          <div className="text-center">
-            <h1 className="font-display text-xl font-bold text-ink-50 sm:text-2xl">{t("Upgrade your plan")}</h1>
-            <p className="mt-1 text-xs text-ink-400 sm:text-sm">
+      <div className="flex flex-1 flex-col items-center py-10 sm:py-14">
+        <div className="w-full max-w-[820px] space-y-7">
+          <div className="pb-2 text-center">
+            <p className="mb-3 text-xs font-medium tracking-[0.18em] text-ink-400">JUDGE. PRO</p>
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-ink-50 sm:text-4xl">{t("Upgrade your plan")}</h1>
+            <p className="mt-3 text-sm leading-relaxed text-ink-400">
               {t("Build your practice habit. Choose the pace that works for you.")}
             </p>
           </div>
@@ -315,28 +317,19 @@ export default function UpgradePlanPage() {
 
           {!isPro && !notApplicable && promo && <LaunchOffer promo={promo} />}
           {(!user || (user && !notApplicable && !isLoading)) && (
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="oj-card order-2 flex flex-col p-4 sm:order-1 sm:p-5">
-                <h2 className="font-display text-base font-semibold text-ink-100 sm:text-lg">{t("Free")}</h2>
-                <p className="mt-1 text-2xl font-bold text-ink-50 sm:text-3xl">
-                  NT$0<span className="text-xs font-normal text-ink-400 sm:text-sm"> {t("forever")}</span>
-                </p>
-                <ul className="mt-3 flex-1 space-y-1.5 sm:mt-4 sm:space-y-2">
-                  <Check>
-                    {status
-                      ? t("{used}/{limit} submissions this month", { used: status.submits.used, limit: status.submits.limit ?? 0 })
-                      : t("10 submissions / month")}
-                  </Check>
-                  <Check>
-                    {status
-                      ? t("{used}/{limit} virtual CPE/GPE contests this month", {
-                          used: status.virtualContests.used,
-                          limit: status.virtualContests.limit ?? 0,
-                        })
-                      : t("1 self-run virtual CPE/GPE contest / month")}
-                  </Check>
-                  <Check>{t("Full access to discussions & leaderboard")}</Check>
-                </ul>
+            <div className="grid items-start gap-5 sm:grid-cols-2">
+              <div className={`${pricingStyles.surface} order-2 flex flex-col p-6 sm:order-1 sm:p-7`}>
+                <h2 className="font-display text-2xl font-semibold tracking-tight text-ink-50">{t("Free")}</h2>
+                <p className="mb-6 mt-2 text-sm text-ink-400">{t("Start with everyday practice.")}</p>
+                <p className="flex min-h-[46px] items-center text-xs text-ink-400">{t("No credit card required")}</p>
+                <div className="min-h-[156px] py-5">
+                  <p className="text-xs leading-5 text-ink-400">{t("Free to get started")}</p>
+                  <p className="mt-1 flex items-baseline gap-1.5">
+                    <span className="font-display text-[44px] font-semibold leading-tight tracking-[-0.04em] text-ink-50">NT$0</span>
+                    <span className="text-sm text-ink-400">/ {t("forever")}</span>
+                  </p>
+                  <p className="mt-2 text-xs leading-relaxed text-ink-300">{t("Practice, explore, and find your rhythm.")}</p>
+                </div>
                 {isPro && status?.subscription ? (
                   <p className="mt-4 text-center text-[11px] text-ink-500">
                     {t("Manage your subscription from the Pro card →")}
@@ -356,7 +349,7 @@ export default function UpgradePlanPage() {
                           setCancelError(null);
                           setShowCancelConfirm(true);
                         }}
-                        className="oj-btn-secondary mt-4 w-full py-2 text-sm"
+                        className="oj-btn-secondary w-full rounded-[10px] py-3 text-sm"
                       >
                         {t("Downgrade to Free Plan")}
                       </button>
@@ -371,22 +364,38 @@ export default function UpgradePlanPage() {
                   <button
                     type="button"
                     onClick={() => router.push("/")}
-                    className="oj-btn-secondary mt-4 w-full py-2 text-sm"
+                    className="oj-btn-secondary w-full rounded-[10px] py-3 text-sm"
                     disabled={!user}
                   >
                     {t("Stay on Free Plan")}
                   </button>
                 )}
+                <ul className="mt-6 space-y-3 border-t border-ink-700/70 pt-6">
+                  <Check>
+                    {status
+                      ? t("{used}/{limit} submissions this month", { used: status.submits.used, limit: status.submits.limit ?? 0 })
+                      : t("10 submissions / month")}
+                  </Check>
+                  <Check>
+                    {status
+                      ? t("{used}/{limit} virtual CPE/GPE contests this month", {
+                          used: status.virtualContests.used,
+                          limit: status.virtualContests.limit ?? 0,
+                        })
+                      : t("1 self-run virtual CPE/GPE contest / month")}
+                  </Check>
+                  <Check>{t("Full access to discussions & leaderboard")}</Check>
+                </ul>
               </div>
 
-              <div className="oj-card relative order-1 flex flex-col border-brand/50 bg-gradient-to-b from-brand/10 via-transparent to-transparent p-4 sm:order-2 sm:p-5">
+              <div className={`${pricingStyles.surface} ${pricingStyles.featured} relative order-1 flex flex-col p-6 sm:order-2 sm:p-7`}>
                 {!isPro && promo && (
                   <span className="absolute -top-2.5 right-4 rounded-full bg-verdict-wa px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-onbrand">
                     {t("Launch month offer")}
                   </span>
                 )}
-                <h2 className="font-display text-base font-semibold text-brand sm:text-lg">Pro</h2>
-                {!status?.subscription && <p className="mb-4 mt-1 text-xs text-ink-300">{t("More practice. More possibilities.")}</p>}
+                <h2 className="font-display text-2xl font-semibold tracking-tight text-ink-50">Pro</h2>
+                {!status?.subscription && <p className="mb-6 mt-2 text-sm text-ink-400">{t("For focused, consistent practice.")}</p>}
                 {isPro && status?.subscription ? (
                   <>
                     <p className="mt-1 text-2xl font-bold text-ink-50 sm:text-3xl">
@@ -421,20 +430,6 @@ export default function UpgradePlanPage() {
                     <BillingPriceDetails period={period} prices={plans.effectivePricing} />
                   </>
                 )}
-                {/* Not a feature — a reassurance about the price itself (effectively a first-month
-                    trial), so it sits with the price rather than in the checklist below. Only
-                    relevant before subscribing; an existing subscriber manages this from the
-                    "Not what you expected?" refund link further down instead. */}
-                {!isPro && (
-                  <p className="mt-1 text-[11px] text-ink-500">{t("Request a full refund within 7 days of your first payment")}</p>
-                )}
-                <ul className="mt-3 flex-1 space-y-1.5 sm:mt-4 sm:space-y-2">
-                  <Check>{t("Unlimited submissions")}</Check>
-                  <Check>{t("Unlimited self-run virtual CPE/GPE contests")}</Check>
-                  <Check>{t("See & sort by past CPE/GPE appearance count")}</Check>
-                  <Check>{t("Full access to discussions & leaderboard")}</Check>
-                  <Check>{t("Priority support")}</Check>
-                </ul>
                 {isPro && status?.subscription ? (
                   <>
                     <button
@@ -443,7 +438,7 @@ export default function UpgradePlanPage() {
                         setUnsubscribeError(null);
                         setShowUnsubscribeConfirm(true);
                       }}
-                      className="oj-btn-secondary mt-4 w-full py-2 text-sm"
+                      className="oj-btn-secondary w-full rounded-[10px] py-3 text-sm"
                     >
                       {t("Unsubscribe")}
                     </button>
@@ -458,12 +453,20 @@ export default function UpgradePlanPage() {
                   <button
                     type="button"
                     onClick={() => router.push(`/upgrade/checkout?period=${period}`)}
-                    className="oj-btn-primary mt-4 w-full py-2 text-sm"
+                    className={`${pricingStyles.primary} w-full py-3 text-sm`}
                     disabled={!user || !plans}
                   >
                     {isPro ? t("Extend Pro Plan") : t("Get Pro Plan")}
                   </button>
                 )}
+                {!isPro && <p className="mt-3 text-center text-[11px] leading-relaxed text-ink-400">{t("Request a full refund within 7 days of your first payment")}</p>}
+                <ul className="mt-6 space-y-3 border-t border-ink-700/70 pt-6">
+                  <Check>{t("Unlimited submissions")}</Check>
+                  <Check>{t("Unlimited self-run virtual CPE/GPE contests")}</Check>
+                  <Check>{t("See & sort by past CPE/GPE appearance count")}</Check>
+                  <Check>{t("Full access to discussions & leaderboard")}</Check>
+                  <Check>{t("Priority support")}</Check>
+                </ul>
                     {status?.refundEligibleUntil && (
                       <button
                         type="button"
@@ -488,6 +491,10 @@ export default function UpgradePlanPage() {
               </div>
             </div>
           )}
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink-400">
+            <Link href="/faq" className="underline-offset-4 hover:underline">{t("Billing questions")}</Link>
+            <Link href="/refund" className="underline-offset-4 hover:underline">{t("Refund & subscription policy")}</Link>
+          </div>
         </div>
       </div>
 

@@ -1,4 +1,12 @@
 export const billingLaunchDictionary: Record<string, string> = {
+  "Save NT${amount}": "省 NT${amount}",
+  "Start with everyday practice.": "從日常練習開始。",
+  "No credit card required": "免費使用，無需信用卡",
+  "Free to get started": "你的第一步，從這裡開始",
+  "Practice, explore, and find your rhythm.": "探索題目，找到適合自己的練習節奏。",
+  "For focused, consistent practice.": "給想持續練習、專注進步的你。",
+  "Billing questions": "訂閱常見問題",
+  "Refund & subscription policy": "退款與訂閱政策",
   "Retry": "重試",
   "Monthly subscription": "月訂閱",
   "Annual subscription": "年訂閱",
