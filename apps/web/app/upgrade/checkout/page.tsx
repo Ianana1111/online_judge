@@ -12,6 +12,7 @@ import { useBillingPlans } from "@/lib/useBillingPlans";
 import { LaunchOffer, LaunchPriceLocked, PricingUnavailable } from "@/components/LaunchOffer";
 import { useT } from "@/lib/i18n/LocaleContext";
 import { BillingPeriodPicker, BillingPriceDetails } from "@/components/BillingPeriodPicker";
+import pricingStyles from "@/components/PricingDesign.module.css";
 
 type Period = "MONTHLY" | "YEARLY";
 
@@ -131,15 +132,15 @@ function CheckoutPage() {
     // NavBar renders nothing on /upgrade* (see NavBar's own check) and Footer does the same (see
     // Footer's own check) — so unlike every other page, there's no 56px navbar to subtract here,
     // only <main>'s own py-6 (3rem, top+bottom).
-    <div className="mx-auto flex h-[calc(100vh-3rem)] max-w-4xl flex-col overflow-y-auto px-6 py-4">
+    <div className="mx-auto flex min-h-[calc(100svh-3rem)] max-w-4xl flex-col px-5 py-4 sm:px-8">
       <div className="shrink-0">
         <BackButton fallbackHref="/upgrade" />
       </div>
 
-      <div className="flex flex-1 flex-col justify-center py-4">
-        <div className="w-full space-y-4">
+      <div className="flex flex-1 flex-col py-10 sm:py-14">
+        <div className="w-full space-y-7">
           <div>
-            <h1 className="font-display text-xl font-bold text-ink-50 sm:text-2xl">{t("Subscribe to Pro")}</h1>
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-ink-50">{t("Subscribe to Pro")}</h1>
             <p className="mt-1 text-xs text-ink-400 sm:text-sm">{t("Unlimited submissions and virtual contests, billed however suits you.")}</p>
           </div>
 
@@ -227,7 +228,7 @@ function CheckoutPage() {
                   </div>
                 )}
 
-                <div className="oj-card p-4">
+                <div className={`${pricingStyles.surface} p-5 sm:p-6`}>
                   <BillingPeriodPicker period={period} prices={plans.effectivePricing} disabled={ecpayLoading} onChange={(next) => {
                     setAgreedQuote(null);
                     router.replace(`/upgrade/checkout?period=${next}`, { scroll: false });
@@ -235,7 +236,7 @@ function CheckoutPage() {
                   <BillingPriceDetails period={period} prices={plans.effectivePricing} />
                 </div>
 
-                <div className="oj-card flex items-start gap-2.5 p-2.5">
+                <div className="flex items-start gap-2.5 px-1 py-2">
                   <span className="mt-0.5 text-lg leading-none">💳</span>
                   <span>
                     <span className="block text-sm font-semibold text-ink-50">{t("Credit / Debit Card")}</span>
@@ -249,7 +250,7 @@ function CheckoutPage() {
               </div>
 
               <div className="mt-4 sm:col-span-2 sm:mt-0">
-                <div className="oj-card space-y-3 p-4">
+                <div className={`${pricingStyles.surface} space-y-4 p-5 sm:p-6`}>
                   <div>
                     <p className="font-display text-sm font-semibold text-ink-50">{t("Order summary")}</p>
                     <div className="mt-2 flex items-baseline justify-between text-sm">
@@ -284,7 +285,7 @@ function CheckoutPage() {
 
                   {ecpayError && <p role="alert" className="text-sm text-verdict-wa">{ecpayError}</p>}
 
-                  <button onClick={startEcpay} disabled={ecpayLoading || !agreed} className="oj-btn-primary w-full py-2.5">
+                  <button onClick={startEcpay} disabled={ecpayLoading || !agreed} className={`${pricingStyles.primary} w-full py-3 text-sm`}>
                     {ecpayLoading ? (
                       <span className="inline-flex items-center gap-2">
                         <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
