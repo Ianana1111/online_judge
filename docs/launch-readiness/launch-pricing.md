@@ -1,6 +1,6 @@
 # Pro launch pricing and renewal protection
 
-Status: implemented; production campaign dates and the post-offer annual price await the owner's decision. An unset campaign preserves the existing NT$200/month and NT$2,000/year without advertising a launch discount. Test dates are fixtures, not an approved launch schedule.
+Historical implementation record. The owner has since chosen ongoing NT$200/month and NT$2,000/year pricing, with no launch deadline or future NT$350 price. See [the current plan-picker implementation](subscription-plan-picker.md). Leave campaign configuration empty; no dates or post-offer annual price are awaiting approval. The versioned quote and saved renewal safeguards remain useful. The campaign rules and activation procedure below are archived, not the current rollout plan.
 
 ## Customer terms
 
@@ -11,7 +11,7 @@ Status: implemented; production campaign dates and the post-offer annual price a
 - Gateway payment retries do not change the saved amount. Gateway-terminated subscriptions need operator reconciliation. This change does not implement card replacement or gateway subscription-status synchronization.
 - The public launch advertisement expires. Qualified active subscribers continue to see their saved amount and launch price-lock badge. Existing legacy subscriptions also retain their amount, without being relabelled as launch purchases.
 
-## Activation
+## Archived campaign activation procedure — not applicable to current pricing
 
 Set all three API variables together only after the owner confirms them:
 

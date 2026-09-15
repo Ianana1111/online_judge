@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
@@ -11,15 +11,21 @@ import type { BillingStatus } from "@/lib/types";
 import { useBillingPlans } from "@/lib/useBillingPlans";
 import { LaunchOffer, LaunchPriceLocked, PricingUnavailable } from "@/components/LaunchOffer";
 import { useT } from "@/lib/i18n/LocaleContext";
+import { BillingPeriodPicker, BillingPriceDetails } from "@/components/BillingPeriodPicker";
 
 type Period = "MONTHLY" | "YEARLY";
 
-export default function CheckoutPage() {
+export default function CheckoutRoute() {
+  const t = useT();
+  return <Suspense fallback={<p role="status" className="p-6 text-sm text-ink-300">{t("Loading…")}</p>}><CheckoutPage /></Suspense>;
+}
+
+function CheckoutPage() {
   const t = useT();
   const router = useRouter();
   const qc = useQueryClient();
   const { user, status: authStatus } = useAuthStore();
-  const [period, setPeriod] = useState<Period>("MONTHLY");
+  const period: Period = useSearchParams().get("period") === "YEARLY" ? "YEARLY" : "MONTHLY";
   const [ecpayError, setEcpayError] = useState<string | null>(null);
   const [ecpayLoading, setEcpayLoading] = useState(false);
   const [dismissing, setDismissing] = useState(false);
@@ -66,11 +72,7 @@ export default function CheckoutPage() {
   const pending = status?.pendingPayment;
 
   const amount = plans?.effectivePricing[period];
-  const monthlyListPrice = plans?.pricing.MONTHLY.amountNtd;
-  const monthlyNowPrice = plans?.effectivePricing.MONTHLY;
-  const yearlyPrice = plans?.effectivePricing.YEARLY;
   const promo = plans?.promo;
-  const yearlySavingsPct = monthlyNowPrice && yearlyPrice ? Math.floor((1 - yearlyPrice / (monthlyNowPrice * 12)) * 100) : 0;
   const quoteKey = plans ? `${plans.pricingVersion}/${period}/${amount}` : null;
   const agreed = quoteKey !== null && agreedQuote === quoteKey;
 
@@ -225,41 +227,12 @@ export default function CheckoutPage() {
                   </div>
                 )}
 
-                <div>
-                  <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-ink-400">{t("Billing period")}</p>
-                  <div className="grid grid-cols-2 gap-2.5">
-                    <button
-                      type="button"
-                      aria-pressed={period === "MONTHLY"}
-                      onClick={() => setPeriod("MONTHLY")}
-                      className={`oj-card p-2.5 text-left transition-colors ${period === "MONTHLY" ? "border-brand" : "hover:border-ink-500"}`}
-                    >
-                      <p className="text-sm font-semibold text-ink-50">{t("Monthly")}</p>
-                      {promo ? (
-                        <p className="mt-0.5 text-xs text-ink-400">
-                          <span className="block">{t("After offer")}: <s>NT${monthlyListPrice}</s></span>
-                          <span className="mt-1 block font-semibold text-ink-100">{t("NT${amount} / mo", { amount: monthlyNowPrice! })}</span>
-                        </p>
-                      ) : (
-                        <p className="mt-0.5 text-xs text-ink-400">{t("NT${amount} / mo", { amount: monthlyNowPrice! })}</p>
-                      )}
-                    </button>
-                    <button
-                      type="button"
-                      aria-pressed={period === "YEARLY"}
-                      onClick={() => setPeriod("YEARLY")}
-                      className={`oj-card relative p-2.5 text-left transition-colors ${period === "YEARLY" ? "border-brand" : "hover:border-ink-500"}`}
-                    >
-                      {yearlySavingsPct > 0 && (
-                        <span className="absolute -top-2 right-2 rounded-full bg-verdict-ac px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-onbrand">
-                          {t("{pct}% less than monthly", { pct: yearlySavingsPct })}
-                        </span>
-                      )}
-                      <p className="text-sm font-semibold text-ink-50">{t("Yearly")}</p>
-                      {promo && plans.pricing.YEARLY.amountNtd > yearlyPrice! && <p className="mt-0.5 text-xs text-ink-400">{t("After offer")}: <s>NT${plans.pricing.YEARLY.amountNtd.toLocaleString()}</s></p>}
-                      <p className="mt-0.5 text-xs font-semibold text-ink-100">{t("NT${amount} / yr", { amount: yearlyPrice!.toLocaleString() })}</p>
-                    </button>
-                  </div>
+                <div className="oj-card p-4">
+                  <BillingPeriodPicker period={period} prices={plans.effectivePricing} disabled={ecpayLoading} onChange={(next) => {
+                    setAgreedQuote(null);
+                    router.replace(`/upgrade/checkout?period=${next}`, { scroll: false });
+                  }} />
+                  <BillingPriceDetails period={period} prices={plans.effectivePricing} />
                 </div>
 
                 <div className="oj-card flex items-start gap-2.5 p-2.5">
