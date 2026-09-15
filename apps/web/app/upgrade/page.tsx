@@ -12,6 +12,8 @@ import { useBillingPlans } from "@/lib/useBillingPlans";
 import { LaunchOffer, LaunchPriceLocked, PricingUnavailable } from "@/components/LaunchOffer";
 import { useT } from "@/lib/i18n/LocaleContext";
 import { useFocusTrap } from "@/lib/useFocusTrap";
+import type { BillingPeriod } from "@oj/shared";
+import { BillingPeriodPicker, BillingPriceDetails } from "@/components/BillingPeriodPicker";
 
 function Check({ children }: { children: React.ReactNode }) {
   return (
@@ -198,6 +200,7 @@ export default function UpgradePlanPage() {
   const t = useT();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [period, setPeriod] = useState<BillingPeriod>("MONTHLY");
   const { user, status: authStatus } = useAuthStore();
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [cancelling, setCancelling] = useState(false);
@@ -274,8 +277,6 @@ export default function UpgradePlanPage() {
   // them (mirrors NavBar's showUpgrade condition, since this page is reachable by direct URL too).
   const notApplicable = isAdmin || user?.isStudent;
 
-  const listPrice = plans?.pricing.MONTHLY.amountNtd;
-  const nowPrice = plans?.effectivePricing.MONTHLY;
   const promo = plans?.promo;
 
   return (
@@ -292,7 +293,7 @@ export default function UpgradePlanPage() {
           <div className="text-center">
             <h1 className="font-display text-xl font-bold text-ink-50 sm:text-2xl">{t("Upgrade your plan")}</h1>
             <p className="mt-1 text-xs text-ink-400 sm:text-sm">
-              {t("Score is difficulty-weighted and Pro removes every cap — pick the plan that fits how you practice.")}
+              {t("Build your practice habit. Choose the pace that works for you.")}
             </p>
           </div>
 
@@ -315,7 +316,7 @@ export default function UpgradePlanPage() {
           {!isPro && !notApplicable && promo && <LaunchOffer promo={promo} />}
           {(!user || (user && !notApplicable && !isLoading)) && (
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="oj-card flex flex-col p-4 sm:p-5">
+              <div className="oj-card order-2 flex flex-col p-4 sm:order-1 sm:p-5">
                 <h2 className="font-display text-base font-semibold text-ink-100 sm:text-lg">{t("Free")}</h2>
                 <p className="mt-1 text-2xl font-bold text-ink-50 sm:text-3xl">
                   NT$0<span className="text-xs font-normal text-ink-400 sm:text-sm"> {t("forever")}</span>
@@ -378,13 +379,14 @@ export default function UpgradePlanPage() {
                 )}
               </div>
 
-              <div className="oj-card relative flex flex-col border-brand/50 p-4 sm:p-5">
+              <div className="oj-card relative order-1 flex flex-col border-brand/50 bg-gradient-to-b from-brand/10 via-transparent to-transparent p-4 sm:order-2 sm:p-5">
                 {!isPro && promo && (
                   <span className="absolute -top-2.5 right-4 rounded-full bg-verdict-wa px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-onbrand">
                     {t("Launch month offer")}
                   </span>
                 )}
                 <h2 className="font-display text-base font-semibold text-brand sm:text-lg">Pro</h2>
+                {!status?.subscription && <p className="mb-4 mt-1 text-xs text-ink-300">{t("More practice. More possibilities.")}</p>}
                 {isPro && status?.subscription ? (
                   <>
                     <p className="mt-1 text-2xl font-bold text-ink-50 sm:text-3xl">
@@ -413,22 +415,11 @@ export default function UpgradePlanPage() {
                   </p>
                 ) : !plans ? (
                   <PricingUnavailable error={pricingError} retry={() => { void refreshPrices(); }} />
-                ) : promo ? (
-                  <div className="mt-2">
-                    <p className="flex flex-wrap items-baseline gap-2">
-                      <span className="text-xs text-ink-400">{t("Monthly price after the offer")} <s className="text-sm">NT${listPrice}</s></span>
-                      <span className="text-3xl font-bold text-ink-50 sm:text-4xl">
-                        NT${nowPrice}
-                        <span className="text-xs font-normal text-ink-400 sm:text-sm"> / {t("month")}</span>
-                      </span>
-                    </p>
-                    <p className="mt-1 text-xs text-ink-300">{t("Or NT${amount}/year", { amount: plans.effectivePricing.YEARLY.toLocaleString() })}</p>
-                  </div>
                 ) : (
-                  <p className="mt-1 text-2xl font-bold text-ink-50 sm:text-3xl">
-                    NT${nowPrice}
-                    <span className="text-xs font-normal text-ink-400 sm:text-sm"> / {t("month")}</span>
-                  </p>
+                  <>
+                    <BillingPeriodPicker period={period} prices={plans.effectivePricing} onChange={setPeriod} />
+                    <BillingPriceDetails period={period} prices={plans.effectivePricing} />
+                  </>
                 )}
                 {/* Not a feature — a reassurance about the price itself (effectively a first-month
                     trial), so it sits with the price rather than in the checklist below. Only
@@ -466,7 +457,7 @@ export default function UpgradePlanPage() {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => router.push("/upgrade/checkout")}
+                    onClick={() => router.push(`/upgrade/checkout?period=${period}`)}
                     className="oj-btn-primary mt-4 w-full py-2 text-sm"
                     disabled={!user || !plans}
                   >

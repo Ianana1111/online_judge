@@ -2,7 +2,7 @@
 
 **Latest status (September 15):** The [GPE recovery is deployed](deployment-20260915.md): 16 missing corpora, 69 new cases, and all 42 affected archive routes restored. The 114-archive lifecycle suite passes; 19 correct / 32 wrong Docker candidates and 10 actual production submissions produce expected verdicts. Read the [owner payment/mail acceptance and Apple Pay checklist](owner-acceptance.md) for remaining external acceptance. Earlier rollout evidence below is historical.
 
-The [Pro launch pricing implementation](launch-pricing.md) is a separate, not-yet-deployed change. Its campaign dates and post-offer annual price still require the owner's decision; current production prices remain unchanged.
+The owner has chosen ongoing NT$200/month and NT$2,000/year pricing without a launch deadline. The [subscription plan picker](subscription-plan-picker.md) replaces the proposed launch campaign presentation; the [earlier pricing implementation](launch-pricing.md) records the saved renewal and quote-validation safeguards. Keep campaign configuration empty.
 
 Execution record for the approved full-site plan. An unchecked gate is not a passed check. The owner authorized production deployment and a restricted local database backup; deployment and migrations completed on **2026-09-13**. See the [deployment and verification record](deployment-20260913.md). No real charge, refund, or email was performed by these deployment checks.
 
