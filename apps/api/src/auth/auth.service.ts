@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import type Redis from "ioredis";
 import { prisma } from "@oj/db";
 import type { LoginDto, RegisterDto } from "@oj/shared";
-import { isLaunchPromoActive, LAUNCH_PROMO } from "@oj/shared";
+import { currentBillingCatalog } from "../billing/pricing.config";
 import { generateCsrfToken } from "../common/csrf.util";
 import { REDIS_CLIENT } from "../common/redis.providers";
 import { isUnlimited } from "../billing/billing.service";
@@ -15,11 +15,14 @@ import { TokenService } from "./token.service";
  * account always sees the same launch-promo nudge in their notification bell, regardless of how
  * they signed up. No-ops once the promo window closes — never even shown after that. */
 async function notifyNewUserOfLaunchPromo(notifications: NotificationsService, userId: string): Promise<void> {
-  if (!isLaunchPromoActive()) return;
+  // A pricing configuration error must not prevent signup or Google login.
+  let promo;
+  try { promo = currentBillingCatalog().promo; } catch { return; }
+  if (!promo) return;
   await notifications.create(userId, {
     type: "promo",
-    title: `🎉 Launch month: ${LAUNCH_PROMO.discountPct}% off Pro`,
-    body: "judge.tw just launched — get Pro at half price for a limited time.",
+    title: "開幕首月，鎖定你的 Pro 優惠價",
+    body: `於 ${new Date(promo.endsAt).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hourCycle: "h23" })}（台北時間）前建立訂閱訂單，首筆付款成功後，持續續訂享月繳 NT$200 或年繳 NT$2,000。詳見方案頁。`,
     link: "/upgrade",
   });
 }

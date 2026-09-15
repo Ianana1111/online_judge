@@ -7,7 +7,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import BackButton from "@/components/BackButton";
-import type { BillingPlans, BillingStatus } from "@/lib/types";
+import type { BillingStatus } from "@/lib/types";
+import { useBillingPlans } from "@/lib/useBillingPlans";
+import { LaunchOffer, LaunchPriceLocked, PricingUnavailable } from "@/components/LaunchOffer";
 import { useT } from "@/lib/i18n/LocaleContext";
 import { useFocusTrap } from "@/lib/useFocusTrap";
 
@@ -134,12 +136,14 @@ function RequestRefundConfirmDialog({
 
 function UnsubscribeConfirmDialog({
   expiresLabel,
+  launchPriceLocked,
   submitting,
   error,
   onCancel,
   onConfirm,
 }: {
   expiresLabel: string | null;
+  launchPriceLocked: boolean;
   submitting: boolean;
   error: string | null;
   onCancel: () => void;
@@ -165,15 +169,17 @@ function UnsubscribeConfirmDialog({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
       role="dialog"
       aria-modal="true"
+      aria-labelledby="unsubscribe-title"
       onClick={onCancel}
     >
       <div ref={trapRef} tabIndex={-1} className="oj-card w-full max-w-sm p-5 outline-none" onClick={(e) => e.stopPropagation()}>
-        <h2 className="font-display text-base font-semibold text-ink-50">{t("Unsubscribe from Pro?")}</h2>
+        <h2 id="unsubscribe-title" className="font-display text-base font-semibold text-ink-50">{t("Unsubscribe from Pro?")}</h2>
         <p className="mt-2 text-sm text-ink-300">
           {expiresLabel
             ? t("Your card won't be charged again. You'll keep full Pro access until {date}, then switch to Free automatically.", { date: expiresLabel })
             : t("Your card won't be charged again. You'll keep full Pro access until your current period ends, then switch to Free automatically.")}
         </p>
+        {launchPriceLocked && <p className="mt-3 text-sm text-ink-200">{t("Cancelling ends your launch price lock. Your paid access remains until expiry; subscribing again uses the price available then.")}</p>}
         {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
         <div className="mt-5 flex justify-end gap-2">
           <button type="button" onClick={onCancel} className="oj-btn-secondary px-4 py-2 text-sm" disabled={submitting}>
@@ -208,19 +214,14 @@ export default function UpgradePlanPage() {
     queryFn: () => apiFetch<BillingStatus>("/billing/me"),
     enabled: !!user,
   });
-  const { data: plans } = useQuery({
-    queryKey: ["billing", "plans"],
-    queryFn: () => apiFetch<BillingPlans>("/billing/plans"),
-  });
+  const { data: plans, isError: pricingError, refetch: refreshPrices } = useBillingPlans();
 
   const isAdmin = user?.role === "ADMIN";
   const isPro = status?.plan === "PRO";
   const expiresLabel = status?.planExpiresAt ? new Date(status.planExpiresAt).toLocaleDateString() : null;
 
-  // There's no auto-renewal in this system — every ECPay/manual payment is a one-time purchase
-  // that extends planExpiresAt, never a recurring charge — so confirming doesn't touch plan/expiry
-  // at all; Pro already lapses back to Free on its own once planExpiresAt passes. The call only
-  // persists the user's choice so the UI keeps reflecting it across reloads.
+  // Legacy one-time grants expire naturally; this path only records downgrade intent.
+  // Recurring card subscriptions use confirmUnsubscribe to stop gateway charges instead.
   async function confirmCancel() {
     setCancelling(true);
     setCancelError(null);
@@ -273,8 +274,8 @@ export default function UpgradePlanPage() {
   // them (mirrors NavBar's showUpgrade condition, since this page is reachable by direct URL too).
   const notApplicable = isAdmin || user?.isStudent;
 
-  const listPrice = plans?.pricing.MONTHLY.amountNtd ?? 200;
-  const nowPrice = plans?.effectivePricing.MONTHLY ?? listPrice;
+  const listPrice = plans?.pricing.MONTHLY.amountNtd;
+  const nowPrice = plans?.effectivePricing.MONTHLY;
   const promo = plans?.promo;
 
   return (
@@ -311,6 +312,7 @@ export default function UpgradePlanPage() {
             </div>
           )}
 
+          {!isPro && !notApplicable && promo && <LaunchOffer promo={promo} />}
           {(!user || (user && !notApplicable && !isLoading)) && (
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="oj-card flex flex-col p-4 sm:p-5">
@@ -379,7 +381,7 @@ export default function UpgradePlanPage() {
               <div className="oj-card relative flex flex-col border-brand/50 p-4 sm:p-5">
                 {!isPro && promo && (
                   <span className="absolute -top-2.5 right-4 rounded-full bg-verdict-wa px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-onbrand">
-                    {t("{pct}% off — first month", { pct: promo.discountPct })}
+                    {t("Launch month offer")}
                   </span>
                 )}
                 <h2 className="font-display text-base font-semibold text-brand sm:text-lg">Pro</h2>
@@ -400,6 +402,7 @@ export default function UpgradePlanPage() {
                         ? t("Subscribed — renews on {date}", { date: new Date(status.subscription.nextChargeAt).toLocaleDateString(undefined, { timeZone: "Asia/Taipei" }) })
                         : t("Subscribed — renews automatically")}
                     </p>
+                    {status.subscription.launchPriceLocked && <LaunchPriceLocked />}
                   </>
                 ) : isPro ? (
                   <p className="mt-1 text-base font-semibold text-ink-50 sm:text-lg">
@@ -408,14 +411,19 @@ export default function UpgradePlanPage() {
                       <span className="block text-xs font-normal text-ink-400 sm:text-sm">{t("until {date}", { date: expiresLabel })}</span>
                     ) : null}
                   </p>
+                ) : !plans ? (
+                  <PricingUnavailable error={pricingError} retry={() => { void refreshPrices(); }} />
                 ) : promo ? (
-                  <p className="mt-1 flex items-baseline gap-2">
-                    <span className="text-sm font-normal text-ink-500 line-through">NT${listPrice}</span>
-                    <span className="text-2xl font-bold text-ink-50 sm:text-3xl">
-                      NT${nowPrice}
-                      <span className="text-xs font-normal text-ink-400 sm:text-sm"> / {t("month")}</span>
-                    </span>
-                  </p>
+                  <div className="mt-2">
+                    <p className="flex flex-wrap items-baseline gap-2">
+                      <span className="text-xs text-ink-400">{t("Monthly price after the offer")} <s className="text-sm">NT${listPrice}</s></span>
+                      <span className="text-3xl font-bold text-ink-50 sm:text-4xl">
+                        NT${nowPrice}
+                        <span className="text-xs font-normal text-ink-400 sm:text-sm"> / {t("month")}</span>
+                      </span>
+                    </p>
+                    <p className="mt-1 text-xs text-ink-300">{t("Or NT${amount}/year", { amount: plans.effectivePricing.YEARLY.toLocaleString() })}</p>
+                  </div>
                 ) : (
                   <p className="mt-1 text-2xl font-bold text-ink-50 sm:text-3xl">
                     NT${nowPrice}
@@ -460,7 +468,7 @@ export default function UpgradePlanPage() {
                     type="button"
                     onClick={() => router.push("/upgrade/checkout")}
                     className="oj-btn-primary mt-4 w-full py-2 text-sm"
-                    disabled={!user}
+                    disabled={!user || !plans}
                   >
                     {isPro ? t("Extend Pro Plan") : t("Get Pro Plan")}
                   </button>
@@ -504,6 +512,7 @@ export default function UpgradePlanPage() {
       {showUnsubscribeConfirm && (
         <UnsubscribeConfirmDialog
           expiresLabel={expiresLabel}
+          launchPriceLocked={!!status?.subscription?.launchPriceLocked}
           submitting={unsubscribing}
           error={unsubscribeError}
           onCancel={() => setShowUnsubscribeConfirm(false)}

@@ -1,9 +1,9 @@
 import { randomBytes } from "node:crypto";
-import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { prisma, Prisma } from "@oj/db";
 import type { User } from "@oj/db";
 import {
-  effectivePriceNtd,
+  hasLaunchPriceLock,
   billingCycleEnd,
   parseEcpayPaymentDate,
   refundDeadline,
@@ -14,6 +14,7 @@ import {
   PLAN_PRICING,
   type BillingPeriod,
   type AdminRefundListDto,
+  type EcpayCreateDto,
 } from "@oj/shared";
 import {
   cancelEcpayPeriod,
@@ -25,6 +26,7 @@ import {
   refundActions,
   verifyCheckMacValue,
 } from "./ecpay.util";
+import { currentBillingCatalog } from "./pricing.config";
 
 // ECPay has no "forever" recurring option — ExecTimes must be finite. These are the max values
 // ECPay allows for each PeriodType (999 for day/month, 99 for year), which is functionally
@@ -203,6 +205,7 @@ export class BillingService {
       refundEligibleUntil: !refundRequest ? refundablePayment?.refundDeadlineAt ?? null : null,
       refundRequest: refundRequest ? { id: refundRequest.id, status: refundRequest.status, requestedAt: refundRequest.requestedAt, completedAt: refundRequest.completedAt } : null,
       subscription: subscription ? { period: subscription.period, amountNtd: subscription.amountNtd,
+        launchPriceLocked: hasLaunchPriceLock(subscription.pricingVersion),
         nextChargeAt: firstCharge?.paidAt ? billingCycleEnd(firstCharge.paidAt, subscription.period, subscription.totalSuccessTimes) : null } : null,
       submits: { used: submitsUsedThisMonth, limit: unlimited ? null : FREE_SUBMIT_QUOTA },
       virtualContests: { used: virtualUsed, limit: unlimited ? null : FREE_VIRTUAL_ATTEMPTS },
@@ -264,7 +267,7 @@ export class BillingService {
         data: {
           userId,
           period,
-          amountNtd: effectivePriceNtd(period),
+          amountNtd: currentBillingCatalog().effectivePricing[period],
           status: "APPROVED",
           method: "ADMIN_GRANT",
           reference: "Manually granted by admin",
@@ -327,7 +330,7 @@ export class BillingService {
    * payment lifecycles for one product; removed rather than kept as unused flexibility.) Confirms
    * this first charge via the ReturnURL webhook (RtnCode "1" = paid); handleEcpayReturn spins up
    * the Subscription row there. */
-  async createEcpayOrder(userId: string, period: BillingPeriod) {
+  async createEcpayOrder(userId: string, period: BillingPeriod, quote?: Pick<EcpayCreateDto, "expectedAmountNtd" | "pricingVersion">) {
     const config = ecpayConfig();
     const apiPublicUrl = process.env.API_PUBLIC_URL || (process.env.RAILWAY_SERVICE_API_URL ? `https://${process.env.RAILWAY_SERVICE_API_URL}` : "http://localhost:4000");
     const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
@@ -335,11 +338,7 @@ export class BillingService {
       const url = new URL(value);
       return url.protocol !== "https:" || ["localhost", "127.0.0.1"].includes(url.hostname);
     })) throw new BadRequestException("Production checkout requires public HTTPS URLs");
-    // The amount that actually gets charged is always derived server-side (PLAN_PRICING plus
-    // any active launch promo via effectivePriceNtd), never trusted from the client — the client
-    // only chooses which of these two fixed plans.
     const pricing = PLAN_PRICING[period];
-    const amountNtd = effectivePriceNtd(period);
     const merchantTradeNo = generateMerchantTradeNo();
 
     // A Postgres advisory lock scoped to this user (namespaced separately from the unrelated
@@ -349,8 +348,20 @@ export class BillingService {
     // insert commits, producing two live payable orders for the same upgrade (and, worse, two
     // active recurring subscriptions on a double-click). See contests.service.ts's own use of this
     // pattern for the reference this mirrors.
-    await prisma.$transaction(async (tx) => {
+    const order = await prisma.$transaction(async (tx) => {
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('billing_order'), hashtext(${userId}))`;
+
+      // Evaluate AFTER acquiring the lock: a queued request may cross the deadline. The client
+      // must acknowledge these exact terms before we create any payable gateway order.
+      const createdAt = new Date();
+      const catalog = currentBillingCatalog(createdAt);
+      const amountNtd = catalog.effectivePricing[period];
+      // During an additive rollout, the old client still displays the unchanged legacy prices.
+      // Once any campaign is configured, every checkout must acknowledge the versioned terms.
+      const legacyClient = catalog.pricingVersion === "legacy-v1" && quote?.expectedAmountNtd === undefined && quote?.pricingVersion === undefined;
+      if (!legacyClient && (quote?.expectedAmountNtd !== amountNtd || quote?.pricingVersion !== catalog.pricingVersion)) {
+        throw new ConflictException({ code: "PRICE_CHANGED", message: "Pricing changed. Review the current price and confirm again." });
+      }
 
       const existingPending = await tx.payment.findFirst({
         where: { userId, status: "PENDING", dismissedByUser: false },
@@ -369,6 +380,8 @@ export class BillingService {
           userId,
           period,
           amountNtd,
+          pricingVersion: catalog.pricingVersion,
+          createdAt,
           method: "ECPAY",
           ecpayMethod: "CREDIT",
           status: "PENDING",
@@ -377,14 +390,15 @@ export class BillingService {
           refundPolicyVersion: REFUND_POLICY_VERSION,
         },
       });
+      return { amountNtd, createdAt };
     });
 
     const params: Record<string, string | number> = {
       MerchantID: config.merchantId,
       MerchantTradeNo: merchantTradeNo,
-      MerchantTradeDate: formatEcpayDate(new Date()),
+      MerchantTradeDate: formatEcpayDate(order.createdAt),
       PaymentType: "aio",
-      TotalAmount: amountNtd,
+      TotalAmount: order.amountNtd,
       TradeDesc: "judge.tw Pro upgrade",
       ItemName: `judge.tw Pro (${pricing.label})`,
       ReturnURL: `${apiPublicUrl}/billing/ecpay/return`,
@@ -393,7 +407,7 @@ export class BillingService {
       IgnorePayment: "ApplePay",
       NeedExtraPaidInfo: "Y",
       EncryptType: 1,
-      PeriodAmount: amountNtd,
+      PeriodAmount: order.amountNtd,
       PeriodType: RECURRING_PERIOD_TYPE[period],
       Frequency: 1,
       ExecTimes: RECURRING_EXEC_TIMES[period],
@@ -484,6 +498,7 @@ export class BillingService {
             userId: payment.userId,
             period: payment.period,
             amountNtd: payment.amountNtd,
+            pricingVersion: payment.pricingVersion,
             merchantTradeNo: payment.merchantTradeNo!,
             status: "ACTIVE",
             totalSuccessTimes: 1,
@@ -535,6 +550,7 @@ export class BillingService {
       if (cycle === 1) return;
       const payment = await tx.payment.create({ data: {
         userId: subscription.userId, period: subscription.period, amountNtd: amount,
+        pricingVersion: subscription.pricingVersion,
         status: "APPROVED", method: "ECPAY", ecpayMethod: "CREDIT", paidAt,
         ecpayTradeNo: body.TradeNo, cycleNumber: cycle, subscriptionId: subscription.id,
         reference: `Recurring renewal #${cycle}`, reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO",

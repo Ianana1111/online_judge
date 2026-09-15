@@ -3,11 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { apiFetch } from "@/lib/api";
 import { SparklesIcon } from "@/components/icons";
-import type { BillingPlans } from "@/lib/types";
-import { useT } from "@/lib/i18n/LocaleContext";
+import { useBillingPlans } from "@/lib/useBillingPlans";
+import { useLocale, useT } from "@/lib/i18n/LocaleContext";
 
 function dismissKey(endsAt: string): string {
   return `promo-dismissed:${endsAt}`;
@@ -20,17 +18,16 @@ function dismissKey(endsAt: string): string {
  * of staying hidden forever because of a stale localStorage flag from this one. */
 export default function PromoBanner() {
   const t = useT();
+  const { locale } = useLocale();
   const pathname = usePathname();
   const [dismissed, setDismissed] = useState(true); // default hidden until localStorage is checked, to avoid a flash
 
-  const { data: plans } = useQuery({
-    queryKey: ["billing", "plans"],
-    queryFn: () => apiFetch<BillingPlans>("/billing/plans"),
-  });
+  const { data: plans } = useBillingPlans();
 
   useEffect(() => {
     if (!plans?.promo) return;
-    setDismissed(localStorage.getItem(dismissKey(plans.promo.endsAt)) === "1");
+    try { setDismissed(localStorage.getItem(dismissKey(plans.promo.endsAt)) === "1"); }
+    catch { setDismissed(false); }
   }, [plans?.promo]);
 
   // The upgrade flow already leads straight to this exact offer — showing the banner there too
@@ -38,26 +35,26 @@ export default function PromoBanner() {
   if (pathname?.startsWith("/upgrade")) return null;
   if (!plans?.promo || dismissed) return null;
 
-  const endsLabel = new Date(plans.promo.endsAt).toLocaleDateString();
+  const endsLabel = new Date(plans.promo.endsAt).toLocaleString(locale, { timeZone: "Asia/Taipei", year: "numeric", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
 
   return (
-    <div className="relative flex items-center justify-center gap-2 bg-gradient-to-r from-brand/90 to-verdict-wa/90 px-4 py-2 text-center text-xs font-medium text-onbrand sm:text-sm">
+    <div className="relative flex flex-wrap items-center justify-center gap-x-3 gap-y-1 border-b border-brand/20 bg-brand/10 py-2 pl-4 pr-12 text-center text-xs font-medium text-ink-100 sm:text-sm">
       <span className="inline-flex items-center gap-1.5">
         <SparklesIcon className="h-4 w-4 shrink-0" />
-        {t("We just launched! Get Pro at")} <span className="font-bold">{t("{pct}% off", { pct: plans.promo.discountPct })}</span>{" "}
-        {t("through {date}.", { date: endsLabel })}
+        {t("Launch offer: NT$200/month or NT$2,000/year. Continuous renewals keep the price.")}
       </span>
-      <Link href="/upgrade" className="whitespace-nowrap rounded bg-onbrand/15 px-2 py-0.5 font-semibold hover:bg-onbrand/25">
-        {t("Claim discount →")}
+      <span className="text-ink-300">{t("Join before {date} (Taipei)", { date: endsLabel })}</span>
+      <Link href="/upgrade" className="whitespace-nowrap rounded px-2 py-1 font-semibold text-brand underline underline-offset-4">
+        {t("View offer →")}
       </Link>
       <button
         type="button"
         aria-label={t("Dismiss")}
         onClick={() => {
-          localStorage.setItem(dismissKey(plans.promo!.endsAt), "1");
+          try { localStorage.setItem(dismissKey(plans.promo!.endsAt), "1"); } catch { /* Dismiss for this visit. */ }
           setDismissed(true);
         }}
-        className="absolute right-2 text-onbrand/70 hover:text-onbrand"
+        className="absolute right-2 flex h-8 w-8 items-center justify-center rounded text-ink-300 hover:bg-brand/10"
       >
         ✕
       </button>

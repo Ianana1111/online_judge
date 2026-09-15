@@ -87,7 +87,7 @@ export interface BillingStatus {
   refundRequest?: { id: string; status: "REQUESTED" | "PROCESSING" | "NEEDS_REVIEW" | "COMPLETED"; requestedAt: string; completedAt: string | null } | null;
   // Present only while an ECPay recurring (定期定額) subscription is ACTIVE — planExpiresAt
   // doubles as "renews on" for this case, since it auto-extends every successful auto-charge.
-  subscription: { period: "MONTHLY" | "YEARLY"; amountNtd: number; nextChargeAt: string | null } | null;
+  subscription: { period: "MONTHLY" | "YEARLY"; amountNtd: number; nextChargeAt: string | null; launchPriceLocked: boolean } | null;
   submits: { used: number; limit: number | null };
   virtualContests: { used: number; limit: number | null };
   pendingPayment: {
@@ -103,13 +103,7 @@ export interface BillingStatus {
   } | null;
 }
 
-export interface BillingPlans {
-  pricing: Record<"MONTHLY" | "YEARLY", { amountNtd: number; days: number; label: string }>;
-  // The real amount a purchase charges right now (reflects the launch promo while active) —
-  // always display/expect to pay THIS, never pricing[period].amountNtd directly.
-  effectivePricing: Record<"MONTHLY" | "YEARLY", number>;
-  promo: { discountPct: number; period: "MONTHLY" | "YEARLY"; endsAt: string } | null;
-}
+export type BillingPlans = import("@oj/shared").BillingCatalog;
 
 // A single problem as shown in a filterable/sortable table. Shared by the Problems list and the
 // per-collection page (see ProblemFilterTable) so both render an identical row + controls.

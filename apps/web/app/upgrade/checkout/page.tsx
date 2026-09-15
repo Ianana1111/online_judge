@@ -7,7 +7,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import BackButton from "@/components/BackButton";
-import type { BillingPlans, BillingStatus } from "@/lib/types";
+import type { BillingStatus } from "@/lib/types";
+import { useBillingPlans } from "@/lib/useBillingPlans";
+import { LaunchOffer, LaunchPriceLocked, PricingUnavailable } from "@/components/LaunchOffer";
 import { useT } from "@/lib/i18n/LocaleContext";
 
 type Period = "MONTHLY" | "YEARLY";
@@ -21,7 +23,7 @@ export default function CheckoutPage() {
   const [ecpayError, setEcpayError] = useState<string | null>(null);
   const [ecpayLoading, setEcpayLoading] = useState(false);
   const [dismissing, setDismissing] = useState(false);
-  const [agreed, setAgreed] = useState(false);
+  const [agreedQuote, setAgreedQuote] = useState<string | null>(null);
 
   // Paying with ECPay does a real <form method="POST"> navigation off-site to their hosted
   // checkout (see startEcpay below) — that's a genuine browser history entry on ECPay's own
@@ -44,11 +46,8 @@ export default function CheckoutPage() {
     return () => window.removeEventListener("popstate", onPopState);
   }, [router]);
 
-  const { data: plans } = useQuery({
-    queryKey: ["billing", "plans"],
-    queryFn: () => apiFetch<BillingPlans>("/billing/plans"),
-  });
-  const { data: status } = useQuery({
+  const { data: plans, isError: pricingError, refetch: refreshPrices } = useBillingPlans();
+  const { data: status, isLoading: statusLoading, isError: statusError, refetch: refreshStatus } = useQuery({
     queryKey: ["billing", "me"],
     queryFn: () => apiFetch<BillingStatus>("/billing/me"),
     enabled: !!user,
@@ -66,22 +65,23 @@ export default function CheckoutPage() {
   const isSubscribed = !!status?.subscription;
   const pending = status?.pendingPayment;
 
-  const amount = plans?.effectivePricing[period] ?? (period === "MONTHLY" ? 200 : 2000);
-  const monthlyListPrice = plans?.pricing.MONTHLY.amountNtd ?? 200;
-  const monthlyNowPrice = plans?.effectivePricing.MONTHLY ?? monthlyListPrice;
-  const yearlyPrice = plans?.pricing.YEARLY.amountNtd ?? 2000;
+  const amount = plans?.effectivePricing[period];
+  const monthlyListPrice = plans?.pricing.MONTHLY.amountNtd;
+  const monthlyNowPrice = plans?.effectivePricing.MONTHLY;
+  const yearlyPrice = plans?.effectivePricing.YEARLY;
   const promo = plans?.promo;
-  // "Save X%" badge on the yearly card, measured against the real ongoing monthly sticker price
-  // (not a temporary promo/test price) so it stays meaningful once pricing settles back down.
-  const yearlySavingsPct = Math.round((1 - yearlyPrice / (monthlyListPrice * 12)) * 100);
+  const yearlySavingsPct = monthlyNowPrice && yearlyPrice ? Math.floor((1 - yearlyPrice / (monthlyNowPrice * 12)) * 100) : 0;
+  const quoteKey = plans ? `${plans.pricingVersion}/${period}/${amount}` : null;
+  const agreed = quoteKey !== null && agreedQuote === quoteKey;
 
   async function startEcpay() {
+    if (!plans || !amount || !agreed || !user || !status || ecpayLoading) return;
     setEcpayError(null);
     setEcpayLoading(true);
     try {
       const res = await apiFetch<{ actionUrl: string; fields: Record<string, string | number>; sandbox: boolean }>(
         "/billing/ecpay/create",
-        { method: "POST", body: { period } },
+        { method: "POST", body: { period, expectedAmountNtd: amount, pricingVersion: plans.pricingVersion } },
       );
       // ECPay's checkout is a hosted page, not a JSON API — the browser itself has to navigate
       // there via a form POST carrying the signed order fields.
@@ -100,7 +100,11 @@ export default function CheckoutPage() {
       // Deliberately leave ecpayLoading true — the page is about to navigate away entirely, so
       // there's no "done loading" moment to show; the spinner just stays up through the redirect.
     } catch (e) {
-      setEcpayError(e instanceof ApiError ? e.message : "無法建立訂單，請稍後再試");
+      if (e instanceof ApiError && e.status === 409) {
+        setAgreedQuote(null);
+        setEcpayError(t("Pricing changed. Review the current price and confirm again."));
+        await refreshPrices();
+      } else setEcpayError(e instanceof ApiError ? t(e.message) : t("Could not create your order. Please try again."));
       setEcpayLoading(false);
     }
   }
@@ -145,6 +149,13 @@ export default function CheckoutPage() {
               </Link>{" "}
               {t("to upgrade.")}
             </div>
+          ) : authStatus !== "ready" || statusLoading ? (
+            <p role="status" className="text-sm text-ink-300">{t("Loading…")}</p>
+          ) : statusError ? (
+            <div role="alert" className="oj-card p-5 text-sm text-ink-300">
+              <p>{t("Could not load your subscription. Please retry.")}</p>
+              <button type="button" onClick={() => { void refreshStatus(); }} className="oj-btn-secondary mt-3 px-3 py-2">{t("Retry")}</button>
+            </div>
           ) : notApplicable ? (
             <div className="oj-card p-5 text-sm text-ink-300">
               {isAdmin ? t("Admin accounts already have no submit or contest limits.") : t("Student accounts are already Pro — no need to upgrade.")}
@@ -163,6 +174,7 @@ export default function CheckoutPage() {
                       period: status.subscription!.period === "MONTHLY" ? t("month") : t("year"),
                     })}
               </p>
+              {status?.subscription?.launchPriceLocked && <LaunchPriceLocked />}
               <Link href="/upgrade" className="mt-2 inline-block text-brand hover:underline">
                 {t("Manage your subscription →")}
               </Link>
@@ -174,6 +186,7 @@ export default function CheckoutPage() {
                   <>
                     <p className="font-semibold text-verdict-tle">{t("Confirming your card payment…")}</p>
                     <p className="mt-1 text-ink-300">{t("This is usually instant. This page updates automatically once it clears.")}</p>
+                    <p className="mt-2 text-ink-200">{t("Order amount: NT${amount}", { amount: pending.amountNtd.toLocaleString() })}</p>
                   </>
                 ) : (
                   <>
@@ -196,9 +209,12 @@ export default function CheckoutPage() {
                 {dismissing ? t("Cancelling…") : t("Not now — cancel and choose again")}
               </button>
             </div>
+          ) : !plans ? (
+            <PricingUnavailable error={pricingError} retry={() => { void refreshPrices(); }} />
           ) : (
             <div className="sm:grid sm:grid-cols-5 sm:items-start sm:gap-6">
               <div className="space-y-4 sm:col-span-3">
+                {promo && <LaunchOffer promo={promo} />}
                 {isPro && (
                   <div className="oj-card border-verdict-ac/40 p-2.5 text-xs text-ink-300">
                     {status?.planExpiresAt
@@ -214,30 +230,34 @@ export default function CheckoutPage() {
                   <div className="grid grid-cols-2 gap-2.5">
                     <button
                       type="button"
+                      aria-pressed={period === "MONTHLY"}
                       onClick={() => setPeriod("MONTHLY")}
                       className={`oj-card p-2.5 text-left transition-colors ${period === "MONTHLY" ? "border-brand" : "hover:border-ink-500"}`}
                     >
                       <p className="text-sm font-semibold text-ink-50">{t("Monthly")}</p>
                       {promo ? (
                         <p className="mt-0.5 text-xs text-ink-400">
-                          <span className="line-through opacity-70">NT${monthlyListPrice}</span> {t("NT${amount} / mo", { amount: monthlyNowPrice })}
+                          <span className="block">{t("After offer")}: <s>NT${monthlyListPrice}</s></span>
+                          <span className="mt-1 block font-semibold text-ink-100">{t("NT${amount} / mo", { amount: monthlyNowPrice! })}</span>
                         </p>
                       ) : (
-                        <p className="mt-0.5 text-xs text-ink-400">{t("NT${amount} / mo", { amount: monthlyNowPrice })}</p>
+                        <p className="mt-0.5 text-xs text-ink-400">{t("NT${amount} / mo", { amount: monthlyNowPrice! })}</p>
                       )}
                     </button>
                     <button
                       type="button"
+                      aria-pressed={period === "YEARLY"}
                       onClick={() => setPeriod("YEARLY")}
                       className={`oj-card relative p-2.5 text-left transition-colors ${period === "YEARLY" ? "border-brand" : "hover:border-ink-500"}`}
                     >
                       {yearlySavingsPct > 0 && (
                         <span className="absolute -top-2 right-2 rounded-full bg-verdict-ac px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-onbrand">
-                          {t("Save {pct}%", { pct: yearlySavingsPct })}
+                          {t("{pct}% less than monthly", { pct: yearlySavingsPct })}
                         </span>
                       )}
                       <p className="text-sm font-semibold text-ink-50">{t("Yearly")}</p>
-                      <p className="mt-0.5 text-xs text-ink-400">{t("NT${amount} / yr", { amount: yearlyPrice })}</p>
+                      {promo && plans.pricing.YEARLY.amountNtd > yearlyPrice! && <p className="mt-0.5 text-xs text-ink-400">{t("After offer")}: <s>NT${plans.pricing.YEARLY.amountNtd.toLocaleString()}</s></p>}
+                      <p className="mt-0.5 text-xs font-semibold text-ink-100">{t("NT${amount} / yr", { amount: yearlyPrice!.toLocaleString() })}</p>
                     </button>
                   </div>
                 </div>
@@ -263,17 +283,12 @@ export default function CheckoutPage() {
                       <span className="text-ink-300">{t("judge. Pro ({period})", { period: period === "MONTHLY" ? t("Monthly") : t("Yearly") })}</span>
                       <span className="text-ink-100">NT${amount}</span>
                     </div>
-                    {promo && period === "MONTHLY" && (
-                      <div className="mt-1 flex items-baseline justify-between text-sm">
-                        <span className="text-verdict-ac">{t("Launch promo ({pct}% off)", { pct: promo.discountPct })}</span>
-                        <span className="text-verdict-ac">−NT${monthlyListPrice - monthlyNowPrice}</span>
-                      </div>
-                    )}
                     <div className="mt-1.5 flex items-baseline justify-between border-t border-ink-700 pt-1.5 text-sm font-semibold">
                       <span className="text-ink-50">{t("Total due today")}</span>
                       <span className="text-ink-50">NT${amount}</span>
                     </div>
                   </div>
+                  <p className="text-xs font-medium text-ink-200">{t("Renews at NT${amount}/{period} while this subscription continues.", { amount: amount!.toLocaleString(), period: period === "MONTHLY" ? t("month") : t("year") })}</p>
 
                   <p className="rounded border border-ink-700 bg-ink-800/50 px-2.5 py-1.5 text-xs text-ink-400">
                     {t("Billed every {period} · renews automatically until you cancel from your account. Request a full refund within 7 days of your first payment.", {
@@ -285,7 +300,7 @@ export default function CheckoutPage() {
                     <input
                       type="checkbox"
                       checked={agreed}
-                      onChange={(e) => setAgreed(e.target.checked)}
+                      onChange={(e) => setAgreedQuote(e.target.checked ? quoteKey : null)}
                       className="mt-0.5"
                     />
                     <span>
@@ -294,7 +309,7 @@ export default function CheckoutPage() {
                     </span>
                   </label>
 
-                  {ecpayError && <p className="text-sm text-verdict-wa">{ecpayError}</p>}
+                  {ecpayError && <p role="alert" className="text-sm text-verdict-wa">{ecpayError}</p>}
 
                   <button onClick={startEcpay} disabled={ecpayLoading || !agreed} className="oj-btn-primary w-full py-2.5">
                     {ecpayLoading ? (
@@ -306,7 +321,7 @@ export default function CheckoutPage() {
                         {t("Redirecting to ECPay…")}
                       </span>
                     ) : (
-                      t("Subscribe — NT${amount}/{period}", { amount, period: period === "MONTHLY" ? t("month") : t("year") })
+                      t("Subscribe — NT${amount}/{period}", { amount: amount!, period: period === "MONTHLY" ? t("month") : t("year") })
                     )}
                   </button>
 

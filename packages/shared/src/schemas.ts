@@ -144,6 +144,9 @@ export type AdminGrantPlanDto = z.infer<typeof adminGrantPlanSchema>;
 
 export const ecpayCreateSchema = z.object({
   period: z.enum(["MONTHLY", "YEARLY"]),
+  // Optional for a clear 409/reload response to an older deployed client. Never sets the price.
+  expectedAmountNtd: z.number().int().positive().optional(),
+  pricingVersion: z.string().min(1).max(150).optional(),
 });
 export type EcpayCreateDto = z.infer<typeof ecpayCreateSchema>;
 

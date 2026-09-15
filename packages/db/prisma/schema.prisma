@@ -369,6 +369,7 @@ model Payment {
   user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   period     BillingPeriod
   amountNtd  Int
+  pricingVersion String @default("legacy-v1")
   status     PaymentStatus @default(PENDING)
   method     String        @default("MANUAL")
   reference  String        @default("")
@@ -486,6 +487,8 @@ model Subscription {
   /// The amount charged each cycle, locked in at subscribe time — a later price change should
   /// never silently reprice an existing subscriber.
   amountNtd Int
+  /// Immutable checkout terms, copied from the first order and onto every renewal.
+  pricingVersion String @default("legacy-v1")
   /// The MerchantTradeNo of the original subscribe order. Required to correlate PeriodReturnURL
   /// renewal webhooks back to this row, and to call ECPay's CreditCardPeriodAction Cancel API.
   merchantTradeNo String             @unique

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, Header, Param, Post, Query, Req, Res } from "@nestjs/common";
 import { Throttle } from "@nestjs/throttler";
 import type { Request, Response } from "express";
 import {
@@ -7,10 +7,6 @@ import {
   resolveRefundSchema,
   type ResolveRefundDto,
   ecpayCreateSchema,
-  effectivePriceNtd,
-  isLaunchPromoActive,
-  LAUNCH_PROMO,
-  PLAN_PRICING,
   type AdminGrantPlanDto,
   type AdminRefundListDto,
   type EcpayCreateDto,
@@ -19,27 +15,18 @@ import { CurrentUser, Public, Roles, type RequestUser } from "../common/decorato
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { BillingService } from "./billing.service";
 import { RefundReconciliationService } from "./refund-reconciliation.service";
+import { currentBillingCatalog } from "./pricing.config";
 
 @Controller("billing")
 export class BillingController {
   constructor(private readonly billing: BillingService, private readonly reconciliation: RefundReconciliationService) {}
 
-  /** Static pricing. Public so the pricing page renders for logged-out visitors too. */
+  /** Public, time-sensitive pricing. Never cache the launch offer past its fixed deadline. */
   @Public()
   @Get("plans")
+  @Header("Cache-Control", "no-store")
   plans() {
-    const promoActive = isLaunchPromoActive();
-    return {
-      pricing: PLAN_PRICING,
-      // The actual amount today's purchase charges per period (reflects the launch promo on
-      // MONTHLY while it's active) — the frontend should always display/charge THIS, never
-      // pricing[period].amountNtd directly, so a promo can never silently drift out of sync.
-      effectivePricing: {
-        MONTHLY: effectivePriceNtd("MONTHLY"),
-        YEARLY: effectivePriceNtd("YEARLY"),
-      },
-      promo: promoActive ? { discountPct: LAUNCH_PROMO.discountPct, period: LAUNCH_PROMO.period, endsAt: LAUNCH_PROMO.endsAt } : null,
-    };
+    return currentBillingCatalog();
   }
 
   @Get("me")
@@ -124,7 +111,7 @@ export class BillingController {
    * JSON API call: the browser itself must navigate there). */
   @Post("ecpay/create")
   createEcpayOrder(@Body(new ZodValidationPipe(ecpayCreateSchema)) body: EcpayCreateDto, @CurrentUser() user: RequestUser) {
-    return this.billing.createEcpayOrder(user.id, body.period);
+    return this.billing.createEcpayOrder(user.id, body.period, body);
   }
 
   /** Webhook — ECPay POSTs here once the customer has actually paid (form-urlencoded, not JSON).
