@@ -32,7 +32,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ user, status: "ready" });
     } catch {
       if (revision !== authRevision) return;
-      clearPrivateCache();
+      // An anonymous visitor has no previous account cache to clear. Clearing on initial 401
+      // can detach an already-mounted public query and leave it loading indefinitely.
+      if (get().user !== null) clearPrivateCache();
       setCsrfToken(null);
       set({ user: null, status: "ready" });
     }
