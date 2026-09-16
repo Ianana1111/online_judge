@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { sampleRevision } from "../packages/shared/src/sampleRevision";
 import { createRunSchema } from "../packages/shared/src/schemas";
 import { runTestCases } from "../apps/judge/src/local/testRun";
 import { evaluateInSandbox } from "../apps/judge/src/local/evaluate";
@@ -59,4 +60,10 @@ it("honors FLOAT tolerances and SPECIAL alternative answers through the same che
   expect(checkProblemOutput(special, special.samples[0].input, special.samples[0].output, alternate)).toBe(true);
   fixture.find.mockResolvedValue(special); fixture.run.mockResolvedValue({ ...execution, stdout: alternate });
   expect((await runTestCases("run", "problem", "cpp17", "source", [{ id: "x", sampleOrd: 1 }])).cases?.[0].verdict).toBe("AC");
+});
+
+it("rejects a sample revision changed while the job was queued", async () => {
+  const revision = await sampleRevision(problem.samples[0].input, "outdated answer");
+  expect((await runTestCases("run", "problem", "cpp17", "source", [{ id: "sample", sampleOrd: 1, sampleRevision: revision }])).status).toBe("ERROR");
+  expect(fixture.run).not.toHaveBeenCalled();
 });

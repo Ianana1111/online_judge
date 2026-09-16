@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { sampleRevision } from "@oj/shared";
 import { apiFetch, ApiError, openRunStream } from "@/lib/api";
 import type { RunCaseResult, RunResult, Sample } from "@/lib/types";
 import { useLocale, useT } from "@/lib/i18n/LocaleContext";
@@ -163,11 +164,11 @@ function TestPanelSession({
           problemId,
           languageKey,
           sourceCode,
-          cases: cases.map((c) => {
+          cases: await Promise.all(cases.map(async (c) => {
             const input = edits[c.id] ?? c.input;
             const unchangedSample = c.isSample && input === c.input;
-            return { id: c.id, ...(input.length <= MAX_INPUT_CHARS ? { input } : {}), ...(unchangedSample ? { sampleOrd: c.sampleOrd } : {}) };
-          }),
+            return { id: c.id, ...(input.length <= MAX_INPUT_CHARS ? { input } : {}), ...(unchangedSample ? { sampleOrd: c.sampleOrd, sampleRevision: await sampleRevision(c.input, c.expectedOutput ?? "") } : {}) };
+          })),
         },
       });
 

@@ -50,7 +50,9 @@ export const runCaseInputSchema = z.object({
   id: z.string().min(1).max(64),
   input: z.string().max(4096).optional(),
   sampleOrd: z.number().int().min(0).optional(),
-}).refine((c) => c.input !== undefined || c.sampleOrd !== undefined, "Input or sample is required");
+  sampleRevision: z.string().regex(/^[a-f0-9]{64}$/).optional(),
+}).refine((c) => c.input !== undefined || c.sampleOrd !== undefined, "Input or sample is required")
+  .refine((c) => c.sampleRevision === undefined || c.sampleOrd !== undefined, "A sample revision requires a sample reference");
 export const createRunSchema = z.object({
   problemId: z.string().cuid(),
   languageKey: z.enum(["cpp17", "c11", "python3", "java17"]),

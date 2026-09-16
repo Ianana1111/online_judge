@@ -6,6 +6,7 @@ export * from "./billingPricing.js";
 export * from "./billingPolicy.js";
 export * from "./scoring.js";
 export * from "./judge.js";
+export * from "./sampleRevision.js";
 export * from "./taiwanUniversities.js";
 export * from "./taiwanUniversityDomains.js";
 export * from "./taiwanSchoolCatalog.js";

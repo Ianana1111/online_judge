@@ -28,7 +28,7 @@ test("sample Run uses server comparisons; edits and language changes invalidate 
     await page.goto(`/problems/${problem.slug}`);
     const run = page.getByRole("button", { name: "▶ 執行", exact: true }), input = page.getByRole("textbox", { name: "輸入", exact: true });
     await expect(run).toBeEnabled(); await run.click(); await expect(page.getByText("與預期相符", { exact: true })).toBeVisible();
-    expect(lastCases).toEqual([{ id: "sample-1", input: "1\n", sampleOrd: 1 }]);
+    expect(lastCases).toEqual([{ id: "sample-1", input: "1\n", sampleOrd: 1, sampleRevision: expect.stringMatching(/^[a-f0-9]{64}$/) }]);
     await input.fill("2\n"); await expect(page.getByText("與預期相符", { exact: true })).toHaveCount(0); await expect(page.getByText(/已修改輸入：只顯示/)).toBeVisible();
     await run.click(); await expect(page.getByText("此結果僅供檢視輸出，未進行答案比對。")).toBeVisible(); expect(lastCases).toEqual([{ id: "sample-1", input: "2\n" }]);
     await page.getByRole("button", { name: "還原範例" }).click(); delayed = true; await run.click(); await input.fill("3\n");
