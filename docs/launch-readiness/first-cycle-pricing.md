@@ -1,3 +1,5 @@
+> Superseded by the owner's next instruction on 2026-09-16: keep the enrollment price for every renewal of the same subscription. The first-cycle-only proposal below is archived. Card-binding service is **not required** for the approved fixed-price renewal implementation. See [current launch pricing](launch-pricing.md).
+
 # First-cycle pricing — approved policy and gateway dependency
 
 Owner instruction, 2026-09-16: replace the earlier perpetual launch-price proposal with a genuine one-calendar-month enrollment offer. This document supersedes the *proposed* new-customer policy in `launch-pricing.md`; it does not change existing payment agreements or imply the new offer is deployed.

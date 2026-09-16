@@ -36,7 +36,7 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("launch orders and renewals wi
   });
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date(startsAt));
-    vi.stubEnv("LAUNCH_PROMO_STARTS_AT", startsAt); vi.stubEnv("LAUNCH_PROMO_ENDS_AT", endsAt); vi.stubEnv("PRO_REGULAR_YEARLY_PRICE_NTD", "3500");
+    vi.stubEnv("LAUNCH_PROMO_STARTS_AT", startsAt); vi.stubEnv("LAUNCH_PROMO_ENDS_AT", endsAt); vi.stubEnv("PRO_REGULAR_YEARLY_PRICE_NTD", "4000");
   });
   afterEach(() => { vi.useRealTimers(); vi.unstubAllEnvs(); });
   afterAll(async () => { await prisma.user.deleteMany({ where: { id: { in: accounts } } }); await prisma.$disconnect(); });
@@ -57,7 +57,7 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("launch orders and renewals wi
     vi.stubEnv("PRO_REGULAR_YEARLY_PRICE_NTD", "");
     const renewal = { MerchantID: "3002607", MerchantTradeNo: subscription.merchantTradeNo,
       TradeNo: `GW${randomUUID().replace(/-/g, "").slice(0, 16)}`, amount: String(subscription.amountNtd), TotalSuccessTimes: "2", process_date: gatewayDate(), RtnCode: "1" };
-    await expect(billing.handleEcpayPeriodReturn(await sign({ ...renewal, amount: period === "MONTHLY" ? "350" : "3500" }))).rejects.toThrow();
+    await expect(billing.handleEcpayPeriodReturn(await sign({ ...renewal, amount: period === "MONTHLY" ? "400" : "4000" }))).rejects.toThrow();
     await billing.handleEcpayPeriodReturn(await sign(renewal));
     await billing.handleEcpayPeriodReturn(await sign(renewal));
     const saved = await prisma.payment.findMany({ where: { subscriptionId: subscription.id }, orderBy: { cycleNumber: "asc" } });
@@ -72,7 +72,7 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("launch orders and renewals wi
     }
     expect(await prisma.payment.count({ where: { userId: user.id } })).toBe(0);
     const order = await billing.createEcpayOrder(user.id, "MONTHLY", quote("MONTHLY"));
-    expect(order.fields.TotalAmount).toBe(350); expect(order.fields.PeriodAmount).toBe(350);
+    expect(order.fields.TotalAmount).toBe(400); expect(order.fields.PeriodAmount).toBe(400);
   });
   it("requires renewed consent when annual price stays the same but launch eligibility ends", async () => {
     vi.stubEnv("PRO_REGULAR_YEARLY_PRICE_NTD", "2000");
@@ -86,16 +86,25 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("launch orders and renewals wi
     expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1);
     expect(await prisma.payment.count({ where: { userId: user.id } })).toBe(1);
   });
-  it("uses regular prices after cancellation and a new subscription", async () => {
-    const user = await account(), order = await billing.createEcpayOrder(user.id, "MONTHLY", quote("MONTHLY"));
+  it.each(["MONTHLY", "YEARLY"] as const)("uses regular %s prices after cancellation and locks the new renewal amount", async (period) => {
+    const user = await account(), order = await billing.createEcpayOrder(user.id, period, quote(period));
     await billing.handleEcpayReturn(await firstNotification(order));
     vi.mocked(cancelEcpayPeriod).mockResolvedValue({ RtnCode: 1, RtnMsg: "OK" } as never);
     await billing.cancelSubscription(user.id);
     vi.setSystemTime(new Date(endsAt));
-    const newOrder = await billing.createEcpayOrder(user.id, "YEARLY", quote("YEARLY"));
-    expect(newOrder.fields.PeriodAmount).toBe(3500);
+    const newOrder = await billing.createEcpayOrder(user.id, period, quote(period));
+    const amount = period === "MONTHLY" ? 400 : 4000;
+    expect(newOrder.fields.PeriodAmount).toBe(amount);
+    expect(newOrder.fields.TotalAmount).toBe(amount);
     await billing.handleEcpayReturn(await firstNotification(newOrder));
     expect((await billing.status(user.id)).subscription?.launchPriceLocked).toBe(false);
+    // Changing today's catalog cannot lower or raise the accepted regular subscription price.
+    vi.stubEnv("LAUNCH_PROMO_STARTS_AT", ""); vi.stubEnv("LAUNCH_PROMO_ENDS_AT", ""); vi.stubEnv("PRO_REGULAR_YEARLY_PRICE_NTD", "");
+    const renewal = { MerchantID: "3002607", MerchantTradeNo: String(newOrder.fields.MerchantTradeNo),
+      TradeNo: `GW${randomUUID().replace(/-/g, "").slice(0, 16)}`, amount: String(amount), TotalSuccessTimes: "2", process_date: gatewayDate(), RtnCode: "1" };
+    await expect(billing.handleEcpayPeriodReturn(await sign({ ...renewal, amount: period === "MONTHLY" ? "200" : "2000" }))).rejects.toThrow();
+    await billing.handleEcpayPeriodReturn(await sign(renewal));
+    expect((await billing.status(user.id)).subscription?.amountNtd).toBe(amount);
   });
   it("preserves legacy subscription amounts without mislabelling them as launch purchases", async () => {
     vi.stubEnv("LAUNCH_PROMO_STARTS_AT", ""); vi.stubEnv("LAUNCH_PROMO_ENDS_AT", ""); vi.stubEnv("PRO_REGULAR_YEARLY_PRICE_NTD", "");

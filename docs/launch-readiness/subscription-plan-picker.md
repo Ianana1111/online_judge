@@ -1,3 +1,5 @@
+> Pricing policy updated 2026-09-16: see [current launch pricing](launch-pricing.md). The layout described here remains; active launch campaigns now display NT$400→200 monthly or NT$4,000→2,000 annually and preserve the agreed renewal price.
+
 # Monthly and annual Pro selection
 
 ## Visual revision

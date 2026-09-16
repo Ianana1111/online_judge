@@ -233,7 +233,7 @@ function CheckoutPage() {
                     setAgreedQuote(null);
                     router.replace(`/upgrade/checkout?period=${next}`, { scroll: false });
                   }} />
-                  <BillingPriceDetails period={period} prices={plans.effectivePricing} />
+                  <BillingPriceDetails period={period} prices={plans.effectivePricing} promo={plans.promo} pricing={plans.pricing} />
                 </div>
 
                 <div className="flex items-start gap-2.5 px-1 py-2">
