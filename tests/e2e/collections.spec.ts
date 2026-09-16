@@ -17,6 +17,9 @@ async function mock(page: Page) {
   });
 }
 async function audit(page: Page) {
+  // App Router streams metadata separately from the client-rendered collection.
+  // Wait for the accessible document title before auditing the completed page.
+  await expect(page).toHaveTitle(/judge\./);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   const result = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
   expect(result.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.target) }))).toEqual([]);
@@ -29,7 +32,10 @@ for (const theme of ["dark", "light"]) test(`collections: responsive design, sea
   const search = page.getByRole("searchbox", { name: "搜尋主題題庫" }); await search.fill("DP");
   await expect(page.getByRole("heading", { name: "動態規劃", exact: true })).toBeVisible(); await expect(page.getByRole("heading", { name: "數學與數論" })).toHaveCount(0);
   await search.fill("找不到"); await expect(page.getByText("沒有符合的主題，試試其他關鍵字。")).toBeVisible(); await page.getByRole("button", { name: "顯示所有主題" }).click();
-  await page.getByRole("heading", { name: "數學與數論" }).click(); await expect(page.getByRole("heading", { name: "數學與數論", exact: true })).toBeVisible();
+  await page.getByRole("link", { name: /^數學與數論 / }).click();
+  await expect(page).toHaveURL(/\/collections\/algo-math$/);
+  await expect(page.getByRole("heading", { name: "數學與數論", level: 1, exact: true })).toBeVisible();
+  await expect(page).toHaveTitle(/^(數學與數論|題目集) \| judge\.$/);
   await expect(page.getByRole("link", { name: /範例題目/ })).toBeVisible(); await audit(page); await page.screenshot({ path: info.outputPath(`collection-detail-${theme}.png`), fullPage: true });
 });
 test("collection list and detail recover from network failures", async ({ page }) => {
