@@ -60,10 +60,11 @@ function DowngradeConfirmDialog({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
       role="dialog"
       aria-modal="true"
+      aria-labelledby="downgrade-title"
       onClick={onCancel}
     >
       <div ref={trapRef} tabIndex={-1} className="oj-card w-full max-w-sm p-5 outline-none" onClick={(e) => e.stopPropagation()}>
-        <h2 className="font-display text-base font-semibold text-ink-50">{t("Downgrade to Free Plan?")}</h2>
+        <h2 id="downgrade-title" className="font-display text-base font-semibold text-ink-50">{t("Downgrade to Free Plan?")}</h2>
         <p className="mt-2 text-sm text-ink-300">
           {expiresLabel
             ? t("You'll keep full Pro access until {date} — nothing changes right away. After that date, your account switches to Free automatically.", { date: expiresLabel })
@@ -114,10 +115,11 @@ function RequestRefundConfirmDialog({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
       role="dialog"
       aria-modal="true"
+      aria-labelledby="refund-title"
       onClick={onCancel}
     >
       <div ref={trapRef} tabIndex={-1} className="oj-card w-full max-w-sm p-5 outline-none" onClick={(e) => e.stopPropagation()}>
-        <h2 className="font-display text-base font-semibold text-ink-50">{t("Request a full refund?")}</h2>
+        <h2 id="refund-title" className="font-display text-base font-semibold text-ink-50">{t("Request a full refund?")}</h2>
         <p className="mt-2 text-sm text-ink-300">
           {t(
             "Requests a full refund of your first payment and stops future renewal. The refunded Pro period ends after processing. Bank posting times vary. This guarantee is available once per account.",
@@ -183,6 +185,7 @@ function UnsubscribeConfirmDialog({
             : t("Your card won't be charged again. You'll keep full Pro access until your current period ends, then switch to Free automatically.")}
         </p>
         {launchPriceLocked && <p className="mt-3 text-sm text-ink-200">{t("Cancelling ends your launch price lock. Your paid access remains until expiry; subscribing again uses the price available then.")}</p>}
+        <p className="mt-3 text-sm text-ink-300">{t("This only cancels renewal; it does not request a refund. After the 7-day first-payment refund window, your paid monthly or annual access continues until expiry.")}</p>
         {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
         <div className="mt-5 flex justify-end gap-2">
           <button type="button" onClick={onCancel} className="oj-btn-secondary px-4 py-2 text-sm" disabled={submitting}>
@@ -217,12 +220,22 @@ export default function UpgradePlanPage() {
     queryKey: ["billing", "me"],
     queryFn: () => apiFetch<BillingStatus>("/billing/me"),
     enabled: !!user,
+    refetchInterval: (query) => {
+      const refund = query.state.data?.refundRequest;
+      return refund && refund.status !== "COMPLETED" ? 5000 : false;
+    },
   });
   const { data: plans, isError: pricingError, refetch: refreshPrices } = useBillingPlans();
 
   const isAdmin = user?.role === "ADMIN";
   const isPro = status?.plan === "PRO";
   const expiresLabel = status?.planExpiresAt ? new Date(status.planExpiresAt).toLocaleDateString() : null;
+
+  useEffect(() => {
+    if (user?.id && status?.refundRequest?.status === "COMPLETED" && status.plan !== user.plan) {
+      useAuthStore.getState().patchUser(user.id, { plan: status.plan });
+    }
+  }, [user?.id, user?.plan, status?.plan, status?.refundRequest?.status]);
 
   // Legacy one-time grants expire naturally; this path only records downgrade intent.
   // Recurring card subscriptions use confirmUnsubscribe to stop gateway charges instead.
@@ -256,9 +269,8 @@ export default function UpgradePlanPage() {
       setUnsubscribing(false);
     }
   }
-  // Downgrades to Free immediately (unlike confirmUnsubscribe above, which runs out the
-  // already-paid period) — the whole point of a refund is that this period is being handed back,
-  // not kept.
+  // Persist the request first. The worker withdraws the refunded access once the gateway
+  // confirms the refund; polling above keeps this page in sync with that durable result.
   async function confirmRefund() {
     setRefunding(true);
     setRefundError(null);

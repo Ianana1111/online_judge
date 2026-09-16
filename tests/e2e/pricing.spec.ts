@@ -182,3 +182,36 @@ test("unavailable prices block purchase and recover on retry", async ({ page }) 
   await expect(page.getByRole("button", { name: "取得 Pro 方案", exact: true })).toBeEnabled();
   expect(state.writes.filter((w) => w.path.startsWith("/billing"))).toEqual([]);
 });
+
+for (const theme of ["light", "dark"] as const) {
+  test(`a refund updates access without reloading and explains immediate termination (${theme})`, async ({ page }, info) => {
+    await fixture(page, { subscriber: true, theme });
+    let requested = false, completed = false, refundPosts = 0;
+    await page.route(/http:\/\/127\.0\.0\.1:55440\/billing\/(me|refund\/request)$/, async (route) => {
+      if (route.request().method() === "POST") {
+        requested = true; refundPosts++;
+        return route.fulfill({ json: { id: "refund-test", status: "REQUESTED" } });
+      }
+      return route.fulfill({ json: {
+        plan: completed ? "FREE" : "PRO", planExpiresAt: completed ? null : "2027-09-16T00:00:00Z", planCancelRequested: false,
+        subscription: completed ? null : { amountNtd: 2000, period: "YEARLY", nextChargeAt: "2027-09-16T00:00:00Z", launchPriceLocked: false },
+        refundEligibleUntil: requested ? null : "2026-09-23T00:00:00Z",
+        refundRequest: requested ? { id: "refund-test", status: completed ? "COMPLETED" : "REQUESTED", requestedAt: "2026-09-16T00:00:00Z", completedAt: completed ? "2026-09-16T00:01:00Z" : null } : null,
+        pendingPayment: null, submits: { used: 0, limit: completed ? 10 : null }, virtualContests: { used: 0, limit: completed ? 1 : null },
+      } });
+    });
+    await page.goto("/upgrade");
+    await page.getByRole("button", { name: /不符合期待/ }).click();
+    const dialog = page.getByRole("dialog", { name: "確定要申請全額退款嗎？" });
+    await expect(dialog).toContainText("不會保留到月底或年度結束");
+    expect((await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()).violations).toEqual([]);
+    await page.screenshot({ path: info.outputPath(`refund-confirm-${theme}.png`), fullPage: true });
+    await dialog.getByRole("button", { name: "申請退款", exact: true }).click();
+    await expect(page.getByRole("status")).toContainText("退款申請已受理");
+    completed = true;
+    await expect(page.getByRole("status")).toContainText("退款已處理，該筆付款的 Pro 權限已終止", { timeout: 15_000 });
+    await expect(page.getByRole("button", { name: "取消訂閱", exact: true })).toBeHidden();
+    await expect(page.getByRole("button", { name: "取得 Pro 方案", exact: true })).toBeVisible();
+    expect(refundPosts).toBe(1);
+  });
+}

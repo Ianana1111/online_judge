@@ -1,4 +1,8 @@
 export const billingLaunchDictionary: Record<string, string> = {
+  "This only cancels renewal; it does not request a refund. After the 7-day first-payment refund window, your paid monthly or annual access continues until expiry.": "這個操作只取消續訂，不會申請退款。首次付款超過 7 天後不適用首次退款保證；已付費的月繳或年繳權限仍保留至到期日。",
+  "Refund processed. Bank posting times vary.": "退款已處理，該筆付款的 Pro 權限已終止。實際入帳時間依發卡銀行而異。",
+  "Your refund request is saved and awaiting payment verification. You do not need to submit it again.": "退款申請已保存，正在核對金流結果，無需重複申請。",
+  "Your refund request is saved. We are processing the refund and stopping future renewal.": "退款申請已受理，正在停止續訂並辦理退款；退款確認成功後，該期 Pro 權限會立即終止。",
   "Save NT${amount}": "省 NT${amount}",
   "Start with everyday practice.": "從日常練習開始。",
   "No credit card required": "免費使用，無需信用卡",

@@ -132,6 +132,35 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("billing with real PostgreSQL 
     expect((await prisma.refundRequest.findUniqueOrThrow({ where: { id: request.id } })).status).toBe("NEEDS_REVIEW");
     expect((await prisma.payment.findUniqueOrThrow({ where: { id: payment.id } })).status).toBe("APPROVED");
   });
+  it.each(["MONTHLY", "YEARLY"] as const)("a day-six %s refund removes access immediately and replay cannot restore it", async (period) => {
+    const { user, payment, notification } = await purchase(period, new Date(Date.now() - 6 * 86400_000));
+    await billing.handleEcpayReturn(notification);
+    const request = await billing.requestRefund(user.id);
+    vi.mocked(queryEcpayOrder).mockResolvedValue(notification);
+    vi.mocked(queryEcpayCreditTrade).mockResolvedValue({ RtnMsg: "", TradeID: "AUTH123", Amount: payment.amountNtd, Status: "Captured" });
+    vi.mocked(cancelEcpayPeriod).mockResolvedValue({ RtnCode: 1, RtnMsg: "OK", MerchantID: "3002607", MerchantTradeNo: payment.merchantTradeNo! });
+    vi.mocked(doCreditCardAction).mockResolvedValue({ ...notification, RtnCode: 1, RtnMsg: "OK" } as never);
+    await billing.processRefund(request.id);
+    await billing.handleEcpayReturn(notification);
+    expect((await billing.status(user.id)).plan).toBe("FREE");
+    expect((await prisma.user.findUniqueOrThrow({ where: { id: user.id } })).planExpiresAt!.getTime()).toBeLessThanOrEqual(Date.now());
+    expect((await prisma.subscription.findFirstOrThrow({ where: { userId: user.id } })).status).toBe("CANCELLED");
+    expect(vi.mocked(doCreditCardAction).mock.calls[0][3]).toBe(payment.amountNtd);
+  });
+  it.each(["MONTHLY", "YEARLY"] as const)("day-eight %s cancellation retains the paid period and never refunds", async (period) => {
+    const { user, payment, notification } = await purchase(period, new Date(Date.now() - 8 * 86400_000));
+    await billing.handleEcpayReturn(notification);
+    const before = await billing.status(user.id);
+    await expect(billing.requestRefund(user.id)).rejects.toThrow();
+    vi.mocked(cancelEcpayPeriod).mockResolvedValue({ RtnCode: 1, RtnMsg: "OK", MerchantID: "3002607", MerchantTradeNo: payment.merchantTradeNo! });
+    await billing.cancelSubscription(user.id);
+    const after = await billing.status(user.id);
+    expect(after.plan).toBe("PRO");
+    expect(after.planExpiresAt).toEqual(before.planExpiresAt);
+    expect(after.subscription).toBeNull();
+    expect(after.refundEligibleUntil).toBeNull();
+    expect(doCreditCardAction).not.toHaveBeenCalled();
+  });
   it("accepts late lower-numbered renewal notifications without losing or duplicating a charge", async () => {
     const { user, notification } = await purchase(); await billing.handleEcpayReturn(notification);
     for (const cycle of [3, 2, 3, 2]) {

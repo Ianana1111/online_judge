@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/refund` },
 };
 
-const LAST_UPDATED = "2026-09-15";
+const LAST_UPDATED = "2026-09-16";
 
 // Server Component, zh-TW only — see terms/page.tsx's file-level comment for why this isn't run
 // through useT()/split into a client component like about/faq.
@@ -25,7 +25,7 @@ export default function RefundPolicyPage() {
         <h2 className="font-display text-lg font-semibold text-ink-50">7 天首次付款退款保證</h2>
         <p className="mt-2">
           訂閱 Pro 後，在第一次扣款後 <strong className="text-ink-100">7 天（168 小時）內</strong>，可以在「升級方案」頁面自助申請
-          <strong className="text-ink-100">全額退款</strong>——系統會受理申請，停止後續續扣並辦理第一筆付款的全額退款；退款確認後撤回該筆 Pro 使用權。信用卡實際入帳時間依發卡銀行作業為準。每個帳號只能使用這個退款資格一次。
+          <strong className="text-ink-100">全額退款</strong>——系統會受理申請，停止後續續扣並辦理第一筆付款的全額退款；退款確認成功時，立即撤回該筆付款剩餘的 Pro 使用權，不會保留到月底或年度結束。信用卡實際入帳時間依發卡銀行作業為準。每個帳號只能使用這個退款資格一次。
         </p>
       </section>
 
@@ -83,7 +83,7 @@ export default function RefundPolicyPage() {
         <p className="mt-2">
           除了上方「7 天首次付款退款保證」的範圍（首次付款成功後 7 天內、每帳號限一次）之外，
           <strong className="text-ink-100">已扣款的費用原則上不予退還</strong>
-          ，包含但不限於：超過7 天退款期限才決定取消、忘記取消導致的續扣、對判題結果或功能不滿意等情形。取消訂閱只會停止未來續扣，不會退還當期已付費用（但如上所述，當期 Pro 權限仍可使用到到期日）。
+          ，包含但不限於：超過 7 天退款期限才決定取消、忘記取消導致的續扣、對判題結果或功能不滿意等情形。取消訂閱只會停止未來續扣，不會退還當期已付費用（但如上所述，當期 Pro 權限仍可使用到到期日）。
         </p>
         <p className="mt-2">以下情形本站會主動處理退款或補償：</p>
         <ul className="mt-2 list-disc space-y-1.5 pl-5">

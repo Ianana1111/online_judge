@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, ForbiddenException, Injectable,
 import { createHash } from "node:crypto";
 import { prisma } from "@oj/db";
 import type { ResolveRefundDto } from "@oj/shared";
+import { accessAfterRefund } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
 
 @Injectable()
@@ -33,10 +34,8 @@ export class RefundReconciliationService {
         if (user && payment?.status !== "REFUNDED") {
           if (payment?.entitlementStartsAt && payment.entitlementEndsAt) {
             if (user.planExpiresAt) {
-              const attributable = Math.min(+payment.entitlementEndsAt - +payment.entitlementStartsAt, Math.max(0, +payment.entitlementEndsAt - +now));
-              if (attributable < 0) throw new ConflictException("Invalid entitlement interval requires investigation.");
-              const expires = new Date(Math.max(+now, +user.planExpiresAt - attributable));
-              await tx.user.update({ where: { id: user.id }, data: { plan: +expires > +now ? "PRO" : "FREE", planExpiresAt: expires, planCancelRequested: false } });
+              const access = accessAfterRefund(user.planExpiresAt, payment.entitlementStartsAt, payment.entitlementEndsAt, now);
+              await tx.user.update({ where: { id: user.id }, data: { ...access, planCancelRequested: false } });
             }
           } else if (!dto.preserveUnattributedEntitlement) {
             throw new ConflictException("This legacy entitlement cannot be attributed safely. Explicitly preserve it and record the reason, or keep the request under review.");
