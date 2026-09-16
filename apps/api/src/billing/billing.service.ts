@@ -3,6 +3,7 @@ import { BadRequestException, ConflictException, ForbiddenException, Injectable,
 import { prisma, Prisma } from "@oj/db";
 import type { User } from "@oj/db";
 import {
+  accessAfterRefund,
   hasLaunchPriceLock,
   billingCycleEnd,
   parseEcpayPaymentDate,
@@ -690,9 +691,8 @@ export class BillingService {
         await tx.$executeRaw`SELECT 1 FROM users WHERE id = ${request.userId} FOR UPDATE`;
         const user = await tx.user.findUniqueOrThrow({ where: { id: request.userId } });
         if (payment.entitlementStartsAt && payment.entitlementEndsAt && user.planExpiresAt) {
-          const remaining = Math.min(+payment.entitlementEndsAt - +payment.entitlementStartsAt, Math.max(0, +payment.entitlementEndsAt - Date.now()));
-          const expires = new Date(Math.max(Date.now(), +user.planExpiresAt - remaining));
-          await tx.user.update({ where: { id: user.id }, data: { plan: +expires > Date.now() ? "PRO" : "FREE", planExpiresAt: expires, planCancelRequested: false } });
+          const access = accessAfterRefund(user.planExpiresAt, payment.entitlementStartsAt, payment.entitlementEndsAt, new Date());
+          await tx.user.update({ where: { id: user.id }, data: { ...access, planCancelRequested: false } });
         } else {
           // No ledger means even a single historical purchase cannot distinguish an admin grant.
           throw new Error("Historical entitlement allocation requires review; refund already confirmed");

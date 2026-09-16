@@ -149,7 +149,7 @@ export const batch3Dictionary: Record<string, string> = {
   "Not what you expected? Request a full refund (until {date})": "不符合期待？可在 {date} 前申請全額退款",
   "Request a full refund?": "確定要申請全額退款嗎？",
   "Requests a full refund of your first payment and stops future renewal. The refunded Pro period ends after processing. Bank posting times vary. This guarantee is available once per account.":
-    "會全額退還你的第一筆扣款、取消訂閱，並立即切換回免費方案——不會保留這期剩餘的 Pro 權限。每個帳號只能申請一次。",
+    "申請後會停止續訂並全額退還第一筆扣款。退款確認成功時，立即終止該筆付款的 Pro 權限，不會保留到月底或年度結束；銀行入帳時間依發卡銀行而異。每個帳號限用一次。",
   "Processing…": "處理中…",
   "Refund me": "申請退款",
 

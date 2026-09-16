@@ -15,6 +15,17 @@ export function withinRefundWindow(paidAt: Date | null, deadline: Date | null, r
     receivedAt.getTime() >= paidAt.getTime() && receivedAt.getTime() <= deadline.getTime();
 }
 
+/** Remove only unused access funded by the refunded payment. A separate paid period or
+ * administrator grant is retained. Use one instant for both expiry and plan selection. */
+export function accessAfterRefund(currentExpiry: Date, startsAt: Date, endsAt: Date, now: Date) {
+  if (![currentExpiry, startsAt, endsAt, now].every((date) => Number.isFinite(+date)) || +endsAt < +startsAt) {
+    throw new Error("Invalid entitlement interval requires investigation");
+  }
+  const unused = Math.min(+endsAt - +startsAt, Math.max(0, +endsAt - +now));
+  const planExpiresAt = new Date(Math.max(+now, +currentExpiry - unused));
+  return { plan: +planExpiresAt > +now ? "PRO" as const : "FREE" as const, planExpiresAt };
+}
+
 /** Preserve the original billing day across short months (Jan 31 -> Feb 28 -> Mar 31).
  * Taipei has no DST; an explicit offset keeps server/browser timezones out of billing. */
 export function billingCycleEnd(anchor: Date, period: BillingPeriod, cycles = 1): Date {

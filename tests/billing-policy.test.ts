@@ -1,8 +1,21 @@
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
-import { billingCycleEnd, parseEcpayPaymentDate, refundDeadline, withinRefundWindow } from "../packages/shared/src/billingPolicy";
+import { accessAfterRefund, billingCycleEnd, parseEcpayPaymentDate, refundDeadline, withinRefundWindow } from "../packages/shared/src/billingPolicy";
 
 describe("first-payment refund guarantee", () => {
+  it.each(["MONTHLY", "YEARLY"] as const)("ends refunded %s access immediately while preserving unrelated grants", (period) => {
+    const start = new Date("2026-09-16T00:00:00+08:00");
+    const end = billingCycleEnd(start, period);
+    const now = new Date(+start + 6 * 86400_000);
+    expect(accessAfterRefund(end, start, end, now)).toEqual({ plan: "FREE", planExpiresAt: now });
+    expect(accessAfterRefund(new Date(+end + 3 * 86400_000), start, end, now)).toEqual({ plan: "PRO", planExpiresAt: new Date(+now + 3 * 86400_000) });
+  });
+  it("does not revoke another period when the refunded period has already expired", () => {
+    const start = new Date("2026-01-01Z"), end = new Date("2026-02-01Z"), now = new Date("2026-03-01Z");
+    const current = new Date("2026-04-01Z");
+    expect(accessAfterRefund(current, start, end, now)).toEqual({ plan: "PRO", planExpiresAt: current });
+    expect(() => accessAfterRefund(current, end, start, now)).toThrow("Invalid entitlement");
+  });
   it("counts exactly 168 hours from payment and accepts the deadline itself", () => {
     const paid = new Date("2026-09-12T23:30:00+08:00");
     const deadline = refundDeadline(paid);
