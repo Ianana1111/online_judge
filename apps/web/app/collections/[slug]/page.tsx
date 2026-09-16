@@ -7,7 +7,7 @@ import CollectionDetailClient from "@/components/CollectionDetailClient";
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const collection = await serverFetch<CollectionDetail>(`/collections/${slug}`);
-  if (!collection) return {};
+  if (!collection) return { title: "題目集", description: "依考試與演算法主題，找到適合你的練習題目。" };
 
   const title = collection.title;
   const description = collection.description || `${collection.problems.length} curated problems in the ${collection.title} collection.`;
