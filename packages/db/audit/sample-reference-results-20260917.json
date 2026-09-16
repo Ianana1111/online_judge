@@ -1,0 +1,2273 @@
+{
+  "contentHash": "55c63c24ba8a028f2f36455dd8ea0f9ae2d189483f976fb2b6aac0d11a12f9c7",
+  "mode": "native-macos-sandbox-semantic-audit",
+  "rows": [
+    {
+      "slug": "gpe-10416-last-digit",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 482
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 34
+        }
+      ],
+      "sourceSha256": "515c31fb0f0d6c5989df70984b7ee831f80edf934a827a0b48e37d9f11713f7e"
+    },
+    {
+      "slug": "gpe-10468-maximum-product",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 839
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 32
+        }
+      ],
+      "sourceSha256": "9eae15893af372b10147015d241cb1e13eb681c5f88dcf0c7a026848d0dc38f3"
+    },
+    {
+      "slug": "gpe-10500-brick-wall-patterns",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 403
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 28
+        }
+      ],
+      "sourceSha256": "5186069c5561bb86818c09c3f2ef82132815499b850f55592400fb181aa5478e"
+    },
+    {
+      "slug": "gpe-10501-safe-salutations",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 459
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "5a60f57b243b2af2fe42e769977c62ff62a11236b898aa9b06eb822822222559"
+    },
+    {
+      "slug": "gpe-10520-conformity",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 400
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "b61947ace8719c861afda5e4d5e4fc02504dcbaf93357c6c94a40b187d706e9f"
+    },
+    {
+      "slug": "gpe-10603-cutting-sticks",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 448
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "fab713332261e228887488f101cc8a6b865cf0986a71d00c1ef2653f681fee65"
+    },
+    {
+      "slug": "gpe-2008-06-parser-and-evaluator",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 404
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 32
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 5,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "2f493df1fdd176fef92c7fb05f711ec3be5ad6e1fc0c04304bf2f3a9f50febd3"
+    },
+    {
+      "slug": "gpe-2008-19-set-partition",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 426
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 41
+        }
+      ],
+      "sourceSha256": "37d92142ef71ff826f5540f5017c1caf387b45cb3d9db6960bc69d4dc1a5d892"
+    },
+    {
+      "slug": "gpe-2008-28-longest-monotonically-increasing-subsequence",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 401
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 39
+        }
+      ],
+      "sourceSha256": "22cf4d49c6edb4850a5059d45b7542dc3781d032629e23bf7f43f3e33239388b"
+    },
+    {
+      "slug": "gpe-2008-37-prefix-expression-evaluation",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 417
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "44a45451920261b82167df95e9968abfb57d157604104fe4d42d922cb68cb5ac"
+    },
+    {
+      "slug": "gpe-2009-02-line-overlap-problem",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 413
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 198
+        }
+      ],
+      "sourceSha256": "a1bd4abc2062f855adde6e23a3e914affb1e5735dba6c1633989bfbc470ad2b7"
+    },
+    {
+      "slug": "gpe-2009-17-binary-tree-traversals",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 399
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "ed8ecf3856811dcf547e0d563aaa70c68d81fd68b254b1841047cfa952c5234b"
+    },
+    {
+      "slug": "gpe-2009-24-unique-lines",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 408
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 34
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 32
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 33
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "5f3ada153ef9fa54559dbdfb5a8cc26e677c182eed2290db8b21ea823f9faf9c"
+    },
+    {
+      "slug": "gpe-2015-01-missing-numbers",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 631
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 33
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 167
+        }
+      ],
+      "sourceSha256": "cdd442c3b5149cca7a14d22d8ae9b11991dec4f584d8cc6a07d572aed3c4c1ac"
+    },
+    {
+      "slug": "gpe-2015-02-recursion-and-mod",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 415
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 28
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 34
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 33
+        }
+      ],
+      "sourceSha256": "79b89737fcd0b9b8765e3d426b3a066bf1a2df84e4545e06ffce50589f7df92f"
+    },
+    {
+      "slug": "gpe-2015-03-sudoku-as-good-as-lee-hsien-loong",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 449
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "6a89b50b79e92df5882fa10384a0d6a4d31c1e9b212a3bf3b8c549af05ddcc07"
+    },
+    {
+      "slug": "gpe-2015-04-the-n-th-element",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 401
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "2885943f8f7a85491c7524cbe384074de5e59c99d8f6a72ccc9db84c3f32150b"
+    },
+    {
+      "slug": "gpe-2015-07-minimum-path-sum",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 407
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 40
+        }
+      ],
+      "sourceSha256": "df701b0f4e469351ae9aaa4f2047cfc4f9424c348bf9941ef2a3232a9480c8ad"
+    },
+    {
+      "slug": "gpe-2015-08-climbing-stairs",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 422
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "59789aa4ef2477348bc067c77a3769f001044a16983e38a72f48a64cf2b64b51"
+    },
+    {
+      "slug": "gpe-2015-09-longest-increasing-subsequence",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 403
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 33
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 93
+        }
+      ],
+      "sourceSha256": "92091f51586c98ed4a6a9a23ca235066eb7512bcac5b86ec5f96260c87fe4b64"
+    },
+    {
+      "slug": "gpe-22261-sorting-the-alphanumeric-list-in-comma-separated-value-forma",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 408
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 35
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 34
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 35
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 41
+        }
+      ],
+      "sourceSha256": "08be39ae3a8b2b214d232d176ef5c2411b103b16fd1ba31586293aaff52e319c"
+    },
+    {
+      "slug": "gpe-25081-solving-maze-problems",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 557
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 32
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 4,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 5,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 6,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 7,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 8,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "e2c46af39f6c61daed0c509909d758e90bf13e2d635a8fb6e41946e61963a9e0"
+    },
+    {
+      "slug": "uva-10004-bicoloring",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 410
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 32
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "32768ca374c0de405b91448604479babb8c63f7f16f0cd2d1b878261db86f63c"
+    },
+    {
+      "slug": "uva-10010-where-s-waldorf",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 403
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 32
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 32
+        }
+      ],
+      "sourceSha256": "3aaccb8ee649c8f26ea8e1cff2b2d1436563e0b41dade388497336ebabd4b1f3"
+    },
+    {
+      "slug": "uva-10018-reverse-and-add",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 414
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 28
+        }
+      ],
+      "sourceSha256": "b4a0f4c2f3ec7f3e64ab0a4db0f7c7aa9a4b59e9b0a28790355175ac9f4e53e4"
+    },
+    {
+      "slug": "uva-10025-the-1-2-n-k-problem",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 407
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "6ce293870a6fef6d0808f32468f4d20fd7fe3772b4de46eb4853f0790d167aab"
+    },
+    {
+      "slug": "uva-10026-shoemaker-s-problem",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 400
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 44
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "03f33b3acbe2edeadf4a2c209fb43ecd66300e5d3971c5a52ef677955a38ad53"
+    },
+    {
+      "slug": "uva-10032-tug-of-war",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 400
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 47
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 61
+        }
+      ],
+      "sourceSha256": "184ac2088b871e9fe3459ea02497e8622c4d12a41ab8da4f5e91c2aa9215a662"
+    },
+    {
+      "slug": "uva-10036-divisibility",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 422
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 28
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "e0574bb9fc720e6e58e1291cfa0a64e1045701ea1377adfd1f714f913eba0134"
+    },
+    {
+      "slug": "uva-10066-the-twin-towers",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 397
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "8b659fdebdd8b9a2f3c46b99bdbd3fa41d5674f63ddaa7682d5110d8450fd4c0"
+    },
+    {
+      "slug": "uva-10074-take-the-land",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 394
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 49
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "fc655d3bad6bbb1a501bbceabdf928d56078e5743d1e429e82885fdb249d270d"
+    },
+    {
+      "slug": "uva-10079-pizza-cutting",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 558
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "bca5347804a388bdb1f784a936239a3dc03ce38596b5749afbb3cf69701d2be8"
+    },
+    {
+      "slug": "uva-10082-wertyu",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 410
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "4b79aa6e64bd28e902f239aa4d314c6fd7e26e98c6bf0cf2a95a639fcc452fd8"
+    },
+    {
+      "slug": "uva-10099-the-tourist-guide",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 456
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 33
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "cb869241bb7ebf3c2aa90a9e729b0e9bf6f48ffa235a56321ee412727835bd53"
+    },
+    {
+      "slug": "uva-10106-product",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 410
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 27
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 28
+        }
+      ],
+      "sourceSha256": "4f5caefd5456d0091c2169aa8a5d697b0cf7e4cfa84f288f24f574ebe8265afa"
+    },
+    {
+      "slug": "uva-10107-what-is-the-median",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 401
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "565304d1ee0fdd06c63cafda6e4370ea93507ec6ebb3cbe8e480742ec01e461d"
+    },
+    {
+      "slug": "uva-10110-light-more-light",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 418
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "330052e6f1108a59c0b209af074a43cfd8a5abcf6ca8b1b9eaf450a629c26020"
+    },
+    {
+      "slug": "uva-10130-supersale",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 402
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 33
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "64d4c49d533648556c4b05d2d64d4f5a5aabd8678b9aa19d223e7934fea85380"
+    },
+    {
+      "slug": "uva-10150-doublets",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 417
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 35
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 33
+        }
+      ],
+      "sourceSha256": "8c3fe756a19f0ade5ee340f05132b5bdd0f48a26ee6f6749e9bce317613bcc1e"
+    },
+    {
+      "slug": "uva-10161-ant-on-a-chessboard",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 636
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 56
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "8ec4a5521d23c730121a5297b6f65f484a0ad1331164ae342dedda957d667481"
+    },
+    {
+      "slug": "uva-10188-automated-judge-script",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 622
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 29
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        },
+        {
+          "kind": "testCases",
+          "ord": 1000,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "6679d71e7888bc4ce13b57ecd903fdb21a3e6d6483c4a0a9cb2549a3f5a37a51"
+    },
+    {
+      "slug": "uva-10191-longest-nap",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 408
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 33
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "a98cbbc7183236e81f50e81929fb3dc674a7416466adf76edfda38824635f923"
+    },
+    {
+      "slug": "uva-10200-prime-time",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 431
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 54
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 57
+        }
+      ],
+      "sourceSha256": "3e968b4251ff2e176e8002260af1778a0d4ad0895fc01952cc110f49c4ab9782"
+    },
+    {
+      "slug": "uva-10229-modular-fibonacci",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 398
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "1c16a12a9fa596ab1fe4aa3a8055ab650d3ba214748aacb9f3ee1aab0e4755c4"
+    },
+    {
+      "slug": "uva-10267-graphical-editor",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 418
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 35
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 34
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 34
+        }
+      ],
+      "sourceSha256": "49aaa8db9726929af9e35f782da55d883d9d4cc8f1fb793f504feb87387a985e"
+    },
+    {
+      "slug": "uva-10273-eat-or-not-to-eat",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 624
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 34
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 32
+        }
+      ],
+      "sourceSha256": "f287258af87dff36b4e74148e8d6b1a179811e2971b1c3dd780c597b8866c4b8"
+    },
+    {
+      "slug": "uva-10309-turn-the-lights-off",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 400
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 37
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "c9b24aa89722194f3d5c890bf26fa40682facc212906717b67b629ee5ac21811"
+    },
+    {
+      "slug": "uva-10326-the-polynomial-equation",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 397
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "2c9e4fc4ad046e6a64873aa58b5d024ce857994a42437c14d77774a45be81c37"
+    },
+    {
+      "slug": "uva-10327-flip-sort",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 420
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 35
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "0c85d2fcf5697b3de7658507fe9bd370fdb6262f69adb17cffe131f3ff187bd5"
+    },
+    {
+      "slug": "uva-10336-rank-the-languages",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 401
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "8d1c7094abcaf9014bfbba8e9771c4d02e0e36f49a12fc8036965ee50d51a8c8"
+    },
+    {
+      "slug": "uva-10355-superman",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 401
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 32
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "5695e7d3e61cec2a5c55edd8d6b499245a9462f018b41b362bc104dbe45be4cd"
+    },
+    {
+      "slug": "uva-10364-square",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 416
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 32
+        }
+      ],
+      "sourceSha256": "9ee5d980e60d6a15cca2cc5e29eeb8027796aa9cb92afacdebe38b9160c38c75"
+    },
+    {
+      "slug": "uva-10365-blocks",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 410
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "88f881830155487a81bb0f9cbd6c3d55e4c6a7ef59d563bc55d991e46bc41c15"
+    },
+    {
+      "slug": "uva-10369-arctic-network",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 412
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 41
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "5b67f1b2f21e6d288e30a8f708c01e25a9c0c44249a06b0174aec7cf8854bb44"
+    },
+    {
+      "slug": "uva-10382-watering-grass",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 411
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 56
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "1aafe4164d7835a3015a1069120a6108963c96957056299e19a525568516411e"
+    },
+    {
+      "slug": "uva-10397-connect-the-campus",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 435
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 92
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "49751ec271b9333a0eceb7428f8c3735b10a98126f1d13ae7baf44ee3256f8c9"
+    },
+    {
+      "slug": "uva-10405-longest-common-subsequence",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 411
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 1000,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 1001,
+          "verdict": "AC",
+          "elapsedMs": 35
+        }
+      ],
+      "sourceSha256": "64e95a4e449e0a3c4e145648e7478b11e56248d40f7c937ddb3507dbc64d9e00"
+    },
+    {
+      "slug": "uva-10407-simple-division",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 416
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 33
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "52ec19b29ceb9f3751d17d9e0748d67d0adad1ceae175af27492ad2e6ac6b286"
+    },
+    {
+      "slug": "uva-10443-rock-scissors-paper",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 215
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 29
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 28
+        }
+      ],
+      "sourceSha256": "82469bbbf10bfe7eb61655fe104cae5b4ba00c5bba517cf4bc686601dc09cc48"
+    },
+    {
+      "slug": "uva-10474-where-is-the-marble",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 406
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "bd098b7bcbe561665d3d1ec3f5b3f987a064c2a5dc32f9a654d3336fe8707e9e"
+    },
+    {
+      "slug": "uva-10487-closest-sums",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 406
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 83
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "7c259b0ded1251c75ffb2fc3833883af4ec61a19b3b41706c463c39c0625b882"
+    },
+    {
+      "slug": "uva-105-the-skyline-problem",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 680
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 33
+        }
+      ],
+      "sourceSha256": "26d3f1942fdd6f4c42b35e4913b1aa3418dd5b3eb23e069fcfa9d98855cf4d83"
+    },
+    {
+      "slug": "uva-10530-guessing-game",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 415
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 32
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "23b7f7c32ce566d62e372d20bbbd42ed1d429e5c490a98550701616600daf9e6"
+    },
+    {
+      "slug": "uva-10533-digit-primes",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 411
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 42
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 45
+        }
+      ],
+      "sourceSha256": "e38cd95472602143c7465c280ae43d676488b6e263d82e98b67130c072dfcb65"
+    },
+    {
+      "slug": "uva-10539-almost-prime-numbers",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 479
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 34
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 35
+        },
+        {
+          "kind": "testCases",
+          "ord": 3,
+          "verdict": "AC",
+          "elapsedMs": 35
+        }
+      ],
+      "sourceSha256": "0a8b0e2c8c2a755782eff13bb88f8fa142eb96ad6c86f26f6f176b8de2729c46"
+    },
+    {
+      "slug": "uva-10550-combination-lock",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 410
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "8428f965afb65d8fbb5107ec55f1ab79ded35a55e38331a5d5448e7a55385ea9"
+    },
+    {
+      "slug": "uva-1056-degrees-of-separation",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 408
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "a59704a5823224839d1c3a77e5383db51c2e07a09138b68b46b299b9ac4c2972"
+    },
+    {
+      "slug": "uva-10583-ubiquitous-religions",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 413
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 217
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "c8d48ca196411c081830aa6c47c31fd6824669290d5409cd4c35acae8f723136"
+    },
+    {
+      "slug": "uva-10591-happy-number",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 412
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 32
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "19c7a59f1b9e80e5f282a4cb3df963263fe712ca73390bb3a2d7cb9b0f7743b5"
+    },
+    {
+      "slug": "uva-10603-fill",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 398
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "ca782c6f35d1f861be1af0c509ba4c7bf30ecad642b13e9b68d9cf4a6d0d4004"
+    },
+    {
+      "slug": "uva-1062-containers",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 419
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 33
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "818b9eb2e499e3c1006555673907d82fa6125536800d27e58b2f61c0b796ff27"
+    },
+    {
+      "slug": "uva-10633-rare-easy-problem",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 408
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 28
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "23855d2424209e3d450b3f2174ef7cf3a969cf62fa2621072821fa6a3f821496"
+    },
+    {
+      "slug": "uva-10664-luggage",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 405
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 32
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 30
+        }
+      ],
+      "sourceSha256": "283eb369354bb319ee8f1717f9a1d9891abcbe250a649283769e3075f9db1e06"
+    },
+    {
+      "slug": "uva-10721-bar-codes",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 410
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 29
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "e26431f979ad0818776463391176636988847cc6cabaecafd5c3dc15b079b3b8"
+    },
+    {
+      "slug": "uva-10740-first-love",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 405
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 31
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 31
+        }
+      ],
+      "sourceSha256": "b6ab3caff63c382fe8f2c57761b96357136f24071b9d41e2d18a8a4197e0e715"
+    },
+    {
+      "slug": "uva-10763-foreign-exchange",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 417
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 338
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 34
+        }
+      ],
+      "sourceSha256": "271cab0e09e86089e3343b8e1e86758067e84bf8a080757d12bc4c5860be3aad"
+    },
+    {
+      "slug": "uva-10789-prime-frequency",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 404
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 30
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "f8f06466c2907f014617df70243526d42c9997a21f1fe071cbecbcb5aec0fe7b"
+    },
+    {
+      "slug": "uva-1101-addmul",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 583
+        }
+      ],
+      "sourceSha256": "a036caf391d7241a0a972ec900d4606bed6103d93a94b176ce805bd61fafb12b"
+    },
+    {
+      "slug": "uva-11085-back-to-the-8-queens",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 419
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 34
+        }
+      ],
+      "sourceSha256": "590ffe878ab22d37bb05d8e5ed280dcaab3ffc23159e2cdf6a89e45b9627ab46"
+    },
+    {
+      "slug": "uva-11094-continents",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 406
+        },
+        {
+          "kind": "testCases",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 29
+        },
+        {
+          "kind": "testCases",
+          "ord": 2,
+          "verdict": "AC",
+          "elapsedMs": 29
+        }
+      ],
+      "sourceSha256": "bb867c7cc787e0ba619e45f517338ca4bd88d016f27a97082eaf61d21d511d84"
+    },
+    {
+      "slug": "uva-1203-argus",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 596
+        }
+      ],
+      "sourceSha256": "57008acceecdc2dfa5fa4bd5e3876e6720c013670460931bb7bea18bc8045dba"
+    },
+    {
+      "slug": "uva-13211-geonosis",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 408
+        }
+      ],
+      "sourceSha256": "057e6cf0c496960172270f4314c48ec9b3ae99453b3cf1f5301e02e1aed83f38"
+    },
+    {
+      "slug": "uva-798-title-puzzle",
+      "mode": "native-macos-sandbox-semantic-audit",
+      "checks": [
+        {
+          "kind": "samples",
+          "ord": 1,
+          "verdict": "AC",
+          "elapsedMs": 413
+        }
+      ],
+      "sourceSha256": "ed5cb32a1fe32fa9f01aa19568605c826ecec0838d7683accd61d1177655ed73"
+    }
+  ]
+}

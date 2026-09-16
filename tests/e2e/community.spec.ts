@@ -59,3 +59,20 @@ test("administrator reviews exact content without loading embedded tracking mark
   await page.getByRole("button", { name: "退回修改", exact: true }).click(); await expect(page.getByText("目前沒有等待審核的內容。", { exact: true })).toBeVisible();
   expect(writes).toEqual([{ path: `/moderation/${revisionId}/review`, body: { decision: "REJECTED", reason: "請補上邊界案例。" } }]); expect(trackers).toHaveLength(0);
 });
+
+for (const theme of ["dark", "light"]) test(`my posts: aligned actions and long titles (${theme})`, async ({ page }, info) => {
+  await mock(page); await page.addInitScript((theme) => localStorage.setItem("theme", theme), theme);
+  await page.goto("/discussion");
+  const create = page.getByRole("link", { name: "＋ 發起討論", exact: true }), mine = page.getByRole("link", { name: "我的投稿", exact: true });
+  await expect(mine).toBeVisible(); const [a, b] = await Promise.all([create.boundingBox(), mine.boundingBox()]);
+  expect(a && b && Math.abs(a.height - b.height)).toBeLessThanOrEqual(1);
+  if (a && b && a.y === b.y) expect(Math.abs(a.y + a.height / 2 - b.y - b.height / 2)).toBeLessThanOrEqual(1);
+  await page.route("http://127.0.0.1:55440/posts/mine", (route) => route.fulfill({ json: { items: [
+    { ...post, id: "pending", title: "沒有空格的長標題".repeat(18), status: "PENDING", reason: null, publishedAt: null },
+    { ...post, id: "rejected", status: "REJECTED", reason: "請補充邊界案例。\n" + "long_reference_identifier_".repeat(12) },
+    { ...post, id: "approved", status: "APPROVED", reason: null },
+  ], nextCursor: null } }));
+  await mine.click(); await expect(page.getByRole("heading", { name: "我的投稿", exact: true })).toBeVisible();
+  await expect(page.getByText("等待審核", { exact: true })).toBeVisible(); await expect(page.getByText("需要修改", { exact: true })).toBeVisible();
+  await accessibility(page); await page.screenshot({ path: info.outputPath(`my-posts-${theme}.png`), fullPage: true });
+});

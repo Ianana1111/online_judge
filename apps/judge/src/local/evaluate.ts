@@ -3,7 +3,8 @@ import type { Problem, TestCase } from "@oj/db";
 import type { JudgeOutcome } from "../remote/uva.js";
 import { LANGUAGES } from "./languages.js";
 import { checkProblemOutput } from "./checkers.js";
-import { OUTPUT_CAP_BYTES, compileInSandbox, runOneCase } from "./sandboxRun.js";
+import { compileInSandbox, runOneCase } from "./sandboxRun.js";
+import { runtimeVerdict } from "./runVerdict.js";
 
 /** One verdict implementation shared by the deployed worker and offline container audit.
  * Sandbox creation/credentials/lifetime are the caller's responsibility. */
@@ -29,13 +30,8 @@ export async function evaluateInSandbox(
     maxTimeMs = Math.max(maxTimeMs, run.timeMs);
     if (run.memoryKb !== null) maxMemoryKb = Math.max(maxMemoryKb ?? 0, run.memoryKb);
     const metrics = { timeMs: maxTimeMs, memoryKb: maxMemoryKb };
-    if (run.timedOut) return { status: "TLE", ...metrics };
-    if (run.exitCode !== 0) {
-      const mle = /bad_alloc|cannot allocate memory|memoryerror|outofmemoryerror|std::length_error/i.test(run.stderr);
-      return { status: run.exitCode === 153 ? "OLE" : mle ? "MLE" : "RE", ...metrics };
-    }
-    if (run.memoryKb !== null && run.memoryKb > problem.memoryLimitKb) return { status: "MLE", ...metrics };
-    if (Buffer.byteLength(run.stdout) >= OUTPUT_CAP_BYTES) return { status: "OLE", ...metrics };
+    const failure = runtimeVerdict(run, problem.memoryLimitKb);
+    if (failure) return { status: failure, ...metrics };
     if (!checkProblemOutput(problem, tc.input, tc.output, run.stdout)) return { status: "WA", ...metrics };
   }
   return { status: "AC", timeMs: maxTimeMs, memoryKb: maxMemoryKb, score: 100 };

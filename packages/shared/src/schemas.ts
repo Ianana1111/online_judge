@@ -44,19 +44,18 @@ export const judgeResultSchema = z.object({
 });
 export type JudgeResultDto = z.infer<typeof judgeResultSchema>;
 
-// "Run" (test code against sample/custom input, no verdict/persistence) — see queue.ts's
-// TEST_RUN_QUEUE_NAME. Capped at 8 cases / 4KB input each: this is meant for eyeballing a sample
-// or a quick hand-written edge case, not a stress-test harness — anyone needing that already has
-// the real Submit path (or, once configured, the local judge's own TestCase-backed run).
+// Official samples are resolved on the server. Custom inputs remain bounded; clients never
+// supply a trusted expected answer or a reference to hidden judge data.
 export const runCaseInputSchema = z.object({
   id: z.string().min(1).max(64),
-  input: z.string().max(4096),
-});
+  input: z.string().max(4096).optional(),
+  sampleOrd: z.number().int().min(0).optional(),
+}).refine((c) => c.input !== undefined || c.sampleOrd !== undefined, "Input or sample is required");
 export const createRunSchema = z.object({
   problemId: z.string().cuid(),
   languageKey: z.enum(["cpp17", "c11", "python3", "java17"]),
   sourceCode: z.string().min(1).max(65536),
-  cases: z.array(runCaseInputSchema).min(1).max(8),
+  cases: z.array(runCaseInputSchema).min(1).max(8).refine((cases) => new Set(cases.map((c) => c.id)).size === cases.length, "Case IDs must be unique"),
 });
 export type CreateRunDto = z.infer<typeof createRunSchema>;
 
@@ -67,6 +66,9 @@ export const runCaseResultSchema = z.object({
   timeMs: z.number().int().min(0),
   timedOut: z.boolean(),
   exitCode: z.number().int(),
+  // AC/WA apply only to an unchanged official sample, never to a custom input.
+  verdict: z.enum(["AC", "WA", "TLE", "MLE", "RE", "OLE"]).optional(),
+  outputTruncated: z.boolean().optional(),
 });
 export type RunCaseResultDto = z.infer<typeof runCaseResultSchema>;
 

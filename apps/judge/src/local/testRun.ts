@@ -1,29 +1,28 @@
 import type { Sandbox } from "@vercel/sandbox";
 import { prisma } from "@oj/db";
-import type { RunCaseResultDto, TestRunResultDto } from "@oj/shared";
+import type { RunCaseResultDto, TestRunResultDto, TestRunJobData } from "@oj/shared";
 import { LANGUAGES } from "./languages.js";
 import { compileInSandbox, createJudgeSandbox, logSandboxApiError, runOneCase } from "./sandboxRun.js";
 import { notePoolActivity, tryClaimPooledSandbox } from "./sandboxPool.js";
+import { checkProblemOutput } from "./checkers.js";
+import { runtimeVerdict } from "./runVerdict.js";
 
-// Shorter than the real judge's 90s (judge.ts) — a "Run" is a handful of small sample/custom
-// cases for eyeballing output, not a stress-test suite, and this feature has no per-user quota
-// (see RunsService's cooldown), so sandbox spin-up cost needs to stay bounded.
-const RUN_SANDBOX_TIMEOUT_MS = 30_000;
+// Match Submit's sandbox lifetime, including compilation and per-language time multipliers.
+const RUN_SANDBOX_TIMEOUT_MS = 90_000;
 const STDOUT_CAP_CHARS = 100_000; // plenty for a sample/custom test's output; guards the Redis
 // cache + SSE payload against a runaway print loop the user is actively debugging.
 
 /**
  * Compiles `sourceCode` once and runs it against every given case, returning raw stdout/stderr
- * per case — no checker, no verdict, nothing persisted. This is deliberately independent of
- * `judgeLocally` (judge.ts): it works for every problem (any problem has Samples), not just the
- * subset with local TestCase rows, since there's no hidden expected output to check against here.
+ * per case. Official samples use Submit's checker; custom inputs have no expected answer.
+ * Sample results are never persisted as submission verdicts and do not imply hidden tests pass.
  */
 export async function runTestCases(
   runId: string,
   problemId: string,
   languageKey: string,
   sourceCode: string,
-  cases: { id: string; input: string }[],
+  cases: TestRunJobData["cases"],
 ): Promise<TestRunResultDto> {
   const snapshotId = process.env.JUDGE_SANDBOX_SNAPSHOT_ID;
   if (!snapshotId) {
@@ -35,9 +34,9 @@ export async function runTestCases(
   }
   const problem = await prisma.problem.findUnique({
     where: { id: problemId },
-    select: { timeLimitMs: true, memoryLimitKb: true },
+    select: { visibility: true, timeLimitMs: true, memoryLimitKb: true, checkerType: true, floatEps: true, uvaId: true, slug: true, samples: { select: { ord: true, input: true, output: true } } },
   });
-  if (!problem) {
+  if (!problem?.visibility) {
     return { runId, status: "ERROR", compileError: "Problem not found." };
   }
 
@@ -69,16 +68,24 @@ export async function runTestCases(
     const timeLimitMs = problem.timeLimitMs * lang.timeMultiplier;
     const results: RunCaseResultDto[] = [];
     for (const c of cases) {
+      const sample = c.sampleOrd === undefined ? undefined : problem.samples.find((s) => s.ord === c.sampleOrd);
+      if ((c.sampleOrd !== undefined && !sample) || (!sample && c.input === undefined) || (sample && c.input !== undefined && c.input !== sample.input)) {
+        return { runId, status: "ERROR", compileError: "Sample has changed. Reload the problem and run again." };
+      }
+      const input = sample?.input ?? c.input!;
       const tCaseStart = Date.now();
       const run = await runOneCase(
         sandbox,
         lang.runCmd({ memKb: problem.memoryLimitKb }),
-        c.input,
+        input,
         timeLimitMs,
         problem.memoryLimitKb,
         lang.ulimitMemory,
       );
       caseTimings.push(Date.now() - tCaseStart);
+      const failure = runtimeVerdict(run, problem.memoryLimitKb);
+      // Compare full stdout before truncating its display payload.
+      const verdict = failure ?? (sample ? (checkProblemOutput(problem, input, sample.output, run.stdout) ? "AC" : "WA") : undefined);
       results.push({
         id: c.id,
         stdout: run.stdout.slice(0, STDOUT_CAP_CHARS),
@@ -86,6 +93,8 @@ export async function runTestCases(
         timeMs: run.timeMs,
         timedOut: run.timedOut,
         exitCode: run.exitCode,
+        verdict,
+        outputTruncated: run.stdout.length > STDOUT_CAP_CHARS,
       });
     }
 

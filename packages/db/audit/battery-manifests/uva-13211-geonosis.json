@@ -5,7 +5,13 @@
   "candidates": [
     {
       "tag": "correct",
-      "label": "Floyd-Warshall once on the full original graph for all-pairs shortest paths (destroyed towers do NOT get excluded as future intermediate nodes -- only removed from the summed pairs), then maintain a running sum over active-tower ordered pairs, subtracting a tower's contribution when it's destroyed, accumulating each step's running sum into a grand total (the actual required output per the worked example: 89+7+0=96, not per-step values). Hand-verified exactly against test cases 1 and 2 of the given sample by tracing Floyd-Warshall and the running-sum bookkeeping by hand.",
+      "label": "Add towers in reverse destruction order, applying one Floyd-Warshall intermediate at each step and summing active ordered pairs. Destroyed towers never remain usable as intermediates.",
+      "languageKey": "cpp17",
+      "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int t; cin >> t;\n    while(t--){\n        int n; cin >> n;\n        vector<vector<long long>> d(n, vector<long long>(n));\n        for(auto &row:d) for(auto &v:row) cin >> v;\n        vector<int> order(n); for(auto &v:order) cin >> v;\n        vector<bool> active(n,false); long long total=0;\n        for(int step=n-1;step>=0;--step){\n            int k=order[step]; active[k]=true;\n            for(int i=0;i<n;++i) for(int j=0;j<n;++j) d[i][j]=min(d[i][j],d[i][k]+d[k][j]);\n            for(int i=0;i<n;++i) if(active[i]) for(int j=0;j<n;++j) if(active[j]) total+=d[i][j];\n        }\n        cout << total << \"\\n\";\n    }\n}\n"
+    },
+    {
+      "tag": "custom",
+      "label": "Incorrect: computes Floyd-Warshall once and continues using destroyed towers as intermediate nodes.",
       "languageKey": "cpp17",
       "sourceCode": "#include <bits/stdc++.h>\nusing namespace std;\ntypedef long long ll;\nint main(){\n    int t;\n    scanf(\"%d\",&t);\n    while(t--){\n        int n;\n        scanf(\"%d\",&n);\n        vector<vector<ll>> d(n, vector<ll>(n));\n        for(int i=0;i<n;i++) for(int j=0;j<n;j++) scanf(\"%lld\",&d[i][j]);\n        for(int k=0;k<n;k++)\n            for(int i=0;i<n;i++)\n                for(int j=0;j<n;j++)\n                    if(d[i][k]+d[k][j] < d[i][j]) d[i][j]=d[i][k]+d[k][j];\n        vector<int> order(n);\n        for(int i=0;i<n;i++) scanf(\"%d\",&order[i]);\n        vector<bool> active(n,true);\n        ll total=0;\n        for(int i=0;i<n;i++) for(int j=0;j<n;j++) if(i!=j) total += d[i][j];\n        ll grandTotal=0;\n        for(int step=0; step<n; step++){\n            int x=order[step];\n            grandTotal += total;\n            for(int y=0;y<n;y++){\n                if(y!=x && active[y]){\n                    total -= d[x][y];\n                    total -= d[y][x];\n                }\n            }\n            active[x]=false;\n        }\n        printf(\"%lld\\n\", grandTotal);\n    }\n}\n"
     },

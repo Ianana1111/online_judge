@@ -1,4 +1,4 @@
-import { ForbiddenException, HttpException, HttpStatus, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
 import type { Queue } from "bullmq";
 import type Redis from "ioredis";
@@ -36,8 +36,15 @@ export class RunsService {
   ) {}
 
   async create(userId: string, dto: CreateRunDto): Promise<{ id: string }> {
-    const problem = await prisma.problem.findUnique({ where: { id: dto.problemId }, select: { id: true } });
+    const problem = await prisma.problem.findFirst({ where: { id: dto.problemId, visibility: true }, select: { id: true, samples: { select: { ord: true, input: true } } } });
     if (!problem) throw new NotFoundException("Problem not found");
+    for (const c of dto.cases) {
+      if (c.sampleOrd === undefined) continue;
+      const sample = problem.samples.find((s) => s.ord === c.sampleOrd);
+      if (!sample || (c.input !== undefined && c.input !== sample.input)) {
+        throw new BadRequestException("Sample has changed. Reload the problem and run again.");
+      }
+    }
 
     // Same atomic-claim cooldown as submit (see SubmissionsService) — shorter, since Run is meant
     // for fast iterate-and-check, not a scarce resource, but a sandbox still costs real compute

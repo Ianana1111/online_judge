@@ -27,7 +27,7 @@ export interface TestRunJobData {
   problemId: string;
   languageKey: string;
   sourceCode: string;
-  cases: { id: string; input: string }[];
+  cases: { id: string; input?: string; sampleOrd?: number }[];
 }
 
 export function testRunResultChannel(runId: string): string {

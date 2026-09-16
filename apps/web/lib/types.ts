@@ -212,10 +212,7 @@ export interface ProblemDetail {
   samples: Sample[];
 }
 
-// The "Run" feature (test code against sample/custom input without submitting) — see
-// TestPanel.tsx / apps/api/src/runs. Deliberately not a Verdict: there's no AC/WA here, just raw
-// output the caller compares against an expected value itself (samples) or just reads (custom
-// cases).
+// Run results are temporary. AC/WA refer only to an official sample, not the hidden suite.
 export type RunStatus = "RUNNING" | "DONE" | "COMPILE_ERROR" | "ERROR";
 
 export interface RunCaseResult {
@@ -225,6 +222,8 @@ export interface RunCaseResult {
   timeMs: number;
   timedOut: boolean;
   exitCode: number;
+  verdict?: "AC" | "WA" | "TLE" | "MLE" | "RE" | "OLE";
+  outputTruncated?: boolean;
 }
 
 export interface RunResult {
@@ -613,6 +612,9 @@ export interface CollectionListItem {
   description: string;
   category: string;
   problemCount: number;
+  tags?: string[];
+  difficultyMin?: number | null;
+  difficultyMax?: number | null;
 }
 
 export type CollectionProblemItem = ProblemRow;
@@ -622,6 +624,7 @@ export interface CollectionDetail {
   slug: string;
   title: string;
   description: string;
+  category?: string;
   problems: CollectionProblemItem[];
 }
 

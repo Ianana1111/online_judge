@@ -5,7 +5,7 @@ import { judgeViaUva } from "../apps/judge/src/remote/uva";
 import type { Problem, TestCase } from "@oj/db";
 
 const fixtures = vi.hoisted(() => ({ error: Object.assign(new Error("private-code bearer-secret postgres://private-connection"), { status: 503, text: "private-code", json: { authorization: "bearer-secret" } }) }));
-vi.mock("../packages/db/src/index.ts", () => ({ prisma: { problem: { findUnique: vi.fn().mockResolvedValue({ timeLimitMs: 1000, memoryLimitKb: 65536 }) } } }));
+vi.mock("../packages/db/src/index.ts", () => ({ prisma: { problem: { findUnique: vi.fn().mockResolvedValue({ visibility: true, timeLimitMs: 1000, memoryLimitKb: 65536, samples: [] }) } } }));
 vi.mock("../apps/judge/src/local/sandboxRun.js", async (original) => ({ ...await original<typeof import("../apps/judge/src/local/sandboxRun")>(), createJudgeSandbox: vi.fn().mockRejectedValue(fixtures.error) }));
 vi.mock("../apps/judge/src/local/sandboxPool.js", () => ({ notePoolActivity: vi.fn(), tryClaimPooledSandbox: vi.fn().mockResolvedValue(null) }));
 vi.mock("../apps/judge/src/remote/uvaClient.js", () => ({ uvaLogin: vi.fn().mockRejectedValue(fixtures.error), fetchMyStatus: vi.fn(), submitSolution: vi.fn(), mapUvaVerdictText: vi.fn() }));
