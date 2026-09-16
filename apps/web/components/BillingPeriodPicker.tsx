@@ -29,15 +29,19 @@ export function BillingPeriodPicker({ period, prices, onChange, disabled = false
   );
 }
 
-export function BillingPriceDetails({ period, prices }: { period: BillingPeriod; prices: Prices }) {
+export function BillingPriceDetails({ period, prices, promo, pricing }: {
+  period: BillingPeriod; prices: Prices; promo?: BillingPlans["promo"]; pricing?: BillingPlans["pricing"];
+}) {
   const t = useT();
   const annual = period === "YEARLY";
   const saving = prices.MONTHLY * 12 - prices.YEARLY;
   const amount = prices[period].toLocaleString();
+  const comparison = promo && pricing && pricing[period].amountNtd > prices[period] ? pricing[period].amountNtd : null;
   return (
     <div aria-live="polite" aria-atomic="true" className="min-h-[156px] py-5">
       <p className="text-xs leading-5 text-ink-400">
-        {annual && saving > 0 ? <>{t("12 monthly payments total")} <s className="ml-1">NT${(prices.MONTHLY * 12).toLocaleString()}</s></> : t("Pay one month at a time")}
+        {comparison ? <>{t("New subscription price after launch")} <s className="ml-1">NT${comparison.toLocaleString()}</s></>
+          : annual && saving > 0 ? <>{t("12 monthly payments total")} <s className="ml-1">NT${(prices.MONTHLY * 12).toLocaleString()}</s></> : t("Pay one month at a time")}
       </p>
       <p className="mt-1 flex flex-wrap items-baseline gap-x-1.5">
         <span className="font-display text-[44px] font-semibold leading-tight tracking-[-0.04em] text-ink-50">NT${amount}</span>
@@ -48,6 +52,7 @@ export function BillingPriceDetails({ period, prices }: { period: BillingPeriod;
           ? t("NT${total} billed yearly, about NT${average}/month.", { total: amount, average: Math.round(prices.YEARLY / 12).toLocaleString() })
           : t("NT${amount} billed monthly. Cancel renewal anytime.", { amount })}
       </p>
+      {comparison && <p className="mt-2 text-xs leading-relaxed text-ink-300">{t("Join during launch and keep this renewal price while your subscription continues.")}</p>}
     </div>
   );
 }

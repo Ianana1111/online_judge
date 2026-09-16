@@ -1,4 +1,6 @@
 export const billingLaunchDictionary: Record<string, string> = {
+  "New subscription price after launch": "開幕優惠結束後的新訂閱價格",
+  "Join during launch and keep this renewal price while your subscription continues.": "開幕期間加入，持續續訂就維持此優惠價。",
   "This only cancels renewal; it does not request a refund. After the 7-day first-payment refund window, your paid monthly or annual access continues until expiry.": "這個操作只取消續訂，不會申請退款。首次付款超過 7 天後不適用首次退款保證；已付費的月繳或年繳權限仍保留至到期日。",
   "Refund processed. Bank posting times vary.": "退款已處理，該筆付款的 Pro 權限已終止。實際入帳時間依發卡銀行而異。",
   "Your refund request is saved and awaiting payment verification. You do not need to submit it again.": "退款申請已保存，正在核對金流結果，無需重複申請。",

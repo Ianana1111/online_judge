@@ -33,10 +33,10 @@ export default function RefundPolicyPage() {
         <h2 className="font-display text-lg font-semibold text-ink-50">方案價格</h2>
         <ul className="mt-2 list-disc space-y-1.5 pl-5">
           <li>
-            <strong className="text-ink-100">月繳方案：</strong>每期新台幣 200 元，透過綠界科技（ECPay）信用卡定期定額扣款，每月自動續扣一次。
+            <strong className="text-ink-100">月繳方案：</strong>開幕優惠期間加入，每期新台幣 200 元；優惠結束後新訂閱，每期 400 元。透過綠界科技（ECPay）信用卡定期定額扣款，每月自動續扣一次。
           </li>
           <li>
-            <strong className="text-ink-100">年繳方案：</strong>每期新台幣 2,000 元，一次支付全年費用。第一次付款後即可使用 Pro 12 個月，之後每 12 個月自動續扣一次。
+            <strong className="text-ink-100">年繳方案：</strong>開幕優惠期間加入，每期新台幣 2,000 元；優惠結束後新訂閱，每期 4,000 元，一次支付全年費用。第一次付款後即可使用 Pro 12 個月，之後每 12 個月自動續扣一次。
           </li>
         </ul>
         <p className="mt-2">
@@ -47,7 +47,7 @@ export default function RefundPolicyPage() {
 
       <section>
         <h2 className="font-display text-lg font-semibold text-ink-50">續訂價格與方案切換</h2>
-        <p className="mt-2">月繳新台幣 200 元、年繳新台幣 2,000 元不限定開幕期間，也不是僅限首次付款的價格。同一筆訂閱持續有效時，每次自動續扣均依原訂閱保存的金額處理。年繳相較連續月繳 12 個月合計新台幣 2,400 元，每年節省 400 元；平均月費約 167 元僅供比較，實際仍一次扣款 2,000 元。</p>
+        <p className="mt-2">開幕優惠僅開放一個月，確切起訖時間與當下價格以升級方案及結帳頁為準。優惠期間建立訂閱並成功付款後，同一筆訂閱持續續訂即維持優惠價，並非只有首期適用。優惠結束後，既有月繳 200 元／年繳 2,000 元的訂閱不會調漲；新訂閱則為月繳 400 元／年繳 4,000 元，後續同樣維持其建立時的金額。取消後重新訂閱適用當時價格，不會恢復舊訂閱優惠。</p>
         <p className="mt-2">更換月繳／年繳方案，目前需先取消原訂閱，再重新選擇方案。取消後，已付款的使用權仍依本政策保留至當期到期日；退款則依退款規則處理。付款暫時失敗、金流仍在重試時，原訂閱金額不會自動調整；若金流已終止續扣，請聯絡客服確認訂閱狀態。</p>
       </section>
 

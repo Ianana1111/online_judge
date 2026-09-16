@@ -1,27 +1,27 @@
 # Pro launch pricing and renewal protection
 
-Historical implementation record. The owner has since chosen ongoing NT$200/month and NT$2,000/year pricing, with no launch deadline or future NT$350 price. See [the current plan-picker implementation](subscription-plan-picker.md). Leave campaign configuration empty; no dates or post-offer annual price are awaiting approval. The versioned quote and saved renewal safeguards remain useful. The campaign rules and activation procedure below are archived, not the current rollout plan.
+Current owner decision (2026-09-16): genuine fixed one-month enrollment campaign with **NT$200/month or NT$2,000/year for every renewal** of that same uninterrupted subscription. After enrollment ends, new subscriptions cost **NT$400/month or NT$4,000/year**, also fixed for their renewals. Cancellation and resubscription use the price then available. This supersedes perpetual public discount advertising and the subsequently withdrawn first-cycle-only proposal. Existing saved agreements remain unchanged. ECPay AIO supports this because first and recurring amounts are equal.
 
 ## Customer terms
 
-- During one fixed calendar month, new orders offer NT$200/month or NT$2,000/year. The comparison is explicitly **monthly price after the offer: NT$350**, not a claim that NT$350 was historically charged.
+- During one fixed calendar month, new orders offer NT$200/month or NT$2,000/year. The comparison is explicitly **monthly price after the offer: NT$400**, not a claim that NT$400 was historically charged.
 - Eligibility is recorded when the subscription order is created before the published Taiwan-time deadline. The first successful payment activates the saved subscription terms. Existing payable orders keep their saved amount even when the first callback arrives later.
 - Every uninterrupted renewal of that same subscription and billing period uses its original amount. No campaign expiry or configuration change reprices existing orders or subscriptions.
 - Cancellation or a refund that terminates the subscription ends that subscription's price lock. Switching month/year currently requires cancellation and a new subscription at the then-current price; there is no automatic transfer of eligibility. Cancellation preserves already-paid access, subject to the refund policy.
 - Gateway payment retries do not change the saved amount. Gateway-terminated subscriptions need operator reconciliation. This change does not implement card replacement or gateway subscription-status synchronization.
 - The public launch advertisement expires. Qualified active subscribers continue to see their saved amount and launch price-lock badge. Existing legacy subscriptions also retain their amount, without being relabelled as launch purchases.
 
-## Archived campaign activation procedure — not applicable to current pricing
+## Campaign activation
 
-Set all three API variables together only after the owner confirms them:
+Set all three API variables together after verifying both deployed applications. The campaign starts at activation and runs one Taipei calendar month; save these exact dates once:
 
 | Variable | Required value |
 | --- | --- |
-| `LAUNCH_PROMO_STARTS_AT` | Fixed ISO timestamp with timezone; owner decision pending |
-| `LAUNCH_PROMO_ENDS_AT` | Start plus one calendar month in Asia/Taipei; owner decision pending |
-| `PRO_REGULAR_YEARLY_PRICE_NTD` | Approved positive integer, at least 2000; owner decision pending |
+| `LAUNCH_PROMO_STARTS_AT` | Fixed ISO timestamp with timezone; fixed activation timestamp |
+| `LAUNCH_PROMO_ENDS_AT` | Start plus one calendar month in Asia/Taipei; fixed activation timestamp |
+| `PRO_REGULAR_YEARLY_PRICE_NTD` | 4000 |
 
-The regular monthly price is NT$350. A completely empty configuration keeps current pricing. Partial/invalid configuration returns 503 for the catalog and new checkout; existing payment callbacks and renewals continue using stored terms. Do not reset dates on deployments or remove the configuration at expiry: doing so would restore legacy pricing for new orders.
+The regular monthly price is NT$400. A completely empty configuration keeps current pricing. Partial/invalid configuration returns 503 for the catalog and new checkout; existing payment callbacks and renewals continue using stored terms. Do not reset dates on deployments or remove the configuration at expiry: doing so would restore legacy pricing for new orders.
 
 Deploy migration `20260916000000_launch_subscription_pricing` before the new API. It adds `pricingVersion` to payments and subscriptions, with `legacy-v1` for existing rows, and does not change any saved amount. Back up the production database before applying. Deploy API and web with the campaign unset, verify both, then configure the approved schedule. Old clients may still create an unquoted order only while the catalog is entirely unconfigured at unchanged legacy prices. Once a campaign is configured, an old client must reload and acknowledge the current quote.
 
@@ -29,7 +29,7 @@ Deploy migration `20260916000000_launch_subscription_pricing` before the new API
 
 - The catalog, checkout and registration notification use the same server-side campaign evaluation, with inclusive start and exclusive end. Catalog responses use `Cache-Control: no-store`.
 - New checkout evaluates pricing after acquiring the per-user PostgreSQL advisory lock. The browser submits the displayed amount and pricing version as consent, never as the source of truth. Mismatch returns `409 PRICE_CHANGED` before creating an order or returning a gateway form.
-- The price version snapshots campaign dates, regular annual price and phase. It is copied from the order to the subscription and every renewal payment. First and recurring gateway amounts remain independently validated against stored amounts.
+- The price version snapshots campaign dates, regular monthly/annual prices and phase (`launch-v2`; old `launch-v1` subscriptions remain recognized). It is copied from the order to the subscription and every renewal payment. First and recurring gateway amounts remain independently validated against stored amounts.
 - Browser prices refresh at the server-provided boundary, on focus and periodically. Expired offers disappear even if refreshing fails. The monotonic browser timer includes request time conservatively; the API is the final authority. Changed quotes or billing periods require renewed consent.
 - Each streamed pricing consumer starts with the server's loading state during hydration before reading a populated client cache. The site-wide banner may otherwise populate pricing before the upgrade page initializes.
 - ECPay `TotalAmount` and `PeriodAmount` are equal. Renewal amounts come from `Subscription.amountNtd`; these operations do not re-evaluate today's catalog.

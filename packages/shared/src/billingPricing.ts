@@ -3,7 +3,7 @@ import { billingCycleEnd } from "./billingPolicy.js";
 import { z } from "zod";
 
 export const LAUNCH_RENEWAL_PRICING = { MONTHLY: 200, YEARLY: 2000 } as const;
-export const REGULAR_MONTHLY_PRICE_NTD = 350;
+export const REGULAR_MONTHLY_PRICE_NTD = 400;
 export interface LaunchPricingConfig {
   startsAt?: string;
   endsAt?: string;
@@ -46,7 +46,7 @@ export function billingCatalog(config: LaunchPricingConfig = {}, now = new Date(
     // Before the launch, preserve the existing public price without claiming launch eligibility.
     pricing: phase === "before" ? PLAN_PRICING : pricing,
     effectivePricing: phase === "ended" ? { MONTHLY: REGULAR_MONTHLY_PRICE_NTD, YEARLY: annual } : { ...LAUNCH_RENEWAL_PRICING },
-    pricingVersion: `launch-v1/${+start}/${+end}/${annual}/${phase}`,
+    pricingVersion: `launch-v2/${+start}/${+end}/${REGULAR_MONTHLY_PRICE_NTD}/${annual}/${phase}`,
     serverNow: now.toISOString(),
     refreshAt: phase === "before" ? start.toISOString() : phase === "active" ? end.toISOString() : null,
     promo: phase === "active" ? { startsAt: start.toISOString(), endsAt: end.toISOString(), renewalPricing: { ...LAUNCH_RENEWAL_PRICING } } : null,
@@ -54,5 +54,6 @@ export function billingCatalog(config: LaunchPricingConfig = {}, now = new Date(
 }
 
 export function hasLaunchPriceLock(pricingVersion: string): boolean {
-  return /^launch-v1\/\d+\/\d+\/\d+\/active$/.test(pricingVersion);
+  return /^launch-v1\/\d+\/\d+\/\d+\/active$/.test(pricingVersion) ||
+    /^launch-v2\/\d+\/\d+\/\d+\/\d+\/active$/.test(pricingVersion);
 }

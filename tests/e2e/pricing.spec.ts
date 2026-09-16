@@ -2,7 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { billingCatalog } from "../../packages/shared/src/billingPricing";
 
-const campaign = { startsAt: "2026-09-15T00:00:00+08:00", endsAt: "2026-10-15T00:00:00+08:00", regularYearlyPriceNtd: "3500" };
+const campaign = { startsAt: "2026-09-15T00:00:00+08:00", endsAt: "2026-10-15T00:00:00+08:00", regularYearlyPriceNtd: "4000" };
 function catalog(ended = false) { return billingCatalog(campaign, new Date(ended ? campaign.endsAt : campaign.startsAt)); }
 async function fixture(page: Page, options: { subscriber?: boolean; anonymous?: boolean; locale?: "en" | "zh-TW"; theme?: "dark" | "light"; launch?: boolean } = {}) {
   const state = { plans: options.launch ? catalog() : billingCatalog(), failPricing: false, rejectQuote: false, writes: [] as { path: string; body: any }[] };
@@ -44,7 +44,8 @@ for (const theme of ["dark", "light"] as const) {
     await expect(monthly).toHaveAttribute("aria-pressed", "true");
     await expect(page.getByText("NT$200", { exact: true })).toBeVisible();
     await expect(page.locator("s")).toHaveCount(0);
-    await expect(page.getByText(/開幕首月|NT\$350/)).toHaveCount(0);
+    await expect(page.getByRole("region", { name: "開幕首月限定" })).toHaveCount(0);
+    await expect(page.getByText("NT$400", { exact: true })).toHaveCount(0);
     await yearly.click();
     await expect(yearly).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator("s")).toHaveText("NT$2,400");
@@ -93,7 +94,7 @@ test("stale checkout refreshes the price and clears consent without redirecting"
   await page.getByRole("button", { name: /訂閱.*200/ }).click();
   await expect(page.getByRole("main").getByRole("alert")).toContainText("方案價格或優惠資格已更新");
   await expect(page.getByRole("checkbox")).not.toBeChecked();
-  await expect(page.getByRole("button", { name: /訂閱.*350/ })).toBeDisabled();
+  await expect(page.getByRole("button", { name: /訂閱.*400/ })).toBeDisabled();
   await expect(page.getByRole("region", { name: "開幕首月限定" })).toBeHidden();
   expect(page.url()).toContain("/upgrade/checkout");
   expect(state.writes.filter((w) => w.path === "/billing/ecpay/create")).toHaveLength(1);
@@ -213,5 +214,25 @@ for (const theme of ["light", "dark"] as const) {
     await expect(page.getByRole("button", { name: "取消訂閱", exact: true })).toBeHidden();
     await expect(page.getByRole("button", { name: "取得 Pro 方案", exact: true })).toBeVisible();
     expect(refundPosts).toBe(1);
+  });
+}
+
+for (const theme of ["light", "dark"] as const) {
+  test(`launch comparison and renewal lock follow the monthly and annual choice (${theme})`, async ({ page }, info) => {
+    await fixture(page, { launch: true, theme });
+    await page.goto("/upgrade");
+    await expect(page.locator("s")).toHaveText("NT$400");
+    await expect(page.getByText("NT$200", { exact: true })).toBeVisible();
+    await expect(page.getByText("開幕期間加入，持續續訂就維持此優惠價。", { exact: true })).toBeVisible();
+    await page.screenshot({ path: info.outputPath(`launch-monthly-${theme}.png`), fullPage: true });
+    await page.getByRole("button", { name: "年訂閱", exact: true }).click();
+    await expect(page.locator("s")).toHaveText("NT$4,000");
+    await expect(page.getByText("NT$2,000", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "取得 Pro 方案", exact: true }).click();
+    await expect(page.locator("s")).toHaveText("NT$4,000");
+    await expect(page.getByText("此訂閱持續有效期間，每期續扣 NT$2,000／年。")).toBeVisible();
+    expect((await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()).violations).toEqual([]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2)).toBe(true);
+    await page.screenshot({ path: info.outputPath(`launch-annual-checkout-${theme}.png`), fullPage: true });
   });
 }

@@ -439,7 +439,7 @@ export default function UpgradePlanPage() {
                 ) : (
                   <>
                     <BillingPeriodPicker period={period} prices={plans.effectivePricing} onChange={setPeriod} />
-                    <BillingPriceDetails period={period} prices={plans.effectivePricing} />
+                    <BillingPriceDetails period={period} prices={plans.effectivePricing} promo={plans.promo} pricing={plans.pricing} />
                   </>
                 )}
                 {isPro && status?.subscription ? (
