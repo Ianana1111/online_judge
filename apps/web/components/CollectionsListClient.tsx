@@ -13,12 +13,14 @@ const topicMarks: Record<string, string> = { math: "∑", array: "[ ]", string: 
 
 function CollectionCard({ item, index, zh }: { item: CollectionListItem; index: number; zh: boolean }) {
   const topic = item.slug.replace(/^algo-/, "");
-  return <Link href={`/collections/${item.slug}`} className="group flex h-full min-w-0 flex-col rounded-2xl border border-ink-700 bg-ink-900 p-6 transition-colors hover:border-brand/60 hover:bg-brand/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand">
+  // Native navigation avoids the observed App Router stall after a filtered card remounts.
+  // The link keeps browser history, keyboard activation and opening in a new tab intact.
+  return <a href={`/collections/${item.slug}`} className="group flex h-full min-w-0 flex-col rounded-2xl border border-ink-700 bg-ink-900 p-6 transition-colors hover:border-brand/60 hover:bg-brand/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand">
     <div className="mb-5 flex items-center justify-between"><span aria-hidden className="flex h-11 w-11 items-center justify-center rounded-xl border border-ink-700 bg-ink-800 font-mono text-xl text-brand">{topicMarks[topic] ?? "≡"}</span><span aria-hidden className="font-mono text-xs text-ink-400">{String(index + 1).padStart(2, "0")}</span></div>
     <h3 className="font-display text-lg font-semibold text-ink-50 [overflow-wrap:anywhere]">{item.title}</h3>
     <p className="mt-2 flex-1 text-sm leading-6 text-ink-300">{item.description}</p>
     <div className="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-ink-700 pt-4 text-xs text-ink-300"><span><strong className="font-mono text-base font-medium text-ink-100">{item.problemCount}</strong> {zh ? "道題目" : "problems"}</span><span className="text-brand">{zh ? "開始練習" : "Explore"} <span aria-hidden>↗</span></span></div>
-  </Link>;
+  </a>;
 }
 
 export default function CollectionsListClient() {
@@ -45,10 +47,10 @@ export default function CollectionsListClient() {
 
     {query.isSuccess && (feature || exams.length > 0) && <section id="exam-collections" className="scroll-mt-24" aria-labelledby="exam-title">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3"><div><p className="font-mono text-xs text-ink-400">01 / EXAM PREP</p><h2 id="exam-title" className="mt-2 font-display text-2xl font-bold text-ink-50">{zh ? "考試專區" : "Exam practice"}</h2></div><p className="text-sm text-ink-300">{zh ? "從熟悉題型，到穩定得分。" : "Build familiarity. Find your rhythm."}</p></div>
-      {feature && <Link href={`/collections/${feature.slug}`} className="group relative mb-5 grid overflow-hidden rounded-2xl border border-brand/40 bg-brand/5 p-6 transition-colors hover:border-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand sm:p-8 md:grid-cols-[minmax(0,1fr)_200px] md:gap-10">
+      {feature && <a href={`/collections/${feature.slug}`} className="group relative mb-5 grid overflow-hidden rounded-2xl border border-brand/40 bg-brand/5 p-6 transition-colors hover:border-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand sm:p-8 md:grid-cols-[minmax(0,1fr)_200px] md:gap-10">
         <div className="relative"><span className="inline-flex rounded-full border border-brand/40 px-3 py-1 text-xs font-semibold text-brand">{zh ? "CPE 歷屆前 3 題" : "CPE · first three problems"}</span><h3 className="mt-5 font-display text-3xl font-bold text-ink-50 sm:text-4xl">{feature.title}</h3><p className="mt-3 max-w-xl text-sm leading-7 text-ink-300">{feature.description}</p><span className="mt-6 inline-flex min-h-11 items-center gap-3 font-semibold text-brand">{zh ? "開始我的考前練習" : "Start exam preparation"}<span aria-hidden>→</span></span></div>
         <div className="relative mt-6 flex items-center gap-4 border-t border-brand/20 pt-5 md:mt-0 md:flex-col md:justify-center md:border-l md:border-t-0 md:pt-0"><div className="font-mono text-5xl font-medium tracking-tight text-ink-50 sm:text-6xl">{feature.problemCount}</div><div className="text-sm leading-6 text-ink-300">{zh ? "道歷屆題目" : "past exam problems"}<br /><span className="text-xs">{zh ? "去除重複・保留原始星等" : "Deduplicated · original ratings"}</span></div></div>
-      </Link>}
+      </a>}
       <div className="grid gap-5 sm:grid-cols-2">{exams.map((item, i) => <CollectionCard key={item.id} item={item} index={i} zh={zh} />)}</div>
     </section>}
 

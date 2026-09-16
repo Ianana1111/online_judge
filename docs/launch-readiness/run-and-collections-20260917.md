@@ -32,6 +32,7 @@ Evidence: `packages/db/audit/sample-audit-20260917.json`, `sample-reference-resu
 - Add responsive cards, featured exam collection, topic search, empty/error/retry states, accessible progress and account-specific progress cache keys. Private problems cannot leak through collection counts or detail.
 - Fix the undefined `oj-btn-ghost` style on discussion actions, consistent action heights, mobile wrapping, long titles, review reasons and card footers on 我的投稿.
 - Fix anonymous auth hydration clearing mounted public queries, which could leave collections loading indefinitely.
+- Browser CI exposed intermittent collection card navigation stalls in Firefox/WebKit: the server returned the destination RSC payload, but the URL and visible page stayed on the listing. Collection cards now use native document navigation, preserving keyboard/history/new-tab behavior and avoiding that client-router path. This trades a document reload on collection selection for reliable navigation; route loading UI remains available. CI repeats the collection flows three times before the complete suite, and verifies the destination URL, level-one heading and streamed document title before accessibility checks.
 
 ## Validation
 
