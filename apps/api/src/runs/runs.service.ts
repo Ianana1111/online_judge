@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import type { Queue } from "bullmq";
 import type Redis from "ioredis";
 import { prisma } from "@oj/db";
-import { FREE_RUN_QUOTA, TEST_RUN_QUEUE_NAME, testRunResultChannel, type CreateRunDto, type TestRunResultDto } from "@oj/shared";
+import { FREE_RUN_QUOTA, TEST_RUN_QUEUE_NAME, testRunResultChannel, sampleRevision, type CreateRunDto, type TestRunResultDto } from "@oj/shared";
 import { currentMonthKey, isUnlimited } from "../billing/billing.service";
 import { REDIS_CLIENT, TEST_RUN_QUEUE } from "../common/redis.providers";
 
@@ -36,12 +36,12 @@ export class RunsService {
   ) {}
 
   async create(userId: string, dto: CreateRunDto): Promise<{ id: string }> {
-    const problem = await prisma.problem.findFirst({ where: { id: dto.problemId, visibility: true }, select: { id: true, samples: { select: { ord: true, input: true } } } });
+    const problem = await prisma.problem.findFirst({ where: { id: dto.problemId, visibility: true }, select: { id: true, samples: { select: { ord: true, input: true, output: true } } } });
     if (!problem) throw new NotFoundException("Problem not found");
     for (const c of dto.cases) {
       if (c.sampleOrd === undefined) continue;
       const sample = problem.samples.find((s) => s.ord === c.sampleOrd);
-      if (!sample || (c.input !== undefined && c.input !== sample.input)) {
+      if (!sample || (c.input !== undefined && c.input !== sample.input) || (c.sampleRevision !== undefined && c.sampleRevision !== await sampleRevision(sample.input, sample.output))) {
         throw new BadRequestException("Sample has changed. Reload the problem and run again.");
       }
     }

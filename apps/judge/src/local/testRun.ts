@@ -1,6 +1,7 @@
 import type { Sandbox } from "@vercel/sandbox";
 import { prisma } from "@oj/db";
 import type { RunCaseResultDto, TestRunResultDto, TestRunJobData } from "@oj/shared";
+import { sampleRevision } from "@oj/shared";
 import { LANGUAGES } from "./languages.js";
 import { compileInSandbox, createJudgeSandbox, logSandboxApiError, runOneCase } from "./sandboxRun.js";
 import { notePoolActivity, tryClaimPooledSandbox } from "./sandboxPool.js";
@@ -69,7 +70,7 @@ export async function runTestCases(
     const results: RunCaseResultDto[] = [];
     for (const c of cases) {
       const sample = c.sampleOrd === undefined ? undefined : problem.samples.find((s) => s.ord === c.sampleOrd);
-      if ((c.sampleOrd !== undefined && !sample) || (!sample && c.input === undefined) || (sample && c.input !== undefined && c.input !== sample.input)) {
+      if ((c.sampleOrd !== undefined && !sample) || (!sample && c.input === undefined) || (sample && c.input !== undefined && c.input !== sample.input) || (sample && c.sampleRevision !== undefined && c.sampleRevision !== await sampleRevision(sample.input, sample.output))) {
         return { runId, status: "ERROR", compileError: "Sample has changed. Reload the problem and run again." };
       }
       const input = sample?.input ?? c.input!;
