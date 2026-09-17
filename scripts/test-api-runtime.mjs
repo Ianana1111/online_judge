@@ -17,7 +17,7 @@ const child = spawn(process.execPath, ["dist/main.js"], {
   env: { ...process.env, NODE_ENV: "test", API_HOST: "127.0.0.1", API_PORT: "55440", ECPAY_ENV: "sandbox", SENTRY_DSN: "", RESEND_API_KEY: "", WEB_ORIGIN: "http://127.0.0.1:55430", ACCOUNT_SECURITY_KEY: randomBytes(32).toString("hex"), ADMIN_MFA_REQUIRED: "false" },
   stdio: ["ignore", "pipe", "pipe"],
 });
-let logs = "", userId;
+let logs = "", userId, foreignUserId;
 child.stdout.on("data", (data) => { logs = (logs + data).slice(-12000); });
 child.stderr.on("data", (data) => { logs = (logs + data).slice(-12000); });
 const base = "http://127.0.0.1:55440", cookies = new Map();
@@ -66,7 +66,19 @@ try {
   assert.equal((await request("/internal/operations")).status, 401);
   assert.equal((await request(`/moderation/${post.revisionId}/review`, "POST", { decision: "APPROVED" }, current.csrfToken)).status, 403);
   assert.equal((await request(`/posts/${post.id}/mine`)).status, 200);
+  const foreignAuthor = await prisma.user.create({ data: { handle: `author_${suffix}`, email: `author_${suffix}@example.test` } });
+  foreignUserId = foreignAuthor.id;
+  const foreignPost = await prisma.post.create({ data: { authorId: foreignUserId, title: "Foreign deletion fixture", bodyMd: "Moderated content", publishedAt: new Date() } });
+  assert.equal((await fetch(`${base}/posts/${foreignPost.id}`, { method: "DELETE" })).status, 401);
+  assert.equal((await request(`/posts/${foreignPost.id}`, "DELETE", { role: "ADMIN", authorId: userId }, current.csrfToken)).status, 404);
+  assert.equal((await request(`/posts/${foreignPost.id}`)).status, 200);
   await prisma.user.update({ where: { id: userId }, data: { role: "ADMIN" } });
+  assert.equal((await request(`/posts/${foreignPost.id}`, "DELETE")).status, 403);
+  assert.equal((await request(`/posts/${foreignPost.id}`, "DELETE", undefined, current.csrfToken)).status, 200);
+  assert.equal((await request(`/posts/${foreignPost.id}`, "DELETE", undefined, current.csrfToken)).status, 200);
+  assert.equal((await request(`/posts/${foreignPost.id}`)).status, 404);
+  const removedPost = await prisma.post.findUniqueOrThrow({ where: { id: foreignPost.id } });
+  assert.equal(removedPost.deletedById, userId); assert.equal(removedPost.deletedByRole, "ADMIN"); assert.ok(removedPost.deletedAt);
   assert.equal((await request("/moderation")).status, 200);
   assert.equal((await request("/billing/admin/refunds")).status, 200);
   const operations = await request("/operations"); assert.equal(operations.status, 200); assert.ok(Array.isArray((await operations.json()).queues));
@@ -123,5 +135,6 @@ try {
 } finally {
   if (child.exitCode === null) { const exited = once(child, "exit"); child.kill("SIGTERM"); await exited; }
   if (userId) await prisma.user.delete({ where: { id: userId } });
+  if (foreignUserId) await prisma.user.delete({ where: { id: foreignUserId } });
   await prisma.$disconnect();
 }

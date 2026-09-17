@@ -90,6 +90,53 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("community publication and rev
     await expect(service.listComments({ problemId: p.id })).rejects.toThrow();
     await expect(service.submitComment({ problemId: p.id }, a, { body: "Hidden" })).rejects.toThrow();
   });
+  it("lets an administrator remove another author's entire post and preserves the first removal record", async () => {
+    const [author, stranger, admin, otherAdmin] = await Promise.all([user(), user(), user("ADMIN"), user("ADMIN")]);
+    const dto = draft("Published content"), p = await service.submitPost(author, dto);
+    await service.review(p.revisionId, admin, { decision: "APPROVED" });
+    const approved = await prisma.contentRevision.findUniqueOrThrow({ where: { id: p.revisionId } });
+    const edit = await service.submitPost(author, draft("Pending edit"), p.id);
+    const comment = await service.submitComment({ postId: p.id }, author, { body: "Pending comment" });
+    await expect(service.remove("post", p.id, stranger)).rejects.toThrow("Post not found");
+    expect(await service.remove("post", p.id, admin)).toEqual({ ok: true });
+    const removed = await prisma.post.findUniqueOrThrow({ where: { id: p.id } });
+    expect(removed).toMatchObject({ deletedAt: expect.any(Date), deletedById: admin.id, deletedByRole: "ADMIN", bodyMd: dto.bodyMd });
+    expect(await prisma.contentRevision.findUniqueOrThrow({ where: { id: p.revisionId } })).toEqual(approved);
+    expect((await prisma.contentRevision.findUniqueOrThrow({ where: { id: edit.revisionId } })).status).toBe("SUPERSEDED");
+    await expect(service.postDetail(p.id)).rejects.toThrow();
+    await expect(service.ownPost(p.id, author)).rejects.toThrow();
+    await expect(service.submitPost(author, draft(), p.id)).rejects.toThrow();
+    await expect(service.listComments({ postId: p.id })).rejects.toThrow();
+    await expect(service.submitComment({ postId: p.id }, author, { body: "After removal" })).rejects.toThrow();
+    await expect(service.review(edit.revisionId, admin, { decision: "APPROVED" })).rejects.toThrow();
+    await expect(service.review(comment.revisionId, admin, { decision: "APPROVED" })).rejects.toThrow();
+    expect((await service.listPosts({ q: dto.title })).items).toHaveLength(0);
+    expect((await service.ownPosts(author.id)).items).toHaveLength(0);
+    expect((await service.postSitemap()).items.some((item) => item.id === p.id)).toBe(false);
+    for (const state of ["pending", "reviewed"] as const) {
+      expect((await service.reviewQueue(undefined, state)).items.some((item) => item.postId === p.id || item.id === comment.revisionId)).toBe(false);
+    }
+    // Lost-response retries from either authorized actor must not alter the original audit.
+    await service.remove("post", p.id, otherAdmin);
+    await service.remove("post", p.id, author);
+    expect(await prisma.post.findUniqueOrThrow({ where: { id: p.id } })).toEqual(removed);
+    await expect(service.remove("post", p.id, stranger)).rejects.toThrow("Post not found");
+  });
+  it("serializes administrator deletion with approval and never republishes the removed post", async () => {
+    const [author, admin] = await Promise.all([user(), user("ADMIN")]);
+    const p = await service.submitPost(author, draft());
+    const results = await Promise.allSettled([
+      service.remove("post", p.id, admin),
+      service.review(p.revisionId, admin, { decision: "APPROVED" }),
+    ]);
+    expect(results[0].status).toBe("fulfilled");
+    expect(await prisma.post.findUniqueOrThrow({ where: { id: p.id } })).toMatchObject({ deletedAt: expect.any(Date), deletedById: admin.id });
+    await expect(service.postDetail(p.id)).rejects.toThrow();
+    await expect(service.review(p.revisionId, admin, { decision: "APPROVED" })).rejects.toThrow();
+    const own = await service.submitPost(author, draft());
+    await service.remove("post", own.id, author);
+    expect(await prisma.post.findUniqueOrThrow({ where: { id: own.id } })).toMatchObject({ deletedById: author.id, deletedByRole: "USER" });
+  });
   it("paginates approved posts with equal timestamps and omits pending search matches", async () => {
     const a = await user(), token = randomUUID(), when = new Date("2026-01-01");
     await prisma.post.createMany({ data: Array.from({ length: 25 }, (_, i) => ({ authorId: a.id, title: `${token} ${i}`, bodyMd: "Published", createdAt: when, publishedAt: when })) });

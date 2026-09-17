@@ -771,6 +771,10 @@ model Post {
   category   String   @default("GENERAL")
   publishedAt DateTime?
   deletedAt DateTime?
+  /// First removal actor and role, written atomically with deletedAt. Historical rows stay null.
+  /// Opaque actor reference, like ContentRevision.reviewedById; never exposed in public responses.
+  deletedById String?
+  deletedByRole Role?
   revisions ContentRevision[]
   comments Discussion[]
 

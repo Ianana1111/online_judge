@@ -9,7 +9,7 @@ import PostDetailClient from "@/components/PostDetailClient";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
-  const post = await serverFetch<PostDetail>(`/posts/${id}`);
+  const post = await serverFetch<PostDetail>(`/posts/${id}`, { cache: "no-store" });
   if (!post) return {};
 
   const description = previewText(post.bodyMd, 160);
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const post = await serverFetch<PostDetail>(`/posts/${id}`);
+  const post = await serverFetch<PostDetail>(`/posts/${id}`, { cache: "no-store" });
 
   const jsonLd = post
     ? {
