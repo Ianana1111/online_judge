@@ -73,11 +73,22 @@ for (const verdict of ["AC", "WA"] as const) test(`Run beside Submit opens a clo
   });
   const errors: string[] = []; page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/contests/run-ui-contest"); await page.getByRole("button", { name: "A Echo sample", exact: true }).click();
+  // Start the interaction after the lazy statement and editor have rendered, as a user
+  // would after reading the problem and entering code. In mobile WebKit the statement
+  // skeleton collapsing during a click can move its target before scroll anchoring settles.
+  await expect(page.getByText(problem.statementMd, { exact: true })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Editor content", exact: true })).toBeAttached();
   const run = page.getByRole("button", { name: "▶ 執行", exact: true });
   const submit = page.getByRole("button", { name: "送出", exact: true });
   await expect(run).toBeEnabled(); await expect(submit).toBeEnabled();
   expect(await run.evaluate((element) => getComputedStyle(element).backgroundColor)).toBe("rgb(17, 17, 17)");
-  const rb = (await run.boundingBox())!, sb = (await submit.boundingBox())!;
+  // Read both rectangles in one browser task. A pending mobile scroll/layout update between
+  // separate protocol calls otherwise compares viewport coordinates from different frames.
+  const boxes = await run.or(submit).evaluateAll((buttons) => buttons.map((button) => {
+    const { x, y, width } = button.getBoundingClientRect(); return { x, y, width };
+  }));
+  expect(boxes).toHaveLength(2);
+  const [rb, sb] = boxes;
   expect(Math.abs(rb.y - sb.y)).toBeLessThan(4); expect(sb.x - (rb.x + rb.width)).toBeLessThan(16);
   await run.click();
   const result = page.getByRole("tabpanel", { name: "執行結果", exact: true });
