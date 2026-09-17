@@ -8,10 +8,11 @@ const API_URL = process.env.API_INTERNAL_URL ?? process.env.NEXT_PUBLIC_API_URL 
 /** Server-side fetch for public (unauthenticated) data used in Server Components. Cached for 15s
  * (safe only because the response never varies by requester) — never use this for anything the
  * API computes differently for a logged-in vs anonymous caller, or Pro vs Free (see
- * serverFetchAuthed below). */
-export async function serverFetch<T>(path: string): Promise<T | null> {
+ * serverFetchAuthed below). Pass cache: no-store for content that must disappear immediately
+ * after moderation, including article metadata and structured data. */
+export async function serverFetch<T>(path: string, options?: { cache: "no-store" }): Promise<T | null> {
   try {
-    const res = await fetch(`${API_URL}${path}`, { next: { revalidate: 15 }, signal: AbortSignal.timeout(8000) });
+    const res = await fetch(`${API_URL}${path}`, { ...(options?.cache === "no-store" ? { cache: "no-store" } : { next: { revalidate: 15 } }), signal: AbortSignal.timeout(8000) });
     if (!res.ok) return null;
     return (await res.json()) as T;
   } catch {

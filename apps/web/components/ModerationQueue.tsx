@@ -6,6 +6,7 @@ import { useAuthStore } from "@/store/auth";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import { categories, reviewLabels, type CommunityPage, type ReviewItem } from "@/lib/community";
 import CommunityMarkdown from "./CommunityMarkdown";
+import AdminDeletePostButton from "./AdminDeletePostButton";
 export default function ModerationQueue() {
   const { locale } = useLocale(), zh = locale === "zh-TW", user = useAuthStore((s) => s.user);
   const [state, setState] = useState<"pending" | "reviewed">("pending");
@@ -36,6 +37,7 @@ function ReviewCard({ item }: { item: ReviewItem }) {
       <details className="text-sm"><summary className="cursor-pointer py-2 text-ink-300">{zh ? "檢視 Markdown 原文" : "View Markdown source"}</summary><pre tabIndex={0} className="max-h-72 overflow-auto whitespace-pre-wrap break-words rounded-md bg-ink-800 p-4 text-xs text-ink-300">{item.body}</pre></details>
       {previous && pending && <details className="text-sm"><summary className="cursor-pointer py-2 text-ink-300">{zh ? "對照目前公開的內容" : "Compare currently published content"}</summary><div tabIndex={0} className="mt-2 max-h-72 overflow-auto rounded-md border border-ink-700 p-4"><CommunityMarkdown content={previous} /></div></details>}
       {pending ? <><label htmlFor={`review-reason-${item.id}`} className="block text-sm font-medium text-ink-200">{zh ? "審核建議（退回時必填）" : "Feedback (required when requesting changes)"}</label><textarea id={`review-reason-${item.id}`} className="oj-input min-h-24 w-full text-sm" value={reason} onChange={(e) => { setReason(e.target.value); setError(""); }} maxLength={1000} /><div className="flex flex-wrap justify-end gap-3"><button className="oj-btn-ghost" disabled={mutation.isPending} onClick={() => decide("REJECTED")}>{zh ? "退回修改" : "Request changes"}</button><button className="oj-btn-primary" disabled={mutation.isPending} onClick={() => decide("APPROVED")}>{mutation.isPending ? (zh ? "處理中…" : "Working…") : (zh ? "核准並公開此版本" : "Approve and publish this version")}</button></div></> : <div className="rounded-lg bg-ink-800 p-4 text-sm text-ink-300"><p className="font-semibold text-brand">{reviewLabels[item.status][zh ? 0 : 1]}</p>{item.reason && <p className="mt-2 whitespace-pre-wrap">{item.reason}</p>}{item.reviewedAt && <time className="mt-2 block text-xs text-ink-400" dateTime={item.reviewedAt}>{new Date(item.reviewedAt).toLocaleString(locale)}</time>}</div>}
+      {item.postId && <div className="flex justify-end border-t border-ink-700 pt-3"><AdminDeletePostButton id={item.postId} title={item.post?.title || item.title || (zh ? "未命名文章" : "Untitled post")} author={author ?? ""} disabled={mutation.isPending} /></div>}
       {(error || mutation.isError) && <p role="alert" className="text-sm text-verdict-wa">{error || (mutation.error instanceof Error ? mutation.error.message : (zh ? "審核失敗，請重新整理後再試。" : "Review failed. Refresh and retry."))}</p>}
     </div></article>;
 }

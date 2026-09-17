@@ -114,9 +114,12 @@ export class CommunityService {
     return prisma.$transaction(async (tx) => {
       await lock(tx, id);
       if (kind === "post") {
-        const p = await tx.post.findFirst({ where: { id, deletedAt: null } });
+        const p = await tx.post.findUnique({ where: { id } });
         if (!p || (p.authorId !== user.id && user.role !== "ADMIN")) throw new NotFoundException("Post not found");
-        await tx.post.update({ where: { id }, data: { deletedAt: new Date() } });
+        // Authorized retries are safe after a lost response. Keep the first actor/time intact.
+        if (p.deletedAt) return { ok: true };
+        await tx.post.update({ where: { id }, data: { deletedAt: new Date(), deletedById: user.id,
+          deletedByRole: user.role === "ADMIN" ? "ADMIN" : "USER" } });
       } else {
         const d = await tx.discussion.findFirst({ where: { id, deletedAt: null } });
         if (!d || (d.userId !== user.id && user.role !== "ADMIN")) throw new NotFoundException("Comment not found");
