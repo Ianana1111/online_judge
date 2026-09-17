@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import ProfileSetupModal from "@/components/ProfileSetupModal";
@@ -15,11 +16,12 @@ import type { UserSettings } from "@/lib/types";
  * see it pop up again on the next page. `visible` then only tracks the modal's local open/close
  * state for the rest of this session. */
 export default function ProfileSetupGate() {
+  const path = usePathname();
   const { user, patchUser } = useAuthStore();
   const [visible, setVisible] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (!user || visible !== null) return;
+    if (path === "/verify-school" || !user || user.mfaRequired || user.mfaEnrollmentRequired || user.deletionRequestedAt || visible !== null) return;
     const shouldShow = !user.school && !user.settings.profileSetupDismissed;
     setVisible(shouldShow);
     if (shouldShow) {
@@ -30,9 +32,9 @@ export default function ProfileSetupGate() {
         .then(({ settings }) => patchUser(user.id, { settings }))
         .catch(() => {});
     }
-  }, [user, visible, patchUser]);
+  }, [user, visible, patchUser, path]);
 
-  if (!visible) return null;
+  if (!visible || path === "/verify-school") return null;
 
   return <ProfileSetupModal onClose={() => setVisible(false)} />;
 }

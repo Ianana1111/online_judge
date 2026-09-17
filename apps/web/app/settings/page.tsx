@@ -15,6 +15,7 @@ import { resizeImageToDataUrl, AVATAR_MAX_DATA_URL_BYTES } from "@/lib/avatarUpl
 import type { UserSettings } from "@/lib/types";
 import { useLocale, useT } from "@/lib/i18n/LocaleContext";
 import { useFocusTrap } from "@/lib/useFocusTrap";
+import { useSchoolVerificationSync } from "@/lib/useSchoolVerificationSync";
 
 const LANGUAGES = ["cpp17", "c11", "python3", "java17"];
 
@@ -28,6 +29,7 @@ const RESEND_COOLDOWN_MS = 60_000;
 function SchoolEmailVerification({ school }: { school: string }) {
   const t = useT(); const { locale } = useLocale(); const zh = locale === "zh-TW";
   const { user, patchUser } = useAuthStore();
+  const verification = useSchoolVerificationSync();
   const supported = useQuery({ queryKey: ["school-domains", user?.id, school], queryFn: () => apiFetch<{ roots: string[]; exact: string[] }>(`/users/me/school/domains?school=${encodeURIComponent(school)}`), enabled: !!user });
   const approved = supported.data?.exact ?? [];
   const domains = [...getSchoolEmailDomains(school), ...approved], domain = domains[0];
@@ -95,9 +97,18 @@ function SchoolEmailVerification({ school }: { school: string }) {
       {domains.length > 1 && <p className="mt-2 text-xs text-ink-400">{zh ? "支援的網域：" : "Supported domains: "}{domains.join(", ")}</p>}
       {domainMismatch && <p className="mt-1.5 text-xs text-verdict-wa">{t("That doesn't look like a @{domain} address.", { domain })}</p>}
       {!domainMismatch && user.schoolEmail && !error && (
-        <p className="mt-1.5 text-xs text-ink-500">
+        <div className="mt-3 space-y-2 text-xs leading-5 text-ink-400">
+        <p>
           {t("Verification email sent to {email} — check your inbox for the link.", { email: user.schoolEmail })}
         </p>
+        <p>{zh ? "信件在另一個 Chrome 個人檔案開啟也沒關係，按確認後會驗證到原本的 judge. 帳號。回到此頁會自動更新，不必用學校 Google 帳號重新登入。" : "The email can open in another Chrome profile. Confirmation verifies your original judge. account and this page updates when you return. You do not need to sign in with your school Google account."}</p>
+        <button type="button" className="text-brand underline disabled:opacity-50" disabled={verification.checking} onClick={() => void verification.refresh(true)}>
+          {verification.checking ? (zh ? "確認中…" : "Checking…") : (zh ? "已點信件確認？更新驗證狀態" : "Already confirmed? Refresh verification status")}
+        </button>
+        {verification.result && <p role="status">{verification.result === "error"
+          ? (zh ? "暫時無法取得最新狀態，請稍後重試。" : "Unable to get the latest status. Try again shortly.")
+          : (zh ? "尚未收到驗證結果。請在最新信件開啟的頁面按「確認驗證學校信箱」。" : "Verification is still pending. Open the latest email link and press Confirm school email.")}</p>}
+        </div>
       )}
       {error && <p className="mt-1.5 text-xs text-verdict-wa">{error}</p>}
       <SchoolDomainAssistance school={school} />
@@ -155,7 +166,7 @@ function ProfileSettingsForm() {
   useEffect(() => {
     setBio(user?.bio ?? "");
     setAvatarPreview(user?.avatarUrl ?? null);
-  }, [user]);
+  }, [user?.id, user?.bio, user?.avatarUrl]);
 
   async function onSchoolChange(school: string | null) {
     if (!user) return;

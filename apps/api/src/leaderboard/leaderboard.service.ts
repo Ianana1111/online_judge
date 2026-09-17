@@ -13,13 +13,11 @@ function periodStart(period: LeaderboardPeriod): Date | undefined {
   return undefined;
 }
 
-/** Consecutive-day streak ending today or yesterday (a still-open streak), from a set of AC
- * dates (YYYY-MM-DD, in whatever the DB timezone is). Solving nothing today doesn't break an
- * already-earned streak until tomorrow passes with still nothing solved. */
-export function computeStreak(dates: Set<string>): number {
+/** Consecutive UTC dates with an AC, ending today or yesterday. A missed day breaks the
+ * streak when that day ends; today's still-open day does not break yesterday's streak. */
+export function computeStreak(dates: Set<string>, now = new Date()): number {
   const toKey = (d: Date) => d.toISOString().slice(0, 10);
-  const today = new Date();
-  const cursor = new Date(today);
+  const cursor = new Date(now);
   if (!dates.has(toKey(cursor))) {
     cursor.setUTCDate(cursor.getUTCDate() - 1); // today not solved yet — check if yesterday keeps the streak alive
     if (!dates.has(toKey(cursor))) return 0;
@@ -39,7 +37,7 @@ export class LeaderboardService {
   async get(period: LeaderboardPeriod, scope: LeaderboardScope = "all", school?: string) {
     // Recomputing this is a full AC-history scan (see below) — cache it briefly. A 60s-stale
     // leaderboard is an acceptable tradeoff for not re-scanning on every poll/page-load.
-    return this.cache.getOrSet(`leaderboard:${period}:${scope}:${school ?? ""}`, 60, () =>
+    return this.cache.getOrSet(`leaderboard:ac-only:${period}:${scope}:${school ?? ""}`, 60, () =>
       this.compute(period, scope, school),
     );
   }
@@ -67,7 +65,7 @@ export class LeaderboardService {
     });
     const userIds = users.map((u) => u.id);
 
-    const [periodSubs, allTimeSubs, freezeDays, perfByUser, totalCountByUser] = await Promise.all([
+    const [periodSubs, allTimeSubs, perfByUser, totalCountByUser] = await Promise.all([
       prisma.submission.findMany({
         where: { verdict: "AC", userId: { in: userIds }, ...(since ? { createdAt: { gte: since } } : {}) },
         select: { userId: true, problemId: true, createdAt: true, problem: { select: { difficulty: true } } },
@@ -78,9 +76,6 @@ export class LeaderboardService {
         where: { verdict: "AC", userId: { in: userIds } },
         select: { userId: true, createdAt: true },
       }),
-      // A streak-freeze day counts the same as a real AC day here too — otherwise this board would
-      // disagree with the personal dashboard's own streak the moment someone uses one.
-      prisma.streakFreezeDay.findMany({ where: { userId: { in: userIds } }, select: { userId: true, date: true } }),
       // Avg time/memory reflect solving *performance*, not attempt-window — always all-time and
       // AC-only, same reasoning as streaks: a "this week" average over 1-2 solves would be noise.
       prisma.submission.groupBy({
@@ -112,14 +107,6 @@ export class LeaderboardService {
       set.add(s.createdAt.toISOString().slice(0, 10));
       acDatesByUser.set(s.userId, set);
     }
-    for (const f of freezeDays) {
-      const set = acDatesByUser.get(f.userId) ?? new Set<string>();
-      set.add(f.date);
-      acDatesByUser.set(f.userId, set);
-    }
-    const todayKey = new Date().toISOString().slice(0, 10);
-    const frozenTodayUserIds = new Set(freezeDays.filter((f) => f.date === todayKey).map((f) => f.userId));
-
     const rows = users.map((u) => {
       const solved = solvedByUser.get(u.id) ?? new Map<string, number>();
       const streak = computeStreak(acDatesByUser.get(u.id) ?? new Set());
@@ -136,7 +123,6 @@ export class LeaderboardService {
         school: u.schoolVerifiedAt ? u.school : null,
         solved: solved.size,
         streak,
-        frozenToday: frozenTodayUserIds.has(u.id),
         avgTimeMs: perf?.avgTimeMs != null ? Math.round(perf.avgTimeMs) : null,
         avgMemoryKb: perf?.avgMemoryKb != null ? Math.round(perf.avgMemoryKb) : null,
         totalSubmissions: totalSubsByUser.get(u.id) ?? 0,

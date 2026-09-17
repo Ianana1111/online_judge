@@ -49,9 +49,9 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("school challenge transactions
     const a = await account(), email = address(); const before = send.mock.calls.length;
     const results = await Promise.allSettled(Array.from({ length: 6 }, () => service.requestSchoolVerification(a.id, email)));
     expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1); expect(send.mock.calls.length - before).toBe(1);
-    const token = tokens.get(a.id)![0]; expect(await service.confirmSchoolVerification(token)).toEqual({ ok: true });
+    const token = tokens.get(a.id)![0]; expect(await service.confirmSchoolVerification(token)).toEqual({ ok: true, account: { handle: a.handle, school: a.school } });
     const first = (await prisma.user.findUniqueOrThrow({ where: { id: a.id } })).schoolVerifiedAt;
-    expect(await service.confirmSchoolVerification(token)).toEqual({ ok: true });
+    expect(await service.confirmSchoolVerification(token)).toEqual({ ok: true, account: { handle: a.handle, school: a.school } });
     expect((await prisma.user.findUniqueOrThrow({ where: { id: a.id } })).schoolVerifiedAt).toEqual(first);
     await expect(service.updateProfile(a.id, { school: "國立清華大學" })).rejects.toThrow();
   });
@@ -70,7 +70,7 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("school challenge transactions
     const a = await account(), email = address(), old = await challenge(a.id, email);
     await prisma.user.update({ where: { id: a.id }, data: { schoolVerificationSentAt: new Date(0) } });
     const latest = await challenge(a.id, email); expect(old).not.toBe(latest);
-    expect(await service.confirmSchoolVerification(old)).toEqual({ ok: false }); expect(await service.confirmSchoolVerification(latest)).toEqual({ ok: true });
+    expect(await service.confirmSchoolVerification(old)).toEqual({ ok: false }); expect(await service.confirmSchoolVerification(latest)).toEqual({ ok: true, account: { handle: a.handle, school: a.school } });
   });
   it("lets only one account claim an inbox and keeps the claim after deletion", async () => {
     const [a, b] = await Promise.all([account(), account()]), email = address();
@@ -84,7 +84,7 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("school challenge transactions
     const a = await account(), email = address(); send.mockRejectedValueOnce(new Error("Synthetic delivery failure"));
     await expect(service.requestSchoolVerification(a.id, email)).rejects.toThrow("Synthetic delivery failure");
     const current = await prisma.user.findUniqueOrThrow({ where: { id: a.id } }); expect(current.schoolVerificationTokenHash).toBeNull(); expect(current.schoolVerificationSentAt).toBeNull();
-    expect(await service.confirmSchoolVerification(await challenge(a.id, email))).toEqual({ ok: true });
+    expect(await service.confirmSchoolVerification(await challenge(a.id, email))).toEqual({ ok: true, account: { handle: a.handle, school: a.school } });
   });
   it("rejects expired tokens, a different token purpose/algorithm, and forged signatures", async () => {
     const a = await account(), email = address(), valid = await challenge(a.id, email), secret = process.env.SCHOOL_VERIFY_SECRET ?? "dev_school_verify_secret_change_me";

@@ -35,7 +35,7 @@ const DistributionChart = dynamic(() => import("@/components/DistributionChart")
 const VERDICT_TITLE: Record<Verdict, string> = {
   PENDING: "Pending",
   JUDGING: "Judging",
-  AC: "Accepted",
+  AC: "Accept",
   WA: "Wrong Answer",
   TLE: "Time Limit Exceeded",
   MLE: "Memory Limit Exceeded",
@@ -126,7 +126,7 @@ export default function SubmissionResultPanel({
     <div className="mb-4 flex items-start gap-3">
       <Icon className={`mt-0.5 h-8 w-8 shrink-0 ${colorClass}`} />
       <div>
-        <p className={`font-display text-2xl font-bold ${colorClass}`}>{t(VERDICT_TITLE[verdict])}</p>
+        <h2 lang="en" className={`font-display text-2xl font-bold ${colorClass}`}>{VERDICT_TITLE[verdict]}</h2>
         <p className="text-xs text-ink-500">
           {t("Submitted at {time}", { time: new Date(resultTab.createdAt).toLocaleString() })}
         </p>

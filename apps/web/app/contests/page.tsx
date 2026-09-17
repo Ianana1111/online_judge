@@ -9,6 +9,7 @@ import { useAuthStore } from "@/store/auth";
 import { SkeletonList } from "@/components/Skeleton";
 import type { ContestListItem, MyContest } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
+import ContestArchiveRow from "@/components/ContestArchiveRow";
 
 // CPE/GPE sittings are virtual (no fixed startAt) but their slugs always embed the real exam
 // date (e.g. "cpe-2026-05-26", "gpe-2018-01-03-9781") — the one reliable way to sort/label them
@@ -54,8 +55,8 @@ function LatestSitting({
   kind: "CPE" | "GPE";
 }) {
   const t = useT();
-  const accent = kind === "CPE" ? "text-brand" : "text-sky-400";
-  const accentBorder = kind === "CPE" ? "hover:border-brand" : "hover:border-sky-400";
+  const accent = kind === "CPE" ? "text-brand" : "text-verdict-pending";
+  const accentBorder = kind === "CPE" ? "hover:border-brand" : "hover:border-verdict-pending";
   const mmdd = date ? `${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}` : "–";
 
   return (
@@ -93,24 +94,6 @@ function LatestSitting({
           {t("Start exam")} <span aria-hidden>→</span>
         </span>
       </div>
-    </Link>
-  );
-}
-
-/** One past sitting in the archive, reduced to its date — every sitting is 180 minutes and the
- * titles are all "<kind> <date>" restated, so the date is the only thing that distinguishes one
- * row from the next. Chips instead of full-width rows fit ~17 years of papers on screen at once
- * rather than behind a 480px scroll box. */
-function ArchiveChip({ contest, date, kind }: { contest: ContestListItem; date: Date | null; kind: "CPE" | "GPE" }) {
-  const hover = kind === "CPE" ? "hover:border-brand hover:text-brand" : "hover:border-sky-400 hover:text-sky-400";
-  const mmdd = date ? `${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}` : "—";
-  return (
-    <Link
-      href={`/contests/${contest.id}`}
-      title={contest.title}
-      className={`min-w-[86px] rounded border border-ink-700 bg-ink-800/40 px-3 py-2 text-center font-mono text-sm tabular-nums text-ink-200 transition-colors ${hover}`}
-    >
-      {mmdd}
     </Link>
   );
 }
@@ -261,13 +244,9 @@ export default function ContestsPage() {
                   <span className="font-display text-sm font-bold tabular-nums text-ink-400">{year}</span>
                   <span className="h-px flex-1 bg-ink-800 sm:hidden" />
                 </div>
-                {/* Wrapping row rather than a fixed grid: a year holds at most ~4 sittings, so
-                    grid columns wide enough for the busiest year would leave the rest half-empty,
-                    and the column alignment wouldn't mean anything anyway (each year's sittings
-                    fall in different months). */}
-                <div className="flex flex-1 flex-wrap gap-2">
+                <div className="min-w-0 flex-1 space-y-2">
                   {sittings.map(({ c, d }) => (
-                    <ArchiveChip key={c.id} contest={c} date={d} kind={tab} />
+                    <ContestArchiveRow key={c.id} contest={c} date={d} />
                   ))}
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, Req, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Header, HttpCode, Param, Patch, Post, Query, Req, Res } from "@nestjs/common";
 import { Throttle } from "@nestjs/throttler";
 import { z } from "zod";
 import type { Request, Response } from "express";
@@ -92,11 +92,6 @@ export class UsersController {
     return this.users.daily(user.id);
   }
 
-  @Post("me/streak-freeze")
-  useStreakFreeze(@CurrentUser() user: RequestUser) {
-    return this.users.useStreakFreeze(user.id);
-  }
-
   @Patch("me/settings")
   updateSettings(
     @Body(new ZodValidationPipe(updateSettingsSchema)) body: UpdateSettingsDto,
@@ -139,6 +134,7 @@ export class UsersController {
   }
 
   @Public() @Post("school/verify/confirm") @HttpCode(200)
+  @Header("Cache-Control", "no-store")
   confirmSchoolVerificationPost(@Body(new ZodValidationPipe(z.object({ token: z.string().min(1).max(4096) }))) body: { token: string }) { return this.users.confirmSchoolVerification(body.token); }
 
   @Roles("ADMIN")

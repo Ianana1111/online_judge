@@ -8,7 +8,7 @@ import { useAuthStore } from "@/store/auth";
 import { SkeletonList } from "@/components/Skeleton";
 import Avatar from "@/components/Avatar";
 import SchoolCombobox from "@/components/SchoolCombobox";
-import { FlameIcon, SnowflakeIcon, TrophyIcon } from "@/components/icons";
+import { FlameIcon, TrophyIcon } from "@/components/icons";
 import { UNVERIFIED_SCHOOL_FILTER } from "@oj/shared";
 import type { LeaderboardRow } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
@@ -85,7 +85,7 @@ export default function LeaderboardPage() {
         <p className="mt-1 text-sm text-ink-400">
           {ranking === "solved"
             ? t("Ranked by how many problems you've solved — grinding a lot beats grinding hard.")
-            : t("Ranked by current consecutive-day streak — a day covered by a streak-freeze counts the same as a real solve.")}
+            : t("Ranked by consecutive days with an accepted solution.")}
         </p>
       </div>
 
@@ -216,9 +216,9 @@ export default function LeaderboardPage() {
                         <span className="font-mono text-sm font-semibold text-brand">{r.solved}</span>
                       ) : (
                         <span
-                          className={`inline-flex items-center gap-1 font-mono text-sm font-semibold ${r.frozenToday ? "text-sky-400" : "text-verdict-tle"}`}
+                          className="inline-flex items-center gap-1 font-mono text-sm font-semibold text-verdict-tle"
                         >
-                          {r.frozenToday ? <SnowflakeIcon className="h-3.5 w-3.5" /> : <FlameIcon className="h-3.5 w-3.5" />}
+                          <FlameIcon className="h-3.5 w-3.5" />
                           {t("{n}d", { n: r.streak })}
                         </span>
                       )}

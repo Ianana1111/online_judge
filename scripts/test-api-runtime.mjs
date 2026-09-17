@@ -43,6 +43,17 @@ try {
   const account = await registered.json(); userId = account.id;
   assert.ok(userId); assert.ok(cookies.get("access_token"));
   const me = await request("/auth/me"); assert.equal(me.status, 200); const current = await me.json(); assert.equal(current.id, userId);
+  const day = new Date().toISOString().slice(0, 10);
+  await prisma.user.update({ where: { id: userId }, data: { streakFreezeCount: 2, streakFreezeGrantMonth: "2000-01" } });
+  await prisma.streakFreezeDay.create({ data: { userId, date: day } });
+  const dailyResponse = await request("/users/me/daily"); assert.equal(dailyResponse.status, 200);
+  const daily = await dailyResponse.json();
+  assert.equal(daily.currentStreak, 0); assert.equal(daily.solvedToday, 0); assert.equal(daily.loginStreak, 1);
+  for (const retired of ["streakFreezeCount", "frozenToday", "loginMilestoneHit"]) assert.equal(retired in daily, false);
+  assert.equal((await request("/users/me/streak-freeze", "POST", {}, current.csrfToken)).status, 404);
+  const inventory = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+  assert.equal(inventory.streakFreezeCount, 2); assert.equal(inventory.streakFreezeGrantMonth, "2000-01");
+  assert.equal(await prisma.streakFreezeDay.count({ where: { userId } }), 1);
   assert.equal((await request("/notifications/read", "POST", { ids: [] })).status, 403);
   assert.equal((await request("/notifications/read", "POST", { ids: [] }, current.csrfToken)).status, 400);
   const notifications = await request("/notifications"); assert.equal(notifications.status, 200); assert.equal((await notifications.json()).unreadCount, 0);
