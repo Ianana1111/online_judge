@@ -20,3 +20,13 @@ The confirmation identifies the whole article by its current published title (or
 - Database regressions cover foreign deletion denial, administrator deletion, preserved approved revisions and first-actor audit, hidden comments/list/sitemap/own-post access, retry safety and concurrent approval/removal. Runtime checks exercise authentication, CSRF, forged client role fields and an actual administrator DELETE route.
 - Before rollout, 10 existing production posts and 7 post revisions were exported read-only to `generated/backups/admin-post-removal-20260917/posts-before-migration.json.gz`. The restricted local backup was decompressed and SHA-256 verified: `026fffdeabeb94939f43f4ca06aaecbbfb0cec886449045ff8f61b47cda2f527`. It is excluded from Git and deployment uploads.
 - Production migration runs through Railway's existing start command after CI succeeds. Check the final commit on API, judge and the live Vercel domain before reporting deployment complete; a ready preview alone is insufficient.
+
+## CI measurement correction
+
+The first full run for this change passed 298/300 browser cases. The two failures were the existing mobile Chromium/iOS WebKit WA Run/Submit alignment check, before either Run or Submit was pressed. The CI screenshots show adjacent buttons. Trace frames show the statement loading placeholder being replaced by its one-line text between two separate `boundingBox()` calls, moving the entire action row up by 233.25 px; the test compared different layout frames.
+
+Both button rectangles are now read synchronously in a single browser evaluation. The original vertical-alignment and horizontal-gap assertions remain intact, with no skipped tests, retries or relaxed thresholds. CI artifact SHA-256: `34a9747884202f87619e7e5f1454fe60db3c98765a8f6e02b8f713759d5c4db6` (run `35233771570`).
+
+The first 50-case repetition caught an additional iOS WebKit click during lazy statement/editor initialization (49 passed). Its trace shows scroll anchoring changing the document offset from 583 to 350 while the click is in progress. The test now waits for the actual statement text and Monaco textbox to attach before measuring and interacting. This models reading the statement and entering code; it does not add a fixed delay or force clicks. Monaco's native EditContext textbox can have no visible dimensions in Chromium, so readiness uses attachment rather than a visibility assertion on that internal control.
+
+Final production-build repetition: **50/50 passed** (AC and WA workflows, five repetitions on each of five browser targets); lint and whitespace checks passed. Full CI must pass on the follow-up commit before the deployment gates release it.
