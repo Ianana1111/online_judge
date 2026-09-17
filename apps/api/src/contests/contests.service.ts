@@ -27,7 +27,11 @@ export class ContestsService {
   ) {}
 
   async list() {
-    const contests = await prisma.contest.findMany({ where: { isPublic: true, problems: { some: {} } }, orderBy: { createdAt: "desc" } });
+    const contests = await prisma.contest.findMany({
+      where: { isPublic: true, problems: { some: {} } }, orderBy: { createdAt: "desc" },
+      select: { id: true, title: true, slug: true, kind: true, startAt: true, durationMin: true, isPublic: true,
+        problems: { orderBy: { ord: "asc" }, select: { label: true, problem: { select: { title: true, uvaId: true } } } } },
+    });
     return contests.map((c) => ({
       id: c.id,
       title: c.title,
@@ -36,6 +40,7 @@ export class ContestsService {
       startAt: c.startAt,
       durationMin: c.durationMin,
       isPublic: c.isPublic,
+      problemPreview: c.problems.map((entry) => ({ label: entry.label, title: entry.problem.title, uvaId: entry.problem.uvaId })),
     }));
   }
 

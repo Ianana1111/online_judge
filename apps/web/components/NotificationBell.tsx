@@ -13,7 +13,8 @@ export default function NotificationBell() {
   const user = useAuthStore((s) => s.user), [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null), trigger = useRef<HTMLButtonElement>(null), panel = useRef<HTMLDivElement>(null);
   const panelId = useId();
-  const { data } = useQuery({ queryKey: ["notifications", user?.id, "badge"], queryFn: () => apiFetch<NotificationList>("/notifications"), enabled: !!user, refetchInterval: 30_000 });
+  const authenticated = !!user && !user.mfaRequired && !user.mfaEnrollmentRequired && !user.deletionRequestedAt;
+  const { data } = useQuery({ queryKey: ["notifications", user?.id, "badge"], queryFn: () => apiFetch<NotificationList>("/notifications"), enabled: authenticated, refetchInterval: 30_000 });
   const unread = data?.unreadCount ?? 0;
   useEffect(() => { setOpen(false); }, [user?.id]);
   useEffect(() => {
@@ -24,6 +25,7 @@ export default function NotificationBell() {
     document.addEventListener("pointerdown", outside); document.addEventListener("keydown", key);
     return () => { document.removeEventListener("pointerdown", outside); document.removeEventListener("keydown", key); };
   }, [open]);
+  if (!authenticated) return null;
   return <div ref={root} className="relative">
     <button ref={trigger} type="button" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls={panelId} aria-haspopup="dialog" aria-label={`${zh ? "通知" : "Notifications"}${unread ? ` (${unread} ${zh ? "則未讀" : "unread"})` : ""}`} className="relative flex h-10 w-10 items-center justify-center rounded-xl text-ink-300 hover:bg-ink-800 hover:text-brand">
       <svg aria-hidden width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M10 21h4" strokeLinecap="round" strokeLinejoin="round" /></svg>

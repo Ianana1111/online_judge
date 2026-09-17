@@ -28,8 +28,8 @@ export const batch3Dictionary: Record<string, string> = {
   "Leaderboard": "排行榜",
   "Score is difficulty-weighted (harder problems are worth more) — grinding easy ones only gets you so far.":
     "分數會依題目難度加權（難題分數更高）——一直刷簡單題能拿到的分數有限。",
-  "Ranked by current consecutive-day streak — a day covered by a streak-freeze counts the same as a real solve.":
-    "依目前的連續天數排名——使用連續紀錄保護的那天也算數，跟真的解題一樣。",
+  "Ranked by consecutive days with an accepted solution.":
+    "依連續解出題目（AC）的天數排名。",
   "This week": "本週",
   "This month": "本月",
   "All time": "全部時間",
@@ -38,7 +38,6 @@ export const batch3Dictionary: Record<string, string> = {
   "Global": "全站",
   "My class": "我的班級",
   "(you)": "（你）",
-  "Protected today by a streak-freeze": "今天有連續紀錄保護",
   "Consecutive days with an AC": "連續 AC 的天數",
   "{n}d streak": "連續 {n} 天",
   "{n} solved": "解出 {n} 題",

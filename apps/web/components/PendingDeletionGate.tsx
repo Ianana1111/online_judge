@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { apiFetch, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import { useT } from "@/lib/i18n/LocaleContext";
@@ -14,12 +15,13 @@ const GRACE_DAYS = 3;
  * period. Unlike ProfileSetupGate, this isn't dismissable: the only ways out are cancelling the
  * deletion or logging out again. */
 export default function PendingDeletionGate() {
+  const path = usePathname();
   const { user, patchUser, logout } = useAuthStore();
   const t = useT();
   const [cancelling, setCancelling] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!user?.deletionRequestedAt) return null;
+  if (!user?.deletionRequestedAt || path === "/verify-school") return null;
 
   const deleteAt = new Date(new Date(user.deletionRequestedAt).getTime() + GRACE_DAYS * 24 * 3600 * 1000);
 

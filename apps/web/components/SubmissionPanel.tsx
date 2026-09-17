@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -71,6 +71,8 @@ export default function SubmissionPanel({
 }) {
   const t = useT();
   const { user, status: authStatus } = useAuthStore();
+  const runFormId = useId();
+  const [runState, setRunState] = useState({ running: false, disabled: true });
   // Scoped per-account (not just per-problem): an unscoped key meant any browser session — logged
   // out, or logged into a different account — would read back whatever the last signed-in user on
   // this device had typed, which is both a privacy leak on shared/public machines and confusing on
@@ -238,7 +240,7 @@ export default function SubmissionPanel({
           {t("This problem has no matching UVa judge, so it isn't gradeable here — reference-only. Use it for reading/practice; submitting is disabled.")}
         </p>
       )}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <select
           aria-label={t("Language")}
           value={languageKey}
@@ -248,7 +250,7 @@ export default function SubmissionPanel({
             setLanguageKey(next);
             setSourceCode(languageDrafts.current[next] ?? STUB[next] ?? "");
           }}
-          className="oj-input w-40"
+          className="oj-input min-w-0 max-w-40 flex-1 basis-28"
         >
           {LANGUAGES.map((l) => (
             <option key={l} value={l}>
@@ -256,7 +258,12 @@ export default function SubmissionPanel({
             </option>
           ))}
         </select>
-        <button onClick={handleSubmit} disabled={!canSubmit} className="oj-btn-primary w-40">
+        <div className="ml-auto flex shrink-0 items-center gap-2">
+        <button type="submit" form={runFormId} disabled={runState.disabled || locked}
+          className="inline-flex min-h-10 min-w-24 items-center justify-center gap-1.5 rounded-lg border border-white/20 bg-[#111111] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#262626] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-50">
+          {runState.running ? t("Running…") : t("▶ Run")}
+        </button>
+        <button type="button" onClick={handleSubmit} disabled={!canSubmit} className="oj-btn-primary min-h-10 min-w-24 px-3">
           {!judgeable
             ? t("Not gradeable")
             : locked
@@ -269,6 +276,7 @@ export default function SubmissionPanel({
                     ? t("Wait {n}s", { n: Math.ceil(cooldownRemaining / 1000) })
                     : t("Submit")}
         </button>
+        </div>
       </div>
 
       {billing && billing.submits.limit != null && (
@@ -314,6 +322,9 @@ export default function SubmissionPanel({
       sourceCode={sourceCode}
       samples={samples}
       checkerType={checkerType}
+      formId={runFormId}
+      onRunStateChange={setRunState}
+      locked={locked}
     />
   );
 

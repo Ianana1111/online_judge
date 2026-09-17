@@ -2,8 +2,8 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { apiFetch, ApiError } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import DailyGoalRing from "@/components/DailyGoalRing";
 import VerdictBadge from "@/components/VerdictBadge";
@@ -19,7 +19,6 @@ import {
   MedalIcon,
   MoonIcon,
   RocketIcon,
-  SnowflakeIcon,
   SunHighIcon,
   SunriseIcon,
   SunsetIcon,
@@ -95,11 +94,8 @@ function StatTile({ value, label, valueClassName = "text-ink-50" }: { value: Rea
   );
 }
 
-/** The streak's visual size/intensity grows with its length — a small ember for a fresh streak, a
- * full blaze past a month — so "keep it alive" reads as a stake worth protecting, not just a
- * number next to a flame icon. A frozen day shows as a cool-toned snowflake instead of the warm
- * "at risk" red, since it's already protected — nothing left to worry about today. */
-function StreakFlame({ streak, atRisk, frozenToday }: { streak: number; atRisk: boolean; frozenToday: boolean }) {
+/** The flame grows with the number of consecutive days with an accepted solution. */
+function StreakFlame({ streak, atRisk }: { streak: number; atRisk: boolean }) {
   const t = useT();
   if (streak <= 0) {
     return (
@@ -110,54 +106,11 @@ function StreakFlame({ streak, atRisk, frozenToday }: { streak: number; atRisk: 
     );
   }
   const size = streak >= 30 ? "h-10 w-10" : streak >= 7 ? "h-8 w-8" : "h-6 w-6";
-  if (frozenToday) {
-    return (
-      <div className="flex flex-col items-center gap-1">
-        <SnowflakeIcon className={`${size} text-verdict-pending`} />
-        <span className="font-display font-bold tabular-nums text-verdict-pending">{streak}</span>
-        <span className="text-[10px] uppercase tracking-wide text-ink-500">{t("protected today")}</span>
-      </div>
-    );
-  }
   return (
     <div className="flex flex-col items-center gap-1">
       <FlameIcon className={`${size} text-verdict-tle ${atRisk ? "animate-pulse-soft" : ""}`} />
       <span className={`font-display font-bold tabular-nums ${atRisk ? "text-verdict-wa" : "text-verdict-tle"}`}>{streak}</span>
       <span className="text-[10px] uppercase tracking-wide text-ink-500">{atRisk ? t("at risk today") : t("day streak")}</span>
-    </div>
-  );
-}
-
-/** Offered only when there's actually something to protect (atRisk) and the user has one in
- * stock — spends it via POST /users/me/streak-freeze and refetches daily() so the flame/ring
- * above flip to the "protected today" state immediately. */
-function StreakFreezeButton({ freezeCount }: { freezeCount: number }) {
-  const t = useT();
-  const qc = useQueryClient();
-  const [error, setError] = useState<string | null>(null);
-
-  const mutation = useMutation({
-    mutationFn: () => apiFetch("/users/me/streak-freeze", { method: "POST" }),
-    onSuccess: () => {
-      setError(null);
-      qc.invalidateQueries({ queryKey: ["daily"] });
-    },
-    onError: (e) => setError(e instanceof ApiError ? e.message : t("Couldn't use a freeze — try again.")),
-  });
-
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <button
-        type="button"
-        onClick={() => mutation.mutate()}
-        disabled={mutation.isPending}
-        title={t("Life gets busy — spend one to keep your streak alive today without solving anything.")}
-        className="inline-flex items-center gap-1.5 rounded border border-verdict-pending/40 bg-verdict-pending/10 px-2.5 py-1.5 text-xs font-medium text-verdict-pending transition-colors hover:bg-verdict-pending/20 disabled:opacity-50"
-      >
-        <SnowflakeIcon className="h-3.5 w-3.5" />
-        {mutation.isPending ? t("Using…") : t("Use a freeze ({n} left)", { n: freezeCount })}
-      </button>
-      {error && <p className="max-w-[160px] text-center text-[10px] text-verdict-wa">{error}</p>}
     </div>
   );
 }
@@ -363,7 +316,6 @@ export default function HomeDashboard() {
               <p className="mt-1 flex items-center gap-1 text-xs text-ink-500">
                 <CalendarCheckIcon className="h-3.5 w-3.5 text-verdict-pending" />
                 {t("{n} days in a row you've shown up", { n: daily.loginStreak })}
-                {daily.loginMilestoneHit && t(" — bonus streak-freeze earned!")}
               </p>
             )}
             <Link
@@ -374,8 +326,7 @@ export default function HomeDashboard() {
             </Link>
           </div>
           <div className="hidden flex-col items-center gap-2 sm:flex">
-            <StreakFlame streak={daily?.currentStreak ?? 0} atRisk={!!daily?.atRisk} frozenToday={!!daily?.frozenToday} />
-            {daily?.atRisk && daily.streakFreezeCount > 0 && <StreakFreezeButton freezeCount={daily.streakFreezeCount} />}
+            <StreakFlame streak={daily?.currentStreak ?? 0} atRisk={!!daily?.atRisk} />
           </div>
         </div>
 
@@ -385,21 +336,19 @@ export default function HomeDashboard() {
               value={
                 daily && daily.currentStreak > 0 ? (
                   <span className="inline-flex items-center gap-1">
-                    {daily.frozenToday ? <SnowflakeIcon className="h-4 w-4" /> : <FlameIcon className="h-4 w-4" />} {daily.currentStreak}
+                    <FlameIcon className="h-4 w-4" /> {daily.currentStreak}
                   </span>
                 ) : (
                   "–"
                 )
               }
-              label={daily?.frozenToday ? t("protected today") : daily?.atRisk ? t("at risk today") : t("day streak")}
+              label={daily?.atRisk ? t("at risk today") : t("day streak")}
               valueClassName={
-                daily?.frozenToday
-                  ? "text-verdict-pending"
-                  : daily?.atRisk
-                    ? "text-verdict-wa animate-pulse-soft"
-                    : daily && daily.currentStreak > 0
-                      ? "text-verdict-tle"
-                      : "text-ink-400"
+                daily?.atRisk
+                  ? "text-verdict-wa animate-pulse-soft"
+                  : daily && daily.currentStreak > 0
+                    ? "text-verdict-tle"
+                    : "text-ink-400"
               }
             />
           </div>

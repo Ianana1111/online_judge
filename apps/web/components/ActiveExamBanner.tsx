@@ -25,13 +25,13 @@ export default function ActiveExamBanner() {
   const { data: mine } = useQuery({
     queryKey: ["contests", "me"],
     queryFn: () => apiFetch<MyContest[]>("/contests/me"),
-    enabled: !!user && !examActive,
+    enabled: !!user && !user.mfaRequired && !user.mfaEnrollmentRequired && !user.deletionRequestedAt && !examActive,
     // Mounted site-wide for every logged-in visitor, so this stays deliberately infrequent —
     // it only needs to notice "still running" within a minute or so, not track it live.
     refetchInterval: 30_000,
   });
 
-  if (!user || examActive) return null;
+  if (!user || user.mfaRequired || user.mfaEnrollmentRequired || user.deletionRequestedAt || examActive) return null;
   const running = (mine ?? []).find((c) => c.status === "RUNNING");
   if (!running) return null;
 

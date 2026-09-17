@@ -3,7 +3,7 @@ import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Leaderboard",
-  description: "Top solvers ranked by score and by longest daily-check-in streak.",
+  description: "Top solvers ranked by problems solved and consecutive days with an accepted solution.",
   alternates: { canonical: `${SITE_URL}/leaderboard` },
 };
 

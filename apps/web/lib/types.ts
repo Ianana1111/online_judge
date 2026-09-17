@@ -160,10 +160,7 @@ export interface DailyStats {
   solvedToday: number;
   currentStreak: number;
   atRisk: boolean;
-  streakFreezeCount: number;
-  frozenToday: boolean;
   loginStreak: number;
-  loginMilestoneHit: boolean;
 }
 
 export interface DailyProblem {
@@ -325,6 +322,7 @@ export interface ContestListItem {
   startAt: string | null;
   durationMin: number;
   isPublic: boolean;
+  problemPreview?: { label: string; title: string; uvaId: number | null }[];
 }
 
 export interface ContestProblemRef {
@@ -700,7 +698,6 @@ export interface LeaderboardRow {
   school: string | null;
   solved: number;
   streak: number;
-  frozenToday: boolean;
   avgTimeMs: number | null;
   avgMemoryKb: number | null;
   totalSubmissions: number;

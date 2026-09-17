@@ -176,18 +176,6 @@ export const CalendarCheckIcon = makeIcon(
   </>,
 );
 
-/** Streak-freeze — a snowflake, so "protect today's streak" reads as a distinct cool-toned action
- * from the flame's warm "keep it burning" one. */
-export const SnowflakeIcon = makeIcon(
-  <>
-    <line x1="12" y1="2" x2="12" y2="22" />
-    <line x1="2" y1="12" x2="22" y2="12" />
-    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
-    <line x1="19.07" y1="4.93" x2="4.93" y2="19.07" />
-    <path d="M12 2l-2 2m2-2l2 2M12 22l-2-2m2 2l2-2M2 12l2-2m-2 2l2 2M22 12l-2-2m2 2l-2 2" />
-  </>,
-);
-
 export const XIcon = makeIcon(
   <>
     <line x1="18" y1="6" x2="6" y2="18" />

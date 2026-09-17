@@ -67,3 +67,99 @@ test("school picker supports old names, keyboard selection, and institution-spec
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.evaluate(() => window.scrollTo(0, 0)); await page.screenshot({ path: info.outputPath("school-settings.png"), fullPage: true });
 });
+
+const verifiedAccount = { handle: "original_student", school: "國立臺灣大學" };
+const schoolUser = (handle = verifiedAccount.handle) => ({
+  id: `c0000000000000000000000${handle === verifiedAccount.handle ? "31" : "32"}`, handle, email: "login@example.test", role: "USER",
+  settings: { profileSetupDismissed: true }, school: verifiedAccount.school, schoolEmail: "student@ntu.edu.tw",
+  schoolVerifiedAt: null as string | null, hasPassword: true, bio: "Original biography", csrfToken: "test",
+});
+
+for (const session of ["anonymous", "original", "different", "mfa", "enrollment", "deletion", "new-account"] as const) {
+  test(`school confirmation in another Chrome profile is independent of ${session} session`, async ({ page }, info) => {
+    const user = schoolUser(session === "original" ? verifiedAccount.handle : "another_student");
+    Object.assign(user, { mfaRequired: session === "mfa", mfaEnrollmentRequired: session === "enrollment", deletionRequestedAt: session === "deletion" ? new Date().toISOString() : null });
+    if (session === "new-account") Object.assign(user, { school: null, schoolEmail: null, settings: {} });
+    let confirms = 0;
+    const unrelatedWrites: string[] = [];
+    await page.route("http://127.0.0.1:55440/**", (route) => {
+      const path = new URL(route.request().url()).pathname;
+      if (path === "/auth/me") return route.fulfill({ status: session === "anonymous" ? 401 : 200, json: user });
+      if (path === "/auth/refresh") return route.fulfill({ status: 401, json: {} });
+      if (path === "/analytics/pageview" || path === "/billing/plans") return route.fulfill({ json: {} });
+      if (path === "/users/school/verify/confirm") {
+        confirms++; if (session === "original") user.schoolVerifiedAt = new Date().toISOString();
+        return route.fulfill({ json: { ok: true, account: verifiedAccount } });
+      }
+      if (route.request().method() !== "GET") unrelatedWrites.push(path);
+      if (["mfa", "enrollment"].includes(session)) return route.fulfill({ status: 403, json: { code: "MFA_REQUIRED" } });
+      return route.fulfill({ json: path === "/notifications" ? { items: [], unreadCount: 0 } : [] });
+    });
+    await page.goto("/verify-school#token=school-fixture-token");
+    await expect(page.getByRole("button", { name: "確認驗證學校信箱", exact: true })).toBeEnabled();
+    await expect(page).toHaveURL(/\/verify-school$/); expect(confirms).toBe(0);
+    await page.getByRole("button", { name: "確認驗證學校信箱", exact: true }).click();
+    await expect(page.getByRole("status")).toContainText(`@${verifiedAccount.handle}`);
+    if (session === "original") {
+      await expect(page.getByRole("link", { name: "查看已驗證的學校" })).toHaveAttribute("href", "/settings");
+    } else {
+      await expect(page.getByText(/你可以關閉此頁/)).toBeVisible();
+      await expect(page.getByRole("link", { name: "查看已驗證的學校" })).toHaveCount(0);
+      if (session !== "anonymous") await expect(page.getByRole("note")).toContainText("@another_student");
+      expect(user.schoolVerifiedAt).toBeNull();
+    }
+    // A success receipt is display-only; neither storage nor URL retains the bearer token.
+    const stored = await page.evaluate(() => JSON.stringify({ session: { ...sessionStorage }, local: { ...localStorage } }));
+    expect(stored).not.toContain("school-fixture-token"); expect(stored).not.toContain("student@ntu.edu.tw");
+    await page.reload();
+    await expect(page.getByRole("status")).toContainText("學校信箱驗證完成");
+    await expect(page).toHaveURL(/\/verify-school$/); expect(confirms).toBe(1); expect(unrelatedWrites).toEqual([]);
+    if (session === "anonymous") {
+      const audit = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+      expect(audit.violations).toEqual([]);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await page.screenshot({ path: info.outputPath("school-confirmed-other-profile.png"), fullPage: true });
+    }
+  });
+}
+
+test("school confirmation retries safely and a new invalid link cannot reuse an old success receipt", async ({ page }) => {
+  let attempts = 0;
+  await page.route("http://127.0.0.1:55440/**", (route) => {
+    if (new URL(route.request().url()).pathname !== "/users/school/verify/confirm") return route.fulfill({ status: 401, json: {} });
+    attempts++;
+    if (attempts === 1) return route.fulfill({ status: 503, json: {} });
+    return route.fulfill({ json: attempts === 2 ? { ok: true, account: verifiedAccount } : { ok: false } });
+  });
+  await page.goto("/verify-school#token=retry-fixture");
+  const button = page.getByRole("button", { name: "確認驗證學校信箱", exact: true });
+  await button.click(); await expect(page.locator("main").getByRole("alert")).toContainText("重試");
+  await button.click(); await expect(page.getByRole("status")).toContainText("學校信箱驗證完成");
+  await page.goto("/verify-school#token=invalid-fixture");
+  await expect(page.getByRole("status")).toHaveCount(0);
+  await button.click(); await expect(page.locator("main").getByRole("alert")).toContainText("連結已失效");
+});
+
+for (const trigger of ["focus", "manual", "poll"] as const) {
+  test(`original Settings observes verification from a separate browser via ${trigger} without discarding edits`, async ({ page }) => {
+    const user = schoolUser();
+    await page.route("http://127.0.0.1:55440/**", (route) => {
+      const path = new URL(route.request().url()).pathname;
+      if (path === "/auth/me") return route.fulfill({ json: user });
+      if (path === "/users/me/school/domains") return route.fulfill({ json: { roots: ["ntu.edu.tw"], exact: [] } });
+      return route.fulfill({ json: path === "/notifications" ? { items: [], unreadCount: 0 } : [] });
+    });
+    if (trigger === "poll") await page.clock.install();
+    await page.goto("/settings");
+    const refresh = page.getByRole("button", { name: "已點信件確認？更新驗證狀態" });
+    await expect(refresh).toBeVisible();
+    const bio = page.locator("#settings-bio"); await bio.fill("Unsaved school verification regression test");
+    user.schoolVerifiedAt = "2026-09-17T12:00:00.000Z";
+    if (trigger === "manual") await refresh.click();
+    else if (trigger === "focus") await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+    else await page.clock.fastForward(15_000);
+    await expect(page.getByText(/student@ntu.edu.tw.*學校已鎖定|Verified via student@ntu.edu.tw/)).toBeVisible();
+    await expect(refresh).toHaveCount(0);
+    await expect(bio).toHaveValue("Unsaved school verification regression test");
+  });
+}

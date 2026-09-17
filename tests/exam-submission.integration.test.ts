@@ -38,6 +38,18 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("exam and submission transacti
     const dto = { problemId: problem.id, languageKey: "cpp17" as const, sourceCode: "int main(){}", clientRequestId: randomUUID() };
     return { user, problem, makeContest, queue, service, dto };
   }
+  it("previews only ordered public exam titles, without statements or test data", async () => {
+    const a = await fixture(), b = await fixture();
+    const visible = await a.makeContest(), hidden = await a.makeContest();
+    await prisma.contest.update({ where: { id: visible.id }, data: { isPublic: true, problems: { create: { problemId: b.problem.id, ord: 3, label: "B" } } } });
+    await prisma.contest.update({ where: { id: hidden.id }, data: { isPublic: false } });
+    const list = await exams.list();
+    expect(list.some((c) => c.id === hidden.id)).toBe(false);
+    expect(list.find((c) => c.id === visible.id)?.problemPreview).toEqual([
+      { label: "A", title: a.problem.title, uvaId: null },
+      { label: "B", title: b.problem.title, uvaId: null },
+    ]);
+  });
   it("allows exactly one active exam when two tabs start different exams", async () => {
     const f = await fixture(); const [a, b] = await Promise.all([f.makeContest(), f.makeContest()]);
     const results = await Promise.allSettled([exams.register(a.id, f.user.id), exams.register(b.id, f.user.id)]);

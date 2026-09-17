@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useExamTimerStore, formatDuration } from "@/store/examTimer";
 import { useT } from "@/lib/i18n/LocaleContext";
+import { useIsDesktop } from "@/lib/useIsDesktop";
 
 export default function ExamModeShell({
   contestId,
@@ -38,6 +39,8 @@ export default function ExamModeShell({
   children: React.ReactNode;
 }) {
   const t = useT();
+  const isDesktop = useIsDesktop();
+  const fillViewport = fullHeight && isDesktop;
   const { setWindow, setActive, remainingMs } = useExamTimerStore();
   const [now, setNow] = useState(serverNow());
   const [confirmingEnd, setConfirmingEnd] = useState(false);
@@ -83,7 +86,7 @@ export default function ExamModeShell({
   }
 
   return (
-    <div className={`bg-ink-950 ${fullHeight ? "flex h-[calc(100vh-3rem)] flex-col overflow-hidden" : "min-h-screen"}`}>
+    <div className={`bg-ink-950 ${fillViewport ? "flex h-[calc(100vh-3rem)] flex-col overflow-hidden" : "min-h-screen"}`}>
       <header className="sticky top-0 z-50 flex shrink-0 items-center justify-between border-b border-ink-800 bg-ink-950/95 px-4 py-2.5 backdrop-blur">
         <div className="flex items-center gap-3">
           <Link href={homeHref} className="font-display text-sm font-bold text-ink-50">
@@ -152,7 +155,7 @@ export default function ExamModeShell({
       )}
 
       <div
-        className={`mx-auto w-full max-w-[1400px] px-6 ${fullHeight ? "min-h-0 flex-1 overflow-hidden py-3" : "py-6"}`}
+        className={`mx-auto w-full max-w-[1400px] px-3 sm:px-6 ${fillViewport ? "min-h-0 flex-1 overflow-hidden py-3" : "py-6"}`}
       >
         {children}
       </div>

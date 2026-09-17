@@ -5,6 +5,7 @@ import { sampleRevision } from "@oj/shared";
 import { apiFetch, ApiError, openRunStream } from "@/lib/api";
 import type { RunCaseResult, RunResult, Sample } from "@/lib/types";
 import { useLocale, useT } from "@/lib/i18n/LocaleContext";
+import { useIsDesktop } from "@/lib/useIsDesktop";
 
 const MAX_CASES = 8; // mirrors the API's createRunSchema cap
 const MAX_INPUT_CHARS = 4096;
@@ -32,6 +33,9 @@ type TestPanelProps = {
   sourceCode: string;
   samples: Sample[];
   checkerType?: "EXACT" | "IGNORE_TRAILING_WS" | "FLOAT" | "SPECIAL";
+  formId: string;
+  onRunStateChange: (state: { running: boolean; disabled: boolean }) => void;
+  locked?: boolean;
 };
 
 export default function TestPanel(props: TestPanelProps) {
@@ -45,10 +49,14 @@ function TestPanelSession({
   languageKey,
   sourceCode,
   samples,
+  formId,
+  onRunStateChange,
+  locked = false,
 }: TestPanelProps) {
   const t = useT();
   const { locale } = useLocale();
   const zh = locale === "zh-TW";
+  const isDesktop = useIsDesktop();
   const storageKey = `oj:testcases:${userId}:${slug}`;
   const sampleCases: Case[] = useMemo(
     () =>
@@ -76,6 +84,12 @@ function TestPanelSession({
   const [runError, setRunError] = useState<string | null>(null);
   const runSequence = useRef(0);
   const esRef = useRef<{ close: () => void } | null>(null);
+  const runningRef = useRef(false);
+  const [pane, setPane] = useState<"cases" | "result">("cases");
+  const [resultOpen, setResultOpen] = useState(false);
+  const resultTabRef = useRef<HTMLButtonElement>(null);
+  const caseTabRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     try {
@@ -148,13 +162,16 @@ function TestPanelSession({
   }
 
   async function handleRun() {
-    if (cases.length === 0 || status === "running") return;
+    if (!canRun || runningRef.current) return;
+    runningRef.current = true;
     const sequence = ++runSequence.current;
     setExecutedFingerprint(fingerprint);
     setStatus("running");
     setCompileError(null);
     setRunError(null);
     setResults({});
+    setResultOpen(true);
+    setPane("result");
     esRef.current?.close();
 
     try {
@@ -179,6 +196,7 @@ function TestPanelSession({
         if (!mounted.current || runSequence.current !== sequence) return;
         const payload = JSON.parse((evt as MessageEvent).data) as RunResult;
         if (payload.status === "RUNNING") return;
+        runningRef.current = false;
         if (payload.status === "DONE") {
           const byId: Record<string, RunCaseResult> = {};
           for (const r of payload.cases ?? []) byId[r.id] = r;
@@ -196,11 +214,13 @@ function TestPanelSession({
       es.onerror = () => {
         es.close();
         if (!mounted.current || runSequence.current !== sequence) return;
+        runningRef.current = false;
         setRunError((prev) => prev ?? t("Lost connection while running."));
         setStatus((prev) => (prev === "running" ? "error" : prev));
       };
     } catch (e) {
       if (!mounted.current || runSequence.current !== sequence) return;
+      runningRef.current = false;
       if (e instanceof ApiError) {
         setRunError(e.status === 429 ? t("You're running tests too fast — wait a moment and try again.") : e.message);
       } else {
@@ -214,9 +234,42 @@ function TestPanelSession({
   const activeResult = active && !stale ? results[active.id] : undefined;
   const activeMatch = activeResult?.verdict === "AC" ? true : activeResult?.verdict === "WA" ? false : null;
   const invalidInput = cases.some((c) => (edits[c.id] ?? c.input).length > MAX_INPUT_CHARS && (!c.isSample || edits[c.id] !== undefined && edits[c.id] !== c.input));
+  const canRun = loaded && !locked && status !== "running" && cases.length > 0 && cases.length <= MAX_CASES && sourceCode.trim().length > 0 && !invalidInput;
+  useEffect(() => { onRunStateChange({ running: status === "running", disabled: !canRun }); }, [status, canRun, onRunStateChange]);
+  useEffect(() => {
+    if (pane !== "result" || !resultOpen) return;
+    resultTabRef.current?.focus({ preventScroll: true });
+    panelRef.current?.scrollIntoView({ block: isDesktop ? "nearest" : "start", inline: "nearest" });
+  }, [pane, resultOpen, executedFingerprint, isDesktop]);
+
+  function closeResult() {
+    setResultOpen(false); setPane("cases");
+    caseTabRef.current?.focus({ preventScroll: true });
+  }
 
   return (
-    <div className="oj-card p-3">
+    <form ref={panelRef} id={formId} onSubmit={(e) => { e.preventDefault(); void handleRun(); }} className="oj-card scroll-mt-24 p-3">
+      <div className="mb-3 flex items-center gap-1 border-b border-ink-700">
+        <div role="tablist" aria-label={zh ? "程式測試" : "Code tests"} className="flex min-w-0 items-center gap-3"
+          onKeyDown={(e) => {
+            if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+            e.preventDefault();
+            const next = !resultOpen || e.key === "Home" ? "cases" : e.key === "End" ? "result" : pane === "cases" ? "result" : "cases";
+            setPane(next); (next === "cases" ? caseTabRef : resultTabRef).current?.focus();
+          }}>
+          <button ref={caseTabRef} type="button" role="tab" id={`${formId}-cases-tab`} aria-controls={`${formId}-cases`} aria-selected={pane === "cases"} tabIndex={pane === "cases" ? 0 : -1}
+            onClick={() => setPane("cases")} className={`min-h-10 border-b-2 px-1 text-sm font-medium ${pane === "cases" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}>
+            {zh ? "測試資料" : "Test cases"}
+          </button>
+          {resultOpen && <button ref={resultTabRef} type="button" role="tab" id={`${formId}-result-tab`} aria-controls={`${formId}-result`} aria-selected={pane === "result"} tabIndex={pane === "result" ? 0 : -1}
+            onClick={() => setPane("result")} className={`min-h-10 border-b-2 px-1 text-sm font-medium ${pane === "result" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}>
+            {zh ? "執行結果" : "Run result"}{status === "running" && <span aria-hidden className="ml-2 inline-block h-2 w-2 animate-pulse rounded-full bg-current" />}
+          </button>}
+        </div>
+        {resultOpen && <button type="button" onClick={closeResult} aria-label={zh ? "關閉執行結果" : "Close run result"} className="flex h-9 w-9 items-center justify-center rounded-md text-lg text-ink-400 hover:bg-ink-800 hover:text-ink-100">×</button>}
+      </div>
+      <div role="tabpanel" id={`${formId}-${pane}`} aria-labelledby={`${formId}-${pane}-tab`}>
+      {pane === "result" && <p role="status" className="mb-3 text-sm font-medium text-ink-200">{status === "running" ? t("Running…") : status === "done" ? (zh ? "執行完成" : "Run complete") : status === "compile_error" ? "Compile Error" : (zh ? "執行未完成" : "Run failed")}</p>}
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-1.5">
           {cases.map((c) => (
@@ -238,7 +291,7 @@ function TestPanelSession({
                   )}
                 </span>
               </button>
-              {!c.isSample && (
+              {!c.isSample && pane === "cases" && (
                 <button
                   type="button"
                   onClick={() => removeCase(c.id)}
@@ -250,7 +303,7 @@ function TestPanelSession({
               )}
             </div>
           ))}
-          {cases.length < MAX_CASES && (
+          {cases.length < MAX_CASES && pane === "cases" && (
             <button
               type="button"
               onClick={addCase}
@@ -262,14 +315,6 @@ function TestPanelSession({
             </button>
           )}
         </div>
-        <button
-          type="button"
-          onClick={handleRun}
-          disabled={status === "running" || cases.length === 0 || sourceCode.trim().length === 0 || invalidInput}
-          className="oj-btn-secondary shrink-0 px-3 py-1.5 text-xs"
-        >
-          {status === "running" ? t("Running…") : t("▶ Run")}
-        </button>
       </div>
 
       {stale && <p role="status" className="mb-3 text-xs text-ink-300">{zh ? "程式碼、語言或輸入已變更，請重新執行以取得最新結果。" : "Code, language or input changed. Run again for current results."}</p>}
@@ -278,7 +323,7 @@ function TestPanelSession({
 
       {active ? (
         <div className="space-y-2.5">
-          <div>
+          {pane === "cases" && <div>
             <p className="mb-1 text-xs font-medium text-ink-400">{t("Input")}</p>
             <textarea
               aria-label={t("Input")}
@@ -288,17 +333,17 @@ function TestPanelSession({
               spellCheck={false}
               className="oj-input h-20 resize-y font-mono text-xs"
             />
-          </div>
+          </div>}
 
-          {activeModified && <div className="flex flex-wrap items-center justify-between gap-2 text-xs"><p className="text-ink-300">{zh ? "已修改輸入：只顯示執行結果，不與原範例答案比較。" : "Edited input: output only, without comparison to the original sample."}</p><button type="button" className="text-brand underline underline-offset-4" onClick={() => setInputFor(active.id, active.input)}>{zh ? "還原範例" : "Restore sample"}</button></div>}
-          {active.isSample && !activeModified && (
+          {pane === "cases" && activeModified && <div className="flex flex-wrap items-center justify-between gap-2 text-xs"><p className="text-ink-300">{zh ? "已修改輸入：只顯示執行結果，不與原範例答案比較。" : "Edited input: output only, without comparison to the original sample."}</p><button type="button" className="text-brand underline underline-offset-4" onClick={() => setInputFor(active.id, active.input)}>{zh ? "還原範例" : "Restore sample"}</button></div>}
+          {pane === "cases" && active.isSample && !activeModified && (
             <div>
               <p className="mb-1 text-xs font-medium text-ink-400">{t("Expected output")}</p>
               <pre tabIndex={0} className="oj-card overflow-x-auto p-2 font-mono text-xs">{active.expectedOutput}</pre>
             </div>
           )}
 
-          {activeResult && (
+          {pane === "result" && activeResult && (
             <div>
               <p className="mb-2 text-xs text-ink-400">{activeResult.verdict === "AC" || activeResult.verdict === "WA" ? (zh ? "使用正式判題規則比對此範例；完整測資請使用提交。" : "Compared with the submission checker for this sample. Submit to check the full test suite.") : !activeResult.verdict ? (zh ? "此結果僅供檢視輸出，未進行答案比對。" : "Output only; no expected answer was checked.") : null}</p>
               <div className="mb-1 flex flex-wrap items-center gap-2">
@@ -315,6 +360,7 @@ function TestPanelSession({
                   {activeResult.stderr}
                 </pre>
               )}
+              {active.isSample && !activeModified && <details className="mt-3 text-xs text-ink-400"><summary className="cursor-pointer">{t("Expected output")}</summary><pre tabIndex={0} className="oj-card mt-2 overflow-x-auto p-2 font-mono">{active.expectedOutput}</pre></details>}
             </div>
           )}
         </div>
@@ -322,13 +368,14 @@ function TestPanelSession({
         <p className="text-xs text-ink-500">{t("No test cases yet — add one to try your code.")}</p>
       )}
 
-      {!stale && compileError && (
+      {pane === "result" && !stale && compileError && (
         <div className="mt-2.5">
           <p className="mb-1 text-xs font-medium text-verdict-ce">{t("Compile error")}</p>
           <pre tabIndex={0} className="oj-card overflow-x-auto p-2 font-mono text-xs text-verdict-ce">{compileError}</pre>
         </div>
       )}
-      {!stale && runError && <p className="mt-2.5 text-xs text-verdict-wa">{runError}</p>}
+      {pane === "result" && !stale && runError && <p role="alert" className="mt-2.5 text-xs text-verdict-wa">{runError}</p>}
     </div>
+    </form>
   );
 }
