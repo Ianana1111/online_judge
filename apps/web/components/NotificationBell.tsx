@@ -31,8 +31,8 @@ export default function NotificationBell() {
       <svg aria-hidden width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M10 21h4" strokeLinecap="round" strokeLinejoin="round" /></svg>
       {unread > 0 && <span className="absolute right-0 top-0 min-w-4 rounded-full bg-brand px-1 text-[10px] font-bold text-onbrand">{unread > 99 ? "99+" : unread}</span>}
     </button>
-    {open && <div ref={panel} id={panelId} tabIndex={-1} role="dialog" aria-label={zh ? "通知中心" : "Notification center"} className="oj-card fixed inset-x-3 top-16 z-50 overflow-hidden rounded-2xl shadow-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-3 sm:w-[25rem]">
-      <div className="flex items-center justify-between px-5 pt-5"><h2 className="text-lg font-semibold text-ink-100">{zh ? "通知中心" : "Notifications"}</h2><button type="button" onClick={() => { setOpen(false); trigger.current?.focus(); }} className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-800" aria-label={zh ? "關閉通知" : "Close notifications"}>×</button></div>
+    {open && <div ref={panel} id={panelId} tabIndex={-1} role="dialog" aria-label={zh ? "通知中心" : "Notification center"} className="oj-card fixed inset-x-3 top-16 z-50 overflow-hidden rounded-2xl shadow-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-3 sm:w-[21rem]">
+      <div className="flex items-center justify-between px-4 pt-4"><h2 className="text-base font-semibold text-ink-100">{zh ? "通知中心" : "Notifications"}</h2><button type="button" onClick={() => { setOpen(false); trigger.current?.focus(); }} className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-800" aria-label={zh ? "關閉通知" : "Close notifications"}>×</button></div>
       <NotificationCenter compact onNavigate={() => setOpen(false)} />
     </div>}
   </div>;
