@@ -64,6 +64,19 @@ export const BookOpenIcon = makeIcon(
   </>,
 );
 
+/** A two-leaf sprout for the *first* growth-themed milestone (solved_10, "Getting Started") —
+ * replaces LeafIcon there, which at the 16-20px size this actually renders at read as a lopsided
+ * blob with a stray diagonal scratch through it rather than a recognizable leaf. LeafIcon itself
+ * is untouched and still covers solved_50. */
+export const SproutIcon = makeIcon(
+  <>
+    <path d="M12 20v-7" />
+    <path d="M12 13c-3.5 0-6-2.5-6-6 3.5 0 6 2.5 6 6Z" />
+    <path d="M12 13c3.5 0 6-2.5 6-6-3.5 0-6 2.5-6 6Z" />
+    <line x1="8" y1="20" x2="16" y2="20" />
+  </>,
+);
+
 export const LeafIcon = makeIcon(
   <>
     <path d="M11 20A7 7 0 0 1 4 13c0-4 3-8 9-10 1 3 3 5 5 6 2 1.5 3 4 3 6a7 7 0 0 1-10 5Z" />
@@ -304,7 +317,7 @@ export const MaximizeIcon = makeIcon(
  * trophy for everything. */
 export const ACHIEVEMENT_ICONS: Record<string, ReturnType<typeof makeIcon>> = {
   first_ac: FlagIcon,
-  solved_10: LeafIcon,
+  solved_10: SproutIcon,
   solved_50: LeafIcon,
   solved_100: TreeIcon,
   first_4star: GemIcon,
