@@ -162,6 +162,30 @@ export class BillingService {
     await tx.user.update({ where: { id: payment.userId }, data: { plan: "PRO", planExpiresAt: end, planCancelRequested: false } });
   }
 
+  /** Spins up the Subscription row a recurring order needs, and links this first charge to it.
+   * Every path that can confirm a first charge must go through this — the authorization poll and
+   * the capture webhook both can, and whichever gets there first has to leave the same state, or
+   * later period-return webhooks have nothing to correlate against and the user can't cancel.
+   * Keyed on the unique merchantTradeNo so a redelivery or a race converges on one row. */
+  private async ensureSubscription(tx: Prisma.TransactionClient, payment: {
+    id: string; userId: string; period: BillingPeriod; amountNtd: number; pricingVersion: string; merchantTradeNo: string | null;
+  }) {
+    const subscription = await tx.subscription.upsert({
+      where: { merchantTradeNo: payment.merchantTradeNo! },
+      create: {
+        userId: payment.userId,
+        period: payment.period,
+        amountNtd: payment.amountNtd,
+        pricingVersion: payment.pricingVersion,
+        merchantTradeNo: payment.merchantTradeNo!,
+        status: "ACTIVE",
+        totalSuccessTimes: 1,
+      },
+      update: {},
+    });
+    await tx.payment.update({ where: { id: payment.id }, data: { subscriptionId: subscription.id, cycleNumber: 1 } });
+  }
+
   private async verifyWebhook(body: Record<string, string>) {
     const config = ecpayConfig();
     if (body.MerchantID !== config.merchantId || !(await verifyCheckMacValue(body, config)) ||
@@ -463,12 +487,19 @@ export class BillingService {
       // read and both think they're the one claiming this transition — Postgres serializes
       // concurrent UPDATEs to the same row, so only the first actually matches count=1; a second
       // redelivery arriving a moment later sees count=0 and is a no-op instead of double-approving.
-      const claimed = await prisma.payment.updateMany({
-        where: { id: payment.id, status: "AUTHORIZED" },
-        data: { status: "APPROVED", paidAt: payment.paidAt ?? paidAt, refundDeadlineAt: deadline, ecpayTradeNo: body.TradeNo, reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO" },
+      const captured = await prisma.$transaction(async (tx) => {
+        const claimed = await tx.payment.updateMany({
+          where: { id: payment.id, status: "AUTHORIZED" },
+          data: { status: "APPROVED", paidAt: payment.paidAt ?? paidAt, refundDeadlineAt: deadline, ecpayTradeNo: body.TradeNo, reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO" },
+        });
+        if (claimed.count === 0) return false; // already claimed by a concurrent delivery of this same webhook
+        // Pro itself was already granted at authorization, but a recurring order's Subscription row
+        // may not exist yet — the authorization path creates it too, so this is the idempotent
+        // catch-up for an order authorized before that was the case.
+        if (payment.isRecurring) await this.ensureSubscription(tx, payment);
+        return true;
       });
-      if (claimed.count === 0) return; // already claimed by a concurrent delivery of this same webhook
-      this.logger.log(`ECPay return webhook: capture confirmed for already-authorized payment ${payment.id}`);
+      if (captured) this.logger.log(`ECPay return webhook: capture confirmed for already-authorized payment ${payment.id}`);
       return;
     }
 
@@ -488,25 +519,7 @@ export class BillingService {
       await this.grantPaymentPeriod(tx, payment, paidAt);
 
       if (payment.isRecurring) {
-        // First successful charge of a recurring order — spin up the Subscription row that
-        // handleEcpayPeriodReturn will extend on every future auto-charge, and that
-        // cancelSubscription calls ECPay's Cancel action against. Guard on the unique
-        // merchantTradeNo rather than an existence check first: idempotent even if ECPay somehow
-        // redelivers this notification after a retry raced the transaction.
-        const subscription = await tx.subscription.upsert({
-          where: { merchantTradeNo: payment.merchantTradeNo! },
-          create: {
-            userId: payment.userId,
-            period: payment.period,
-            amountNtd: payment.amountNtd,
-            pricingVersion: payment.pricingVersion,
-            merchantTradeNo: payment.merchantTradeNo!,
-            status: "ACTIVE",
-            totalSuccessTimes: 1,
-          },
-          update: {},
-        });
-        await tx.payment.update({ where: { id: payment.id }, data: { subscriptionId: subscription.id, cycleNumber: 1 } });
+        await this.ensureSubscription(tx, payment);
         // Only pre-migration checkout orders retain an already-promised annual bonus.
         if (payment.refundPolicyVersion === "legacy-30d" && payment.period === "YEARLY") {
           await this.extendPlanByDays(tx, payment.userId, 30);
@@ -735,7 +748,13 @@ export class BillingService {
           reference: `ECPay TradeID: ${tradeId}`,
         },
       });
-      if (claimed.count) await this.grantPaymentPeriod(tx, payment, new Date());
+      if (!claimed.count) return;
+      await this.grantPaymentPeriod(tx, payment, new Date());
+      // A recurring order's mandate exists at ECPay from this moment (their own query already
+      // reports PeriodType/ExecTimes and TotalSuccessTimes=1), so the Subscription row has to exist
+      // now too — not only once capture is confirmed. Without it the 2nd cycle's period-return
+      // webhook has nothing to correlate against and cancellation has no row to act on.
+      if (payment.isRecurring) await this.ensureSubscription(tx, payment);
     });
     this.logger.log(`ECPay auth poll: granted Pro on authorization for payment ${payment.id} (user ${payment.userId})`);
   }

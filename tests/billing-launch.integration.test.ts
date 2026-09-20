@@ -117,4 +117,37 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("launch orders and renewals wi
     await expect(billing.createEcpayOrder(user.id, "MONTHLY", accepted)).rejects.toMatchObject({ status: 503 });
     expect(await prisma.payment.count({ where: { userId: user.id } })).toBe(0);
   });
+  // Under manual capture the first charge of a subscription is only ever seen as an authorization:
+  // no ReturnURL webhook fires until someone captures, which for a subscription may be never. Pro
+  // and the Subscription row both have to exist from the authorization alone, or the customer pays
+  // and gets nothing, and the 2nd cycle has no row to correlate against.
+  it("grants Pro and opens the subscription from the authorization alone, before any capture", async () => {
+    const user = await account(), accepted = quote("MONTHLY");
+    const order = await billing.createEcpayOrder(user.id, "MONTHLY", accepted);
+    const merchantTradeNo = String(order.fields.MerchantTradeNo);
+
+    await billing.markCreditAuthorized(merchantTradeNo, "163066184");
+
+    const subscription = await prisma.subscription.findUniqueOrThrow({ where: { merchantTradeNo } });
+    expect(subscription).toMatchObject({ status: "ACTIVE", totalSuccessTimes: 1, amountNtd: 200 });
+    expect((await prisma.user.findUniqueOrThrow({ where: { id: user.id } })).plan).toBe("PRO");
+    expect(await prisma.payment.findFirstOrThrow({ where: { merchantTradeNo } })).toMatchObject({
+      status: "AUTHORIZED", subscriptionId: subscription.id, cycleNumber: 1,
+    });
+
+    // Capture settles later; it must converge on the same row rather than making a second one.
+    await billing.handleEcpayReturn(await firstNotification(order));
+    expect(await prisma.subscription.count({ where: { userId: user.id } })).toBe(1);
+    expect(await prisma.payment.findFirstOrThrow({ where: { merchantTradeNo } })).toMatchObject({
+      status: "APPROVED", subscriptionId: subscription.id, cycleNumber: 1,
+    });
+
+    // The 2nd cycle now has something to correlate against instead of throwing "not found".
+    await billing.handleEcpayPeriodReturn(await sign({
+      MerchantID: "3002607", MerchantTradeNo: merchantTradeNo,
+      TradeNo: `GW${randomUUID().replace(/-/g, "").slice(0, 16)}`,
+      amount: String(subscription.amountNtd), TotalSuccessTimes: "2", process_date: gatewayDate(), RtnCode: "1",
+    }));
+    expect(await prisma.payment.count({ where: { subscriptionId: subscription.id } })).toBe(2);
+  });
 });
