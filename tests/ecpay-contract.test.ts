@@ -17,6 +17,40 @@ describe("ECPay contract", () => {
     expect(await verifyCheckMacValue({ ...withoutEmpty, CheckMacValue: mac }, config)).toBe(false);
     expect(await verifyCheckMacValue({ ...body, CheckMacValue: "invalid" }, config)).toBe(false);
   });
+  // ECPay sorts the signed fields case-insensitively. It only shows up on payloads that mix cases,
+  // which is exactly what ECPay sends back once NeedExtraPaidInfo is on or the order is recurring:
+  // a case-sensitive sort grouped every lowercase key after every uppercase one, so real payment
+  // notifications failed verification and were rejected as forgeries.
+  it("sorts signed fields case-insensitively, as ECPay's own signatures are produced", async () => {
+    const body = {
+      ...identity, RtnCode: "1", TradeAmt: "200", amount: "200", auth_code: "414278",
+      card4no: "3895", gwsr: "163066184", process_date: "2026/09/20 12:34:55", ItemName: "judge.tw Pro",
+    };
+    const mac = await computeCheckMacValue(body, config);
+    // Independently built here in the order ECPay specifies, so a regression in the sort is caught
+    // rather than silently agreeing with whatever the implementation happens to do.
+    const ordered = Object.entries(body).sort(([a], [b]) => (a.toLowerCase() < b.toLowerCase() ? -1 : a.toLowerCase() > b.toLowerCase() ? 1 : 0));
+    expect(Object.keys(body).sort()).not.toEqual(ordered.map(([k]) => k)); // the two orders really do differ
+    const raw = `HashKey=${config.hashKey}&${ordered.map(([k, v]) => `${k}=${v}`).join("&")}&HashIV=${config.hashIv}`;
+    const { createHash } = await import("node:crypto");
+    const encoded = encodeURIComponent(raw)
+      .replace(/%2d/gi, "-").replace(/%5f/gi, "_").replace(/%2e/gi, ".").replace(/%21/gi, "!")
+      .replace(/%2a/gi, "*").replace(/%28/gi, "(").replace(/%29/gi, ")").replace(/%20/gi, "+")
+      .toLowerCase();
+    expect(mac).toBe(createHash("sha256").update(encoded).digest("hex").toUpperCase());
+  });
+  // Everything we SEND ECPay is PascalCase, where both orderings agree — pinned so a future change
+  // to the sort can't silently invalidate the checkout form signature ECPay validates on redirect.
+  it("keeps the outgoing checkout signature stable", async () => {
+    expect(await computeCheckMacValue({
+      MerchantID: "3002607", MerchantTradeNo: "JTMU9BMGWP2C13526D78", MerchantTradeDate: "2026/09/20 12:33:20",
+      PaymentType: "aio", TotalAmount: 200, TradeDesc: "judge.tw Pro upgrade", ItemName: "judge.tw Pro (月方案)",
+      ReturnURL: "https://api.judge.tw/billing/ecpay/return", ClientBackURL: "https://judge.tw/upgrade/checkout",
+      ChoosePayment: "Credit", IgnorePayment: "ApplePay", NeedExtraPaidInfo: "Y", EncryptType: 1,
+      PeriodAmount: 200, PeriodType: "M", Frequency: 1, ExecTimes: 999,
+      PeriodReturnURL: "https://api.judge.tw/billing/ecpay/period-return",
+    }, config)).toBe("A968E13285AE5E1B53BA5EFAE39D2652F30E2C53D9F20CB3477529F580E9660B");
+  });
   it.each([
     ["Authorized", ["N"]], ["To be captured", ["E", "N"]], ["Captured", ["R"]],
     ["已授權", ["N"]], ["要關帳", ["E", "N"]], ["操作取消", ["N"]],

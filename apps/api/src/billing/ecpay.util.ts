@@ -81,7 +81,19 @@ export async function computeCheckMacValue(
   const entries = Object.entries(params).filter(
     ([k, v]) => k !== "CheckMacValue" && v !== undefined,
   ) as [string, string | number][];
-  entries.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+  // Case-INSENSITIVE, as ECPay specifies and as their own signatures are actually produced —
+  // verified against a real production QueryTradeInfo response, which a case-sensitive sort could
+  // not reproduce. It only matters for payloads mixing cases: everything we send ECPay is
+  // PascalCase, so both orderings agree there, but what ECPay sends back adds lowercase fields
+  // (amount, auth_code, card4no, gwsr, process_date, eci, stage, ...) whenever NeedExtraPaidInfo
+  // is on or the order is recurring. Sorting those case-sensitively grouped every lowercase key
+  // after every uppercase one, so the digest never matched and real payment notifications were
+  // rejected as forgeries.
+  const lower = new Map(entries.map(([k]) => [k, k.toLowerCase()]));
+  entries.sort(([a], [b]) => {
+    const x = lower.get(a)!, y = lower.get(b)!;
+    return x < y ? -1 : x > y ? 1 : a < b ? -1 : a > b ? 1 : 0;
+  });
 
   const joined = entries.map(([k, v]) => `${k}=${v}`).join("&");
   const raw = `HashKey=${hashKey}&${joined}&HashIV=${hashIv}`;
