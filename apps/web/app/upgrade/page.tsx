@@ -142,17 +142,24 @@ function RequestRefundConfirmDialog({
 function UnsubscribeConfirmDialog({
   expiresLabel,
   launchPriceLocked,
+  refundEligibleUntilLabel,
   submitting,
   error,
   onCancel,
   onConfirm,
+  onSwitchToRefund,
 }: {
   expiresLabel: string | null;
   launchPriceLocked: boolean;
+  /** Set only while the first-payment refund is still available — unsubscribing is then the wrong
+   * action for anyone who actually wants their money back, so say so here rather than describing
+   * only the post-window rule they aren't subject to yet. */
+  refundEligibleUntilLabel: string | null;
   submitting: boolean;
   error: string | null;
   onCancel: () => void;
   onConfirm: () => void;
+  onSwitchToRefund: () => void;
 }) {
   const t = useT();
   const trapRef = useFocusTrap<HTMLDivElement>(true);
@@ -185,7 +192,19 @@ function UnsubscribeConfirmDialog({
             : t("Your card won't be charged again. You'll keep full Pro access until your current period ends, then switch to Free automatically.")}
         </p>
         {launchPriceLocked && <p className="mt-3 text-sm text-ink-200">{t("Cancelling ends your launch price lock. Your paid access remains until expiry; subscribing again uses the price available then.")}</p>}
-        <p className="mt-3 text-sm text-ink-300">{t("This only cancels renewal; it does not request a refund. After the 7-day first-payment refund window, your paid monthly or annual access continues until expiry.")}</p>
+        {refundEligibleUntilLabel ? (
+          <div className="mt-3 rounded-lg border border-brand/30 bg-brand/5 p-3">
+            <p className="text-sm text-ink-200">
+              {t("This only stops renewal — it does not return your last payment. You can still get that payment back in full until {date}.", { date: refundEligibleUntilLabel })}
+            </p>
+            <p className="mt-1.5 text-sm text-ink-300">{t("A refund ends your Pro access as soon as it is processed, rather than letting it run to the date above.")}</p>
+            <button type="button" onClick={onSwitchToRefund} className="mt-2 text-sm font-medium text-brand underline-offset-4 hover:underline" disabled={submitting}>
+              {t("Request a full refund instead →")}
+            </button>
+          </div>
+        ) : (
+          <p className="mt-3 text-sm text-ink-300">{t("This only cancels renewal; it does not request a refund. After the 7-day first-payment refund window, your paid monthly or annual access continues until expiry.")}</p>
+        )}
         {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
         <div className="mt-5 flex justify-end gap-2">
           <button type="button" onClick={onCancel} className="oj-btn-secondary px-4 py-2 text-sm" disabled={submitting}>
@@ -230,6 +249,9 @@ export default function UpgradePlanPage() {
   const isAdmin = user?.role === "ADMIN";
   const isPro = status?.plan === "PRO";
   const expiresLabel = status?.planExpiresAt ? new Date(status.planExpiresAt).toLocaleDateString() : null;
+  const refundEligibleUntilLabel = status?.refundEligibleUntil
+    ? new Date(status.refundEligibleUntil).toLocaleString(undefined, { timeZone: "Asia/Taipei", hour12: false }) + " (UTC+8)"
+    : null;
 
   useEffect(() => {
     if (user?.id && status?.refundRequest?.status === "COMPLETED" && status.plan !== user.plan) {
@@ -488,9 +510,7 @@ export default function UpgradePlanPage() {
                         }}
                         className="mt-2 w-full py-1 text-center text-[11px] text-ink-500 underline hover:text-verdict-wa"
                       >
-                        {t("Not what you expected? Request a full refund (until {date})", {
-                          date: new Date(status?.refundEligibleUntil).toLocaleString(undefined, { timeZone: "Asia/Taipei", hour12: false }) + " (UTC+8)",
-                        })}
+                        {t("Not what you expected? Request a full refund (until {date})", { date: refundEligibleUntilLabel! })}
                       </button>
                     )}
                 {status?.refundRequest && (
@@ -523,10 +543,12 @@ export default function UpgradePlanPage() {
         <UnsubscribeConfirmDialog
           expiresLabel={expiresLabel}
           launchPriceLocked={!!status?.subscription?.launchPriceLocked}
+          refundEligibleUntilLabel={refundEligibleUntilLabel}
           submitting={unsubscribing}
           error={unsubscribeError}
           onCancel={() => setShowUnsubscribeConfirm(false)}
           onConfirm={confirmUnsubscribe}
+          onSwitchToRefund={() => { setShowUnsubscribeConfirm(false); setShowRefundConfirm(true); }}
         />
       )}
       {showRefundConfirm && (
