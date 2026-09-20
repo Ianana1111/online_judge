@@ -18,10 +18,12 @@ Set all three API variables together after verifying both deployed applications.
 | Variable | Required value |
 | --- | --- |
 | `LAUNCH_PROMO_STARTS_AT` | Fixed ISO timestamp with timezone; fixed activation timestamp |
-| `LAUNCH_PROMO_ENDS_AT` | Start plus one calendar month in Asia/Taipei; fixed activation timestamp |
+| `LAUNCH_PROMO_ENDS_AT` | Fixed ISO timestamp with timezone, strictly after `LAUNCH_PROMO_STARTS_AT` |
 | `PRO_REGULAR_YEARLY_PRICE_NTD` | 4000 |
 
 The regular monthly price is NT$400. A completely empty configuration keeps current pricing. Partial/invalid configuration returns 503 for the catalog and new checkout; existing payment callbacks and renewals continue using stored terms. Do not reset dates on deployments or remove the configuration at expiry: doing so would restore legacy pricing for new orders.
+
+`LAUNCH_PROMO_ENDS_AT` is validated only as "a real ISO instant after start" — it is not required to be exactly one calendar month after `LAUNCH_PROMO_STARTS_AT`. To extend an already-running campaign's deadline, set only `LAUNCH_PROMO_ENDS_AT` to the new later instant and leave `LAUNCH_PROMO_STARTS_AT` untouched: changing `startsAt` on a live campaign would move it into the future and flip the catalog to "not started yet" for new checkout until that date arrives. Setting `LAUNCH_PROMO_ENDS_AT` to anything on or before `LAUNCH_PROMO_STARTS_AT`, or to a non-ISO value, is invalid configuration and returns 503 — verify the new value against `GET /billing/plans` immediately after the resulting redeploy.
 
 Deploy migration `20260916000000_launch_subscription_pricing` before the new API. It adds `pricingVersion` to payments and subscriptions, with `legacy-v1` for existing rows, and does not change any saved amount. Back up the production database before applying. Deploy API and web with the campaign unset, verify both, then configure the approved schedule. Old clients may still create an unquoted order only while the catalog is entirely unconfigured at unchanged legacy prices. Once a campaign is configured, an old client must reload and acknowledge the current quote.
 

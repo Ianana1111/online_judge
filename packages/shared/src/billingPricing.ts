@@ -1,5 +1,4 @@
 import { PLAN_PRICING, type BillingPeriod } from "./billing.js";
-import { billingCycleEnd } from "./billingPolicy.js";
 import { z } from "zod";
 
 export const LAUNCH_RENEWAL_PRICING = { MONTHLY: 200, YEARLY: 2000 } as const;
@@ -20,6 +19,8 @@ export interface BillingCatalog {
 
 /** Fixed operator-approved dates only. Empty configuration preserves existing prices; partial or
  * invalid configuration must stop NEW checkout, never silently pick a different charge amount.
+ * endsAt is an independent operator-chosen deadline (not derived from startsAt) so an already-active
+ * campaign's deadline can be moved later without re-anchoring startsAt to keep it continuously active.
  * Webhooks deliberately do not call this: paid orders and renewals retain their saved terms. */
 export function billingCatalog(config: LaunchPricingConfig = {}, now = new Date()): BillingCatalog {
   if (!Number.isFinite(+now)) throw new Error("Invalid pricing timestamp");
@@ -33,9 +34,9 @@ export function billingCatalog(config: LaunchPricingConfig = {}, now = new Date(
   const start = new Date(config.startsAt ?? ""), end = new Date(config.endsAt ?? "");
   const annual = Number(config.regularYearlyPriceNtd);
   if (!values.every(Boolean) || !iso.safeParse(config.startsAt).success || !iso.safeParse(config.endsAt).success ||
-    !Number.isFinite(+start) || !Number.isFinite(+end) || +end !== +billingCycleEnd(start, "MONTHLY") ||
+    !Number.isFinite(+start) || !Number.isFinite(+end) || +end <= +start ||
     !/^\d+$/.test(config.regularYearlyPriceNtd!) || !Number.isSafeInteger(annual) || annual < 2000 || annual > 100_000) {
-    throw new Error("Launch pricing requires one fixed calendar month and an approved regular annual price");
+    throw new Error("Launch pricing requires a valid start/end window (end after start) and an approved regular annual price");
   }
   const phase = +now < +start ? "before" : +now < +end ? "active" : "ended";
   const pricing = {
