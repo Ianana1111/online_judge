@@ -147,8 +147,10 @@ export const batch3Dictionary: Record<string, string> = {
   "Request a full refund within 7 days of your first payment": "首次付款後 7 天內可申請全額退款",
   "Not what you expected? Request a full refund (until {date})": "不符合期待？可在 {date} 前申請全額退款",
   "Request a full refund?": "確定要申請全額退款嗎？",
-  "Requests a full refund of your first payment and stops future renewal. The refunded Pro period ends after processing. Bank posting times vary. This guarantee is available once per account.":
-    "申請後會停止續訂並全額退還第一筆扣款。退款確認成功時，立即終止該筆付款的 Pro 權限，不會保留到月底或年度結束；銀行入帳時間依發卡銀行而異。每個帳號限用一次。",
+  "Requests a full refund of your first payment and stops future renewal. The refunded Pro period ends after processing. This guarantee is available once per account.":
+    "申請後會停止續訂並全額退還第一筆扣款。退款確認成功時，立即終止該筆付款的 Pro 權限，不會保留到月底或年度結束。每個帳號限用一次。",
+  "We send the refund to the gateway within minutes. Your card issuer decides when it posts — usually 7-14 business days, at most by your next statement.":
+    "我們會在數分鐘內把退款送到金流端。實際沖銷回帳單的時間由發卡銀行決定，一般為 7～14 個工作天，最長可能延至下一個帳單週期。",
   "Processing…": "處理中…",
   "Refund me": "申請退款",
 

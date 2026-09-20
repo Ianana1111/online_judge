@@ -5,7 +5,7 @@ export const billingLaunchDictionary: Record<string, string> = {
   "This only stops renewal — it does not return your last payment. You can still get that payment back in full until {date}.": "這個操作只停止續訂，不會退還你已付的款項。在 {date} 之前，你仍然可以把這筆款項全額退回。",
   "A refund ends your Pro access as soon as it is processed, rather than letting it run to the date above.": "選擇退款的話，Pro 權限會在退款處理完成時立即結束，不會保留到上面那個日期。",
   "Request a full refund instead →": "改為申請全額退款 →",
-  "Refund processed. Bank posting times vary.": "退款已處理，該筆付款的 Pro 權限已終止。實際入帳時間依發卡銀行而異。",
+  "Refund sent to your card issuer. It usually posts within 7-14 business days, at most by your next statement — contact us if it hasn't after 30 days.": "退款已送出，該筆付款的 Pro 權限已終止。實際沖銷回帳單的時間由發卡銀行決定，一般為 7～14 個工作天，最長可能延至下一個帳單週期；若超過 30 天仍未入帳，請聯絡我們協助查詢。",
   "Your refund request is saved and awaiting payment verification. You do not need to submit it again.": "退款申請已保存，正在核對金流結果，無需重複申請。",
   "Your refund request is saved. We are processing the refund and stopping future renewal.": "退款申請已受理，正在停止續訂並辦理退款；退款確認成功後，該期 Pro 權限會立即終止。",
   "Save NT${amount}": "省 NT${amount}",

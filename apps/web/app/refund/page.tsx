@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_URL } from "@/lib/site";
+import { SUPPORT_EMAIL } from "@/lib/faq";
 
 export const metadata: Metadata = {
   title: "退款與訂閱政策",
@@ -25,7 +26,12 @@ export default function RefundPolicyPage() {
         <h2 className="font-display text-lg font-semibold text-ink-50">7 天首次付款退款保證</h2>
         <p className="mt-2">
           訂閱 Pro 後，在第一次扣款後 <strong className="text-ink-100">7 天（168 小時）內</strong>，可以在「升級方案」頁面自助申請
-          <strong className="text-ink-100">全額退款</strong>——系統會受理申請，停止後續續扣並辦理第一筆付款的全額退款；退款確認成功時，立即撤回該筆付款剩餘的 Pro 使用權，不會保留到月底或年度結束。信用卡實際入帳時間依發卡銀行作業為準。每個帳號只能使用這個退款資格一次。
+          <strong className="text-ink-100">全額退款</strong>——系統會受理申請，停止後續續扣並辦理第一筆付款的全額退款；退款確認成功時，立即撤回該筆付款剩餘的 Pro 使用權，不會保留到月底或年度結束。每個帳號只能使用這個退款資格一次。
+        </p>
+        <p className="mt-3">
+          退款申請受理後，系統會立即向綠界科技送出退款指令，通常數分鐘內完成。實際沖銷回信用卡帳單的時間由<strong className="text-ink-100">發卡銀行</strong>決定，一般為 7～14 個工作天，最長可能延至下一個帳單週期。若申請後<strong className="text-ink-100">超過 30 天仍未入帳</strong>，請來信{" "}
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="text-brand underline-offset-4 hover:underline">{SUPPORT_EMAIL}</a>
+          ，我們會協助向金流與發卡銀行查詢。
         </p>
       </section>
 
