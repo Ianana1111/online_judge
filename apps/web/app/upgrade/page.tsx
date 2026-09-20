@@ -122,8 +122,11 @@ function RequestRefundConfirmDialog({
         <h2 id="refund-title" className="font-display text-base font-semibold text-ink-50">{t("Request a full refund?")}</h2>
         <p className="mt-2 text-sm text-ink-300">
           {t(
-            "Requests a full refund of your first payment and stops future renewal. The refunded Pro period ends after processing. Bank posting times vary. This guarantee is available once per account.",
+            "Requests a full refund of your first payment and stops future renewal. The refunded Pro period ends after processing. This guarantee is available once per account.",
           )}
+        </p>
+        <p className="mt-2 text-sm text-ink-400">
+          {t("We send the refund to the gateway within minutes. Your card issuer decides when it posts — usually 7-14 business days, at most by your next statement.")}
         </p>
         {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
         <div className="mt-5 flex justify-end gap-2">
@@ -515,7 +518,7 @@ export default function UpgradePlanPage() {
                     )}
                 {status?.refundRequest && (
                   <p role="status" className="mt-4 rounded-lg border border-ink-700 bg-ink-800/50 p-3 text-sm text-ink-200">
-                    {status.refundRequest.status === "COMPLETED" ? t("Refund processed. Bank posting times vary.") :
+                    {status.refundRequest.status === "COMPLETED" ? t("Refund sent to your card issuer. It usually posts within 7-14 business days, at most by your next statement — contact us if it hasn't after 30 days.") :
                       status.refundRequest.status === "NEEDS_REVIEW" ? t("Your refund request is saved and awaiting payment verification. You do not need to submit it again.") :
                         t("Your refund request is saved. We are processing the refund and stopping future renewal.")}
                   </p>
