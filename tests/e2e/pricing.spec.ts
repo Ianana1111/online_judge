@@ -210,7 +210,7 @@ for (const theme of ["light", "dark"] as const) {
     await dialog.getByRole("button", { name: "申請退款", exact: true }).click();
     await expect(page.getByRole("status")).toContainText("退款申請已受理");
     completed = true;
-    await expect(page.getByRole("status")).toContainText("退款已處理，該筆付款的 Pro 權限已終止", { timeout: 15_000 });
+    await expect(page.getByRole("status")).toContainText("退款已送出，該筆付款的 Pro 權限已終止", { timeout: 15_000 });
     await expect(page.getByRole("button", { name: "取消訂閱", exact: true })).toBeHidden();
     await expect(page.getByRole("button", { name: "取得 Pro 方案", exact: true })).toBeVisible();
     expect(refundPosts).toBe(1);
