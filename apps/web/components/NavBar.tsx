@@ -45,6 +45,7 @@ function UserMenu({
 }) {
   const t = useT();
   const [open, setOpen] = useState(false);
+  const [showHandle, setShowHandle] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [logoutError, setLogoutError] = useState(false);
@@ -68,6 +69,10 @@ function UserMenu({
         aria-label={t("Account menu for {handle}", { handle })}
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
+        onMouseEnter={() => setShowHandle(true)}
+        onMouseLeave={() => setShowHandle(false)}
+        onFocus={() => setShowHandle(true)}
+        onBlur={() => setShowHandle(false)}
         className="flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-lg px-2 text-sm text-ink-200 hover:text-brand"
       >
         {isAdmin && (
@@ -76,11 +81,20 @@ function UserMenu({
           </span>
         )}
         <Avatar avatarUrl={avatarUrl} handle={handle} size={22} />
-        <span className="hidden max-w-28 truncate md:block">{handle}</span>
         <svg width="10" height="10" viewBox="0 0 10 10" className={`transition-transform ${open ? "rotate-180" : ""}`}>
           <path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
         </svg>
       </button>
+      {/* The handle is a hover/focus affordance rather than always-on text: a long one used to
+          stretch the header and crowd the nav. The open menu already shows it, so don't stack both. */}
+      {showHandle && !open && (
+        <span
+          aria-hidden
+          className="oj-card pointer-events-none absolute right-0 top-full z-50 mt-2 max-w-[14rem] break-words px-2.5 py-1.5 text-xs font-medium text-ink-200"
+        >
+          {handle}
+        </span>
+      )}
       {open && (
         <div className="oj-card absolute right-0 top-full mt-2 w-56 overflow-hidden p-2">
           <p className="truncate border-b border-ink-700 px-3 py-3 text-sm font-semibold text-ink-200">{handle}</p>
