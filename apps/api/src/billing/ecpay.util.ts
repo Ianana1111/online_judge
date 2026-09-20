@@ -154,7 +154,10 @@ function ecpayAesEncrypt(payload: unknown, hashKey: string, hashIv: string): str
 function ecpayAesDecrypt<T>(encryptedBase64: string, hashKey: string, hashIv: string): T {
   const decipher = createDecipheriv("aes-128-cbc", Buffer.from(hashKey, "utf8"), Buffer.from(hashIv, "utf8"));
   const decrypted = Buffer.concat([decipher.update(Buffer.from(encryptedBase64, "base64")), decipher.final()]);
-  return JSON.parse(decodeURIComponent(decrypted.toString("utf8"))) as T;
+  // ECPay encodes this payload .NET-style, where a space is "+" and a literal plus is "%2b".
+  // decodeURIComponent alone only handles "%20", so without this every spaced value arrives
+  // mangled — "To+be+captured" never equals the "To be captured" the auth poll compares against.
+  return JSON.parse(decodeURIComponent(decrypted.toString("utf8").replace(/\+/g, "%20"))) as T;
 }
 
 interface EcpayApiConfig {

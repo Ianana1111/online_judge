@@ -103,11 +103,11 @@ export class EcpayAuthPollService implements OnModuleInit, OnModuleDestroy {
           method: "ECPAY",
           ecpayMethod: "CREDIT",
           status: "PENDING",
-          // Recurring (定期定額) orders auto-authorize AND auto-capture every cycle on ECPay's own
-          // side — that's the entire point of a subscription — so they never need this manual
-          // "detect authorization, grant early" path. They just wait for the regular ReturnURL
-          // webhook like ATM orders always have.
-          isRecurring: false,
+          // Recurring (定期定額) orders are included: only the periodic charges from the 2nd cycle
+          // onward are captured by ECPay's own scheduler. The FIRST charge follows the merchant
+          // account's capture setting, so under manual capture it sits authorized-but-uncaptured
+          // and its ReturnURL webhook — which is the only thing that would grant Pro — never fires.
+          // Excluding them here left every subscriber paying and getting nothing.
           createdAt: { gte: new Date(now.getTime() - MAX_ORDER_AGE_MS) },
           merchantTradeNo: { not: null },
         },
