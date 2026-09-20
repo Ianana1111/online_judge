@@ -1,7 +1,10 @@
 export const billingLaunchDictionary: Record<string, string> = {
   "New subscription price after launch": "開幕優惠結束後的新訂閱價格",
   "Join during launch and keep this renewal price while your subscription continues.": "開幕期間加入，持續續訂就維持此優惠價。",
-  "This only cancels renewal; it does not request a refund. After the 7-day first-payment refund window, your paid monthly or annual access continues until expiry.": "這個操作只取消續訂，不會申請退款。首次付款超過 7 天後不適用首次退款保證；已付費的月繳或年繳權限仍保留至到期日。",
+  "This only cancels renewal; it does not request a refund. After the 7-day first-payment refund window, your paid monthly or annual access continues until expiry.": "這個操作只取消續訂，不會退還已付款項。首次付款的 7 天退款期限已過，已付費的月繳或年繳權限仍可使用到到期日。",
+  "This only stops renewal — it does not return your last payment. You can still get that payment back in full until {date}.": "這個操作只停止續訂，不會退還你已付的款項。在 {date} 之前，你仍然可以把這筆款項全額退回。",
+  "A refund ends your Pro access as soon as it is processed, rather than letting it run to the date above.": "選擇退款的話，Pro 權限會在退款處理完成時立即結束，不會保留到上面那個日期。",
+  "Request a full refund instead →": "改為申請全額退款 →",
   "Refund processed. Bank posting times vary.": "退款已處理，該筆付款的 Pro 權限已終止。實際入帳時間依發卡銀行而異。",
   "Your refund request is saved and awaiting payment verification. You do not need to submit it again.": "退款申請已保存，正在核對金流結果，無需重複申請。",
   "Your refund request is saved. We are processing the refund and stopping future renewal.": "退款申請已受理，正在停止續訂並辦理退款；退款確認成功後，該期 Pro 權限會立即終止。",
