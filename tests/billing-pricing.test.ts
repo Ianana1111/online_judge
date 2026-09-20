@@ -39,14 +39,20 @@ describe("launch pricing and fixed renewal terms", () => {
   });
   it.each([
     { startsAt: launch.startsAt }, { ...launch, endsAt: undefined }, { ...launch, regularYearlyPriceNtd: "" },
-    { ...launch, startsAt: "2026-09-15T00:00:00" }, { ...launch, endsAt: "2026-11-15T00:00:00+08:00" },
+    { ...launch, startsAt: "2026-09-15T00:00:00" }, { ...launch, endsAt: launch.startsAt },
+    { ...launch, endsAt: "2026-09-01T00:00:00+08:00" },
     { ...launch, startsAt: "2026-02-30T00:00:00+08:00", endsAt: "2026-04-02T00:00:00+08:00" },
     { ...launch, regularYearlyPriceNtd: "2000.50" }, { ...launch, regularYearlyPriceNtd: "-1" },
     { ...launch, regularYearlyPriceNtd: "10000000000000000" },
   ])("fails closed for incomplete or invalid operator configuration: %j", (config) => {
     expect(() => billingCatalog(config)).toThrow();
   });
-  it("handles the end of a short month without extending the campaign", () => {
+  it("accepts an operator-extended deadline that is not exactly one calendar month after start", () => {
+    const config = { ...launch, endsAt: "2026-11-15T00:00:00+08:00" };
+    expect(billingCatalog(config, new Date(launch.startsAt!)).promo?.endsAt).toBe("2026-11-14T16:00:00.000Z");
+    expect(billingCatalog(config, new Date("2026-10-20T00:00:00+08:00")).promo).not.toBeNull();
+  });
+  it("handles explicit leap-day end dates correctly", () => {
     const config = { ...launch, startsAt: "2028-01-31T00:00:00+08:00", endsAt: "2028-02-29T00:00:00+08:00" };
     expect(billingCatalog(config, new Date("2028-02-28T23:59:59+08:00")).promo).not.toBeNull();
     expect(billingCatalog(config, new Date(config.endsAt)).promo).toBeNull();
