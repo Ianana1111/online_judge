@@ -30,7 +30,7 @@ export default function RefundPolicyPage() {
         </p>
         <p className="mt-3">
           退款申請受理後，系統會立即向綠界科技送出退款指令，通常數分鐘內完成。實際沖銷回信用卡帳單的時間由<strong className="text-ink-100">發卡銀行</strong>決定，一般為 7～14 個工作天，最長可能延至下一個帳單週期。若申請後<strong className="text-ink-100">超過 30 天仍未入帳</strong>，請來信{" "}
-          <a href={`mailto:${SUPPORT_EMAIL}`} className="text-brand underline-offset-4 hover:underline">{SUPPORT_EMAIL}</a>
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">{SUPPORT_EMAIL}</a>
           ，我們會協助向金流與發卡銀行查詢。
         </p>
       </section>
