@@ -219,6 +219,17 @@ export class BillingService {
     const firstCharge = subscription ? await prisma.payment.findUnique({ where: { merchantTradeNo: subscription.merchantTradeNo } }) : null;
     const refundablePayment = await this.findRefundableFirstPayment(userId);
     const refundRequest = await prisma.refundRequest.findUnique({ where: { userId } });
+    // A completed refund is a receipt for one purchase, not a permanent state of the account. Once
+    // the account has paid again it describes an older, unrelated purchase, and leaving it on
+    // screen reads as if it applied to the new subscription. Only the display is suppressed:
+    // refundEligibleUntil below still consults the real row, because the once-per-account
+    // guarantee stays spent regardless of what is shown.
+    const refundSuperseded = refundRequest?.status === "COMPLETED" && refundRequest.completedAt
+      ? (await prisma.payment.count({
+          where: { userId, status: { in: ["APPROVED", "AUTHORIZED"] }, paidAt: { gt: refundRequest.completedAt } },
+        })) > 0
+      : false;
+    const shownRefundRequest = refundSuperseded ? null : refundRequest;
 
     return {
       // "plan" drives every Pro-gated UI check, so ADMIN reports "PRO" here too (see isUnlimited)
@@ -228,7 +239,7 @@ export class BillingService {
       planExpiresAt: pro ? user.planExpiresAt : null,
       planCancelRequested: pro && user.planCancelRequested,
       refundEligibleUntil: !refundRequest ? refundablePayment?.refundDeadlineAt ?? null : null,
-      refundRequest: refundRequest ? { id: refundRequest.id, status: refundRequest.status, requestedAt: refundRequest.requestedAt, completedAt: refundRequest.completedAt } : null,
+      refundRequest: shownRefundRequest ? { id: shownRefundRequest.id, status: shownRefundRequest.status, requestedAt: shownRefundRequest.requestedAt, completedAt: shownRefundRequest.completedAt } : null,
       subscription: subscription ? { period: subscription.period, amountNtd: subscription.amountNtd,
         launchPriceLocked: hasLaunchPriceLock(subscription.pricingVersion),
         nextChargeAt: firstCharge?.paidAt ? billingCycleEnd(firstCharge.paidAt, subscription.period, subscription.totalSuccessTimes) : null } : null,

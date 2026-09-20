@@ -117,6 +117,34 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("launch orders and renewals wi
     await expect(billing.createEcpayOrder(user.id, "MONTHLY", accepted)).rejects.toMatchObject({ status: 503 });
     expect(await prisma.payment.count({ where: { userId: user.id } })).toBe(0);
   });
+  // The completed-refund notice described the refunded purchase, but stayed on screen forever —
+  // so after resubscribing it sat under a brand-new subscription claiming its Pro access had been
+  // terminated. The spent guarantee itself must still be spent.
+  it("stops reporting a completed refund once the account has paid again", async () => {
+    const user = await account();
+    const order = await billing.createEcpayOrder(user.id, "MONTHLY", quote("MONTHLY"));
+    await billing.handleEcpayReturn(await firstNotification(order));
+    const payment = await prisma.payment.findFirstOrThrow({ where: { userId: user.id } });
+    // The end state a completed refund leaves behind: payment refunded, subscription closed.
+    await prisma.refundRequest.create({ data: { userId: user.id, paymentId: payment.id, amountNtd: payment.amountNtd,
+      merchantTradeNo: payment.merchantTradeNo!, status: "COMPLETED", requestedAt: new Date(), completedAt: new Date() } });
+    await prisma.payment.update({ where: { id: payment.id }, data: { status: "REFUNDED" } });
+    await prisma.subscription.updateMany({ where: { userId: user.id }, data: { status: "CANCELLED", cancelledAt: new Date() } });
+
+    const afterRefund = await billing.status(user.id);
+    expect(afterRefund.refundRequest).toMatchObject({ status: "COMPLETED" });
+    expect(afterRefund.refundEligibleUntil).toBeNull();
+
+    vi.setSystemTime(new Date(Date.now() + 60_000));
+    const again = await billing.createEcpayOrder(user.id, "MONTHLY", quote("MONTHLY"));
+    await billing.handleEcpayReturn(await firstNotification(again));
+
+    const afterResubscribe = await billing.status(user.id);
+    expect(afterResubscribe.refundRequest).toBeNull();
+    // Spent is spent: the notice is hidden, the guarantee is not handed back.
+    expect(afterResubscribe.refundEligibleUntil).toBeNull();
+    await expect(billing.requestRefund(user.id)).resolves.toMatchObject({ status: "COMPLETED" });
+  });
   // Under manual capture the first charge of a subscription is only ever seen as an authorization:
   // no ReturnURL webhook fires until someone captures, which for a subscription may be never. Pro
   // and the Subscription row both have to exist from the authorization alone, or the customer pays
