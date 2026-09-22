@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10416-last-digit",
+  "title": "先證明百項和的個位數為零，再縮小巨大 N",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

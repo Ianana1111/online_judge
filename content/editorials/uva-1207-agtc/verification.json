@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/12/1207.pdf"
+  ],
+  "constraints": [
+    "per dataset length-prefixed x and y;0<=m<=n;unit-cost insertion/deletion/substitution;matching0;EOF;dynamic lengths."
+  ],
+  "independentMethod": "Myers arbitrary-precision bit-vector frontier computes edit distance independently of cellwise displayed DP; exhaustive short alphabet pairs and long random pairs cross-check against a full grid.",
+  "oracleFile": "scripts/editorials/oracles/sequence_choices.py",
+  "mutations": [
+    {
+      "id": "replace-cost-two",
+      "label": "Charges two instead of one for replacement",
+      "languageKey": "cpp17",
+      "find": "(x[i-1] != y[j-1])",
+      "replace": "2 * (x[i-1] != y[j-1])"
+    },
+    {
+      "id": "free-deletions",
+      "label": "Omits deletion cost",
+      "languageKey": "cpp17",
+      "find": "previous[j] + 1",
+      "replace": "previous[j]"
+    }
+  ]
+}

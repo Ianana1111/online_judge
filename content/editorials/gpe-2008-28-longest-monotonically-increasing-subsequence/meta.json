@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-2008-28-longest-monotonically-increasing-subsequence",
+  "title": "先求每個起點的最長長度，再列舉所有能完成最長解的索引路徑",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

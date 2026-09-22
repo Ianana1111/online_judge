@@ -1,0 +1,8 @@
+{
+  "slug": "uva-828-deciphering-messages",
+  "title": "完整驗證三字元包裹，維持跨單字的金鑰位置",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

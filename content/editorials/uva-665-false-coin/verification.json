@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/6/665.pdf"
+  ],
+  "constraints": [
+    "1<=N,K<=100;equal pan sizes1..floor(N/2);distinct coin identities per weighing;light/heavy unknown;unique coin ID not unique sign;LOCAL clarification returns0 for inconsistent observations."
+  ],
+  "independentMethod": "Independent elimination of possible-light and possible-heavy identifier sets for each weighing; exhaustive paired single-coin weighings checked against explicit numeric weight simulation, including unique unseen coin and contradiction.",
+  "oracleFile": "scripts/editorials/oracles/finite_enumeration.py",
+  "mutations": [
+    {
+      "id": "heavy-only",
+      "label": "Never considers a lighter counterfeit",
+      "languageKey": "cpp17",
+      "find": "for (int direction : {-1,1})",
+      "replace": "for (int direction : {1})"
+    },
+    {
+      "id": "counts-hypotheses-not-identities",
+      "label": "Counts two weight directions as two different coins",
+      "languageKey": "cpp17",
+      "find": "++candidates;",
+      "replace": "candidates += possibilities;"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "27bdb3fcf4ded0fd4584641e461d3b3088cfac5e4a70de526844d9a39f3ee4b8",
+    "file": "content/editorials/uva-665-false-coin/statement.md",
+    "reason": "Explicit local handling of pre-existing inconsistent observations: no matching light/heavy model returns0, while a unique identifier with both signs remains identifiable. The original PDF does not explicitly discuss contradictory records; preserve all recorded weighings rather than invent their true outcomes.",
+    "source": "https://onlinejudge.org/external/6/665.pdf"
+  }
+}

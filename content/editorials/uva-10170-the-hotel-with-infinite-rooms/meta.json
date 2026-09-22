@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10170-the-hotel-with-infinite-rooms",
+  "title": "累計住宿天數單調增加，用二分搜尋定位當日團體",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

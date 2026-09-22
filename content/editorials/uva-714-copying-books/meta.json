@@ -1,0 +1,8 @@
+{
+  "slug": "uva-714-copying-books",
+  "title": "二分最少最大工作量，從右向左重建最早分隔",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/108/10800.pdf"
+  ],
+  "constraints": [
+    "Tpositive;RFCstringlength1..50;unit segments;one gap after vertical axis;horizontal axisn+2dashes;no trailing spaces or unused rows."
+  ],
+  "independentMethod": "Independent endpoint geometry rasterizes each segment at min(startHeight,endHeight), computes occupied bounds and renders rows. Exhaustively all RFC words through length5 plus50length extremes; guarded public sample spacing correction only.",
+  "oracleFile": "scripts/editorials/oracles/text_paths.py",
+  "mutations": [
+    {
+      "id": "never-falls",
+      "label": "Does not lower the height for falling segments",
+      "languageKey": "cpp17",
+      "find": "if(ch=='F')--height;",
+      "replace": "if(false)--height;"
+    },
+    {
+      "id": "short-axis",
+      "label": "Omits the required horizontal-axis extension",
+      "languageKey": "cpp17",
+      "find": "string(n+2,'-')",
+      "replace": "string(n+1,'-')"
+    }
+  ]
+}

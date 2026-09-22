@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/131/13171.pdf"
+  ],
+  "constraints": [
+    "Tcases;stocksnonnegative noexplicitupperbound;1<=pixels<=100000;MYCRBGVW;R=MY,G=YC,V=MC,B=MYC,W=none;stockorderMYC."
+  ],
+  "independentMethod": "Count each color then multiply explicit primary-color membership sets, independent of per-pixel bit masks and decrementing stock.",
+  "oracleFile": "scripts/editorials/oracles/events.py",
+  "mutations": [
+    {
+      "id": "wrong-green",
+      "label": "Omits cyan from green",
+      "languageKey": "python3",
+      "find": "\"G\": 6",
+      "replace": "\"G\": 2"
+    },
+    {
+      "id": "wrong-black",
+      "label": "Omits cyan from black",
+      "languageKey": "python3",
+      "find": "\"B\": 7",
+      "replace": "\"B\": 3"
+    }
+  ]
+}

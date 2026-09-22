@@ -1,6 +1,6 @@
 /** Shared by every seed-cpe49-*.ts / seed-pilot-testcases.ts script: writes a problem's TestCase
  * rows from its existing Sample row(s) plus one or more hand-authored boundary cases. */
-import { prisma } from "@oj/db";
+import { prisma, type Prisma } from "@oj/db";
 
 export interface Boundary {
   input: string;
@@ -34,74 +34,55 @@ function clean(s: string): string {
   return trimmed === "" ? "" : trimmed + "\n";
 }
 
-export async function seedFromSample(slug: string, boundaries: Boundary[], sampleLimit?: number): Promise<void> {
-  const problem = await prisma.problem.findUniqueOrThrow({ where: { slug } });
-  const allSamples = await prisma.sample.findMany({ where: { problemId: problem.id }, orderBy: { ord: "asc" } });
-  // `sampleLimit ? ... : ...` would be wrong here: 0 is a legitimate, meaningful value (a problem
-  // whose entire scraped Sample is untrustworthy and should be skipped, e.g. uva-11005) but is
-  // falsy in JS, so that ternary would silently fall through to "use every sample" instead —
-  // exactly the class of bug already hit once in judge.ts's exit-code parsing.
-  const samples = sampleLimit === undefined ? allSamples : allSamples.slice(0, sampleLimit);
-
-  const rows = [
-    ...samples.map((s, i) => ({ problemId: problem.id, ord: i + 1, input: clean(s.input), output: clean(s.output) })),
-    ...boundaries.map((b, i) => ({
-      problemId: problem.id,
-      ord: samples.length + i + 1,
-      input: clean(b.input),
-      // Boundary output may intentionally start with a blank line (e.g. "no characters in
-      // common" producing an empty first line) — only trim trailing whitespace, never a leading
-      // blank line, for hand-authored content. Same unconditional-trailing-newline fix as clean()
-      // above: always end in exactly one "\n" unless the whole output is genuinely empty.
-      output: (() => {
-        const t = b.output.replace(/\r\n?/g, "\n").replace(/\s+$/, "");
-        return t === "" ? "" : t + "\n";
-      })(),
-    })),
-  ];
-  // deleteMany + createMany must commit together: worker.ts routes a problem to the real UVa
-  // relay the instant its TestCase count reads 0 (see worker.ts's `testCases.length > 0` check),
-  // so a crash between two standalone calls would silently flip that problem back to the UVa path
-  // until the next successful re-run, with no error surfaced anywhere. $transaction makes the
-  // pair atomic: on any failure the deleteMany itself rolls back, so the DB always holds either
-  // the full old row set or the full new one, never a gap.
-  await prisma.$transaction([
-    prisma.testCase.deleteMany({ where: { problemId: problem.id } }),
-    prisma.testCase.createMany({ data: rows }),
-  ]);
-  console.log(`${slug}: seeded ${rows.length} test cases (${samples.length} from Sample + ${boundaries.length} boundary)`);
+/** Lock the same parent row as editorial publication, before reading samples/cases.
+ * Even a superseded or unpublished verified snapshot protects its corpus: old seed
+ * scripts must never undo a reviewed release. Changes then require new proof and
+ * the guarded editorial publication flow, not a bypass flag on a legacy seed. */
+async function lockSeedableProblem(tx: Prisma.TransactionClient, slug: string) {
+  await tx.$queryRaw`SELECT id FROM problems WHERE slug = ${slug} FOR UPDATE`;
+  const problem = await tx.problem.findUniqueOrThrow({ where: { slug } });
+  const verified = await tx.problemEditorial.findFirst({ where: { problemId: problem.id }, select: { id: true } });
+  if (verified) throw new Error(`${slug}: verified editorial corpus is protected; use the reviewed editorial publication flow`);
+  return problem;
 }
 
-/** Adds ONE test case to a problem's EXISTING TestCase rows, for the judge-rigor verification
- * audit's remediation loop (see the audit plan): when a divergence shows local test data is too
- * weak, this is how the adversarial input that exposed it gets folded in as a permanent hidden
- * case, on top of whatever cases the problem already has — unlike seedFromSample, which replaces
- * everything from scratch and would throw away that existing history. Still a delete-all +
- * recreate-all inside one transaction (same atomicity reasoning as seedFromSample: worker.ts
- * routes a 0-TestCase problem straight to the remote UVa relay, so the DB must never observably
- * pass through a 0-row state, not even between two separate statements). */
+export async function seedFromSample(slug: string, boundaries: Boundary[], sampleLimit?: number): Promise<void> {
+  if (sampleLimit !== undefined && (!Number.isSafeInteger(sampleLimit) || sampleLimit < 0)) throw new Error("Invalid sample limit");
+  const result = await prisma.$transaction(async tx => {
+    const problem = await lockSeedableProblem(tx, slug);
+    const allSamples = await tx.sample.findMany({ where: { problemId: problem.id }, orderBy: { ord: "asc" } });
+    // Zero deliberately excludes an untrustworthy scraped sample.
+    const samples = sampleLimit === undefined ? allSamples : allSamples.slice(0, sampleLimit);
+    const rows = [
+      ...samples.map((sample, i) => ({ problemId: problem.id, ord: i + 1, input: clean(sample.input), output: clean(sample.output) })),
+      ...boundaries.map((boundary, i) => ({
+        problemId: problem.id, ord: samples.length + i + 1, input: clean(boundary.input), output: cleanBoundaryOutput(boundary.output),
+      })),
+    ];
+    // Atomic replacement prevents transient fallback to the remote UVa judge.
+    await tx.testCase.deleteMany({ where: { problemId: problem.id } });
+    await tx.testCase.createMany({ data: rows });
+    return { count: rows.length, samples: samples.length };
+  });
+  console.log(`${slug}: seeded ${result.count} test cases (${result.samples} from Sample + ${boundaries.length} boundary)`);
+}
+
+function cleanBoundaryOutput(value: string): string {
+  // A leading blank line can itself be the first answer; never remove it.
+  const trimmed = value.replace(/\r\n?/g, "\n").replace(/\s+$/, "");
+  return trimmed === "" ? "" : trimmed + "\n";
+}
+
+/** Add a counterexample to an unverified legacy corpus without losing concurrent
+ * additions. Reviewed editorial corpora go through proof-bound publication. */
 export async function appendTestCase(slug: string, boundary: Boundary): Promise<void> {
-  const problem = await prisma.problem.findUniqueOrThrow({ where: { slug } });
-  const existing = await prisma.testCase.findMany({ where: { problemId: problem.id }, orderBy: { ord: "asc" } });
-
-  const cleanOutput = (s: string): string => {
-    const t = s.replace(/\r\n?/g, "\n").replace(/\s+$/, "");
-    return t === "" ? "" : t + "\n";
-  };
-
-  const rows = [
-    ...existing.map((tc) => ({ problemId: problem.id, ord: tc.ord, input: tc.input, output: tc.output })),
-    {
-      problemId: problem.id,
-      ord: existing.length + 1,
-      input: clean(boundary.input),
-      output: cleanOutput(boundary.output),
-    },
-  ];
-
-  await prisma.$transaction([
-    prisma.testCase.deleteMany({ where: { problemId: problem.id } }),
-    prisma.testCase.createMany({ data: rows }),
-  ]);
-  console.log(`${slug}: appended 1 test case (now ${rows.length} total)`);
+  const count = await prisma.$transaction(async tx => {
+    const problem = await lockSeedableProblem(tx, slug);
+    const last = await tx.testCase.findFirst({ where: { problemId: problem.id }, orderBy: { ord: "desc" }, select: { ord: true } });
+    await tx.testCase.create({ data: {
+      problemId: problem.id, ord: (last?.ord ?? 0) + 1, input: clean(boundary.input), output: cleanBoundaryOutput(boundary.output),
+    } });
+    return tx.testCase.count({ where: { problemId: problem.id } });
+  });
+  console.log(`${slug}: appended 1 test case (now ${count} total)`);
 }

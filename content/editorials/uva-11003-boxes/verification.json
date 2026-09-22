@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11003.pdf"
+  ],
+  "constraints": [
+    "1<=N<=1000;nonnegative weights/loads<=3000;serials increase bottom-to-top;load excludes own weight;0 sentinel."
+  ],
+  "independentMethod": "Process boxes bottom-to-top in original order and maximize residual supported capacity per height, dual to the reference minimum-weight reverse DP; exhaustive ordered subsets independently checked.",
+  "oracleFile": "scripts/editorials/oracles/sequence_choices.py",
+  "mutations": [
+    {
+      "id": "reverses-number-rule",
+      "label": "Processes boxes in the wrong serial direction",
+      "languageKey": "cpp17",
+      "find": "for (int i = n - 1; i >= 0; --i)",
+      "replace": "for (int i = 0; i < n; ++i)"
+    },
+    {
+      "id": "counts-own-weight",
+      "label": "Charges own weight against maximum upper load",
+      "languageKey": "cpp17",
+      "find": "best[h] <= load[i]",
+      "replace": "best[h] + weight[i] <= load[i]"
+    }
+  ]
+}

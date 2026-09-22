@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/126/12654.pdf"
+  ],
+  "constraints": [
+    "N1..1000;C1..10^6;patch lengths1..C;holes0..C-1;whole patches only;circle wrap;distance exactly patch length covers both endpoints;EOF."
+  ],
+  "independentMethod": "Dijkstra shortest paths on the next-uncovered-hole index for each circular start, with independent bisect-based coverage; small cases exhaust every integer patch placement and solve exact weighted subset cover.",
+  "oracleFile": "scripts/editorials/oracles/routes_algebra.py",
+  "mutations": [
+    {
+      "id": "open-right-endpoint",
+      "label": "Does not cover a hole exactly at the far endpoint",
+      "languageKey": "cpp17",
+      "find": "hole[pointer]<=hole[i]+length[kind]",
+      "replace": "hole[pointer]<hole[i]+length[kind]"
+    },
+    {
+      "id": "fixed-cut",
+      "label": "Never considers a cover crossing the initial circular cut",
+      "languageKey": "cpp17",
+      "find": "start<n;++start",
+      "replace": "start<1;++start"
+    }
+  ]
+}

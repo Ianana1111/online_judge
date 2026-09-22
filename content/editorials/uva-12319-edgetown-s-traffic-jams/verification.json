@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/123/12319.pdf"
+  ],
+  "constraints": [
+    "n3..100;directed adjacency rows;old graph strongly connected;proposal may disconnect;A,B0..10;all ordered pairs new<=A*old+B;LOCAL output includes old directed diameter;0 sentinel."
+  ],
+  "independentMethod": "Run independent BFS from every source in both directed graphs, checking finite reachability, affine bounds and original diameter; cross-check random directed distance matrices against Floyd.",
+  "oracleFile": "scripts/editorials/oracles/routes_algebra.py",
+  "mutations": [
+    {
+      "id": "strict-bound",
+      "label": "Rejects distances equal to the allowed upper bound",
+      "languageKey": "cpp17",
+      "find": "proposal[u][v]>a*old[u][v]+b",
+      "replace": "proposal[u][v]>=a*old[u][v]+b"
+    },
+    {
+      "id": "undirected-streets",
+      "label": "Adds forbidden reverse directions",
+      "languageKey": "cpp17",
+      "find": "g[u][v]=1;",
+      "replace": "g[u][v]=g[v][u]=1;"
+    }
+  ]
+}

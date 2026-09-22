@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10603-cutting-sticks",
+  "title": "枚舉區間內第一刀，左右子棒獨立求最小費用",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

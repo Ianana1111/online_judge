@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1746-string-theory",
+  "title": "從兩端剝除引號層，將最內層化為偶數計數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

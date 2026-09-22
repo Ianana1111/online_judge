@@ -1,0 +1,8 @@
+{
+  "slug": "uva-855-lunch-in-grid-city",
+  "title": "把曼哈頓距離拆成兩軸，各取較小中位數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

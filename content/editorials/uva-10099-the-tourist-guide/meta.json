@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10099-the-tourist-guide",
+  "title": "最大化路徑瓶頸，再扣掉導遊座位計算趟數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

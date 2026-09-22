@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/109/10905.pdf"
+  ],
+  "constraints": [
+    "1<=N<=50;positiveintegers;alltokensusedincludingduplicates;0countends;maximizeconcatenation;noexplicitperintegermagnitudebound."
+  ],
+  "independentMethod": "Sort exact rational keys value/(10^digits-1), independent of pairwise concatenation comparator; enumerate all permutations for tiny inventories.",
+  "oracleFile": "scripts/editorials/oracles/missingstructures.py",
+  "mutations": [
+    {
+      "id": "lexicographic-only",
+      "label": "Uses plain descending lexical order",
+      "languageKey": "cpp17",
+      "find": "return a + b > b + a;",
+      "replace": "return a > b;"
+    },
+    {
+      "id": "reverse-concatenation",
+      "label": "Minimizes instead of maximizes",
+      "languageKey": "cpp17",
+      "find": "return a + b > b + a;",
+      "replace": "return a + b < b + a;"
+    }
+  ]
+}

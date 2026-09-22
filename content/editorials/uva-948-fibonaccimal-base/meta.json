@@ -1,0 +1,8 @@
+{
+  "slug": "uva-948-fibonaccimal-base",
+  "title": "每次選最大可用 Fibonacci 數，得到不相鄰的一表示",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

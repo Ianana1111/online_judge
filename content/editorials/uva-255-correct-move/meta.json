@@ -1,0 +1,8 @@
+{
+  "slug": "uva-255-correct-move",
+  "title": "依優先順序驗證狀態、路徑與雙方可移動位置",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

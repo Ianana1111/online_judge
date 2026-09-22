@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/8/815.pdf"
+  ],
+  "constraints": [
+    "1<=M,N<30;integer heights includingnegative;nonnegative integer cubicmetervolume;100squaremeters/cell;global drainage;strict height<waterlevel;zero waterlevel=minheight and0percent submerged;2decimals;00sentinel."
+  ],
+  "independentMethod": "Independent exact volume function at sorted unique height thresholds, binary-search the last affordable threshold and solve its rational affine segment; exact volume conservation and strict submerged counts verified.",
+  "oracleFile": "scripts/editorials/oracles/rational_shapes.py",
+  "mutations": [
+    {
+      "id": "counts-touching",
+      "label": "Counts cells merely touching the water surface",
+      "languageKey": "python3",
+      "find": "height * denominator < numerator",
+      "replace": "height * denominator <= numerator"
+    },
+    {
+      "id": "missing-cell-area",
+      "label": "Uses a one-square-meter cell",
+      "languageKey": "python3",
+      "find": "* count * 100",
+      "replace": "* count * 1"
+    },
+    {
+      "id": "other-nearest-midpoint",
+      "label": "Legal exact midpoint alternative rounds toward zero",
+      "languageKey": "python3",
+      "find": "(2 * abs(numerator) * scale + denominator)",
+      "replace": "(2 * abs(numerator) * scale + denominator - 1)",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Respect exact numeric output contracts: derive rational centroid and water results from input, compare finite-decimal salaries by value, and retain deterministic Huffman codes while validating the exact frequency-weighted rounded mean. Do not accept arbitrary adjacent decimal values."
+  }
+}

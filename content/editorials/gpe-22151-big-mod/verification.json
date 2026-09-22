@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/374.pdf"
+  ],
+  "constraints": [
+    "0<=B,P<=2^31-1;1<=M<=46340;zero exponent including zero base uses empty-product residue;EOF."
+  ],
+  "independentMethod": "Python three-argument pow as independent arbitrary-precision modular exponentiation; exhaustive small cases validated by repeated multiplication, plus maximum exponents and modulus-one cases.",
+  "oracleFile": "scripts/editorials/oracles/missingsequences.py",
+  "mutations": [
+    {
+      "id": "bad-zero-exponent-mod-one",
+      "label": "Does not reduce the multiplicative identity",
+      "languageKey": "cpp17",
+      "find": "result = 1 % modulus",
+      "replace": "result = 1"
+    },
+    {
+      "id": "skips-low-bit",
+      "label": "Multiplies on even rather than odd exponent",
+      "languageKey": "cpp17",
+      "find": "if (exponent & 1)",
+      "replace": "if (!(exponent & 1))"
+    }
+  ]
+}

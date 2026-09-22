@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/119/11960.pdf"
+  ],
+  "constraints": [
+    "T<=50000;N1..10^6;maximize number of positive divisors over1..N;largest integer breaks ties."
+  ],
+  "independentMethod": "Linear prime sieve tracks least prime exponent and multiplicative divisor counts, then independent prefix records; direct divisor enumeration verifies all values through5000 and generated queries cover every record transition.",
+  "oracleFile": "scripts/editorials/oracles/structural_counts.py",
+  "mutations": [
+    {
+      "id": "earliest-tie",
+      "label": "Keeps the smallest instead of largest tied record",
+      "languageKey": "cpp17",
+      "find": "divisors[n]>=divisors[record]",
+      "replace": "divisors[n]>divisors[record]"
+    },
+    {
+      "id": "odd-divisors-only",
+      "label": "Counts only odd divisors",
+      "languageKey": "cpp17",
+      "find": "for (int divisor=1;divisor<=limit;++divisor)",
+      "replace": "for (int divisor=1;divisor<=limit;divisor+=2)"
+    }
+  ]
+}

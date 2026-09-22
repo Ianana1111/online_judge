@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10106.pdf"
+  ],
+  "constraints": [
+    "0<=X,Y<10^250;EOF decimalpairs;exactproduct<=500digits;no floating point;zero outputsingle0."
+  ],
+  "independentMethod": "Native arbitrary-precision integer multiplication, independently checked via repeated addition and modular product identities across generated long operands.",
+  "oracleFile": "scripts/editorials/oracles/optimization.py",
+  "mutations": [
+    {
+      "id": "drop-carry",
+      "label": "Does not propagate decimal carries",
+      "languageKey": "cpp17",
+      "find": "digits[i - 1] += digits[i] / 10;",
+      "replace": "/* missing carry */"
+    },
+    {
+      "id": "erase-internal-zero",
+      "label": "Drops every zero digit after normalization",
+      "languageKey": "cpp17",
+      "find": "for (int i = first; i < int(digits.size()); ++i) cout << digits[i];",
+      "replace": "for (int i = first; i < int(digits.size()); ++i) if (digits[i] != 0) cout << digits[i];"
+    }
+  ]
+}

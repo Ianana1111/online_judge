@@ -1,0 +1,30 @@
+{
+  "sources": [
+    "repository:packages/db/audit/gpe-recovery-cases.json#2009-24"
+  ],
+  "constraints": [
+    "N<100; distinct integer points; original statement has no coordinate bound; reference accepts signed 64-bit coordinates using 128-bit intermediates"
+  ],
+  "independentMethod": "Python Fraction slope/intercept pairs with a separate vertical-line representation.",
+  "oracleFile": "scripts/editorials/oracles/gpe.py",
+  "oracleDependencies": [
+    "scripts/author-gpe-recovery.py",
+    "scripts/gpe_recovery_references.py"
+  ],
+  "mutations": [
+    {
+      "id": "parallel",
+      "label": "Merges parallel lines by dropping their offset",
+      "languageKey": "cpp17",
+      "find": "lines.insert({a, b, c});",
+      "replace": "Integer d = gcdInteger(a,b); lines.insert({a/d, b/d, 0});"
+    },
+    {
+      "id": "not-reduced",
+      "label": "Does not reduce proportional equations",
+      "languageKey": "cpp17",
+      "find": "a /= divisor; b /= divisor; c /= divisor;",
+      "replace": "(void)divisor;"
+    }
+  ]
+}

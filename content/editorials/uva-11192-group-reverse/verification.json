@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/111/11192.pdf"
+  ],
+  "constraints": [
+    "1<=G<10;alphanumeric string1..100chars;length divisible byG;at most101lines including0terminator."
+  ],
+  "independentMethod": "Construct output by a direct source-index permutation for each output position, independent of in-place segment reverse.",
+  "oracleFile": "scripts/editorials/oracles/textgames.py",
+  "mutations": [
+    {
+      "id": "reverse-all",
+      "label": "Reverses the entire string",
+      "languageKey": "cpp17",
+      "find": "int size = int(text.size()) / groups;",
+      "replace": "int size = int(text.size());"
+    },
+    {
+      "id": "rotate-instead-of-reverse",
+      "label": "Rotates each group left instead of reversing",
+      "languageKey": "cpp17",
+      "find": "reverse(text.begin() + start, text.begin() + start + size);",
+      "replace": "rotate(text.begin() + start, text.begin() + start + 1, text.begin() + start + size);"
+    }
+  ]
+}

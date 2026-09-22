@@ -1,0 +1,8 @@
+{
+  "slug": "uva-532-dungeon-master",
+  "title": "六方向廣度優先搜尋，找出三維地牢的最短逃生路線",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

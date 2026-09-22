@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/2/288.pdf"
+  ],
+  "constraints": [
+    "LOCAL <=50expressions/file;positive literals<=1000digits;1..100operations;power base1..9 and positive exponent;right-associative power;all arithmetic intermediates and answers abs<10^3000;input length not limited to3000."
+  ],
+  "independentMethod": "Independent precedence-climbing Pratt AST evaluator validates every intermediate and token contract; Python AST structure and exhaustive small arithmetic expressions cross-check precedence. Repair only sample visual continuation artifacts.",
+  "oracleFile": "scripts/editorials/oracles/exact_domains.py",
+  "mutations": [
+    {
+      "id": "power-left-associative",
+      "label": "Evaluates exponent chains from the left",
+      "languageKey": "python3",
+      "find": "i = max(j for j, op in enumerate(operators) if op == '**')",
+      "replace": "i = min(j for j, op in enumerate(operators) if op == '**')"
+    },
+    {
+      "id": "skips-products",
+      "label": "Treats multiplication as subtraction in the last stage",
+      "languageKey": "python3",
+      "find": "while '*' in operators:",
+      "replace": "while False:"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "b6ae9d9bba74b7354ad26582802838158fcd7ce7a4e2b4047dbcf0eaad903955",
+    "file": "content/editorials/uva-288-arithmetic-operations-with-large-integers/statement.md",
+    "reason": "User authorized measured local capacity limits. Preserve the original1000-digit literal and100-operation limits and existing67132-character valid expression; explicitly bound each intermediate and result to3000digits and50expressions per file, clarify right-associative exponentiation, and remove ambiguity about visual sample continuation.",
+    "source": "https://onlinejudge.org/external/2/288.pdf"
+  }
+}

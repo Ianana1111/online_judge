@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/106/10684.pdf"
+  ],
+  "constraints": [
+    "1<=N<=10000;signed wins/losses with nonzero magnitude<1000;contiguous interval;positive profit required;0 sentinel."
+  ],
+  "independentMethod": "Maximum difference between a prefix sum and an earlier minimum prefix, checked against enumeration of all intervals on small signed sequences.",
+  "oracleFile": "scripts/editorials/oracles/missingsequences.py",
+  "mutations": [
+    {
+      "id": "sum-positive-only",
+      "label": "Skips losses instead of requiring contiguity",
+      "languageKey": "cpp17",
+      "find": "ending = max(0LL,ending + value)",
+      "replace": "ending += max(0LL,value)"
+    },
+    {
+      "id": "last-streak-only",
+      "label": "Prints last streak instead of maximum",
+      "languageKey": "cpp17",
+      "find": "<< best <<",
+      "replace": "<< ending <<"
+    }
+  ]
+}

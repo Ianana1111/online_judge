@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10188-automated-judge-script",
+  "title": "依 CPE 規則逐層比對完整文字與可見字元",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

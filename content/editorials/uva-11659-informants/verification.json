@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/116/11659.pdf"
+  ],
+  "constraints": [
+    "1<=n<=20;0<=assertions<=800;self assertions and contradictions allowed;unreliable statements can be either true or false;maximize reliable people."
+  ],
+  "independentMethod": "Translate each assertion to a two-literal clause and solve maximum true assignment via independent DPLL unit propagation and branch bounds; compare direct truth assignments for random small surveys.",
+  "oracleFile": "scripts/editorials/oracles/structural_counts.py",
+  "mutations": [
+    {
+      "id": "trusts-every-speaker",
+      "label": "Requires statements by unreliable speakers to hold",
+      "languageKey": "cpp17",
+      "find": "if (mask&(1<<i)) {",
+      "replace": "if (true) {"
+    },
+    {
+      "id": "ignores-negatives",
+      "label": "Ignores negative reliability statements",
+      "languageKey": "cpp17",
+      "find": " || (negative[i]&mask)",
+      "replace": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/15/1513.pdf"
+  ],
+  "constraints": [
+    "1<=T<=100;1<=N,M<=100000;initial top-to-bottom1..N;report count above before move-to-front;repeated requests preserved."
+  ],
+  "independentMethod": "Randomized order-statistic treap stores current timestamp keys, erases a requested movie and merges it at the minimum key; exhaustive small request sequences checked against literal list movement.",
+  "oracleFile": "scripts/editorials/oracles/ranks_schedules.py",
+  "mutations": [
+    {
+      "id": "includes-self",
+      "label": "Counts the requested movie as above itself",
+      "languageKey": "cpp17",
+      "find": "occupied.prefix(position[movie]-1)",
+      "replace": "occupied.prefix(position[movie])"
+    },
+    {
+      "id": "leaves-ghost-box",
+      "label": "Never removes the old occupied position",
+      "languageKey": "cpp17",
+      "find": "occupied.add(position[movie],-1);",
+      "replace": ""
+    }
+  ]
+}

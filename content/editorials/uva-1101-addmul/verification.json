@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/11/1101.pdf"
+  ],
+  "constraints": [
+    "a,m,p,q,r,s1..1e9;p<=q;r<=s;all input values in[p,q] must land[r,s];minimum instruction count then lex A<M;RLE output;all-zero sentinel."
+  ],
+  "independentMethod": "Independent tight-lower/tight-upper digit DP minimizes digit sums in each feasible B interval and retains lexicographically largest optimal digit vector; exhaustive small-state BFS validates actual programs and lex order.",
+  "oracleFile": "scripts/editorials/oracles/allocation_paths.py",
+  "mutations": [
+    {
+      "id": "only-lower",
+      "label": "Never rounds the feasible B lower bound upward",
+      "languageKey": "cpp17",
+      "find": "j<=k",
+      "replace": "j<=0"
+    },
+    {
+      "id": "ignores-upper-endpoint",
+      "label": "Computes upper B bound using p instead of q",
+      "languageKey": "cpp17",
+      "find": "high=(s-q*powers[k])/a",
+      "replace": "high=(s-p*powers[k])/a"
+    }
+  ]
+}

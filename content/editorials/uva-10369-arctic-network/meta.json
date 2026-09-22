@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10369-arctic-network",
+  "title": "Kruskal 保留 P−S 條邊，最小化各群內的最大距離",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

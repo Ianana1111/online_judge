@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10409-die-game",
+  "title": "用六個方向完整追蹤骰子姿態",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

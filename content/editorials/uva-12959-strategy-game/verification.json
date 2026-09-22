@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/129/12959.pdf"
+  ],
+  "constraints": [
+    "1<=J,R<=500;0<=score<=100;roundmajor;tiehighestplayerID;00terminator."
+  ],
+  "independentMethod": "Slice the flat chronological list by player stride, then lexicographically maximize (sum,playerID), independent of nested accumulation and replacement scan.",
+  "oracleFile": "scripts/editorials/oracles/events.py",
+  "mutations": [
+    {
+      "id": "earlier-tie",
+      "label": "Chooses earlier player on a tie",
+      "languageKey": "cpp17",
+      "find": "total[player] >= total[winner]",
+      "replace": "total[player] > total[winner]"
+    },
+    {
+      "id": "last-round-only",
+      "label": "Discards previous rounds",
+      "languageKey": "cpp17",
+      "find": "total[player] += score;",
+      "replace": "total[player] = score;"
+    }
+  ]
+}

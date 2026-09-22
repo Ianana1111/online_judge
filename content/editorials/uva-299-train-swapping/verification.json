@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/2/299.pdf"
+  ],
+  "constraints": [
+    "Tcases;0<=L<=50;permutation1..L;adjacentswapsonly;emptytrainlegal."
+  ],
+  "independentMethod": "Explicit bubble sorting and counting actual swaps, independent of pairwise inversion counting.",
+  "oracleFile": "scripts/editorials/oracles/formatting.py",
+  "mutations": [
+    {
+      "id": "adjacent-only",
+      "label": "Counts only neighboring inversions",
+      "languageKey": "cpp17",
+      "find": "j < n; ++j",
+      "replace": "j < min(n, i + 2); ++j"
+    },
+    {
+      "id": "reverse-comparison",
+      "label": "Counts ordered pairs instead of inversions",
+      "languageKey": "cpp17",
+      "find": "cars[i] > cars[j]",
+      "replace": "cars[i] < cars[j]"
+    }
+  ]
+}

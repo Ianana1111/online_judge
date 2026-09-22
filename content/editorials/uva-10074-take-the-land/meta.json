@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10074-take-the-land",
+  "title": "固定上下邊界，找可用欄位的最長連續段",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

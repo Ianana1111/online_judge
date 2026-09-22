@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11498-division-of-nlogonia",
+  "title": "先排除兩條邊界，再以相對方向決定象限",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10008.pdf"
+  ],
+  "constraints": [
+    "Positive declared line count; exactlyN lines including empty lines; ASCII letters only case-insensitive;frequency descending thenletter ascending; omit zeros."
+  ],
+  "independentMethod": "For each uppercase letter independently scan the complete text and count both cases, then sort by a tuple key.",
+  "oracleFile": "scripts/editorials/oracles/arithmetic.py",
+  "mutations": [
+    {
+      "id": "ignore-lowercase",
+      "label": "Drops lowercase letters instead of merging them",
+      "languageKey": "cpp17",
+      "find": "c = char(c - 'a' + 'A');",
+      "replace": "continue;"
+    },
+    {
+      "id": "tie-reversed",
+      "label": "Uses descending alphabet for tied counts",
+      "languageKey": "cpp17",
+      "find": "return a < b;",
+      "replace": "return a > b;"
+    }
+  ]
+}

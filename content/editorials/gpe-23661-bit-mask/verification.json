@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/107/10718.pdf"
+  ],
+  "constraints": [
+    "Unsigned32 N,L,U;0<=L<=U<=2^32-1;maximize OR then minimize M;EOF."
+  ],
+  "independentMethod": "Independent tight-bound binary digit DP enumerates both bit choices and selects the lexicographic objective (OR,-M); exhaustive small intervals validate every answer.",
+  "oracleFile": "scripts/editorials/oracles/combinatorial.py",
+  "mutations": [
+    {
+      "id": "ignore-lower",
+      "label": "Never forces bits required by lower bound",
+      "languageKey": "cpp17",
+      "find": "if ((mask | (bit - 1)) < lower)",
+      "replace": "if (false)"
+    },
+    {
+      "id": "always-fill",
+      "label": "Fills all available bits even when N already contains them",
+      "languageKey": "cpp17",
+      "find": "if ((n & bit) == 0)",
+      "replace": "if (true)"
+    }
+  ]
+}

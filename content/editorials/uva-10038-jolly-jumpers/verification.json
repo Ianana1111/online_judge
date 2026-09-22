@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10038.pdf"
+  ],
+  "constraints": [
+    "1<=N<=3000;EOF;consecutive absolute differences exactly1..N-1;singleton is Jolly."
+  ],
+  "independentMethod": "Sort every absolute difference and compare the complete list against range(1,N), independent of streaming seen array.",
+  "oracleFile": "scripts/editorials/oracles/counting.py",
+  "mutations": [
+    {
+      "id": "signed-difference",
+      "label": "Does not take absolute difference",
+      "languageKey": "cpp17",
+      "find": "llabs(current - previous)",
+      "replace": "(current - previous)"
+    },
+    {
+      "id": "duplicates",
+      "label": "Accepts duplicate differences",
+      "languageKey": "cpp17",
+      "find": " || seen[difference]",
+      "replace": ""
+    }
+  ]
+}

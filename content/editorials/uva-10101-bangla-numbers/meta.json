@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10101-bangla-numbers",
+  "title": "遞迴處理 kuti，再由大到小拆分單位",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

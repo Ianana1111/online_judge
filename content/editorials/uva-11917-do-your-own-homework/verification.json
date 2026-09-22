@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/119/11917.pdf"
+  ],
+  "constraints": [
+    "1<=T,N,D,days<=100;distinct lowercase subjectnames1..20chars;on-time inclusiveD;late inclusiveD+5;unknown subject fails."
+  ],
+  "independentMethod": "Scan the original subject records for an exact-name match, then classify signed lateness into <=0,1..5,>5 independently of map lookup branches.",
+  "oracleFile": "scripts/editorials/oracles/collections_suite.py",
+  "mutations": [
+    {
+      "id": "deadline-exclusive",
+      "label": "Treats exact deadline as late",
+      "languageKey": "cpp17",
+      "find": "found->second <= deadline",
+      "replace": "found->second < deadline"
+    },
+    {
+      "id": "grace-exclusive",
+      "label": "Rejects exact fifth grace day",
+      "languageKey": "cpp17",
+      "find": "found->second > deadline + 5",
+      "replace": "found->second >= deadline + 5"
+    }
+  ]
+}

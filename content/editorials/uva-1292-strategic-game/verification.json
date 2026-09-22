@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/12/1292.pdf"
+  ],
+  "constraints": [
+    "1<=n<=1500;connected undirected tree;each edge appears once;every vertex has one u:(degree) row;EOF;cover edges not vertices."
+  ],
+  "independentMethod": "Maximum matching of a tree by repeatedly selecting a leaf edge and removing its endpoints; Konig equality yields minimum cover size, independently checked against all vertex subsets on random small trees.",
+  "oracleFile": "scripts/editorials/oracles/network_costs.py",
+  "mutations": [
+    {
+      "id": "leaves-uncovered-edge",
+      "label": "Allows parent and child both unselected",
+      "languageKey": "cpp17",
+      "find": "off[u]+=on[v]",
+      "replace": "off[u]+=min(off[v],on[v])"
+    },
+    {
+      "id": "forces-adjacent-guards",
+      "label": "Requires child selected even with selected parent",
+      "languageKey": "cpp17",
+      "find": "on[u]+=min(off[v],on[v])",
+      "replace": "on[u]+=on[v]"
+    }
+  ]
+}

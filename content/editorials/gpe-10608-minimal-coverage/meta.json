@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10608-minimal-coverage",
+  "title": "每次選能把已覆蓋前綴延伸最遠的區間",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

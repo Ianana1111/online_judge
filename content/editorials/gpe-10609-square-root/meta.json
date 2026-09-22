@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10609-square-root",
+  "title": "以整數 Newton 迭代求千位完全平方數的精確平方根",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

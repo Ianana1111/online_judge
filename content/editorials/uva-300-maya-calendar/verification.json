@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/300.pdf"
+  ],
+  "constraints": [
+    "Haabyear0..4999;18months20days plusuayet5days;day0-based;Tzolkin cycles13and20/year260;leadingcasecount."
+  ],
+  "independentMethod": "Precompute one260-day ceremonial cycle by advancing number and day-name counters, then count whole Haab years/month lengths independently.",
+  "oracleFile": "scripts/editorials/oracles/formatting.py",
+  "mutations": [
+    {
+      "id": "zero-day-number",
+      "label": "Omits one-based ceremonial day",
+      "languageKey": "cpp17",
+      "find": "elapsed % 13 + 1",
+      "replace": "elapsed % 13"
+    },
+    {
+      "id": "wrong-year",
+      "label": "Uses civil365dayyear in output",
+      "languageKey": "cpp17",
+      "find": "elapsed / 260",
+      "replace": "elapsed / 365"
+    }
+  ]
+}

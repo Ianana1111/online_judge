@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11956-brainfuck",
+  "title": "分開處理指標與位元組的環狀狀態",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

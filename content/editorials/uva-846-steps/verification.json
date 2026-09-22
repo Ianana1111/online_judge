@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/8/846.pdf"
+  ],
+  "constraints": [
+    "0<=x<=y<2^31;nonnegative steps,adjacent difference<=1;first/last1 for nonempty path;distance0 needs0."
+  ],
+  "independentMethod": "Binary-search the minimum step count whose independently derived capacity floor((steps+1)^2/4) reaches distance; exhaustive BFS over (position,last-step) validates all small distances.",
+  "oracleFile": "scripts/editorials/oracles/exactmath.py",
+  "mutations": [
+    {
+      "id": "zero-distance-negative",
+      "label": "Omits empty journey case",
+      "languageKey": "cpp17",
+      "find": "if (distance == 0) { cout << 0 << '\\n'; continue; }",
+      "replace": ""
+    },
+    {
+      "id": "strict-double-peak",
+      "label": "Rejects equality at the even-step capacity",
+      "languageKey": "cpp17",
+      "find": "distance <= root * root + root",
+      "replace": "distance < root * root + root"
+    }
+  ]
+}

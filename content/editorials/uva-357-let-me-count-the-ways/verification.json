@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/357.pdf"
+  ],
+  "constraints": [
+    "coins1,5,10,25,50 unlimited;unordered combinations;0<=amount<=30000;zero has one empty combination;EOF;singular/plural English sentences;64bit counts."
+  ],
+  "independentMethod": "Independent coefficient recurrence from the full generating-function denominator (1-x)^2(1-x^2)(1-x^5)(1-x^10) in five-cent units; explicit denomination-count enumeration validates small amounts and the entire legal query domain is exercised.",
+  "oracleFile": "scripts/editorials/oracles/discrete_structures.py",
+  "mutations": [
+    {
+      "id": "one-of-each-only",
+      "label": "Updates amounts downward as if each denomination could be used once",
+      "languageKey": "cpp17",
+      "find": "int amount = coin; amount <= LIMIT; ++amount",
+      "replace": "int amount = LIMIT; amount >= coin; --amount"
+    },
+    {
+      "id": "truncates-count",
+      "label": "Stores large combination counts modulo2^32",
+      "languageKey": "cpp17",
+      "find": "vector<unsigned long long> ways",
+      "replace": "vector<uint32_t> ways"
+    }
+  ]
+}

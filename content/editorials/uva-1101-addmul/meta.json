@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1101-addmul",
+  "title": "固定乘法次數，以進位與壓縮字串求最短程式",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

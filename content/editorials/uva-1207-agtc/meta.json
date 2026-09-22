@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1207-agtc",
+  "title": "以編輯距離 DP 比較插入、刪除與替換",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

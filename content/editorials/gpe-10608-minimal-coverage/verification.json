@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10020.pdf"
+  ],
+  "constraints": [
+    "Tpositive;M1..5000;N<=100000;integer-50000<=L<=R<=50000;00sentinel;closedcoverage;outputminimumINPUTsegmentmultiset sortedleft;anyoptimalchoice;blankbetween."
+  ],
+  "independentMethod": "Independent shortest-path dynamic programming over right-endpoint coverage states with range-min tree, plus exhaustive small subset covers; every expected and candidate witness is independently checked for membership, order and optimum.",
+  "oracleFile": "scripts/editorials/oracles/constructive_witnesses.py",
+  "mutations": [
+    {
+      "id": "excludes-touching",
+      "label": "Rejects intervals that start at covered endpoint",
+      "languageKey": "cpp17",
+      "find": "segments[at].first<=covered",
+      "replace": "segments[at].first<covered"
+    },
+    {
+      "id": "chooses-first-reachable",
+      "label": "Does not update to the farthest reachable segment",
+      "languageKey": "cpp17",
+      "find": "if(segments[at].second>farthest)",
+      "replace": "if(chosen<0&&segments[at].second>farthest)"
+    },
+    {
+      "id": "legal-alternate-witness",
+      "label": "Different valid optimal witness or feasible allocation",
+      "languageKey": "cpp17",
+      "find": "segments[at].second>farthest",
+      "replace": "segments[at].second>=farthest",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Original problem permits multiple optimal or feasible outputs. Verify original-input membership and ordering for covers, maximum strict elephant chains, exact per-team/table seating constraints, or both matrix marginals with1..20cells. Reject false impossible claims and nonoptimal witnesses; do not require the particular stored reference witness."
+  }
+}

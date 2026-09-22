@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://cpe.mcu.edu.tw/cpe/problemPdf/10188.pdf"
+  ],
+  "constraints": [
+    "CPE modified version: all visible characters; n,m in 1..99; each line <=120 characters; print standard character count including spaces, excluding newlines; n=0 terminates."
+  ],
+  "independentMethod": "Python line-list equality and literal space removal; retains all letters/punctuation; independent original text length sum.",
+  "oracleFile": "scripts/editorials/oracles/ordering.py",
+  "mutations": [
+    {
+      "id": "digits-only",
+      "label": "Uses original UVa numeric-only comparison",
+      "languageKey": "cpp17",
+      "find": "if (!isspace(ch))",
+      "replace": "if (isdigit(ch))"
+    },
+    {
+      "id": "no-line-boundaries",
+      "label": "Treats layout differences as Accepted",
+      "languageKey": "cpp17",
+      "find": "if (standard == team)",
+      "replace": "if (visible(standard) == visible(team))"
+    }
+  ]
+}

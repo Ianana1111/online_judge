@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/127/12797.pdf"
+  ],
+  "constraints": [
+    "EOF;N2..100;grid usesabcdefghijABCDEFGHIJ;orthogonal steps;entire path may use only one case of each letter;distance counts cells including start."
+  ],
+  "independentMethod": "Independent product-state BFS tracks actually used20bitletter masks along paths; an earlier state with subset restrictions dominates a later superset. Cross-check exhaustive case-assignment BFS on random small grids.",
+  "oracleFile": "scripts/editorials/oracles/cuts_constraints.py",
+  "mutations": [
+    {
+      "id": "zero-start",
+      "label": "Counts edges rather than cells",
+      "languageKey": "cpp17",
+      "find": "distance[0]=1;",
+      "replace": "distance[0]=0;"
+    },
+    {
+      "id": "ignores-case",
+      "label": "Allows all letter cases in a single path",
+      "languageKey": "cpp17",
+      "find": "return ((mask>>letter[at])&1)==upper[at];",
+      "replace": "return true;"
+    }
+  ]
+}

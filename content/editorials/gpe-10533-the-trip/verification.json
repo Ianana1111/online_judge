@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10137.pdf"
+  ],
+  "constraints": [
+    "1<=N<=1000;0<=expense<=10000.00 in exact cents;final costs differ by<=onecent;minimum exchanged money;0 sentinel."
+  ],
+  "independentMethod": "Sort expenses and assign exactly S mod N higher cent targets to the largest expenses; sum exact excess transfers, independently checked against enumeration of every legal high-cent assignment on small groups.",
+  "oracleFile": "scripts/editorials/oracles/missing_exact.py",
+  "mutations": [
+    {
+      "id": "smaller-side",
+      "label": "Takes smaller mandatory transfer bound",
+      "languageKey": "cpp17",
+      "find": "answer = max(give,receive)",
+      "replace": "answer = min(give,receive)"
+    },
+    {
+      "id": "rounds-all-up",
+      "label": "Requires every student to reach the ceiling average",
+      "languageKey": "cpp17",
+      "find": "low = sum / n",
+      "replace": "low = (sum + n - 1) / n"
+    }
+  ]
+}

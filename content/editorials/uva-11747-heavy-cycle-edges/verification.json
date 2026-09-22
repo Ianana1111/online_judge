@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/117/11747.pdf"
+  ],
+  "constraints": [
+    "N1..1000,M0..25000;0<=weights<2^31;allweights distinct;no parallel nodepairs;undirectedpossiblydisconnected;00sentinel;outputallcyclemaximumedgeweights sorted."
+  ],
+  "independentMethod": "Independent Prim minimum-spanning-forest selects unique optimal forest; complement gives heavy edges. Every small graph cross-checked per edge by reachability using strictly lighter edges;25000-edge unique-weight stress.",
+  "oracleFile": "scripts/editorials/oracles/coins_forests.py",
+  "mutations": [
+    {
+      "id": "reverse-order",
+      "label": "Processes heavy edges first",
+      "languageKey": "cpp17",
+      "find": "sort(edges.begin(),edges.end());",
+      "replace": "sort(edges.rbegin(),edges.rend());"
+    },
+    {
+      "id": "forest-edges",
+      "label": "Prints accepted forest edges rather than cycle maxima",
+      "languageKey": "cpp17",
+      "find": "if(!dsu.unite(u,v))",
+      "replace": "if(dsu.unite(u,v))"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1644-prime-gap",
+  "title": "篩出所有質數，用相鄰質數的距離回答",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10035-primary-arithmetic",
+  "title": "逐位模擬加法，計算每次向高位進位",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

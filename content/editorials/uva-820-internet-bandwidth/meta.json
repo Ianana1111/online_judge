@@ -1,0 +1,8 @@
+{
+  "slug": "uva-820-internet-bandwidth",
+  "title": "用殘餘網路與 Dinic 計算雙向網路最大流",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

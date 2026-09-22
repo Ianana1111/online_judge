@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/6/686.pdf"
+  ],
+  "constraints": [
+    "even4<=N<32768;unordered prime pairs;equal primes allowed;2+2 counts;0 sentinel."
+  ],
+  "independentMethod": "Enumerate each unordered pair of independently trial-tested primes once, accumulate by sum, and check all16382 legal even queries; small-domain divisor-set enumeration cross-checks counts.",
+  "oracleFile": "scripts/editorials/oracles/ordered_domains.py",
+  "mutations": [
+    {
+      "id": "drops-diagonal",
+      "label": "Excludes equal-prime pairs",
+      "languageKey": "cpp17",
+      "find": "p <= n / 2",
+      "replace": "p < n / 2"
+    },
+    {
+      "id": "ordered-pairs",
+      "label": "Counts both orders of unequal primes",
+      "languageKey": "cpp17",
+      "find": "p <= n / 2",
+      "replace": "p < n"
+    }
+  ]
+}

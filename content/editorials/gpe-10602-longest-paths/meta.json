@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10602-longest-paths",
+  "title": "拓樸順序計算最長距離，終點同長時取最小編號",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

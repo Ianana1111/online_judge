@@ -1,0 +1,33 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10258.pdf",
+    "https://icpc.global/community/history/brochures/world-finals-2011-brochure.pdf"
+  ],
+  "constraints": [
+    "LOCALorder solvedDESC,penaltyASC,teamASC;teams1..100/problems1..9;received-order events;firstC only;20per priorI;unsolved no penalty;RUE only participation;blank case separators."
+  ],
+  "independentMethod": "Independent grouping of all events by team/problem, locate firstC index and recount prefixI, then sort score tuples. Ties, duplicateC, postAC I, ignored statuses and all100teams/9problems covered.",
+  "oracleFile": "scripts/editorials/oracles/missing_models.py",
+  "mutations": [
+    {
+      "id": "penalty-descending",
+      "label": "Ranks larger penalty first within equal solved counts",
+      "languageKey": "python3",
+      "find": "(-teams[team][0], teams[team][1], team)",
+      "replace": "(-teams[team][0], -teams[team][1], team)"
+    },
+    {
+      "id": "counts-all-correct",
+      "label": "Counts repeated accepted submissions",
+      "languageKey": "python3",
+      "find": "if entry[3][problem]:",
+      "replace": "if False:"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "31eb5c89ebfa334c952b306c8396ef90127fc44aacb59e948fe211bee5cb6156",
+    "file": "content/editorials/gpe-10429-contest-scoreboard/statement.md",
+    "reason": "Explicit LOCAL clarification of penalty ordering: original UVa PDF itself says decreasing, whereas common contest scoring uses least total time. Define solved descending, penalty ascending, team ID ascending; preserve this problem team-ID final tie rule and disclose the discrepancy instead of falsely calling it an import error.",
+    "source": "https://onlinejudge.org/external/102/10258.pdf"
+  }
+}

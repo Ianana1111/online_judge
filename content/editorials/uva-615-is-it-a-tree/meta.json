@@ -1,0 +1,8 @@
+{
+  "slug": "uva-615-is-it-a-tree",
+  "title": "檢查唯一根、入度與從根可達的全部節點",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

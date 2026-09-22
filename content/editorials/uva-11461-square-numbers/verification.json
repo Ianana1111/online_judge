@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/114/11461.pdf"
+  ],
+  "constraints": [
+    "1<=a<=b<=100000;<=200queries plus00;inclusive square-count interval."
+  ],
+  "independentMethod": "Python exact integer square roots: isqrt(b)-isqrt(a-1), independently of precomputed square array and binary-search boundaries.",
+  "oracleFile": "scripts/editorials/oracles/intervals.py",
+  "mutations": [
+    {
+      "id": "exclude-right",
+      "label": "Excludes square upper endpoint",
+      "languageKey": "cpp17",
+      "find": "auto after = upper_bound",
+      "replace": "auto after = lower_bound"
+    },
+    {
+      "id": "exclude-left",
+      "label": "Excludes square lower endpoint",
+      "languageKey": "cpp17",
+      "find": "auto first = lower_bound",
+      "replace": "auto first = upper_bound"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10024.pdf"
+  ],
+  "constraints": [
+    "Tpositive;6x6 grid exactlysix1;each paper square has adjacent square;any rotation/reflection;blank between answers."
+  ],
+  "independentMethod": "Independently unfold all384 spanning trees of the cube face-adjacency graph; reject overlapping/extra-edge layouts and obtain11 canonical nets. Compare all35freehexominoes and all dihedral transforms and translations; units cross-check direct folding.",
+  "oracleFile": "scripts/editorials/oracles/missing_models.py",
+  "mutations": [
+    {
+      "id": "ignores-overlap",
+      "label": "Accepts consistent connected folds even when faces overlap",
+      "languageKey": "cpp17",
+      "find": "normals.size()==6",
+      "replace": "true"
+    },
+    {
+      "id": "wrong-up-fold",
+      "label": "Uses down rotation when crossing upward",
+      "languageKey": "cpp17",
+      "find": "return {u,n,negative(v)};",
+      "replace": "return {u,negative(n),v};"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1657-game",
+  "title": "逐輪刪除已能確定的數對，模擬共同知識",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

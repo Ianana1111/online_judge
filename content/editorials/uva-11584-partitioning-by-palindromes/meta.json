@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11584-partitioning-by-palindromes",
+  "title": "先標記所有回文區間，再求最少前綴分段數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

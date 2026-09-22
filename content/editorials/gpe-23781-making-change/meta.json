@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-23781-making-change",
+  "title": "有限錢包與無限找零分開計算，用可行交易導出安全金額上界",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

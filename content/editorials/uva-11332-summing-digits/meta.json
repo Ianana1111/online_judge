@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11332-summing-digits",
+  "title": "反覆相加直到剩下一位數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

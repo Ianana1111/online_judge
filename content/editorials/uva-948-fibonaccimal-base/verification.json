@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/9/948.pdf"
+  ],
+  "constraints": [
+    "1<=T<=500;positive value<1e8;weights1,2,...;no adjacent1 and no leading0;unique Zeckendorf representation."
+  ],
+  "independentMethod": "Meet-in-the-middle enumerates nonadjacent-bit Fibonacci representations of each half, enforces the boundary-bit constraint and joins exact complementary sums. Exhaustive small independent subsets prove representation and uniqueness.",
+  "oracleFile": "scripts/editorials/oracles/common_completion.py",
+  "mutations": [
+    {
+      "id": "duplicate-one",
+      "label": "Starts weights at duplicate ones",
+      "languageKey": "cpp17",
+      "find": "vector<int> fib{1,2};",
+      "replace": "vector<int> fib{1,1};"
+    },
+    {
+      "id": "strict-greedy",
+      "label": "Refuses a weight equal to remaining value",
+      "languageKey": "cpp17",
+      "find": "fib[i] <= remaining",
+      "replace": "fib[i] < remaining"
+    }
+  ]
+}

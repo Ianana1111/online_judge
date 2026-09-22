@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/116/11677.pdf"
+  ],
+  "constraints": [
+    "Hours0..23;minutes0..59;allfour0terminator. Explicit LOCAL convention preserves existing corpus: equal nonterminal times mean nextday/1440, otherwise forward positive duration. Original PDF does not specify equal-time convention."
+  ],
+  "independentMethod": "Literal do-while minute-by-minute clock simulation until target; preserves the existing LOCAL strictly-positive-wait convention, explicitly clarified in the statement.",
+  "oracleFile": "scripts/editorials/oracles/intervals.py",
+  "mutations": [
+    {
+      "id": "absolute-time",
+      "label": "Uses absolute difference instead of forward duration",
+      "languageKey": "cpp17",
+      "find": "(finish > start ? finish - start : finish - start + 1440)",
+      "replace": "abs(finish - start)"
+    },
+    {
+      "id": "same-as-zero",
+      "label": "Violates explicit LOCAL next-day convention for equal times",
+      "languageKey": "cpp17",
+      "find": "(finish > start ? finish - start : finish - start + 1440)",
+      "replace": "(finish - start + 1440) % 1440"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "9ba135257a71cb626a771073db07262971706563b7168ec41806e0c66f80379c",
+    "file": "content/editorials/uva-11677-alarm-clock/statement.md",
+    "reason": "Clarify rather than change existing LOCAL corpus convention: equal nonterminal clock times mean next day (1440); original source leaves equality unspecified. Does not claim this convention is universal on external UVa.",
+    "source": "https://onlinejudge.org/external/116/11677.pdf"
+  }
+}

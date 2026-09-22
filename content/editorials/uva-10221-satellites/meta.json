@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10221-satellites",
+  "title": "將角分換算成弧度，分別計算短弧與弦長",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

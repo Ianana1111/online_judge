@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/1/141.pdf"
+  ],
+  "constraints": [
+    "N2..50;exactly2Nmoves;allmoveslegal;rotations0/90/180/270only;LOCAL history starts after first move,initialemptyboard notstored;first repetition loses."
+  ],
+  "independentMethod": "Independent occupied centered complex-coordinate sets compare actual prior boards against four rotations; matrix-rotation simulation cross-checks random legal games and first-loss timing.",
+  "oracleFile": "scripts/editorials/oracles/order_tracking.py",
+  "mutations": [
+    {
+      "id": "no-rotation",
+      "label": "Compares only the unrotated board",
+      "languageKey": "cpp17",
+      "find": "turn<4",
+      "replace": "turn<1"
+    },
+    {
+      "id": "counts-initial",
+      "label": "Includes initial empty position despite LOCAL completed-move history",
+      "languageKey": "cpp17",
+      "find": "set<string> seen;",
+      "replace": "set<string> seen;seen.insert(board);"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "0d15d35b4818ea971cf3ea745801160e9eab1a39ed34eda14f0a5e8290f4e461",
+    "file": "content/editorials/uva-141-the-spot-game/statement.md",
+    "reason": "Explicit LOCAL interpretation of patterns produced during moves: do not preload the untouched initial empty board. Preserve all archived game inputs and results; empty boards produced by actual moves are still stored. Removes ambiguity instead of silently changing winner timing.",
+    "source": "https://onlinejudge.org/external/1/141.pdf"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/105/10539.pdf"
+  ],
+  "constraints": [
+    "T1..600;0<low<=high<10^12;exactlyone prime divisor and nonprime;p^k k>=2;closed range."
+  ],
+  "independentMethod": "Independent count by exponent: sum prime-count differences at exact integer e-th roots of bounds. Linear least-prime sieve supplies pi, unlike reference Eratosthenes and enumerated powers; small results checked by trial factorization.",
+  "oracleFile": "scripts/editorials/oracles/rank_digits.py",
+  "mutations": [
+    {
+      "id": "includes-primes",
+      "label": "Starts at the first power and counts primes",
+      "languageKey": "cpp17",
+      "find": "long long value=1LL*p*p;",
+      "replace": "long long value=p;"
+    },
+    {
+      "id": "squares-only",
+      "label": "Never enumerates prime cubes and higher powers",
+      "languageKey": "cpp17",
+      "find": "value*=p;",
+      "replace": "break;"
+    }
+  ]
+}

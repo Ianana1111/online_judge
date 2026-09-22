@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/117/11728.pdf"
+  ],
+  "constraints": [
+    "1<=S<=1000;all positive divisors includingn;largest preimage else-1;0terminator;candidate n<=S."
+  ],
+  "independentMethod": "Enumerate divisor pairs up to integer square root for every candidate n, avoid double-counting square roots, and select largest matching n per query.",
+  "oracleFile": "scripts/editorials/oracles/collections_suite.py",
+  "mutations": [
+    {
+      "id": "smallest-answer",
+      "label": "Keeps smallest matching n",
+      "languageKey": "cpp17",
+      "find": "largest[sum[n]] = n;",
+      "replace": "if (largest[sum[n]] == -1) largest[sum[n]] = n;"
+    },
+    {
+      "id": "proper-divisors",
+      "label": "Omits each number itself",
+      "languageKey": "cpp17",
+      "find": "sum[multiple] += divisor;",
+      "replace": "if (multiple != divisor) sum[multiple] += divisor;"
+    }
+  ]
+}

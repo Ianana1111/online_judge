@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/106/10626.pdf"
+  ],
+  "constraints": [
+    "T1..50;C1..150;ones0..500,fives0..100,tens0..50;sufficient initialvalue;price8;minimum-number canonicalchange;change reusable;minimize coins inserted."
+  ],
+  "independentMethod": "Independent layered wallet DP enumerates every feasible coin combination paying8..17, computes greedy1/5/10change, and retains cheapest actual wallet states. Embedded C++ source is hash-bound. Small tests permit ALL payments up to the entire wallet and verify both the overpayment bound and five normal forms.",
+  "oracleFile": "scripts/editorials/oracles/coins_forests.py",
+  "mutations": [
+    {
+      "id": "no-conversion",
+      "label": "Omits ten plus three ones converting into a five",
+      "languageKey": "cpp17",
+      "find": "if(tens>=1&&ones>=3)answer=min(answer,4+solve(remaining-1,fives+1,tens-1));",
+      "replace": ""
+    },
+    {
+      "id": "wrong-two-fives",
+      "label": "Treats the two-five payment as inserting one coin",
+      "languageKey": "cpp17",
+      "find": "2+solve(remaining-1,fives-2,tens)",
+      "replace": "1+solve(remaining-1,fives-2,tens)"
+    }
+  ]
+}

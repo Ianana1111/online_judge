@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/8/834.pdf"
+  ],
+  "constraints": [
+    "EOF integer numerator/nonzero denominator;LOCAL normalize denominatorpositive, floorcontinuedfraction;integer output[b0;];lastcoefficient>1 applies only when there is a fractional tail."
+  ],
+  "independentMethod": "Independent accelerated Stern-Brocot mediant navigation encodes alternating left/right runs; exact Fraction reconstruction and all small signed-rational Euclidean cross-check.",
+  "oracleFile": "scripts/editorials/oracles/explicit_domains.py",
+  "mutations": [
+    {
+      "id": "truncate-negative",
+      "label": "Uses truncation toward zero instead of floor division",
+      "languageKey": "python3",
+      "find": "quotient, remainder = divmod(numerator, denominator)",
+      "replace": "quotient = abs(numerator) // denominator * (1 if numerator >= 0 else -1)\n        remainder = numerator - quotient * denominator"
+    },
+    {
+      "id": "integer-semicolon",
+      "label": "Omits the required semicolon for an integral rational",
+      "languageKey": "python3",
+      "find": "+ ';' + ','.join",
+      "replace": "+ (';' if len(coefficients) > 1 else '') + ','.join"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "71bf9f66dbf5ea7a35ab65737e6560d6b42dc80c687a774f33ece1fe43b87ae1",
+    "file": "content/editorials/uva-834-continued-fractions/statement.md",
+    "reason": "Preserve archived integral-format answers and make signed-rational and integer uniqueness conventions explicit.",
+    "source": "https://onlinejudge.org/external/8/834.pdf"
+  }
+}

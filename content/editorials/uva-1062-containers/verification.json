@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/10/1062.pdf"
+  ],
+  "constraints": [
+    "1..1000 uppercase arrivals;ships loaded A..Z;each stack nonincreasing in arrival order;equal letters may stack;end sentinel."
+  ],
+  "independentMethod": "Alphabet-indexed strict increasing-subsequence DP computes the chain-cover lower bound, independently checked by exhaustive legal stack assignment on every short ABC string.",
+  "oracleFile": "scripts/editorials/oracles/state_spaces.py",
+  "mutations": [
+    {
+      "id": "equal-needs-new-stack",
+      "label": "Disallows stacking equal letters",
+      "languageKey": "cpp17",
+      "find": "lower_bound(tops.begin(),tops.end(),ship)",
+      "replace": "upper_bound(tops.begin(),tops.end(),ship)"
+    },
+    {
+      "id": "sorts-arrival-order",
+      "label": "Reorders arrivals before assigning stacks",
+      "languageKey": "cpp17",
+      "find": "vector<char> tops;",
+      "replace": "sort(sequence.begin(),sequence.end()); vector<char> tops;"
+    }
+  ]
+}

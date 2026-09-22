@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10000.pdf"
+  ],
+  "constraints": [
+    "2<=n<=100;DAG;all nodes reachable from s;no self-loop;length in edges;smallest finish on tie;00 edges,0 dataset sentinel."
+  ],
+  "independentMethod": "All-pairs max-plus Floyd dynamic programming computes longest distances using an independent intermediate-vertex formulation; tiny path enumeration checks the oracle.",
+  "oracleFile": "scripts/editorials/oracles/combinatorial.py",
+  "mutations": [
+    {
+      "id": "vertices-not-edges",
+      "label": "Counts starting vertex as a step",
+      "languageKey": "cpp17",
+      "find": "distance[start] = 0;",
+      "replace": "distance[start] = 1;"
+    },
+    {
+      "id": "largest-tie",
+      "label": "Chooses largest terminal label on ties",
+      "languageKey": "cpp17",
+      "find": "i < finish",
+      "replace": "i > finish"
+    }
+  ]
+}

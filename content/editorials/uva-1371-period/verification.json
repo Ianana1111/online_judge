@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/13/1371.pdf"
+  ],
+  "constraints": [
+    "Tpositive;patterny1..50,textx1..5000;lowercase;partition x into nonempty pieces;minimize max Levenshtein distance to y."
+  ],
+  "independentMethod": "Independent minimax prefix partition DP enumerates every candidate segment of length<=2|y| and computes its full incremental Levenshtein distance. Exhaustive all binary texts up to6 against every partition; separately cross-check threshold recurrence. Legal50x5000 stress.",
+  "oracleFile": "scripts/editorials/oracles/rank_digits.py",
+  "mutations": [
+    {
+      "id": "strict-threshold",
+      "label": "Rejects distances equal to the allowed bound",
+      "languageKey": "cpp17",
+      "find": "finished=current[m]<=bound;",
+      "replace": "finished=current[m]<bound;"
+    },
+    {
+      "id": "substitution-only",
+      "label": "Disallows insertion and deletion",
+      "languageKey": "cpp17",
+      "find": "current[j]=min({previous[j]+1,current[j-1]+1,previous[j-1]+(ch!=y[j-1])});",
+      "replace": "current[j]=previous[j-1]+(ch!=y[j-1]);"
+    }
+  ]
+}

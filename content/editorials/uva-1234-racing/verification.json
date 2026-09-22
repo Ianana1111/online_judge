@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/12/1234.pdf"
+  ],
+  "constraints": [
+    "Connected simple undirected graph;1<=N<10000;1<=M<100000;distinct unordered endpoint pairs;cost1..1000;dataset count then final0;LOCAL explicitly excludes parallel roads."
+  ],
+  "independentMethod": "Independent maximum Prim spanning-tree weight subtracted from total edge cost; exhaustive camera-subset deletion on small graphs validates optimality. Repair only duplicated historical endpoint pairs, preserving every edge cost and the first occurrence of every original pair.",
+  "oracleFile": "scripts/editorials/oracles/paths_mixtures.py",
+  "mutations": [
+    {
+      "id": "minimum-tree",
+      "label": "Preserves the cheapest spanning tree",
+      "languageKey": "cpp17",
+      "find": "sort(edges.rbegin(),edges.rend());",
+      "replace": "sort(edges.begin(),edges.end());"
+    },
+    {
+      "id": "counts-cameras",
+      "label": "Counts cameras instead of their costs",
+      "languageKey": "cpp17",
+      "find": "answer+=cost",
+      "replace": "answer+=1"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "93c457cf6433884fc1ec6897c7325db4dbc5cad2308f0adcf8a731a4a7ccefee",
+    "file": "content/editorials/uva-1234-racing/statement.md",
+    "reason": "User explicitly chose on 2026-09-22 to repair parallel-road cases and retain the three-road circuit definition; make the resulting simple-road input guarantee visible rather than redefining two-road circuits.",
+    "source": "https://onlinejudge.org/external/12/1234.pdf"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/573.pdf"
+  ],
+  "constraints": [
+    "1<=H,U,D,F<=100;H0terminator;constant fatigue U*F/100;climbfloor0;successstrict>H daytime;failurestrict<0night."
+  ],
+  "independentMethod": "Closed-form arithmetic-series sum of all positive daily climbs minus previous/current nights, independent of incremental height simulation; rational checks validate small parameter grid.",
+  "oracleFile": "scripts/editorials/oracles/layouts.py",
+  "mutations": [
+    {
+      "id": "touch-is-success",
+      "label": "Treats touching rim as escape",
+      "languageKey": "cpp17",
+      "find": "height > h * 100",
+      "replace": "height >= h * 100"
+    },
+    {
+      "id": "negative-climb",
+      "label": "Lets fatigue make daytime climbing negative",
+      "languageKey": "cpp17",
+      "find": "height += max(0, climb);",
+      "replace": "height += climb;"
+    }
+  ]
+}

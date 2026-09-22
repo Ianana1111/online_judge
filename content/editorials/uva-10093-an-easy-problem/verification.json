@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10093.pdf"
+  ],
+  "constraints": [
+    "Bases2..62; digit alphabet0..9,A..Z,a..z; optional integer sign; EOF; minimum legal base dividing value by base-1."
+  ],
+  "independentMethod": "For every candidate base evaluate the original numeral with modular Horner, independently of the digit-sum formula.",
+  "oracleFile": "scripts/editorials/oracles/arithmetic.py",
+  "mutations": [
+    {
+      "id": "lowercase",
+      "label": "Maps lowercase digits like uppercase",
+      "languageKey": "cpp17",
+      "find": "c - 'a' + 36",
+      "replace": "c - 'a' + 10"
+    },
+    {
+      "id": "illegal-base",
+      "label": "Allows maximum digit equal to base",
+      "languageKey": "cpp17",
+      "find": "max(2, maximum + 1)",
+      "replace": "max(2, maximum)"
+    }
+  ]
+}

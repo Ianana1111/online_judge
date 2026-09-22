@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10080.pdf"
+  ],
+  "constraints": [
+    "n,m,s,v positive<100;distinct gopher coordinates and distinct hole coordinates;Euclidean distance<=s*v;one gopher per hole;decimal coordinates exact;EOF."
+  ],
+  "independentMethod": "Exact Fraction squared distances with an independent unit-capacity residual network and Edmonds-Karp maximum flow; exhaustive small matching assignments and exact/on/outside decimal boundaries.",
+  "oracleFile": "scripts/editorials/oracles/gpe_readiness.py",
+  "mutations": [
+    {
+      "id": "strict-distance",
+      "label": "Rejects a gopher exactly at the reachable boundary",
+      "languageKey": "python3",
+      "find": "** 2 <= limit",
+      "replace": "** 2 < limit"
+    },
+    {
+      "id": "no-reassignment",
+      "label": "Uses only currently empty holes",
+      "languageKey": "python3",
+      "find": "owner[hole] < 0 or augment(owner[hole], seen)",
+      "replace": "owner[hole] < 0"
+    }
+  ]
+}

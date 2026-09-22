@@ -1,0 +1,8 @@
+{
+  "slug": "uva-437-the-tower-of-babylon",
+  "title": "列出三種高度方向，在嚴格縮小的底面上做最長路徑",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/126/12694.pdf"
+  ],
+  "constraints": [
+    "1<=T<=100;0..19 events;integer0<=start<finish<=10;touching endpoints allowed;00 ends each day;maximize count."
+  ],
+  "independentMethod": "Exact DP over the1024 occupied-hour masks considers accepting or rejecting each event, independently verified by exhaustive subsets; zero events, duplicates, touching and shortest-first counterexample.",
+  "oracleFile": "scripts/editorials/oracles/ranks_schedules.py",
+  "mutations": [
+    {
+      "id": "requires-gap",
+      "label": "Rejects activities that touch previous finish",
+      "languageKey": "cpp17",
+      "find": "start >= end",
+      "replace": "start > end"
+    },
+    {
+      "id": "shortest-first",
+      "label": "Sorts by duration rather than finish",
+      "languageKey": "cpp17",
+      "find": "return a.second < b.second;",
+      "replace": "return a.second-a.first < b.second-b.first;"
+    }
+  ]
+}

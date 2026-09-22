@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11085.pdf"
+  ],
+  "constraints": [
+    "8columns fixed;rows1..8;move vertically any distance costsone;all row/diagonal conflicts forbidden;fewer than1000 cases;EOF."
+  ],
+  "independentMethod": "Enumerate all8! row permutations and retain distinct diagonal sums/differences, independently obtaining92 boards; all legal boards, one-move perturbations and999-case batches checked.",
+  "oracleFile": "scripts/editorials/oracles/state_spaces.py",
+  "mutations": [
+    {
+      "id": "distance-not-moves",
+      "label": "Charges row distance rather than number of relocated queens",
+      "languageKey": "cpp17",
+      "find": "cost += initial[col] != target[col]",
+      "replace": "cost += abs(initial[col] - target[col])"
+    },
+    {
+      "id": "omits-one-diagonal",
+      "label": "Fails to check descending diagonal attacks",
+      "languageKey": "cpp17",
+      "find": " || (falling & downBit)",
+      "replace": ""
+    }
+  ]
+}

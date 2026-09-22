@@ -1,0 +1,8 @@
+{
+  "slug": "uva-725-division",
+  "title": "枚舉五位分母，用十位數字集合檢查零到九各一次",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

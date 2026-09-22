@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/536.pdf"
+  ],
+  "constraints": [
+    "unique uppercase labels;1..26 nodes;valid preorder/inorder of same binary tree;EOF;emit postorder."
+  ],
+  "independentMethod": "Build an inorder Cartesian tree whose priorities are preorder indices, then traverse iteratively; all binary-tree shapes up to7 nodes independently supply known traversals.",
+  "oracleFile": "scripts/editorials/oracles/ordered_domains.py",
+  "mutations": [
+    {
+      "id": "root-first",
+      "label": "Outputs root before both children",
+      "languageKey": "cpp17",
+      "find": "build(left,middle); build(middle + 1,right);\n            answer += root;",
+      "replace": "answer += root; build(left,middle); build(middle + 1,right);"
+    },
+    {
+      "id": "reverse-children",
+      "label": "Reverses final postorder instead of preserving left/right/root",
+      "languageKey": "cpp17",
+      "find": "cout << answer",
+      "replace": "reverse(answer.begin(),answer.end()); cout << answer"
+    }
+  ]
+}

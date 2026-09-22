@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11264-coin-collector",
+  "title": "保留不會觸發下一面額的最小收集金額",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

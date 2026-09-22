@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/9/991.pdf"
+  ],
+  "constraints": [
+    "1<=N<=10 pairs;2N cyclic people;perfect matching;noncrossing;EOF;blank line between datasets."
+  ],
+  "independentMethod": "Closed-form Catalan binomial(2n,n)/(n+1), independently checked by enumerating noncrossing perfect matchings for small n.",
+  "oracleFile": "scripts/editorials/oracles/gpecore.py",
+  "mutations": [
+    {
+      "id": "add-independent-regions",
+      "label": "Adds counts of two independent regions",
+      "languageKey": "cpp17",
+      "find": "ways[inside] * ways[pairs - 1 - inside]",
+      "replace": "ways[inside] + ways[pairs - 1 - inside]"
+    },
+    {
+      "id": "empty-zero",
+      "label": "Treats empty region as impossible",
+      "languageKey": "cpp17",
+      "find": "ways[0] = 1;",
+      "replace": "ways[0] = 0;"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/106/10635.pdf"
+  ],
+  "constraints": [
+    "T1..10;n2..250;1<=p,q<n*n;route lengthp+1/q+1;distinctvalues1..n*n;bothstart1endn*n;LCS counts visitedsquares."
+  ],
+  "independentMethod": "Independent Fenwick maximum-prefix dynamic programming on common event positions, cross-checked with quadratic LCS on random distinct routes; full62500-element cases.",
+  "oracleFile": "scripts/editorials/oracles/metadata_models.py",
+  "mutations": [
+    {
+      "id": "counts-common",
+      "label": "Counts common squares without preserving order",
+      "languageKey": "cpp17",
+      "find": "auto where=lower_bound(tails.begin(),tails.end(),position[value]);",
+      "replace": "auto where=tails.end();"
+    },
+    {
+      "id": "jump-count",
+      "label": "Returns number of jumps rather than number of squares",
+      "languageKey": "cpp17",
+      "find": "<<tails.size()<<'\\n'",
+      "replace": "<<(tails.size()-1)<<'\\n'"
+    }
+  ],
+  "textCorrections": [
+    {
+      "field": "title",
+      "beforeHash": "97464f332f22b0b7bfa3b8e49d27f586b706feadf4f2e362bbaafe825d3506ff",
+      "value": "10635 - Prince and Princess",
+      "reason": "Restore the official problem title matching its UVa number and actual statement; preserve the stable slug and all existing links.",
+      "source": "https://onlinejudge.org/external/106/10635.pdf"
+    }
+  ]
+}

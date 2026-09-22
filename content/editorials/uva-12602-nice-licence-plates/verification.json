@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/126/12602.pdf"
+  ],
+  "constraints": [
+    "1<=N<=100;format[A-Z]{3}-[0-9]{4};A0..Z25;base26vsdecimal;absolute difference<=100."
+  ],
+  "independentMethod": "Explicit weighted sum676*a+26*b+c versus decimal positional expansion, independent of Horner/stoi reference.",
+  "oracleFile": "scripts/editorials/oracles/records.py",
+  "mutations": [
+    {
+      "id": "strict-hundred",
+      "label": "Rejects exactly100difference",
+      "languageKey": "cpp17",
+      "find": "<= 100 ?",
+      "replace": "< 100 ?"
+    },
+    {
+      "id": "signed-difference",
+      "label": "Does not take absolute difference",
+      "languageKey": "cpp17",
+      "find": "abs(letters - digits)",
+      "replace": "(letters - digits)"
+    }
+  ]
+}

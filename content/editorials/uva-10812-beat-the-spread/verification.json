@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/108/10812.pdf"
+  ],
+  "constraints": [
+    "Tcases;s,dnonnegativeintegers;noexplicitmagnitudeupperbound;nonnegativeintegralscores;higherfirst;impossibleotherwise."
+  ],
+  "independentMethod": "Compute candidate higher via (s+d)//2 then independently reconstruct both sum and absolute difference and validate nonnegative values; exhaustive score-pair enumeration validates small domain.",
+  "oracleFile": "scripts/editorials/oracles/integers.py",
+  "mutations": [
+    {
+      "id": "ignore-parity",
+      "label": "Rounds nonintegral scores down",
+      "languageKey": "python3",
+      "find": " or (total - difference) % 2 != 0",
+      "replace": ""
+    },
+    {
+      "id": "allow-negative",
+      "label": "Allows negative lower score",
+      "languageKey": "python3",
+      "find": "total < difference or ",
+      "replace": ""
+    }
+  ]
+}

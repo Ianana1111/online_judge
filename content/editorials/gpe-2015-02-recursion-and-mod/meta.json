@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-2015-02-recursion-and-mod",
+  "title": "平移遞迴式，用快速冪處理巨大下標",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10066.pdf"
+  ],
+  "constraints": [
+    "1<=N,M<=100;positive radii;orderpreserved;00terminator;LCSnotmultiset;blanklineaftercase."
+  ],
+  "independentMethod": "Hunt-Szymanski reduction: map second-sequence matching positions in descending order into LIS tails, independent of rectangular LCS DP.",
+  "oracleFile": "scripts/editorials/oracles/graphdp.py",
+  "mutations": [
+    {
+      "id": "substring",
+      "label": "Resets nonmatching prefixes",
+      "languageKey": "cpp17",
+      "find": "max(dp[i - 1][j], dp[i][j - 1])",
+      "replace": "0"
+    },
+    {
+      "id": "reuse-tile",
+      "label": "Reuses second tower tile",
+      "languageKey": "cpp17",
+      "find": "dp[i - 1][j - 1] + 1",
+      "replace": "dp[i - 1][j] + 1"
+    }
+  ]
+}

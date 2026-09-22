@@ -1,0 +1,8 @@
+{
+  "slug": "uva-929-number-maze",
+  "title": "對格子進入成本跑 Dijkstra，計入起點並允許四向移動",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

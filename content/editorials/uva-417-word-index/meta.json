@@ -1,0 +1,8 @@
+{
+  "slug": "uva-417-word-index",
+  "title": "檢查字母嚴格遞增，以組合數計算長度優先的排名",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

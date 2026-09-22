@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/120/12096.pdf"
+  ],
+  "constraints": [
+    "0<=T<=5;0<=operations<=2000;valid stack depth;finite nested sets;ADD inserts first popped set as one element into second;*** after every case."
+  ],
+  "independentMethod": "Literal Python frozensets preserve recursive mathematical equality without ID interning; deep999-level singleton nesting,999-member nested sets, valid random operations, zero operations and zero test cases.",
+  "oracleFile": "scripts/editorials/oracles/nested_states.py",
+  "mutations": [
+    {
+      "id": "flatten-add",
+      "label": "Treats ADD as a union of members",
+      "languageKey": "cpp17",
+      "find": "result = values[b]; result.insert(a);",
+      "replace": "result = values[b]; result.insert(values[a].begin(),values[a].end());"
+    },
+    {
+      "id": "reverse-add",
+      "label": "Inserts second popped set into first instead",
+      "languageKey": "cpp17",
+      "find": "result = values[b]; result.insert(a);",
+      "replace": "result = values[a]; result.insert(b);"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/15/1594.pdf"
+  ],
+  "constraints": [
+    "Tcases;3<=n<=15;values0..1000;circularsimultaneousabsdifferences;repeatorzerowithin1000steps."
+  ],
+  "independentMethod": "Floyd tortoise-hare cycle detection over immutable tuples, independently of stored-state set; bounded trajectory checks input step promise.",
+  "oracleFile": "scripts/editorials/oracles/structures.py",
+  "mutations": [
+    {
+      "id": "any-zero",
+      "label": "Treats any zero entry as all-zero state",
+      "languageKey": "cpp17",
+      "find": "all_of(state.begin()",
+      "replace": "any_of(state.begin()"
+    },
+    {
+      "id": "no-wrap",
+      "label": "Last entry compares with itself instead of first",
+      "languageKey": "cpp17",
+      "find": "state[(i + 1) % n]",
+      "replace": "state[min(i + 1, n - 1)]"
+    }
+  ]
+}

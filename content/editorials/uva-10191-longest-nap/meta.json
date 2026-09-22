@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10191-longest-nap",
+  "title": "排序並合併忙碌區間，保留最早的最長空檔",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

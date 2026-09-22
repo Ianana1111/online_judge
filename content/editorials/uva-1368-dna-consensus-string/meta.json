@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1368-dna-consensus-string",
+  "title": "每一欄獨立選最多的字母，同票取字典序最小",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10161.pdf"
+  ],
+  "constraints": [
+    "1<=N<=2e9; 0 sentinel; output x then y."
+  ],
+  "independentMethod": "Walk each ring from its first coordinate through two axis-aligned segments using math.isqrt, independent of endpoint-distance reference.",
+  "oracleFile": "scripts/editorials/oracles/geometry.py",
+  "mutations": [
+    {
+      "id": "parity",
+      "label": "Swaps even rings instead of odd rings",
+      "languageKey": "cpp17",
+      "find": "side % 2 == 1",
+      "replace": "side % 2 == 0"
+    },
+    {
+      "id": "corner-offset",
+      "label": "Starts the final edge at coordinate zero",
+      "languageKey": "cpp17",
+      "find": "y = distance + 1;",
+      "replace": "y = distance;"
+    }
+  ]
+}

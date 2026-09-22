@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/116/11634.pdf"
+  ],
+  "constraints": [
+    "1<=initial<10000;0 input sentinel;decimal leading zero allowed;count initial and generated zero;middle four of eight-digit square."
+  ],
+  "independentMethod": "Floyd cycle decomposition into noncyclic prefix plus cycle length; transition computed via padded decimal slicing instead of arithmetic extraction.",
+  "oracleFile": "scripts/editorials/oracles/arithmetic.py",
+  "mutations": [
+    {
+      "id": "exclude-zero",
+      "label": "Stops before counting a generated zero",
+      "languageKey": "cpp17",
+      "find": "while (!seen[value])",
+      "replace": "while (value != 0 && !seen[value])"
+    },
+    {
+      "id": "wrong-middle",
+      "label": "Drops one digit instead of two",
+      "languageKey": "cpp17",
+      "find": "value * value / 100",
+      "replace": "value * value / 10"
+    }
+  ]
+}

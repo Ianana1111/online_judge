@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/417.pdf"
+  ],
+  "constraints": [
+    "1..5 lowercase letters;strictly increasing;length then lexicographic order;rank1..83681;invalid0;EOF."
+  ],
+  "independentMethod": "Enumerate every combination of1..5 letters in length/lex order to build all83681 exact ranks; validate boundaries and all-domain ordered properties.",
+  "oracleFile": "scripts/editorials/oracles/discrete_structures.py",
+  "mutations": [
+    {
+      "id": "allows-duplicate-letters",
+      "label": "Treats nondecreasing words as valid",
+      "languageKey": "cpp17",
+      "find": "word[i] <= word[i - 1]",
+      "replace": "word[i] < word[i - 1]"
+    },
+    {
+      "id": "omits-shorter-words",
+      "label": "Ranks only among words of the same length",
+      "languageKey": "cpp17",
+      "find": "answer += choose[26][len]",
+      "replace": "answer += 0"
+    }
+  ]
+}

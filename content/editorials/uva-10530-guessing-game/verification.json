@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/105/10530.pdf"
+  ],
+  "constraints": [
+    "EOFterminated0;guesses1..10;too high/low strict;right onendsgame;eachgameresetbounds."
+  ],
+  "independentMethod": "Maintain explicit set{1..10} and filter each constraint, independent of interval endpoints.",
+  "oracleFile": "scripts/editorials/oracles/integers.py",
+  "mutations": [
+    {
+      "id": "non-strict-high",
+      "label": "Keeps too-high value feasible",
+      "languageKey": "cpp17",
+      "find": "guess - 1",
+      "replace": "guess"
+    },
+    {
+      "id": "forget-restriction",
+      "label": "Allows later high guess to widen bound",
+      "languageKey": "cpp17",
+      "find": "high = min(high, guess - 1)",
+      "replace": "high = guess - 1"
+    }
+  ]
+}

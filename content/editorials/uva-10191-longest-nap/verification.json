@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10191.pdf"
+  ],
+  "constraints": [
+    "1<=appointments<=100;10:00<=start<end<=18:00;line<=255chars;unsorted and overlapping allowed;at least one positive nap;earliest tied maximum;EOF."
+  ],
+  "independentMethod": "Mark every occupied minute in the fixed480-minute day, then identify maximal free runs; brute interval enumeration checks small schedules, overlaps, tie order and one-minute boundaries.",
+  "oracleFile": "scripts/editorials/oracles/state_spaces.py",
+  "mutations": [
+    {
+      "id": "overlap-regression",
+      "label": "Moves occupied end backward for nested intervals",
+      "languageKey": "cpp17",
+      "find": "cursor = max(cursor,end)",
+      "replace": "cursor = end"
+    },
+    {
+      "id": "latest-tie",
+      "label": "Replaces earliest maximum with a later equal gap",
+      "languageKey": "cpp17",
+      "find": "start - cursor > longest",
+      "replace": "start - cursor >= longest"
+    }
+  ]
+}

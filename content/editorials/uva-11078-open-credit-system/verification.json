@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11078.pdf"
+  ],
+  "constraints": [
+    "1<=T<20;2<=n<=100000;abs(score)<150000;max score[i]-score[j] with strict i<j;negative answers valid."
+  ],
+  "independentMethod": "Build suffix minimum scores and compare each senior with the minimum strictly later junior, independent of streaming prefix maximum. All pairs validate small sequences.",
+  "oracleFile": "scripts/editorials/oracles/matrixsets.py",
+  "mutations": [
+    {
+      "id": "absolute-difference",
+      "label": "Uses absolute score difference",
+      "languageKey": "cpp17",
+      "find": "highest - current",
+      "replace": "abs(highest - current)"
+    },
+    {
+      "id": "nonnegative-only",
+      "label": "Allows an invalid zero answer",
+      "languageKey": "cpp17",
+      "find": "int answer = INT_MIN;",
+      "replace": "int answer = 0;"
+    }
+  ]
+}

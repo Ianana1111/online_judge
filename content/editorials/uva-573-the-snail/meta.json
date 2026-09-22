@@ -1,0 +1,8 @@
+{
+  "slug": "uva-573-the-snail",
+  "title": "以百分之一呎的整數模擬，精確判斷越界時刻",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

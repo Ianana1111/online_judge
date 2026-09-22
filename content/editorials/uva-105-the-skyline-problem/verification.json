@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/1/105.pdf"
+  ],
+  "constraints": [
+    "1..5000 buildings; 0<L<R<10000, positive H<10000; left endpoints nondecreasing; EOF; emit only height changes."
+  ],
+  "independentMethod": "Rasterize maximum height for each integer unit interval, independent of multiset event handling.",
+  "oracleFile": "scripts/editorials/oracles/geometry.py",
+  "mutations": [
+    {
+      "id": "erase-all",
+      "label": "Deletes every building with equal height",
+      "languageKey": "cpp17",
+      "find": "active.erase(active.find(h));",
+      "replace": "active.erase(h);"
+    },
+    {
+      "id": "inclusive-right",
+      "label": "Keeps each building one coordinate too far",
+      "languageKey": "cpp17",
+      "find": "events[right].push_back",
+      "replace": "events[right + 1].push_back"
+    }
+  ]
+}

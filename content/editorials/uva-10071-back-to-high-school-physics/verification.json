@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10071.pdf"
+  ],
+  "constraints": [
+    "-100<=v<=100;0<=t<=200;constant acceleration;midpoint velocity at t;EOF including0 0 as data."
+  ],
+  "independentMethod": "Sum unit-time displacement for a zero-acceleration trajectory having the given midpoint velocity; algebraic proof covers any constant acceleration.",
+  "oracleFile": "scripts/editorials/oracles/counting.py",
+  "mutations": [
+    {
+      "id": "half-time",
+      "label": "Uses t rather than2t",
+      "languageKey": "cpp17",
+      "find": "2 * velocity * time",
+      "replace": "velocity * time"
+    },
+    {
+      "id": "unsigned-displacement",
+      "label": "Converts negative displacement to positive",
+      "languageKey": "cpp17",
+      "find": "2 * velocity * time",
+      "replace": "2 * llabs(velocity) * time"
+    }
+  ]
+}

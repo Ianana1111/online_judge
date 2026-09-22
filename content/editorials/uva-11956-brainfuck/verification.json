@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/119/11956.pdf"
+  ],
+  "constraints": [
+    "1<=T<=100;one line per program, length<100000;commands><+-.;100 circular cells,bytevalues0..255;dot no statechange;final full uppercase2digit dump only."
+  ],
+  "independentMethod": "Rotate a deque for pointer movement and mutate its front byte, then rotate back to original physical cell order; independent of indexed pointer simulation.",
+  "oracleFile": "scripts/editorials/oracles/collections_suite.py",
+  "mutations": [
+    {
+      "id": "clamp-pointer",
+      "label": "Clamps at last cell instead of wrapping",
+      "languageKey": "cpp17",
+      "find": "pointer = (pointer + 1) % 100;",
+      "replace": "pointer = min(99, pointer + 1);"
+    },
+    {
+      "id": "clamp-byte",
+      "label": "Clamps increment at255 instead of wrapping",
+      "languageKey": "cpp17",
+      "find": "memory[pointer] = (memory[pointer] + 1) % 256;",
+      "replace": "memory[pointer] = min(255, memory[pointer] + 1);"
+    }
+  ]
+}

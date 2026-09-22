@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10050-hartals",
+  "title": "標記罷工日期，再排除週五與週六",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

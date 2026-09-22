@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10200.pdf"
+  ],
+  "constraints": [
+    "0<=a<=b<=10000;EOF;prime of n*n+n+41;inclusive denominator;2decimal percent with either nearest at exact midpoint."
+  ],
+  "independentMethod": "Independent deterministic Miller-Rabin primality using bases2,3,5,7,11 for values<=100010041, exact Fraction percentages, and all10001singleton intervals; oracle unit checks against trial division.",
+  "oracleFile": "scripts/editorials/oracles/rational_results.py",
+  "mutations": [
+    {
+      "id": "miss-prime-squares",
+      "label": "Stops trial division before checking square root equality",
+      "languageKey": "cpp17",
+      "find": "divisor*divisor>value",
+      "replace": "divisor*divisor>=value"
+    },
+    {
+      "id": "exclusive-range",
+      "label": "Uses an exclusive endpoint denominator",
+      "languageKey": "cpp17",
+      "find": "b-a+1,2",
+      "replace": "max(1,b-a),2"
+    },
+    {
+      "id": "exact-midpoint-toward-zero",
+      "label": "Legal alternative chooses the other nearest decimal at exact rounding midpoints",
+      "languageKey": "cpp17",
+      "find": "(2*numerator*scale+denominator)",
+      "replace": "(2*numerator*scale+denominator-1)",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Use exact input-derived rational answers with required output precision. Accept both nearest printed decimals only at true rounding midpoints, retain labels, counts, order and blank separators, and reject malformed or numerically wrong answers."
+  }
+}

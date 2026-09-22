@@ -1,0 +1,34 @@
+{
+  "sources": [
+    "local-statement:gpe-22261-sorting-the-alphanumeric-list-in-comma-separated-value-forma:sha256:9ee0f98ad86b17a0dc4592fb9043a47e2e3d058dd90f86a8c0e6e395b4a3d87c"
+  ],
+  "constraints": [
+    "T1..100;M1..1000;L1..20;eachfield<=128includingASCIIspaces;lexicaltuple after outerspace trim;shorterprefixfirst;preserveexactrawrows including allspaces andduplicates;any order of ties."
+  ],
+  "independentMethod": "Independent multi-level field trie emits terminal records before child keys; archived expected outputs validated by exact raw-row multiset and sorted key tuples. Max1000x20x128 dataset and distinct raw rows with equal keys; reversed ties are a legal alternative.",
+  "oracleFile": "scripts/editorials/oracles/grammar_models.py",
+  "mutations": [
+    {
+      "id": "untrimmed-key",
+      "label": "Compares outer spaces as significant",
+      "languageKey": "cpp17",
+      "find": "return value.substr(first,last-first+1);",
+      "replace": "return value;"
+    },
+    {
+      "id": "first-field-only",
+      "label": "Discards later fields from the sort key",
+      "languageKey": "cpp17",
+      "find": "record.key.push_back(trim(line.substr(start,end-start)));",
+      "replace": "if(record.key.empty())record.key.push_back(trim(line.substr(start,end-start)));"
+    },
+    {
+      "id": "reverse-valid-ties",
+      "label": "Uses reverse input order only among equal normalized keys",
+      "languageKey": "cpp17",
+      "find": "return a.index<b.index;",
+      "replace": "return a.index>b.index;",
+      "expectation": "AC"
+    }
+  ]
+}

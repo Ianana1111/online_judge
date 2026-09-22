@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/382.pdf"
+  ],
+  "constraints": [
+    "2..99 numbers;1<=n<=60000;0 sentinel;proper divisors exclude n;square root counted once;width5 then exactly2 spaces."
+  ],
+  "independentMethod": "Sieve sums of proper divisors for the whole domain by adding each divisor to its larger multiples.",
+  "oracleFile": "scripts/editorials/oracles/arithmetic.py",
+  "mutations": [
+    {
+      "id": "square-double",
+      "label": "Counts square-root divisor twice",
+      "languageKey": "cpp17",
+      "find": "if (paired != divisor)",
+      "replace": "if (true)"
+    },
+    {
+      "id": "single-space",
+      "label": "Prints only one separator space",
+      "languageKey": "cpp17",
+      "find": "<< \"  \" << kind",
+      "replace": "<< \" \" << kind"
+    }
+  ]
+}

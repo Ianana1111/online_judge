@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10142-australian-voting",
+  "title": "同步淘汰最低票候選人，依選票排名重新計票",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

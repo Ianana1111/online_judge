@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/514.pdf"
+  ],
+  "constraints": [
+    "1<=N<=1000;each target a permutation1..N;one LIFO station;0 ends query block and final0 ends input;blank line after block."
+  ],
+  "independentMethod": "A permutation is stack-realizable iff it avoids312; detect a prefix maximum and a later intermediate value using ordered remaining labels. Exhaustive push/pop state exploration checks every permutation through7.",
+  "oracleFile": "scripts/editorials/oracles/ordered_domains.py",
+  "mutations": [
+    {
+      "id": "queue-pop",
+      "label": "Uses the oldest parked coach rather than the top",
+      "languageKey": "cpp17",
+      "find": "while (next <= n && (station.empty() || station.back() != wanted)) station.push_back(next++);\n                if (station.empty() || station.back() != wanted) { possible = false; break; }\n                station.pop_back();",
+      "replace": "while (next <= n && (station.empty() || station.front() != wanted)) station.push_back(next++);\n                if (station.empty() || station.front() != wanted) { possible = false; break; }\n                station.erase(station.begin());"
+    },
+    {
+      "id": "skip-last-coach",
+      "label": "Never pushes the last incoming coach",
+      "languageKey": "cpp17",
+      "find": "next <= n",
+      "replace": "next < n"
+    }
+  ]
+}

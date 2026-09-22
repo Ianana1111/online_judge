@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10190.pdf"
+  ],
+  "constraints": [
+    "0 <= n,m < 2000000000; EOF; local clarified k>=2 contract; 0 0 is not a terminator"
+  ],
+  "independentMethod": "Build ascending powers using multiplication, then reverse; independent of repeated division.",
+  "oracleFile": "scripts/editorials/oracles/simulation.py",
+  "mutations": [
+    {
+      "id": "ignore-remainder",
+      "label": "Truncates divisions with a nonzero remainder",
+      "languageKey": "cpp17",
+      "find": "current % m == 0",
+      "replace": "true"
+    },
+    {
+      "id": "zero-divisions",
+      "label": "Accepts a zero-division singleton contrary to the clarified local contract",
+      "languageKey": "cpp17",
+      "find": "n <= 1 || m <= 1",
+      "replace": "n == 0 || m <= 1"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "c380ed072a8ed20b53f5299ce185dd6a8cdc6f2cac891d378038da46bb7a720b",
+    "file": "content/editorials/uva-10190-divide-but-not-quite-conquer/statement.md",
+    "reason": "Explicitly document the existing local nontrivial-division convention for underspecified n=1, without claiming the original PDF explicitly states k>=2.",
+    "source": "https://onlinejudge.org/external/101/10190.pdf"
+  }
+}

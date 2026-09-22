@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/544.pdf"
+  ],
+  "constraints": [
+    "2<=N<=200;1<=R<=19900;undirected road capacities0..10000;names<=30chars;single-route maximum bottleneck between distinct cities;00 sentinel."
+  ],
+  "independentMethod": "Sort edges by descending capacity and union endpoints until query vertices connect; threshold connectivity independently checked against every simple path in small graphs.",
+  "oracleFile": "scripts/editorials/oracles/graph_structures.py",
+  "mutations": [
+    {
+      "id": "sum-route",
+      "label": "Adds road capacity instead of taking the bottleneck",
+      "languageKey": "cpp17",
+      "find": "min(best[u],capacity[u][v])",
+      "replace": "best[u] + capacity[u][v]"
+    },
+    {
+      "id": "last-parallel-road",
+      "label": "Overwrites rather than taking maximum parallel road",
+      "languageKey": "cpp17",
+      "find": "max(capacity[u][v],w)",
+      "replace": "w"
+    }
+  ]
+}

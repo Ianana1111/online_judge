@@ -1,0 +1,8 @@
+{
+  "slug": "uva-389-basically-speaking",
+  "title": "本站七位顯示規則：對目標進位的七次方取模",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

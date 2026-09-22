@@ -1,0 +1,30 @@
+{
+  "sources": [
+    "repository:packages/db/audit/gpe-recovery-cases.json#2015-07"
+  ],
+  "constraints": [
+    "Positive grid dimensions; nonnegative cells; right/down only; both endpoints counted; no invented maximum size"
+  ],
+  "independentMethod": "Dijkstra over the directed grid, independent of row-major dynamic programming.",
+  "oracleFile": "scripts/editorials/oracles/gpe.py",
+  "oracleDependencies": [
+    "scripts/author-gpe-recovery.py",
+    "scripts/gpe_recovery_references.py"
+  ],
+  "mutations": [
+    {
+      "id": "omit-start",
+      "label": "Omits the starting cell cost",
+      "languageKey": "cpp17",
+      "find": "dp[c] = value;",
+      "replace": "dp[c] = 0;"
+    },
+    {
+      "id": "ignore-left",
+      "label": "Ignores cheaper arrivals from the left",
+      "languageKey": "cpp17",
+      "find": "min(dp[c], dp[c - 1])",
+      "replace": "dp[c]"
+    }
+  ]
+}

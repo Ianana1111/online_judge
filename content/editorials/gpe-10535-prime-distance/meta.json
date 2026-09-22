@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10535-prime-distance",
+  "title": "用奇偶性限制最多四個佔用格，再分配相同硬幣",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

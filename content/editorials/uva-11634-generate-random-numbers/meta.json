@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11634-generate-random-numbers",
+  "title": "記錄已出現值，遇到重複時停止平方中取",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

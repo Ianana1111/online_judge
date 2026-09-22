@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10249.pdf"
+  ],
+  "constraints": [
+    "M1..70;N1..50;teammembers1..100;tablecapacity2..100;distincttableswithineachteam;tabletotals<=capacity;ANYvalidseating;0iffimpossible;00sentinel."
+  ],
+  "independentMethod": "Independent Gale-Ryser upper-capacity inequalities on descending team sizes, plus exhaustive small seating enumerations. Validate every concrete table assignment rather than requiring a single standard arrangement.",
+  "oracleFile": "scripts/editorials/oracles/constructive_witnesses.py",
+  "mutations": [
+    {
+      "id": "same-team-same-table",
+      "label": "Allows two members of one team at a table",
+      "languageKey": "cpp17",
+      "find": "flow.add(i,teams+j,1)",
+      "replace": "flow.add(i,teams+j,2)"
+    },
+    {
+      "id": "no-rerouting",
+      "label": "Removes reverse residual updates",
+      "languageKey": "cpp17",
+      "find": "graph[e.to][e.reverse].capacity+=pushed;",
+      "replace": "/* no reverse residual update */"
+    },
+    {
+      "id": "legal-alternate-witness",
+      "label": "Different valid optimal witness or feasible allocation",
+      "languageKey": "cpp17",
+      "find": "for(int j=0;j<tables;++j)edge[i][j]=flow.add(i,teams+j,1);",
+      "replace": "for(int j=tables-1;j>=0;--j)edge[i][j]=flow.add(i,teams+j,1);",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Original problem permits multiple optimal or feasible outputs. Verify original-input membership and ordering for covers, maximum strict elephant chains, exact per-team/table seating constraints, or both matrix marginals with1..20cells. Reject false impossible claims and nonoptimal witnesses; do not require the particular stored reference witness."
+  }
+}

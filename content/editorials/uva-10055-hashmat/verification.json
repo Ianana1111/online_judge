@@ -1,0 +1,35 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10055.pdf"
+  ],
+  "constraints": [
+    "EOF pairs;0<=a,b<=2^32 INCLUSIVE perofficialstatement;arbitrarypairorder;absolute difference;00isdata;notnarrowoldinputSpec<2^31."
+  ],
+  "independentMethod": "Independent grade-school decimal subtraction with explicit borrowing after magnitude comparison; exact upper endpoint and reversed pairs verify wide-integer reference.",
+  "oracleFile": "scripts/editorials/oracles/metadata_models.py",
+  "mutations": [
+    {
+      "id": "narrow-input",
+      "label": "Reads legal large populations into signed32bit integers",
+      "languageKey": "cpp17",
+      "find": "long long a,b;",
+      "replace": "int a,b;"
+    },
+    {
+      "id": "assumes-order",
+      "label": "Assumes second army is always larger",
+      "languageKey": "cpp17",
+      "find": "max(a,b)-min(a,b)",
+      "replace": "b-a"
+    }
+  ],
+  "textCorrections": [
+    {
+      "field": "inputSpecMd",
+      "beforeHash": "0e2a2361f9dcbdad85b2d9a1311db137bb35cfafa6a5448685fe15f400f34244",
+      "value": "Each line contains two integers a and b, with 0 <= a, b <= 2^32 (inclusive), in either order. Read complete pairs until end of file; 0 0 is an ordinary input pair.",
+      "reason": "Correct the narrower imported <2^31 range to the official statement: input values are not greater than2^32. This changes the documented input contract and requires new judge and oracle evidence.",
+      "source": "https://onlinejudge.org/external/100/10055.pdf"
+    }
+  ]
+}

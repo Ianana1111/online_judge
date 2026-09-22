@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/580.pdf"
+  ],
+  "constraints": [
+    "stackheight1..30 as specified in background;L/U strings;contains at leastone UUU;count each stringonce;0 sentinel."
+  ],
+  "independentMethod": "Four-state automaton tracks trailing0/1/2 U or already-dangerous absorbing state, independent of complementary tribonacci; allbinary strings through15 and complete1..30 domain checked.",
+  "oracleFile": "scripts/editorials/oracles/finite_enumeration.py",
+  "mutations": [
+    {
+      "id": "omits-two-u-tail",
+      "label": "Omits the LUU ending class",
+      "languageKey": "cpp17",
+      "find": " + safe[length-3]",
+      "replace": ""
+    },
+    {
+      "id": "counts-occurrences",
+      "label": "Counts each UUU placement and double-counts overlap",
+      "languageKey": "cpp17",
+      "find": "(1LL << n) - safe[n]",
+      "replace": "(n < 3 ? 0LL : (n-2) * (1LL << (n-3)))"
+    }
+  ]
+}

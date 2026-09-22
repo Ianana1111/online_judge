@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10429-contest-scoreboard",
+  "title": "按提交順序累計首次 AC，最後依題數、罰時與隊號排序",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

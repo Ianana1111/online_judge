@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/114/11456.pdf"
+  ],
+  "constraints": [
+    "0<=N<=2000;distinct nonnegative integer weights;fixed arrival order;only prepend/append/skip;strict descending final train;no explicit weight-width assumption."
+  ],
+  "independentMethod": "Coordinate-compressed Fenwick prefix maxima compute future increasing/decreasing chains in O(NlogN); exhaustive forward prepend/append/skip state exploration checks every permutation through7.",
+  "oracleFile": "scripts/editorials/oracles/sequence_choices.py",
+  "mutations": [
+    {
+      "id": "double-counts-first",
+      "label": "Counts initial car twice",
+      "languageKey": "cpp17",
+      "find": "rise[i] + fall[i] - 1",
+      "replace": "rise[i] + fall[i]"
+    },
+    {
+      "id": "only-front",
+      "label": "Ignores ability to append lighter cars",
+      "languageKey": "cpp17",
+      "find": "rise[i] + fall[i] - 1",
+      "replace": "rise[i]"
+    }
+  ]
+}

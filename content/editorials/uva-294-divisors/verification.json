@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/2/294.pdf"
+  ],
+  "constraints": [
+    "1<=L<=U<=1e9;U-L<=10000 inclusive;positive divisors include1 andself;smallest number on tiedmaximum."
+  ],
+  "independentMethod": "Enumerate divisor pairs across the interval: each d<=sqrt(U) visits multiples>=d² and contributes two partners except squares. Independent of prime exponents; allsmall integers and max-width near1e9 checked.",
+  "oracleFile": "scripts/editorials/oracles/finite_enumeration.py",
+  "mutations": [
+    {
+      "id": "drops-large-prime",
+      "label": "Omits residual prime factor",
+      "languageKey": "cpp17",
+      "find": "if (remaining[i] > 1) counts[i] *= 2;",
+      "replace": ""
+    },
+    {
+      "id": "largest-tie",
+      "label": "Chooses the largest rather than smallest tied number",
+      "languageKey": "cpp17",
+      "find": "counts[i] > counts[best]",
+      "replace": "counts[i] >= counts[best]"
+    }
+  ]
+}

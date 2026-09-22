@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/117/11792.pdf"
+  ],
+  "constraints": [
+    "N<=10000;S<=100;connected bidirectional consecutive-station graph;each line has distinct endpoints;important iff in>=2 distinct lines;1..100 important stations;min average only among important stations;smallest ID ties."
+  ],
+  "independentMethod": "Suppress degree-two nonimportant chain vertices into weighted edges, then use Dijkstra on the compressed graph; independently compare full Floyd matrices on random small networks.",
+  "oracleFile": "scripts/editorials/oracles/routes_algebra.py",
+  "mutations": [
+    {
+      "id": "includes-secondary",
+      "label": "Treats every used station as important",
+      "languageKey": "cpp17",
+      "find": "if (lines[u]>1)",
+      "replace": "if (lines[u]>=1)"
+    },
+    {
+      "id": "largest-tie",
+      "label": "Chooses the largest tied station",
+      "languageKey": "cpp17",
+      "find": "if (sum<best)",
+      "replace": "if (sum<=best)"
+    }
+  ]
+}

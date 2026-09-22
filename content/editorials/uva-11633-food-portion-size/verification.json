@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/116/11633.pdf"
+  ],
+  "constraints": [
+    "n1..1000;a,b1..10;yi1..100;continuouspositiveportionS;ceil(yi/S)<=3;minimize weighted waste+ALLfetches;reducedfractionwithspacesslash."
+  ],
+  "independentMethod": "Independent exhaustive sixth-unit lattice covers every rational breakpoint y/k(k<=3); computes exact Fraction costs directly from ceil demands. Enumerating all1..3 visit allocations independently verifies small cases.",
+  "oracleFile": "scripts/editorials/oracles/rational_surfaces.py",
+  "mutations": [
+    {
+      "id": "integer-portions",
+      "label": "Considers only integer portion sizes",
+      "languageKey": "cpp17",
+      "find": "if(3*p<largest*q)continue;",
+      "replace": "if(3*p<largest*q||p%q)continue;"
+    },
+    {
+      "id": "only-two-visits",
+      "label": "Forbids a legal third visit",
+      "languageKey": "cpp17",
+      "find": "if(3*p<largest*q)continue;",
+      "replace": "if(2*p<largest*q)continue;"
+    }
+  ]
+}

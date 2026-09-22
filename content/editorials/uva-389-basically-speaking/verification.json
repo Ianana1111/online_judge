@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/389.pdf"
+  ],
+  "constraints": [
+    "LOCALVARIANT:exactly7digits;leftzeropad;overflowkeepright7;from/to2..16;uppercasevaliddigits;leadingzeros;EOFlines. OriginalUVaERRORruledoesnotapply."
+  ],
+  "independentMethod": "Parse full arbitrary-precision integer in source base then build full target expansion, slice last7 and left-zero-pad, independent of modular streaming reference.",
+  "oracleFile": "scripts/editorials/oracles/formatting.py",
+  "mutations": [
+    {
+      "id": "six-digits",
+      "label": "Uses six-digit modulo and loses seventh",
+      "languageKey": "cpp17",
+      "find": "i < 7; ++i",
+      "replace": "i < 6; ++i"
+    },
+    {
+      "id": "wrong-from",
+      "label": "Parses using target radix",
+      "languageKey": "cpp17",
+      "find": "value * from +",
+      "replace": "value * to +"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "ebd003e798c88cab0974cd44b938a74898071f4814c54574b06cb611cc95389f",
+    "file": "content/editorials/uva-389-basically-speaking/statement.md",
+    "reason": "Clarify existing local seven-digit zero-padding/truncation rule, already used by the hidden corpus. Do not silently replace it with the different original UVa ERROR behavior.",
+    "source": "https://onlinejudge.org/external/3/389.pdf"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/113/11309.pdf"
+  ],
+  "constraints": [
+    "valid24hourHH:MM;ignore leading zeros in hours then minutes ifhour0;strict successor;cyclic day;formattedtwo-digit fields."
+  ],
+  "independentMethod": "Increment real clock minutes from1 to1440 and check stripped decimal text, independently validated at all1440 origins and explicit leading-zero/cross-midnight anchors.",
+  "oracleFile": "scripts/editorials/oracles/missing_exact.py",
+  "mutations": [
+    {
+      "id": "allows-current-time",
+      "label": "Includes current time in successor search",
+      "languageKey": "cpp17",
+      "find": "upper_bound(valid.begin(),valid.end(),time)",
+      "replace": "lower_bound(valid.begin(),valid.end(),time)"
+    },
+    {
+      "id": "keeps-leading-zeroes",
+      "label": "Checks fixed four-digit time instead of stripped representation",
+      "languageKey": "cpp17",
+      "find": "string digits = to_string(hours * 100 + minutes);",
+      "replace": "string digits = to_string(hours * 100 + minutes); digits = string(4 - digits.size(),'0') + digits;"
+    }
+  ]
+}

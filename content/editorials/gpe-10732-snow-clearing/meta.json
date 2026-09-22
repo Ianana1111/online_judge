@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10732-snow-clearing",
+  "title": "雙向車道形成 Euler 迴路，總長直接換算時間",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

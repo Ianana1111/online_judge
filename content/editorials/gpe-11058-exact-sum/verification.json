@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11057.pdf"
+  ],
+  "constraints": [
+    "2<=N<=10000;book price<=1e6;two distinct indices;duplicates allowed;guaranteed sum solution;minimize price difference;EOF."
+  ],
+  "independentMethod": "Frequency map enumerates complementary prices, requiring count>=2 for equal prices, then minimizes the difference; brute force distinct-index pairs validates the oracle.",
+  "oracleFile": "scripts/editorials/oracles/missingsequences.py",
+  "mutations": [
+    {
+      "id": "reuse-one-book",
+      "label": "Allows buying the same index twice",
+      "languageKey": "cpp17",
+      "find": "while (left < right)",
+      "replace": "while (left <= right)"
+    },
+    {
+      "id": "first-pair-only",
+      "label": "Stops at first valid rather than closest prices",
+      "languageKey": "cpp17",
+      "find": "++left; --right; }",
+      "replace": "break; }"
+    }
+  ]
+}

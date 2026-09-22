@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10015.pdf"
+  ],
+  "constraints": [
+    "1<=N<=3501;successive prime elimination steps2,3,5,...;count resumes after removed person;1based result;0 sentinel."
+  ],
+  "independentMethod": "Forward elimination uses Fenwick order statistics to remove the prime-counted live person; all3501 legal sizes covered and small cases checked against literal list deletions.",
+  "oracleFile": "scripts/editorials/oracles/missing_exact.py",
+  "mutations": [
+    {
+      "id": "prime-order-reversed",
+      "label": "Uses primes forward while reversing population size",
+      "languageKey": "cpp17",
+      "find": "primes[n - size]",
+      "replace": "primes[size - 2]"
+    },
+    {
+      "id": "missing-coordinate-shift",
+      "label": "Adds step-1 during backward reconstruction",
+      "languageKey": "cpp17",
+      "find": "survivor + primes[n - size]",
+      "replace": "survivor + primes[n - size] - 1"
+    }
+  ]
+}

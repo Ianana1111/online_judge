@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11995-i-can-guess-the-data-structure",
+  "title": "同時模擬三個候選，只淘汰與紀錄矛盾者",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/397.pdf"
+  ],
+  "constraints": [
+    "1..20binaryoperations;2..21signedintegeroperands;optionalspaces;+-*/;divisionexactwithnonzerodivisor;ALLmuldivleftbeforeALLaddsubleft;variable1..8letters;allstatesrequired;spacingunimportant;blankbetweenequations."
+  ],
+  "independentMethod": "Independent shunting-yard expression tree, execute postorder multiplication/division nodes before addition/subtraction nodes, rendering partially collapsed trees after every operation. Compare normalized integer/operator states, not only final values.",
+  "oracleFile": "scripts/editorials/oracles/lexical_witnesses.py",
+  "mutations": [
+    {
+      "id": "ignores-precedence",
+      "label": "Always performs the leftmost operation",
+      "languageKey": "python3",
+      "find": "i = high[0] if high else 0",
+      "replace": "i = 0"
+    },
+    {
+      "id": "right-associative-add-sub",
+      "label": "Performs additions/subtractions from the right",
+      "languageKey": "python3",
+      "find": "i = high[0] if high else 0",
+      "replace": "i = high[0] if high else len(operators) - 1"
+    },
+    {
+      "id": "legal-alternate-output",
+      "label": "Another permitted ordering, spacing or shortest path",
+      "languageKey": "python3",
+      "find": "return text + ' = ' + variable",
+      "replace": "return (text + '=' + variable).replace(' ', '')",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Respect the original semantic output contract: exact original excuse/name multisets may be reordered, complete anagram lists retain all multiplicities withconsecutive numbering, and algebra solutions retain all required operator/number states while allowing explicitly insignificant spacing. Validate all content and reject missing/extra records."
+  }
+}

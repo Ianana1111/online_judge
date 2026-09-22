@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11908-skyscraper",
+  "title": "按廣告結束樓層排序，用加權區間 DP 最大化收益",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

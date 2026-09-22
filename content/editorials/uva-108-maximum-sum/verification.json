@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/1/108.pdf"
+  ],
+  "constraints": [
+    "1<=N<=100;values[-127,127];nonempty contiguous rectangle;local multiple datasets,0 sentinel."
+  ],
+  "independentMethod": "Two-dimensional prefix sums enumerate every rectangle and evaluate exact four-corner sums, independently of Kadane row compression; brute individual-cell summation validates tiny matrices.",
+  "oracleFile": "scripts/editorials/oracles/matrixsets.py",
+  "mutations": [
+    {
+      "id": "empty-rectangle",
+      "label": "Allows an empty rectangle with sum zero",
+      "languageKey": "cpp17",
+      "find": "int answer = INT_MIN;",
+      "replace": "int answer = 0;"
+    },
+    {
+      "id": "single-row-only",
+      "label": "Never considers rectangles spanning multiple rows",
+      "languageKey": "cpp17",
+      "find": "bottom < n",
+      "replace": "bottom == top"
+    }
+  ]
+}

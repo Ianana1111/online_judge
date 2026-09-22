@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11730-number-transformation",
+  "title": "把質因數增量變成有向邊，以 BFS 求最少轉換次數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

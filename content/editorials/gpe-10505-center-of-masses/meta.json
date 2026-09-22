@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10505-center-of-masses",
+  "title": "先排出凸多邊形邊界，以有向面積計算質心",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

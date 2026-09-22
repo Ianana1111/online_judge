@@ -1,0 +1,8 @@
+{
+  "slug": "uva-13211-geonosis",
+  "title": "將刪塔順序反轉，逐步開放 Floyd 的中繼點",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

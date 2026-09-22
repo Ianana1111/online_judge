@@ -1,0 +1,8 @@
+{
+  "slug": "uva-263-number-chains",
+  "title": "每步重新排序目前數字，重複值出現時停止",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

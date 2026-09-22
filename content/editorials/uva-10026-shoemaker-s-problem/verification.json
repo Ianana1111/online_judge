@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10026.pdf"
+  ],
+  "constraints": [
+    "Tcases;1<=N<=1000;1<=time<=1000;1<=fine<=10000;waitingbeforestart;minfine;lexicographicallysmallestIDs;blankbetweencases."
+  ],
+  "independentMethod": "Sort exact Fraction(time,fine) keys with index tie-break; exhaustive schedule cost enumeration independently verifies all small instances.",
+  "oracleFile": "scripts/editorials/oracles/optimization.py",
+  "mutations": [
+    {
+      "id": "reverse-ratio",
+      "label": "Reverses the optimal ratio order",
+      "languageKey": "cpp17",
+      "find": "return ab < ba;",
+      "replace": "return ab > ba;"
+    },
+    {
+      "id": "reverse-tie",
+      "label": "Breaks equal ratios by descendingID",
+      "languageKey": "cpp17",
+      "find": "return a.id < b.id;",
+      "replace": "return a.id > b.id;"
+    }
+  ]
+}

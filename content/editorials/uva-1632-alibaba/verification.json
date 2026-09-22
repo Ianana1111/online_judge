@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/16/1632.pdf"
+  ],
+  "constraints": [
+    "N1..10000;sorted distinct integer coordinates;instant collection;unit-speed;arbitrary starting point;LOCAL arrival strictly before deadline;EOF;64-bit input integers with widened arithmetic."
+  ],
+  "independentMethod": "Independent reverse latest-start feasibility DP for a candidate completion bound, followed by binary search; endpoint straight-walk certificates meet the unavoidable full-span lower bound on large instances. Exhaustive permutations with first-pass collection validate small instances.",
+  "oracleFile": "scripts/editorials/oracles/paths_mixtures.py",
+  "mutations": [
+    {
+      "id": "inclusive-deadline",
+      "label": "Allows arrival at the disappearance time",
+      "languageKey": "cpp17",
+      "find": "candidate < deadline",
+      "replace": "candidate <= deadline"
+    },
+    {
+      "id": "leftmost-start",
+      "label": "Only permits the leftmost starting treasure",
+      "languageKey": "cpp17",
+      "find": "deadline[i]>0?0:-1",
+      "replace": "i==0&&deadline[i]>0?0:-1"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "e345f917dd6f9e96d0adc3961a98464faf99aa39666c36f27f17b5bde1cf3096",
+    "file": "content/editorials/uva-1632-alibaba/statement.md",
+    "reason": "Disambiguate the deadline boundary and unit speed; strict arrival preserves every archived answer, including the deadline-equality counterexample. This is an explicit local clarification, not a claim that the original sample disambiguates equality.",
+    "source": "https://onlinejudge.org/external/16/1632.pdf"
+  }
+}

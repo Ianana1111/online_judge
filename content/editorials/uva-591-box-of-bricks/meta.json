@@ -1,0 +1,8 @@
+{
+  "slug": "uva-591-box-of-bricks",
+  "title": "只累加高於平均的磚塊，就是最少搬運次數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

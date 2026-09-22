@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/124/12442.pdf"
+  ],
+  "constraints": [
+    "1<=T<=20;2<=N<=50000;exactlyone outgoing edge per person;no self-loop;arbitrary source-line order;maximum distinct reach with smallest-ID tie."
+  ],
+  "independentMethod": "Iterative Kosaraju SCC condensation counts component weights along the functional DAG, independent of indegree peeling; exhaustive small non-self functional graphs and50000-node chains/cycles.",
+  "oracleFile": "scripts/editorials/oracles/ranks_schedules.py",
+  "mutations": [
+    {
+      "id": "largest-id-tie",
+      "label": "Overwrites tied maximum with a larger label",
+      "languageKey": "cpp17",
+      "find": "reach[i] > reach[best]",
+      "replace": "reach[i] >= reach[best]"
+    },
+    {
+      "id": "cycle-as-one",
+      "label": "Counts every cycle as one reachable person",
+      "languageKey": "cpp17",
+      "find": "reach[v] = cycle.size();",
+      "replace": "reach[v] = 1;"
+    }
+  ]
+}

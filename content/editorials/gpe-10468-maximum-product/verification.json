@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11059.pdf"
+  ],
+  "constraints": [
+    "1<=N<=18;-10<=Si<=10;contiguous nonempty product;zero if no positive;EOF;maximum magnitude1e18."
+  ],
+  "independentMethod": "Track minimum and maximum products ending at each position; a negative multiplier swaps their roles, independent of reference interval enumeration.",
+  "oracleFile": "scripts/editorials/oracles/gpecore.py",
+  "mutations": [
+    {
+      "id": "narrow-product",
+      "label": "Uses32bit intermediate products",
+      "languageKey": "cpp17",
+      "find": "product *= a[right];",
+      "replace": "product = int(product * a[right]);"
+    },
+    {
+      "id": "negative-answer",
+      "label": "Allows a negative result when no positive interval",
+      "languageKey": "cpp17",
+      "find": "long long answer = 0;",
+      "replace": "long long answer = LLONG_MIN;"
+    }
+  ]
+}

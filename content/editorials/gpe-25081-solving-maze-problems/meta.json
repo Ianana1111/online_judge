@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-25081-solving-maze-problems",
+  "title": "先找出可達路徑，再只標記通往終點的前驅鏈",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

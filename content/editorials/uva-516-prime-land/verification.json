@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/516.pdf"
+  ],
+  "constraints": [
+    "descending distinct prime/exponent pairs;positive exponents;2<X<=32767;factorX-1;0 line sentinel."
+  ],
+  "independentMethod": "Smallest-prime-factor table decomposes each value independently of displayed trial division; all32765 legal X checked with exact reconstruction, and excessive old products repaired only by reducing exponents.",
+  "oracleFile": "scripts/editorials/oracles/ordered_domains.py",
+  "mutations": [
+    {
+      "id": "forgets-subtraction",
+      "label": "Factors X instead of X-1",
+      "languageKey": "cpp17",
+      "find": "rest = value - 1",
+      "replace": "rest = value"
+    },
+    {
+      "id": "drops-residual-prime",
+      "label": "Omits the last remaining prime factor",
+      "languageKey": "cpp17",
+      "find": "if (rest > 1) factors.push_back({rest,1});",
+      "replace": ""
+    }
+  ]
+}

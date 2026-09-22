@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/128/12820.pdf"
+  ],
+  "constraints": [
+    "<=30EOFcases;1<=n<=10000;lowercasewordlength1..30;atleast2distinctletters;allpositive frequenciesdistinct."
+  ],
+  "independentMethod": "Run-length count sorted characters then compare every pair of positive frequencies, independent of array/set uniqueness.",
+  "oracleFile": "scripts/editorials/oracles/records.py",
+  "mutations": [
+    {
+      "id": "single-letter",
+      "label": "Allows only one distinct letter",
+      "languageKey": "cpp17",
+      "find": "distinct >= 2",
+      "replace": "distinct >= 1"
+    },
+    {
+      "id": "ignore-ties",
+      "label": "Ignores duplicate frequencies",
+      "languageKey": "cpp17",
+      "find": "if (!frequencies.insert(count).second) unique = false;",
+      "replace": "frequencies.insert(count);"
+    }
+  ]
+}

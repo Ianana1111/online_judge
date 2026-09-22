@@ -1,0 +1,8 @@
+{
+  "slug": "uva-993-product-of-digits",
+  "title": "枚舉數字六的用量，再壓縮剩餘質因數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/2/256.pdf"
+  ],
+  "constraints": [
+    "digits in{2,4,6,8};include leading-zero strings;ascending values per query;preserve repeated query order;EOF."
+  ],
+  "independentMethod": "Enumerate the first half a and solve s(s-1)=a*(base-1) using an exact discriminant, including both roots for a=0; exhaustive complete two/four-digit domains validate the algebraic oracle.",
+  "oracleFile": "scripts/editorials/oracles/missingsequences.py",
+  "mutations": [
+    {
+      "id": "omits-zero",
+      "label": "Skips the all-zero square",
+      "languageKey": "cpp17",
+      "find": "root = 0; root < base",
+      "replace": "root = 1; root < base"
+    },
+    {
+      "id": "drops-leading-zeroes",
+      "label": "Prints numbers without required width",
+      "languageKey": "cpp17",
+      "find": "setw(digits)",
+      "replace": "setw(0)"
+    }
+  ]
+}

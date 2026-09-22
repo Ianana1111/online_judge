@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10465-necklace",
+  "title": "用兩條邊不相交路徑判斷是否存在環形項鍊",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

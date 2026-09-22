@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/15/1585.pdf"
+  ],
+  "constraints": [
+    "Tcases;OXonly;1<=length<80;scoreeachO=currentconsecutiveO;Xresetsstreakonly."
+  ],
+  "independentMethod": "Split by X and sum triangular numbers k(k+1)/2 for complete O runs, independent of per-character score accumulation.",
+  "oracleFile": "scripts/editorials/oracles/structures.py",
+  "mutations": [
+    {
+      "id": "no-reset",
+      "label": "Keeps streak across wrong answers",
+      "languageKey": "cpp17",
+      "find": "else streak = 0;",
+      "replace": "else streak = streak;"
+    },
+    {
+      "id": "flat-score",
+      "label": "Awards one point per correct answer",
+      "languageKey": "cpp17",
+      "find": "total += streak;",
+      "replace": "total += 1;"
+    }
+  ]
+}

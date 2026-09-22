@@ -1,0 +1,45 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/7/709.pdf"
+  ],
+  "constraints": [
+    "W1..80;wordASCII33..126;wordlen<=W;wordcharacters<=10000/paragraph;LOCAL<=50000wordcharacters/input;alllinesincludinglastjustifiedexceptsingleword;singletonshortcost500;globalfirstdifferinghorizontalgap smaller."
+  ],
+  "independentMethod": "Independent forward shortest-path costs, backward tight-edge reachability, then epsilon-closure NFA frontier selecting the smallest next horizontal gap across ALL optimal layouts; exhaustive all partitions and positive gap compositions crosscheck small paragraphs.",
+  "oracleFile": "scripts/editorials/oracles/formatting_text.py",
+  "mutations": [
+    {
+      "id": "free-short-singleton",
+      "label": "Forgets the500 penalty for a short singleton",
+      "languageKey": "cpp17",
+      "find": "letters==width?0:500",
+      "replace": "0"
+    },
+    {
+      "id": "long-gaps-first",
+      "label": "Puts larger gaps before smaller gaps",
+      "languageKey": "cpp17",
+      "find": "q+(j-i-1>=gaps-r)",
+      "replace": "q+(j-i-1<r)"
+    },
+    {
+      "id": "crlf-equivalent",
+      "label": "Equivalent CRLF paragraph output",
+      "languageKey": "cpp17",
+      "find": "cout<<'\\n';\n        }",
+      "replace": "cout<<\"\\r\\n\";\n        }",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Validate all original words/order, every justified width, optimal total badness and the first differing horizontal gap; permit layouts tied by the actual specification rather than arbitrary byte equality."
+  },
+  "statementCorrection": {
+    "beforeHash": "b558c133928ee169d298353ae50b41e769546d38ff4780a793eae7afa67dd2ee",
+    "file": "content/editorials/uva-709-formatting-text/statement.md",
+    "reason": "State a measured whole-file resource bound while retaining the original full per-paragraph limit; explicitly describe horizontal-gap comparison and singleton/last-line requirements already present in the source.",
+    "source": "https://onlinejudge.org/external/7/709.pdf"
+  }
+}

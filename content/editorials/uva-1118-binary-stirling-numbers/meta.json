@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1118-binary-stirling-numbers",
+  "title": "把 Stirling 數的奇偶性化為二進位無進位條件",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

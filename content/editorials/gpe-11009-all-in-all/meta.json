@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-11009-all-in-all",
+  "title": "由左到右找最早可用字元，判斷是否為子序列",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

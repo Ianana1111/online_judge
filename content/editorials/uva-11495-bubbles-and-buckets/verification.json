@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/114/11495.pdf"
+  ],
+  "constraints": [
+    "2<=N<=100000;permutation1..N;adjacent inversion swaps;Marcelo first;LOCAL output winner AND total moves;0 sentinel."
+  ],
+  "independentMethod": "Merge-sort cross inversion counting independent of Fenwick ranks; all permutations of small n validated by explicit legal-game recursion and pair enumeration.",
+  "oracleFile": "scripts/editorials/oracles/matrixsets.py",
+  "mutations": [
+    {
+      "id": "narrow-moves",
+      "label": "Stores inversion total in 32-bit integer",
+      "languageKey": "cpp17",
+      "find": "long long moves = 0;",
+      "replace": "int moves = 0;"
+    },
+    {
+      "id": "wrong-player",
+      "label": "Swaps the winner parity",
+      "languageKey": "cpp17",
+      "find": "moves % 2 ? \"Marcelo\" : \"Carlos\"",
+      "replace": "moves % 2 ? \"Carlos\" : \"Marcelo\""
+    }
+  ]
+}

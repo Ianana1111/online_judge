@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10539-almost-prime-numbers",
+  "title": "列出質數的二次以上冪，再以二分查詢區間個數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

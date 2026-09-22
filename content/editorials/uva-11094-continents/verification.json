@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11094.pdf"
+  ],
+  "constraints": [
+    "1<=M,N<=20;at most two letters;land determined by starting cell;horizontal wrapping only;exclude entire initial component;EOF."
+  ],
+  "independentMethod": "Disjoint-set unions of right and downward land neighbors, including horizontal seam; exhaustive tiny maps checked against independent component enumeration.",
+  "oracleFile": "scripts/editorials/oracles/reachability.py",
+  "mutations": [
+    {
+      "id": "no-horizontal-wrap",
+      "label": "Treats both horizontal edges as walls",
+      "languageKey": "cpp17",
+      "find": "int nr = r + dy[d], nc = (c + dx[d] + cols) % cols;",
+      "replace": "int nr = r + dy[d], nc = c + dx[d]; if (nc < 0 || nc >= cols) continue;"
+    },
+    {
+      "id": "includes-home",
+      "label": "Includes the king current continent",
+      "languageKey": "cpp17",
+      "find": "flood(sy,sx); int answer = 0;",
+      "replace": "int answer = flood(sy,sx);"
+    }
+  ]
+}

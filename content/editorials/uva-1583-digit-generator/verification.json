@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/15/1583.pdf"
+  ],
+  "constraints": [
+    "Tqueries;1<=target<=100000;positivegenerators;smallestelse0;target=N+decimaldigitsum."
+  ],
+  "independentMethod": "For each target search only max(1,target-9*digits)..target in ascending order; independent inverse bounded search rather than global forward table.",
+  "oracleFile": "scripts/editorials/oracles/structures.py",
+  "mutations": [
+    {
+      "id": "last-generator",
+      "label": "Overwrites smallest generator",
+      "languageKey": "cpp17",
+      "find": " && smallest[target] == 0",
+      "replace": ""
+    },
+    {
+      "id": "drop-units",
+      "label": "Omits generator units digit",
+      "languageKey": "cpp17",
+      "find": "int x = value;",
+      "replace": "int x = value / 10;"
+    }
+  ]
+}

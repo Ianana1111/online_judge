@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/129/12911.pdf"
+  ],
+  "constraints": [
+    "N1..40;target and values -10^9..10^9;nonempty subsets;retain multiplicity of equal sums from different element choices;EOF;64-bit sums/counts."
+  ],
+  "independentMethod": "Gray-code traversal changes one chosen element at a time; count left sums with a frequency map and stream right sums for complementary lookups, without sorting/two-pointers; exhaustive small index subsets and distinct-value large cancellation cases.",
+  "oracleFile": "scripts/editorials/oracles/routes_algebra.py",
+  "mutations": [
+    {
+      "id": "includes-empty",
+      "label": "Counts the forbidden empty subset",
+      "languageKey": "cpp17",
+      "find": "if (target==0) --answer;",
+      "replace": ""
+    },
+    {
+      "id": "counts-distinct-sums",
+      "label": "Counts each matching sum pair only once",
+      "languageKey": "cpp17",
+      "find": "answer+=leftCount*rightCount;",
+      "replace": "answer+=1;"
+    }
+  ]
+}

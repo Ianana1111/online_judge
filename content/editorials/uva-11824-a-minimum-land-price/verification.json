@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/118/11824.pdf"
+  ],
+  "constraints": [
+    "1<=T<=10;fewerthan40 distinct positive land prices percase;0terminator;year starts1;2*L^t;budget5000000 inclusive;no borrowed price bound."
+  ],
+  "independentMethod": "Exact minimum-cost bipartite assignment of prices to years, using arbitrary-precision integer powers; a different optimizer from sorted greedy; brute-force small permutations verify assignment.",
+  "oracleFile": "scripts/editorials/oracles/collections_suite.py",
+  "mutations": [
+    {
+      "id": "cheapest-first",
+      "label": "Buys lowest initial price first",
+      "languageKey": "cpp17",
+      "find": "sort(prices.rbegin(), prices.rend());",
+      "replace": "sort(prices.begin(), prices.end());"
+    },
+    {
+      "id": "reject-exact-budget",
+      "label": "Rejects exactly the allowed budget",
+      "languageKey": "cpp17",
+      "find": "total + 2 * power > budget",
+      "replace": "total + 2 * power >= budget"
+    }
+  ]
+}

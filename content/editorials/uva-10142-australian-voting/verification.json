@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10142.pdf"
+  ],
+  "constraints": [
+    "Tpositive;N1..20;candidatenames<=80printablecharacters;0..1000completepermutationballots;strictmajority>half;simultaneousALLminimumelimination;allremainingtie;winnernamesANYorderwithmultiplicity;blankdatasets."
+  ],
+  "independentMethod": "Independent elimination by grouping ballots into first-live preferences and repeatedly filtering ranked ballots after a simultaneous deletion set; exhaustive small complete ballots cross-check majority and tie behavior.",
+  "oracleFile": "scripts/editorials/oracles/lexical_witnesses.py",
+  "mutations": [
+    {
+      "id": "half-is-majority",
+      "label": "Accepts exactly half the ballots as an outright win",
+      "languageKey": "cpp17",
+      "find": "2*most>(int)ballots.size()",
+      "replace": "2*most>=(int)ballots.size()"
+    },
+    {
+      "id": "remove-one-minimum",
+      "label": "Removes only one of multiple tied lowest candidates",
+      "languageKey": "cpp17",
+      "find": "if(alive[i]&&votes[i]==least)alive[i]=false;",
+      "replace": "if(alive[i]&&votes[i]==least){alive[i]=false;break;}"
+    },
+    {
+      "id": "legal-alternate-output",
+      "label": "Another permitted ordering, spacing or shortest path",
+      "languageKey": "cpp17",
+      "find": "for(int id:winners)cout<<names[id]<<'\\n';",
+      "replace": "reverse(winners.begin(),winners.end());for(int id:winners)cout<<names[id]<<'\\n';",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Respect the original semantic output contract: exact original excuse/name multisets may be reordered, complete anagram lists retain all multiplicities withconsecutive numbering, and algebra solutions retain all required operator/number states while allowing explicitly insignificant spacing. Validate all content and reject missing/extra records."
+  }
+}

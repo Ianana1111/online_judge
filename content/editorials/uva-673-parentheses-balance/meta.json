@@ -1,0 +1,8 @@
+{
+  "slug": "uva-673-parentheses-balance",
+  "title": "以堆疊配對括號，完整保留空字串案例",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

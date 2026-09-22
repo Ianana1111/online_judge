@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/117/11743.pdf"
+  ],
+  "constraints": [
+    "N lines;exactly16 decimal digits grouped4x4;leading zeros preserved;Luhn second-last alternating doubling;only checksum validity."
+  ],
+  "independentMethod": "Right-to-left alternating lookup table for doubled digits [0,2,4,6,8,1,3,5,7,9], independent of left-index parity and subtract9 arithmetic.",
+  "oracleFile": "scripts/editorials/oracles/collections_suite.py",
+  "mutations": [
+    {
+      "id": "wrong-parity",
+      "label": "Doubles wrong positions",
+      "languageKey": "cpp17",
+      "find": "i % 2 == 0",
+      "replace": "i % 2 == 1"
+    },
+    {
+      "id": "no-digit-sum",
+      "label": "Fails to sum doubled digits",
+      "languageKey": "cpp17",
+      "find": "if (value > 9) value -= 9;",
+      "replace": "if (value > 9) value = value;"
+    }
+  ]
+}

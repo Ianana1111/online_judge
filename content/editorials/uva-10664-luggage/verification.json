@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/106/10664.pdf"
+  ],
+  "constraints": [
+    "Tcases;eachline1..20luggageweights;total<=200;positiveweights;eachusedonce;equalweightsnotcounts;noNprefix."
+  ],
+  "independentMethod": "Arbitrary-precision bitset subset sums via bits|bits<<weight, independently of descending boolean table; exhaustive subset enumeration validates small cases.",
+  "oracleFile": "scripts/editorials/oracles/graphdp.py",
+  "mutations": [
+    {
+      "id": "unbounded-items",
+      "label": "Reuses a suitcase by ascending update",
+      "languageKey": "cpp17",
+      "find": "for (int sum = target; sum >= w; --sum)",
+      "replace": "for (int sum = w; sum <= target; ++sum)"
+    },
+    {
+      "id": "ignore-parity",
+      "label": "Truncates odd total",
+      "languageKey": "cpp17",
+      "find": "if (total % 2 == 0)",
+      "replace": "if (true)"
+    }
+  ]
+}

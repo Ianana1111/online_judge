@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10252-common-permutation",
+  "title": "逐字母取較小次數，依字典順序輸出多重集合交集",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

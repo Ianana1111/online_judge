@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10530-guessing-game",
+  "title": "維護仍可能的整數區間，結束時核對最後猜測",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

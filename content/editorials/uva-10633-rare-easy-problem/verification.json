@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/106/10633.pdf"
+  ],
+  "constraints": [
+    "10<=D<=10^18; D=0 sentinel; N at least two digits; all possible N ascending."
+  ],
+  "independentMethod": "Binary search the monotone original function N-floor(N/10), then enumerate its equal-value plateau, independent of quotient/remainder derivation.",
+  "oracleFile": "scripts/editorials/oracles/geometry.py",
+  "mutations": [
+    {
+      "id": "missing-smaller",
+      "label": "Drops the smaller answer when divisible by nine",
+      "languageKey": "cpp17",
+      "find": "cout << 10 * q - 1 << ' ' << 10 * q;",
+      "replace": "cout << 10 * q;"
+    },
+    {
+      "id": "float-division",
+      "label": "Rounds large quotients through double",
+      "languageKey": "cpp17",
+      "find": "difference / 9",
+      "replace": "(long long)((double)difference / 9.0)"
+    }
+  ]
+}

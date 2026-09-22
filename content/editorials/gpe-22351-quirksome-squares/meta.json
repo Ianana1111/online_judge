@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-22351-quirksome-squares",
+  "title": "只枚舉可能的平方根，再檢查十進位左右半部",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

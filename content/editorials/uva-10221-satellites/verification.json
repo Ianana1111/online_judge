@@ -1,0 +1,45 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10221.pdf"
+  ],
+  "constraints": [
+    "Earthradius6440km;nonnegative integerheight/angle;unitsdeg/min (60min=1deg);shorterarcturnnormalization;arc thenchord;six decimals."
+  ],
+  "independentMethod": "Independent Decimal Taylor sine at80-digit precision and arc-minute integer normalization; exact 0/60/180-degree special-angle identities, complement equivalence and all existing5000query corpus checked.",
+  "oracleFile": "scripts/editorials/oracles/circular_geometry.py",
+  "mutations": [
+    {
+      "id": "missing-earth-radius",
+      "label": "Uses altitude without Earth radius",
+      "languageKey": "cpp17",
+      "find": "6440.0L+height",
+      "replace": "(long double)height"
+    },
+    {
+      "id": "no-short-arc",
+      "label": "Uses the large arc for angles above180",
+      "languageKey": "cpp17",
+      "find": "if(degrees>180)degrees=360-degrees;",
+      "replace": ""
+    },
+    {
+      "id": "legal-leading-sign",
+      "label": "Explicit sign on the first decimal is an equivalent value",
+      "languageKey": "cpp17",
+      "find": "<<arc",
+      "replace": "<<showpos<<arc<<noshowpos",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Retain exact independently rounded decimal values and output layout, while accepting numeric signs and signed zero without accepting a wrong last digit."
+  },
+  "statementCorrection": {
+    "beforeHash": "ce2737acefbb65d8b47264e05f60d083188a41a81a34b006dc3fe962427cf20b",
+    "file": "content/editorials/uva-10221-satellites/statement.md",
+    "reason": "Make the distance convention explicit: minor arc and straight chord,60angularminutes per degree and complete-turn coincidence. This prevents legacy long-arc generator behavior from silently becoming a conflicting local rule.",
+    "source": "https://onlinejudge.org/external/102/10221.pdf"
+  }
+}

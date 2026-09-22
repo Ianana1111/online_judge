@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/2/240.pdf"
+  ],
+  "constraints": [
+    "R2..10;N2..26;frequency1..999;zero dummy padding untilL>=R and(L-1)%(R-1)==0;sort byweight then earliestcontainedreal letter withdummyafterZ;assigndigits inpoporder;weightedmean2decimal;blanklineaftereachset."
+  ],
+  "independentMethod": "Independent repeatedly sorted forest without heap; prepend assigned digits directly to each leaf code at every merge, then exact Fraction weighted mean. Exhaustive small frequency tuples and prefix-free/Kraft checks validate construction.",
+  "oracleFile": "scripts/editorials/oracles/rational_shapes.py",
+  "mutations": [
+    {
+      "id": "reverse-letter-ties",
+      "label": "Orders equal-weight nodes by latest letter",
+      "languageKey": "cpp17",
+      "find": "return letter>other.letter;",
+      "replace": "return letter<other.letter;"
+    },
+    {
+      "id": "unweighted-average",
+      "label": "Averages code lengths without frequencies",
+      "languageKey": "cpp17",
+      "find": "weighted+=frequency[i]*codes[i].size();total+=frequency[i];",
+      "replace": "weighted+=codes[i].size();total+=1;"
+    },
+    {
+      "id": "other-nearest-midpoint",
+      "label": "Legal exact midpoint alternative rounds down",
+      "languageKey": "cpp17",
+      "find": "(2*numerator*100+denominator)",
+      "replace": "(2*numerator*100+denominator-1)",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Respect exact numeric output contracts: derive rational centroid and water results from input, compare finite-decimal salaries by value, and retain deterministic Huffman codes while validating the exact frequency-weighted rounded mean. Do not accept arbitrary adjacent decimal values."
+  }
+}

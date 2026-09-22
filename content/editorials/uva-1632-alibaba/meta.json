@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1632-alibaba",
+  "title": "以已收集區間與所在端點，記錄最早抵達時間",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

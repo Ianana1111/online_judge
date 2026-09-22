@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/13/1366.pdf"
+  ],
+  "constraints": [
+    "n,m1..500;two mineral matrices0..1000;west/north straight belts only;one belt per cell;no turns;0 0 sentinel."
+  ],
+  "independentMethod": "Independent dynamic programming over nondecreasing west-prefix cuts in successive rows, maximizing row west-prefix plus north-suffix profits; exhaustive all binary belt assignments on grids through3x3.",
+  "oracleFile": "scripts/editorials/oracles/network_costs.py",
+  "mutations": [
+    {
+      "id": "wrong-prefix-axis",
+      "label": "Accumulates west minerals vertically",
+      "languageKey": "cpp17",
+      "find": "west[i][j]+=west[i][j-1]",
+      "replace": "west[i][j]+=west[i-1][j]"
+    },
+    {
+      "id": "omits-current-north-row",
+      "label": "Drops the bottom mineral in a north column",
+      "languageKey": "cpp17",
+      "find": "dp[j-1]+north[i][j]",
+      "replace": "dp[j-1]+north[i-1][j]"
+    }
+  ]
+}

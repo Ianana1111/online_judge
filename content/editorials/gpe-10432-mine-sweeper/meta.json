@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10432-mine-sweeper",
+  "title": "先判斷是否踩雷，再顯示所有地雷與已觸碰格的鄰雷數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

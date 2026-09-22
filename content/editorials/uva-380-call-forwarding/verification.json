@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/380.pdf"
+  ],
+  "constraints": [
+    "1<=systems<=10;0..100 requests;extensions1..9998;0<=start<=end<=8784;inclusive intervals;no per-source overlap;nondecreasing calls;0000/9000 sentinels;cycles including feeders ring9999."
+  ],
+  "independentMethod": "Build the active functional graph at each time and propagate terminal destinations backward; unresolved cycles and their feeders map9999. Independent direct walks validate random graphs and inclusive endpoints.",
+  "oracleFile": "scripts/editorials/oracles/nested_states.py",
+  "mutations": [
+    {
+      "id": "exclusive-end",
+      "label": "Drops the inclusive final forwarding hour",
+      "languageKey": "cpp17",
+      "find": "time <= request.start + request.duration",
+      "replace": "time < request.start + request.duration"
+    },
+    {
+      "id": "one-hop-only",
+      "label": "Stops after a single forwarding hop",
+      "languageKey": "cpp17",
+      "find": "current = next;",
+      "replace": "current = next; break;"
+    }
+  ]
+}

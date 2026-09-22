@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/9/993.pdf"
+  ],
+  "constraints": [
+    "Tpositive;0<=N<=1e9;LOCAL Qmaybe0,soN0->0;N1->1;minimize numeric nonnegative decimal Q;otherwise digits2..9 and no leadingzero."
+  ],
+  "independentMethod": "Independent memoized recursion tries every next digit2..9 dividing the remaining product and minimizes the complete suffix by length then lex; brute scan all Q<100000 validates N0..300.",
+  "oracleFile": "scripts/editorials/oracles/explicit_domains.py",
+  "mutations": [
+    {
+      "id": "no-six",
+      "label": "Never considers the mixed-prime digit6",
+      "languageKey": "cpp17",
+      "find": "sixes<=min(a,b)",
+      "replace": "sixes<=0"
+    },
+    {
+      "id": "descending-digits",
+      "label": "Sorts candidate digits from largest to smallest",
+      "languageKey": "cpp17",
+      "find": "sort(digits.begin(),digits.end());",
+      "replace": "sort(digits.rbegin(),digits.rend());"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "2a799114535cfc6a37d9248fd9eedc955cbc5010acb317314a70f713e39a8fae",
+    "file": "content/editorials/uva-993-product-of-digits/statement.md",
+    "reason": "Clarify the natural-number convention to preserve the archived N=0 answer0, without silently changing it to10.",
+    "source": "https://onlinejudge.org/external/9/993.pdf"
+  }
+}

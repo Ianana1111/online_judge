@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11518-dominos-2",
+  "title": "從所有手動推倒的位置搜尋，計算有向可達聯集",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

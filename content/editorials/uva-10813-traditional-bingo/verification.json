@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/108/10813.pdf"
+  ],
+  "constraints": [
+    "5x5 card;free center;unique column-constrained numbers;all75 calls form a permutation;win by5rows/5columns/2diagonals."
+  ],
+  "independentMethod": "Simulate calls one by one with a marked-cell set and inspect every winning line; independent of min/max call-time reference.",
+  "oracleFile": "scripts/editorials/oracles/textgames.py",
+  "mutations": [
+    {
+      "id": "ignore-diagonals",
+      "label": "Omits diagonal wins",
+      "languageKey": "cpp17",
+      "find": "answer = min({answer, diagonal1, diagonal2});",
+      "replace": "answer = answer;"
+    },
+    {
+      "id": "center-not-free",
+      "label": "Requires a nonexistent final center call",
+      "languageKey": "cpp17",
+      "find": "int called[76]{};",
+      "replace": "int called[76]{}; called[0] = 75;"
+    }
+  ]
+}

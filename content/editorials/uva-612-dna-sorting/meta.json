@@ -1,0 +1,8 @@
+{
+  "slug": "uva-612-dna-sorting",
+  "title": "以逆序數評分，穩定排序保留同分輸入順序",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

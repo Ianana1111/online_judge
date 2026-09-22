@@ -1,0 +1,8 @@
+{
+  "slug": "uva-679-dropping-balls",
+  "title": "用局部到訪次序的奇偶，直接追蹤第 I 顆球",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

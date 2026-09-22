@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12820-cool-word",
+  "title": "只比較出現過的頻率，並要求至少兩種字母",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

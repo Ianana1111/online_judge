@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/111/11150.pdf"
+  ],
+  "constraints": [
+    "EOF;1<=N<=200;3emptiesfor1drink;drinkreturns1empty;borrowingallowedbutmustrepay;includeinitialN."
+  ],
+  "independentMethod": "Explicit one-bottle exchange simulation with initial borrowed bottle and final debt repayment check, compared against exhaustive small borrowing amounts.",
+  "oracleFile": "scripts/editorials/oracles/integers.py",
+  "mutations": [
+    {
+      "id": "no-borrow",
+      "label": "Allows no final borrowing",
+      "languageKey": "cpp17",
+      "find": "n + n / 2",
+      "replace": "n + (n - 1) / 2"
+    },
+    {
+      "id": "ceil-extra",
+      "label": "Rounds extra drinks upward",
+      "languageKey": "cpp17",
+      "find": "n + n / 2",
+      "replace": "n + (n + 1) / 2"
+    }
+  ]
+}

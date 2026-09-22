@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-2009-24-unique-lines",
+  "title": "正規化整數直線方程，精確去除重複直線",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

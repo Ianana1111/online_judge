@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12250-language-detection",
+  "title": "完整字串查表，未知招呼語保持 UNKNOWN",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

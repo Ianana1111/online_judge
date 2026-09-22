@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/401.pdf"
+  ],
+  "constraints": [
+    "EOFstrings1..20;uppercaseA-Z,digits1..9,no0;exactmirrorlookup;centralcharincluded;blanklineafterresult."
+  ],
+  "independentMethod": "Reverse full string and translate with an explicit character mapping; compare two whole strings independently of paired-index loop.",
+  "oracleFile": "scripts/editorials/oracles/formatting.py",
+  "mutations": [
+    {
+      "id": "skip-center",
+      "label": "Does not check center character",
+      "languageKey": "cpp17",
+      "find": "i < int(text.size())",
+      "replace": "i < int(text.size()) / 2"
+    },
+    {
+      "id": "no-digit-mirror",
+      "label": "Drops mirror direction3toE",
+      "languageKey": "cpp17",
+      "find": "mirror[pair.second] = pair.first;",
+      "replace": "if (pair.second != '3') mirror[pair.second] = pair.first;"
+    }
+  ]
+}

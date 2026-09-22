@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10126.pdf"
+  ],
+  "constraints": [
+    "positive requested frequency with no stated upper bound;<=10000ASCII-English-letter words per case;nonletters delimit;case insensitive;exact EndOfText sentinel;EOF;alphabetic lowercase results and blank lines."
+  ],
+  "independentMethod": "Independent regular-expression tokenization plus Counter and lexical filtering; explicit punctuation/digit/case/empty-text and10000-word boundary checks.",
+  "oracleFile": "scripts/editorials/oracles/gpe_readiness.py",
+  "mutations": [
+    {
+      "id": "digits-in-words",
+      "label": "Treats digits as part of words",
+      "languageKey": "cpp17",
+      "find": "if(letter) {",
+      "replace": "if(letter || (ch>='0' && ch<='9')) {"
+    },
+    {
+      "id": "case-sensitive",
+      "label": "Does not normalize upper-case letters",
+      "languageKey": "cpp17",
+      "find": "if(ch>='A' && ch<='Z')ch=char(ch-'A'+'a');",
+      "replace": ""
+    }
+  ]
+}

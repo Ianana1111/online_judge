@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/130/13055.pdf"
+  ],
+  "constraints": [
+    "1<=Q<=10000;Sleep name letters1..15;Kick popsone orignoreempty;Test onlyoutput;duplicatesandcasepreserved."
+  ],
+  "independentMethod": "Persistent parent-linked dream nodes with current pointer, independent of mutable vector-stack operations.",
+  "oracleFile": "scripts/editorials/oracles/records.py",
+  "mutations": [
+    {
+      "id": "clear-all",
+      "label": "Kick exits all layers",
+      "languageKey": "cpp17",
+      "find": "dreams.pop_back();",
+      "replace": "dreams.clear();"
+    },
+    {
+      "id": "outermost",
+      "label": "Reports outermost dream",
+      "languageKey": "cpp17",
+      "find": "dreams.back())",
+      "replace": "dreams.front())"
+    }
+  ]
+}

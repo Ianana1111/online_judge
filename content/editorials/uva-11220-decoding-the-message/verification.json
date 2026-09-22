@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/112/11220.pdf"
+  ],
+  "constraints": [
+    "1<=T<=30;1..100lines/message;1..30words/line;ASCII letters;word<=30;whitespace separators;skip shortword without advancing index;reset perline."
+  ],
+  "independentMethod": "Queue of remaining words: for wanted position1,2,... discard short candidates until one qualifies, then consume that word; independent of decoded-length reference.",
+  "oracleFile": "scripts/editorials/oracles/textgames.py",
+  "mutations": [
+    {
+      "id": "advance-on-short",
+      "label": "Advances index even when word is short",
+      "languageKey": "cpp17",
+      "find": "while (input >> word) {\n                if (word.size() > decoded.size()) decoded.push_back(word[decoded.size()]);\n            }",
+      "replace": "int index = 0; while (input >> word) { if (word.size() > size_t(index)) decoded.push_back(word[index]); ++index; }"
+    },
+    {
+      "id": "first-letter-only",
+      "label": "Always takes first letter",
+      "languageKey": "cpp17",
+      "find": "word[decoded.size()]",
+      "replace": "word[0]"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/108/10858.pdf"
+  ],
+  "constraints": [
+    "at most20 positiveN<=2000000;0 sentinel;atleasttwo factors>=2;nondecreasing factors;unique numeric lexicographic sequences."
+  ],
+  "independentMethod": "Factor N into prime occurrences, then distribute each occurrence into an existing unordered block or a new block and deduplicate sorted block tuples; allN<=1000 checked against divisor recursion.",
+  "oracleFile": "scripts/editorials/oracles/finite_enumeration.py",
+  "mutations": [
+    {
+      "id": "misses-square-pair",
+      "label": "Excludes equal factors at the square root",
+      "languageKey": "cpp17",
+      "find": "divisor * divisor <= rest",
+      "replace": "divisor * divisor < rest"
+    },
+    {
+      "id": "allows-single-factor",
+      "label": "Includes the trivial one-factor expression N",
+      "languageKey": "cpp17",
+      "find": "!path.empty() && rest >= minimum",
+      "replace": "rest >= minimum"
+    }
+  ]
+}

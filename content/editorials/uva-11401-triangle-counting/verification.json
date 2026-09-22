@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/114/11401.pdf"
+  ],
+  "constraints": [
+    "3<=n<=1e6;one rod of each length1..n;distinct sides;strict triangle;any n<3 terminates;64bit."
+  ],
+  "independentMethod": "Closed sums of even and odd square sequences evaluate total directly without prefix recurrence; exhaustive triples for small n validate the strict inequality.",
+  "oracleFile": "scripts/editorials/oracles/exactmath.py",
+  "mutations": [
+    {
+      "id": "degenerate-triangles",
+      "label": "Counts equality as a triangle",
+      "languageKey": "cpp17",
+      "find": "(largest - 2) * (largest - 2)",
+      "replace": "(largest - 1) * (largest - 1)"
+    },
+    {
+      "id": "exclude-largest",
+      "label": "Excludes the rod of length n",
+      "languageKey": "cpp17",
+      "find": "cout << triangles[n]",
+      "replace": "cout << triangles[n - 1]"
+    }
+  ]
+}

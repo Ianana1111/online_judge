@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/17/1730.pdf"
+  ],
+  "constraints": [
+    "at most200queries;2<=N<=20000000;distinct positive set elements;LCM=N;sumMSLCM i2..N;0sentinel;64-bit integer."
+  ],
+  "independentMethod": "Independent weighted Dirichlet hyperbola identity with isqrtN: sum[d*floor(N/d)+tri(floor(N/d))] over d<=root, minus root*tri(root) and sigma1. Unit enumerates all divisors for every N2..1000.",
+  "oracleFile": "scripts/editorials/oracles/text_paths.py",
+  "mutations": [
+    {
+      "id": "includes-one",
+      "label": "Includes sigma1 despite lower sum bound2",
+      "languageKey": "cpp17",
+      "find": "cout << answer-1 << '\\n';",
+      "replace": "cout << answer << '\\n';"
+    },
+    {
+      "id": "counts-not-sums",
+      "label": "Counts divisors rather than summing their values",
+      "languageKey": "cpp17",
+      "find": "long long sum=(left+right)*(right-left+1)/2;",
+      "replace": "long long sum=right-left+1;"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/112/11286.pdf"
+  ],
+  "constraints": [
+    "1<=students<=10000;each5distinct100..499;courseorderirrelevant;sum ALL students in tied mostpopular combinations;0terminator."
+  ],
+  "independentMethod": "Counter keyed by frozenset, then count winning original student records, independently of sorted-array keys and summing group frequencies.",
+  "oracleFile": "scripts/editorials/oracles/gpecore.py",
+  "mutations": [
+    {
+      "id": "ordered-courses",
+      "label": "Treats course order as significant",
+      "languageKey": "cpp17",
+      "find": "sort(courses.begin(), courses.end());",
+      "replace": "/* keep input order */"
+    },
+    {
+      "id": "one-winner-group",
+      "label": "Keeps only one tied group",
+      "languageKey": "cpp17",
+      "find": "answer += entry.second;",
+      "replace": "answer = entry.second;"
+    }
+  ]
+}

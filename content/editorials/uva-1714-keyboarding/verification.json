@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/17/1714.pdf"
+  ],
+  "constraints": [
+    "r,c1..50;keys uppercase/digits/-/*;each character exactlyone connected region;start upperleft;arrow skips same-key run tofirstdifferent;nonemptytext<=10000available non*chars;mustselectEnter;EOF."
+  ],
+  "independentMethod": "Independent unweighted BFS on product(position,typed-prefix), using row/column maximal-run boundaries to build moves. Dense visited bytes bound memory. Units compare layered weighted shortest paths; legal repairs preserve dimensions,key multiplicities,startkey,text while replacing disconnected layouts.",
+  "oracleFile": "scripts/editorials/oracles/text_paths.py",
+  "mutations": [
+    {
+      "id": "unit-grid-move",
+      "label": "Moves one grid cell rather than skipping same key",
+      "languageKey": "cpp17",
+      "find": "while(nr>=0 && nr<r && nc>=0 && nc<c && grid[nr][nc]==grid[row][col])",
+      "replace": "while(false)"
+    },
+    {
+      "id": "missing-enter-navigation",
+      "label": "Does not navigate to Enter",
+      "languageKey": "cpp17",
+      "find": "word.push_back('*');",
+      "replace": ""
+    }
+  ]
+}

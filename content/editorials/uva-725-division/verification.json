@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/7/725.pdf"
+  ],
+  "constraints": [
+    "2<=N<=79;5-digit representations incl leading zero;digits0..9 exactly once jointly;sorted numerators;0 sentinel."
+  ],
+  "independentMethod": "Enumerate every permutation of all ten digits, split into two five-digit numerals and group exact quotients, independent of multiplying enumerated denominators. Compare all legal quotients against a second direct digit-multiset sweep.",
+  "oracleFile": "scripts/editorials/oracles/common_completion.py",
+  "mutations": [
+    {
+      "id": "no-leading-zero",
+      "label": "Starts denominators at five nonzero-place digits",
+      "languageKey": "cpp17",
+      "find": "denominator = 1234",
+      "replace": "denominator = 10000"
+    },
+    {
+      "id": "separate-digit-sets",
+      "label": "Resets used digits between numerator and denominator",
+      "languageKey": "cpp17",
+      "find": "    int used = 0;\n    for (int value : {numerator, denominator}) {\n        for (int i = 0; i < 5; ++i) {\n            int bit = 1 << (value % 10); value /= 10;\n            if (used & bit) return false;\n            used |= bit;\n        }\n    }\n    return used == (1 << 10) - 1;",
+      "replace": "    int used = 0;\n    for (int value : {numerator, denominator}) { used = 0;\n        for (int i = 0; i < 5; ++i) {\n            int bit = 1 << (value % 10); value /= 10;\n            if (used & bit) return false;\n            used |= bit;\n        }\n    }\n    return true;"
+    }
+  ]
+}

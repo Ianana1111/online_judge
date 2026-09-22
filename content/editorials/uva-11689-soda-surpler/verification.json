@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/116/11689.pdf"
+  ],
+  "constraints": [
+    "1<=T<15;0<=e,f<1000;2<=c<2000;empty bottles only, no borrowing;new drink returns1empty."
+  ],
+  "independentMethod": "Exchange exactly one bottle at a time, reducing empty stock by c-1 until belowc, independently of quotient/remainder batch simulation.",
+  "oracleFile": "scripts/editorials/oracles/collections_suite.py",
+  "mutations": [
+    {
+      "id": "strict-cost",
+      "label": "Cannot exchange when exactly enough bottles",
+      "languageKey": "cpp17",
+      "find": "while (empty >= cost)",
+      "replace": "while (empty > cost)"
+    },
+    {
+      "id": "no-recycling",
+      "label": "Discards newly emptied bottles",
+      "languageKey": "cpp17",
+      "find": "empty = empty % cost + drinks;",
+      "replace": "empty = empty % cost;"
+    }
+  ]
+}

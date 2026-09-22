@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11039.pdf"
+  ],
+  "constraints": [
+    "n<=500000;nonzero signed values abs<=999999;ALL absolute sizes distinct;alternating colors and strictly increasing dimensions."
+  ],
+  "independentMethod": "Place colors in a direct size-indexed array and compute separate red/blue subsequence DP, independent of sorting and counting color runs; brute all subsets validates small instances.",
+  "oracleFile": "scripts/editorials/oracles/matrixsets.py",
+  "mutations": [
+    {
+      "id": "signed-sort",
+      "label": "Sorts signed values instead of sizes",
+      "languageKey": "cpp17",
+      "find": "return abs(a) < abs(b);",
+      "replace": "return a < b;"
+    },
+    {
+      "id": "all-floors",
+      "label": "Counts every available floor",
+      "languageKey": "cpp17",
+      "find": "if (color != previous)",
+      "replace": "if (true)"
+    }
+  ]
+}

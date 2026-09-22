@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10254.pdf"
+  ],
+  "constraints": [
+    "N0..10000;EOF;minimize the stated4-peg split strategy;F0=0;arbitrary-precision output."
+  ],
+  "independentMethod": "Independent triangular-run sequence of first differences1,2,2,4,4,4,...; units validate with the full unpruned recurrence and unrestricted4-peg state-graph BFS for up to6disks. New corpus queries every N0..10000.",
+  "oracleFile": "scripts/editorials/oracles/missing_models.py",
+  "mutations": [
+    {
+      "id": "one-top-transfer",
+      "label": "Counts upper stack movement only once",
+      "languageKey": "python3",
+      "find": "candidate = 2 * moves[disks - bottom] + three_pegs",
+      "replace": "candidate = moves[disks - bottom] + three_pegs"
+    },
+    {
+      "id": "missing-return-in-initial",
+      "label": "Initial one-bottom split omits returning top stack",
+      "languageKey": "python3",
+      "find": "best = 2 * moves[disks - 1] + 1",
+      "replace": "best = moves[disks - 1] + 1"
+    }
+  ]
+}

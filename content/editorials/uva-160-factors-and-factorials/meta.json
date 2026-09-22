@@ -1,0 +1,8 @@
+{
+  "slug": "uva-160-factors-and-factorials",
+  "title": "以 Legendre 公式計算階乘中的質因數次方",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

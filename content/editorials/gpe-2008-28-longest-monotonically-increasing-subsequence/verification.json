@@ -1,0 +1,40 @@
+{
+  "sources": [
+    "local-statement:gpe-2008-28-longest-monotonically-increasing-subsequence:sha256:5bb45a5f81f8be52c66ca479dd4a47be7d8a76a7d2ac31a6ecd08045df875117"
+  ],
+  "constraints": [
+    "LOCALn1..9;values1..2^32-1;strictly increasing;count all index-distinct maximum-length paths;duplicate value rows retain multiplicity;listing order arbitrary;first number countnotlength."
+  ],
+  "independentMethod": "Independent enumeration of every nonempty index subset and strict-increase filtering, retain multiset of all maximal lengths. Archived answers semantically verified without enforcing listing order; exhaustive small repeated-value sequences and legal reversed listing.",
+  "oracleFile": "scripts/editorials/oracles/grammar_models.py",
+  "mutations": [
+    {
+      "id": "nonstrict-up",
+      "label": "Allows equal values in suffix lengths",
+      "languageKey": "cpp17",
+      "find": "if(values[j]>values[i])",
+      "replace": "if(values[j]>=values[i])"
+    },
+    {
+      "id": "prints-length",
+      "label": "Prints maximum length instead of number of solutions",
+      "languageKey": "cpp17",
+      "find": "cout << answers.size() << '\\n';",
+      "replace": "cout << length << '\\n';"
+    },
+    {
+      "id": "reverse-valid-list",
+      "label": "Reverses only the legal order of solution lines",
+      "languageKey": "cpp17",
+      "find": "for(const auto &sequence:answers)",
+      "replace": "reverse(answers.begin(),answers.end()); for(const auto &sequence:answers)",
+      "expectation": "AC"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "5bb45a5f81f8be52c66ca479dd4a47be7d8a76a7d2ac31a6ecd08045df875117",
+    "file": "content/editorials/gpe-2008-28-longest-monotonically-increasing-subsequence/statement.md",
+    "reason": "Clarify LOCAL index-distinct subsequence multiplicity, consistent with the existing multiset SPECIAL checker; archived cases have distinct values and retain their results. Restore lost exponent in the unsigned32-bit value bound. Do not silently deduplicate valid index paths.",
+    "source": "local-statement:gpe-2008-28-longest-monotonically-increasing-subsequence:sha256:5bb45a5f81f8be52c66ca479dd4a47be7d8a76a7d2ac31a6ecd08045df875117"
+  }
+}

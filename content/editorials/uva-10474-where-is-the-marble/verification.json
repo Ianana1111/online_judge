@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/104/10474.pdf"
+  ],
+  "constraints": [
+    "All input numbers in 0..10000; fewer than 65 datasets; terminate only at N=Q=0; preserve duplicate marbles; first position is one-based."
+  ],
+  "independentMethod": "Frequency counts and prefix totals compute the first rank, independent of sorting and binary search.",
+  "oracleFile": "scripts/editorials/oracles/ordering.py",
+  "mutations": [
+    {
+      "id": "last-occurrence",
+      "label": "Returns last occurrence of duplicate values",
+      "languageKey": "cpp17",
+      "find": "auto it = lower_bound(marbles.begin(), marbles.end(), x);",
+      "replace": "auto it = upper_bound(marbles.begin(), marbles.end(), x);\n            if (it != marbles.begin()) --it;"
+    },
+    {
+      "id": "zero-based",
+      "label": "Prints zero-based positions",
+      "languageKey": "cpp17",
+      "find": "it - marbles.begin() + 1",
+      "replace": "it - marbles.begin()"
+    }
+  ]
+}

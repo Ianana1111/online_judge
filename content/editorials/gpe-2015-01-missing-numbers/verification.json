@@ -1,0 +1,30 @@
+{
+  "sources": [
+    "repository:packages/db/audit/gpe-recovery-cases.json#2015-01"
+  ],
+  "constraints": [
+    "0 < M < N; M*N ≤ 5000000; every integer <65536; successive multisets differ by exactly one occurrence"
+  ],
+  "independentMethod": "Python Counter multiset subtraction, independent of XOR cancellation.",
+  "oracleFile": "scripts/editorials/oracles/gpe.py",
+  "oracleDependencies": [
+    "scripts/author-gpe-recovery.py",
+    "scripts/gpe_recovery_references.py"
+  ],
+  "mutations": [
+    {
+      "id": "first-list-only",
+      "label": "Compares all lists with the first",
+      "languageKey": "cpp17",
+      "find": "previous = current;",
+      "replace": "if (i == 0) previous = current;"
+    },
+    {
+      "id": "missing-zero",
+      "label": "Omits zero as a missing value",
+      "languageKey": "cpp17",
+      "find": "if (i != 0) cout",
+      "replace": "if (i != 0 && (previous ^ current) != 0) cout"
+    }
+  ]
+}

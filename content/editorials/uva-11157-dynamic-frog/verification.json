@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/111/11157.pdf"
+  ],
+  "constraints": [
+    "1<=T<100;0<=N<=100;1<=D<=1e9;distinct sorted0<M<D;Sonce;Bunlimited;roundtrip."
+  ],
+  "independentMethod": "Binary search maximum jump and test two-unit max flow through vertex-split DAG with capacities one for small stones and two for large stones/banks; independent of every-second-gap formula.",
+  "oracleFile": "scripts/editorials/oracles/orders.py",
+  "mutations": [
+    {
+      "id": "one-way",
+      "label": "Only checks adjacent gaps",
+      "languageKey": "cpp17",
+      "find": "points[i] - points[i - 2]",
+      "replace": "points[i] - points[i - 1]"
+    },
+    {
+      "id": "small-reusable",
+      "label": "Duplicates all stones",
+      "languageKey": "cpp17",
+      "find": "if (type == 'B') points.push_back(position);",
+      "replace": "points.push_back(position);"
+    }
+  ]
+}

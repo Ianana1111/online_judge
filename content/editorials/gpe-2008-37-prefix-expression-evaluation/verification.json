@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "local-statement:gpe-2008-37-prefix-expression-evaluation:sha256:56ab057e8476709cc440aeae0f8b7c9b29f65336d6a16678b043a6bf7e9ca099"
+  ],
+  "constraints": [
+    "positive decimal literals only;binary+-*/%;tokens whitespace-separated;line<=1024;periodsentinel;integer quotient truncates toward0;remainder=a-q*b;LOCALdivide0illegal;exactlyone full expression."
+  ],
+  "independentMethod": "Independent recursive descent consumes one expression from left to right and requires complete token consumption; generated AST values, negative quotient/remainder identities and malformed/deep expressions checked.",
+  "oracleFile": "scripts/editorials/oracles/grammar_models.py",
+  "mutations": [
+    {
+      "id": "swapped-operands",
+      "label": "Reverses operands of noncommutative operators",
+      "languageKey": "python3",
+      "find": "calculate(token, left, right)",
+      "replace": "calculate(token, right, left)"
+    },
+    {
+      "id": "floor-division",
+      "label": "Uses floor quotient for negative division",
+      "languageKey": "python3",
+      "find": "abs(a) // abs(b) * (-1 if (a < 0) != (b < 0) else 1)",
+      "replace": "a // b"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "56ab057e8476709cc440aeae0f8b7c9b29f65336d6a16678b043a6bf7e9ca099",
+    "file": "content/editorials/gpe-2008-37-prefix-expression-evaluation/statement.md",
+    "reason": "Explicit LOCAL handling of undefined division and literal grammar: positive constants only, signed values may arise as subexpression results, divide/remainder by zero is illegal. Existing archived cases retain identical results.",
+    "source": "local-statement:gpe-2008-37-prefix-expression-evaluation:sha256:56ab057e8476709cc440aeae0f8b7c9b29f65336d6a16678b043a6bf7e9ca099"
+  }
+}

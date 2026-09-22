@@ -1,0 +1,8 @@
+{
+  "slug": "uva-13185-dpa-numbers-i",
+  "title": "枚舉真因數，依總和與原數的大小分類",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

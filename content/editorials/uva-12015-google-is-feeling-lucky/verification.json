@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/120/12015.pdf"
+  ],
+  "constraints": [
+    "T cases;10records each;URLlength1..100 no whitespace;score1..100;allmaximum ties in input order."
+  ],
+  "independentMethod": "For each record, check that no other score is greater, using pairwise dominance rather than global maximum selection.",
+  "oracleFile": "scripts/editorials/oracles/records.py",
+  "mutations": [
+    {
+      "id": "first-only",
+      "label": "Prints only first maximum",
+      "languageKey": "cpp17",
+      "find": "if (score == best) cout << url << '\\n';",
+      "replace": "if (score == best) { cout << url << '\\n'; break; }"
+    },
+    {
+      "id": "minimum",
+      "label": "Selects minimum relevance",
+      "languageKey": "cpp17",
+      "find": "best = max(best, score);",
+      "replace": "best = (best == 0 ? score : min(best, score));"
+    }
+  ]
+}

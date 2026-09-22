@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/112/11264.pdf"
+  ],
+  "constraints": [
+    "1<=N<=1000;strictly increasing positive denominations;C1=1;Cn<1e9;unbounded withdrawal;maximize distinct types under greedy largest-coin change."
+  ],
+  "independentMethod": "DP stores minimum realizable withdrawal amount per distinct-type count under each next-denomination boundary; exhaustive small denomination subsets and all remainder withdrawals cross-check the greedy optimum.",
+  "oracleFile": "scripts/editorials/oracles/sequence_choices.py",
+  "mutations": [
+    {
+      "id": "allows-equal-next",
+      "label": "Accepts remainder equal to next denomination",
+      "languageKey": "cpp17",
+      "find": "sum + coins[i] < coins[i+1]",
+      "replace": "sum + coins[i] <= coins[i+1]"
+    },
+    {
+      "id": "ignores-prefix-sum",
+      "label": "Checks only the current coin against the next",
+      "languageKey": "cpp17",
+      "find": "sum + coins[i] < coins[i+1]",
+      "replace": "coins[i] < coins[i+1]"
+    }
+  ]
+}

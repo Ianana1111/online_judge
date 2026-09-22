@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-11192-simple-minded-hashing",
+  "title": "把嚴格遞增字串視為固定個數的字母子集合",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/114/11498.pdf"
+  ],
+  "constraints": [
+    "1<=K<=1000;division coordinates strictly inside+-10000;query coordinates inclusive+-10000;either border coordinate equal ->divisa;west usesO."
+  ],
+  "independentMethod": "Translate points to signed offsets and look up a four-entry quadrant table, with membership in the two coordinate axes checked separately.",
+  "oracleFile": "scripts/editorials/oracles/intervals.py",
+  "mutations": [
+    {
+      "id": "only-center-border",
+      "label": "Requires both coordinates equal for border",
+      "languageKey": "cpp17",
+      "find": "x == centerX || y == centerY",
+      "replace": "x == centerX && y == centerY"
+    },
+    {
+      "id": "english-west",
+      "label": "Uses W instead of requiredO",
+      "languageKey": "cpp17",
+      "find": "? 'E' : 'O'",
+      "replace": "? 'E' : 'W'"
+    }
+  ]
+}

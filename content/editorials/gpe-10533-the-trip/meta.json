@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10533-the-trip",
+  "title": "把金額化成整數分，分別計算必付與必收下界",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

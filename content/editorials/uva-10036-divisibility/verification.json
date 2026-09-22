@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10036.pdf"
+  ],
+  "constraints": [
+    "Tcases;1<=N<=10000;2<=K<=100;absvalues<=10000;firstsignfixed;remainingplus/minus;negativeinputsallowed."
+  ],
+  "independentMethod": "Circular bitset rotations moduloK encode adding/subtracting each value, independently of per-remainder boolean loops; exhaustive sign enumeration checks small cases.",
+  "oracleFile": "scripts/editorials/oracles/graphdp.py",
+  "mutations": [
+    {
+      "id": "only-plus",
+      "label": "Does not allow subtraction",
+      "languageKey": "cpp17",
+      "find": "next[(r - value + k) % k] = true;",
+      "replace": "/* no subtraction */"
+    },
+    {
+      "id": "skip-value",
+      "label": "Allows skipping each later number",
+      "languageKey": "cpp17",
+      "find": "vector<char> next(k, false);",
+      "replace": "vector<char> next = possible;"
+    }
+  ]
+}

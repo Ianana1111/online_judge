@@ -1,0 +1,8 @@
+{
+  "slug": "uva-165-stamps",
+  "title": "限制下一個面額不跨過缺口，搜尋最大連續郵資",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

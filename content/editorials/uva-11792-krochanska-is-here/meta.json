@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11792-krochanska-is-here",
+  "title": "只比較重要車站，以 BFS 累加到其他重要站的最短距離",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

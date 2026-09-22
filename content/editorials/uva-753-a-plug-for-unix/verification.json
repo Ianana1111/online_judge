@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/7/753.pdf"
+  ],
+  "constraints": [
+    "n,m,k1..100;one physical receptacle per listed unique type;alphanumeric labels<=24;unique device names;directed provided-receptacle->plug adapters;unlimited supply and chaining;blank line between answers."
+  ],
+  "independentMethod": "Directed reachability followed by explicit device-to-physical-outlet bipartite augmenting matching; small cases exhaustively enumerate all assignments. Guarded repairs preserve each device/outlet compatibility relation.",
+  "oracleFile": "scripts/editorials/oracles/network_costs.py",
+  "mutations": [
+    {
+      "id": "reverse-adapter",
+      "label": "Reverses adapter direction",
+      "languageKey": "cpp17",
+      "find": "network.add(u,v,m)",
+      "replace": "network.add(v,u,m)"
+    },
+    {
+      "id": "finite-adapter",
+      "label": "Allows only one copy of each adapter",
+      "languageKey": "cpp17",
+      "find": "network.add(u,v,m)",
+      "replace": "network.add(u,v,1)"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-24941-uncompress",
+  "title": "用移至最前字典與 Fenwick 樹還原壓縮文字",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

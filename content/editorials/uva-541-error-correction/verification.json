@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/541.pdf"
+  ],
+  "constraints": [
+    "1<=N<100;squarebinarymatrix;everyrowandeverycol even;singlebitflip;1basedcoordinates;0terminator."
+  ],
+  "independentMethod": "Encode each row as an integer; row bit counts and XOR of row bitsets identify odd rows/columns. Exhaustive one-bit trial checks all matrices through3x3.",
+  "oracleFile": "scripts/editorials/oracles/events.py",
+  "mutations": [
+    {
+      "id": "row-only",
+      "label": "Accepts all even rows without checking columns",
+      "languageKey": "cpp17",
+      "find": "oddRows.empty() && oddColumns.empty()",
+      "replace": "oddRows.empty()"
+    },
+    {
+      "id": "zero-based",
+      "label": "Prints zero-based coordinates",
+      "languageKey": "cpp17",
+      "find": "oddRows[0] + 1 << ',' << oddColumns[0] + 1",
+      "replace": "oddRows[0] << ',' << oddColumns[0]"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/6/657.pdf"
+  ],
+  "constraints": [
+    "5<=W,H<=50;.*X pixels;four-neighbor nonbackground dice and X pips;atleastone die;1..6 dots each;00 sentinel."
+  ],
+  "independentMethod": "Two independent DSU forests identify nonbackground and X components, then count distinct pip roots per die; all3^9 tiny images cross-check nested BFS, plus legal50x50 and diagonal fixtures.",
+  "oracleFile": "scripts/editorials/oracles/nested_states.py",
+  "mutations": [
+    {
+      "id": "eight-neighbors",
+      "label": "Merges diagonally touching dice and dots",
+      "languageKey": "cpp17",
+      "find": "{{-1,0},{1,0},{0,-1},{0,1}}",
+      "replace": "{{-1,0},{1,0},{0,-1},{0,1},{-1,-1},{-1,1},{1,-1},{1,1}}"
+    },
+    {
+      "id": "counts-pixels",
+      "label": "Counts each X pixel rather than each X component",
+      "languageKey": "cpp17",
+      "find": "grid[r][c] == 'X' && !pipSeen[r][c]",
+      "replace": "grid[r][c] == 'X'"
+    }
+  ]
+}

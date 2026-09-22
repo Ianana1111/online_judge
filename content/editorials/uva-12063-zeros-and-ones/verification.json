@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/120/12063.pdf"
+  ],
+  "constraints": [
+    "T<=100;1<=N<=64;0<=K<=100;positive exactly N-bit numbers;leading1;equal zeros/ones;K0 gives no positive multiples;64bit counts."
+  ],
+  "independentMethod": "Choose lower one-bit positions via generating-polynomial coefficients with fixed weights2^position modK, accounting separately for mandatory highest bit; brute enumeration through14bits and binomial closed forms at64bits.",
+  "oracleFile": "scripts/editorials/oracles/combinatorics_dp.py",
+  "mutations": [
+    {
+      "id": "leading-zero-allowed",
+      "label": "Also counts prefixes starting with zero",
+      "languageKey": "cpp17",
+      "find": "dp[1][1 % k] = 1;",
+      "replace": "dp[1][1 % k] = 1; dp[0][0] = 1;"
+    },
+    {
+      "id": "wrong-bit-balance",
+      "label": "Requests one fewer one bit",
+      "languageKey": "cpp17",
+      "find": "answer = dp[half][0]",
+      "replace": "answer = dp[half - 1][0]"
+    }
+  ]
+}

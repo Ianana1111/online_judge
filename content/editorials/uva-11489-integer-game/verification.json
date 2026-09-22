@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/114/11489.pdf"
+  ],
+  "constraints": [
+    "T<60;positive integer1..1000 digits;digits1..9 only;remove one digit leaving digit sum divisible by3 or empty;S starts."
+  ],
+  "independentMethod": "Explicit iterative minimax search on residue-count states, without the parity formula; independently compare all short strings to direct digit-removal games.",
+  "oracleFile": "scripts/editorials/oracles/mask_paths.py",
+  "mutations": [
+    {
+      "id": "miss-first-removal",
+      "label": "Does not remove the first zero-residue digit from the count",
+      "languageKey": "cpp17",
+      "find": "count[0]-(residue==0)",
+      "replace": "count[0]"
+    },
+    {
+      "id": "wrong-turn-parity",
+      "label": "Reverses the parity of subsequent turns",
+      "languageKey": "cpp17",
+      "find": "remaining%2==0",
+      "replace": "remaining%2==1"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-300-maya-calendar",
+  "title": "先轉成從紀元起算的天數，再分解兩個循環",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

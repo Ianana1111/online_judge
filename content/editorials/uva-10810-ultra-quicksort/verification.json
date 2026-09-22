@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/108/10810.pdf"
+  ],
+  "constraints": [
+    "1<=N<500000;distinct0..999999999;adjacent swaps;zero terminator;64bit answer."
+  ],
+  "independentMethod": "Merge-sort cross-inversion counting independent of Fenwick ranks; pair enumeration verifies small arrays and descending maximum has closed form.",
+  "oracleFile": "scripts/editorials/oracles/orders.py",
+  "mutations": [
+    {
+      "id": "int-overflow",
+      "label": "Accumulates inversions in32bits",
+      "languageKey": "cpp17",
+      "find": "long long inversions = 0;",
+      "replace": "int inversions = 0;"
+    },
+    {
+      "id": "count-smaller",
+      "label": "Counts increasing pairs instead of inversions",
+      "languageKey": "cpp17",
+      "find": "inversions += i - prefix(rank);",
+      "replace": "inversions += prefix(rank);"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/7/719.pdf"
+  ],
+  "constraints": [
+    "positive cases;lowercase string length1..10000;minimum full cyclic rotation;one-based earliest index among identical minima."
+  ],
+  "independentMethod": "Independent cyclic rank doubling sorts pairs of half-prefix ranks until they cover the full necklace, then selects minimal rank and lowest index; exhaustive all ternary necklaces through length7 and long periodic ties.",
+  "oracleFile": "scripts/editorials/oracles/gpe_readiness.py",
+  "mutations": [
+    {
+      "id": "largest-rotation",
+      "label": "Eliminates the smaller instead of larger rotation",
+      "languageKey": "cpp17",
+      "find": "if(a>b)",
+      "replace": "if(a<b)"
+    },
+    {
+      "id": "late-periodic-tie",
+      "label": "Chooses the later candidate when complete rotations tie",
+      "languageKey": "cpp17",
+      "find": "min(i,j)+1",
+      "replace": "(k==n?max(i,j):min(i,j))+1"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/12/1200.pdf"
+  ],
+  "constraints": [
+    "T1..10;equation length<=255;coefficients0..1000;no whitespace,parentheses or unary operators;implicit x coefficient1;exact floor of unique rational solution."
+  ],
+  "independentMethod": "Evaluate both affine expressions at x=0 and x=1 to recover intercept/slope independently from coefficient parsing; compare thousands of known coefficient equations with exact Fraction floors.",
+  "oracleFile": "scripts/editorials/oracles/routes_algebra.py",
+  "mutations": [
+    {
+      "id": "truncates-negative",
+      "label": "Uses truncation instead of floor for negative fractions",
+      "languageKey": "cpp17",
+      "find": "if (numerator<0 && numerator%denominator!=0) --answer;",
+      "replace": ""
+    },
+    {
+      "id": "zero-coefficient-is-one",
+      "label": "Treats explicit0x as implicit1x",
+      "languageKey": "cpp17",
+      "find": "hasDigits?value:1",
+      "replace": "value?value:1"
+    }
+  ]
+}

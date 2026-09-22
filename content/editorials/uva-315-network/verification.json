@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/315.pdf"
+  ],
+  "constraints": [
+    "connected undirected graph;1<=N<100;at mostN adjacency rows;each edge described at leastonce;duplicate descriptions deduplicated;0 block/0 final."
+  ],
+  "independentMethod": "Delete each vertex and BFS the remaining graph; all connected labeled graphs through5 vertices, long chain, star and clique. Repeated adjacency rows are merged without changing any edge or answer.",
+  "oracleFile": "scripts/editorials/oracles/graph_structures.py",
+  "mutations": [
+    {
+      "id": "root-one-child",
+      "label": "Marks a one-child DFS root as critical",
+      "languageKey": "cpp17",
+      "find": "children > 1",
+      "replace": "children >= 1"
+    },
+    {
+      "id": "strict-low",
+      "label": "Misses child subtrees whose back edge only reaches u",
+      "languageKey": "cpp17",
+      "find": "low[v] >= entered[u]",
+      "replace": "low[v] > entered[u]"
+    }
+  ]
+}

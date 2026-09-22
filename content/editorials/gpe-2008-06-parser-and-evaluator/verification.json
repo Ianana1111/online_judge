@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "local-statement:gpe-2008-06-parser-and-evaluator:sha256:38d0afef560e846ede3454cbc82e21ee07591680b90ddf396d9c5c3505eb191a"
+  ],
+  "constraints": [
+    "LOCALleft-associative binary operators;priority unary signs>%>*/>+-;nonnegative decimal literals,unary signs;C/C++truncating quotient/remainder;whitespace between tokens;line<1024;malformed/zero-divisor produces syntactically incorrect."
+  ],
+  "independentMethod": "Independent hand lexer and Pratt precedence parser with recursive AST evaluation; compare old samples,all prior cases,deep1023-character unary/parenthesis boundaries and left-associativity/mod-priority witnesses.",
+  "oracleFile": "scripts/editorials/oracles/grammar_models.py",
+  "mutations": [
+    {
+      "id": "standard-mod-priority",
+      "label": "Incorrectly gives remainder the same priority as multiplication",
+      "languageKey": "python3",
+      "find": "'%': 3",
+      "replace": "'%': 2"
+    },
+    {
+      "id": "right-associative-binary",
+      "label": "Delays same-priority operations and makes binary operators right-associative",
+      "languageKey": "python3",
+      "find": "PRIORITY[operators[-1]] >= PRIORITY[token]",
+      "replace": "PRIORITY[operators[-1]] > PRIORITY[token]"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "38d0afef560e846ede3454cbc82e21ee07591680b90ddf396d9c5c3505eb191a",
+    "file": "content/editorials/gpe-2008-06-parser-and-evaluator/statement.md",
+    "reason": "Explicit LOCAL resolution of archived right-recursive grammar versus existing samples: left-associative binary operations, remainder higher than multiplication/division, unary signs highest. Preserve all historical results, state token boundaries and zero-divisor handling; no invented public source URL.",
+    "source": "local-statement:gpe-2008-06-parser-and-evaluator:sha256:38d0afef560e846ede3454cbc82e21ee07591680b90ddf396d9c5c3505eb191a"
+  }
+}

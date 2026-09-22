@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11747-heavy-cycle-edges",
+  "title": "以較輕邊的連通性找出每個環的最重邊",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

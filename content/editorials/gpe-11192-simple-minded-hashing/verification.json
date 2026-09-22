@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/109/10912.pdf"
+  ],
+  "constraints": [
+    "0<L,S<10000;strictly increasing lowercase;00 sentinel;count fits signed32;feasible length<=26,sum<=351."
+  ],
+  "independentMethod": "Meet-in-the-middle enumerates all subsets of each thirteen-letter half, aggregates by cardinality and sum, then combines independent halves. Tiny combinations and total-subset identity validate counts.",
+  "oracleFile": "scripts/editorials/oracles/combinatorial.py",
+  "mutations": [
+    {
+      "id": "repeated-letters",
+      "label": "Allows choosing the same letter repeatedly",
+      "languageKey": "cpp17",
+      "find": "for (int length = 26; length >= 1; --length)",
+      "replace": "for (int length = 1; length <= 26; ++length)"
+    },
+    {
+      "id": "empty-base",
+      "label": "Omits the empty subset base case",
+      "languageKey": "cpp17",
+      "find": "count[0][0] = 1;",
+      "replace": "count[0][0] = 0;"
+    }
+  ]
+}

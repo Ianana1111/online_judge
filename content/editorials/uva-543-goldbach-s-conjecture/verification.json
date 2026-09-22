@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/543.pdf"
+  ],
+  "constraints": [
+    "even6<=N<1000000;odd primes may equal;maximize b-a;a<=b;0 sentinel;specified no-pair message."
+  ],
+  "independentMethod": "Independent exact trial primality and minimum odd partner search; small all-pair enumeration proves maximum gap, plus2000 random and near-million inputs.",
+  "oracleFile": "scripts/editorials/oracles/ordered_domains.py",
+  "mutations": [
+    {
+      "id": "keeps-last-pair",
+      "label": "Overwrites the smallest partner with later valid pairs",
+      "languageKey": "cpp17",
+      "find": "answer = a; break;",
+      "replace": "answer = a;"
+    },
+    {
+      "id": "forbids-equal-pair",
+      "label": "Excludes a=b at the midpoint",
+      "languageKey": "cpp17",
+      "find": "a <= n / 2",
+      "replace": "a < n / 2"
+    }
+  ]
+}

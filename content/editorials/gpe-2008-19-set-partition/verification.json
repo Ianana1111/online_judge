@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "local-statement:gpe-2008-19-set-partition:sha256:fc1835a3c3e9fc377ed01991153e3d388ba8a2ef4488336cba210b5bee380206"
+  ],
+  "constraints": [
+    "Distinct positive integers;N1..30;values<=1e12;LOCAL<=50datasets and<=10000total answer subsets per input;all complement subsets count;cardinality then numeric lex order."
+  ],
+  "independentMethod": "Independent descending-value DFS with remaining-sum and suffix-gcd pruning, exact direct subset enumeration on small arrays, and sum-count DP for dense-output boundary certificates.",
+  "oracleFile": "scripts/editorials/oracles/reviewed_limits.py",
+  "mutations": [
+    {
+      "id": "one-complement",
+      "label": "Counts only subsets containing the smallest element",
+      "languageKey": "cpp17",
+      "find": "answers.push_back(mask|(at->second<<middle));",
+      "replace": "if(mask&1)answers.push_back(mask|(at->second<<middle));"
+    },
+    {
+      "id": "odd-total",
+      "label": "Searches floor-half even when the total is odd",
+      "languageKey": "cpp17",
+      "find": "if(total%2==0){",
+      "replace": "if(true){"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "fc1835a3c3e9fc377ed01991153e3d388ba8a2ef4488336cba210b5bee380206",
+    "file": "content/editorials/gpe-2008-19-set-partition/statement.md",
+    "reason": "User authorized measured local input/output limits on2026-09-22. Keep the full30-element algorithmic range while bounding total enumerated output; do not silently omit oversized cases under an unchanged statement.",
+    "source": "local-statement:gpe-2008-19-set-partition:sha256:fc1835a3c3e9fc377ed01991153e3d388ba8a2ef4488336cba210b5bee380206"
+  }
+}

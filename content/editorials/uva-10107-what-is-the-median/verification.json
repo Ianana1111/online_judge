@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10107.pdf"
+  ],
+  "constraints": [
+    "0 <= X < 2^31; total N <10000; EOF; print floor of even-count average; duplicates retained"
+  ],
+  "independentMethod": "Maintain a sorted Python list with bisect and select exact middle values, independent of two-heap balancing.",
+  "oracleFile": "scripts/editorials/oracles/sequences.py",
+  "mutations": [
+    {
+      "id": "divide-first",
+      "label": "Divides each midpoint before adding",
+      "languageKey": "cpp17",
+      "find": "(lower.top() + upper.top()) / 2",
+      "replace": "lower.top() / 2 + upper.top() / 2"
+    },
+    {
+      "id": "lower-only",
+      "label": "Uses the lower median for even prefixes",
+      "languageKey": "cpp17",
+      "find": "(lower.top() + upper.top()) / 2",
+      "replace": "lower.top()"
+    }
+  ]
+}

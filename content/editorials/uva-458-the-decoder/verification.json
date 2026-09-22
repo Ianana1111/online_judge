@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/458.pdf"
+  ],
+  "constraints": [
+    "LOCAL clarification of existing generator: codedASCII32..126, decode minus7 cyclic over95printablecharacters including space;LF/CRpreserved. Original examples do not establish boundarywrap."
+  ],
+  "independentMethod": "Build inverse lookup by encoding every printable ASCII character with plus7 cyclic rotation, independently of reference subtract-and-correct arithmetic; exhaustive95-character roundtrip.",
+  "oracleFile": "scripts/editorials/oracles/formatting.py",
+  "mutations": [
+    {
+      "id": "wrong-shift",
+      "label": "Subtracts six instead of seven",
+      "languageKey": "cpp17",
+      "find": "(ch) - 7",
+      "replace": "(ch) - 6"
+    },
+    {
+      "id": "wrong-cycle-length",
+      "label": "Uses94-character cycle instead of95",
+      "languageKey": "cpp17",
+      "find": "value += 95",
+      "replace": "value += 94"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "d890e48ff3eaa08ab14fe2cdf9abffbabdb89204234ea7e8a6094b7b5618866e",
+    "file": "content/editorials/uva-458-the-decoder/statement.md",
+    "reason": "Original examples cannot prove95-character wrap. Explicitly clarify the existing local generator contract rather than silently imposing it; retain current expected answers and correct a lone out-of-alphabet DEL encoding.",
+    "source": "https://cpe.mcu.edu.tw/cpe/problemPdf/458.pdf"
+  }
+}

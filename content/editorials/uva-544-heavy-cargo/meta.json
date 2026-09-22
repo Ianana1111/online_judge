@@ -1,0 +1,8 @@
+{
+  "slug": "uva-544-heavy-cargo",
+  "title": "用最大瓶頸路徑更新可運送重量",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

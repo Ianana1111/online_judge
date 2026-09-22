@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/112/11233.pdf"
+  ],
+  "constraints": [
+    "0 <= L <= 20; 1 <= N <= 100; 1..20 lowercase letters; irregular dictionary first"
+  ],
+  "independentMethod": "Regular-expression suffix recognition instead of indexed C++ suffix checks.",
+  "oracleFile": "scripts/editorials/oracles/basics.py",
+  "mutations": [
+    {
+      "id": "all-y",
+      "label": "Treats every final y as consonant+y",
+      "languageKey": "cpp17",
+      "find": "vowels.find(word[word.size() - 2]) == string::npos",
+      "replace": "true"
+    },
+    {
+      "id": "ignore-irregular",
+      "label": "Skips irregular dictionary",
+      "languageKey": "cpp17",
+      "find": "if (entry != irregular.end()) {",
+      "replace": "if (false) {"
+    }
+  ]
+}

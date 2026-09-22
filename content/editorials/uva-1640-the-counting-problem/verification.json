@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/16/1640.pdf"
+  ],
+  "constraints": [
+    "<=500pairs;0<a,b<10^8;unordered endpoints;positive decimal representations without leading zeros;00sentinel;inclusive counts."
+  ],
+  "independentMethod": "Independent tight/started digit DP returns both number of represented positive integers and per-digit aggregate counts. Literal enumeration for small prefixes and total-digit-length identity at all powers of ten.",
+  "oracleFile": "scripts/editorials/oracles/rank_digits.py",
+  "mutations": [
+    {
+      "id": "leading-zero-cycle",
+      "label": "Includes spurious leading zero cycles",
+      "languageKey": "cpp17",
+      "find": "(higher-1)*factor",
+      "replace": "higher*factor"
+    },
+    {
+      "id": "ordered-endpoints",
+      "label": "Assumes endpoints already increasing",
+      "languageKey": "cpp17",
+      "find": "if(a>b)swap(a,b);",
+      "replace": ""
+    }
+  ]
+}

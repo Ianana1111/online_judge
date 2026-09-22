@@ -1,0 +1,8 @@
+{
+  "slug": "uva-536-tree-recovery",
+  "title": "用前序根節點切開中序序列，遞迴輸出後序",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

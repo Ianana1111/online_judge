@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/392.pdf"
+  ],
+  "constraints": [
+    "EOFgroups9;coefficientsmagnitude<1000;degree8..0;omitzeros/unitnonconstantcoeff;single-spacedbinarysigns;allzero0."
+  ],
+  "independentMethod": "Build signed term strings independently, join then normalize only separators; polynomial evaluation of formatted output checked at multiple integer x.",
+  "oracleFile": "scripts/editorials/oracles/formatting.py",
+  "mutations": [
+    {
+      "id": "omit-constant-one",
+      "label": "Omits unit constant",
+      "languageKey": "cpp17",
+      "find": "degree == 0 || magnitude != 1",
+      "replace": "magnitude != 1"
+    },
+    {
+      "id": "omit-zero",
+      "label": "Prints empty polynomial for all zero",
+      "languageKey": "cpp17",
+      "find": "if (first) cout << 0;",
+      "replace": "if (first) cout << \"\";"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-337-interpreting-control-sequence",
+  "title": "把游標、畫面與插入模式分開，逐個命令模擬終端機",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

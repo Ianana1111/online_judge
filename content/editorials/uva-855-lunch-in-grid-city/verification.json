@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/8/855.pdf"
+  ],
+  "constraints": [
+    "Tpositive;S,A1..1000;F1..50000;locationswithin1-based grid;Manhattan total;lowerstreet and loweravenue ties;duplicates count as separatepeople."
+  ],
+  "independentMethod": "Independent discrete cost sweep: compute cost at coordinate1 and update by left-count minus right-count for every grid coordinate. Unit brute-force every2Dcorner; even50000friends and disjoint axis-median examples.",
+  "oracleFile": "scripts/editorials/oracles/rank_digits.py",
+  "mutations": [
+    {
+      "id": "upper-median",
+      "label": "Takes higher median on even groups",
+      "languageKey": "cpp17",
+      "find": "int index=(f-1)/2;",
+      "replace": "int index=f/2;"
+    },
+    {
+      "id": "mixed-axis",
+      "label": "Uses street median for avenue output",
+      "languageKey": "cpp17",
+      "find": "avenues[index]",
+      "replace": "streets[index]"
+    }
+  ]
+}

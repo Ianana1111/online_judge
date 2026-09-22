@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1262-password",
+  "title": "每欄取交集去重，再以混合進位定位第 K 個密碼",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

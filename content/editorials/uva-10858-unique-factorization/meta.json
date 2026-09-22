@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10858-unique-factorization",
+  "title": "限制因數非遞減，以回溯列出所有不同乘法分解",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

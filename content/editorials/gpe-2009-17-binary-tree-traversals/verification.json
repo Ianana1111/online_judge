@@ -1,0 +1,30 @@
+{
+  "sources": [
+    "repository:packages/db/audit/gpe-recovery-cases.json#2009-17"
+  ],
+  "constraints": [
+    "1 ≤ n ≤ 26; distinct uppercase labels in valid preorder/inorder; case count first"
+  ],
+  "independentMethod": "Iterative stack reconstruction and postorder, distinct from recursive interval splitting.",
+  "oracleFile": "scripts/editorials/oracles/gpe.py",
+  "oracleDependencies": [
+    "scripts/author-gpe-recovery.py",
+    "scripts/gpe_recovery_references.py"
+  ],
+  "mutations": [
+    {
+      "id": "root-first",
+      "label": "Prints preorder instead of postorder",
+      "languageKey": "cpp17",
+      "find": "return left + right + root;",
+      "replace": "return root + left + right;"
+    },
+    {
+      "id": "swapped-children",
+      "label": "Exchanges left and right subtrees",
+      "languageKey": "cpp17",
+      "find": "return left + right + root;",
+      "replace": "return right + left + root;"
+    }
+  ]
+}

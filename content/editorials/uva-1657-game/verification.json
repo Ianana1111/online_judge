@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/16/1657.pdf"
+  ],
+  "constraints": [
+    "N2..200,M0..100;unordered distinct1..N;sum speaksfirst;M preceding ignorance statements thennextspeakerKNOWS;anypairorder."
+  ],
+  "independentMethod": "Independent bipartite leaf peeling: each pair is an edge between its sum/product knowledge classes; alternating degree-one frontier removal assigns the first knowing round, crosschecked by exhaustive histories.",
+  "oracleFile": "scripts/editorials/oracles/knowledge_trees.py",
+  "mutations": [
+    {
+      "id": "product-first",
+      "label": "Starts with product instead of sum",
+      "languageKey": "cpp17",
+      "find": "turn%2==0?p.first+p.second:p.first*p.second",
+      "replace": "turn%2==1?p.first+p.second:p.first*p.second"
+    },
+    {
+      "id": "equal-pairs",
+      "label": "Includes X=Y although numbers differ",
+      "languageKey": "cpp17",
+      "find": "int y=x+1",
+      "replace": "int y=x"
+    },
+    {
+      "id": "legal-alternate-output",
+      "label": "Same valid answer with reversed undirected endpoints and/or edge order",
+      "languageKey": "cpp17",
+      "find": "for(auto [x,y]:answer)cout<<x<<' '<<y",
+      "replace": "for(auto [x,y]:answer)cout<<y<<' '<<x",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Accept any complete unordered game answer set and any minimum spanning tree, preserving count/header/real-edge/optimality checks rather than enforcing one arbitrary listing."
+  }
+}

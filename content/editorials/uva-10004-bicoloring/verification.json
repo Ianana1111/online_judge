@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10004.pdf"
+  ],
+  "constraints": [
+    "2<=n<=199;undirected connected graph;noloops;vertex0..n-1;0terminator;do not use disconnected-only counterexamples."
+  ],
+  "independentMethod": "Union-find on doubled vertices enforces each endpoint opposite the other; contradiction iff a vertex joins its opposite, independent of BFS coloring.",
+  "oracleFile": "scripts/editorials/oracles/graphdp.py",
+  "mutations": [
+    {
+      "id": "ignore-conflict",
+      "label": "Ignores an edge between equal colors",
+      "languageKey": "cpp17",
+      "find": "good = false;",
+      "replace": "good = good;"
+    },
+    {
+      "id": "same-color",
+      "label": "Assigns neighbor same color",
+      "languageKey": "cpp17",
+      "find": "color[v] = 1 - color[u]",
+      "replace": "color[v] = color[u]"
+    }
+  ]
+}

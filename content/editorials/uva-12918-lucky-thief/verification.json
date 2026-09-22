@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/129/12918.pdf"
+  ],
+  "constraints": [
+    "T1..100000;1<=N<=M<=100000;LOCAL distinct-key injective door mapping;minimum guaranteed worst-case trials;infer final available door without trying it."
+  ],
+  "independentMethod": "Independent count of deletions from complete bipartite graph to unique matching: N*M-C(N+1,2); exhaustive small bipartite graphs certify maximal unique-matching edge counts and optimal adaptive decision trees independently match the bound.",
+  "oracleFile": "scripts/editorials/oracles/bounds_walks.py",
+  "mutations": [
+    {
+      "id": "divide-early",
+      "label": "Divides odd N before multiplying",
+      "languageKey": "cpp17",
+      "find": "n*(2*m-n-1)/2",
+      "replace": "(n/2)*(2*m-n-1)"
+    },
+    {
+      "id": "test-last-door",
+      "label": "Counts testing the last inferable door",
+      "languageKey": "cpp17",
+      "find": "n*(2*m-n-1)/2",
+      "replace": "n*(2*m-n+1)/2"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "202d1363f87f3c43ae7e35559f50213580eab320be09fd544433ea49a426419e",
+    "file": "content/editorials/uva-12918-lucky-thief/statement.md",
+    "reason": "State the injective and guaranteed-worst-case model implied by all official sample answers; without these assumptions the original prose does not uniquely determine its numeric answers.",
+    "source": "https://onlinejudge.org/external/129/12918.pdf"
+  }
+}

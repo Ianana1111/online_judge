@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-21964-fill-the-containers",
+  "title": "二分最大容量，以保留原順序的貪心檢查可行性",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

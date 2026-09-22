@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10042.pdf"
+  ],
+  "constraints": [
+    "positive n<1e9;strictly larger successor exists;composite only;prime factors counted with multiplicity;digit sums."
+  ],
+  "independentMethod": "Sieve-generated prime list factorization, independently validated by smallest-factor recurrence for every n<=10000; include prime exclusions, repeated powers, exact Smith inputs and near1e9 successors.",
+  "oracleFile": "scripts/editorials/oracles/missing_exact.py",
+  "mutations": [
+    {
+      "id": "accepts-primes",
+      "label": "Omits composite requirement",
+      "languageKey": "cpp17",
+      "find": "count > 1 && sum == digitSum(value)",
+      "replace": "sum == digitSum(value)"
+    },
+    {
+      "id": "includes-current",
+      "label": "Returns n itself when already Smith",
+      "languageKey": "cpp17",
+      "find": "cin >> value; ++value;",
+      "replace": "cin >> value;"
+    }
+  ]
+}

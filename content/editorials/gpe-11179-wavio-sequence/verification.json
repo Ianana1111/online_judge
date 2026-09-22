@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/105/10534.pdf"
+  ],
+  "constraints": [
+    "1<=N<=10000;fewer than75 cases;strict rise/fall;odd equal arms;subsequence;EOF."
+  ],
+  "independentMethod": "Coordinate-compressed Fenwick maximum queries for each strict prefix and reversed prefix, independently checked by enumeration of every subsequence on tiny inputs.",
+  "oracleFile": "scripts/editorials/oracles/missingsequences.py",
+  "mutations": [
+    {
+      "id": "nonstrict-increase",
+      "label": "Allows equal values to extend an arm",
+      "languageKey": "cpp17",
+      "find": "lower_bound(tails.begin(), tails.end(), value)",
+      "replace": "upper_bound(tails.begin(), tails.end(), value)"
+    },
+    {
+      "id": "unequal-arms",
+      "label": "Uses unrestricted bitonic length",
+      "languageKey": "cpp17",
+      "find": "2 * min(left[i],right[i]) - 1",
+      "replace": "left[i] + right[i] - 1"
+    }
+  ]
+}

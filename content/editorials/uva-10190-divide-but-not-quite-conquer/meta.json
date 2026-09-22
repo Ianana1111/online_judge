@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10190-divide-but-not-quite-conquer",
+  "title": "以整除序列判斷是否為正整數冪",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

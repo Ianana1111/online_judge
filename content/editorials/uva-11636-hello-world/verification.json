@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/116/11636.pdf"
+  ],
+  "constraints": [
+    "1<=N<=10000;up to2000input lines;any negative integer terminates;startwith1line;copyfree,pastecanadd1..currentcount."
+  ],
+  "independentMethod": "Closed form bit_length(N-1), independently of repeated doubling; BFS of literal paste operations validates small states.",
+  "oracleFile": "scripts/editorials/oracles/intervals.py",
+  "mutations": [
+    {
+      "id": "power-off-by-one",
+      "label": "Adds extra paste on exact powers of two",
+      "languageKey": "cpp17",
+      "find": "while (capacity < n)",
+      "replace": "while (capacity <= n)"
+    },
+    {
+      "id": "initial-paste",
+      "label": "Counts existing initial line as a paste",
+      "languageKey": "cpp17",
+      "find": "capacity = 1, pastes = 0",
+      "replace": "capacity = 1, pastes = 1"
+    }
+  ]
+}

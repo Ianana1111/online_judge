@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/532.pdf"
+  ],
+  "constraints": [
+    "1<=L,R,C<=30;6 face directions;unique S/E;blank-separated floors;0 0 0 sentinel."
+  ],
+  "independentMethod": "Heap-based Dijkstra over coordinate tuples, independently validated by explicit vertical, blocked and detour cases; maximum volume and randomized rock maps.",
+  "oracleFile": "scripts/editorials/oracles/reachability.py",
+  "mutations": [
+    {
+      "id": "no-vertical-motion",
+      "label": "Ignores both vertical directions",
+      "languageKey": "cpp17",
+      "find": "int d = 0; d < 6",
+      "replace": "int d = 2; d < 6"
+    },
+    {
+      "id": "counts-start",
+      "label": "Counts starting cell as a minute",
+      "languageKey": "cpp17",
+      "find": "distance[start] = 0",
+      "replace": "distance[start] = 1"
+    }
+  ]
+}

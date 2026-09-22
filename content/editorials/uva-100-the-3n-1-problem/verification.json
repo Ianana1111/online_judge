@@ -1,0 +1,46 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/1/100.pdf"
+  ],
+  "constraints": [
+    "1 ≤ i,j < 10000; preserve endpoint order; inclusive range; EOF"
+  ],
+  "independentMethod": "Direct, non-memoized Python simulation of each cycle, then interval maximum.",
+  "oracleFile": "scripts/editorials/oracles/pilot.py",
+  "mutations": [
+    {
+      "id": "exclusive-upper",
+      "label": "Omits the upper endpoint",
+      "languageKey": "cpp17",
+      "find": "n <= max(first, second)",
+      "replace": "n < max(first, second)"
+    },
+    {
+      "id": "reordered-output",
+      "label": "Sorts the displayed endpoints",
+      "languageKey": "cpp17",
+      "find": "cout << first << ' ' << second",
+      "replace": "cout << min(first, second) << ' ' << max(first, second)"
+    },
+    {
+      "id": "counts-edges",
+      "label": "Counts one extra step at 1",
+      "languageKey": "cpp17",
+      "find": "memo[1] = 1;",
+      "replace": "memo[1] = 2;"
+    },
+    {
+      "id": "legal-multiple-spaces",
+      "label": "Valid alternative: three separating spaces on each output line",
+      "languageKey": "cpp17",
+      "find": "cout << first << ' ' << second << ' ' << answer",
+      "replace": "cout << first << \"   \" << second << \"   \" << answer",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "The statement allows at least one separating space, while generic trailing-whitespace comparison rejects valid multiple spaces."
+  }
+}

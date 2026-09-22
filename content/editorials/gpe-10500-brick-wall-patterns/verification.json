@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/9/900.pdf"
+  ],
+  "constraints": [
+    "1<=width<=50;2-by-N domino tiling;rotations allowed;0terminator;no symmetry quotient."
+  ],
+  "independentMethod": "Sum binomial(n-k,k) over the number k of horizontal brick pairs, independent of Fibonacci recurrence; exhaustive masks validate tiny widths.",
+  "oracleFile": "scripts/editorials/oracles/gpecore.py",
+  "mutations": [
+    {
+      "id": "wrong-empty-base",
+      "label": "Drops the empty completion",
+      "languageKey": "cpp17",
+      "find": "ways[0] = ways[1] = 1;",
+      "replace": "ways[0] = 0; ways[1] = 1;"
+    },
+    {
+      "id": "narrow-table",
+      "label": "Uses32bit tiling counts",
+      "languageKey": "cpp17",
+      "find": "array<long long, 51> ways",
+      "replace": "array<int, 51> ways"
+    }
+  ]
+}

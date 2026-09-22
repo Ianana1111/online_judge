@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/496.pdf"
+  ],
+  "constraints": [
+    "EOF even number of lines;each line distinct integers;empty line empty set;LOCAL equality/proper-subset precede disjointness;integers no imported numeric bound."
+  ],
+  "independentMethod": "Independent sorted two-pointer merge counts intersection, then compares intersection cardinality against both sizes; exhaustive small set pairs.",
+  "oracleFile": "scripts/editorials/oracles/explicit_domains.py",
+  "mutations": [
+    {
+      "id": "size-only",
+      "label": "Treats equal sizes as equal sets",
+      "languageKey": "python3",
+      "find": "if a == b:",
+      "replace": "if len(a) == len(b):"
+    },
+    {
+      "id": "missing-subset",
+      "label": "Skips A proper-subset recognition",
+      "languageKey": "python3",
+      "find": "elif a < b:",
+      "replace": "elif False:"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "84e43d29a036f378a8541a3e50e7105d79dadfc124b008f589336da824a5ac36",
+    "file": "content/editorials/uva-496-simply-subsets/statement.md",
+    "reason": "Specify empty-set parsing and the precedence of overlapping mathematical classifications; preserve all archived cases.",
+    "source": "https://onlinejudge.org/external/4/496.pdf"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10220.pdf"
+  ],
+  "constraints": [
+    "factorialdefinedfor0<=N<=1000;EOF;sumdecimaldigits;exactinteger;0!=1;answerfitsint."
+  ],
+  "independentMethod": "Python math.factorial followed by decimal digit summation, independently checked against repeated-addition multiplication for small factorials and modular digit-sum congruence.",
+  "oracleFile": "scripts/editorials/oracles/missingcore.py",
+  "mutations": [
+    {
+      "id": "single-carry-digit",
+      "label": "Appends only one digit of carry",
+      "languageKey": "cpp17",
+      "find": "while (carry) {",
+      "replace": "if (carry) {"
+    },
+    {
+      "id": "overwrite-sum",
+      "label": "Keeps only the last digit instead of sum",
+      "languageKey": "cpp17",
+      "find": "sums[n] += digit;",
+      "replace": "sums[n] = digit;"
+    }
+  ]
+}

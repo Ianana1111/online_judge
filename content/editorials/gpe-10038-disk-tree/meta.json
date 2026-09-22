@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10038-disk-tree",
+  "title": "以目錄名稱建立 Trie，再依字典順序輸出",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

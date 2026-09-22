@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11349-symmetric-matrix",
+  "title": "把中心對稱化為陣列前後配對",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

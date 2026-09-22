@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/104/10487.pdf"
+  ],
+  "constraints": [
+    "2<=N<=1000; 1<=queries<25; distinct elements; no tied distinct closest sums; N=0 sentinel."
+  ],
+  "independentMethod": "Two-pointer scan on sorted original values per query, validates unique nearest sum independently of precomputed-pair binary search.",
+  "oracleFile": "scripts/editorials/oracles/geometry.py",
+  "mutations": [
+    {
+      "id": "self-pair",
+      "label": "Allows reusing a single input element",
+      "languageKey": "cpp17",
+      "find": "int j = i + 1;",
+      "replace": "int j = i;"
+    },
+    {
+      "id": "right-only",
+      "label": "Never checks predecessor",
+      "languageKey": "cpp17",
+      "find": "if (it != sums.begin() &&",
+      "replace": "if (false && it != sums.begin() &&"
+    }
+  ]
+}

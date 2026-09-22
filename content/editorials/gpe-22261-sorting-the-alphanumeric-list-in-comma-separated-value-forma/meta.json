@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-22261-sorting-the-alphanumeric-list-in-comma-separated-value-forma",
+  "title": "分離排序鍵與原始資料，逐欄比較後原封不動輸出",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

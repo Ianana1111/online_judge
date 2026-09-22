@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10130.pdf"
+  ],
+  "constraints": [
+    "T<=1000;N1..1000;price1..100;weight1..30;G1..100;capacity1..30;eachpersonindependent0/1inventory;sumfamilyvalue."
+  ],
+  "independentMethod": "Group items by weight and sort prices descending; bounded group-choice DP uses prefix sums of the best q prices for each weight, independently of item-by-item descending updates. Exhaustive subsets validate small inventories.",
+  "oracleFile": "scripts/editorials/oracles/optimization.py",
+  "mutations": [
+    {
+      "id": "unlimited-items",
+      "label": "Updates capacity ascending",
+      "languageKey": "cpp17",
+      "find": "for (int capacity = 30; capacity >= weight; --capacity)",
+      "replace": "for (int capacity = weight; capacity <= 30; ++capacity)"
+    },
+    {
+      "id": "one-person-only",
+      "label": "Keeps only the best family member",
+      "languageKey": "cpp17",
+      "find": "total += best[capacity];",
+      "replace": "total = max(total, best[capacity]);"
+    }
+  ]
+}

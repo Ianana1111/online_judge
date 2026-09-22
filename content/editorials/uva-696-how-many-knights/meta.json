@@ -1,0 +1,8 @@
+{
+  "slug": "uva-696-how-many-knights",
+  "title": "區分單行、雙行與一般棋盤，配對證明最大數量",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

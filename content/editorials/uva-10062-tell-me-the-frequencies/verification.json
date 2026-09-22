@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10062.pdf"
+  ],
+  "constraints": [
+    "Each line independent;length<=1000;ASCII32..127;CR/LF excluded;frequency ascending/code descending;empty lines retained as cases."
+  ],
+  "independentMethod": "Count each distinct character with string.count and tuple-sort independent of array counts/comparator.",
+  "oracleFile": "scripts/editorials/oracles/counting.py",
+  "mutations": [
+    {
+      "id": "tie-ascending",
+      "label": "Sorts tied ASCII codes ascending",
+      "languageKey": "cpp17",
+      "find": "return a > b;",
+      "replace": "return a < b;"
+    },
+    {
+      "id": "drop-spaces",
+      "label": "Ignores ASCII space",
+      "languageKey": "cpp17",
+      "find": "++count[ch];",
+      "replace": "if (ch != ' ') ++count[ch];"
+    }
+  ]
+}

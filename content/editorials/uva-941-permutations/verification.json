@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/9/941.pdf"
+  ],
+  "constraints": [
+    "1<=length<=20;lowercase;LOCAL unique multiset permutations;rank zero-based less than actual multinomial count;20! fits signed64bit."
+  ],
+  "independentMethod": "Independent binomial-product multinomial count and cumulative-block binary selection using totalWays*frequency/remaining; enumerate all unique small-string permutations and all valid ranks.",
+  "oracleFile": "scripts/editorials/oracles/explicit_domains.py",
+  "mutations": [
+    {
+      "id": "positional-duplicates",
+      "label": "Treats equal character occurrences as distinct positions",
+      "languageKey": "cpp17",
+      "find": "for(int frequency:count)ways/=factorial[frequency];",
+      "replace": ""
+    },
+    {
+      "id": "one-based",
+      "label": "Offsets every rank as though input were one-based",
+      "languageKey": "cpp17",
+      "find": "cin>>word>>rank;",
+      "replace": "cin>>word>>rank;rank=max(0LL,rank-1);"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "66f16cb215e96dc483b973e20cf70826ce6e5235c77e9a576a0db6843a4aec30",
+    "file": "content/editorials/uva-941-permutations/statement.md",
+    "reason": "Correct the factorial-only explanation to match the archived aabb rank2=abba multiset case; explicitly require a rank for which a requested permutation exists.",
+    "source": "https://onlinejudge.org/external/9/941.pdf"
+  }
+}

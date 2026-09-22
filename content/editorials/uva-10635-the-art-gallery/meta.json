@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10635-the-art-gallery",
+  "title": "把不重複路線的共同子序列轉成位置 LIS",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

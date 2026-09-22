@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11219-basic-wall-maze",
+  "title": "先判未出生日期，再按生日是否已過計算周歲",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

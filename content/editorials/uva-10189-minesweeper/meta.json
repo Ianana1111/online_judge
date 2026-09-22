@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10189-minesweeper",
+  "title": "精確檢查八個鄰居與盤面邊界",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

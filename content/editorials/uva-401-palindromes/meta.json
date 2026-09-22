@@ -1,0 +1,8 @@
+{
+  "slug": "uva-401-palindromes",
+  "title": "回文與鏡像分別判斷，再組合四種結果",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

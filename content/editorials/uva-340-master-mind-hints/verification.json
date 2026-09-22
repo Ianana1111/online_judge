@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/340.pdf"
+  ],
+  "constraints": [
+    "1<=N<=1000;digits1..9;Nzerosendsgame;N0endsfile;maxindependentmatches withallstrong;4spacehintindent."
+  ],
+  "independentMethod": "First remove equal-position matches, then greedily remove matching digits from remaining multisets by list search; exhaustive small bipartite matching check.",
+  "oracleFile": "scripts/editorials/oracles/formatting.py",
+  "mutations": [
+    {
+      "id": "double-count-strong",
+      "label": "Includes strong in weak count",
+      "languageKey": "cpp17",
+      "find": "total - strong",
+      "replace": "total"
+    },
+    {
+      "id": "max-multiplicity",
+      "label": "Uses larger count for a digit",
+      "languageKey": "cpp17",
+      "find": "min(a[digit], b[digit])",
+      "replace": "max(a[digit], b[digit])"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11461-square-numbers",
+  "title": "預先列出所有平方數，用上下界查詢閉區間",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

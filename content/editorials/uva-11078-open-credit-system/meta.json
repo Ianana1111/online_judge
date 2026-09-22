@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11078-open-credit-system",
+  "title": "維護先前最高分，求有先後限制的最大差",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

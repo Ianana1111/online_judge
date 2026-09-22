@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/534.pdf"
+  ],
+  "constraints": [
+    "2<=N<=200;integercoordinates0..1000;minimize maximum edge fromvertex0to1;N0sentinel;three decimals withScenario andblankcases."
+  ],
+  "independentMethod": "Independent ascending-edge DSU connectivity threshold for stones0/1; minimax Floyd closure on small cases crosschecks the threshold; Decimal square roots validate rounding.",
+  "oracleFile": "scripts/editorials/oracles/metric_graphs.py",
+  "mutations": [
+    {
+      "id": "sum-instead-of-max",
+      "label": "Optimizes sum of squared jumps",
+      "languageKey": "cpp17",
+      "find": "max(best[u],dx*dx+dy*dy)",
+      "replace": "(best[u]+dx*dx+dy*dy)"
+    },
+    {
+      "id": "skip-intermediate",
+      "label": "Never relaxes from an intermediate stone",
+      "languageKey": "cpp17",
+      "find": "for(int v=0;v<n;++v)if(!used[v])",
+      "replace": "for(int v=0;v<n;++v)if(!used[v]&&u==0)"
+    },
+    {
+      "id": "legal-numeric-sign",
+      "label": "Explicit positive sign is the same fixed-decimal value",
+      "languageKey": "cpp17",
+      "find": "<<sqrtl(best[1])",
+      "replace": "<<showpos<<sqrtl(best[1])<<noshowpos",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Preserve exact correctly rounded fixed-decimal values and required case layout while accepting signed zero and equivalent numeric signs; no broad floating tolerance or adjacent incorrect last digit."
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/13/1316.pdf"
+  ],
+  "constraints": [
+    "0<=N<=10000;1<=profit,deadline<=10000;unit processing time;finish<=deadline;EOF includingN0 data;one result per line."
+  ],
+  "independentMethod": "Sort by profit descending and allocate the latest free deadline slot using predecessor DSU, independently of the displayed deadline heap; every small subset checked for sorted-deadline feasibility.",
+  "oracleFile": "scripts/editorials/oracles/ranks_schedules.py",
+  "mutations": [
+    {
+      "id": "rejects-exact-deadline",
+      "label": "Rejects a job completed exactly at deadline",
+      "languageKey": "cpp17",
+      "find": "selected.size() > deadline",
+      "replace": "selected.size() >= deadline"
+    },
+    {
+      "id": "drops-most-profitable",
+      "label": "Uses max-heap and drops largest profit",
+      "languageKey": "cpp17",
+      "find": "greater<int>> selected",
+      "replace": "less<int>> selected"
+    }
+  ]
+}

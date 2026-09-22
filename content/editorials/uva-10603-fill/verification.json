@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/106/10603.pdf"
+  ],
+  "constraints": [
+    "capacities and target1..200;initial0,0,c;pour until source empty or destination full;minimize poured volume after maximizing achievable volume<=target."
+  ],
+  "independentMethod": "Queue-based repeated shortest-path relaxation on explicit three-volume tuples; exhaustive small capacities independently checked by Floyd-Warshall over every conserved state.",
+  "oracleFile": "scripts/editorials/oracles/network_costs.py",
+  "mutations": [
+    {
+      "id": "counts-operations",
+      "label": "Optimizes move count instead of poured volume",
+      "languageKey": "cpp17",
+      "find": "nextCost=cost+amount",
+      "replace": "nextCost=cost+1"
+    },
+    {
+      "id": "smallest-volume",
+      "label": "Selects smallest instead of closest smaller amount",
+      "languageKey": "cpp17",
+      "find": "for (int volume=target;volume>=0;--volume)",
+      "replace": "for (int volume=0;volume<=target;++volume)"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/112/11258.pdf"
+  ],
+  "constraints": [
+    "1<=T<=500;1..200 digits;each part0..2147483647;no leading zeros except single0;sum uses64-bit."
+  ],
+  "independentMethod": "Streaming weighted digit automaton keeps open segment values and best closed-part totals, independently checked against every split mask for short strings; exact upper boundary and200-digit sums.",
+  "oracleFile": "scripts/editorials/oracles/sequence_choices.py",
+  "mutations": [
+    {
+      "id": "excludes-int-max",
+      "label": "Rejects the legal maximum signed32-bit segment",
+      "languageKey": "cpp17",
+      "find": "value > 2147483647LL",
+      "replace": "value >= 2147483647LL"
+    },
+    {
+      "id": "wraps-total32",
+      "label": "Wraps complete sums at2^32",
+      "languageKey": "cpp17",
+      "find": "value + best[j + 1]",
+      "replace": "(value + best[j + 1]) % 4294967296LL"
+    }
+  ]
+}

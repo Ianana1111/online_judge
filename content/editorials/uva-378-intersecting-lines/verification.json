@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/378.pdf"
+  ],
+  "constraints": [
+    "T1..10;integercoordinates[-1000,1000];eachline endpointsdistinct;infinite lines;integercross classification;2decimal rationalpoints;fixedheader/footer;midpoint alternatives andsignedzero accepted."
+  ],
+  "independentMethod": "Independent standard-form ax+by=c elimination and Fraction intersections, separate from parametric direction-vector construction; exact line incidence checked on rational outputs.",
+  "oracleFile": "scripts/editorials/oracles/rational_results.py",
+  "mutations": [
+    {
+      "id": "parallel-always-none",
+      "label": "Fails to distinguish coincident lines",
+      "languageKey": "python3",
+      "find": "print('LINE' if cross(dx, dy, ux, uy) == 0 else 'NONE')",
+      "replace": "print('NONE')"
+    },
+    {
+      "id": "truncates-points",
+      "label": "Drops the fractional coordinate before rounding",
+      "languageKey": "python3",
+      "find": "fixed_ratio(x, denominator, 2)",
+      "replace": "fixed_ratio(x // denominator, 1, 2)"
+    },
+    {
+      "id": "exact-midpoint-toward-zero",
+      "label": "Legal alternative chooses the other nearest decimal at exact rounding midpoints",
+      "languageKey": "python3",
+      "find": "(2 * abs(numerator) * scale + denominator)",
+      "replace": "(2 * abs(numerator) * scale + denominator - 1)",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Use exact input-derived rational answers with required output precision. Accept both nearest printed decimals only at true rounding midpoints, retain labels, counts, order and blank separators, and reject malformed or numerically wrong answers."
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/104/10443.pdf"
+  ],
+  "constraints": [
+    "1 <= rows,cols <= 100; 0 <= days <= 100; only four-neighbor attacks; simultaneous updates; blank line between cases."
+  ],
+  "independentMethod": "Represent each species as coordinate sets; compute all captured positions from old sets and then apply set differences and unions.",
+  "oracleFile": "scripts/editorials/oracles/ordering.py",
+  "mutations": [
+    {
+      "id": "in-place",
+      "label": "Propagates same-day conquests immediately",
+      "languageKey": "cpp17",
+      "find": "vector<string> next = grid;",
+      "replace": "vector<string>& next = grid;"
+    },
+    {
+      "id": "reverse-dominance",
+      "label": "Reverses the predator cycle",
+      "languageKey": "cpp17",
+      "find": "grid[r][c] == 'R' ? 'P' : grid[r][c] == 'P' ? 'S' : 'R'",
+      "replace": "grid[r][c] == 'R' ? 'S' : grid[r][c] == 'S' ? 'P' : 'R'"
+    }
+  ]
+}

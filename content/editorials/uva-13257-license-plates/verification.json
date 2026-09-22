@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/132/13257.pdf"
+  ],
+  "constraints": [
+    "T>=0;1<=|S|<=100000;uppercase A..Z;distinct ordered length3 subsequence strings;strictly increasing positions;zero cases emptyoutput."
+  ],
+  "independentMethod": "Streaming bit masks track seen single letters, ordered pairs and triples, updating longest states before shorter ones; exhaustive short ABC strings checked by index-triple enumeration.",
+  "oracleFile": "scripts/editorials/oracles/finite_enumeration.py",
+  "mutations": [
+    {
+      "id": "reuses-first-position",
+      "label": "Allows the first and second letters to use the same index",
+      "languageKey": "cpp17",
+      "find": "next[first+1][b]",
+      "replace": "next[first][b]"
+    },
+    {
+      "id": "unordered-last-letters",
+      "label": "Imposes an unintended alphabetical order on last two letters",
+      "languageKey": "cpp17",
+      "find": "for (int c = 0; c < 26; ++c)",
+      "replace": "for (int c = b; c < 26; ++c)"
+    }
+  ]
+}

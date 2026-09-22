@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-23671-camel-trading",
+  "title": "正整數運算式：加法優先取最大，乘法優先取最小",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

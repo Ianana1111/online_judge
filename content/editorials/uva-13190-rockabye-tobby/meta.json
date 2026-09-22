@@ -1,0 +1,8 @@
+{
+  "slug": "uva-13190-rockabye-tobby",
+  "title": "最小堆按下次時間與原始優先序取出事件",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

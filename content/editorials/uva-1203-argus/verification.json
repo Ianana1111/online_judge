@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/12/1203.pdf"
+  ],
+  "constraints": [
+    "1..1000distinct registrations;Qnum/Period1..3000;first event atPeriod;K1..10000;timeASC thenIDASC;single dataset."
+  ],
+  "independentMethod": "Independent timestamp order statistic: binary search smallest time with sum(floor(time/period))>=K, explicitly enumerate all events up to it and sort. Units compare literal second-by-second simulation;1000registrations and10000events.",
+  "oracleFile": "scripts/editorials/oracles/rank_digits.py",
+  "mutations": [
+    {
+      "id": "reversed-id-tie",
+      "label": "Higher ID returns first when times tie",
+      "languageKey": "cpp17",
+      "find": "priority_queue<Event,vector<Event>,greater<Event>> events;",
+      "replace": "auto compare=[](const Event &a,const Event &b){if(get<0>(a)!=get<0>(b))return get<0>(a)>get<0>(b);return get<1>(a)<get<1>(b);}; priority_queue<Event,vector<Event>,decltype(compare)> events(compare);"
+    },
+    {
+      "id": "wrong-repeat-period",
+      "label": "Repeats every unit rather than its own period",
+      "languageKey": "cpp17",
+      "find": "time+period,id,period",
+      "replace": "time+1,id,period"
+    }
+  ]
+}

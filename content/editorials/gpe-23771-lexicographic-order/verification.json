@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/123/12335.pdf"
+  ],
+  "constraints": [
+    "T<=5000;1<=N<=20;distinct lowercase symbols;known string is kth permutation in UNKNOWN alphabet;1<=k<=N!;recover alphabet."
+  ],
+  "independentMethod": "Decode mixed-radix digits by repeated modulo1,2,...,N, then insert input symbols from right to left at their relative ranks; exhaustive all permutations through7symbols validate the inverse mapping.",
+  "oracleFile": "scripts/editorials/oracles/missing_exact.py",
+  "mutations": [
+    {
+      "id": "one-based-rank",
+      "label": "Fails to subtract one and wraps maximum rank",
+      "languageKey": "cpp17",
+      "find": "--rank;",
+      "replace": "rank %= factorial[n];"
+    },
+    {
+      "id": "counts-greater-symbols",
+      "label": "Interprets the rank digit as number of greater remaining symbols",
+      "languageKey": "cpp17",
+      "find": "int index = int(rank / factorial[n - i - 1]);",
+      "replace": "int index = int(available.size()) - 1 - int(rank / factorial[n - i - 1]);"
+    }
+  ]
+}

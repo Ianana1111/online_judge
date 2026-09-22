@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-24461-sum-of-consecutive-prime-numbers",
+  "title": "質數遞增且全為正，用滑動視窗找指定和",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

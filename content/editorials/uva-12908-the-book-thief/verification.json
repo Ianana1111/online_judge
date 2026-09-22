@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/129/12908.pdf"
+  ],
+  "constraints": [
+    "1<=s<=1e8;omit exactlyonepage1..N;0terminator;T(N-1)<=s<T(N);missingfirst."
+  ],
+  "independentMethod": "Integer square root derives floor triangular index, then advances exactly one; direct sums and reconstruction verify all small inputs.",
+  "oracleFile": "scripts/editorials/oracles/events.py",
+  "mutations": [
+    {
+      "id": "nonstrict-bound",
+      "label": "Allows forgotten pagezero",
+      "languageKey": "cpp17",
+      "find": "/ 2 > sum",
+      "replace": "/ 2 >= sum"
+    },
+    {
+      "id": "wrong-page-difference",
+      "label": "Uses N squared as page sum",
+      "languageKey": "cpp17",
+      "find": "missing = pages * (pages + 1) / 2 - sum",
+      "replace": "missing = pages * pages - sum"
+    }
+  ]
+}

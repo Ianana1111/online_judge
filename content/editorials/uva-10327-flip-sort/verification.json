@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/103/10327.pdf"
+  ],
+  "constraints": [
+    "1 <= N <= 1000; integer values; datasets until EOF; only adjacent swaps; equal values do not form inversions."
+  ],
+  "independentMethod": "Perform actual bubble-sort adjacent swaps and count them, independent of pair enumeration.",
+  "oracleFile": "scripts/editorials/oracles/ordering.py",
+  "mutations": [
+    {
+      "id": "equal-inversions",
+      "label": "Counts equal values as inversions",
+      "languageKey": "cpp17",
+      "find": "a[i] > a[j]",
+      "replace": "a[i] >= a[j]"
+    },
+    {
+      "id": "adjacent-only",
+      "label": "Counts only adjacent inversions",
+      "languageKey": "cpp17",
+      "find": "j < n;",
+      "replace": "j < min(n, i + 2);"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10800-not-that-kind-of-graph",
+  "title": "記錄每一段畫在哪個高度，再由上到下輸出最小畫布",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/12/1262.pdf"
+  ],
+  "constraints": [
+    "two6x5 uppercase grids;positionwise common letters;duplicates do not multiply candidates;1<=K<=7777;lexicographic distinct passwords or NO."
+  ],
+  "independentMethod": "Enumerate unique candidates from the first grid then filter against the second grid column sets, independently of mixed-radix selection; all7777 ranks of a7776-word grid and empty/repeated-column cases.",
+  "oracleFile": "scripts/editorials/oracles/sequence_choices.py",
+  "mutations": [
+    {
+      "id": "column-union",
+      "label": "Accepts letters seen in either grid instead of both",
+      "languageKey": "cpp17",
+      "find": "a[letter] && b[letter]",
+      "replace": "a[letter] || b[letter]"
+    },
+    {
+      "id": "rejects-last-rank",
+      "label": "Rejects K equal to the total number of candidates",
+      "languageKey": "cpp17",
+      "find": "k > total",
+      "replace": "k >= total"
+    }
+  ]
+}

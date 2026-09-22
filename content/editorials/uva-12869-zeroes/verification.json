@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/128/12869.pdf"
+  ],
+  "constraints": [
+    "0<low<=high<=9e18;at most50001 input lines including00 sentinel;count distinct factorial-zero values,not value range."
+  ],
+  "independentMethod": "Count strictly interior/right-end multiples of five as change points, plus the initial plateau; direct Legendre valuations and exact factorial strings validate all small intervals.",
+  "oracleFile": "scripts/editorials/oracles/exactmath.py",
+  "mutations": [
+    {
+      "id": "include-left-jump",
+      "label": "Counts the lower-end jump twice",
+      "languageKey": "cpp17",
+      "find": "high / 5 - low / 5 + 1",
+      "replace": "high / 5 - (low - 1) / 5 + 1"
+    },
+    {
+      "id": "count-missing-values",
+      "label": "Counts skipped factorial valuations as present",
+      "languageKey": "cpp17",
+      "find": "high / 5 - low / 5 + 1",
+      "replace": "([&]() { long long difference = 1; for (long long p = 5; p <= high;) { difference += high / p - low / p; if (p > high / 5) break; p *= 5; } return difference; }())"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11806-cheerleaders",
+  "title": "對四條邊做容斥，使用 Pascal 表計算組合數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

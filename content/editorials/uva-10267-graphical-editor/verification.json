@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10267.pdf"
+  ],
+  "constraints": [
+    "1<=M,N<=100;1basedcolumn,row;uppercase colors;V/H endpoints unordered,Kupper-left/lower-right;four-connected F;same-color no-op;unknown-command whole line ignored;other errors undefined;X sentinel."
+  ],
+  "independentMethod": "Literal drawing operations with DSU-built same-color connected components for each fill, independent of queue flood fill; exhaustive tiny binary-color boards and maximum-grid commands.",
+  "oracleFile": "scripts/editorials/oracles/state_spaces.py",
+  "mutations": [
+    {
+      "id": "horizontal-reverse-ignored",
+      "label": "Does not normalize reversed horizontal endpoints",
+      "languageKey": "cpp17",
+      "find": "if (x1 > x2) swap(x1,x2);",
+      "replace": "(void)0;"
+    },
+    {
+      "id": "diagonal-flood",
+      "label": "Uses eight-neighbor rather than four-neighbor fill",
+      "languageKey": "cpp17",
+      "find": "const int dx[] = {1,-1,0,0}, dy[] = {0,0,1,-1};\n                for (int d = 0; d < 4; ++d)",
+      "replace": "const int dx[] = {1,-1,0,0,1,1,-1,-1}, dy[] = {0,0,1,-1,1,-1,1,-1};\n                for (int d = 0; d < 8; ++d)"
+    }
+  ]
+}

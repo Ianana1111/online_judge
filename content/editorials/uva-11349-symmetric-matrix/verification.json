@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/113/11349.pdf"
+  ],
+  "constraints": [
+    "1 <= T <= 300; 1 <= n <= 100; -2^32 <= element <= 2^32; N = n header; nonnegative central symmetry"
+  ],
+  "independentMethod": "Rotate a two-dimensional grid by reversing row order and each row; independent of flattened-index comparison.",
+  "oracleFile": "scripts/editorials/oracles/simulation.py",
+  "mutations": [
+    {
+      "id": "negative-allowed",
+      "label": "Ignores the nonnegative requirement",
+      "languageKey": "cpp17",
+      "find": "if (value < 0) symmetric = false;",
+      "replace": "// sign ignored"
+    },
+    {
+      "id": "transpose",
+      "label": "Checks transpose symmetry instead of central symmetry",
+      "languageKey": "cpp17",
+      "find": "values[values.size() - 1 - i]",
+      "replace": "values[(i % n) * n + i / n]"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "b90b8db4a458c2cfda5e0421fdd6d745cd11f28d4aed9a095aa12b4f776c4135",
+    "file": "content/editorials/uva-11349-symmetric-matrix/statement.md",
+    "reason": "Clarify N = n input header and terminal output period shown by the official sample.",
+    "source": "https://onlinejudge.org/external/113/11349.pdf"
+  }
+}

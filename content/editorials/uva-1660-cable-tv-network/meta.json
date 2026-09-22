@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1660-cable-tv-network",
+  "title": "拆點容量限制中繼節點，求最小頂點割",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11743-credit-check",
+  "title": "保留十六位字串，從右端定位 Luhn 加倍位置",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

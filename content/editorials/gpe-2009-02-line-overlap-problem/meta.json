@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-2009-02-line-overlap-problem",
+  "title": "掃描端點，累加每一對線段的重疊長度",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

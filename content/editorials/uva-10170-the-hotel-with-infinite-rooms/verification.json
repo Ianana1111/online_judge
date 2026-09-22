@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10170.pdf"
+  ],
+  "constraints": [
+    "1<=S<=10000;1<=D<10^15;day1-based;groupkoccupieskinclusivedays;EOF."
+  ],
+  "independentMethod": "Arbitrary-precision integer square-root inversion of triangular-number total plus direct boundary correction, independent of binary-search cumulative formula.",
+  "oracleFile": "scripts/editorials/oracles/integers.py",
+  "mutations": [
+    {
+      "id": "strict-last-day",
+      "label": "Moves checkout day to next group",
+      "languageKey": "cpp17",
+      "find": "through(mid) >= day",
+      "replace": "through(mid) > day"
+    },
+    {
+      "id": "start-at-one",
+      "label": "Includes earlier nonexistent groups",
+      "languageKey": "cpp17",
+      "find": "(size - start + 1) * (start + size) / 2",
+      "replace": "size * (size + 1) / 2"
+    }
+  ]
+}

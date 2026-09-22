@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1371-period",
+  "title": "二分最大編輯距離，讓編輯距離 DP 在合法段尾重新開始",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

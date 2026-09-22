@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/501.pdf"
+  ],
+  "constraints": [
+    "N<=M<=30000;|A|<=2e9;nondecreasing u;rank p<=u[p]<=M;duplicates count;GET rank increases each call;blank line between datasets."
+  ],
+  "independentMethod": "Persistent prefix frequency segment trees answer each kth query at exactly root[u], independent of online heap balancing; random small prefixes checked by full sorting and30000 repeated ranks/values.",
+  "oracleFile": "scripts/editorials/oracles/ranks_schedules.py",
+  "mutations": [
+    {
+      "id": "never-rebalances-small",
+      "label": "Always inserts new small values into upper",
+      "languageKey": "cpp17",
+      "find": "!lower.empty() && value < lower.top()",
+      "replace": "false"
+    },
+    {
+      "id": "upper-max-heap",
+      "label": "Uses largest remaining value instead of smallest",
+      "languageKey": "cpp17",
+      "find": "greater<long long>> upper",
+      "replace": "less<long long>> upper"
+    }
+  ]
+}

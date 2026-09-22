@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10002.pdf"
+  ],
+  "constraints": [
+    "3<=N<=100;unordered distinct integer vertices of strict convex polygon;no3collinear;uniformarea centroid;N<3sentinel;3decimal coordinates."
+  ],
+  "independentMethod": "Independent monotone convex hull and triangulation about one hull vertex, summing exact triangle areas times triangle centroids; permutation invariance and affine transformation checks.",
+  "oracleFile": "scripts/editorials/oracles/rational_shapes.py",
+  "mutations": [
+    {
+      "id": "vertex-average",
+      "label": "Mistakes vertex mass for area mass",
+      "languageKey": "python3",
+      "find": "return fixed_ratio(moment_x, 3 * area, 3), fixed_ratio(moment_y, 3 * area, 3)",
+      "replace": "return fixed_ratio(sum_x, n, 3), fixed_ratio(sum_y, n, 3)"
+    },
+    {
+      "id": "input-order",
+      "label": "Assumes unordered input is already polygon boundary order",
+      "languageKey": "python3",
+      "find": "points = sorted(points, key=cmp_to_key(compare))",
+      "replace": "points = list(points)"
+    },
+    {
+      "id": "other-nearest-midpoint",
+      "label": "Legal exact midpoint alternative rounds toward zero",
+      "languageKey": "python3",
+      "find": "(2 * abs(numerator) * scale + denominator)",
+      "replace": "(2 * abs(numerator) * scale + denominator - 1)",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Respect exact numeric output contracts: derive rational centroid and water results from input, compare finite-decimal salaries by value, and retain deterministic Huffman codes while validating the exact frequency-weighted rounded mean. Do not accept arbitrary adjacent decimal values."
+  }
+}

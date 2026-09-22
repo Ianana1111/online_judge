@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/124/12455.pdf"
+  ],
+  "constraints": [
+    "0<=T<=50;target0..1000;1<=P<=20;uncut nonnegative physical lengths;each bar once;empty subset for target0."
+  ],
+  "independentMethod": "Meet-in-the-middle enumerates subset sums of two disjoint halves and joins exact complementary sums, independent of bounded-target dynamic programming; exhaustive subsets validate small cases.",
+  "oracleFile": "scripts/editorials/oracles/matrixsets.py",
+  "mutations": [
+    {
+      "id": "unlimited-bars",
+      "label": "Reuses each bar by ascending sum update",
+      "languageKey": "cpp17",
+      "find": "for (int sum = target; sum >= length; --sum)",
+      "replace": "for (int sum = length; sum <= target; ++sum)"
+    },
+    {
+      "id": "no-empty-subset",
+      "label": "Removes zero-sum base case",
+      "languageKey": "cpp17",
+      "find": "possible[0] = true;",
+      "replace": "possible[0] = false;"
+    }
+  ]
+}

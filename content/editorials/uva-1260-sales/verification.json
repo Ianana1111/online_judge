@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/12/1260.pdf"
+  ],
+  "constraints": [
+    "Tcases;2<=N<=1000;1<=sales<=5000;count earlier<=current includingequal;chronological order."
+  ],
+  "independentMethod": "Enumerate all ordered index pairs i<j and compare amounts directly, independent of Fenwick prefix frequency aggregation.",
+  "oracleFile": "scripts/editorials/oracles/events.py",
+  "mutations": [
+    {
+      "id": "strict-only",
+      "label": "Excludes equal sales",
+      "languageKey": "cpp17",
+      "find": "answer += query(x);",
+      "replace": "answer += query(x - 1);"
+    },
+    {
+      "id": "opposite-relation",
+      "label": "Counts earlier larger values",
+      "languageKey": "cpp17",
+      "find": "answer += query(x);",
+      "replace": "answer += i - query(x);"
+    }
+  ]
+}

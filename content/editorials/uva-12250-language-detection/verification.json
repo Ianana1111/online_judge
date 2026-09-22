@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/122/12250.pdf"
+  ],
+  "constraints": [
+    "uppercaseA-Z wordlength1..14;exact6lookup;#terminator;around2000linesnotahardcap."
+  ],
+  "independentMethod": "Ordered if/elif exact-word dispatch, independently verifies every mapping and exhaustive near-miss edits.",
+  "oracleFile": "scripts/editorials/oracles/records.py",
+  "mutations": [
+    {
+      "id": "hello-german",
+      "label": "Wrong language for HELLO",
+      "languageKey": "cpp17",
+      "find": "{\"HELLO\",\"ENGLISH\"}",
+      "replace": "{\"HELLO\",\"GERMAN\"}"
+    },
+    {
+      "id": "unknown-english",
+      "label": "Guesses English for unknown words",
+      "languageKey": "cpp17",
+      "find": "? \"UNKNOWN\" :",
+      "replace": "? \"ENGLISH\" :"
+    }
+  ]
+}

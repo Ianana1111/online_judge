@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/116/11639.pdf"
+  ],
+  "constraints": [
+    "1<=T<=100;coordinates0..100;strict positive rectangle width/height;areas strong/exactly-one/uncovered sum10000."
+  ],
+  "independentMethod": "Raster count every unit cell by number of covering rectangles, independent of intersection/inclusion-exclusion formula.",
+  "oracleFile": "scripts/editorials/oracles/arithmetic.py",
+  "mutations": [
+    {
+      "id": "union-not-single",
+      "label": "Counts double-covered area as weak coverage",
+      "languageKey": "cpp17",
+      "find": "areaA + areaB - 2 * strong",
+      "replace": "areaA + areaB - strong"
+    },
+    {
+      "id": "negative-overlap",
+      "label": "Does not clamp separated x intervals",
+      "languageKey": "cpp17",
+      "find": "max(0, min(c, g) - max(a, e))",
+      "replace": "min(c, g) - max(a, e)"
+    }
+  ]
+}

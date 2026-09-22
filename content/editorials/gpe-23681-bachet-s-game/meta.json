@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-23681-bachet-s-game",
+  "title": "可走到必敗狀態就是必勝，依石頭數遞增求解",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

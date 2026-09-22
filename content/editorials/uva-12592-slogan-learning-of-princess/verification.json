@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/125/12592.pdf"
+  ],
+  "constraints": [
+    "1<=N<=20;unique firstlines;1<=Q<=100;line<=100 lowercase/spaces at leastoneletter;allqueriesknown;preserve spaces."
+  ],
+  "independentMethod": "Linear search through stored line pairs for exact equality, independently of associative lookup; keys with shared prefixes and meaningful spaces tested.",
+  "oracleFile": "scripts/editorials/oracles/records.py",
+  "mutations": [
+    {
+      "id": "wrong-line",
+      "label": "Echoes first line instead of response",
+      "languageKey": "cpp17",
+      "find": "responses[first] = second;",
+      "replace": "responses[first] = first;"
+    },
+    {
+      "id": "last-only",
+      "label": "Forgets all but final learned slogan",
+      "languageKey": "cpp17",
+      "find": "responses[first] = second;",
+      "replace": "responses.clear(); responses[first] = second;"
+    }
+  ]
+}

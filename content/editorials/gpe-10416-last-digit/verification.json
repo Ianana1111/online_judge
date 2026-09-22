@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10162.pdf"
+  ],
+  "constraints": [
+    "1<=N<=2*10^100;0terminator;sum i^i lastdecimaldigit;largeNstring;termperiod20,sumperiod100."
+  ],
+  "independentMethod": "Parse arbitrary-precision N; quotient/remainder by20 with block contribution4 and direct modular powers, independent of reference mod100 prefix lookup.",
+  "oracleFile": "scripts/editorials/oracles/gpecore.py",
+  "mutations": [
+    {
+      "id": "period-twenty",
+      "label": "Drops contributions of full20-term blocks",
+      "languageKey": "cpp17",
+      "find": "remainder * 10 + ch - '0') % 100",
+      "replace": "remainder * 10 + ch - '0') % 20"
+    },
+    {
+      "id": "wrong-exponent",
+      "label": "Computes i^(i-1)",
+      "languageKey": "cpp17",
+      "find": "e < i;",
+      "replace": "e < i - 1;"
+    }
+  ]
+}

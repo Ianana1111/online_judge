@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-23571-smith-numbers",
+  "title": "逐一找後繼合數，比對含重數的質因數數字和",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

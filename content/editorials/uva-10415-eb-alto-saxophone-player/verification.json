@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/104/10415.pdf"
+  ],
+  "constraints": [
+    "1 <= songs <= 1000; 0 <= length <= 200; exact case-sensitive note alphabet; all fingers initially released"
+  ],
+  "independentMethod": "Per-finger Boolean run starts from independent literal bitmasks; differs from all-finger transition simulation.",
+  "oracleFile": "scripts/editorials/oracles/basics.py",
+  "mutations": [
+    {
+      "id": "held-again",
+      "label": "Counts held fingers again",
+      "languageKey": "cpp17",
+      "find": "current[i] && !previous[i]",
+      "replace": "current[i]"
+    },
+    {
+      "id": "state-leak",
+      "label": "Retains finger state between songs",
+      "languageKey": "cpp17",
+      "find": "array<bool, 10> previous{};",
+      "replace": "static array<bool, 10> previous{};"
+    }
+  ]
+}

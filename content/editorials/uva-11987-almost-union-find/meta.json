@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11987-almost-union-find",
+  "title": "分離元素身分與 DSU 節點，搬移時配置新節點",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

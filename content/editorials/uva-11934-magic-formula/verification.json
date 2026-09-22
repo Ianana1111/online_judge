@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/119/11934.pdf"
+  ],
+  "constraints": [
+    "coefficients-1000..1000;2<=d<=999999;0<=L<=999;include both0andL;00000terminator;zero polynomial divisible."
+  ],
+  "independentMethod": "Generate polynomial values using first/second finite differences f(0)=c, delta=a+b, delta+=2a, independently of direct Horner evaluation.",
+  "oracleFile": "scripts/editorials/oracles/collections_suite.py",
+  "mutations": [
+    {
+      "id": "skip-zero",
+      "label": "Starts at1 instead of0",
+      "languageKey": "cpp17",
+      "find": "long long x = 0;",
+      "replace": "long long x = 1;"
+    },
+    {
+      "id": "exclude-limit",
+      "label": "Omits x=L",
+      "languageKey": "cpp17",
+      "find": "x <= limit",
+      "replace": "x < limit"
+    }
+  ]
+}

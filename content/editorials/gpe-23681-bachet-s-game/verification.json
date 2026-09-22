@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/104/10404.pdf"
+  ],
+  "constraints": [
+    "1<=n<=1e6;1<=m<=10;positive allowed moves incl1;normal play last stone wins;EOF."
+  ],
+  "independentMethod": "Compute full Sprague-Grundy mex values of all legal successor states; nonzero Grundy identifies winning, independently richer than boolean reference. Small recursive minimax validates all move subsets.",
+  "oracleFile": "scripts/editorials/oracles/treegames.py",
+  "mutations": [
+    {
+      "id": "misere-base",
+      "label": "Treats zero remaining stones as winning",
+      "languageKey": "cpp17",
+      "find": "vector<char> winning(n + 1, false);",
+      "replace": "vector<char> winning(n + 1, false); winning[0] = true;"
+    },
+    {
+      "id": "contiguous-formula",
+      "label": "Assumes all moves1..maximum are legal",
+      "languageKey": "cpp17",
+      "find": "winning[n] ?",
+      "replace": "(n % (*max_element(moves.begin(), moves.end()) + 1) != 0) ?"
+    }
+  ]
+}

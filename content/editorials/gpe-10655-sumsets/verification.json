@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10125.pdf"
+  ],
+  "constraints": [
+    "1<=N<=1000;distinctintegers[-536870912,536870911];four distinct elements;a+b+c=d;largestd;0terminator."
+  ],
+  "independentMethod": "Counter of pair sums subtracts the exact number of pairs incident to c or d using value lookup; independent of sorted pair-range scanning. Exhaustive four-index enumeration verifies small sets.",
+  "oracleFile": "scripts/editorials/oracles/missingcore.py",
+  "mutations": [
+    {
+      "id": "reuse-elements",
+      "label": "Allows pair endpoints to equal c or d",
+      "languageKey": "cpp17",
+      "find": "it->a != c && it->a != d && it->b != c && it->b != d",
+      "replace": "true"
+    },
+    {
+      "id": "smallest-answer",
+      "label": "Searches d from smallest to largest",
+      "languageKey": "cpp17",
+      "find": "for (int d = n - 1; d >= 0 && !found; --d)",
+      "replace": "for (int d = 0; d < n && !found; ++d)"
+    }
+  ]
+}

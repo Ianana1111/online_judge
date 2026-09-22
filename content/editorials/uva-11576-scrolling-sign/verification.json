@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/115/11576.pdf"
+  ],
+  "constraints": [
+    "1<=K,W<=100;each word exactlyK uppercase letters;fixed order;consecutive identical words need zero additional chars."
+  ],
+  "independentMethod": "KMP prefix-function on next-word + separator + previous-word derives overlap independently of descending direct comparisons; exhaustive small-string stream tests.",
+  "oracleFile": "scripts/editorials/oracles/intervals.py",
+  "mutations": [
+    {
+      "id": "exclude-full-overlap",
+      "label": "Forbids full overlap between identical words",
+      "languageKey": "cpp17",
+      "find": "int overlap = length;",
+      "replace": "int overlap = length - 1;"
+    },
+    {
+      "id": "prefix-prefix",
+      "label": "Compares two prefixes instead of suffix-prefix",
+      "languageKey": "cpp17",
+      "find": "previous.compare(length - overlap, overlap",
+      "replace": "previous.compare(0, overlap"
+    }
+  ]
+}

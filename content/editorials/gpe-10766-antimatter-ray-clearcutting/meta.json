@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10766-antimatter-ray-clearcutting",
+  "title": "預算每條直線能砍的樹，以集合動態規劃達到指定棵數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/107/10721.pdf"
+  ],
+  "constraints": [
+    "1<=n,k,m<=50;exactlykpositiveorderedwidths<=m;totaln;startdarkfixed;EOF;64bitsignedanswer."
+  ],
+  "independentMethod": "Inclusion-exclusion bounded stars-and-bars: sum (-1)^j*C(k,j)*C(n-j*m-1,k-1), independent of composition DP; exhaustive width tuples validate small domain.",
+  "oracleFile": "scripts/editorials/oracles/grids.py",
+  "mutations": [
+    {
+      "id": "zero-width",
+      "label": "Allows a vanished zero-width bar",
+      "languageKey": "cpp17",
+      "find": "int width = 1;",
+      "replace": "int width = 0;"
+    },
+    {
+      "id": "narrow-counts",
+      "label": "Stores counts in32bits",
+      "languageKey": "cpp17",
+      "find": "vector<vector<long long>> ways(k + 1, vector<long long>(n + 1, 0));",
+      "replace": "vector<vector<int>> ways(k + 1, vector<int>(n + 1, 0));"
+    }
+  ]
+}

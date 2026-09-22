@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/119/11908.pdf"
+  ],
+  "constraints": [
+    "1<=T<=50;1<=N<=30000;0<=A<=100000;1<=B<=100000;1<=C<=1000;occupied floorsA..A+B-1;maximize profit."
+  ],
+  "independentMethod": "Dense floor-index DP chooses an advertisement starting at each floor or skips that floor; every small subset independently validates weighted nonoverlap and touching endpoints.",
+  "oracleFile": "scripts/editorials/oracles/ranks_schedules.py",
+  "mutations": [
+    {
+      "id": "strict-predecessor",
+      "label": "Rejects an advertisement ending exactly at the next start",
+      "languageKey": "cpp17",
+      "find": "upper_bound(ends.begin(),ends.begin()+i-1,ad.start)",
+      "replace": "lower_bound(ends.begin(),ends.begin()+i-1,ad.start)"
+    },
+    {
+      "id": "single-ad-only",
+      "label": "Ignores compatible previous profit",
+      "languageKey": "cpp17",
+      "find": "best[compatible] + ad.profit",
+      "replace": "0LL + ad.profit"
+    }
+  ]
+}

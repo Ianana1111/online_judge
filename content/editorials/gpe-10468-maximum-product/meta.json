@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10468-maximum-product",
+  "title": "枚舉每個起點，累乘所有連續區間",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

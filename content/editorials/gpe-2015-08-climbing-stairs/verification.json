@@ -1,0 +1,30 @@
+{
+  "sources": [
+    "repository:packages/db/audit/gpe-recovery-cases.json#2015-08"
+  ],
+  "constraints": [
+    "1 ≤ n ≤100; repeated values until EOF; exact integer answer with no modulus"
+  ],
+  "independentMethod": "Sum of binomial coefficients by number of two-step moves, independent of Fibonacci recurrence.",
+  "oracleFile": "scripts/editorials/oracles/gpe.py",
+  "oracleDependencies": [
+    "scripts/author-gpe-recovery.py",
+    "scripts/gpe_recovery_references.py"
+  ],
+  "mutations": [
+    {
+      "id": "overflow",
+      "label": "Uses only 64 bits for a 21-digit answer",
+      "languageKey": "cpp17",
+      "find": "using Number = unsigned __int128;",
+      "replace": "using Number = unsigned long long;"
+    },
+    {
+      "id": "off-by-one",
+      "label": "Stops one recurrence too early",
+      "languageKey": "cpp17",
+      "find": "step <= n",
+      "replace": "step < n"
+    }
+  ]
+}

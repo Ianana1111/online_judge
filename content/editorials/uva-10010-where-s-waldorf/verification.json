@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10010.pdf"
+  ],
+  "constraints": [
+    "1 <= rows,cols <= 50; 1 <= queries <= 20; alphabetic case-insensitive words; every query occurs; row-major tie priority"
+  ],
+  "independentMethod": "Extract maximal grid lines and use substring search; min starting coordinate over all matches.",
+  "oracleFile": "scripts/editorials/oracles/sequences.py",
+  "mutations": [
+    {
+      "id": "no-diagonals",
+      "label": "Checks only orthogonal directions",
+      "languageKey": "cpp17",
+      "find": "if (dr == 0 && dc == 0) continue;",
+      "replace": "if (dr == dc || dr == -dc) continue;"
+    },
+    {
+      "id": "case-sensitive-query",
+      "label": "Does not normalize query casing",
+      "languageKey": "cpp17",
+      "find": "lowercase(word);",
+      "replace": "// query remains case-sensitive"
+    }
+  ]
+}

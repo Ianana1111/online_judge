@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/6/679.pdf"
+  ],
+  "constraints": [
+    "2<=D<=20;1<=I<=2^(D-1)<=524288;all flags initiallyfalse per case;root depth1;declared T plus final-1."
+  ],
+  "independentMethod": "Reverse exactly D-1 low bits of I-1 to obtain the leaf offset, independently validated against explicit flag simulation for all balls through depth11.",
+  "oracleFile": "scripts/editorials/oracles/discrete_structures.py",
+  "mutations": [
+    {
+      "id": "wrong-local-odd-index",
+      "label": "Rounds down the local odd visit index",
+      "languageKey": "cpp17",
+      "find": "number = (number + 1) / 2",
+      "replace": "number = number / 2"
+    },
+    {
+      "id": "extra-level",
+      "label": "Descends one level below the leaves",
+      "languageKey": "cpp17",
+      "find": "level < depth",
+      "replace": "level <= depth"
+    }
+  ]
+}

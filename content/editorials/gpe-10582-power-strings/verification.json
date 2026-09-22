@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10298.pdf"
+  ],
+  "constraints": [
+    "line-basedprintableASCII;1<=length<=1000000;spacespreserved;singleperiodlineends;maxexactwhole-stringrepetitions."
+  ],
+  "independentMethod": "Z-function computes prefix matches at each position; test divisors of total length for complete coverage, independent of prefix-function period formula.",
+  "oracleFile": "scripts/editorials/oracles/missingcore.py",
+  "mutations": [
+    {
+      "id": "partial-last-copy",
+      "label": "Omits exact divisibility check",
+      "languageKey": "cpp17",
+      "find": "n % period == 0 ? n / period : 1",
+      "replace": "n / period"
+    },
+    {
+      "id": "drop-spaces",
+      "label": "Erases genuine spaces from input line",
+      "languageKey": "cpp17",
+      "find": "int n = s.size();",
+      "replace": "s.erase(remove(s.begin(), s.end(), ' '), s.end()); if (s.empty()) s = \"x\"; int n = s.size();"
+    }
+  ]
+}

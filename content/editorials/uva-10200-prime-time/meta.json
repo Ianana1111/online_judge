@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10200-prime-time",
+  "title": "預算多項式質數前綴和，以整數精確輸出百分比",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/103/10397.pdf"
+  ],
+  "constraints": [
+    "N1..750;distinctintegercoordinatesabs<=10000;0<=M<=1000;uniqueundirectedexistingedges;minimumADDEDlength;two decimals."
+  ],
+  "independentMethod": "Independent Kruskal precontracts all existing cables, sorts integer squared distances, and sums Decimal square roots of newly needed edges; small exhaustive spanning-tree and zero-cost connectivity checks.",
+  "oracleFile": "scripts/editorials/oracles/metric_graphs.py",
+  "mutations": [
+    {
+      "id": "bill-existing-cables",
+      "label": "Charges for existing cables",
+      "languageKey": "cpp17",
+      "find": "connected[u][v]?0:dx*dx+dy*dy",
+      "replace": "dx*dx+dy*dy"
+    },
+    {
+      "id": "maximum-not-total",
+      "label": "Keeps only the longest new cable",
+      "languageKey": "cpp17",
+      "find": "total+=sqrtl(best[u]);",
+      "replace": "total=max(total,sqrtl(best[u]));"
+    },
+    {
+      "id": "legal-numeric-sign",
+      "label": "Explicit positive sign is the same fixed-decimal value",
+      "languageKey": "cpp17",
+      "find": "<<total",
+      "replace": "<<showpos<<total<<noshowpos",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Preserve exact correctly rounded fixed-decimal values and required case layout while accepting signed zero and equivalent numeric signs; no broad floating tolerance or adjacent incorrect last digit."
+  }
+}

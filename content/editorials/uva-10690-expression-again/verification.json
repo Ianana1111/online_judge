@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/106/10690.pdf"
+  ],
+  "constraints": [
+    "1<=N,M<=50;values -50..50;at most110 EOF cases;exact cardinality;maximum then minimum."
+  ],
+  "independentMethod": "Transpose states: map each signed sum to a bitmask of feasible element counts; independently brute-force all combinations on small random instances.",
+  "oracleFile": "scripts/editorials/oracles/mask_paths.py",
+  "mutations": [
+    {
+      "id": "reuse-item",
+      "label": "Ascending counts reuse the current item",
+      "languageKey": "cpp17",
+      "find": "for (int count=min(k,i+1);count>=1;--count)",
+      "replace": "for (int count=1;count<=min(k,i+1);++count)"
+    },
+    {
+      "id": "drops-negative",
+      "label": "Ignores negative selected sums",
+      "languageKey": "cpp17",
+      "find": "int sum=-2500",
+      "replace": "int sum=0"
+    }
+  ]
+}

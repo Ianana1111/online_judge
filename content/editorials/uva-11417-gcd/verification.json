@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/114/11417.pdf"
+  ],
+  "constraints": [
+    "2<=N<=500;at most100input lines including0;sum gcd(i,j) for1<=i<j<=N;EOF after0."
+  ],
+  "independentMethod": "Totient sieve and divisor grouping: sum over d of d*sum(phi(k),2<=k<=N//d); independent of enumerating gcd pairs.",
+  "oracleFile": "scripts/editorials/oracles/intervals.py",
+  "mutations": [
+    {
+      "id": "include-diagonal",
+      "label": "Includes self-pairs",
+      "languageKey": "cpp17",
+      "find": "left < right",
+      "replace": "left <= right"
+    },
+    {
+      "id": "last-column-only",
+      "label": "Drops previous prefix result",
+      "languageKey": "cpp17",
+      "find": "total[right] = total[right - 1];",
+      "replace": "total[right] = 0;"
+    }
+  ]
+}

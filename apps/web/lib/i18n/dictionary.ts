@@ -17,6 +17,7 @@ import { billingLaunchDictionary } from "./dict/billingLaunch";
  * "Solved count".
  */
 const overrides: Record<string, string> = {
+  "Official editorial": "官方詳解",
   "Your browser could not save these test cases. Copy them before leaving.": "瀏覽器無法保存自訂測資，離開前請先複製備份。",
   "Your browser could not save this draft. Copy your code before leaving.": "瀏覽器無法保存程式碼草稿，離開前請先複製備份。",
   "Refresh": "重新整理",

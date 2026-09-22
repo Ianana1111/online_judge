@@ -1,0 +1,12 @@
+{
+  "extends": "../../packages/config/tsconfig.base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "types": ["node"],
+    "typeRoots": ["../../apps/judge/node_modules/@types"],
+    "paths": { "@vercel/sandbox": ["../../apps/judge/node_modules/@vercel/sandbox"] }
+  },
+  "include": ["*.ts", "../../tests/editorials.test.ts", "../../tests/editorial-publication.test.ts", "../../tests/editorial-run.pipeline.test.ts"]
+}

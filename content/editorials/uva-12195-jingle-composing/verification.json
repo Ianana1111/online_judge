@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/121/12195.pdf"
+  ],
+  "constraints": [
+    "songlength3..200;slashes at bothends;nonemptymeasures;WHQESTXdurations powersof2;single*terminator."
+  ],
+  "independentMethod": "Split measures and sum fractions.Fraction durations exactly, independent of scaled streaming integer state.",
+  "oracleFile": "scripts/editorials/oracles/records.py",
+  "mutations": [
+    {
+      "id": "overlong-valid",
+      "label": "Accepts overlong measures",
+      "languageKey": "cpp17",
+      "find": "sum == 64",
+      "replace": "sum >= 64"
+    },
+    {
+      "id": "no-reset",
+      "label": "Carries duration into next measure",
+      "languageKey": "cpp17",
+      "find": "++answer; sum = 0;",
+      "replace": "++answer; sum = sum;"
+    }
+  ]
+}

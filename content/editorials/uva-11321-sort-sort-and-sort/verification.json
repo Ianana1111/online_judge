@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/113/11321.pdf"
+  ],
+  "constraints": [
+    "1 <= N,M <= 10000; signed32 values; C signed remainder; duplicates retained; output final 0 0"
+  ],
+  "independentMethod": "Tuple sort keys with independently computed signed remainder, compared to branch-based C++ comparator.",
+  "oracleFile": "scripts/editorials/oracles/basics.py",
+  "mutations": [
+    {
+      "id": "negative-odd",
+      "label": "Misclassifies negative odd numbers",
+      "languageKey": "cpp17",
+      "find": "a % 2 != 0, oddB = b % 2 != 0",
+      "replace": "a % 2 == 1, oddB = b % 2 == 1"
+    },
+    {
+      "id": "odd-ascending",
+      "label": "Sorts odd ties ascending",
+      "languageKey": "cpp17",
+      "find": "if (oddA) return a > b;",
+      "replace": "if (oddA) return a < b;"
+    }
+  ]
+}

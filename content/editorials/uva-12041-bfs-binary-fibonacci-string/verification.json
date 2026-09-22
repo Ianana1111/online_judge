@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/120/12041.pdf"
+  ],
+  "constraints": [
+    "T<=100;N,i,j0..2^31-1;valid inclusive indices;i<=j;j-i<=10000;F0=0,F1=1,Fn=F(n-2)+F(n-1)."
+  ],
+  "independentMethod": "Iterative rope interval intersection extracts only overlapping subtrees in order rather than locating each character; compare explicit strings through22 and unreduced exact-length descent through200 for high-prefix parity.",
+  "oracleFile": "scripts/editorials/oracles/structural_counts.py",
+  "mutations": [
+    {
+      "id": "loses-parity",
+      "label": "Collapses odd and even large levels to the same prefix",
+      "languageKey": "cpp17",
+      "find": "46+(n-46)%2",
+      "replace": "46"
+    },
+    {
+      "id": "wrong-split",
+      "label": "Uses the second child length as the first split",
+      "languageKey": "cpp17",
+      "find": "split=length[level-2]",
+      "replace": "split=length[level-1]"
+    }
+  ]
+}

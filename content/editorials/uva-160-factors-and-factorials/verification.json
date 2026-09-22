@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/1/160.pdf"
+  ],
+  "constraints": [
+    "2<=N<=100;0 sentinel;prime exponents ascending;N and counts width3;15 counts/line;six-space continuation."
+  ],
+  "independentMethod": "Directly factor every integer1..N with a smallest-prime-factor table and accumulate multiplicities; all99 legal inputs cross-checked against exact factorial division.",
+  "oracleFile": "scripts/editorials/oracles/ordered_domains.py",
+  "mutations": [
+    {
+      "id": "only-first-power",
+      "label": "Counts multiples of p but omits higher powers",
+      "languageKey": "cpp17",
+      "find": "exponent += quotient;",
+      "replace": "{ exponent += quotient; break; }"
+    },
+    {
+      "id": "fourteen-columns",
+      "label": "Wraps before the required fifteenth exponent",
+      "languageKey": "cpp17",
+      "find": "column == 15",
+      "replace": "column == 14"
+    }
+  ]
+}

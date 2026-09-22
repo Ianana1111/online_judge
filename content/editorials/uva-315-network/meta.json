@@ -1,0 +1,8 @@
+{
+  "slug": "uva-315-network",
+  "title": "以 DFS 進入時間與 low-link 找出全部割點",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

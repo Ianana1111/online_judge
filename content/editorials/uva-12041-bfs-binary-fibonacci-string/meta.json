@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12041-bfs-binary-fibonacci-string",
+  "title": "利用串接長度定位字元，將極大階數縮到同奇偶前綴",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

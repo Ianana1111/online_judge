@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/111/11175.pdf"
+  ],
+  "constraints": [
+    "T<220;vertices0..300;directed adjacency;D allows duplicate edges and self-loops;all out-neighbor sets pairwise disjoint or equal."
+  ],
+  "independentMethod": "Build undirected bipartite endpoint components with DSU and require each component edge count equals left-size times right-size. Independently enumerate every partition of original-edge endpoints for all E graphs through3 vertices.",
+  "oracleFile": "scripts/editorials/oracles/structural_counts.py",
+  "mutations": [
+    {
+      "id": "allows-subsets",
+      "label": "Accepts partially overlapping nested successor sets",
+      "languageKey": "cpp17",
+      "find": "row[u]!=row[v]",
+      "replace": "(row[u]&row[v])!=row[u] && (row[u]&row[v])!=row[v]"
+    },
+    {
+      "id": "reject-self-loop",
+      "label": "Forbids legal self loops",
+      "languageKey": "cpp17",
+      "find": "row[u][v]=true;",
+      "replace": "row[u][v]=true; if (u==v) valid=false;"
+    }
+  ]
+}

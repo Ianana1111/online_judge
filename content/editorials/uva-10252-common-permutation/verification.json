@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10252.pdf"
+  ],
+  "constraints": [
+    "EOFlinepairs;lowercaseletters;length0..1000;emptylinesaredata;permutationsmaydiffer;lexicographicallyminimummaximum multisetintersection."
+  ],
+  "independentMethod": "Sort both strings and merge with two pointers consuming one equal letter at a time, independent of frequency minima.",
+  "oracleFile": "scripts/editorials/oracles/integers.py",
+  "mutations": [
+    {
+      "id": "union-count",
+      "label": "Uses larger occurrence count",
+      "languageKey": "cpp17",
+      "find": "min(ca[i], cb[i])",
+      "replace": "max(ca[i], cb[i])"
+    },
+    {
+      "id": "deduplicate",
+      "label": "Only prints one shared occurrence",
+      "languageKey": "cpp17",
+      "find": "min(ca[i], cb[i])",
+      "replace": "min(1, min(ca[i], cb[i]))"
+    }
+  ]
+}

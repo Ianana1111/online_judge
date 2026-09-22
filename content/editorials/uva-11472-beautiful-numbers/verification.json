@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/114/11472.pdf"
+  ],
+  "constraints": [
+    "T<100;base2..10;maximum digits0..100;no leading0;adjacent difference1;all digits required;count at-most length modulo1000000007."
+  ],
+  "independentMethod": "Inclusion-exclusion on adjacent walks restricted to digit intervals: covering both endpoints forces visiting every interior digit; subtract walks omitting either endpoint and add those omitting both. Exhaustive small walk enumeration.",
+  "oracleFile": "scripts/editorials/oracles/mask_paths.py",
+  "mutations": [
+    {
+      "id": "leading-zero",
+      "label": "Allows zero as the first digit",
+      "languageKey": "cpp17",
+      "find": "for (int digit=1;digit<base;++digit)",
+      "replace": "for (int digit=0;digit<base;++digit)"
+    },
+    {
+      "id": "exact-length",
+      "label": "Counts only the exact upper length",
+      "languageKey": "cpp17",
+      "find": "(answer[base][length-1]+current)%MOD",
+      "replace": "current"
+    }
+  ]
+}

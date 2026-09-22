@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12694-meeting-room-arrangement",
+  "title": "每次選最早結束的可接續活動",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}
