@@ -1,0 +1,3 @@
+`parse` first matches an optionally signed integer, then one binary operator, advancing by each match's complete length including spaces. `render` rebuilds the current `values` and `operators` while preserving the variable's original spelling; converting integers to text naturally removes leading zeros and unary plus signs.
+
+`high` lists the remaining multiplication and division positions, and `high[0]` selects the leftmost one. When it is empty, index zero is the next left-associated addition or subtraction. Slice replacement contracts two operands to their result and `pop` removes the matching operator. The initial state and every reduction are printed. Python exact integers are used, with the environment's decimal string digit limit disabled.

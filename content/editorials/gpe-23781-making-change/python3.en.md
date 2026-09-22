@@ -1,0 +1,3 @@
+`Fraction` parses the price exactly; multiplying by twenty converts dollars to five-cent units without binary floating-point error. The initial largest-first pass exists only to obtain a valid `budget`, while the dynamic programs compute the true optimum.
+
+Wallet stock is capped by the coin-count budget and decomposed into powers-of-two groups. Descending updates prevent group reuse; ascending shop updates permit unlimited denominations. The final loop combines payment and change costs for every safe payment amount. The all-zero sentinel is detected before consuming a price, and `:3d` preserves the required alignment.

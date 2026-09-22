@@ -10,6 +10,7 @@ import { EDITORIAL_JUDGE_REVISION } from "../../packages/shared/src/editorial";
 import { currentJudgeRevision, loadEditorial, loadVerification, sha256, validateSpecChanges, type AuditProblem } from "./evidence";
 import { validatePublication } from "./publication";
 import { applyPublications, type PublicationPlan } from "./apply";
+import { validateContentRevision } from "./content-revision";
 
 async function main(){
   const option=(name:string)=>process.argv.find(s=>s.startsWith(`--${name}=`))?.slice(name.length+3);
@@ -27,10 +28,16 @@ async function main(){
     const after=proposed.problems.find((p:AuditProblem)=>p.slug===slug) as AuditProblem|undefined;
     const content=await loadEditorial(process.cwd(),slug);
     if(!before||!after||!content)throw new Error("Problem or editorial missing");
+    if(!content.translations?.en)throw new Error("Bilingual teaching content is required before publication");
     const verification=await loadVerification(process.cwd(),slug);
     await validateSpecChanges(process.cwd(),before,after,verification.review);
     const files={docker:await read(resolve(evidenceDir,`docker/${slug}.json`)),vercel:await read(resolve(evidenceDir,`vercel/${slug}.json`)),runDocker:await read(resolve(evidenceDir,`run-docker/${slug}.json`)),runVercel:await read(resolve(evidenceDir,`run-vercel/${slug}.json`)),oracle};
-    const proof=validatePublication(after,content,verification,files,process.env.JUDGE_SANDBOX_SNAPSHOT_ID??"");
+    let revision;
+    try { revision=await read(resolve(evidenceDir,`content-revisions/${slug}.json`)); }
+    catch(error) { if ((error as NodeJS.ErrnoException).code!=="ENOENT") throw error; }
+    const proof=revision
+      ? validateContentRevision(after,content,verification,files,process.env.JUDGE_SANDBOX_SNAPSHOT_ID??"",revision)
+      : validatePublication(after,content,verification,files,process.env.JUDGE_SANDBOX_SNAPSHOT_ID??"");
     plans.push({slug,before,after,content,proof});
   }
   const apply=process.argv.includes("--apply");

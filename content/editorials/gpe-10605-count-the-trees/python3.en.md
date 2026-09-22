@@ -1,0 +1,3 @@
+`count[0] = 1` is the empty-tree base used internally. The ascending precomputation multiplies the previous answer by `(4 * n - 2) * n`, then performs exact integer division by `n + 1`. Python evaluates the multiplications before `//`, which is essential to avoid truncating a fraction prematurely.
+
+Python integers grow with the answer, so no manual decimal-digit array is necessary. The input loop treats zero as a terminator and does not print the internal empty-tree count. Answers are converted directly to full decimal strings and joined with newlines; the final conditional newline also handles an input that terminates before any query.

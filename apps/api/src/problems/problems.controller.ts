@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Header, Param, Patch, Post, Put, Query } from "@nestjs/common";
-import { createProblemSchema, noteSchema, type CreateProblemDto, type NoteDto } from "@oj/shared";
+import { createProblemSchema, noteSchema, editorialLocaleSchema, type EditorialLocale, type CreateProblemDto, type NoteDto } from "@oj/shared";
 import { CurrentUser, OptionalAuth, Roles, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { ListQuery, ProblemsService } from "./problems.service";
@@ -11,9 +11,11 @@ export class ProblemsController {
 
   @OptionalAuth()
   @Header("Cache-Control", "private, no-store")
+  @Header("Vary", "Cookie")
   @Get(":slug/editorial")
-  editorial(@Param("slug") slug: string, @CurrentUser() user: RequestUser | null) {
-    return this.editorials.detail(slug, user);
+  editorial(@Param("slug") slug: string, @CurrentUser() user: RequestUser | null,
+    @Query("locale", new ZodValidationPipe(editorialLocaleSchema.default("zh-TW"))) locale: EditorialLocale) {
+    return this.editorials.detail(slug, user, locale);
   }
 
   @OptionalAuth()

@@ -1,0 +1,3 @@
+`cross` implements the two-dimensional determinant. A zero `denominator` enters the parallel branch before any division, where one incidence test separates `LINE` from `NONE`. Otherwise `numerator` is the exact numerator of parameter `t`; combining it with `x1` and `y1` produces exact rational coordinate numerators.
+
+`fixed_ratio` first moves a negative denominator's sign to the numerator, then rounds the absolute rational value to two places using integer arithmetic. It adds a minus sign only when the rounded magnitude is nonzero, avoiding `-0.00`. The global header and footer are printed once, and each `POINT` line separates its two coordinates with one space.

@@ -1,0 +1,3 @@
+`vertices` stores only labels actually seen. Every listed edge increments indegree, including duplicates. On `0 0`, the program checks and prints the current case before clearing adjacency, indegrees, and vertices; the negative final pair creates no extra empty case.
+
+`roots` gathers zero-indegree vertices, while any indegree other than one for a nonroot marks failure. BFS runs only after a valid unique root exists. `visited.insert(y).second` enqueues a node once even in an invalid cyclic graph, and the final size comparison detects disconnected components. The root suffix is printed only for a valid nonempty tree.

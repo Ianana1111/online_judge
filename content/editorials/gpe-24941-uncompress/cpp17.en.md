@@ -1,0 +1,3 @@
+The first scan counts only literal-word and numeric-reference events. Letter and digit runs are consumed completely, so a multi-digit index remains one event. `front` starts beyond all reserved positions and decreases before every insertion, always creating a new position smaller than previous ones.
+
+`Fenwick::kth` uses binary lifting to find where the active prefix count first reaches `k`; holes from removed positions do not consume ranks. The old count is removed before the word is stored at its new position. Non-event characters take a direct output branch, retaining repeated spaces and line breaks.

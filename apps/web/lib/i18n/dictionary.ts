@@ -142,6 +142,7 @@ const overrides: Record<string, string> = {
  * "{name}"-style placeholders in a key must appear in its translation too, e.g. "Wait {n}s".
  */
 export const dictionary: Record<string, string> = {
+  "Official editorials in Chinese and English, with judge-verified code": "中英文官方詳解，附通過 Judge 驗證的參考程式",
   // --- app/settings/page.tsx ---
   "Image is too large even after compression — try a smaller or simpler picture.":
     "圖片壓縮後還是太大，換一張小一點或簡單一點的圖片試試。",

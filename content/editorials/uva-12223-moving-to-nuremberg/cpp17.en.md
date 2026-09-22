@@ -1,0 +1,3 @@
+`order` is constructed parent before child, while `distance` stores root distances. `subtree` starts as the local frequency array and is accumulated in reverse order. The root cost is independently summed as `frequency[u]*distance[u]`.
+
+The forward pass then finds every child after its parent cost is ready and applies the reroot equation using that child's edge length. `1LL` keeps multiplication wide, and a negative balance correctly means the move approaches more demand. The output doubles the minimum and scans numeric station IDs in order, printing every equal-cost station with controlled spacing.

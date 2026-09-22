@@ -1,0 +1,3 @@
+`half_sums` computes each mask from the mask with its lowest set bit removed, so every half-sum needs only one previous lookup and one addition. Sorting changes enumeration order but preserves each mask's element identity.
+
+The `lower_bound` and `upper_bound` keys use zero and `UINT32_MAX` in the second field, capturing every mask with the required sum. Answer sorting first compares popcount, then isolates the lowest differing bit with `difference & -difference`; the mask containing that bit is lexicographically earlier. Output iterates sorted element indices, and the `first` flag supplies exactly one blank line between datasets.

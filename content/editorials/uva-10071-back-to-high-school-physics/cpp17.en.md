@@ -1,0 +1,3 @@
+The variables `velocity` and `time` hold the two quantities supplied by the problem, not the initial velocity and total duration. The expression `2 * velocity * time` uses the algebraically reduced formula, so the program never needs to invent an acceleration.
+
+Both variables are `long long`; multiplying by either variable promotes the arithmetic to that integer type. The EOF loop processes every complete pair, including zeros and negative velocities. Printing the signed result directly preserves displacement direction. There is no rounding step because the derivation reduces the answer to an integer product for every allowed input.

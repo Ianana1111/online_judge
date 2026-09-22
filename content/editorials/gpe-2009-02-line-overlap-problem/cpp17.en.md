@@ -1,0 +1,3 @@
+Input is read line by line so the period sentinel can be recognized directly; `stringstream` then accepts any amount of spacing between endpoints. Each segment contributes one opening and one closing event.
+
+`active` describes the coverage after the previous event. The program first integrates over `position-previous`, then applies the new change. Equal-position events span zero distance, so the pair ordering used by `sort` is harmless. Coordinates, active count, interval length, intermediate products, and the answer all use `long long`. The entire file describes one collection of segments and produces one total.

@@ -501,6 +501,7 @@ export default function UpgradePlanPage() {
                   <Check>{t("Unlimited submissions")}</Check>
                   <Check>{t("Unlimited self-run virtual CPE/GPE contests")}</Check>
                   <Check>{t("See & sort by past CPE/GPE appearance count")}</Check>
+                  <Check>{t("Official editorials in Chinese and English, with judge-verified code")}</Check>
                   <Check>{t("Full access to discussions & leaderboard")}</Check>
                   <Check>{t("Priority support")}</Check>
                 </ul>

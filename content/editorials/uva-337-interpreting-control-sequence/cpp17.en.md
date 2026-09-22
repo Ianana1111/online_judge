@@ -1,0 +1,3 @@
+After reading `n`, the first `getline` consumes its trailing newline. Exactly `n` complete data lines are then read, preserving spaces and empty lines. The index `at` explicitly consumes command characters; coordinate commands consume two digits that never reach the writing path.
+
+All nonliteral commands finish with `continue`. Only `^^` changes `ch` to a caret and falls through to the common writer. Insert-mode movement runs from column 9 toward `col`, protecting values that have not yet been copied. Each row always remains ten characters long, and output does not trim spaces because they are part of the screen. Screen state is recreated for each case, while the case number continues increasing.

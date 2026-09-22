@@ -1,0 +1,3 @@
+`bit_length()` gives the binary magnitude of `number`. Halving that exponent upward and constructing a power of two produces an initial estimate on or above the integer square root. Both the Newton update and the stopping comparison use Python arbitrary-precision integers, so no floating-point conversion or overflow occurs.
+
+Returning when `following >= current` also avoids a possible two-value oscillation caused by floor division near the root. The main loop handles the zero sentinel before calling `integer_sqrt`, then appends `root * root` because the required answer is the door number, not the count of open doors or the square root itself.

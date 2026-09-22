@@ -1,0 +1,3 @@
+`grid` contains `levels*rows` strings of length `cols`; `z*rows+y` locates one map row. Start and finish use full flattened ids. Decoding takes the column remainder, then the row remainder after division by columns, and finally the level after division by one floor's size.
+
+`distance` is both shortest-distance storage and visited marker, with only -1 eligible for enqueue. All coordinate bounds are checked before grid or distance indexing. The same direction index selects one complete `(dz,dy,dx)` offset. Start distance zero avoids counting the initial cell as a minute, and output preserves the exact fixed sentences.

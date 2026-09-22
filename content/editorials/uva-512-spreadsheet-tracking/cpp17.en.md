@@ -1,0 +1,3 @@
+The `position` vector's index always uses the original column count, so an original `(r,c)` query directly locates its permanent record. Operations modify only the current coordinate stored there. `(-1,-1)` marks gone data and cannot collide with positive valid exchange coordinates.
+
+The exchange uses `if`/`else if` so one record moves only once. Batch code saves the relevant coordinate in `before`, handles direct deletion first, then accumulates one `shift` against all original labels. Only the row or column named by the command changes. Output retains both the queried original coordinate and the resulting current coordinate.

@@ -45,7 +45,18 @@ export async function loadEditorial(root: string, slug: string) {
   if(meta.slug!==slug||!Array.isArray(meta.languages)||meta.languages.some((key:string)=>!Object.hasOwn(extensions,key)))throw new Error(`Invalid editorial metadata: ${slug}`);
   const solutions=[];
   for(const languageKey of meta.languages) solutions.push({languageKey,sourceCode:await readFile(resolve(directory,`${languageKey}.${extensions[languageKey]}`),"utf8"),explanationMd:await readFile(resolve(directory,`${languageKey}.md`),"utf8")});
-  return officialEditorialSchema.parse({slug,title:meta.title,locale:meta.locale,bodyMd:await readFile(resolve(directory,"editorial.md"),"utf8"),solutions});
+  let translations, englishText: string | undefined;
+  try { englishText = await readFile(resolve(directory, "editorial.en.md"), "utf8"); }
+  catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
+  if (englishText !== undefined) {
+    const heading = /^# ([^\n]+)\n/.exec(englishText);
+    if (!heading) throw new Error(`English editorial needs a title: ${slug}`);
+    const englishSolutions = await Promise.all(meta.languages.map(async (languageKey: string) => ({
+      languageKey, explanationMd: await readFile(resolve(directory, `${languageKey}.en.md`), "utf8"),
+    })));
+    translations = { en: { title: heading[1].trim(), bodyMd: englishText.slice(heading[0].length).trim(), solutions: englishSolutions } };
+  }
+  return officialEditorialSchema.parse({slug,title:meta.title,locale:meta.locale,bodyMd:await readFile(resolve(directory,"editorial.md"),"utf8"),solutions,...(translations ? { translations } : {})});
 }
 
 export type StatementCorrection = { beforeHash: string; file: string; reason: string; source: string };

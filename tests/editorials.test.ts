@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EDITORIAL_JUDGE_REVISION, officialEditorialSchema } from "../packages/shared/src/editorial";
+import { EDITORIAL_JUDGE_REVISION, officialEditorialSchema, localizeEditorial } from "../packages/shared/src/editorial";
 import { currentJudgeRevision, judgeFingerprint, loadStatementCorrection, sha256, validateSpecChanges, validateTextCorrections, type AuditProblem } from "../scripts/editorials/evidence";
 
 import { editorialFixture } from "./support/editorial-fixture";
@@ -13,6 +13,22 @@ describe("official editorial content and evidence fingerprints", () => {
   });
   it("binds the revision to the actual Submit and Run pipeline, not a manually asserted label", async () => {
     expect(await currentJudgeRevision()).toBe(EDITORIAL_JUDGE_REVISION);
+  });
+  it("requires complete English explanations and shares the exact judged source across languages", () => {
+    const content = editorialFixture();
+    const english = localizeEditorial(content, "en")!;
+    expect(english.locale).toBe("en");
+    expect(english.title).toBe(content.translations.en.title);
+    expect(english.solutions[0].sourceCode).toBe(content.solutions[0].sourceCode);
+    expect(english.solutions[0].explanationMd).toBe(content.translations.en.solutions[0].explanationMd);
+    expect(english).not.toHaveProperty("translations");
+    expect(localizeEditorial(content, "zh-TW")!.bodyMd).toBe(content.bodyMd);
+    const missing = structuredClone(content); missing.translations.en.solutions = [];
+    expect(officialEditorialSchema.safeParse(missing).success).toBe(false);
+    const duplicate = structuredClone(content); duplicate.translations.en.solutions.push(duplicate.translations.en.solutions[0]);
+    expect(officialEditorialSchema.safeParse(duplicate).success).toBe(false);
+    const override = structuredClone(content); Object.assign(override.translations.en.solutions[0], {sourceCode:"unjudged code"});
+    expect(officialEditorialSchema.safeParse(override).success).toBe(false);
   });
   it("invalidates evidence for answer, sample, statement and limit edits, independent of database IDs", () => {
     const p:AuditProblem={id:"one",slug:"echo",title:"Echo",uvaId:null,uvaPid:null,statementMd:"Echo input.",inputSpecMd:"Integer",outputSpecMd:"Same integer",sourceUrl:null,timeLimitMs:1000,memoryLimitKb:65536,checkerType:"EXACT",floatEps:null,samples:[{ord:1,input:"1\n",output:"1\n"}],testCases:[{ord:2,input:"2\n",output:"2\n"},{ord:1,input:"3\n",output:"3\n"}]};

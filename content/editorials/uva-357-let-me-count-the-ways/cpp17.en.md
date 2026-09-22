@@ -1,0 +1,3 @@
+`ways[0] = 1` represents the single empty selection. The coin loop is outside, and each amount loop increases from the current denomination to the limit. That exact ordering makes combinations unordered while allowing unlimited copies; swapping the loops or reversing the amount direction would solve a different problem.
+
+All input amounts share the one precomputed table, so repeated, decreasing, and zero-valued queries need no special state. The output branch tests `ways[amount] == 1`, since amounts such as zero and four also have exactly one way. `unsigned long long` preserves large results throughout printing.

@@ -4,8 +4,9 @@ import { randomUUID } from "node:crypto";
 import { resolve } from "node:path";
 import AxeBuilder from "@axe-core/playwright";
 import { loadEditorial } from "../../scripts/editorials/evidence";
+import { localizeEditorial } from "../../packages/shared/src/editorial";
 
-const user={id:"c000000000000000000000001",handle:"reader",email:"reader@example.test",role:"USER",plan:"FREE",settings:{profileSetupDismissed:true,defaultLanguage:"cpp17"},bio:"",avatarUrl:null,school:null,isStudent:false,hasPassword:true,csrfToken:"test"};
+const user={id:"c000000000000000000000001",handle:"reader",email:"reader@example.test",role:"USER",plan:"PRO",settings:{profileSetupDismissed:true,defaultLanguage:"cpp17"},bio:"",avatarUrl:null,school:null,isStudent:false,hasPassword:true,csrfToken:"test"};
 
 test("official editorial is lazy, keyboard reachable, responsive, and copies the exact validated source",async({page},info)=>{
   test.skip(process.env.RUN_FULL_SITE_E2E!=="1","Requires the isolated server-rendered problem fixture");
@@ -15,6 +16,7 @@ test("official editorial is lazy, keyboard reachable, responsive, and copies the
   const problem=await db.problem.create({data:{slug:`editorial-${randomUUID()}`,title:"詳解閱讀測試",statementMd:"Read an integer and print it.",samples:{create:{ord:1,input:"1\n",output:"1\n"}},testCases:{create:{ord:1,input:"1\n",output:"1\n"}}}});
   const editorial=(await loadEditorial(process.cwd(),"uva-100-the-3n-1-problem"))!;editorial.slug=problem.slug;
   let requests=0,mode="NOT_READY",copied="";
+  let accessExpiresAt:string|null=null;
   await page.exposeFunction("captureEditorialCopy",(text:string)=>{copied=text;});
   await page.addInitScript((theme)=>{
     localStorage.setItem("theme",theme);
@@ -29,7 +31,8 @@ test("official editorial is lazy, keyboard reachable, responsive, and copies the
     if(path.endsWith("/editorial")){
       requests++;
       if(mode==="ERROR")return route.fulfill({status:503,json:{message:"Unavailable"}});
-      return route.fulfill({json:mode==="AVAILABLE"?{status:mode,editorial,revision:1,verifiedAt:"2026-09-21T00:00:00Z",publishedAt:"2026-09-21T00:00:00Z"}:{status:mode}});
+      const locale=new URL(route.request().url()).searchParams.get("locale")==="en"?"en":"zh-TW";
+      return route.fulfill({json:mode==="AVAILABLE"?{status:mode,editorial:localizeEditorial(editorial,locale),revision:1,verifiedAt:"2026-09-21T00:00:00Z",publishedAt:"2026-09-21T00:00:00Z",accessExpiresAt}:{status:mode}});
     }
     return route.fulfill({json:{items:[],total:0,page:1}});
   });
@@ -51,14 +54,25 @@ test("official editorial is lazy, keyboard reachable, responsive, and copies the
     await panel.getByRole("button",{name:"複製 C++17 程式碼",exact:true}).click();
     await expect.poll(()=>copied).toBe(editorial.solutions[0].sourceCode);
     await expect(panel.getByText("已複製",{exact:true})).toBeVisible();
+    await panel.getByRole("button",{name:"English",exact:true}).click();
+    await expect(panel.getByRole("heading",{name:editorial.translations!.en.title,exact:true})).toBeVisible();
+    await expect(panel.locator("pre code")).toHaveText(editorial.solutions[0].sourceCode);
+    await panel.getByRole("button",{name:"繁體中文",exact:true}).click();
+    await expect(panel.getByRole("heading",{name:editorial.title,exact:true})).toBeVisible();
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
     const audit=await new AxeBuilder({page}).include("#problem-tabpanel-editorial").withTags(["wcag2a","wcag2aa","wcag21aa"]).analyze();expect(audit.violations).toEqual([]);
     await page.screenshot({path:info.outputPath("official-editorial.png"),fullPage:true});
+    await reopen("PRO_REQUIRED");await expect(panel.locator("pre")).toHaveCount(0);await expect(panel.getByRole("link",{name:"查看 Pro 方案"})).toHaveAttribute("href","/upgrade");
+    mode="AVAILABLE";await panel.getByRole("button",{name:"我已升級，重新確認"}).click();await expect(panel.locator("pre code")).toHaveText(editorial.solutions[0].sourceCode);
+    await reopen("AUTH_REQUIRED");await expect(panel.locator("pre")).toHaveCount(0);await expect(panel.getByRole("link",{name:"登入並查看 Pro 權益"})).toHaveAttribute("href","/login");
     await reopen("REVIEW_REQUIRED");await expect(panel).toContainText("這題的詳解正在重新驗證");await expect(panel.locator("pre")).toHaveCount(0);
     await reopen("EXAM_LOCKED");await expect(panel).toContainText("先完成測驗");await expect(panel.locator("pre")).toHaveCount(0);
     mode="AVAILABLE";await panel.getByRole("button",{name:"重新確認",exact:true}).click();await expect(panel.locator("pre code")).toHaveText(editorial.solutions[0].sourceCode);
     await reopen("ERROR");await expect(panel.getByRole("alert")).toBeVisible();
     mode="AVAILABLE";await panel.getByRole("button",{name:"重試",exact:true}).click();await expect(panel.locator("pre code")).toHaveText(editorial.solutions[0].sourceCode);
+    accessExpiresAt=new Date(Date.now()+2_000).toISOString();await reopen("AVAILABLE");
+    await expect(panel.locator("pre code")).toHaveText(editorial.solutions[0].sourceCode);mode="PRO_REQUIRED";
+    await expect(panel.getByRole("link",{name:"查看 Pro 方案"})).toBeVisible();await expect(panel.locator("pre")).toHaveCount(0);
   }finally{await db.problem.delete({where:{id:problem.id}});await db.$disconnect();}
 });
 

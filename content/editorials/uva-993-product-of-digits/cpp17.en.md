@@ -1,0 +1,3 @@
+The `n < 2` branch implements the platform's special answers for zero and one and also prevents an infinite factorization loop for zero. The next loop removes every factor `2`, `3`, `5`, and `7`; a final `rest != 1` means that no decimal digit can supply the unsupported factor.
+
+`sixes` is the only mixed-factor decision that must be enumerated. After subtracting those twos and threes, `string(count, digit)` adds the forced fives and sevens, the maximum number of eights and nines, and the one possible remainder digit for each prime. Sorting produces the smallest arrangement of a fixed multiset. `best` compares length before lexicographic order, exactly matching nonnegative integer order without converting a potentially long answer back to an integer.

@@ -11,6 +11,7 @@ import { dirname, resolve, sep } from "node:path";
 import { EDITORIAL_JUDGE_REVISION } from "../../packages/shared/src/editorial";
 import { currentJudgeRevision, judgeFingerprint, loadEditorial, loadVerification, sha256, validateSpecChanges, type AuditProblem } from "./evidence";
 import { validatePublication } from "./publication";
+import { validateContentRevision } from "./content-revision";
 
 const option=(name:string)=>process.argv.find(s=>s.startsWith(`--${name}=`))?.slice(name.length+3);
 const read=async(file:string)=>JSON.parse(await readFile(file,"utf8"));
@@ -20,6 +21,7 @@ async function optionalRead(file:string){
 
 async function main(){
   const originalFile=option("original"),proposedFile=option("proposed"),auditRoot=option("audit-root"),out=resolve(option("out")??"");
+  const revisionRoot = option("content-revisions");
   if(!originalFile||!proposedFile||!auditRoot||![resolve("generated")+sep,"/private/tmp/"].some(p=>out.startsWith(p)))throw new Error("Explicit snapshots, evidence root and private output required");
   const toolchain=process.env.JUDGE_SANDBOX_SNAPSHOT_ID;
   if(!toolchain)throw new Error("Intended live sandbox snapshot required");
@@ -43,6 +45,11 @@ async function main(){
     const before=original.problems.find((p:AuditProblem)=>p.slug===after.slug);
     if(!before)throw new Error("Original problem missing");
     const verification=await loadVerification(process.cwd(),after.slug);
+    const revisionFile = revisionRoot ? resolve(revisionRoot, `${after.slug}.json`) : undefined;
+    const contentRevision = revisionFile ? await optionalRead(revisionFile) : null;
+    if (revisionRoot && (!contentRevision || !content.translations?.en)) {
+      rows.push({slug:after.slug,status:"MISSING_EVIDENCE",missing:["Bilingual teaching review"]});continue;
+    }
     await validateSpecChanges(process.cwd(),before,after,verification.review);
     const oracle=oracles.find(o=>o.report.oracleHash===verification.oracleHash&&o.report.problems?.some((p:{slug:string})=>p.slug===after.slug));
     const paths={docker:resolve(auditRoot,`current-baseline/${after.slug}.json`),runDocker:resolve(auditRoot,`all-run-docker/${after.slug}.json`),runVercel:resolve(auditRoot,`all-run-vercel/${after.slug}.json`)};
@@ -55,8 +62,9 @@ async function main(){
     let accepted=false,reason="Evidence does not match the current source and corpus";
     for(const candidate of candidates){
       try{
-        const proof=validatePublication(after,content,verification,{docker,vercel:candidate.report,runDocker,runVercel,oracle:oracle!.report},toolchain);
-        rows.push({slug:after.slug,status:"VERIFIED_NOT_PUBLISHED",proof,files:{...paths,vercel:candidate.file,oracle:oracle!.file},beforeFingerprint:judgeFingerprint(before)});
+        const files={docker,vercel:candidate.report,runDocker,runVercel,oracle:oracle!.report};
+        const proof=contentRevision ? validateContentRevision(after,content,verification,files,toolchain,contentRevision) : validatePublication(after,content,verification,files,toolchain);
+        rows.push({slug:after.slug,status:"VERIFIED_NOT_PUBLISHED",proof,files:{...paths,vercel:candidate.file,oracle:oracle!.file,...(revisionFile?{contentRevision:revisionFile}:{})},beforeFingerprint:judgeFingerprint(before)});
         accepted=true;break;
       }catch(error){
         // Do not dump validation objects: they may contain private diagnostics.

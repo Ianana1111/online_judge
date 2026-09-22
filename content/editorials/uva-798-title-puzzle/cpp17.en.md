@@ -1,0 +1,3 @@
+`count_tiles` builds mixed-radix multipliers; dividing `code` by a group multiplier and taking modulo `count+1` recovers its remaining count. Placement masks are precomputed in `anchors` by their top-left cell, eliminating repeated rectangle scans during recursion.
+
+`full ^ occupied` exposes empty bits and `ctz` finds the first. A zero inventory digit or mask overlap rejects a branch; otherwise bitwise OR places the tile and subtracting its multiplier updates inventory. The base case requires both full occupancy and zero code. With area at most 20 and at most 20 tiles, the packed state fits in `uint64_t`, and memoization is cleared for each puzzle.

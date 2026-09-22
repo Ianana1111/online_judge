@@ -1,0 +1,3 @@
+`cuts` is a `long long`, so both factors in `cuts * (cuts + 1)` are evaluated in 64-bit arithmetic. At the maximum allowed input, this intermediate product is about 4.41 × 10¹⁶, safely within that type. Dividing afterward is exact because one of two consecutive integers is even.
+
+The loop condition first reads a value and then requires `cuts >= 0`. Thus zero reaches the formula and produces one, while every negative value ends input without an output line. The final `+ 1` represents the uncut pizza; it is not an adjustment for indexing. The formula avoids storing regions or simulating an arrangement.
