@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10104.pdf"
+  ],
+  "constraints": [
+    "A,B positive<=1e9;EOF;AX+BY=gcd;minimum abs(X)+abs(Y),tie X<=Y."
+  ],
+  "independentMethod": "Modular inverse of reduced A modulo reduced B, enumerate neighboring representatives. Independent exhaustive coefficient search for all small input pairs.",
+  "oracleFile": "scripts/editorials/oracles/algebra_text.py",
+  "mutations": [
+    {
+      "id": "nonminimal-bezout",
+      "label": "Still satisfies Bezout but shifts away from minimal coefficients",
+      "languageKey": "cpp17",
+      "find": "cout << bestX << ' ' << bestY << ' ' << r0",
+      "replace": "cout << bestX + 3 * stepX << ' ' << bestY - 3 * stepY << ' ' << r0"
+    },
+    {
+      "id": "assume-coprime",
+      "label": "Outputs one instead of gcd",
+      "languageKey": "cpp17",
+      "find": "<< bestY << ' ' << r0",
+      "replace": "<< bestY << ' ' << 1"
+    }
+  ]
+}

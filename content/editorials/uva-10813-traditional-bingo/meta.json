@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10813-traditional-bingo",
+  "title": "以每一格被叫到的時間，求最早完成的連線",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

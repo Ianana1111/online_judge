@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/6/612.pdf"
+  ],
+  "constraints": [
+    "T groups;1<=N<=50;1<=M<=100;alphabet ACGT only;strict inversion pairs;stable input order on ties;blank line between groups."
+  ],
+  "independentMethod": "Merge-sort inversion counting independent of quadratic displayed code; exhaustive short DNA cross-checks, same-score identity-preserving repair of invalid alphabet cases, long random and stable ties.",
+  "oracleFile": "scripts/editorials/oracles/ordered_domains.py",
+  "mutations": [
+    {
+      "id": "equal-is-inversion",
+      "label": "Counts equal letters as inversions",
+      "languageKey": "cpp17",
+      "find": "dna[i] > dna[j]",
+      "replace": "dna[i] >= dna[j]"
+    },
+    {
+      "id": "lexicographic-ties",
+      "label": "Orders equal scores by DNA text",
+      "languageKey": "cpp17",
+      "find": "return a.first < b.first;",
+      "replace": "return a < b;"
+    }
+  ]
+}

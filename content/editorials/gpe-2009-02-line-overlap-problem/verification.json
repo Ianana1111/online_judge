@@ -1,0 +1,30 @@
+{
+  "sources": [
+    "repository:packages/db/audit/gpe-recovery-cases.json#2009-02"
+  ],
+  "constraints": [
+    "N<200000; ordered integer endpoints <100000; period terminator; 64-bit result; zero-length contact contributes zero"
+  ],
+  "independentMethod": "Unit-interval difference integration; pairwise brute-force cross-check for small inputs.",
+  "oracleFile": "scripts/editorials/oracles/gpe.py",
+  "oracleDependencies": [
+    "scripts/author-gpe-recovery.py",
+    "scripts/gpe_recovery_references.py"
+  ],
+  "mutations": [
+    {
+      "id": "union",
+      "label": "Computes union length",
+      "languageKey": "cpp17",
+      "find": "(active * (active - 1) / 2)",
+      "replace": "(active > 0 ? 1 : 0)"
+    },
+    {
+      "id": "int32",
+      "label": "Truncates the answer to 32 bits",
+      "languageKey": "cpp17",
+      "find": "cout << answer << '\\n';",
+      "replace": "cout << static_cast<int>(answer) << '\\n';"
+    }
+  ]
+}

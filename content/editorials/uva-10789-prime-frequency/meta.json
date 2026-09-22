@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10789-prime-frequency",
+  "title": "統計字元次數並以質數表篩選",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-2015-08-climbing-stairs",
+  "title": "從最後一步分類，精確計算一百階樓梯",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

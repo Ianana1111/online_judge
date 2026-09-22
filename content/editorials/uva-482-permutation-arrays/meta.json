@@ -1,0 +1,8 @@
+{
+  "slug": "uva-482-permutation-arrays",
+  "title": "索引指出目的位置，數值保留原始字串",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

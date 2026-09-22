@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10066-the-twin-towers",
+  "title": "保留原順序的最大共同塔，就是最長共同子序列",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/103/10308.pdf"
+  ],
+  "constraints": [
+    "Positive weighted connected tree;<=10000 villages;edge lines,blank dataset separators,EOF flush;unique simple path."
+  ],
+  "independentMethod": "One rooted postorder DP combines the two largest downward branches at every node, independent of double farthest traversal. Exhaustive all-pairs distances check random tiny trees.",
+  "oracleFile": "scripts/editorials/oracles/treegames.py",
+  "mutations": [
+    {
+      "id": "unweighted-distance",
+      "label": "Counts edges instead of lengths",
+      "languageKey": "cpp17",
+      "find": "distance+length",
+      "replace": "distance+1"
+    },
+    {
+      "id": "one-search",
+      "label": "Reports eccentricity of arbitrary start",
+      "languageKey": "cpp17",
+      "find": "farthest(graph, endpoint.first).second",
+      "replace": "endpoint.second"
+    }
+  ]
+}

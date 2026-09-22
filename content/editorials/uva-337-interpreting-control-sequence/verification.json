@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/337.pdf"
+  ],
+  "constraints": [
+    "10x10screen;ASCII^controls;legal sequences never splitlines;line endings ignored but spaces printable;overwrite initially;clear preservescursor/mode;insert dropslastcolumn;clampedcursor;0sentinel."
+  ],
+  "independentMethod": "Independent regex tokenization plus immutable row-string slicing for terminal operations; explicit all controls,insert shifts,lastcolumn,clear-with-cursor,escapedcaret and ignored input newlines. Fixed-width sample output repaired without changing input.",
+  "oracleFile": "scripts/editorials/oracles/text_paths.py",
+  "mutations": [
+    {
+      "id": "clear-resets-cursor",
+      "label": "Clearing also incorrectly homes the cursor",
+      "languageKey": "cpp17",
+      "find": "else if(command=='c')screen.assign(10,string(10,' '));",
+      "replace": "else if(command=='c'){screen.assign(10,string(10,' '));row=col=0;}"
+    },
+    {
+      "id": "ignores-insert",
+      "label": "Always overwrites, even in insert mode",
+      "languageKey": "cpp17",
+      "find": "if(insert)for(int c=9;",
+      "replace": "if(false)for(int c=9;"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/108/10815.pdf"
+  ],
+  "constraints": [
+    "<=5000 lines,<=200 chars/line,<=5000 distinct words;word=maximal ASCII alphabetic run;case insensitive;EOF may lack newline."
+  ],
+  "independentMethod": "Regex [A-Za-z]+ tokenization, lowercase, sorted unique list independent of streaming delimiter parser.",
+  "oracleFile": "scripts/editorials/oracles/textgames.py",
+  "mutations": [
+    {
+      "id": "retain-case",
+      "label": "Fails to lowercase uppercase letters",
+      "languageKey": "cpp17",
+      "find": "ch = char(ch - 'A' + 'a');",
+      "replace": "ch = ch;"
+    },
+    {
+      "id": "skip-eof",
+      "label": "Drops last word without trailing delimiter",
+      "languageKey": "cpp17",
+      "find": "    flush();\n    for",
+      "replace": "    word.clear();\n    for"
+    }
+  ]
+}

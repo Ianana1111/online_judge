@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/107/10763.pdf"
+  ],
+  "constraints": [
+    "1<=N<=500000;nonnegative location IDs;A!=B;duplicate requests retained;0terminator;direct reciprocal pairing."
+  ],
+  "independentMethod": "Signed Counter balance per directed pair, independently of sorting two vectors; exhaustive perfect-pair search checks tiny cases.",
+  "oracleFile": "scripts/editorials/oracles/orders.py",
+  "mutations": [
+    {
+      "id": "drop-multiplicity",
+      "label": "Deduplicates requests before matching",
+      "languageKey": "cpp17",
+      "find": "sort(forward.begin(), forward.end()); sort(backward.begin(), backward.end());",
+      "replace": "sort(forward.begin(), forward.end()); sort(backward.begin(), backward.end()); forward.erase(unique(forward.begin(),forward.end()),forward.end()); backward.erase(unique(backward.begin(),backward.end()),backward.end());"
+    },
+    {
+      "id": "forget-direction",
+      "label": "Erases request direction",
+      "languageKey": "cpp17",
+      "find": "forward.push_back({a, b}); backward.push_back({b, a});",
+      "replace": "forward.push_back({min(a,b), max(a,b)}); backward.push_back({min(a,b), max(a,b)});"
+    }
+  ]
+}

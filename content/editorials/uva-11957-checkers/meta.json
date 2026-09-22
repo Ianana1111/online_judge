@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11957-checkers",
+  "title": "依列向上傳遞路徑數，只有遇到黑棋時才能跳躍",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

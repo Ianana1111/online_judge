@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1730-sum-of-mslcm",
+  "title": "最大集合就是全部因數，交換求和後按商分段",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

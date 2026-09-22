@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/6/630.pdf"
+  ],
+  "constraints": [
+    "Tpositive;dictionaryN<1000;lowercasewords1..20letters;ENDsentinel;queryorderpreserved;allvocabularyoccurrencesmatchedbysignature,identityincluded;anylistingorderwithconsecutivewidth3numbers;blankdatasets."
+  ],
+  "independentMethod": "Independent26-letter count tuples and multiset output validation; equal sets with unequal multiplicities and duplicated dictionary entries explicitly tested.",
+  "oracleFile": "scripts/editorials/oracles/lexical_witnesses.py",
+  "mutations": [
+    {
+      "id": "distinct-letter-set",
+      "label": "Drops letter multiplicities from signature",
+      "languageKey": "cpp17",
+      "find": "sort(word.begin(),word.end());return word;",
+      "replace": "sort(word.begin(),word.end());word.erase(unique(word.begin(),word.end()),word.end());return word;"
+    },
+    {
+      "id": "excludes-query-itself",
+      "label": "Excludes a dictionary entry equal to the query",
+      "languageKey": "cpp17",
+      "find": "if(keys[i]==key)",
+      "replace": "if(keys[i]==key&&words[i]!=query)"
+    },
+    {
+      "id": "legal-alternate-output",
+      "label": "Another permitted ordering, spacing or shortest path",
+      "languageKey": "cpp17",
+      "find": "cout<<\"Anagrams for: \"<<query",
+      "replace": "reverse(answer.begin(),answer.end());cout<<\"Anagrams for: \"<<query",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Respect the original semantic output contract: exact original excuse/name multisets may be reordered, complete anagram lists retain all multiplicities withconsecutive numbering, and algebra solutions retain all required operator/number states while allowing explicitly insignificant spacing. Validate all content and reject missing/extra records."
+  }
+}

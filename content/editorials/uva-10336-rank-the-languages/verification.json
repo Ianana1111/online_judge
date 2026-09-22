@@ -1,0 +1,33 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/103/10336.pdf"
+  ],
+  "constraints": [
+    "Tworlds;positiveH,W;lowercasegrid;4neighbors ONLY;countcomponents notarea;descendingcounts ascendingletters;World#n."
+  ],
+  "independentMethod": "Disjoint-set unions only between equal top/left neighbors, then count distinct roots per letter; independent of destructive flood fill. Tiny connectivity closure validates partitions.",
+  "oracleFile": "scripts/editorials/oracles/grids.py",
+  "mutations": [
+    {
+      "id": "area-not-components",
+      "label": "Counts cells instead of connected states",
+      "languageKey": "cpp17",
+      "find": "components[language - 'a'] += 1;",
+      "replace": "components[language - 'a'] += cells;"
+    },
+    {
+      "id": "diagonal-connectivity",
+      "label": "Merges diagonal neighbors",
+      "languageKey": "cpp17",
+      "find": "directions{{1,0},{-1,0},{0,1},{0,-1}}",
+      "replace": "directions{{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}}"
+    },
+    {
+      "id": "reverse-alphabet",
+      "label": "Breaks ties reverse alphabetically",
+      "languageKey": "cpp17",
+      "find": "return a < b;",
+      "replace": "return a > b;"
+    }
+  ]
+}

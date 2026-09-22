@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/16/1644.pdf"
+  ],
+  "constraints": [
+    "2<=k<=1299709;upperboundis100000thprime;0terminator;primeanswer0;compositegapendpointdifference."
+  ],
+  "independentMethod": "Cached trial-division primality and outward neighbor search, independent of Eratosthenes and binary-search prime vector.",
+  "oracleFile": "scripts/editorials/oracles/structures.py",
+  "mutations": [
+    {
+      "id": "count-composites",
+      "label": "Counts interior composites instead of endpoint gap",
+      "languageKey": "cpp17",
+      "find": "*upper - *prev(upper)",
+      "replace": "*upper - *prev(upper) - 1"
+    },
+    {
+      "id": "prime-one",
+      "label": "Reports one for primes",
+      "languageKey": "cpp17",
+      "find": "if (*upper == n) cout << 0",
+      "replace": "if (*upper == n) cout << 1"
+    }
+  ]
+}

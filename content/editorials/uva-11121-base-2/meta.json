@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11121-base-2",
+  "title": "每次選非負位元，再以負二除去最低位",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

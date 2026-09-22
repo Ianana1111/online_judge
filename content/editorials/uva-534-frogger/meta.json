@@ -1,0 +1,8 @@
+{
+  "slug": "uva-534-frogger",
+  "title": "Dijkstra 將路徑加總改成取最大跳距",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

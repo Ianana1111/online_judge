@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10035.pdf"
+  ],
+  "constraints": [
+    "0<=a,b<10^9;only0 0 sentinel;count outgoing carries per decimal column;singular/plural exact."
+  ],
+  "independentMethod": "Count k-digit suffix sums crossing 10^k; independent of carrying column-by-column.",
+  "oracleFile": "scripts/editorials/oracles/arithmetic.py",
+  "mutations": [
+    {
+      "id": "ignore-carry",
+      "label": "Does not propagate the prior carry",
+      "languageKey": "cpp17",
+      "find": "int(a % 10 + b % 10) + carry",
+      "replace": "int(a % 10 + b % 10)"
+    },
+    {
+      "id": "shorter-length",
+      "label": "Stops at the shorter operand",
+      "languageKey": "cpp17",
+      "find": "while (a != 0 || b != 0)",
+      "replace": "while (a != 0 && b != 0)"
+    }
+  ]
+}

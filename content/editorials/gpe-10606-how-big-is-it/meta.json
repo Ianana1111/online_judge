@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10606-how-big-is-it",
+  "title": "列舉圓心左右順序，每次考慮所有已放入的圓",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

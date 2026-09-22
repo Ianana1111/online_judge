@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/7/793.pdf"
+  ],
+  "constraints": [
+    "Tblank-separatedcases;Npositive;computers1..N;caddbidirectionaledge;qcurrentconnectivity;selfquerytrue;repeatconnectharmless;successful,unsuccessful."
+  ],
+  "independentMethod": "Maintain adjacency sets and run fresh BFS for each query in chronological order, independent of union-find partitions; tiny randomized traces cross-check with explicit reachability closure.",
+  "oracleFile": "scripts/editorials/oracles/missingstructures.py",
+  "mutations": [
+    {
+      "id": "direct-parent-only",
+      "label": "Compares immediate parents without finding roots",
+      "languageKey": "cpp17",
+      "find": "dsu.find(a) == dsu.find(b)",
+      "replace": "dsu.parent[a] == dsu.parent[b]"
+    },
+    {
+      "id": "drop-connections",
+      "label": "Never updates network on connection",
+      "languageKey": "cpp17",
+      "find": "dsu.join(a,b);",
+      "replace": "(void)0;"
+    }
+  ]
+}

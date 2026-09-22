@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10018.pdf"
+  ],
+  "constraints": [
+    "1 <= tests <= 100; at least one addition; promised answer in <1000 additions; final palindrome <=4294967295"
+  ],
+  "independentMethod": "Decimal-string reversal and palindrome equality instead of numeric digit extraction.",
+  "oracleFile": "scripts/editorials/oracles/sequences.py",
+  "mutations": [
+    {
+      "id": "zero-additions",
+      "label": "Checks initial palindrome before first addition",
+      "languageKey": "cpp17",
+      "find": "do {\n            value += reversed(value);\n            ++additions;\n        } while (value != reversed(value));",
+      "replace": "while (value != reversed(value)) {\n            value += reversed(value);\n            ++additions;\n        }"
+    },
+    {
+      "id": "count-extra",
+      "label": "Counts one extra addition",
+      "languageKey": "cpp17",
+      "find": "int additions = 0;",
+      "replace": "int additions = 1;"
+    }
+  ]
+}

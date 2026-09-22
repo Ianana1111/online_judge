@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://cpe.mcu.edu.tw/cpe/problemPdf/10273.pdf"
+  ],
+  "constraints": [
+    "T1..50;n1..1000;periods1..10;milk0..250;onlyunique minimum dies perday;global phasescontinue;lastkillday1based or0;steady state afterfullLCMnochange."
+  ],
+  "independentMethod": "Independent milk-value histograms by period and phase, counts plus XOR identifiers identify a global unique minimum; update all phases of the removed cow. Small literal simulation detects repeated(alive-set,phase) states; CRT witness first death on day2520 and1000cow limits.",
+  "oracleFile": "scripts/editorials/oracles/grammar_models.py",
+  "mutations": [
+    {
+      "id": "short-stability-window",
+      "label": "Stops after only10days without a death",
+      "languageKey": "cpp17",
+      "find": "idle<period",
+      "replace": "idle<10"
+    },
+    {
+      "id": "eats-tied-cow",
+      "label": "Eats the first cow even when minimum is tied",
+      "languageKey": "cpp17",
+      "find": "if(b==n || milk[cow][phase%milk[cow].size()]<milk[order[phase][b]][phase%milk[order[phase][b]].size()])",
+      "replace": "if(true)"
+    }
+  ]
+}

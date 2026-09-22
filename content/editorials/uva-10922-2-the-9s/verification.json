@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/109/10922.pdf"
+  ],
+  "constraints": [
+    "positive decimal N with<=1000 digits;literal0 terminator;9-degree(9)=1;preserve input digits in output."
+  ],
+  "independentMethod": "Whole-value arbitrary-precision modulo9 checks divisibility; repeated arithmetic divmod digit extraction computes degree independently of reference character sums.",
+  "oracleFile": "scripts/editorials/oracles/textgames.py",
+  "mutations": [
+    {
+      "id": "degree-zero",
+      "label": "Starts recursion degree at zero",
+      "languageKey": "cpp17",
+      "find": "int degree = 1;",
+      "replace": "int degree = 0;"
+    },
+    {
+      "id": "stop-at-two-digits",
+      "label": "Stops the digit sum before reaching9",
+      "languageKey": "cpp17",
+      "find": "while (total != 9)",
+      "replace": "while (total > 99)"
+    }
+  ]
+}

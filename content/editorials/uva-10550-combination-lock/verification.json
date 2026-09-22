@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/105/10550.pdf"
+  ],
+  "constraints": [
+    "0..39 dial; a!=b and b!=c; initial dial may equal first code; all-zero tuple terminates; three mandatory full turns."
+  ],
+  "independentMethod": "Walk one dial tick at a time in each direction, independent of modular difference formulas.",
+  "oracleFile": "scripts/editorials/oracles/ordering.py",
+  "mutations": [
+    {
+      "id": "wrong-direction",
+      "label": "Reverses final clockwise direction",
+      "languageKey": "cpp17",
+      "find": "(b - c + 40) % 40",
+      "replace": "(c - b + 40) % 40"
+    },
+    {
+      "id": "missing-full-turn",
+      "label": "Omits a mandatory full turn",
+      "languageKey": "cpp17",
+      "find": "120 + clockwiseFirst",
+      "replace": "80 + clockwiseFirst"
+    }
+  ]
+}

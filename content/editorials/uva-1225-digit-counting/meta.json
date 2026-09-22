@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1225-digit-counting",
+  "title": "逐個數字拆位，零只在真正出現的位置計數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

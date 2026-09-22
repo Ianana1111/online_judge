@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1513-movie-collection",
+  "title": "預留移到最上方的位置，用 Fenwick tree 查詢上方盒數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

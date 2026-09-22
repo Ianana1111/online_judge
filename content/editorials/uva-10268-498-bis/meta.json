@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10268-498-bis",
+  "title": "用 Horner 法精確計算多項式導數",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

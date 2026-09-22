@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/113/11332.pdf"
+  ],
+  "constraints": [
+    "1 <= n <= 2000000000; terminating zero not processed"
+  ],
+  "independentMethod": "Mathematical digital-root congruence 1+(n-1)%9; no digit-summing loop shared.",
+  "oracleFile": "scripts/editorials/oracles/basics.py",
+  "mutations": [
+    {
+      "id": "single-round",
+      "label": "Stops after one digit sum",
+      "languageKey": "cpp17",
+      "find": "while (value >= 10) {",
+      "replace": "if (value >= 10) {"
+    },
+    {
+      "id": "nine-zero",
+      "label": "Maps positive multiples of nine to zero",
+      "languageKey": "cpp17",
+      "find": "cout << value << '\\n';",
+      "replace": "cout << value % 9 << '\\n';"
+    }
+  ]
+}

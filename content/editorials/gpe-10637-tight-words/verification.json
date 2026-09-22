@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10081.pdf"
+  ],
+  "constraints": [
+    "0<=K<=9;1<=N<=100;alphabet0..K includesleading0;adjacent absolute difference<=1;5decimalpercentage;EOF."
+  ],
+  "independentMethod": "Independent exponentiation of the tridiagonal adjacency matrix counts all lengthN walks; Fraction percentage and exhaustive small complete word enumerations validate DP.",
+  "oracleFile": "scripts/editorials/oracles/rational_results.py",
+  "mutations": [
+    {
+      "id": "strict-neighbors",
+      "label": "Forbids repeating the same digit",
+      "languageKey": "python3",
+      "find": "next_counts[digit] += count",
+      "replace": "next_counts[digit] += count if digit != last else 0"
+    },
+    {
+      "id": "wrong-alphabet-size",
+      "label": "Uses K rather than K+1 in denominator",
+      "languageKey": "python3",
+      "find": "(k + 1) ** n",
+      "replace": "max(1, k) ** n"
+    },
+    {
+      "id": "exact-midpoint-toward-zero",
+      "label": "Legal alternative chooses the other nearest decimal at exact rounding midpoints",
+      "languageKey": "python3",
+      "find": "(2 * abs(numerator) * scale + denominator)",
+      "replace": "(2 * abs(numerator) * scale + denominator - 1)",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Use exact input-derived rational answers with required output precision. Accept both nearest printed decimals only at true rounding midpoints, retain labels, counts, order and blank separators, and reject malformed or numerically wrong answers."
+  }
+}

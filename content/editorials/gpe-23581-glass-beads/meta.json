@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-23581-glass-beads",
+  "title": "以兩個候選起點線性淘汰，求最小循環字串的位置",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

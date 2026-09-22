@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10397-connect-the-campus",
+  "title": "將既有線路視為零成本，再用 Prim 補足連通網路",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

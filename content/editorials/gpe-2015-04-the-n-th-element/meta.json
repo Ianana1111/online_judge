@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-2015-04-the-n-th-element",
+  "title": "二分搜尋兩個分割點，找出第 N 小元素",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

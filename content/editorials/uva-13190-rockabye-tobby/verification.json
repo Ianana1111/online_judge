@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/131/13190.pdf"
+  ],
+  "constraints": [
+    "1<=T<=5;1<=N<=3000;1<=K<=10000;names1..15;1<=frequency<=3000;firstdoseatperiod;tiesinputorder."
+  ],
+  "independentMethod": "Binary search the time of the kth event using sum floor(t/period), enumerate all events through that horizon and sort (time,input index), independent of priority queue simulation.",
+  "oracleFile": "scripts/editorials/oracles/events.py",
+  "mutations": [
+    {
+      "id": "reverse-tie",
+      "label": "Uses reverse input priority for equal times",
+      "languageKey": "cpp17",
+      "find": "priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<pair<long long,int>>> events;",
+      "replace": "auto later = [](const auto &a, const auto &b) { return a.first != b.first ? a.first > b.first : a.second < b.second; }; priority_queue<pair<long long,int>, vector<pair<long long,int>>, decltype(later)> events(later);"
+    },
+    {
+      "id": "reset-time",
+      "label": "Reschedules first occurrence instead of next",
+      "languageKey": "cpp17",
+      "find": "time + period[id]",
+      "replace": "period[id]"
+    }
+  ]
+}

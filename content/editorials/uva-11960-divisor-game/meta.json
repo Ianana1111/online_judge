@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11960-divisor-game",
+  "title": "用倍數篩計算因數個數，前綴維護同分時最大的編號",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

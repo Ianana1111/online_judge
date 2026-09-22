@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11472-beautiful-numbers",
+  "title": "記錄已見數字與尾數，累加所有允許長度的美麗數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

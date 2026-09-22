@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10179.pdf"
+  ],
+  "constraints": [
+    "1<=N<1e9;fractions0<=m<N;gcd(m,N)=1;N1counts0/1thus1;zeroends;distinctprimefactors."
+  ],
+  "independentMethod": "Enumerate subsets of distinct prime factors and use inclusion-exclusion to count multiples in0..N-1, independent of multiplicative totient updates; gcd enumeration checks small denominators.",
+  "oracleFile": "scripts/editorials/oracles/missingstructures.py",
+  "mutations": [
+    {
+      "id": "miss-final-prime",
+      "label": "Omits last remaining prime factor",
+      "languageKey": "cpp17",
+      "find": "if (remaining > 1) answer -= answer / remaining;",
+      "replace": "/* omitted final factor */"
+    },
+    {
+      "id": "repeat-prime-factor",
+      "label": "Applies correction for each prime power",
+      "languageKey": "cpp17",
+      "find": "while (remaining % prime == 0) remaining /= prime;",
+      "replace": "remaining /= prime; while (remaining % prime == 0) { answer -= answer / prime; remaining /= prime; }"
+    }
+  ]
+}

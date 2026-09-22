@@ -1,0 +1,30 @@
+{
+  "sources": [
+    "repository:packages/db/audit/gpe-recovery-cases.json#2015-04"
+  ],
+  "constraints": [
+    "1 ≤ M ≤100; 1 ≤ N ≤10000000; positive coefficients; all values fit signed64; count duplicate values independently"
+  ],
+  "independentMethod": "Binary search by value with integer-square-root counting; merge-and-sort cross-check on small arrays; independent from partition-index search.",
+  "oracleFile": "scripts/editorials/oracles/gpe.py",
+  "oracleDependencies": [
+    "scripts/author-gpe-recovery.py",
+    "scripts/gpe_recovery_references.py"
+  ],
+  "mutations": [
+    {
+      "id": "rank",
+      "label": "Selects rank N+1",
+      "languageKey": "cpp17",
+      "find": "int rank = n;",
+      "replace": "int rank = n + 1;"
+    },
+    {
+      "id": "int32",
+      "label": "Truncates the selected value to 32 bits",
+      "languageKey": "cpp17",
+      "find": "cout << answer << '\\n';",
+      "replace": "cout << static_cast<int>(answer) << '\\n';"
+    }
+  ]
+}

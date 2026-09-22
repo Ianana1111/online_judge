@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/9/907.pdf"
+  ],
+  "constraints": [
+    "EOF;N1..600;K0..300;N+1nonnegative segment distances;LOCAL extraovernights may stay at an existingcamp with zero walking;K>N valid;minimize maximumdaydistance."
+  ],
+  "independentMethod": "Independent minimax partition DP computes min_j max(previous[j],prefix[i]-prefix[j]); monotonic crossing binary search evaluates adjacent minimizers, with exhaustive all cut sets on small arrays.",
+  "oracleFile": "scripts/editorials/oracles/explicit_domains.py",
+  "mutations": [
+    {
+      "id": "nights-as-days",
+      "label": "Allows only K days instead of K+1",
+      "languageKey": "python3",
+      "find": "days <= nights + 1",
+      "replace": "days <= nights"
+    },
+    {
+      "id": "splits-at-equality",
+      "label": "Splits a day even when it exactly meets the limit",
+      "languageKey": "python3",
+      "find": "walked + distance > limit",
+      "replace": "walked + distance >= limit"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "bac459ba5d24e58d2940ac66d058e92ce839872bda2265f80b27f0c7eb3c226b",
+    "file": "content/editorials/uva-907-winterim-backpacking-trip/statement.md",
+    "reason": "Resolve the independently specified K and N bounds without excluding K>N inputs or requiring an undefined impossible-output format; existing K<=N answers remain unchanged.",
+    "source": "https://onlinejudge.org/external/9/907.pdf"
+  }
+}

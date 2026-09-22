@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/117/11730.pdf"
+  ],
+  "constraints": [
+    "1<=S<=100;1<=T<=1000;proper prime divisors excluding1 and A;positive increments;0 0 sentinel."
+  ],
+  "independentMethod": "Prime sieve lists factors for all multiples, then increasing-value DAG dynamic programming; independently checked against BFS with exhaustive primality/divisor tests.",
+  "oracleFile": "scripts/editorials/oracles/reachability.py",
+  "mutations": [
+    {
+      "id": "allows-prime-self",
+      "label": "Allows a prime to add itself",
+      "languageKey": "cpp17",
+      "find": "remaining > 1 && remaining < value",
+      "replace": "remaining > 1"
+    },
+    {
+      "id": "off-by-one-step",
+      "label": "Counts initial state as an operation",
+      "languageKey": "cpp17",
+      "find": "distance[start] = 0",
+      "replace": "distance[start] = 1"
+    }
+  ]
+}

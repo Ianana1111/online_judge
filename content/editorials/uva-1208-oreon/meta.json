@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1208-oreon",
+  "title": "用 Kruskal 選出總守衛數最小的連通道路",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

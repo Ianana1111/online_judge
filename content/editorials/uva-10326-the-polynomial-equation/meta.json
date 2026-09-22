@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10326-the-polynomial-equation",
+  "title": "逐根乘入一次因式，精確展開並格式化多項式",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

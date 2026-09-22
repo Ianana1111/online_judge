@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11336-drm",
+  "title": "只合併新增地點，檢查舊街道是否能被合法細分",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

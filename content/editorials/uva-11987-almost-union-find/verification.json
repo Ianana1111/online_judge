@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/119/11987.pdf"
+  ],
+  "constraints": [
+    "1<=n,m<=100000;union/move-one/query count and sum;ignore same-set union/move;values1..n;EOF;sum needs64-bit."
+  ],
+  "independentMethod": "Literal disjoint Python sets with explicit ownership and maintained arithmetic totals, independent of ghost-node DSU; random partition-label simulation, root moves, singleton moves and100000-element total.",
+  "oracleFile": "scripts/editorials/oracles/graph_structures.py",
+  "mutations": [
+    {
+      "id": "moves-old-node",
+      "label": "Reparents old node and unintentionally moves its descendants",
+      "languageKey": "cpp17",
+      "find": "id[p] = ++used; parent[id[p]] = b;",
+      "replace": "parent[id[p]] = b;"
+    },
+    {
+      "id": "sum-wrap32",
+      "label": "Stores sums in unsigned32-bit and wraps large sets",
+      "languageKey": "cpp17",
+      "find": "vector<long long> sum",
+      "replace": "vector<unsigned int> sum"
+    }
+  ]
+}

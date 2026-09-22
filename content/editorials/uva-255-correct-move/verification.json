@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/2/255.pdf"
+  ],
+  "constraints": [
+    "all positions0..63;orthogonal moves only;queen positive distance cannot cross king;priority state/legal/allowed/continue-stop;EOF."
+  ],
+  "independentMethod": "Trace every queen ray until edge or king and compare explicit move sets; all262144 triples,180-degree symmetry and corner traps independently checked.",
+  "oracleFile": "scripts/editorials/oracles/nested_states.py",
+  "mutations": [
+    {
+      "id": "ignores-blocking",
+      "label": "Lets queen pass through the king",
+      "languageKey": "cpp17",
+      "find": "if (king / 8 == from / 8 && min(from,to) < king && king < max(from,to)) return false;",
+      "replace": ""
+    },
+    {
+      "id": "allows-adjacency",
+      "label": "Does not reject queen landing beside king",
+      "languageKey": "cpp17",
+      "find": "abs(kr-qr) + abs(kc-qc) == 1",
+      "replace": "false"
+    }
+  ]
+}

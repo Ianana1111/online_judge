@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/7/706.pdf"
+  ],
+  "constraints": [
+    "1 <= size <= 10; 0 <= n <= 99999999; terminal 0 0; exact internal spacing; one blank column between glyphs"
+  ],
+  "independentMethod": "Expand independently drawn five-row glyph templates, not reference bit masks.",
+  "oracleFile": "scripts/editorials/oracles/simulation.py",
+  "mutations": [
+    {
+      "id": "double-gap",
+      "label": "Adds two columns between digits",
+      "languageKey": "cpp17",
+      "find": "if (index) cout << ' ';",
+      "replace": "if (index) cout << \"  \";"
+    },
+    {
+      "id": "six-as-zero",
+      "label": "Draws digit six as zero",
+      "languageKey": "cpp17",
+      "find": "0x6d, 0x7d, 0x07",
+      "replace": "0x6d, 0x3f, 0x07"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/16/1650.pdf"
+  ],
+  "constraints": [
+    "signaturelength1..1000;I,D,?;permutation of1..L+1;strict comparisons;EOF;mod1000000007."
+  ],
+  "independentMethod": "Independent inclusion-exclusion over required descents, summing ascending-block exponential generating weights; ? splits unconstrained blocks with multinomial interleavings. Exhaustive all3^npatterns n<=6 against permutations, plus1000-length monotone/all?/alternating boundaries.",
+  "oracleFile": "scripts/editorials/oracles/rank_digits.py",
+  "mutations": [
+    {
+      "id": "nonstrict-increasing",
+      "label": "Includes the equal old rank in increasing transitions",
+      "languageKey": "cpp17",
+      "find": "if(relation=='I')current[j]=prefix[j];",
+      "replace": "if(relation=='I')current[j]=prefix[min(j+1,k)];"
+    },
+    {
+      "id": "question-only-increasing",
+      "label": "Treats wildcard as only increasing",
+      "languageKey": "cpp17",
+      "find": "else current[j]=prefix[k];",
+      "replace": "else current[j]=prefix[j];"
+    }
+  ]
+}

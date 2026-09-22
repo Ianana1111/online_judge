@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/113/11360.pdf"
+  ],
+  "constraints": [
+    "1<=T<50;1<=N<10;0<=M<50;digits0..9;distinct row/col indices1..N;mod10;ordered operations;blank after every case."
+  ],
+  "independentMethod": "Lazy row/column coordinate permutations with a transpose flag and global additive offset, independent of mutating matrix cells. Coordinate-tag transformations verify operation ordering.",
+  "oracleFile": "scripts/editorials/oracles/matrixsets.py",
+  "mutations": [
+    {
+      "id": "negative-remainder",
+      "label": "Uses C++ negative modulo on decrement",
+      "languageKey": "cpp17",
+      "find": "? 1 : 9",
+      "replace": "? 1 : -1"
+    },
+    {
+      "id": "double-transpose",
+      "label": "Swaps each off-diagonal pair twice",
+      "languageKey": "cpp17",
+      "find": "int c = r + 1",
+      "replace": "int c = 0"
+    }
+  ]
+}

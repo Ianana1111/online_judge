@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/3/302.pdf"
+  ],
+  "constraints": [
+    "Road IDs positive unique<1995;vertices1..44;undirected connected nonempty road support;selfloops and parallelroads allowed;start=min endpoints of first listedroad;lexminimumEuler circuit;00blockandemptyblocksentinel."
+  ],
+  "independentMethod": "Independent Fleury chooses the smallest next edge whose deletion leaves all remaining edges reachable from the destination; exhaustive small Euler tours confirm global lexicographic minimality.",
+  "oracleFile": "scripts/editorials/oracles/ordered_routes.py",
+  "mutations": [
+    {
+      "id": "descending-edges",
+      "label": "Prefers high-numbered roads",
+      "languageKey": "cpp17",
+      "find": "sort(row.begin(),row.end());",
+      "replace": "sort(row.rbegin(),row.rend());"
+    },
+    {
+      "id": "preorder-output",
+      "label": "Outputs edges before finishing their recursive branches",
+      "languageKey": "cpp17",
+      "find": "used[id]=true;visit(v);route.push_back(id);",
+      "replace": "used[id]=true;route.push_back(id);visit(v);"
+    }
+  ]
+}

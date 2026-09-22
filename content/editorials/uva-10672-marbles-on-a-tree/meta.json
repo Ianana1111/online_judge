@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10672-marbles-on-a-tree",
+  "title": "用子樹盈虧決定每條邊必須搬運的彈珠數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

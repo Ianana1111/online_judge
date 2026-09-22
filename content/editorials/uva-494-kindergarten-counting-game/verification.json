@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/494.pdf"
+  ],
+  "constraints": [
+    "EOFlines;atleastonewordperline;word=maximal[A-Za-z]+;digitsandpunctuationareseparators;perlinecount."
+  ],
+  "independentMethod": "Regex findall of maximal ASCII alphabetic runs, independent of transition-state counter.",
+  "oracleFile": "scripts/editorials/oracles/formatting.py",
+  "mutations": [
+    {
+      "id": "digits-letters",
+      "label": "Counts digit runs as words",
+      "languageKey": "cpp17",
+      "find": "('A' <= ch && ch <= 'Z')",
+      "replace": "('A' <= ch && ch <= 'Z') || ('0' <= ch && ch <= '9')"
+    },
+    {
+      "id": "lowercase-only",
+      "label": "Ignores uppercase words",
+      "languageKey": "cpp17",
+      "find": " || ('A' <= ch && ch <= 'Z')",
+      "replace": ""
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11000.pdf"
+  ],
+  "constraints": [
+    "N>=0;-1sentinel;male andtotal<=2^32;oneimmortalfemale;actualproblemBee."
+  ],
+  "independentMethod": "Independent binary exponentiation of the Fibonacci2x2matrix: male=F(n+2)-1,total=F(n+3)-1; population reproduction checks every legal year0..44.",
+  "oracleFile": "scripts/editorials/oracles/metadata_models.py",
+  "mutations": [
+    {
+      "id": "queen-dies",
+      "label": "Omits immortal queen",
+      "languageKey": "cpp17",
+      "find": "nextFemale = male + 1",
+      "replace": "nextFemale = male"
+    },
+    {
+      "id": "female-not-total",
+      "label": "Prints female count instead of total",
+      "languageKey": "cpp17",
+      "find": "<< male + female <<",
+      "replace": "<< female <<"
+    }
+  ],
+  "textCorrections": [
+    {
+      "field": "title",
+      "beforeHash": "f539d3964b5deec36d0b134fab2c0ee2b1e914966c01e21020ce8a5418c83153",
+      "value": "11000 - Bee",
+      "reason": "Restore the official problem title matching its UVa number and actual statement; preserve the stable slug and all existing links.",
+      "source": "https://onlinejudge.org/external/110/11000.pdf"
+    }
+  ]
+}

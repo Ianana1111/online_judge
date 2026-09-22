@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/115/11536.pdf"
+  ],
+  "constraints": [
+    "T<100;N3..1000000;M1..1000;K2..100;first three values fixed1,2,3 even when M<3;contiguous range inclusive length."
+  ],
+  "independentMethod": "Stream recurrence and maintain each required value’s latest occurrence in a segment tree: minimum latest position is the latest feasible left endpoint. Compare all intervals for exhaustive small parameters.",
+  "oracleFile": "scripts/editorials/oracles/mask_paths.py",
+  "mutations": [
+    {
+      "id": "wrong-recurrence",
+      "label": "Forgets the plus one in the generated sequence",
+      "languageKey": "cpp17",
+      "find": "%m+1",
+      "replace": "%m"
+    },
+    {
+      "id": "off-by-one-length",
+      "label": "Omits one endpoint from the interval length",
+      "languageKey": "cpp17",
+      "find": "right-left+1",
+      "replace": "right-left"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/131/13185.pdf"
+  ],
+  "constraints": [
+    "1<=T<=500;2<=n<=1000;properpositive divisors exclude n;lowercaseclassification."
+  ],
+  "independentMethod": "Factor n and multiply prime-power geometric sums to obtain sigma(n), then subtract n, independent of full divisor enumeration.",
+  "oracleFile": "scripts/editorials/oracles/structures.py",
+  "mutations": [
+    {
+      "id": "include-self",
+      "label": "Includes number itself",
+      "languageKey": "cpp17",
+      "find": "d < n",
+      "replace": "d <= n"
+    },
+    {
+      "id": "perfect-deficient",
+      "label": "Classifies equality as deficient",
+      "languageKey": "cpp17",
+      "find": "if (sum < n)",
+      "replace": "if (sum <= n)"
+    }
+  ]
+}

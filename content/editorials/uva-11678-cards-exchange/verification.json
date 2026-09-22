@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/116/11678.pdf"
+  ],
+  "constraints": [
+    "1<=A,B<=10000;sorted nondecreasing IDs1..100000;distinct desired types only;equal exchange counts;00terminator."
+  ],
+  "independentMethod": "Deduplicate sorted lists by adjacent runs, then merge them to count exclusive elements on each side independently of set-membership reference.",
+  "oracleFile": "scripts/editorials/oracles/collections_suite.py",
+  "mutations": [
+    {
+      "id": "take-max",
+      "label": "Uses larger exclusive set instead of limiting side",
+      "languageKey": "cpp17",
+      "find": "min(onlyA, onlyB)",
+      "replace": "max(onlyA, onlyB)"
+    },
+    {
+      "id": "include-common",
+      "label": "Counts shared types as exchangeable",
+      "languageKey": "cpp17",
+      "find": "if (!b.count(x))",
+      "replace": "if (true)"
+    }
+  ]
+}

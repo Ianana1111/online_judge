@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/106/10642.pdf"
+  ],
+  "constraints": [
+    "1<=T<=500;coordinates0..100000;directed path destination reachable, including samepoint;index increases by x within diagonal."
+  ],
+  "independentMethod": "Sum the lengths of each intervening diagonal plus the change in within-diagonal x, independently of triangular closed form; small literal-walk tests.",
+  "oracleFile": "scripts/editorials/oracles/counting.py",
+  "mutations": [
+    {
+      "id": "wrong-offset",
+      "label": "Uses y instead of x along a diagonal",
+      "languageKey": "cpp17",
+      "find": "/ 2 + x;",
+      "replace": "/ 2 + y;"
+    },
+    {
+      "id": "int-product",
+      "label": "Multiplies the diagonal in int32",
+      "languageKey": "cpp17",
+      "find": "long long diagonal = x + y;",
+      "replace": "int diagonal = x + y;"
+    }
+  ]
+}

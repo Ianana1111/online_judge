@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/115/11526.pdf"
+  ],
+  "constraints": [
+    "T<=1000;signed32 n includes negatives;H(n)=0 for n<=0;positive floor-division sum;64bit result."
+  ],
+  "independentMethod": "Group consecutive denominators having the same quotient, summing quotient times block length, independent of square-root hyperbola symmetry; direct summation checks all small signed inputs.",
+  "oracleFile": "scripts/editorials/oracles/exactmath.py",
+  "mutations": [
+    {
+      "id": "double-overlap",
+      "label": "Fails to subtract the shared square",
+      "languageKey": "cpp17",
+      "find": "2 * sum - root * root",
+      "replace": "2 * sum"
+    },
+    {
+      "id": "negative-absolute",
+      "label": "Returns magnitude for negative inputs",
+      "languageKey": "cpp17",
+      "find": "if (n <= 0) { cout << 0",
+      "replace": "if (n <= 0) { cout << -n"
+    }
+  ]
+}

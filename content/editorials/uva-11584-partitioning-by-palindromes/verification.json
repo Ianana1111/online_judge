@@ -1,0 +1,33 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/115/11584.pdf"
+  ],
+  "constraints": [
+    "1<=length<=1000;lowercase ASCII;nonempty consecutive palindrome groups covering entire string;minimum groups not cuts."
+  ],
+  "independentMethod": "Expand odd/even palindrome centers into edges between prefix boundaries, then BFS for minimum edge count; exhaustive all-cut partitions on tiny binary strings.",
+  "oracleFile": "scripts/editorials/oracles/combinatorics_dp.py",
+  "mutations": [
+    {
+      "id": "wrong-empty-prefix",
+      "label": "Adds a phantom initial group",
+      "languageKey": "cpp17",
+      "find": "groups[0] = 0",
+      "replace": "groups[0] = 1"
+    },
+    {
+      "id": "cuts-not-groups",
+      "label": "Reports cuts rather than groups",
+      "languageKey": "cpp17",
+      "find": "cout << groups[n]",
+      "replace": "cout << groups[n] - 1"
+    },
+    {
+      "id": "longest-suffix-greedy",
+      "label": "Takes first longest palindromic suffix instead of minimizing all cuts",
+      "languageKey": "cpp17",
+      "find": "if (palindrome[begin][end - 1]) groups[end] = min(groups[end],groups[begin] + 1);",
+      "replace": "if (palindrome[begin][end - 1]) { groups[end] = groups[begin] + 1; break; }"
+    }
+  ]
+}

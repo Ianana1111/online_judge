@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/1/122.pdf"
+  ],
+  "constraints": [
+    "each tree1..256 specified nodes per Input section;positive integer values;LR paths;() terminator;every required path node exactlyonce;EOF;left-to-right level order."
+  ],
+  "independentMethod": "Dictionary of explicit paths detects duplicates and immediate-prefix closure, then sorts by path length and lexicographic LR order; shuffled trees, missing ancestors and256-deep chains.",
+  "oracleFile": "scripts/editorials/oracles/nested_states.py",
+  "mutations": [
+    {
+      "id": "accepts-duplicate",
+      "label": "Allows a path to be assigned more than once",
+      "languageKey": "cpp17",
+      "find": "if (!nodes[at].value.empty()) valid = false;",
+      "replace": ""
+    },
+    {
+      "id": "ignores-missing-ancestor",
+      "label": "Does not reject unassigned intermediate nodes",
+      "languageKey": "cpp17",
+      "find": "if (nodes[u].value.empty()) valid = false;",
+      "replace": ""
+    }
+  ]
+}

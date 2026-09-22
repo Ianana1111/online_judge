@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/10/1056.pdf"
+  ],
+  "constraints": [
+    "2<=P<=50;R>=1;undirected relationships;declared unnamed isolated people retained;maximum shortest distance or DISCONNECTED;00 sentinel."
+  ],
+  "independentMethod": "Run independent BFS from every declared vertex, including unnamed isolated vertices; chain, complete graph, duplicate relationships and random connected networks.",
+  "oracleFile": "scripts/editorials/oracles/graph_structures.py",
+  "mutations": [
+    {
+      "id": "forgets-unnamed",
+      "label": "Scans only vertices whose names occurred",
+      "languageKey": "cpp17",
+      "find": "for (int i = 0; i < n; ++i) for (int j = 0; j < n; ++j) answer",
+      "replace": "for (int i = 0; i < (int)ids.size(); ++i) for (int j = 0; j < (int)ids.size(); ++j) answer"
+    },
+    {
+      "id": "directed-friendship",
+      "label": "Treats symmetric relationship as directed",
+      "languageKey": "cpp17",
+      "find": "distance[u][v] = distance[v][u] = 1",
+      "replace": "distance[u][v] = 1"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-24931-extend-to-palindromes",
+  "title": "保留最長回文後綴，把前面剩餘部分反轉接上",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

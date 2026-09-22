@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10655-sumsets",
+  "title": "預算兩數和，再由最大候選 d 反查另一半",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

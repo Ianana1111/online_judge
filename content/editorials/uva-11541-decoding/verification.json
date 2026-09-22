@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/115/11541.pdf"
+  ],
+  "constraints": [
+    "1<=T<50;valid sequence of uppercase-letter plus1+digits;decoded length<=200;preserve run order and multi-digit counts."
+  ],
+  "independentMethod": "Regex tokenization into letter/count groups, exact reassembly check of input, and independent repeated-character expansion.",
+  "oracleFile": "scripts/editorials/oracles/intervals.py",
+  "mutations": [
+    {
+      "id": "no-place-value",
+      "label": "Adds digits without base10 place value",
+      "languageKey": "cpp17",
+      "find": "count = count * 10 + encoded[i] - '0';",
+      "replace": "count = count + encoded[i] - '0';"
+    },
+    {
+      "id": "drop-final-run",
+      "label": "Drops final run at end of string",
+      "languageKey": "cpp17",
+      "find": "decoded.append(count, letter);",
+      "replace": "if (i < encoded.size()) decoded.append(count, letter);"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/2/245.pdf"
+  ],
+  "constraints": [
+    "Case-sensitive maximal ASCII letter words<=50;original has no digits;new literal only first occurrence;one-based MTF indices;0 terminator line;unbounded distinct-word count."
+  ],
+  "independentMethod": "Plain Python list move-to-front decoding; independently compress original texts and verify exact round trips including punctuation/newlines, multi-digit references and fifty-letter words.",
+  "oracleFile": "scripts/editorials/oracles/algebra_text.py",
+  "mutations": [
+    {
+      "id": "duplicate-dictionary",
+      "label": "Fails to remove the previous dictionary occurrence",
+      "languageKey": "cpp17",
+      "find": "active.add(old, -1);",
+      "replace": "(void)0;"
+    },
+    {
+      "id": "oldest-first",
+      "label": "Allocates slots in oldest-first order",
+      "languageKey": "cpp17",
+      "find": "int position = --front;",
+      "replace": "int position = events + 1 - (--front);"
+    }
+  ]
+}

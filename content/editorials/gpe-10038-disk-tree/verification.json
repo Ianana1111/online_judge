@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/15/1556.pdf"
+  ],
+  "constraints": [
+    "1<=N<=500;distinct paths<=80 chars;component1..8 allowed uppercase digits punctuation;backslash separators;lexicographic siblings;one-space depth;blank after datasets."
+  ],
+  "independentMethod": "Collect every directory prefix as a tuple, sort all tuples lexicographically, and render depth from tuple length; independent of Trie construction and recursive traversal.",
+  "oracleFile": "scripts/editorials/oracles/treegames.py",
+  "mutations": [
+    {
+      "id": "double-indent",
+      "label": "Uses two spaces per level",
+      "languageKey": "cpp17",
+      "find": "string(depth, ' ')",
+      "replace": "string(2 * depth, ' ')"
+    },
+    {
+      "id": "leaves-only",
+      "label": "Omits internal directories",
+      "languageKey": "cpp17",
+      "find": "cout << string(depth, ' ')",
+      "replace": "if (nodes[v].children.empty()) cout << string(depth, ' ')"
+    }
+  ]
+}

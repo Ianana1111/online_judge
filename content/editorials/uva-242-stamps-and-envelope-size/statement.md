@@ -1,0 +1,60 @@
+Philatelists have collected stamps since long before postal workers were disgruntled. An excess of
+stamps may be bad news to a country’s postal service, but good news to those that collect the excess
+stamps. The postal service works to minimize the number of stamps needed to provide seamless postage
+coverage. To this end you have been asked to write a program to assist the postal service.
+
+Envelope size restricts the number of stamps that can be used on one envelope. For example, if 1
+cent and 3 cent stamps are available and an envelope can accommodate 5 stamps, all postage from 1
+to 13 cents can be “covered”:
+
+| Postage | Number of 1¢ Stamps | Number of 3¢ Stamps |
+|---|---|---|
+| 1 | 1 | 0 |
+| 2 | 2 | 0 |
+| 3 | 0 | 1 |
+| 4 | 1 | 1 |
+| 5 | 2 | 1 |
+| 6 | 0 | 2 |
+| 7 | 1 | 2 |
+| 8 | 2 | 2 |
+| 9 | 0 | 3 |
+| 10 | 1 | 3 |
+| 11 | 2 | 3 |
+| 12 | 0 | 4 |
+| 13 | 1 | 4 |
+
+Although five 3 cent stamps yields an envelope with 15 cents postage, it is not possible to cover an
+envelope with 14 cents of stamps using at most five 1 and 3 cent stamps. Since the postal service wants
+maximal coverage without gaps, the maximal coverage is 13 cents.
+
+### Input
+
+The first line of each data set contains the integer S, representing the maximum of stamps that an
+envelope can accommodate. The second line contains the integer N , representing the number of sets of
+stamp denominations in the data set. Each of the next N lines contains a set of stamp denominations.
+The first integer on each line is the number of denominations in the set, followed by a list of stamp
+denominations, in order from smallest to largest, with each denomination separated from the others by
+one or more spaces. There will be at most S denominations on each of the N lines. The maximum
+value of S is 10, the largest stamp denomination is 100, the maximum value of N is 10.
+
+The input is terminated by a data set beginning with zero (S is zero).
+
+### Output
+
+Output one line for each data set giving the maximal no-gap coverage followed by the stamp denominations that yield that coverage in the following format:
+
+`max coverage = <value> :       <denominations>`
+
+If more than one set of denominations in a set yields the same maximal no-gap coverage, the set
+with the fewest number of denominations should be printed (this saves on stamp printing costs). If two sets with the same number of denominations yield the same maximal no-gap coverage, then the
+set with the lower maximum stamp denomination should be printed. For example, if five stamps fit on
+an envelope, then stamp sets of 1, 4, 12, 21 and 1, 5, 12, 28 both yield maximal no-gap coverage of 71
+cents. The first set would be printed because both sets have the same number of denominations but
+the first set’s largest denomination (21) is lower than that of the second set (28). If multiple sets in a
+sequence yield the same maximal no-gap coverage, have the same number of denominations, and have
+equal largest denominations, then print the set with the lewer second-maximum stamp denomination,
+and so on.
+
+### LOCAL 輸出欄寬
+
+本平台統一使用 `max coverage =`，緊接寬度四格且靠右的覆蓋整數，再接 ` :`，之後每個面額均占三格並靠右。公開 PDF 的排版空格與既有隱藏答案不同；本平台以此明確規則統一公開範例與隱藏案例。

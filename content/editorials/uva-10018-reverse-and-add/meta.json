@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10018-reverse-and-add",
+  "title": "先反轉相加，再檢查回文",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

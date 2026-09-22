@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10365-blocks",
+  "title": "枚舉整數邊長因數，最小化長方體表面積",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

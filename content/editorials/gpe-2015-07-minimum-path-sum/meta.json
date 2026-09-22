@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-2015-07-minimum-path-sum",
+  "title": "用一列動態規劃，找出最小路徑和",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

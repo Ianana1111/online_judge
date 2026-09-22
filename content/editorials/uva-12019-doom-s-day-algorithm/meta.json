@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12019-doom-s-day-algorithm",
+  "title": "以一月一日為基準，把日期轉為天數位移",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

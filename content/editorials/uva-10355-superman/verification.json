@@ -1,0 +1,45 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/103/10355.pdf"
+  ],
+  "constraints": [
+    "integercoordsabs<21;1..10spheres,radius1..20;disjointinteriors,tangencyallowed;distinctpathendpoints;percentage two decimals;clippedsegmentnotinfiniteline."
+  ],
+  "independentMethod": "Independent closest-point projection and exact squared perpendicular distance, followed by80-digit Decimal half-chords and endpoint clipping; rational-root analysis identifies exact decimal midpoint ties.",
+  "oracleFile": "scripts/editorials/oracles/geometric_witnesses.py",
+  "mutations": [
+    {
+      "id": "unclipped-line",
+      "label": "Uses the whole infinite-line chord",
+      "languageKey": "cpp17",
+      "find": "max(0.0L,min(1.0L,leave)-max(0.0L,enter))",
+      "replace": "max(0.0L,leave-enter)"
+    },
+    {
+      "id": "largest-region-only",
+      "label": "Keeps only the largest polluted interval",
+      "languageKey": "cpp17",
+      "find": "fraction+=inside;",
+      "replace": "fraction=max(fraction,inside);"
+    },
+    {
+      "id": "legal-alternate-rounding",
+      "label": "Equally near half-minute or equivalent explicit numeric sign",
+      "languageKey": "cpp17",
+      "find": "<<percentage",
+      "replace": "<<showpos<<percentage<<noshowpos",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Validate nearest rounded geometric answers, including both equally near values at exact rational midpoint ties. Preserve all case labels and separation; reject wrong precision and materially wrong rounded answers."
+  },
+  "statementCorrection": {
+    "beforeHash": "66b9428552803afa578bf032313e10138a4440ea1fad8534fa7b3e09ad3fd617",
+    "file": "content/editorials/uva-10355-superman/statement.md",
+    "reason": "Clarify well-defined geometric inputs and nearest-rounding ties; user-authorized resource bounds are explicitly stated and must pass real maximum-size sandbox execution before release.",
+    "source": "https://onlinejudge.org/external/103/10355.pdf"
+  }
+}

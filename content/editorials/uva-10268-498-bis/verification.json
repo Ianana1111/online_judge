@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10268.pdf"
+  ],
+  "constraints": [
+    "Alternating x and coefficient lines; highest degree first; absolute input and final output < 2^31; intermediates not restricted to int32"
+  ],
+  "independentMethod": "Explicit arbitrary-precision monomial powers and summation, independent of Horner.",
+  "oracleFile": "scripts/editorials/oracles/simulation.py",
+  "mutations": [
+    {
+      "id": "forget-degree",
+      "label": "Omits derivative degree weights",
+      "languageKey": "python3",
+      "find": "coefficient * (degree - index)",
+      "replace": "coefficient"
+    },
+    {
+      "id": "drop-linear",
+      "label": "Omits the original linear term",
+      "languageKey": "python3",
+      "find": "coefficients[:-1]",
+      "replace": "coefficients[:-2]"
+    }
+  ]
+}

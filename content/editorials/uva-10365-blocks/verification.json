@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/103/10365.pdf"
+  ],
+  "constraints": [
+    "1<=N<=1000;integer dimensions abc=N;minimal surface2(ab+bc+ca)."
+  ],
+  "independentMethod": "Enumerate all ordered positive dimension triples with volume at most1000 and aggregate minimum surface by product, independent of per-query sorted divisor search.",
+  "oracleFile": "scripts/editorials/oracles/partitions_graph.py",
+  "mutations": [
+    {
+      "id": "three-faces",
+      "label": "Omits opposite faces",
+      "languageKey": "cpp17",
+      "find": "2 * (a * b + b * c + c * a)",
+      "replace": "(a * b + b * c + c * a)"
+    },
+    {
+      "id": "omit-squares",
+      "label": "Excludes equal middle and largest sides",
+      "languageKey": "cpp17",
+      "find": "b * b <= n / a",
+      "replace": "b * b < n / a"
+    }
+  ]
+}

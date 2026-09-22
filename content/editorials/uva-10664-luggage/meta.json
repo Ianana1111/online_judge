@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10664-luggage",
+  "title": "總重必須為偶數，再做每件只能選一次的子集合和",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

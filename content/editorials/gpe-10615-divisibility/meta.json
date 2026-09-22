@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10615-divisibility",
+  "title": "用質數進位與區間數位 DP 計數不被整除的格子",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

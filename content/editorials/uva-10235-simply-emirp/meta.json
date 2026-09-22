@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10235-simply-emirp",
+  "title": "先判原數為質數，再檢查不同的反轉值",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

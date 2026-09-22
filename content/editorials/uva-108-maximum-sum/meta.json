@@ -1,0 +1,8 @@
+{
+  "slug": "uva-108-maximum-sum",
+  "title": "固定上下邊界，將最大子矩形化為一維最大子段",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

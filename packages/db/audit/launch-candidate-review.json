@@ -59,7 +59,7 @@
     },
     {
       "slug": "uva-1056-degrees-of-separation",
-      "index": 0,
+      "index": 1,
       "sourceHash": "ca7bcd3148075f1fcb78ef3e17ec558aae1747a0dbbf1c17bbaf7e626126aba2",
       "expected": "REJECT",
       "reason": "Discovered names can be fewer than the declared population P. This candidate omits unnamed isolated people and is not a correct reference."
@@ -87,24 +87,38 @@
     },
     {
       "slug": "uva-10099-the-tourist-guide",
-      "index": 0,
+      "index": 1,
       "sourceHash": "dfd9eb80bb955c9a16087e5add1854366a6668afbc9f0fdca9cd18d0b4e9e02f",
       "expected": "REJECT",
       "reason": "The candidate fails to reserve a seat for the guide. The original first hidden expected answer was also wrong; the guarded correction restores ceil(20/(5-1))=5."
     },
     {
       "slug": "uva-10099-the-tourist-guide",
-      "index": 1,
+      "index": 2,
       "sourceHash": "e02836fb70d95d8583665eee99c9fb98e7c88fdc30fc585bce1625be58f5fb9d",
       "expected": "REJECT",
       "reason": "Independent of unresolved parallel-road semantics, this candidate also omits the guide seat and fails valid unambiguous inputs."
     },
     {
       "slug": "uva-11094-continents",
-      "index": 0,
+      "index": 1,
       "sourceHash": "db19ad0ee039676c2a3dc14e5935af5de420a909975aeb414b8217efb556e6f1",
       "expected": "REJECT",
       "reason": "Land is the character at the king's starting location; the statement permits any two map letters. This candidate incorrectly hardcodes l."
+    },
+    {
+      "slug": "gpe-2008-37-prefix-expression-evaluation",
+      "index": 0,
+      "sourceHash": "636e372e6d032eb5acb0908be565822bb1ffc6fddf8d16a6faaf6fa42106446b",
+      "expected": "REJECT",
+      "reason": "The original statement permits positive integer constants only. This historical reference incorrectly returns 0 for the standalone zero literal instead of illegal. The new legal syntax-validation case demonstrates WA while all four archived cases remain AC. Preserve the exact historical source as a known rejection, not a retired candidate; the independently verified Python official solution enforces positivity and handles unbounded intermediate integers."
+    },
+    {
+      "slug": "uva-1101-addmul",
+      "index": 0,
+      "sourceHash": "2d73edd227f55ce389c8a12f36fe13bc35809fd6f3b099f212a7e3a9655b4a2c",
+      "expected": "REJECT",
+      "reason": "The historical BFS hard-caps program length at300, although legal m=1 inputs can require999999999 additions. Its captured output incorrectly labels that legal case impossible, and a following legal large case throws std::bad_alloc in the isolated64MiB judge. The original sample remains AC. Preserve the exact historical source as a known rejection, not a retired candidate; the official bounded affine/base-m reference constructs run-length output without expanding the instruction string."
     }
   ],
   "additionalCandidates": [

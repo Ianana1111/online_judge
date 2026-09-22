@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11360-having-fun-with-matrices",
+  "title": "逐項模擬五種矩陣操作，特別處理模十與轉置",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

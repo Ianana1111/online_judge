@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/9/928.pdf"
+  ],
+  "constraints": [
+    "R,C2..300;oneS and oneE;orthogonal complete moves of1,2,3 repeating;all intermediate cells clear;goal at move endpoint in any phase;min moves not distance."
+  ],
+  "independentMethod": "Use row/column wall prefix sums to construct complete legal ritual moves and BFS phase states; independent explicit state graph Bellman-Ford checks on random small mazes and position-only counterexamples.",
+  "oracleFile": "scripts/editorials/oracles/gpe_readiness.py",
+  "mutations": [
+    {
+      "id": "ignores-phase",
+      "label": "Uses only position for the visited key",
+      "languageKey": "cpp17",
+      "find": "int key=(nr*c+nc)*3+nextPhase;",
+      "replace": "int key=(nr*c+nc)*3;"
+    },
+    {
+      "id": "jumps-walls",
+      "label": "Checks only the landing cell for walls",
+      "languageKey": "cpp17",
+      "find": "board[nr][nc]=='#'",
+      "replace": "(step==length && board[nr][nc]=='#')"
+    }
+  ]
+}

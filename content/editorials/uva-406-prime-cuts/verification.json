@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/406.pdf"
+  ],
+  "constraints": [
+    "1<=C<=N<=1000;candidate list explicitly includes1;odd2C-1/even2C;clip to list;blank line after each case."
+  ],
+  "independentMethod": "Trial-divide candidate integers and repeatedly remove one element from each end until requested central size remains.",
+  "oracleFile": "scripts/editorials/oracles/arithmetic.py",
+  "mutations": [
+    {
+      "id": "exclude-one",
+      "label": "Excludes the task-specific candidate one",
+      "languageKey": "cpp17",
+      "find": "vector<int> values{1};",
+      "replace": "vector<int> values;"
+    },
+    {
+      "id": "odd-count",
+      "label": "Always takes an even number",
+      "languageKey": "cpp17",
+      "find": "2 * c - length % 2",
+      "replace": "2 * c"
+    }
+  ]
+}

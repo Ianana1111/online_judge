@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-11058-exact-sum",
+  "title": "排序後雙指標收縮，找總價固定且差距最小的兩本書",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

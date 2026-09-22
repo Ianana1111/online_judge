@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/132/13242.pdf"
+  ],
+  "constraints": [
+    "N1..3000;positive pool capacity;nonnegative integer volumes;integer temperatures;positive selected volume;capacity/2<=volume<=capacity;absolute weighted-temperature difference<=5;LOCAL tie lexicographic(start,end)."
+  ],
+  "independentMethod": "Independent exact Fraction temperatures using prefix heat/volume sums and binary-searched feasible volume endpoints; exhaustive direct slice aggregation checks small pools. Boundary tests cover half/full capacity, exactly five degrees, exact rational ties, zero-volume jars, and 3000-jar stress.",
+  "oracleFile": "scripts/editorials/oracles/paths_mixtures.py",
+  "mutations": [
+    {
+      "id": "unweighted-heat",
+      "label": "Forgets to weight temperature by jar volume",
+      "languageKey": "python3",
+      "find": "heat += amount * temperature",
+      "replace": "heat += temperature"
+    },
+    {
+      "id": "tie-overwrite",
+      "label": "Replaces an earlier equally good interval",
+      "languageKey": "python3",
+      "find": "error * best_volume < best_error * volume",
+      "replace": "error * best_volume <= best_error * volume"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "8c35facd33b1351fe2f5829a184eec0a2521da8284fa84561e7feaaf9e92cbc9",
+    "file": "content/editorials/uva-13242-pool-filling/statement.md",
+    "reason": "Make zero-volume and tie behavior explicit while retaining all existing positive-volume answers and the inclusive boundaries stated in the original problem.",
+    "source": "https://onlinejudge.org/external/132/13242.pdf"
+  }
+}

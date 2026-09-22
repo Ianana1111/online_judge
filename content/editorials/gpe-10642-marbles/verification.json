@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/130/13043.pdf"
+  ],
+  "constraints": [
+    "T1..50;1<=X<=N<=100000;1<=K<=50;distinguishable marbles and labelled boxes;each at leastX;mod1000000007."
+  ],
+  "independentMethod": "Independent exponential generating functions: truncated product for small slack and inclusion-exclusion of bad-box EGFs otherwise; exhaustive labelled assignments for small N.",
+  "oracleFile": "scripts/editorials/oracles/allocation_paths.py",
+  "mutations": [
+    {
+      "id": "missing-box-choice",
+      "label": "Omits the choice of the labelled box for the last marble",
+      "languageKey": "cpp17",
+      "find": "current[balls]=boxes*(current[balls-1]+exact)%MOD;",
+      "replace": "current[balls]=(current[balls-1]+exact)%MOD;"
+    },
+    {
+      "id": "exact-only",
+      "label": "Forgets allocations whose last marble belongs to a box larger than X",
+      "languageKey": "cpp17",
+      "find": "current[balls-1]+exact",
+      "replace": "exact"
+    }
+  ]
+}

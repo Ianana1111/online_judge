@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10503-show-the-sequence",
+  "title": "從最內層開始，分清累加與累乘的索引",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

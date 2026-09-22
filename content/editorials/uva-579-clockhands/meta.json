@@ -1,0 +1,8 @@
+{
+  "slug": "uva-579-clockhands",
+  "title": "兩支指針都會移動，用半度單位精確求最小夾角",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

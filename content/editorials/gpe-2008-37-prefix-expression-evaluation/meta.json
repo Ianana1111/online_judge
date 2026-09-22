@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-2008-37-prefix-expression-evaluation",
+  "title": "從右往左用堆疊計算前序式，同時檢查完整文法",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

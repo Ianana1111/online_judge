@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12602-nice-licence-plates",
+  "title": "三個字母視為二十六進位，再比較兩部分差距",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

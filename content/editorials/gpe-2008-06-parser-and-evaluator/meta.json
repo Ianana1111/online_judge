@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-2008-06-parser-and-evaluator",
+  "title": "用兩個堆疊處理一元符號與特殊優先序，完整驗證中序式",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

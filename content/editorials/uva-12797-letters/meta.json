@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12797-letters",
+  "title": "枚舉十種字母的大小寫選擇，再找最短路",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

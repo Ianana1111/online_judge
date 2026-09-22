@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/1/147.pdf"
+  ],
+  "constraints": [
+    "Positive amounts<=300.00,multiples of0.05;0 terminator;11 NZ denominations;unlimited unordered combinations;width6+17;64bit."
+  ],
+  "independentMethod": "Multiply finite denomination generating polynomials using explicit quantity enumeration, independent of in-place unbounded recurrence; tiny recursive quantity enumeration verifies counts and formatting.",
+  "oracleFile": "scripts/editorials/oracles/combinatorial.py",
+  "mutations": [
+    {
+      "id": "single-use",
+      "label": "Updates amounts backwards, using each denomination at most once",
+      "languageKey": "cpp17",
+      "find": "for (int sum = coin; sum <= limit; ++sum)",
+      "replace": "for (int sum = limit; sum >= coin; --sum)"
+    },
+    {
+      "id": "drop-notes",
+      "label": "Omits fifty- and hundred-dollar notes",
+      "languageKey": "cpp17",
+      "find": ", 1000, 2000}",
+      "replace": "}"
+    }
+  ]
+}

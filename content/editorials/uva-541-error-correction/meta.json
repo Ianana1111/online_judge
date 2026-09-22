@@ -1,0 +1,8 @@
+{
+  "slug": "uva-541-error-correction",
+  "title": "奇數行與奇數列的交點，決定能否單點修復",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

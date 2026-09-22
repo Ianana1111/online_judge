@@ -1,0 +1,36 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11005.pdf"
+  ],
+  "constraints": [
+    "1 ≤ T <25; 36 costs each 1..128; queries 0..2000000000; bases 2..36; all ties; blank line between groups"
+  ],
+  "independentMethod": "Most-significant-place decomposition in Python instead of repeated least-significant division.",
+  "oracleFile": "scripts/editorials/oracles/pilot.py",
+  "mutations": [
+    {
+      "id": "base-36",
+      "label": "Skips base 36",
+      "languageKey": "cpp17",
+      "find": "base <= 36",
+      "replace": "base < 36"
+    },
+    {
+      "id": "ties",
+      "label": "Keeps only one tied base",
+      "languageKey": "cpp17",
+      "find": "if (total == best) bases.push_back(base);",
+      "replace": "if (total == best && bases.empty()) bases.push_back(base);"
+    },
+    {
+      "id": "case-separator",
+      "label": "Omits the group separator",
+      "languageKey": "cpp17",
+      "find": "if (tc > 1) cout << '\\n';",
+      "replace": "if (tc > 1) {}"
+    }
+  ],
+  "equivalentVariants": [
+    "For zero, incorrectly computing cost 0 still yields all bases tied, so this output-equivalent variant is not a reject candidate."
+  ]
+}

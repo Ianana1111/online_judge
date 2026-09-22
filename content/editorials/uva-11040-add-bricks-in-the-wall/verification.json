@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11040.pdf"
+  ],
+  "constraints": [
+    "Nine rows;given odd rows/positions;each upper=two lower sum;integer values,no explicit magnitude bound;solution guaranteed."
+  ],
+  "independentMethod": "Recover only the four unknown bottom-row entries from the seventh-row equations, rebuild all upper rows by addition and verify every supplied clue. Random full-wall construction verifies round trips.",
+  "oracleFile": "scripts/editorials/oracles/matrixsets.py",
+  "mutations": [
+    {
+      "id": "missing-double",
+      "label": "Forgets that the middle bottom value contributes twice",
+      "languageKey": "python3",
+      "find": "// 2",
+      "replace": "// 1"
+    },
+    {
+      "id": "wrong-right",
+      "label": "Uses the left clue twice",
+      "languageKey": "python3",
+      "find": "right = wall[r + 2][c + 2]",
+      "replace": "right = wall[r + 2][c]"
+    }
+  ]
+}

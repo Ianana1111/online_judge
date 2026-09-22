@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11401-triangle-counting",
+  "title": "按最大邊分類，累加嚴格三角不等式的配對",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

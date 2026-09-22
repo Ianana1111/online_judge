@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/132/13204.pdf"
+  ],
+  "constraints": [
+    "1..1000EOFqueries;n1..1000000;maximum footrule distance floor(n^2/2);count modulo1000000007."
+  ],
+  "independentMethod": "Independent allowed-block permanent counting distinguishes middle-value position; factorial residues evaluated via prime valuations, not displayed factorial loop. Exhaustive permutations n<=8 and rook-polynomial inclusion-exclusion permanent n<=60 verify the closed count.",
+  "oracleFile": "scripts/editorials/oracles/text_paths.py",
+  "mutations": [
+    {
+      "id": "odd-factor-missing",
+      "label": "Omits odd middle-value placements",
+      "languageKey": "cpp17",
+      "find": "if(n%2)answer=answer*n%MOD;",
+      "replace": ""
+    },
+    {
+      "id": "ceil-half",
+      "label": "Uses ceiling instead of floor half",
+      "languageKey": "cpp17",
+      "find": "long long f=factorial[n/2]",
+      "replace": "long long f=factorial[(n+1)/2]"
+    }
+  ]
+}

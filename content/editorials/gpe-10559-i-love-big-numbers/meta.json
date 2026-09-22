@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10559-i-love-big-numbers",
+  "title": "以十進位陣列累乘階乘，同步保存各 N 的位數和",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

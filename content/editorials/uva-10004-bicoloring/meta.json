@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10004-bicoloring",
+  "title": "以 BFS 交替染色，邊的兩端同色就出現矛盾",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

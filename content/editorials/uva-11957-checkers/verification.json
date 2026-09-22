@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/119/11957.pdf"
+  ],
+  "constraints": [
+    "T<=100;N1..100;one W;B static;forward diagonal step or jump over adjacent B only into free destination;top row terminal;mod1000007."
+  ],
+  "independentMethod": "Exact integer backward dynamic counts from every top-row square, without modular reductions until the starting square; independently enumerate all legal paths on random small boards.",
+  "oracleFile": "scripts/editorials/oracles/mask_paths.py",
+  "mutations": [
+    {
+      "id": "no-jumps",
+      "label": "Forbids legal jumps over black pieces",
+      "languageKey": "cpp17",
+      "find": "if (board[nextRow][nextCol]=='B') { --nextRow; nextCol+=direction; }",
+      "replace": "if (board[nextRow][nextCol]=='B') continue;"
+    },
+    {
+      "id": "wrong-modulus",
+      "label": "Uses the common but wrong billion-size modulus",
+      "languageKey": "cpp17",
+      "find": "MOD=1000007",
+      "replace": "MOD=1000000007"
+    }
+  ]
+}

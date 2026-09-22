@@ -1,0 +1,8 @@
+{
+  "slug": "uva-674-coin-change",
+  "title": "逐種加入硬幣，計算不分順序的無限找零組合",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

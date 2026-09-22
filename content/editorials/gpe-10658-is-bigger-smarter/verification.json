@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10131.pdf"
+  ],
+  "constraints": [
+    "EOF;1..1000elephants;weightsIQ1..10000;duplicatesallowed;strictWincreaseandIQdecrease;original1basedIDs;ANYmaximumchain;oneIDperline."
+  ],
+  "independentMethod": "Independent Fenwick maximum over reversed IQ ranks, delaying all updates in each equal-weight batch, with exhaustive small subset feasibility and witness validation.",
+  "oracleFile": "scripts/editorials/oracles/constructive_witnesses.py",
+  "mutations": [
+    {
+      "id": "equal-weight-chain",
+      "label": "Allows equal weights to be consecutive",
+      "languageKey": "cpp17",
+      "find": "animals[j].weight<animals[i].weight",
+      "replace": "animals[j].weight<=animals[i].weight"
+    },
+    {
+      "id": "equal-iq-chain",
+      "label": "Allows equal IQs to be consecutive",
+      "languageKey": "cpp17",
+      "find": "animals[j].iq>animals[i].iq",
+      "replace": "animals[j].iq>=animals[i].iq"
+    },
+    {
+      "id": "legal-alternate-witness",
+      "label": "Different valid optimal witness or feasible allocation",
+      "languageKey": "cpp17",
+      "find": "length[j]+1>length[i]",
+      "replace": "length[j]+1>=length[i]",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Original problem permits multiple optimal or feasible outputs. Verify original-input membership and ordering for covers, maximum strict elephant chains, exact per-team/table seating constraints, or both matrix marginals with1..20cells. Reject false impossible claims and nonoptimal witnesses; do not require the particular stored reference witness."
+  }
+}

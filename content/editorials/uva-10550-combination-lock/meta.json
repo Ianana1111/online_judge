@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10550-combination-lock",
+  "title": "以有向圓周距離加總密碼鎖轉動角度",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

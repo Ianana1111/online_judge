@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11192-group-reverse",
+  "title": "先由組數求組長，再各自反轉連續區段",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

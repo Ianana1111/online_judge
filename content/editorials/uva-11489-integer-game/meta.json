@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11489-integer-game",
+  "title": "先讓數位和成為三的倍數，再計算可移除零餘數數位的奇偶",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

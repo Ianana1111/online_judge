@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/118/11806.pdf"
+  ],
+  "constraints": [
+    "T<=50;2<=M,N<=20;0<=K<=500;unlabeled occupied-cell sets;all four sides;mod1000007."
+  ],
+  "independentMethod": "Independent cell-by-cell occupancy DP counts chosen cells and a four-bit covered-boundary mask, without inclusion-exclusion; exhaustive subsets on small rectangles validate it.",
+  "oracleFile": "scripts/editorials/oracles/combinatorics_dp.py",
+  "mutations": [
+    {
+      "id": "wrong-modulus",
+      "label": "Uses the common but incorrect modulus",
+      "languageKey": "cpp17",
+      "find": "MOD = 1000007",
+      "replace": "MOD = 1000000007"
+    },
+    {
+      "id": "adds-all-intersections",
+      "label": "Omits alternating inclusion-exclusion signs",
+      "languageKey": "cpp17",
+      "find": "answer -= ways",
+      "replace": "answer += ways"
+    }
+  ]
+}

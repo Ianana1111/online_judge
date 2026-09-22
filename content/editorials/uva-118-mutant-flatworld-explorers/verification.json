@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/1/118.pdf"
+  ],
+  "constraints": [
+    "World coordinates 0..50 inclusive; initial positions in bounds; command strings length <100; coordinate scent persists across robots"
+  ],
+  "independentMethod": "Complex-number vector rotations and a set of scented coordinates, independent of integer heading lookup and Boolean grid.",
+  "oracleFile": "scripts/editorials/oracles/simulation.py",
+  "mutations": [
+    {
+      "id": "no-scent",
+      "label": "Ignores saved scents",
+      "languageKey": "cpp17",
+      "find": "if (!scent[x][y]) {",
+      "replace": "if (true) {"
+    },
+    {
+      "id": "exclusive-bound",
+      "label": "Rejects legal upper/right boundary positions",
+      "languageKey": "cpp17",
+      "find": "nextX > maxX || nextY < 0 || nextY > maxY",
+      "replace": "nextX >= maxX || nextY < 0 || nextY >= maxY"
+    }
+  ]
+}

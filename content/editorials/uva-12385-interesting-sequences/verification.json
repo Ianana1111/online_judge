@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/123/12385.pdf"
+  ],
+  "constraints": [
+    "T<=100;N1..100000;values1..100000;contiguous intervali<j;equal endpoints;conflict-free intervals may SHARE endpoints."
+  ],
+  "independentMethod": "Independent prefix DP records best earlier value-index start scores and extends any equal-endpoint interval; exhaustive small sequences compared with every possible sequence of nonconflicting intervals.",
+  "oracleFile": "scripts/editorials/oracles/cuts_constraints.py",
+  "mutations": [
+    {
+      "id": "drops-shared-endpoint",
+      "label": "Drops the current endpoint after choosing an interval",
+      "languageKey": "cpp17",
+      "find": "seen[value]=epoch;",
+      "replace": "seen[value]=epoch-1;"
+    },
+    {
+      "id": "keeps-overlaps",
+      "label": "Retains values from inside the previous chosen interval",
+      "languageKey": "cpp17",
+      "find": "++answer;++epoch;",
+      "replace": "++answer;"
+    }
+  ]
+}

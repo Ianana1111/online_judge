@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/2/264.pdf"
+  ],
+  "constraints": [
+    "EOFqueries1..10^7;zigzagantidiagonals;term1=1/1;unreducedfractions;exactTERMformat."
+  ],
+  "independentMethod": "Integer-square-root closed-form diagonal inversion corrected by triangular bound, with explicit zigzag grid simulation as small independent check.",
+  "oracleFile": "scripts/editorials/oracles/structures.py",
+  "mutations": [
+    {
+      "id": "strict-triangle",
+      "label": "Skips exact triangular-number endpoints",
+      "languageKey": "cpp17",
+      "find": "/ 2 >= n",
+      "replace": "/ 2 > n"
+    },
+    {
+      "id": "reverse-direction",
+      "label": "Reverses diagonal parity",
+      "languageKey": "cpp17",
+      "find": "diagonal % 2 ?",
+      "replace": "diagonal % 2 == 0 ?"
+    }
+  ]
+}

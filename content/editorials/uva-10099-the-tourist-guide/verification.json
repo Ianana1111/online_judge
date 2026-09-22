@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10099.pdf"
+  ],
+  "constraints": [
+    "N<=100;undirected;capacityP>1;guide takes one seat;finite transport requires connected S,D;no unsupported disconnected-output contract invented."
+  ],
+  "independentMethod": "Descending-edge DSU threshold connectivity obtains the bottleneck independently of max-min Floyd, then exact integer trip count. Tiny enumeration of all simple paths validates the threshold.",
+  "oracleFile": "scripts/editorials/oracles/partitions_graph.py",
+  "mutations": [
+    {
+      "id": "no-guide",
+      "label": "Does not reserve the guide seat",
+      "languageKey": "cpp17",
+      "find": "capacity[start][destination] - 1",
+      "replace": "capacity[start][destination]"
+    },
+    {
+      "id": "floor-trips",
+      "label": "Drops final partial trip",
+      "languageKey": "cpp17",
+      "find": " + (tourists % usable != 0)",
+      "replace": ""
+    }
+  ]
+}

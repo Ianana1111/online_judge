@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/107/10700.pdf"
+  ],
+  "constraints": [
+    "N expressions;1..12 values;each integer1..20;operators+/*;insert parentheses without reordering;positive-only proof;64bit."
+  ],
+  "independentMethod": "Full interval dynamic programming considers every final operator split and computes minimum/maximum values, independent of precedence grouping; enumerate all small parenthesizations for verification.",
+  "oracleFile": "scripts/editorials/oracles/combinatorial.py",
+  "mutations": [
+    {
+      "id": "swapped-priority",
+      "label": "Treats normal precedence as maximum",
+      "languageKey": "cpp17",
+      "find": "evaluate(values, operators, '+')",
+      "replace": "evaluate(values, operators, '*')"
+    },
+    {
+      "id": "narrow-groups",
+      "label": "Uses 32-bit intermediate group",
+      "languageKey": "cpp17",
+      "find": "long long answer = first",
+      "replace": "int answer = first"
+    }
+  ]
+}

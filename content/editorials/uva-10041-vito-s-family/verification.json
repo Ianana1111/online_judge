@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10041.pdf"
+  ],
+  "constraints": [
+    "1<=R<=499; street1..29999; duplicates are separate relatives; minimize sum of absolute distances."
+  ],
+  "independentMethod": "Sweep every legal house coordinate using frequency-count cost differences, without selecting a median.",
+  "oracleFile": "scripts/editorials/oracles/arithmetic.py",
+  "mutations": [
+    {
+      "id": "mean",
+      "label": "Uses arithmetic mean",
+      "languageKey": "cpp17",
+      "find": "positions[count / 2]",
+      "replace": "accumulate(positions.begin(), positions.end(), 0LL) / count"
+    },
+    {
+      "id": "no-absolute",
+      "label": "Adds signed distances",
+      "languageKey": "cpp17",
+      "find": "abs(x - home)",
+      "replace": "(x - home)"
+    }
+  ]
+}

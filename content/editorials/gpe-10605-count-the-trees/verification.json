@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10007.pdf"
+  ],
+  "constraints": [
+    "1<=n<=300;distinct labels;ordered left/right binary trees,not necessarily full or BST;0 sentinel;exact unbounded integer."
+  ],
+  "independentMethod": "Direct exact factorial quotient (2n)!/(n+1)! rather than adjacent Catalan recurrence; independent choose-root/choose-left-label-set DP validates small n.",
+  "oracleFile": "scripts/editorials/oracles/treegames.py",
+  "mutations": [
+    {
+      "id": "forget-labels",
+      "label": "Counts Catalan shapes only",
+      "languageKey": "python3",
+      "find": "* (4 * n - 2) * n //",
+      "replace": "* (4 * n - 2) //"
+    },
+    {
+      "id": "wrong-division",
+      "label": "Uses n instead of n+1 as denominator",
+      "languageKey": "python3",
+      "find": "// (n + 1)",
+      "replace": "// n"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/105/10533.pdf"
+  ],
+  "constraints": [
+    "1<=Q<=500000;1<=L<=R<1000000;bothvalueanddigitsumprime;inclusive range;fastIO."
+  ],
+  "independentMethod": "Linear smallest-prime-factor sieve builds a sorted list of digit primes; bisect counts range membership, independently of Eratosthenes and prefix array. Trial division verifies small values.",
+  "oracleFile": "scripts/editorials/oracles/grids.py",
+  "mutations": [
+    {
+      "id": "ignore-digit-sum",
+      "label": "Counts ordinary primes",
+      "languageKey": "cpp17",
+      "find": "prime[value] && prime[digitSum]",
+      "replace": "prime[value]"
+    },
+    {
+      "id": "exclude-left",
+      "label": "Uses an open left endpoint",
+      "languageKey": "cpp17",
+      "find": "prefix[right] - prefix[left - 1]",
+      "replace": "prefix[right] - prefix[left]"
+    }
+  ]
+}

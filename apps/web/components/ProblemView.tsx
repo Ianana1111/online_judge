@@ -3,6 +3,7 @@
 import { serverNow } from "@/lib/serverClock";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import SubmissionPanel from "@/components/SubmissionPanel";
 import SubmissionResultPanel from "@/components/SubmissionResultPanel";
@@ -23,14 +24,17 @@ import { stripProblemNumber } from "@/lib/problemTitle";
 import { useT } from "@/lib/i18n/LocaleContext";
 import { useIsDesktop } from "@/lib/useIsDesktop";
 
+const OfficialEditorialPanel = dynamic(() => import("@/components/OfficialEditorialPanel"));
+
 const DIFFICULTY_EXPLANATION =
   "Estimated from official ratings where available, otherwise from worldwide solve statistics — for reference only.";
 
-type TabKey = "statement" | "history" | "discussion" | "stats" | "notes" | "result";
-const TAB_ORDER: TabKey[] = ["statement", "history", "discussion", "stats", "notes"];
+type TabKey = "statement" | "history" | "editorial" | "discussion" | "stats" | "notes" | "result";
+const TAB_ORDER: TabKey[] = ["statement", "history", "editorial", "discussion", "stats", "notes"];
 const TAB_LABEL: Record<TabKey, string> = {
   statement: "Statement",
   history: "My submissions",
+  editorial: "Official editorial",
   discussion: "Discussion",
   stats: "Stats",
   notes: "Notes",
@@ -137,7 +141,7 @@ export default function ProblemView({
       <div
         role="tablist"
         aria-label={t("Problem sections")}
-        className="mb-4 flex gap-4 border-b border-ink-800 text-sm"
+        className="mb-4 flex gap-4 overflow-x-auto border-b border-ink-800 text-sm [&>button]:shrink-0 [&>button]:whitespace-nowrap"
         onKeyDown={(e) => {
           if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
           e.preventDefault();
@@ -259,6 +263,11 @@ export default function ProblemView({
       {tab === "history" && (
         <div id="problem-tabpanel-history" role="tabpanel" aria-labelledby="problem-tab-history">
           <SubmissionHistory problemId={problem.id} />
+        </div>
+      )}
+      {tab === "editorial" && (
+        <div id="problem-tabpanel-editorial" role="tabpanel" aria-labelledby="problem-tab-editorial">
+          <OfficialEditorialPanel slug={problem.slug} examLocked={Boolean(contestId && examActive && remaining > 0)} />
         </div>
       )}
       {tab === "discussion" && (

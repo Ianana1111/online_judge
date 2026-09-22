@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/6/615.pdf"
+  ],
+  "constraints": [
+    "Directed edges;node labels1..100;00 case separator;negativepair EOF;emptytree accepted withoutrootline;nonempty validtree outputRoot is i;parallel edges count separately."
+  ],
+  "independentMethod": "Independent undirected DSU rejects cycles, alongside indegree bounds and connectivity; exhaustive all simple directed graphs through4nodes validate unique root reach paths; explicit self-loop and duplicate-edge cases.",
+  "oracleFile": "scripts/editorials/oracles/explicit_domains.py",
+  "mutations": [
+    {
+      "id": "no-reachability",
+      "label": "Skips the disconnected-cycle reachability check",
+      "languageKey": "cpp17",
+      "find": "if(visited.size()!=vertices.size())good=false;",
+      "replace": ""
+    },
+    {
+      "id": "empty-rejected",
+      "label": "Rejects the explicitly permitted empty tree",
+      "languageKey": "cpp17",
+      "find": "bool good=true;",
+      "replace": "bool good=!vertices.empty();"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "75d8f36db3ace18d36362d209ac15b3c591918430cd0017cfab2b61868ac3c8b",
+    "file": "content/editorials/uva-615-is-it-a-tree/statement.md",
+    "reason": "Clarify the empty-tree output to match the archived empty graph; never invent a root0 or remove the existing root suffix for nonempty trees.",
+    "source": "https://onlinejudge.org/external/6/615.pdf"
+  }
+}

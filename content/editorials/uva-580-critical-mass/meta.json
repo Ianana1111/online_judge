@@ -1,0 +1,8 @@
+{
+  "slug": "uva-580-critical-mass",
+  "title": "計算不含連續三個 U 的安全排列，再取補集",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

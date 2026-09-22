@@ -1,0 +1,8 @@
+{
+  "slug": "uva-380-call-forwarding",
+  "title": "固定來電時間追蹤轉接鏈，重訪任何分機即判循環",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

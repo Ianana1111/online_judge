@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10679-irreducible-basic-fractions",
+  "title": "找出不同質因數，用歐拉函數扣除不互質分子",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

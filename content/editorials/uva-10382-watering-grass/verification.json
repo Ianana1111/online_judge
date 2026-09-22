@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/103/10382.pdf"
+  ],
+  "constraints": [
+    "EOF;N0..10000;nonnegative integer length,width,radius;integer sprinkler center;whole strip coverage;closed endpoints;zero length needs0."
+  ],
+  "independentMethod": "Independent Decimal100 geometry and dynamic-programming shortest cover over reachable interval right endpoints, with small exhaustive subset covers; exact signed-radical comparisons separately checked against squared algebraic identities.",
+  "oracleFile": "scripts/editorials/oracles/ordered_routes.py",
+  "mutations": [
+    {
+      "id": "ignores-width",
+      "label": "Treats horizontal radius as full-strip coverage",
+      "languageKey": "python3",
+      "find": "4 * radius * radius - width * width",
+      "replace": "4 * radius * radius"
+    },
+    {
+      "id": "rejects-touching",
+      "label": "Rejects intervals whose left endpoint exactly meets coverage",
+      "languageKey": "python3",
+      "find": "compare(intervals[at][0], covered) <= 0",
+      "replace": "compare(intervals[at][0], covered) < 0"
+    }
+  ]
+}

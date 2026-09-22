@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/2/263.pdf"
+  ],
+  "constraints": [
+    "positive original<1e9;<=5000 inputs;0terminator;current natural decimal width;initial value in seen;print repeated-result step;chain<=1000."
+  ],
+  "independentMethod": "Construct ascending/descending integers from digit-frequency counts using arithmetic division; dictionary cycle detection starts with original, independent of string sorting.",
+  "oracleFile": "scripts/editorials/oracles/events.py",
+  "mutations": [
+    {
+      "id": "omit-original",
+      "label": "Does not record initial value",
+      "languageKey": "cpp17",
+      "find": "set<long long> seen{original};",
+      "replace": "set<long long> seen;"
+    },
+    {
+      "id": "fixed-width",
+      "label": "Pads all later values to original width",
+      "languageKey": "cpp17",
+      "find": "string digits = to_string(current);",
+      "replace": "string digits = to_string(current); digits = string(to_string(original).size() - digits.size(), '0') + digits;"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/113/11336.pdf"
+  ],
+  "constraints": [
+    "Undirected streets listed once;case-sensitive identifiers;all old places retained;each old edge needs path with only new internal vertices;no stated graph size bound;END;star terminator."
+  ],
+  "independentMethod": "Independent BFS starts from each old place, collects other old endpoints without expanding them, and checks every required old neighbor; exhaustive simple-path cross-check on small random graphs.",
+  "oracleFile": "scripts/editorials/oracles/cuts_constraints.py",
+  "mutations": [
+    {
+      "id": "allow-old-intermediates",
+      "label": "Treats every retained old edge as satisfiable once vertices remain",
+      "languageKey": "cpp17",
+      "find": "if(!found)return false;",
+      "replace": "if(!found)continue;"
+    },
+    {
+      "id": "requires-direct",
+      "label": "Rejects legal subdivision through new places",
+      "languageKey": "cpp17",
+      "find": "if(direct.count({a,b}))continue;",
+      "replace": "if(direct.count({a,b}))continue; else return false;"
+    }
+  ]
+}

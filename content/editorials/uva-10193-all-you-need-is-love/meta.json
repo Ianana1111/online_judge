@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10193-all-you-need-is-love",
+  "title": "有效 love 值就是大於一的共同因數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

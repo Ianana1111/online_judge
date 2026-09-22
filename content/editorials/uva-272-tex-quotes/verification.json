@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/2/272.pdf"
+  ],
+  "constraints": [
+    "EOFtext;eventotaldoublequotes;alternateopen/closeacrosslines;preserveallotherbytes;sitecheckerignoresonlytrailingwhitespace."
+  ],
+  "independentMethod": "Split entire text at double quotes and interleave separators by segment index, independent of streaming state toggle.",
+  "oracleFile": "scripts/editorials/oracles/structures.py",
+  "mutations": [
+    {
+      "id": "all-open",
+      "label": "Every quote becomes opening",
+      "languageKey": "cpp17",
+      "find": "opening = !opening;",
+      "replace": "opening = true;"
+    },
+    {
+      "id": "reset-line",
+      "label": "Resets quote direction at each newline",
+      "languageKey": "cpp17",
+      "find": "else cout << ch;",
+      "replace": "else { cout << ch; if (ch == '\\n') opening = true; }"
+    }
+  ]
+}

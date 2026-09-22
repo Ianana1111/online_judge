@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/119/11995.pdf"
+  ],
+  "constraints": [
+    "EOFcases;1<=operations<=1000;op1insert/op2extractexpected;1<=x<=100;MAXpriority;duplicatesretained;emptyremoveeliminatescandidate."
+  ],
+  "independentMethod": "Three independent list-of-insertion-record replays select minimum timestamp, maximum timestamp or maximum value; exhaustive short traces check classification.",
+  "oracleFile": "scripts/editorials/oracles/orders.py",
+  "mutations": [
+    {
+      "id": "min-priority",
+      "label": "Uses min-heap instead of max-heap",
+      "languageKey": "cpp17",
+      "find": "priority_queue<int> p;",
+      "replace": "priority_queue<int, vector<int>, greater<int>> p;"
+    },
+    {
+      "id": "premature-certainty",
+      "label": "Chooses stack when several candidates survive",
+      "languageKey": "cpp17",
+      "find": "else if (candidates > 1) cout << \"not sure\\n\";",
+      "replace": "else if (candidates > 1) cout << \"stack\\n\";"
+    }
+  ]
+}

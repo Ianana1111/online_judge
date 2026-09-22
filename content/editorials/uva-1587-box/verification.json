@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/15/1587.pdf"
+  ],
+  "constraints": [
+    "EOFgroups6rectangles;1<=edges<=10000;rotationallowed;all6faces formrectangularbox;equaldimensionsallowed."
+  ],
+  "independentMethod": "Enumerate candidate x,y,z from observed edge values and compare generated six-face multiset against input, independent of sorted-index equalities.",
+  "oracleFile": "scripts/editorials/oracles/structures.py",
+  "mutations": [
+    {
+      "id": "pairs-only",
+      "label": "Does not check shared edge compatibility",
+      "languageKey": "cpp17",
+      "find": "pairs && edges",
+      "replace": "pairs"
+    },
+    {
+      "id": "no-rotation",
+      "label": "Does not normalize rectangle orientation",
+      "languageKey": "cpp17",
+      "find": "faces[i] = minmax(a, b);",
+      "replace": "faces[i] = {a, b};"
+    }
+  ]
+}

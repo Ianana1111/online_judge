@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10295.pdf"
+  ],
+  "constraints": [
+    "M1..1000;N1..100;unique dictionary lowercase words length<=16;finite decimal values0..1000000;descriptionlowercaseletters,digits,spaces;period-only line terminates each;sum every occurrence;numeric output equivalence without prescribed precision."
+  ],
+  "independentMethod": "Independent decimal coefficient/exponent parsing and one common integer scale; Counter frequencies times each dictionary value, compared against Fraction streaming reference. Exact decimal comparison accepts equivalent representations only.",
+  "oracleFile": "scripts/editorials/oracles/rational_shapes.py",
+  "mutations": [
+    {
+      "id": "one-per-word",
+      "label": "Scores only one occurrence per description",
+      "languageKey": "python3",
+      "find": "salary = Fraction(0)\n    for word in tokens:\n        if word == '.':\n            break\n        salary += values.get(word, 0)",
+      "replace": "salary = Fraction(0)\n    seen = set()\n    for word in tokens:\n        if word == '.':\n            break\n        if word not in seen:\n            salary += values.get(word, 0)\n            seen.add(word)"
+    },
+    {
+      "id": "integer-money",
+      "label": "Truncates all dictionary values",
+      "languageKey": "python3",
+      "find": "values[word] = Fraction(amount)",
+      "replace": "values[word] = int(Fraction(amount))"
+    },
+    {
+      "id": "equivalent-fixed-decimal",
+      "label": "Legal equivalent salary spelling with one extra decimal zero",
+      "languageKey": "python3",
+      "find": "print(decimal_string(salary))",
+      "replace": "text = decimal_string(salary)\n    print(text + ('0' if '.' in text else '.0'))",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Respect exact numeric output contracts: derive rational centroid and water results from input, compare finite-decimal salaries by value, and retain deterministic Huffman codes while validating the exact frequency-weighted rounded mean. Do not accept arbitrary adjacent decimal values."
+  }
+}

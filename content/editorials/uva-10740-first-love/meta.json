@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10740-first-love",
+  "title": "每個頂點保留 K 次到達，計算可重複頂點的第 K 短路",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

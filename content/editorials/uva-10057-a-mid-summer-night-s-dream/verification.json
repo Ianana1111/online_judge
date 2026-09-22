@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10057.pdf"
+  ],
+  "constraints": [
+    "1<=N<=1e6;0<=Xi<65536;minimum L1 cost;count all optimal input occurrences and all optimal integer values;EOF."
+  ],
+  "independentMethod": "Sweep every possible A from0 to65535, updating exact absolute-distance cost from the histogram slope; compare complete optimum interval and frequency counts, with exhaustive small direct-cost tests.",
+  "oracleFile": "scripts/editorials/oracles/combinatorics_dp.py",
+  "mutations": [
+    {
+      "id": "lower-median-only",
+      "label": "Counts only occurrences of smallest optimum",
+      "languageKey": "cpp17",
+      "find": "upper_bound(values.begin(),values.end(),high)",
+      "replace": "upper_bound(values.begin(),values.end(),low)"
+    },
+    {
+      "id": "missing-inclusive-end",
+      "label": "Drops one endpoint from number of choices",
+      "languageKey": "cpp17",
+      "find": "high - low + 1",
+      "replace": "high - low"
+    }
+  ]
+}

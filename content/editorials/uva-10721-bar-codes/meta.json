@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10721-bar-codes",
+  "title": "把條碼視為有上限的正整數有序分拆",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/12/1237.pdf"
+  ],
+  "constraints": [
+    "T<=10;D<10000;Q<1000;0<L<H<1000000;0<P<1000000;maker names1..20withoutwhitespace;inclusive ranges;exactly one match."
+  ],
+  "independentMethod": "Offline sorted boundary sweep adds at L and removes at H+1, maintaining active row identities; independent of scanning every interval per query.",
+  "oracleFile": "scripts/editorials/oracles/events.py",
+  "mutations": [
+    {
+      "id": "exclusive-endpoints",
+      "label": "Excludes interval boundaries",
+      "languageKey": "cpp17",
+      "find": "m.low <= price && price <= m.high",
+      "replace": "m.low < price && price < m.high"
+    },
+    {
+      "id": "first-match",
+      "label": "Stops before detecting overlap",
+      "languageKey": "cpp17",
+      "find": "++matches; answer = m.name;",
+      "replace": "++matches; answer = m.name; break;"
+    }
+  ]
+}

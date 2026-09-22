@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/1/151.pdf"
+  ],
+  "constraints": [
+    "13<=N<100;region1 removed first;fixed step m counts only live regions;region13 last;smallest positive m;0 sentinel."
+  ],
+  "independentMethod": "Explicit forward circle deletion starting with regions2..N, terminating early if13 is removed; every87 legal N tested and coordinate mapping cross-checked for many candidate steps.",
+  "oracleFile": "scripts/editorials/oracles/state_spaces.py",
+  "mutations": [
+    {
+      "id": "wrong-backward-shift",
+      "label": "Uses step-1 in the backward position map",
+      "languageKey": "cpp17",
+      "find": "survivor + step",
+      "replace": "survivor + step - 1"
+    },
+    {
+      "id": "counts-first-region",
+      "label": "Keeps the already removed first region",
+      "languageKey": "cpp17",
+      "find": "size <= n - 1",
+      "replace": "size <= n"
+    }
+  ]
+}

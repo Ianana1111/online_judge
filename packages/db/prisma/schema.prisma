@@ -532,6 +532,8 @@ model Problem {
   checkerType   CheckerType   @default(IGNORE_TRAILING_WS)
   floatEps      Float?
   visibility    Boolean       @default(true)
+  /// Database triggers advance this when statement, samples, cases or judging settings change.
+  judgeDataVersion Int        @default(1)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
@@ -545,9 +547,33 @@ model Problem {
   classHomework    ClassHomework[]
   collectionLinks  CollectionProblem[]
   notes            Note[]
+  editorials       ProblemEditorial[]
 
   @@index([uvaId])
   @@map("problems")
+}
+
+/// Immutable published snapshots. The public API returns only the active, currently verified
+/// revision; validationReport stays private and never travels with problem detail responses.
+model ProblemEditorial {
+  id                     String   @id @default(cuid())
+  problemId              String
+  problem                Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  revision               Int
+  content                Json
+  contentHash            String
+  judgeFingerprint       String
+  judgeRevision          String
+  verifiedProblemVersion Int
+  verifiedAt             DateTime
+  validationReport       Json
+  publishedAt            DateTime?
+  supersededAt           DateTime?
+  createdAt              DateTime @default(now())
+
+  @@unique([problemId, revision])
+  @@index([problemId, publishedAt])
+  @@map("problem_editorials")
 }
 
 /// A named, curated problem list (LeetCode-style) — e.g. "CPE 必考 49 題". Distinct from Contest:

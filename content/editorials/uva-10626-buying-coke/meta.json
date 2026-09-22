@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10626-buying-coke",
+  "title": "用金額守恆減少狀態，完整考慮五種有效付款",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

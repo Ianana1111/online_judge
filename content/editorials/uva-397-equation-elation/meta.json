@@ -1,0 +1,8 @@
+{
+  "slug": "uva-397-equation-elation",
+  "title": "依指定優先序逐步縮減算式，保留完整推導過程",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

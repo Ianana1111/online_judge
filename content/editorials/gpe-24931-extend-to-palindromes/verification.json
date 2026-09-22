@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/114/11475.pdf"
+  ],
+  "constraints": [
+    "EOFstrings;1<=length<=100000;ASCIIletterscase-sensitive;appendONLYatend;minimaladdedlength;already-palindromenochange."
+  ],
+  "independentMethod": "Manacher odd/even palindrome radii find the longest palindrome ending at the final character, independent of reversed-string KMP; exhaustive suffix checks validate short words.",
+  "oracleFile": "scripts/editorials/oracles/missingcore.py",
+  "mutations": [
+    {
+      "id": "prefix-not-suffix",
+      "label": "Uses palindromic prefix instead of suffix",
+      "languageKey": "cpp17",
+      "find": "reversed + \"#\" + s",
+      "replace": "s + \"#\" + reversed"
+    },
+    {
+      "id": "one-extra-letter",
+      "label": "Appends one unnecessary letter",
+      "languageKey": "cpp17",
+      "find": "s.substr(0, s.size() - suffix)",
+      "replace": "s.substr(0, s.size() - suffix + 1)"
+    }
+  ]
+}

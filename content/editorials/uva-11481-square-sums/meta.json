@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11481-square-sums",
+  "title": "先選固定點，再對其他指定位置做容斥",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

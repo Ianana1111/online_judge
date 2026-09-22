@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1062-containers",
+  "title": "將貨櫃放到最小的可用堆頂，最少堆數等於嚴格 LIS 長度",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

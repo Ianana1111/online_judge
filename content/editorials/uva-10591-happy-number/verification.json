@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/105/10591.pdf"
+  ],
+  "constraints": [
+    "1 <= N < 1e9; positive case count; preserve original N in output"
+  ],
+  "independentMethod": "Floyd cycle detection with string-digit squaring, independent of the C++ visited-set implementation.",
+  "oracleFile": "scripts/editorials/oracles/foundations.py",
+  "mutations": [
+    {
+      "id": "no-square",
+      "label": "Adds digits without squaring",
+      "languageKey": "cpp17",
+      "find": "total += digit * digit;",
+      "replace": "total += digit;"
+    },
+    {
+      "id": "inverted",
+      "label": "Reverses happy/unhappy classification",
+      "languageKey": "cpp17",
+      "find": "(value == 1 ?",
+      "replace": "(value != 1 ?"
+    }
+  ]
+}

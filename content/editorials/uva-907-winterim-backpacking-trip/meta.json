@@ -1,0 +1,8 @@
+{
+  "slug": "uva-907-winterim-backpacking-trip",
+  "title": "二分最長步行距離，以貪心檢查每天的分段",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

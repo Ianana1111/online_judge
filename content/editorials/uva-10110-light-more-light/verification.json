@@ -1,0 +1,34 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10110.pdf"
+  ],
+  "constraints": [
+    "1<=n<=2^32-1;0terminator;initiallyoff;toggleforpositive divisors;65535largestpossibleintegerroot."
+  ],
+  "independentMethod": "Trial-factor n and require every prime exponent even; separate small explicit switch simulation cross-checks factor parity, independent of binary-square search.",
+  "oracleFile": "scripts/editorials/oracles/numberproof.py",
+  "mutations": [
+    {
+      "id": "root-cap",
+      "label": "Limits roots to signed32-bit-safe square range",
+      "languageKey": "cpp17",
+      "find": "high = 65535",
+      "replace": "high = 46340"
+    },
+    {
+      "id": "skip-last-root",
+      "label": "Never tests last binary-search candidate",
+      "languageKey": "cpp17",
+      "find": "while (low <= high)",
+      "replace": "while (low < high)"
+    }
+  ],
+  "retiredLegacyCandidates": [
+    {
+      "index": 1,
+      "sourceHash": "3c98860c390585a6355a710ceb51b184819dea565cee565030d1f8c95ca958a1",
+      "reason": "This exact historical signed-overflow candidate remained AC under the pinned supported execution environment and has no demonstrated wrong-output witness. It is unsuitable as a mandatory wrong-answer test; preserve its historical OBSERVE record and replace it with the two explicitly counterexampled semantic mutants in this plan. This is not an assertion that signed overflow is portable or correct.",
+      "classification": "UNSUITABLE_MUTANT"
+    }
+  ]
+}

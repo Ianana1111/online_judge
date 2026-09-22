@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10336-rank-the-languages",
+  "title": "先數同字母的四方向連通區，再依區塊數排名",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

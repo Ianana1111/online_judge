@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/12/1242.pdf"
+  ],
+  "constraints": [
+    "N2..10000;M1..100000;undirected multigraph;distinct endpoints, no selfloops;parallel edges allowed and length2cycles count per originalsample;S!=T;00sentinel."
+  ],
+  "independentMethod": "Independent iterative Tarjan low-link bridge detection followed by connectivity after removing all bridges; exhaustive small vertex cuts validate the equivalence with two edge-disjoint paths.",
+  "oracleFile": "scripts/editorials/oracles/exact_domains.py",
+  "mutations": [
+    {
+      "id": "only-connectivity",
+      "label": "Accepts any connected pair",
+      "languageKey": "cpp17",
+      "find": "flow==2",
+      "replace": "flow>=1"
+    },
+    {
+      "id": "no-residual-cancellation",
+      "label": "Does not permit the first augmenting path to be rerouted",
+      "languageKey": "cpp17",
+      "find": "++graph[v][e.reverse].capacity;",
+      "replace": "graph[v][e.reverse].capacity=0;"
+    }
+  ]
+}

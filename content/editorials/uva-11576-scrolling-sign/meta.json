@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11576-scrolling-sign",
+  "title": "找前字尾與後字首的最長重疊，只補新字元",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

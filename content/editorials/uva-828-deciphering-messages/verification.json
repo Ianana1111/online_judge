@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/8/828.pdf"
+  ],
+  "constraints": [
+    "Ordered unique uppercase keyL;shift1..25;L disjoint ciph(L);m reset permessage notword;rule3 requires middle inverse inL;rule2 inverse notinL;spaces preserved;invalidciphertexts error;key/message lines retained."
+  ],
+  "independentMethod": "Independent forward parse DAG over(cipher position,key index), tries every legal rule, checks unique terminal decoding, and re-encrypts the reconstructed plaintext exactly. Exhaustive small forward-language enumeration verifies valid and invalid ciphertexts; invalid historical keys repaired by maximum legal subsequence with stable earliest-position ties.",
+  "oracleFile": "scripts/editorials/oracles/coins_forests.py",
+  "mutations": [
+    {
+      "id": "middle-not-key",
+      "label": "Accepts a wrapper whose middle inverse is not in the key",
+      "languageKey": "python3",
+      "find": "\n                   and decode(message[i + 1]) in key_set",
+      "replace": ""
+    },
+    {
+      "id": "word-reset",
+      "label": "Resets the key counter at every word boundary",
+      "languageKey": "python3",
+      "find": "out.append(' ')\n            i += 1",
+      "replace": "out.append(' ')\n            position = 0\n            i += 1"
+    }
+  ]
+}

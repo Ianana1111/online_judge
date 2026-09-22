@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/125/12503.pdf"
+  ],
+  "constraints": [
+    "T<=100;1<=N<=100;LEFT/RIGHT/SAME AS i;1<=i<current;reset each case."
+  ],
+  "independentMethod": "Preserve original reference links and chase each chain to a literal direction independently, with maximum-depth chains and explicit position totals.",
+  "oracleFile": "scripts/editorials/oracles/missingsequences.py",
+  "mutations": [
+    {
+      "id": "reverses-references",
+      "label": "Reverses referenced action",
+      "languageKey": "cpp17",
+      "find": "movement[i] = movement[previous]",
+      "replace": "movement[i] = -movement[previous]"
+    },
+    {
+      "id": "wrong-origin",
+      "label": "Starts one unit to the right",
+      "languageKey": "cpp17",
+      "find": "int position = 0",
+      "replace": "int position = 1"
+    }
+  ]
+}

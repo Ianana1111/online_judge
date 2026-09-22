@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11728-alternate-task",
+  "title": "先篩出每個數的因數和，再反查最大的原數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10019-funny-encryption-method",
+  "title": "同一串數字的兩種進位解讀，分別計算二進位一的個數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

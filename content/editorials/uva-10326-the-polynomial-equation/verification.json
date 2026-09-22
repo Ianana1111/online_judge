@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/103/10326.pdf"
+  ],
+  "constraints": [
+    "1<=N<=50;integer roots including duplicates/zero/negative;monic polynomial;final coefficients magnitude<=1e15;special zero constant and unit coefficients;EOF."
+  ],
+  "independentMethod": "Newton identities reconstruct elementary symmetric polynomials from exact root power sums, independent of repeated linear-factor convolution. Small subset-product coefficients and multiplicity-aware synthetic division validate the oracle.",
+  "oracleFile": "scripts/editorials/oracles/exactmath.py",
+  "mutations": [
+    {
+      "id": "wrong-root-sign",
+      "label": "Multiplies x+root instead of x-root",
+      "languageKey": "python3",
+      "find": "updated[degree] -= root * coefficient",
+      "replace": "updated[degree] += root * coefficient"
+    },
+    {
+      "id": "omit-zero-constant",
+      "label": "Drops mandatory zero constant",
+      "languageKey": "python3",
+      "find": "if coefficient == 0 and degree > 0:",
+      "replace": "if coefficient == 0:"
+    }
+  ]
+}

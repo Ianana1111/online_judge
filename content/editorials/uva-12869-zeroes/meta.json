@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12869-zeroes",
+  "title": "尾零數只在五的倍數跳升，計算區間跨過幾次變化",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

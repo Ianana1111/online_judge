@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12654-patches",
+  "title": "展開圓周並枚舉起點，以兩種補片長度做最小覆蓋",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

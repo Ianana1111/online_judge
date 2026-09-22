@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10023.pdf"
+  ],
+  "constraints": [
+    "T positive;1<=Y<=10^1000 inclusive;no leading zeroes;Y guaranteed perfect square;blank line between outputs."
+  ],
+  "independentMethod": "Python math.isqrt independently computes the root and verifies root squared equals Y; legal perfect-square generation includes1001-digit upper bound and near-bound roots.",
+  "oracleFile": "scripts/editorials/oracles/missing_exact.py",
+  "mutations": [
+    {
+      "id": "underestimates-start",
+      "label": "Starts below the root but uses upper-bound stopping condition",
+      "languageKey": "python3",
+      "find": "(value.bit_length() + 1) // 2",
+      "replace": "(value.bit_length() - 1) // 2"
+    },
+    {
+      "id": "single-newton-step",
+      "label": "Stops before Newton iteration converges",
+      "languageKey": "python3",
+      "find": "while True:",
+      "replace": "for _ in range(1):"
+    }
+  ]
+}

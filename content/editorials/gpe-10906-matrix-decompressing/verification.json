@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11082.pdf"
+  ],
+  "constraints": [
+    "T1..100;R,C1..20;inputcumulativeROW/COLUMNsums;integercells1..20;atleastonesolutionguaranteed;ANYvalidmatrix;Matrixx labels;optionalblankbetween."
+  ],
+  "independentMethod": "Independent capacity-limited transportation feasibility via Edmonds-Karp residual BFS and direct validation of every supplied matrix against both cumulative marginals and cell bounds; exhaustive2x2instances.",
+  "oracleFile": "scripts/editorials/oracles/constructive_witnesses.py",
+  "mutations": [
+    {
+      "id": "allows-twenty-one",
+      "label": "Allows20 extra units on top of baseline1",
+      "languageKey": "cpp17",
+      "find": "flow.add(i,rows+j,19)",
+      "replace": "flow.add(i,rows+j,20)"
+    },
+    {
+      "id": "omits-baseline",
+      "label": "Forgets to restore the mandatory one in each cell",
+      "languageKey": "cpp17",
+      "find": "cout<<1+e.initial-e.capacity",
+      "replace": "cout<<e.initial-e.capacity"
+    },
+    {
+      "id": "legal-alternate-witness",
+      "label": "Different valid optimal witness or feasible allocation",
+      "languageKey": "cpp17",
+      "find": "for(int j=0;j<columns;++j)edge[i][j]=flow.add(i,rows+j,19);",
+      "replace": "for(int j=columns-1;j>=0;--j)edge[i][j]=flow.add(i,rows+j,19);",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Original problem permits multiple optimal or feasible outputs. Verify original-input membership and ordering for covers, maximum strict elephant chains, exact per-team/table seating constraints, or both matrix marginals with1..20cells. Reject false impossible claims and nonoptimal witnesses; do not require the particular stored reference witness."
+  }
+}

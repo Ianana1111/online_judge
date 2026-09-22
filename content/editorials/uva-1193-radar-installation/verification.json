@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/11/1193.pdf"
+  ],
+  "constraints": [
+    "N1..1000;integer islands on sea side y>=0;nonnegative radius;00sentinel;closed distance<=radius;zero-width feasible intervals allowed."
+  ],
+  "independentMethod": "Independent Decimal100 interval geometry; left-endpoint sweep partitions intervals into groups with nonempty common intersections. Exhaustive candidate-endpoint hitting sets cross-check small cases. Reflect only historically negative y coordinates to abs(y), preserving all radar distances.",
+  "oracleFile": "scripts/editorials/oracles/ordered_routes.py",
+  "mutations": [
+    {
+      "id": "excludes-tangent",
+      "label": "Rejects islands exactly at radar height",
+      "languageKey": "python3",
+      "find": "if y > radius:",
+      "replace": "if y >= radius:"
+    },
+    {
+      "id": "touch-needs-new",
+      "label": "Adds a radar when the interval touches the current point",
+      "languageKey": "python3",
+      "find": "compare(left, position) > 0",
+      "replace": "compare(left, position) >= 0"
+    }
+  ]
+}

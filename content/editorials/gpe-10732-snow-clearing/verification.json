@@ -1,0 +1,45 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10203.pdf"
+  ],
+  "constraints": [
+    "LOCAL<=100testcases;<=100roads/case;integercoordsabs<=1e9;everyroadreachablefromhangar,includingintersections;twooppositedirections;20kmhwhileplowing;nearestminute;exacthalfmayrundeitherway."
+  ],
+  "independentMethod": "Independent connected-segment validation and 80-digit Decimal Euclidean sums; exact integer square roots identify true half-minute ties, distinguishing them from unique irrational totals.",
+  "oracleFile": "scripts/editorials/oracles/geometric_witnesses.py",
+  "mutations": [
+    {
+      "id": "single-lane-only",
+      "label": "Clears only one lane per street",
+      "languageKey": "cpp17",
+      "find": "length*6/1000",
+      "replace": "length*3/1000"
+    },
+    {
+      "id": "already-cleared-speed",
+      "label": "Incorrectly clears at50km/h",
+      "languageKey": "cpp17",
+      "find": "length*6/1000",
+      "replace": "length*12/5000"
+    },
+    {
+      "id": "legal-alternate-rounding",
+      "label": "Equally near half-minute or equivalent explicit numeric sign",
+      "languageKey": "cpp17",
+      "find": "floorl(minutes+0.5L)",
+      "replace": "ceill(minutes-0.5L)",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Validate nearest rounded geometric answers, including both equally near values at exact rational midpoint ties. Preserve all case labels and separation; reject wrong precision and materially wrong rounded answers."
+  },
+  "statementCorrection": {
+    "beforeHash": "14e060c0d9164633d8f443eae77a3e528e9172cba102e82b928189e50cf5928e",
+    "file": "content/editorials/gpe-10732-snow-clearing/statement.md",
+    "reason": "Clarify well-defined geometric inputs and nearest-rounding ties; user-authorized resource bounds are explicitly stated and must pass real maximum-size sandbox execution before release.",
+    "source": "https://onlinejudge.org/external/102/10203.pdf"
+  }
+}

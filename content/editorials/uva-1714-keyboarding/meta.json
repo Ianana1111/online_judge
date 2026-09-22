@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1714-keyboarding",
+  "title": "保留游標格子，逐字用多起點最短路徑選擇下一個按鍵",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

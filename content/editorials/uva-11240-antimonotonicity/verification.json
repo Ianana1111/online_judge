@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/112/11240.pdf"
+  ],
+  "constraints": [
+    "1<=T<=50;1<=N<=30000;permutation1..N;strict alternating sequence startsDOWN."
+  ],
+  "independentMethod": "Fenwick maximum DP keeps odd-length peaks and even-length valleys separately, independent of one-pass extrema greedy; exhaustive subsequences validate short permutations.",
+  "oracleFile": "scripts/editorials/oracles/orders.py",
+  "mutations": [
+    {
+      "id": "wrong-first-direction",
+      "label": "Starts with an increasing pair",
+      "languageKey": "cpp17",
+      "find": "bool needDown = true;",
+      "replace": "bool needDown = false;"
+    },
+    {
+      "id": "stale-extremum",
+      "label": "Does not replace an unfavorable endpoint",
+      "languageKey": "cpp17",
+      "find": "++answer; needDown = !needDown;\n            }\n            last = a[i];",
+      "replace": "++answer; needDown = !needDown; last = a[i];\n            }"
+    }
+  ]
+}

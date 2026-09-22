@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/6/673.pdf"
+  ],
+  "constraints": [
+    "n positive;each line only()[];length0..128;empty line is valid testcase."
+  ],
+  "independentMethod": "Repeatedly eliminate adjacent () and [] until fixed point; equivalence to recursive grammar differs from stack reference. Exhaustive short strings validated by interval grammar recognition.",
+  "oracleFile": "scripts/editorials/oracles/common_completion.py",
+  "mutations": [
+    {
+      "id": "ignore-types",
+      "label": "Matches either closing kind to any opener",
+      "languageKey": "cpp17",
+      "find": " || stack.back() != expected",
+      "replace": ""
+    },
+    {
+      "id": "unclosed-allowed",
+      "label": "Does not require all openers closed",
+      "languageKey": "cpp17",
+      "find": "valid && stack.empty()",
+      "replace": "valid"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10610-curling-up-the-cube",
+  "title": "沿紙面傳播三維方向，確認六格恰好成為六個不同面",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

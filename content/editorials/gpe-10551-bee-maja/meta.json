@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10551-bee-maja",
+  "title": "沿六邊形外圈走訪，建立格號與座標對照",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

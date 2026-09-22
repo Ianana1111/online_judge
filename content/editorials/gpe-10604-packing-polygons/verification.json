@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10005.pdf"
+  ],
+  "constraints": [
+    "N1..99 distinct integer vertices;nonnegative decimalradius;closed circle containment;00termination;no invented huge coordinate stress."
+  ],
+  "independentMethod": "Independent convex hull plus exhaustive supporting diameter/circumcircle candidates, using integer homogeneous centers and exact rational radius comparisons. Small pointsets checked under many input permutations and precise radius boundaries.",
+  "oracleFile": "scripts/editorials/oracles/exact_domains.py",
+  "mutations": [
+    {
+      "id": "strict-radius",
+      "label": "Rejects exact boundary containment",
+      "languageKey": "python3",
+      "find": "squared <= radius * radius",
+      "replace": "squared < radius * radius"
+    },
+    {
+      "id": "centroid-circle",
+      "label": "Uses the mean vertex position rather than the minimum circle",
+      "languageKey": "python3",
+      "find": "squared = minimum_circle(points)[2]",
+      "replace": "x = Fraction(sum(p[0] for p in points), count)\n    y = Fraction(sum(p[1] for p in points), count)\n    squared = max((px-x)**2+(py-y)**2 for px,py in points)"
+    }
+  ]
+}

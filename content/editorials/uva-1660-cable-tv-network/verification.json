@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/16/1660.pdf"
+  ],
+  "constraints": [
+    "EOF;n0..50;undirected(u,v)u<v;empty/singletonconnected;completegraph safety=n;otherwise min vertex deletions disconnecting survivors;alreadydisconnected0."
+  ],
+  "independentMethod": "Independent Edmonds-Karp BFS augmentation on a dense split-vertex capacity matrix; enumerate all removed subsets for every graph through5vertices to validate vertex-cut and complete-graph conventions.",
+  "oracleFile": "scripts/editorials/oracles/rational_surfaces.py",
+  "mutations": [
+    {
+      "id": "complete-minus-one",
+      "label": "Uses conventional n-1 rather than required n for complete graphs",
+      "languageKey": "cpp17",
+      "find": "if(complete){cout<<n<<'\\n';continue;}",
+      "replace": "if(complete){cout<<n-1<<'\\n';continue;}"
+    },
+    {
+      "id": "double-vertex-cost",
+      "label": "Assigns cost two to deleting an internal relay",
+      "languageKey": "cpp17",
+      "find": "(v==source||v==sink)?n:1",
+      "replace": "(v==source||v==sink)?n:2"
+    }
+  ]
+}

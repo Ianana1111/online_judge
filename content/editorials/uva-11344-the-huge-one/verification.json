@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/113/11344.pdf"
+  ],
+  "constraints": [
+    "0<=M<=10^1000 inclusive;up to1001 digits;T<=2000;distinct divisors in1..12;all divisibility conditions."
+  ],
+  "independentMethod": "Parse with Python arbitrary-precision integer and test divisibility by the exact LCM of the complete set; explicit1001-digit upper-bound and zero cases.",
+  "oracleFile": "scripts/editorials/oracles/combinatorics_dp.py",
+  "mutations": [
+    {
+      "id": "last-divisor-only",
+      "label": "Overwrites earlier failed conditions",
+      "languageKey": "cpp17",
+      "find": "wonderful &= remainder == 0",
+      "replace": "wonderful = remainder == 0"
+    },
+    {
+      "id": "last-digit-only",
+      "label": "Tests only the final digit",
+      "languageKey": "cpp17",
+      "find": "for (char digit : number)",
+      "replace": "for (char digit : number.substr(number.size() - 1))"
+    }
+  ]
+}

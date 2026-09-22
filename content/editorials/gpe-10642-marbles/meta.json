@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10642-marbles",
+  "title": "依最後一顆彈珠所在盒子的大小建立遞迴",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

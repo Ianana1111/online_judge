@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11067-little-red-riding-hood",
+  "title": "按網格累加避開狼的路徑，保留精確中間計數",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

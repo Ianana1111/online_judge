@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10079-pizza-cutting",
+  "title": "從每刀新增區域推導最大塊數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

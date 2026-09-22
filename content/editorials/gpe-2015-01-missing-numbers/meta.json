@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-2015-01-missing-numbers",
+  "title": "用 XOR 消去相同元素，找出逐次消失的數字",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

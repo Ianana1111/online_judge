@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/126/12627.pdf"
+  ],
+  "constraints": [
+    "T<1000;K0..30;1<=A<=B<=2^K;inclusive rows;three red quadrants,blue bottom-right;exact64-bit counts no modulo."
+  ],
+  "independentMethod": "Weighted digit DP over row-index bits: a0 row bit permits two red column choices and a1 bit permits one; sum all rows through bound and verify against explicit iterative balloon expansion.",
+  "oracleFile": "scripts/editorials/oracles/routes_algebra.py",
+  "mutations": [
+    {
+      "id": "single-top-copy",
+      "label": "Counts only one of the two top quadrants",
+      "languageKey": "cpp17",
+      "find": "return 2*prefix(k-1,rows)",
+      "replace": "return prefix(k-1,rows)"
+    },
+    {
+      "id": "narrow-result",
+      "label": "Stores the exact large count in32 bits",
+      "languageKey": "cpp17",
+      "find": "long long result=prefix(k,b)-prefix(k,a-1);",
+      "replace": "int result=prefix(k,b)-prefix(k,a-1);"
+    }
+  ]
+}

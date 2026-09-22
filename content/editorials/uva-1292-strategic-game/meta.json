@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1292-strategic-game",
+  "title": "在樹上選最少頂點，確保每條邊至少有一端受守衛",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

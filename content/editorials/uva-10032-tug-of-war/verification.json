@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10032.pdf"
+  ],
+  "constraints": [
+    "1<=n<=100,weights1..450;team sizes differ<=1;minimum total difference;output lower first;blank between cases."
+  ],
+  "independentMethod": "Exact bivariate subset generating polynomial packed in a Python integer, with count/weight fields separated by total+1. Exhaustive combinations independently validate all small groups, including heavier smaller teams.",
+  "oracleFile": "scripts/editorials/oracles/partitions_graph.py",
+  "mutations": [
+    {
+      "id": "half-only",
+      "label": "Incorrectly assumes the smaller team cannot be heavier",
+      "languageKey": "cpp17",
+      "find": "sum <= total",
+      "replace": "sum <= total / 2"
+    },
+    {
+      "id": "reuse-person",
+      "label": "Updates selected count forwards",
+      "languageKey": "cpp17",
+      "find": "for (int count = min(seen, teamSize); count >= 1; --count)",
+      "replace": "for (int count = 1; count <= min(seen, teamSize); ++count)"
+    }
+  ]
+}

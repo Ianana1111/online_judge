@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11067.pdf"
+  ],
+  "constraints": [
+    "w,h1..100;up/right intersections including endpoints;<=100 wolf coordinates0..100 excluding both houses;final paths<=2^32-1, intermediate may be larger;three exact output sentences."
+  ],
+  "independentMethod": "Count unrestricted binomial paths and subtract paths by their first blocked point; compare every blocked subset on small grids to explicit path enumeration, including huge dead-end intermediate counts.",
+  "oracleFile": "scripts/editorials/oracles/structural_counts.py",
+  "mutations": [
+    {
+      "id": "ignores-wolves",
+      "label": "Allows paths through blocked intersections",
+      "languageKey": "python3",
+      "find": "if (x, y) in blocked:",
+      "replace": "if False:"
+    },
+    {
+      "id": "signed-bound",
+      "label": "Reduces intermediate counts to a signed32-bit range",
+      "languageKey": "python3",
+      "find": "ways[x] += ways[x - 1]",
+      "replace": "ways[x] = (ways[x] + ways[x - 1]) % 2147483648"
+    }
+  ]
+}

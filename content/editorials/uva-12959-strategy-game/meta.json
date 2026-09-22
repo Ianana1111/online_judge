@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12959-strategy-game",
+  "title": "按輪次累計，總分平手選最後出手者",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

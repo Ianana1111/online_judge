@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11934-magic-formula",
+  "title": "枚舉包含零與上限的整數，用餘數判斷整除",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

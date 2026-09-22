@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/13/1339.pdf"
+  ],
+  "constraints": [
+    "EOFpairs;equalnonemptylength<=100;uppercaseA-Z;bijectionalphabetthenarbitrarypermutation."
+  ],
+  "independentMethod": "Frequency-of-frequencies histogram built with string.count over distinct letters, compared as multiplicity maps rather than sorted count arrays.",
+  "oracleFile": "scripts/editorials/oracles/structures.py",
+  "mutations": [
+    {
+      "id": "fixed-letters",
+      "label": "Requires exact letter identity",
+      "languageKey": "cpp17",
+      "find": "sort(ca.begin(), ca.end()); sort(cb.begin(), cb.end());",
+      "replace": "/* no frequency sorting */"
+    },
+    {
+      "id": "max-only",
+      "label": "Compares only highest frequency",
+      "languageKey": "cpp17",
+      "find": "ca == cb",
+      "replace": "ca.back() == cb.back()"
+    }
+  ]
+}

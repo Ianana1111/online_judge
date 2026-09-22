@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1200-a-dp-problem",
+  "title": "把等式兩側化成一次式，精確求解並向下取整",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

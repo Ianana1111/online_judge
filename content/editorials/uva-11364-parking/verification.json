@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/113/11364.pdf"
+  ],
+  "constraints": [
+    "1<=T<=100;1<=N<=20;positions0..99;visit all and return to chosen single parking spot."
+  ],
+  "independentMethod": "Enumerate every possible parking position and both orders of visiting the two extremes; minimize full closed-route distance independently of2range.",
+  "oracleFile": "scripts/editorials/oracles/intervals.py",
+  "mutations": [
+    {
+      "id": "no-return",
+      "label": "Omits return journey",
+      "languageKey": "cpp17",
+      "find": "2 * (right - left)",
+      "replace": "(right - left)"
+    },
+    {
+      "id": "assume-origin",
+      "label": "Always includes coordinate zero",
+      "languageKey": "cpp17",
+      "find": "int left = 100, right = -1;",
+      "replace": "int left = 0, right = -1;"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/111/11121.pdf"
+  ],
+  "constraints": [
+    "1<=T<=10000;-10^9<=n<=10^9;negativebasetwo;digits0/1;zerorepresented0;noleadingzeros."
+  ],
+  "independentMethod": "Choose digits from alternating-sign power intervals using exact bounded representability, independent of division/remainder conversion; decode output and exhaustively test small integers.",
+  "oracleFile": "scripts/editorials/oracles/integers.py",
+  "mutations": [
+    {
+      "id": "positive-base",
+      "label": "Uses positive base divisor",
+      "languageKey": "cpp17",
+      "find": "/ -2",
+      "replace": "/ 2"
+    },
+    {
+      "id": "stop-negative",
+      "label": "Stops when quotient negative",
+      "languageKey": "cpp17",
+      "find": "while (n != 0)",
+      "replace": "while (n > 0)"
+    }
+  ]
+}

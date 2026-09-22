@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10019.pdf"
+  ],
+  "constraints": [
+    "1<=T<=1000;1<=M<=9999;interpret decimal spelling inbase10andbase16;outputpopcounts only."
+  ],
+  "independentMethod": "Native integer parsing base10/base16 and binary-string count, plus hexadecimal nibble lookup cross-check, independent of Horner/division loops.",
+  "oracleFile": "scripts/editorials/oracles/integers.py",
+  "mutations": [
+    {
+      "id": "same-radix",
+      "label": "Usesdecimal for second interpretation",
+      "languageKey": "cpp17",
+      "find": "hexadecimal * 16",
+      "replace": "hexadecimal * 10"
+    },
+    {
+      "id": "bit-length",
+      "label": "Counts zero bits as well",
+      "languageKey": "cpp17",
+      "find": "total += value % 2;",
+      "replace": "total += 1;"
+    }
+  ]
+}

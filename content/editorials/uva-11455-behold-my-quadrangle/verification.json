@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/114/11455.pdf"
+  ],
+  "constraints": [
+    "Four positive integer sides<=2^30;free reordering;priority square,rectangle,quadrangle,banana;strict longest<sumothers."
+  ],
+  "independentMethod": "Count side multiplicities without sorting; determine polygon validity by checking every side against sum of other three.",
+  "oracleFile": "scripts/editorials/oracles/intervals.py",
+  "mutations": [
+    {
+      "id": "degenerate",
+      "label": "Accepts degenerate equality as a quadrangle",
+      "languageKey": "cpp17",
+      "find": "side[0] + side[1] + side[2] > side[3]",
+      "replace": "side[0] + side[1] + side[2] >= side[3]"
+    },
+    {
+      "id": "square-as-rectangle",
+      "label": "Classifies square as rectangle",
+      "languageKey": "cpp17",
+      "find": "answer = \"square\";",
+      "replace": "answer = \"rectangle\";"
+    }
+  ]
+}

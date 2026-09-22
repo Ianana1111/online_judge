@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10474-where-is-the-marble",
+  "title": "排序後找出第一顆相同編號的彈珠",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

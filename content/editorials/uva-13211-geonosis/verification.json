@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/132/13211.pdf"
+  ],
+  "constraints": [
+    "N1..500;directed complete weights1..10000;diagonal0;zero-index deletion permutation;charge ordered-pair shortest distances BEFORE each deletion."
+  ],
+  "independentMethod": "Independent active-only APSP insertion computes incoming/outgoing distances of the new vertex before relaxing old pairs; small graphs cross-checked with repeated deletion and fresh Dijkstra. Large directed potential metrics have a proved closed total.",
+  "oracleFile": "scripts/editorials/oracles/allocation_paths.py",
+  "mutations": [
+    {
+      "id": "active-only-floyd",
+      "label": "Restricts Floyd endpoint updates without initializing new endpoint shortest paths",
+      "languageKey": "cpp17",
+      "find": "for(int u=0;u<n;++u)for(int v=0;v<n;++v)",
+      "replace": "for(int u:active)for(int v:active)"
+    },
+    {
+      "id": "unordered-pairs",
+      "label": "Counts each pair only in one direction",
+      "languageKey": "cpp17",
+      "find": "answer+=d[u][v];",
+      "replace": "if(u<v)answer+=d[u][v];"
+    }
+  ]
+}

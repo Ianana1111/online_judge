@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/109/10931.pdf"
+  ],
+  "constraints": [
+    "1 <= I <= 2147483647; terminating zero not output; print popcount without applying modulo"
+  ],
+  "independentMethod": "Python binary formatting and string count, independent of repeated division C++.",
+  "oracleFile": "scripts/editorials/oracles/basics.py",
+  "mutations": [
+    {
+      "id": "mod2",
+      "label": "Prints parity bit instead of count",
+      "languageKey": "cpp17",
+      "find": "<< ones <<",
+      "replace": "<< (ones % 2) <<"
+    },
+    {
+      "id": "reversed",
+      "label": "Leaves binary digits reversed",
+      "languageKey": "cpp17",
+      "find": "reverse(bits.begin(), bits.end());",
+      "replace": "// no reversal"
+    }
+  ]
+}

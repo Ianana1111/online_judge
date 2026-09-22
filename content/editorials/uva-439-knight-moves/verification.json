@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/439.pdf"
+  ],
+  "constraints": [
+    "8x8 chessboard;a..h and1..8;8 knight moves;no wrapping;minimum steps;EOF."
+  ],
+  "independentMethod": "Floyd-Warshall over all64 squares built from absolute coordinate-difference tests, independently compared with BFS for every origin; all4096 ordered queries are tested.",
+  "oracleFile": "scripts/editorials/oracles/discrete_structures.py",
+  "mutations": [
+    {
+      "id": "missing-four-directions",
+      "label": "Only explores half of knight moves",
+      "languageKey": "cpp17",
+      "find": "int d = 0; d < 8",
+      "replace": "int d = 0; d < 4"
+    },
+    {
+      "id": "counts-start",
+      "label": "Counts initial square as one move",
+      "languageKey": "cpp17",
+      "find": "distance[sx][sy] = 0",
+      "replace": "distance[sx][sy] = 1"
+    }
+  ]
+}

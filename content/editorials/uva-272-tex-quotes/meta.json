@@ -1,0 +1,8 @@
+{
+  "slug": "uva-272-tex-quotes",
+  "title": "跨行保留引號狀態，其餘字元逐一原樣輸出",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

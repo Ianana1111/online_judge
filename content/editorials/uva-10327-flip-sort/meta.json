@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10327-flip-sort",
+  "title": "以逆序對計算最少相鄰交換次數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12592-slogan-learning-of-princess",
+  "title": "整行字串作為查詢鍵，保留口號中的空白",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

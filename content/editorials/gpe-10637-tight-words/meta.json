@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10637-tight-words",
+  "title": "按最後一位計數，用大整數保留極小機率",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

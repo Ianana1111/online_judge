@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11538-chess-queen",
+  "title": "分開計算同行、同列與同斜線的有序皇后配對",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

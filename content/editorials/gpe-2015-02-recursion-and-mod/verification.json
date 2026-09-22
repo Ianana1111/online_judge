@@ -1,0 +1,37 @@
+{
+  "sources": [
+    "repository:packages/db/audit/gpe-recovery-cases.json#2015-02"
+  ],
+  "constraints": [
+    "0<n<2^63; at most 1000 queries; modulo 1000000009; EOF"
+  ],
+  "independentMethod": "Python modular exponentiation with small-n recurrence cross-check, plus the independently implemented affine-composition C++ battery.",
+  "oracleFile": "scripts/editorials/oracles/gpe.py",
+  "oracleDependencies": [
+    "scripts/author-gpe-recovery.py",
+    "scripts/gpe_recovery_references.py"
+  ],
+  "mutations": [
+    {
+      "id": "modulus",
+      "label": "Uses 1000000007 instead of 1000000009",
+      "languageKey": "cpp17",
+      "find": "1000000009LL",
+      "replace": "1000000007LL"
+    },
+    {
+      "id": "exponent",
+      "label": "Uses exponent n-1",
+      "languageKey": "cpp17",
+      "find": "power(3, n)",
+      "replace": "power(3, n - 1)"
+    },
+    {
+      "id": "negative-remainder",
+      "label": "Does not normalize a negative remainder",
+      "languageKey": "cpp17",
+      "find": "power(3, n) - 2 + MOD",
+      "replace": "power(3, n) - 2"
+    }
+  ]
+}

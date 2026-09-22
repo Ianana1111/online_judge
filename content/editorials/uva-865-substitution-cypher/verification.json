@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/8/865.pdf"
+  ],
+  "constraints": [
+    "Tpositive;equal-length plaintext/substitution alphabets with unique plaintext characters;each line<=64characters;case-sensitive;unmapped characters and spaces preserved;empty-line dataset separation."
+  ],
+  "independentMethod": "Independent dictionary transduction over complete lines; explicit64-character alphabets, spaces mapped and unmapped, case/punctuation passthrough and reversed direction checks.",
+  "oracleFile": "scripts/editorials/oracles/text_paths.py",
+  "mutations": [
+    {
+      "id": "reverse-map",
+      "label": "Applies substitution in the inverse direction",
+      "languageKey": "cpp17",
+      "find": "mapping[(unsigned char)plain[i]]=(unsigned char)sub[i];",
+      "replace": "mapping[(unsigned char)sub[i]]=(unsigned char)plain[i];"
+    },
+    {
+      "id": "unmapped-replaced",
+      "label": "Replaces unmapped characters instead of preserving them",
+      "languageKey": "cpp17",
+      "find": "mapping[c]=c;",
+      "replace": "mapping[c]='?';"
+    }
+  ]
+}

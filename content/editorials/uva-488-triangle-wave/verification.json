@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/488.pdf"
+  ],
+  "constraints": [
+    "1<=A<=9;Fpositive;Tcases;peakonce;blanklinebetween EVERY wave;no extra trailing blankline."
+  ],
+  "independentMethod": "Build row heights as A-abs(offset) for offsets -(A-1)..A-1, join all waves with a blank line, independent of ascending/descending output loops.",
+  "oracleFile": "scripts/editorials/oracles/layouts.py",
+  "mutations": [
+    {
+      "id": "double-peak",
+      "label": "Prints peak twice",
+      "languageKey": "cpp17",
+      "find": "height = amplitude - 1",
+      "replace": "height = amplitude"
+    },
+    {
+      "id": "missing-wave-separator",
+      "label": "Drops blank between waveforms",
+      "languageKey": "cpp17",
+      "find": "if (!firstWave) cout << '\\n';",
+      "replace": "/* missing separator */"
+    }
+  ]
+}

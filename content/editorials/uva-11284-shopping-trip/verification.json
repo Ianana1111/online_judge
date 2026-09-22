@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/112/11284.pdf"
+  ],
+  "constraints": [
+    "N1..50,M1..1000,P1..12;connected undirected roads;exact two-decimal nonnegative costs;positive savings;duplicate offer stores allowed;must return home."
+  ],
+  "independentMethod": "Dijkstra from relevant vertices followed by minimum-cost Held-Karp tours with separately accumulated subset profits; all ordered subset tours brute-forced for small instances.",
+  "oracleFile": "scripts/editorials/oracles/mask_paths.py",
+  "mutations": [
+    {
+      "id": "no-return",
+      "label": "Forgets the cost of returning home",
+      "languageKey": "python3",
+      "find": "answer = -cost[current][0]",
+      "replace": "answer = 0"
+    },
+    {
+      "id": "overwrite-offer",
+      "label": "Overwrites earlier discounts at the same store",
+      "languageKey": "python3",
+      "find": "savings[store] = savings.get(store, 0) + amount",
+      "replace": "savings[store] = amount"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10082.pdf"
+  ],
+  "constraints": [
+    "EOF lines; uppercase/digits/pictured punctuation excluding Q A Z and backquote; preserve spaces and line breaks"
+  ],
+  "independentMethod": "Literal encoded/decoded key pairs independently transcribed from the keyboard, rather than reference row predecessor indexes.",
+  "oracleFile": "scripts/editorials/oracles/sequences.py",
+  "mutations": [
+    {
+      "id": "shift-right",
+      "label": "Shifts keys right instead of left",
+      "languageKey": "cpp17",
+      "find": "row[i - 1]",
+      "replace": "row[(i + 1) % row.size()]"
+    },
+    {
+      "id": "drop-spaces",
+      "label": "Discards spaces while decoding",
+      "languageKey": "cpp17",
+      "find": "for (unsigned char ch : line) cout << decoded[ch];",
+      "replace": "for (unsigned char ch : line) if (ch != ' ') cout << decoded[ch];"
+    }
+  ]
+}

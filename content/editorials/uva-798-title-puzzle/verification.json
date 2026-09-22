@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/7/798.pdf"
+  ],
+  "constraints": [
+    "LOCAL areaW*H<=20,<=20puzzles/input;originalW,H<=100,G<=10;positive copies;unique shapes up to rotation;all tiles used;solvable;unlabelled same-shape tiles;rotations allowed."
+  ],
+  "independentMethod": "Independent exact-cover count chooses the uncovered cell with fewest currently viable placements, using all placements covering that cell rather than top-left anchoring. Exhaustive enumeration of all7399 area<=20 shape-count specifications checks full local-domain coverage, including infeasible specifications separately.",
+  "oracleFile": "scripts/editorials/oracles/reviewed_limits.py",
+  "mutations": [
+    {
+      "id": "no-rotation",
+      "label": "Disallows rotated non-square rectangles",
+      "languageKey": "cpp17",
+      "find": "if(a!=b)orientations.push_back({b,a});",
+      "replace": ""
+    },
+    {
+      "id": "double-squares",
+      "label": "Counts both identical orientations of squares",
+      "languageKey": "cpp17",
+      "find": "if(a!=b)orientations.push_back({b,a});",
+      "replace": "orientations.push_back({b,a});"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "ae46d292ba4cbbfbb540ba590d08e2178663ac5e5ee3c6c6a16140a7a4a6f4ac",
+    "file": "content/editorials/uva-798-title-puzzle/statement.md",
+    "reason": "User authorized measured local limits on2026-09-22. Exhaustively enumerate all7399 area<=20 shape-count specifications for capacity review, independently cross-check their counts, and run boundary cases in both sandboxes before publication.",
+    "source": "https://onlinejudge.org/external/7/798.pdf"
+  }
+}

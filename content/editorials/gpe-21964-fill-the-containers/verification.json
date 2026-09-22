@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/114/11413.pdf"
+  ],
+  "constraints": [
+    "1<=N<=1000;1<=M<=1e6;1<=volume<=1e6;ordered contiguous groups;no split;unused containers allowed by M>N."
+  ],
+  "independentMethod": "Exact minimax partition DP over number of groups; monotonic crossing of previous-prefix optimum and last-group sum finds each optimal cut independently of capacity feasibility. Small all-cut-set enumeration validates DP.",
+  "oracleFile": "scripts/editorials/oracles/missingsequences.py",
+  "mutations": [
+    {
+      "id": "breaks-on-equality",
+      "label": "Starts another container at exact capacity",
+      "languageKey": "cpp17",
+      "find": "current + milk > capacity",
+      "replace": "current + milk >= capacity"
+    },
+    {
+      "id": "requires-all-containers",
+      "label": "Rejects feasible assignments using fewer containers",
+      "languageKey": "cpp17",
+      "find": "return used <= containers;",
+      "replace": "return used == containers;"
+    }
+  ]
+}

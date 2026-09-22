@@ -1,0 +1,45 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10012.pdf"
+  ],
+  "constraints": [
+    "LOCAL1e-6<=r<=10000,rhasatmostsixdecimalplaces;T1..50;N1..8;allcirclestangenttobottom;nonoverlap;minimumBOXWIDTHnotarea;three decimals."
+  ],
+  "independentMethod": "Independent exhaustive center-order enumeration with Decimal max-plus difference-constraint closure, crosschecked by exact two-circle formulas and pairwise geometric nonoverlap; all50maximum8circlecases exercise the real sandbox.",
+  "oracleFile": "scripts/editorials/oracles/geometric_witnesses.py",
+  "mutations": [
+    {
+      "id": "adjacent-only",
+      "label": "Checks only the preceding circle",
+      "languageKey": "cpp17",
+      "find": "for(int j=0;j<(int)order.size();++j)",
+      "replace": "for(int j=max(0,(int)order.size()-1);j<(int)order.size();++j)"
+    },
+    {
+      "id": "one-order-only",
+      "label": "Uses just the sorted radius order",
+      "languageKey": "cpp17",
+      "find": "x.pop_back();order.pop_back();used[i]=false;",
+      "replace": "x.pop_back();order.pop_back();used[i]=false;break;"
+    },
+    {
+      "id": "legal-alternate-rounding",
+      "label": "Equally near half-minute or equivalent explicit numeric sign",
+      "languageKey": "cpp17",
+      "find": "<<best",
+      "replace": "<<showpos<<best<<noshowpos",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Validate nearest rounded geometric answers, including both equally near values at exact rational midpoint ties. Preserve all case labels and separation; reject wrong precision and materially wrong rounded answers."
+  },
+  "statementCorrection": {
+    "beforeHash": "bc0a476fa408f86a2ccfff2d99208d396205fda3ac31b7f5738531d80df61b04",
+    "file": "content/editorials/gpe-10606-how-big-is-it/statement.md",
+    "reason": "Clarify well-defined geometric inputs and nearest-rounding ties; user-authorized resource bounds are explicitly stated and must pass real maximum-size sandbox execution before release.",
+    "source": "https://onlinejudge.org/external/100/10012.pdf"
+  }
+}

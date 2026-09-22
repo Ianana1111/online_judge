@@ -1,0 +1,8 @@
+{
+  "slug": "uva-657-the-die-is-cast",
+  "title": "先找骰子連通區，再計算其中點數連通區",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

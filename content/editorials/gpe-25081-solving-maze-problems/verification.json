@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "local-statement:gpe-25081-solving-maze-problems:sha256:b80bdf554539b761b7b91030af1c0f76e3bdbce2775ebd7c40a156e8c553c37c"
+  ],
+  "constraints": [
+    "Exactlyone10x10maze/input;characters# . S G;exactlyoneSoneG;fourneighbors;0or1simpleS-Gpath;markbothendpoints;blanklineafteroutput."
+  ],
+  "independentMethod": "Independent vertex-deletion reachability: on a unique S-G path, exactly its vertices disconnect S from G when removed. Validate uniqueness independently by deleting each edge of a BFS witness; off-path cycles may remain.",
+  "oracleFile": "scripts/editorials/oracles/ordered_routes.py",
+  "mutations": [
+    {
+      "id": "all-visited",
+      "label": "Marks every reachable cell, including dead ends",
+      "languageKey": "cpp17",
+      "find": "for(int at=goal;;at=parent[at]){grid[at/10][at%10]='+';if(at==start)break;}",
+      "replace": "for(int at=0;at<100;++at)if(parent[at]!=-1)grid[at/10][at%10]='+';"
+    },
+    {
+      "id": "keeps-endpoints",
+      "label": "Does not mark start and goal",
+      "languageKey": "cpp17",
+      "find": "grid[at/10][at%10]='+';",
+      "replace": "if(at!=start&&at!=goal)grid[at/10][at%10]='+';"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "b80bdf554539b761b7b91030af1c0f76e3bdbce2775ebd7c40a156e8c553c37c",
+    "file": "content/editorials/gpe-25081-solving-maze-problems/statement.md",
+    "reason": "Resolve the original unique-path sentence with its explicit no-solution branch and state the endpoint marking already shown by every archived successful answer.",
+    "source": "local-statement:gpe-25081-solving-maze-problems:sha256:b80bdf554539b761b7b91030af1c0f76e3bdbce2775ebd7c40a156e8c553c37c"
+  }
+}

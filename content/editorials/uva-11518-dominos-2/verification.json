@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/115/11518.pdf"
+  ],
+  "constraints": [
+    "1<=n<=10000;0<=m,l<=10000;directed edges;union of all pushed-source reachability;cycles and repeated pushes."
+  ],
+  "independentMethod": "Kosaraju SCC decomposition followed by topological propagation on the condensed DAG; randomized small graphs independently checked by full transitive closure.",
+  "oracleFile": "scripts/editorials/oracles/reachability.py",
+  "mutations": [
+    {
+      "id": "undirected-edges",
+      "label": "Adds nonexistent reverse influence",
+      "languageKey": "cpp17",
+      "find": "edges[a].push_back(b);",
+      "replace": "edges[a].push_back(b); edges[b].push_back(a);"
+    },
+    {
+      "id": "double-count-pushes",
+      "label": "Counts repeated manual pushes repeatedly",
+      "languageKey": "cpp17",
+      "find": "if (!seen[start]) { seen[start]",
+      "replace": "if (true) { seen[start]"
+    }
+  ]
+}

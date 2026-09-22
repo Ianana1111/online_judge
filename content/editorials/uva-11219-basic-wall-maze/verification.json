@@ -1,0 +1,35 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/112/11219.pdf"
+  ],
+  "constraints": [
+    "T1..200;valid Gregorian datesDD/MM/YYYY;current thenbirth;future invalid;completedage>130check;Feb29birthdaynotreachedonFeb28ofnonleapyear;equaldate0."
+  ],
+  "independentMethod": "Independent calendar anniversaries are constructed one year at a time (Feb29 falls on March1 in nonleap years) until current date, capped after131years; random valid-date cross-check and exact130/leap/future boundaries.",
+  "oracleFile": "scripts/editorials/oracles/metadata_models.py",
+  "mutations": [
+    {
+      "id": "year-difference",
+      "label": "Ignores whether the birthday has occurred",
+      "languageKey": "cpp17",
+      "find": "if(make_pair(cm,cd)<make_pair(bm,bd))--age;",
+      "replace": ""
+    },
+    {
+      "id": "rejects-130",
+      "label": "Treats exactly130years as invalidly old",
+      "languageKey": "cpp17",
+      "find": "if(age>130)",
+      "replace": "if(age>=130)"
+    }
+  ],
+  "textCorrections": [
+    {
+      "field": "title",
+      "beforeHash": "bc92c7aeefb366693b85d18b1450ce4fafa9df9fcaf93e2bc9981ec0314129ef",
+      "value": "11219 - How old are you?",
+      "reason": "Restore the official problem title matching its UVa number and actual statement; preserve the stable slug and all existing links.",
+      "source": "https://onlinejudge.org/external/112/11219.pdf"
+    }
+  ]
+}

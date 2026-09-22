@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/441.pdf"
+  ],
+  "constraints": [
+    "7 ≤ k ≤ 12; sorted distinct values from 1..49; terminate with 0; blank line between datasets"
+  ],
+  "independentMethod": "Python itertools.combinations, independent of the recursive C++ enumeration.",
+  "oracleFile": "scripts/editorials/oracles/pilot.py",
+  "mutations": [
+    {
+      "id": "no-separator",
+      "label": "Omits the inter-dataset blank line",
+      "languageKey": "cpp17",
+      "find": "if (!firstCase) cout << '\\n';",
+      "replace": "if (!firstCase) {}"
+    },
+    {
+      "id": "last-combination",
+      "label": "Prunes one index too early",
+      "languageKey": "cpp17",
+      "find": "i <= static_cast<int>(numbers.size()) - needed",
+      "replace": "i < static_cast<int>(numbers.size()) - needed"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12532-interval-product",
+  "title": "用兩棵 Fenwick tree 記錄零數量與負數奇偶",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

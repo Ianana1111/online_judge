@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/126/12650.pdf"
+  ],
+  "constraints": [
+    "EOF;1<=R<=N<=10000;distinct returnedIDs1..N;missingascendingwithtrailingspace;*ifallreturn."
+  ],
+  "independentMethod": "Sorted returned list merged against full1..N range, independent of boolean membership array.",
+  "oracleFile": "scripts/editorials/oracles/records.py",
+  "mutations": [
+    {
+      "id": "miss-final",
+      "label": "Skips final volunteer",
+      "languageKey": "cpp17",
+      "find": "id <= n",
+      "replace": "id < n"
+    },
+    {
+      "id": "invert-membership",
+      "label": "Prints returned volunteers",
+      "languageKey": "cpp17",
+      "find": "if (!present[id])",
+      "replace": "if (present[id])"
+    }
+  ]
+}

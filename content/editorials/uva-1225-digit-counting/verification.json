@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/12/1225.pdf"
+  ],
+  "constraints": [
+    "1<N<10000;1<=T<=20;write1..N without leadingzeros;countoccurrences notpresence."
+  ],
+  "independentMethod": "Construct decimal representations and use independent character counts for each digit; exhaustive incremental histogram identities tested.",
+  "oracleFile": "scripts/editorials/oracles/records.py",
+  "mutations": [
+    {
+      "id": "omit-n",
+      "label": "Does not include final integer",
+      "languageKey": "cpp17",
+      "find": "value <= n",
+      "replace": "value < n"
+    },
+    {
+      "id": "lose-zeros",
+      "label": "Skips real zero digits",
+      "languageKey": "cpp17",
+      "find": "++count[x % 10];",
+      "replace": "if (x % 10 != 0) ++count[x % 10];"
+    }
+  ]
+}

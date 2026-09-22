@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10079.pdf"
+  ],
+  "constraints": [
+    "0 <= N <= 210000000; every negative value terminates; zero gives one piece"
+  ],
+  "independentMethod": "Count base region, N cuts and choose(N,2) pair intersections; cross-check small N by incremental recurrence.",
+  "oracleFile": "scripts/editorials/oracles/sequences.py",
+  "mutations": [
+    {
+      "id": "missing-original",
+      "label": "Omits the uncut pizza region",
+      "languageKey": "cpp17",
+      "find": "1 + cuts * (cuts + 1) / 2",
+      "replace": "cuts * (cuts + 1) / 2"
+    },
+    {
+      "id": "zero-terminates",
+      "label": "Treats zero as a terminator",
+      "languageKey": "cpp17",
+      "find": "cuts >= 0",
+      "replace": "cuts > 0"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1585-score",
+  "title": "連續答對長度就是本題得分，答錯立刻歸零",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

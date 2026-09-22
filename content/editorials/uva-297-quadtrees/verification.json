@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/2/297.pdf"
+  ],
+  "constraints": [
+    "valid preorder p/f/e quadtrees;32x32 image;depth<=5;black union not sum;two strings per case."
+  ],
+  "independentMethod": "Parse immutable tree tuples and recursively compute union area with full-node absorption, independently of raster painting; all256 pairs of one-level patterns and120 random full-depth pairs.",
+  "oracleFile": "scripts/editorials/oracles/nested_states.py",
+  "mutations": [
+    {
+      "id": "xor-overlap",
+      "label": "Toggles black pixels so overlap disappears",
+      "languageKey": "cpp17",
+      "find": "black[r][c] = true;",
+      "replace": "black[r][c] = !black[r][c];"
+    },
+    {
+      "id": "ignores-second",
+      "label": "Never applies the second image",
+      "languageKey": "cpp17",
+      "find": "paint(second,position,0,0,32);",
+      "replace": ""
+    }
+  ]
+}

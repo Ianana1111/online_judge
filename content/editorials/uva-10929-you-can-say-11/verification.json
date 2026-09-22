@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/109/10929.pdf"
+  ],
+  "constraints": [
+    "EOFpositive decimalstringslength<=1000;single0terminator;fulloriginalnumber echoed;divisibility11."
+  ],
+  "independentMethod": "Alternating signed decimal digit sum modulo11, independent of streaming decimal remainder.",
+  "oracleFile": "scripts/editorials/oracles/integers.py",
+  "mutations": [
+    {
+      "id": "mod-nine",
+      "label": "Uses nine divisibility",
+      "languageKey": "cpp17",
+      "find": "% 11;",
+      "replace": "% 9;"
+    },
+    {
+      "id": "digit-sum",
+      "label": "Uses ordinary digit sum",
+      "languageKey": "cpp17",
+      "find": "remainder * 10 +",
+      "replace": "remainder +"
+    }
+  ]
+}

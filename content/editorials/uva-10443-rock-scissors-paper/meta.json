@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10443-rock-scissors-paper",
+  "title": "以雙棋盤模擬每天同時發生的戰鬥",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

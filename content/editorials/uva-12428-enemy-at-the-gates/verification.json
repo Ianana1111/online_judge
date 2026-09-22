@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/124/12428.pdf"
+  ],
+  "constraints": [
+    "T1..50;N2..100000;connected undirected SIMPLE graph;N-1<=M<=N(N-1)/2;64bit roads;maximize bridges."
+  ],
+  "independentMethod": "Independent exact integer-square-root inversion with boundary correction; enumerate every connected simple graph through6vertices and count bridges by deleting each edge.",
+  "oracleFile": "scripts/editorials/oracles/cuts_constraints.py",
+  "mutations": [
+    {
+      "id": "strict-capacity",
+      "label": "Requires strictly more core capacity than necessary",
+      "languageKey": "cpp17",
+      "find": "/2>=excess",
+      "replace": "/2>excess"
+    },
+    {
+      "id": "wrong-excess",
+      "label": "Subtracts N rather than N-1 from the road count",
+      "languageKey": "cpp17",
+      "find": "excess=m-(n-1)",
+      "replace": "excess=m-n"
+    }
+  ]
+}

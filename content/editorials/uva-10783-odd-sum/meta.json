@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10783-odd-sum",
+  "title": "用前 K 個奇數和的平方公式回答區間",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

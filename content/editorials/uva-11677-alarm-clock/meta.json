@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11677-alarm-clock",
+  "title": "將時間換成分鐘，在一天的環上做差",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

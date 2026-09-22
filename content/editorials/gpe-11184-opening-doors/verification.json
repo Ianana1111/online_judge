@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/106/10606.pdf"
+  ],
+  "constraints": [
+    "1<=N<=10^100;0sentinel;largest perfect square<=N;exact integer output."
+  ],
+  "independentMethod": "Python standard-library integer square root, independent of displayed Newton implementation; direct door toggling for all smallN and legal100-digit square-minus-one/exact/plus-one boundaries.",
+  "oracleFile": "scripts/editorials/oracles/missing_models.py",
+  "mutations": [
+    {
+      "id": "floating-root",
+      "label": "Uses a floating square root at exact large boundaries",
+      "languageKey": "python3",
+      "find": "root = integer_sqrt(number)",
+      "replace": "root = int(number ** 0.5)"
+    },
+    {
+      "id": "prints-root",
+      "label": "Prints root rather than largest open door",
+      "languageKey": "python3",
+      "find": "str(root * root)",
+      "replace": "str(root)"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "dd50b5355d8f1ca136ecbefdffb165eb632bd961cffb49fc74c1f317b922b15f",
+    "file": "content/editorials/gpe-11184-opening-doors/statement.md",
+    "reason": "Restore lost superscript in the input bound: original mathematical expression is ten to the hundredth power, not decimal10100. State10^100 explicitly so the large-integer corpus and displayed constraints agree.",
+    "source": "https://onlinejudge.org/external/106/10606.pdf"
+  }
+}

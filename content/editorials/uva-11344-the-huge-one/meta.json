@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11344-the-huge-one",
+  "title": "把巨大十進位數逐位取餘，檢查所有指定因數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

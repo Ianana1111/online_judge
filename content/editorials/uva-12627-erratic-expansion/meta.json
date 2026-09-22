@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12627-erratic-expansion",
+  "title": "利用上下半部的自相似結構，計算紅氣球列前綴",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

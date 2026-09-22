@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/7/748.pdf"
+  ],
+  "constraints": [
+    "0<R<99.999 strictly;Rfits6columns;1<=n<=25;exactdecimalpower;drop leadingzeros and insignificant fractionaltrailingzeros only."
+  ],
+  "independentMethod": "Independent grade-school base10 digit convolution repeated n times; rational-number cross-check validates exact values and decimal normalization including integer trailing zeros.",
+  "oracleFile": "scripts/editorials/oracles/order_tracking.py",
+  "mutations": [
+    {
+      "id": "wrong-scale",
+      "label": "Restores only the original decimal scale",
+      "languageKey": "python3",
+      "find": "places = len(fraction) * exponent",
+      "replace": "places = len(fraction)"
+    },
+    {
+      "id": "leading-zero",
+      "label": "Keeps a zero before subunit decimal results",
+      "languageKey": "python3",
+      "find": "return digits.lstrip('0') or '0'",
+      "replace": "return digits"
+    }
+  ]
+}

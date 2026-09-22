@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/9/929.pdf"
+  ],
+  "constraints": [
+    "positive cases;N,M1..999;cell weights0..9;orthogonal four-way paths;both start and end cost included."
+  ],
+  "independentMethod": "Dial circular buckets exploit integer weights0..9 instead of heap Dijkstra; small random grids checked with full Bellman-Ford relaxation, including an explicit path requiring upward detour and999x999 cases.",
+  "oracleFile": "scripts/editorials/oracles/network_costs.py",
+  "mutations": [
+    {
+      "id": "free-start",
+      "label": "Does not charge the starting cell",
+      "languageKey": "cpp17",
+      "find": "distance[0]=weight[0]",
+      "replace": "distance[0]=0"
+    },
+    {
+      "id": "only-monotone",
+      "label": "Allows only down and right",
+      "languageKey": "cpp17",
+      "find": "direction<4",
+      "replace": "direction<2"
+    }
+  ]
+}

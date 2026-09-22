@@ -1,0 +1,8 @@
+{
+  "slug": "uva-105-the-skyline-problem",
+  "title": "將同座標事件合併後維護最高建築",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

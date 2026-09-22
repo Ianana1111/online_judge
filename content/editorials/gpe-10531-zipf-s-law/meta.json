@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10531-zipf-s-law",
+  "title": "以非字母切詞、忽略大小寫，輸出指定頻率的字",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

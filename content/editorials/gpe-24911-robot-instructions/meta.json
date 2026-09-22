@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-24911-robot-instructions",
+  "title": "把每條指令解析成位移，直接複用已解析的動作",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

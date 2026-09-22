@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12096-the-setstack-computer",
+  "title": "為每個不同集合建立標準 ID，精確模擬巢狀集合",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

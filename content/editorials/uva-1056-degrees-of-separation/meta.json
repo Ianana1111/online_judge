@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1056-degrees-of-separation",
+  "title": "以 Floyd–Warshall 求最短關係距離，再取全圖最大值",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/117/11764.pdf"
+  ],
+  "constraints": [
+    "1<=T<30;1<=N<50;heights1..10;starts on firstwall;equal heights neitherhighnorlow;JumpingMario."
+  ],
+  "independentMethod": "Build signed adjacent differences and count positive/negative entries, independently of streaming previous-height state.",
+  "oracleFile": "scripts/editorials/oracles/metadata_models.py",
+  "mutations": [
+    {
+      "id": "equal-is-low",
+      "label": "Counts level jump as descending",
+      "languageKey": "cpp17",
+      "find": "else if (current < previous) ++low;",
+      "replace": "else ++low;"
+    },
+    {
+      "id": "never-move",
+      "label": "Always compares against first wall",
+      "languageKey": "cpp17",
+      "find": "previous = current;",
+      "replace": "previous = previous;"
+    }
+  ],
+  "textCorrections": [
+    {
+      "field": "title",
+      "beforeHash": "04674a09ad19365b563dda95e1c8825faddda8b03462eee865f08d3f1175903e",
+      "value": "11764 - Jumping Mario",
+      "reason": "Restore the official problem title matching its UVa number and actual statement; preserve the stable slug and all existing links.",
+      "source": "https://onlinejudge.org/external/117/11764.pdf"
+    }
+  ]
+}

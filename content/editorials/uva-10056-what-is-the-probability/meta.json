@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10056-what-is-the-probability",
+  "title": "將無窮回合化成有限幾何權重，穩定計算勝率",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10279.pdf"
+  ],
+  "constraints": [
+    "positive cases;n1..10;mine grid ./*;touch grid ./x;eight neighbors;any hit reveals all mines;untouched safe cells remain dots;blank line between boards."
+  ],
+  "independentMethod": "Scatter each mine contribution into its valid neighboring cells, independently of per-safe-cell gathering; exhaustive all256 mine/touch combinations on2x2 boards and one-cell boundaries.",
+  "oracleFile": "scripts/editorials/oracles/gpe_readiness.py",
+  "mutations": [
+    {
+      "id": "four-neighbors",
+      "label": "Ignores diagonal mines",
+      "languageKey": "cpp17",
+      "find": "if(dr || dc)",
+      "replace": "if(abs(dr)+abs(dc)==1)"
+    },
+    {
+      "id": "only-hit-mines",
+      "label": "Reveals only directly touched mines",
+      "languageKey": "cpp17",
+      "find": "if(lost && board[r][c]=='*')",
+      "replace": "if(touch[r][c]=='x' && board[r][c]=='*')"
+    }
+  ]
+}

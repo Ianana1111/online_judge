@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/125/12546.pdf"
+  ],
+  "constraints": [
+    "T<=500;1<=C<=15 distinctprimes2..1000;exponents1..50;sum p+q overp<=q,lcm=n;mod1000000007."
+  ],
+  "independentMethod": "Independent explicit ordered exponent-pair enumeration for each prime with max(i,j)=a, multiplying exact arbitrary-precision weighted sums before reduction. Direct divisor-pair enumeration checks every smalln.",
+  "oracleFile": "scripts/editorials/oracles/rational_surfaces.py",
+  "mutations": [
+    {
+      "id": "missing-diagonal",
+      "label": "Fails to add the second contribution of (n,n)",
+      "languageKey": "cpp17",
+      "find": "(ordered+number)%MOD",
+      "replace": "ordered%MOD"
+    },
+    {
+      "id": "one-fewer-choice",
+      "label": "Counts only a choices when p already has exponent a",
+      "languageKey": "cpp17",
+      "find": "(exponent+1)*power",
+      "replace": "exponent*power"
+    }
+  ]
+}

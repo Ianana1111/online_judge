@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/579.pdf"
+  ],
+  "constraints": [
+    "1<=H<=12;0<=M<=59;0:00terminator;hourmoves0.5degree/min;minimum0..180;3decimals."
+  ],
+  "independentMethod": "Simulate minute-by-minute hour/minute positions on720 half-degree ticks, compute shorter circular distance, independently compared with rational angle formulas.",
+  "oracleFile": "scripts/editorials/oracles/layouts.py",
+  "mutations": [
+    {
+      "id": "fixed-hour-hand",
+      "label": "Omits minute contribution to hour hand",
+      "languageKey": "cpp17",
+      "find": "60 * (hour % 12) + minute - 12 * minute",
+      "replace": "60 * (hour % 12) - 12 * minute"
+    },
+    {
+      "id": "major-angle",
+      "label": "Never chooses shorter arc",
+      "languageKey": "cpp17",
+      "find": "twiceAngle = min(twiceAngle, 720 - twiceAngle);",
+      "replace": "/* retains raw difference */"
+    }
+  ]
+}

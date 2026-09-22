@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/104/10409.pdf"
+  ],
+  "constraints": [
+    "1 <= commands <= 1024; zero terminator; reset each game"
+  ],
+  "independentMethod": "Rotate per-face three-dimensional normal vectors instead of permuting face-position slots.",
+  "oracleFile": "scripts/editorials/oracles/foundations.py",
+  "mutations": [
+    {
+      "id": "north-south",
+      "label": "Uses the south rotation for north",
+      "languageKey": "cpp17",
+      "find": "face = {old[3], old[2], old[0], old[1], old[4], old[5]};",
+      "replace": "face = {old[2], old[3], old[1], old[0], old[4], old[5]};"
+    },
+    {
+      "id": "east-west",
+      "label": "Uses the west rotation for east",
+      "languageKey": "cpp17",
+      "find": "face = {old[4], old[5], old[2], old[3], old[1], old[0]};",
+      "replace": "face = {old[5], old[4], old[2], old[3], old[0], old[1]};"
+    }
+  ]
+}

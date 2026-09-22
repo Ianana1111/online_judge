@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10025-the-1-2-n-k-problem",
+  "title": "總和足夠且差為偶數，就能翻轉部分數字的正負號",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

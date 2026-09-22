@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10242.pdf"
+  ],
+  "constraints": [
+    "Coordinates between -10000 and 10000 metres at millimetre precision; adjacent nondegenerate sides; EOF; exactly three decimal digits in output"
+  ],
+  "independentMethod": "Decimal endpoint-vector addition with separate common-endpoint detection; compared to integer-mm four-point sum in C++.",
+  "oracleFile": "scripts/editorials/oracles/foundations.py",
+  "mutations": [
+    {
+      "id": "common-twice",
+      "label": "Subtracts only two copies of common endpoint",
+      "languageKey": "cpp17",
+      "find": "-= 3 * common[axis];",
+      "replace": "-= 2 * common[axis];"
+    },
+    {
+      "id": "always-second",
+      "label": "Assumes second point is always the common endpoint",
+      "languageKey": "cpp17",
+      "find": "array<long long, 2> answer{};",
+      "replace": "common = points[1];\n        array<long long, 2> answer{};"
+    }
+  ]
+}

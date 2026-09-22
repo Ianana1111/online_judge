@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10107-what-is-the-median",
+  "title": "以兩個堆維持即時中位數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/122/12218.pdf"
+  ],
+  "constraints": [
+    "1<=T<=200;1..7 decimal digits;use any nonempty subset and ordering;equal digits indistinguishable;numbers differing only by leading zeros equal;0/1 notprime."
+  ],
+  "independentMethod": "Generate permutations of every subset length including leading-zero strings, convert to numeric set, and trial-divide with small primes; independent of multiset DFS and global sieve; prime digit-inventory enumeration checks small signatures.",
+  "oracleFile": "scripts/editorials/oracles/finite_enumeration.py",
+  "mutations": [
+    {
+      "id": "requires-all-digits",
+      "label": "Counts only numbers using every fragment",
+      "languageKey": "cpp17",
+      "find": "if (prime[value]) ++answer;",
+      "replace": "if (used == (int)digits.size() && prime[value]) ++answer;"
+    },
+    {
+      "id": "counts-leading-zero-duplicates",
+      "label": "Counts alternate leading-zero spellings again",
+      "languageKey": "cpp17",
+      "find": "if (used == 0 && digit == 0) continue;",
+      "replace": ""
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-665-false-coin",
+  "title": "枚舉每枚硬幣偏輕或偏重，留下符合全部秤重的編號",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

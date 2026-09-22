@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10226.pdf"
+  ],
+  "constraints": [
+    "T cases separated by blank lines;species name<=30 chars;<=10000 species and1e6 trees per case;lexicographic full names;percentage4decimals;nearest rounding including either exact midpoint."
+  ],
+  "independentMethod": "Sort full names and groupby to count; Decimal division/ROUND_HALF_UP forms proposed output; Fraction interval validates any existing nearest4decimal rounding.",
+  "oracleFile": "scripts/editorials/oracles/percentages.py",
+  "mutations": [
+    {
+      "id": "missing-percent",
+      "label": "Outputs a fraction instead of a percentage",
+      "languageKey": "cpp17",
+      "find": "count * 1000000",
+      "replace": "count * 10000"
+    },
+    {
+      "id": "descending-names",
+      "label": "Sorts names backwards",
+      "languageKey": "cpp17",
+      "find": "map<string, long long> counts;",
+      "replace": "map<string, long long, greater<string>> counts;"
+    },
+    {
+      "id": "legal-double-rounding",
+      "label": "Alternate double formatting accepts legitimate midpoint rounding",
+      "languageKey": "cpp17",
+      "find": "long long scaled = (count * 1000000 + total / 2) / total;\n            cout << name << ' ' << scaled / 10000 << '.'\n                 << setw(4) << setfill('0') << scaled % 10000 << setfill(' ') << '\\n';",
+      "replace": "cout << name << ' ' << fixed << setprecision(4) << count * 100.0 / total << '\\n';",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Validate four-decimal numerical rounding against the input-derived value; do not reject correct binary floating-point rounding at halfway boundaries."
+  }
+}

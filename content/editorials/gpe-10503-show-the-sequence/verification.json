@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/9/997.pdf"
+  ],
+  "constraints": [
+    "LOCAL<=20datasets;expression<=200chars;bracketdepth<=20;literalabs<=1e9;operator coefficient positive;N2..50;every nested-subexpression term1..N has<=1000decimaldigits excluding sign;exact integer recurrence."
+  ],
+  "independentMethod": "Independent recursive syntax tree; memoized term(node,index) directly evaluates m+sum(previous child terms) or m*product(child terms through current index), validating every nested intermediate against the explicit digit cap.",
+  "oracleFile": "scripts/editorials/oracles/reviewed_limits.py",
+  "mutations": [
+    {
+      "id": "shift-addition",
+      "label": "Adds the current child instead of the previous one",
+      "languageKey": "python3",
+      "find": "for item in result[:-1]:",
+      "replace": "for item in result[1:]:"
+    },
+    {
+      "id": "skip-first-product",
+      "label": "Drops the first multiplicative child term",
+      "languageKey": "python3",
+      "find": "for item in result:",
+      "replace": "for item in [1] + result[1:]:"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "065ecf878e9f9374be6342f7255ea32ea9944f4e959e8ae7bf3cf65149cdce90",
+    "file": "content/editorials/gpe-10503-show-the-sequence/statement.md",
+    "reason": "User authorized measured input/output restrictions on2026-09-22. Bound nested intermediate values as well as final output to prevent hidden computation explosions; retain exact integers and original recurrence semantics.",
+    "source": "https://onlinejudge.org/external/9/997.pdf"
+  }
+}

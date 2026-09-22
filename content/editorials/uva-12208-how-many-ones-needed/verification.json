@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/122/12208.pdf"
+  ],
+  "constraints": [
+    "0<=a<=b<=2000000000;at most11000 query lines;0 0 sentinel;count set bits over inclusive interval;64-bit total required."
+  ],
+  "independentMethod": "Digit DP over the upper bound accumulates both number of represented integers and their total ones under tight/loose prefixes; compare direct popcounts through10000 and every all-ones power-of-two boundary.",
+  "oracleFile": "scripts/editorials/oracles/structural_counts.py",
+  "mutations": [
+    {
+      "id": "narrow-total",
+      "label": "Stores the potentially huge total in32 bits",
+      "languageKey": "cpp17",
+      "find": "long long total=0;",
+      "replace": "int total=0;"
+    },
+    {
+      "id": "drops-lower-endpoint",
+      "label": "Subtracts the lower endpoint as well",
+      "languageKey": "cpp17",
+      "find": "prefix(left-1)",
+      "replace": "prefix(left)"
+    }
+  ]
+}

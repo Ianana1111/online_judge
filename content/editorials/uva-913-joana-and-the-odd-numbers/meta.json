@@ -1,0 +1,8 @@
+{
+  "slug": "uva-913-joana-and-the-odd-numbers",
+  "title": "利用前幾個奇數和，直接求最後三項",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

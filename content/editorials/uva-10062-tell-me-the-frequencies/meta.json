@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10062-tell-me-the-frequencies",
+  "title": "逐行統計 ASCII，依次數升序與代碼降序輸出",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

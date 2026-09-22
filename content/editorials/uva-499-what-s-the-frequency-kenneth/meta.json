@@ -1,0 +1,8 @@
+{
+  "slug": "uva-499-what-s-the-frequency-kenneth",
+  "title": "逐行統計英文字母，按大小寫次序列出最高頻率",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

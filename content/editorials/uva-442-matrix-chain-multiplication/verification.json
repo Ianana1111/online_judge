@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/442.pdf"
+  ],
+  "constraints": [
+    "1<=N<=26;positive matrix dimensions;fully parenthesized binary expression or single matrix;specified strategy;incompatible dimensions error;EOF;no fixed expression-depth bound stated."
+  ],
+  "independentMethod": "First build matching-parenthesis subtree intervals, then evaluate the explicit syntax tree in postorder with arbitrary-precision costs; test deep expressions, incompatible nested subtrees and alternative fixed strategies.",
+  "oracleFile": "scripts/editorials/oracles/discrete_structures.py",
+  "mutations": [
+    {
+      "id": "misses-shared-dimension",
+      "label": "Omits the shared dimension from scalar count",
+      "languageKey": "python3",
+      "find": "rows * shared * cols",
+      "replace": "rows * cols"
+    },
+    {
+      "id": "ignores-incompatibility",
+      "label": "Always accepts incompatible dimensions",
+      "languageKey": "python3",
+      "find": "if shared != other_rows:",
+      "replace": "if False:"
+    }
+  ]
+}

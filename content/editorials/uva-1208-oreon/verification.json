@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/12/1208.pdf"
+  ],
+  "constraints": [
+    "CitiesEnglishletters1..26;symmetricnonnegativeintegeradjacency,diagonal0,zero=absent;connectednetwork;minimum spanning tree;anyminimumtree/edgeorder/undirectedorientation."
+  ],
+  "independentMethod": "Independent dense Prim computes optimum; every output is additionally checked for real weighted edges, unique endpoints, connectivity and N-1 edges; exhaustive spanning trees on small graphs crosscheck optimum.",
+  "oracleFile": "scripts/editorials/oracles/knowledge_trees.py",
+  "mutations": [
+    {
+      "id": "descending-cost",
+      "label": "Chooses a maximum spanning tree",
+      "languageKey": "python3",
+      "find": "edges.sort()",
+      "replace": "edges.sort(reverse=True)"
+    },
+    {
+      "id": "zero-is-edge",
+      "label": "Treats absent tunnels as free edges",
+      "languageKey": "python3",
+      "find": "if matrix[a][b] > 0",
+      "replace": "if matrix[a][b] >= 0"
+    },
+    {
+      "id": "legal-alternate-output",
+      "label": "Same valid answer with reversed undirected endpoints and/or edge order",
+      "languageKey": "python3",
+      "find": "for weight, a, b in solve(matrix):",
+      "replace": "for weight, b, a in reversed(solve(matrix)):",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Accept any complete unordered game answer set and any minimum spanning tree, preserving count/header/real-edge/optimality checks rather than enforcing one arbitrary listing."
+  }
+}

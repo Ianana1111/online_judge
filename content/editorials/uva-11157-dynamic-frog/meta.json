@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11157-dynamic-frog",
+  "title": "大石複製兩次，兩條交錯路徑共享可重用落點",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

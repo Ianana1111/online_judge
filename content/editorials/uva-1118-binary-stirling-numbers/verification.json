@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/11/1118.pdf"
+  ],
+  "constraints": [
+    "1<=m<=n<=1e9;Stirling second-kind parity;blank line between outputs."
+  ],
+  "independentMethod": "Ordinary generating function reduces to a binomial parity evaluated by recursive Lucas digits; all n<=699 independently checked against the original Stirling recurrence modulo2.",
+  "oracleFile": "scripts/editorials/oracles/combinatorics_dp.py",
+  "mutations": [
+    {
+      "id": "wrong-half-index",
+      "label": "Uses m/2 instead of (m-1)/2",
+      "languageKey": "cpp17",
+      "find": "overlap = (m - 1) / 2",
+      "replace": "overlap = m / 2"
+    },
+    {
+      "id": "uses-n-not-excess",
+      "label": "Tests n instead of n-m",
+      "languageKey": "cpp17",
+      "find": "excess = n - m",
+      "replace": "excess = n"
+    }
+  ]
+}

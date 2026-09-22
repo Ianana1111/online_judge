@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12218-an-industrial-spy",
+  "title": "依數字出現次數回溯所有非零開頭整數，再查質數表",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

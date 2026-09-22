@@ -1,0 +1,30 @@
+{
+  "sources": [
+    "repository:packages/db/audit/gpe-recovery-cases.json#2015-09"
+  ],
+  "constraints": [
+    "n ≤65535; strict increase; duplicates must not extend a sequence; EOF"
+  ],
+  "independentMethod": "Coordinate-compressed Fenwick tree maximum queries, independent of the tails/lower_bound method.",
+  "oracleFile": "scripts/editorials/oracles/gpe.py",
+  "oracleDependencies": [
+    "scripts/author-gpe-recovery.py",
+    "scripts/gpe_recovery_references.py"
+  ],
+  "mutations": [
+    {
+      "id": "nondecreasing",
+      "label": "Allows equal values to extend the sequence",
+      "languageKey": "cpp17",
+      "find": "lower_bound(tails.begin(), tails.end(), x)",
+      "replace": "upper_bound(tails.begin(), tails.end(), x)"
+    },
+    {
+      "id": "contiguous",
+      "label": "Keeps only contiguous increasing runs",
+      "languageKey": "cpp17",
+      "find": "auto position = lower_bound(tails.begin(), tails.end(), x);",
+      "replace": "if (!tails.empty() && x <= tails.back()) tails.clear();\n            auto position = lower_bound(tails.begin(), tails.end(), x);"
+    }
+  ]
+}

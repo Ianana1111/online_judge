@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/103/10340.pdf"
+  ],
+  "constraints": [
+    "ASCII alphanumeric whitespace-separated nonempty strings;case-sensitive ordered subsequence;EOF;no stated fixed length bound."
+  ],
+  "independentMethod": "Per-character occurrence lists with binary search for each subsequent position; small cases checked with subsequence dynamic programming.",
+  "oracleFile": "scripts/editorials/oracles/missingsequences.py",
+  "mutations": [
+    {
+      "id": "case-insensitive",
+      "label": "Ignores required case distinction",
+      "languageKey": "cpp17",
+      "find": "ch == s[matched]",
+      "replace": "tolower(ch) == tolower(s[matched])"
+    },
+    {
+      "id": "partial-match",
+      "label": "Accepts a matched prefix without completing the string",
+      "languageKey": "cpp17",
+      "find": "matched == s.size() ?",
+      "replace": "matched > 0 ?"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10579-hay-points",
+  "title": "精確累加每個單字的薪資權重",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

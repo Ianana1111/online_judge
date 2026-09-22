@@ -1,0 +1,8 @@
+{
+  "slug": "uva-540-team-queue",
+  "title": "用隊伍佇列加上各隊成員佇列，維持整隊相鄰",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

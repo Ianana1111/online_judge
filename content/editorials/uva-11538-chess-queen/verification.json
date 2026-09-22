@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/115/11538.pdf"
+  ],
+  "constraints": [
+    "1<=M,N<=1e6;at most5000 input lines including sentinel;distinguishable black/white queens;different cells;0 0 sentinel;64bit."
+  ],
+  "independentMethod": "Count diagonal pairs by signed displacement: four times sum((M-d)*(N-d)), evaluated with exact arithmetic-series formulas; exhaustive ordered square-pair enumeration checks small boards.",
+  "oracleFile": "scripts/editorials/oracles/combinatorics_dp.py",
+  "mutations": [
+    {
+      "id": "unordered-queens",
+      "label": "Treats black and white queens as interchangeable",
+      "languageKey": "cpp17",
+      "find": "cout << straight + diagonal",
+      "replace": "cout << (straight + diagonal) / 2"
+    },
+    {
+      "id": "one-diagonal-direction",
+      "label": "Counts only one diagonal orientation",
+      "languageKey": "cpp17",
+      "find": "cout << straight + diagonal",
+      "replace": "cout << straight + diagonal / 2"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/103/10369.pdf"
+  ],
+  "constraints": [
+    "1<=S<=100;S<P<=500;integercoordinates0..10000;minimum radio threshold after P-S unions;two decimals."
+  ],
+  "independentMethod": "Independent dense Prim MST: sort the chosen edge squared lengths and select index P-S-1; brute threshold graph connectivity validates small cases; Decimal square roots certify rounding.",
+  "oracleFile": "scripts/editorials/oracles/metric_graphs.py",
+  "mutations": [
+    {
+      "id": "one-extra-union",
+      "label": "Connects one too many radio components",
+      "languageKey": "cpp17",
+      "find": "++chosen==n-satellites",
+      "replace": "++chosen==n-satellites+1"
+    },
+    {
+      "id": "manhattan",
+      "label": "Uses squared Manhattan instead of Euclidean distance",
+      "languageKey": "cpp17",
+      "find": "dx*dx+dy*dy",
+      "replace": "(llabs(dx)+llabs(dy))*(llabs(dx)+llabs(dy))"
+    },
+    {
+      "id": "legal-numeric-sign",
+      "label": "Explicit positive sign is the same fixed-decimal value",
+      "languageKey": "cpp17",
+      "find": "<<sqrtl(answer)",
+      "replace": "<<showpos<<sqrtl(answer)<<noshowpos",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Preserve exact correctly rounded fixed-decimal values and required case layout while accepting signed zero and equivalent numeric signs; no broad floating tolerance or adjacent incorrect last digit."
+  }
+}

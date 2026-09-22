@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/483.pdf"
+  ],
+  "constraints": [
+    "EOFtext;wordscontiguousprintable nonwhitespace;punctuationinsidewords;preserve whitespaceincludingtabsandnewlines;finalwordnoLF."
+  ],
+  "independentMethod": "Regex split retaining whitespace separator groups; reverse only nonseparator tokens, independent of streaming buffer.",
+  "oracleFile": "scripts/editorials/oracles/formatting.py",
+  "mutations": [
+    {
+      "id": "no-final-flush",
+      "label": "Drops final word at EOF",
+      "languageKey": "cpp17",
+      "find": "    flush();\n}",
+      "replace": "    /* no final flush */\n}"
+    },
+    {
+      "id": "space-only",
+      "label": "Does not split at tabs/newlines",
+      "languageKey": "cpp17",
+      "find": "isspace(static_cast<unsigned char>(ch))",
+      "replace": "ch == ' '"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10815-andy-s-first-dictionary",
+  "title": "以所有非英文字母為分隔，建立不重複的小寫字典",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

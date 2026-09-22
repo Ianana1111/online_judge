@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10382-watering-grass",
+  "title": "把圓形灑水範圍轉成區間，貪心延伸已覆蓋前綴",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

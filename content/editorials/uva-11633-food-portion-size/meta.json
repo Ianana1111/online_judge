@@ -1,0 +1,8 @@
+{
+  "slug": "uva-11633-food-portion-size",
+  "title": "只枚舉取餐次數改變的份量，用分數精確比較成本",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

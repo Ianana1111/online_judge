@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/113/11389.pdf"
+  ],
+  "constraints": [
+    "1<=N<=100;1<=D,lengths<=10000;1<=R<=5;each morning/evening used once;charge max(0,sum-D)*R;000 terminator."
+  ],
+  "independentMethod": "Exact minimum-weight bipartite assignment via Hungarian algorithm on overtime cost matrix, independently of opposite-sorting greedy; exhaustive small permutations test oracle.",
+  "oracleFile": "scripts/editorials/oracles/intervals.py",
+  "mutations": [
+    {
+      "id": "same-order",
+      "label": "Pairs both routes in ascending order",
+      "languageKey": "cpp17",
+      "find": "sort(evening.rbegin(), evening.rend());",
+      "replace": "sort(evening.begin(), evening.end());"
+    },
+    {
+      "id": "omit-rate",
+      "label": "Omits overtime rate",
+      "languageKey": "cpp17",
+      "find": "* rate;",
+      "replace": ";"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/107/10789.pdf"
+  ],
+  "constraints": [
+    "1<=T<=200; ASCII alphanumeric string length1..2000; prime frequency; ASCII output order."
+  ],
+  "independentMethod": "Counter with trial division up to exact integer square root, independent of reference sieve.",
+  "oracleFile": "scripts/editorials/oracles/geometry.py",
+  "mutations": [
+    {
+      "id": "one-prime",
+      "label": "Treats frequency one as prime",
+      "languageKey": "cpp17",
+      "find": "prime[0] = prime[1] = false;",
+      "replace": "prime[0] = false;"
+    },
+    {
+      "id": "descending",
+      "label": "Prints characters in reverse ASCII order",
+      "languageKey": "cpp17",
+      "find": "int ch = 0; ch < 128; ++ch",
+      "replace": "int ch = 127; ch >= 0; --ch"
+    }
+  ]
+}

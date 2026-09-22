@@ -1,0 +1,8 @@
+{
+  "slug": "uva-151-power-crisis",
+  "title": "先移除第一區，再以 Josephus 生存位置搜尋最小步長",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

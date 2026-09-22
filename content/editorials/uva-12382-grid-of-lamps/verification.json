@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/123/12382.pdf"
+  ],
+  "constraints": [
+    "T<=100;1<=M,N<=1000;row demand0..N,column demand0..M;demands lower bounds;binary cell capacity1."
+  ],
+  "independentMethod": "Independent Havel-Hakimi exchange construction greedily matches row demand to largest remaining column demands, then completes outstanding columns. Exhaustive all binary grids up to3x3 validates minimum count.",
+  "oracleFile": "scripts/editorials/oracles/cuts_constraints.py",
+  "mutations": [
+    {
+      "id": "totals-only",
+      "label": "Uses only the larger total and ignores cell capacity",
+      "languageKey": "cpp17",
+      "find": "answer=max(answer,prefix+excess);",
+      "replace": "if(k==m)answer=max(answer,prefix);"
+    },
+    {
+      "id": "ascending-rows",
+      "label": "Sorts weakest row demands first",
+      "languageKey": "cpp17",
+      "find": "sort(a.rbegin(),a.rend());",
+      "replace": "sort(a.begin(),a.end());"
+    }
+  ]
+}

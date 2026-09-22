@@ -1,12 +1,20 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Header, Param, Patch, Post, Put, Query } from "@nestjs/common";
 import { createProblemSchema, noteSchema, type CreateProblemDto, type NoteDto } from "@oj/shared";
 import { CurrentUser, OptionalAuth, Roles, type RequestUser } from "../common/decorators";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { ListQuery, ProblemsService } from "./problems.service";
+import { EditorialsService } from "./editorials.service";
 
 @Controller("problems")
 export class ProblemsController {
-  constructor(private readonly problems: ProblemsService) {}
+  constructor(private readonly problems: ProblemsService, private readonly editorials: EditorialsService) {}
+
+  @OptionalAuth()
+  @Header("Cache-Control", "private, no-store")
+  @Get(":slug/editorial")
+  editorial(@Param("slug") slug: string, @CurrentUser() user: RequestUser | null) {
+    return this.editorials.detail(slug, user);
+  }
 
   @OptionalAuth()
   @Get()

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11063.pdf"
+  ],
+  "constraints": [
+    "2<=N<=100;elements<=10000;B2 iff positive strictly increasing and all i<=j sums distinct;EOF;blank line aftercase."
+  ],
+  "independentMethod": "Enumerate pair sums into a list, sort and compare adjacent values; positivity/order checked independently; includes diagonal pairs.",
+  "oracleFile": "scripts/editorials/oracles/textgames.py",
+  "mutations": [
+    {
+      "id": "omit-self-pairs",
+      "label": "Omits i=j pairs",
+      "languageKey": "cpp17",
+      "find": "int j = i;",
+      "replace": "int j = i + 1;"
+    },
+    {
+      "id": "sort-input",
+      "label": "Sorts an invalid original order",
+      "languageKey": "cpp17",
+      "find": "bool good = true;",
+      "replace": "sort(a.begin(), a.end()); bool good = true;"
+    }
+  ]
+}

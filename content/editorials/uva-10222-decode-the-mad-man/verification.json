@@ -1,0 +1,33 @@
+{
+  "sources": [
+    "https://cpe.mcu.edu.tw/cpe/problemPdf/10222.pdf"
+  ],
+  "constraints": [
+    "CPE variant: positive N then exactly N nonempty message lines; same-row two-left key exists; preserve spaces; sample requires lowercase normalization"
+  ],
+  "independentMethod": "Literal reviewed key pairs in Python; restrict tests to defined key mappings and one-or-more-word lines.",
+  "oracleFile": "scripts/editorials/oracles/pilot.py",
+  "mutations": [
+    {
+      "id": "one-left",
+      "label": "Decodes one key left instead of two",
+      "languageKey": "cpp17",
+      "find": "row[i - 2]",
+      "replace": "row[i - 1]"
+    },
+    {
+      "id": "uppercase",
+      "label": "Does not normalize uppercase letters",
+      "languageKey": "cpp17",
+      "find": "tolower(ch)",
+      "replace": "ch"
+    },
+    {
+      "id": "spaces",
+      "label": "Drops spaces",
+      "languageKey": "cpp17",
+      "find": "for (unsigned char ch : line) {",
+      "replace": "for (unsigned char ch : line) { if (ch == ' ') continue;"
+    }
+  ]
+}

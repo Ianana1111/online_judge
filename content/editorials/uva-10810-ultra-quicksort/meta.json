@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10810-ultra-quicksort",
+  "title": "相鄰交換的最少次數等於逆序數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

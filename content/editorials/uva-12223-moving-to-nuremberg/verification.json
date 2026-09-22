@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/122/12223.pdf"
+  ],
+  "constraints": [
+    "T1..200;n1..50000;tree weights1..300;m0..n distinct destinations;frequencies1..500;round trips;all optimal station IDs increasing;64-bit weighted sum."
+  ],
+  "independentMethod": "Weighted tree-median characterization: every component after deleting an optimum contains at most half total demand. Compute costs by direct distance traversal from one independently selected median; brute every station on small trees.",
+  "oracleFile": "scripts/editorials/oracles/network_costs.py",
+  "mutations": [
+    {
+      "id": "one-way-only",
+      "label": "Forgets the return journey",
+      "languageKey": "cpp17",
+      "find": "cout << 2*minimum",
+      "replace": "cout << minimum"
+    },
+    {
+      "id": "wrong-reroot-balance",
+      "label": "Does not subtract demand moved closer",
+      "languageKey": "cpp17",
+      "find": "total-2*subtree[v]",
+      "replace": "total-subtree[v]"
+    }
+  ]
+}

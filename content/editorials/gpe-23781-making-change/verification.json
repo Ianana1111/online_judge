@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/1/166.pdf"
+  ],
+  "constraints": [
+    "six nonnegative finite stocks;denominations5,10,20,50,100,200c;price0<=p<5.00 multiple5c;sufficient wallet;shop unlimited;right-aligned width3;allzero sentinel has no price."
+  ],
+  "independentMethod": "Independent exact-coin-count bitsets enumerate attainable wallet sums and unlimited-shop sums, finding first total count with compatible payment/change. Small0/1wallets checked by complete payment enumeration; upper search budget proven by crossing transaction.",
+  "oracleFile": "scripts/editorials/oracles/missing_models.py",
+  "mutations": [
+    {
+      "id": "ignores-change-cost",
+      "label": "Optimizes payer coins without returned coins",
+      "languageKey": "python3",
+      "find": "own[paid] + shop[paid - target]",
+      "replace": "own[paid]"
+    },
+    {
+      "id": "unbounded-wallet",
+      "label": "Allows arbitrary wallet coins despite finite stock",
+      "languageKey": "python3",
+      "find": "remaining = min(stock, budget)",
+      "replace": "remaining = budget if stock else 0"
+    }
+  ]
+}

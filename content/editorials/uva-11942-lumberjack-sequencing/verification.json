@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/119/11942.pdf"
+  ],
+  "constraints": [
+    "1<=T<20;exactly10 distinct positive values<100;original strict ascending or descending;single header."
+  ],
+  "independentMethod": "Compare original list against independently sorted ascending and descending copies; no adjacent-direction state machine.",
+  "oracleFile": "scripts/editorials/oracles/collections_suite.py",
+  "mutations": [
+    {
+      "id": "ascending-only",
+      "label": "Rejects descending order",
+      "languageKey": "cpp17",
+      "find": "increasing || decreasing",
+      "replace": "increasing"
+    },
+    {
+      "id": "first-pair-only",
+      "label": "Only checks first neighboring pair",
+      "languageKey": "cpp17",
+      "find": "i < 10;",
+      "replace": "i < 2;"
+    }
+  ]
+}

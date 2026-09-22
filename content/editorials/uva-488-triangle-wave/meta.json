@@ -1,0 +1,8 @@
+{
+  "slug": "uva-488-triangle-wave",
+  "title": "每個波形先升到振幅，再下降至一",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

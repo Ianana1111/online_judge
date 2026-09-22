@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/110/11008.pdf"
+  ],
+  "constraints": [
+    "T1..20;n1..16;0<=m<=n;integer coordinates[-1000,1000];cut at leastm;whole-line coverage."
+  ],
+  "independentMethod": "Normalize integer(A,B,C) line equations; independent memoized cover recursion may discard a first point or cover it, tracking remaining required count. Small instances cross-checked by exhaustive unions of cross-product lines; partial targets with ignored outliers.",
+  "oracleFile": "scripts/editorials/oracles/missing_models.py",
+  "mutations": [
+    {
+      "id": "forces-first-tree",
+      "label": "Incorrectly requires the first remaining tree to be cut next",
+      "languageKey": "cpp17",
+      "find": "for(int line:lines) {",
+      "replace": "for(int line:lines) { if(!(line & ((~mask)&-~mask)))continue;"
+    },
+    {
+      "id": "only-pair",
+      "label": "Counts only defining pair, losing other collinear points",
+      "languageKey": "cpp17",
+      "find": "if(x*dy==y*dx)",
+      "replace": "if(k==i || k==j)"
+    }
+  ]
+}

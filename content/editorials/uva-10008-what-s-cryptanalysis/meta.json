@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10008-what-s-cryptanalysis",
+  "title": "合併大小寫，依頻率與字母雙重排序",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

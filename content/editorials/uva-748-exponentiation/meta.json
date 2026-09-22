@@ -1,0 +1,8 @@
+{
+  "slug": "uva-748-exponentiation",
+  "title": "把有限小數轉成整數冪，再精確放回小數點",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

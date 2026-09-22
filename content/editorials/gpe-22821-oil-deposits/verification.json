@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/572.pdf"
+  ],
+  "constraints": [
+    "1<=rows,cols<=100;@oil/*empty;EIGHTneighbors;eachcomponent<=100pockets;rows0ends;countcomponents."
+  ],
+  "independentMethod": "Union-find on oil cells and four already-scanned undirected edge directions including diagonals; distinct roots and component-size validation independent of destructive DFS.",
+  "oracleFile": "scripts/editorials/oracles/missingstructures.py",
+  "mutations": [
+    {
+      "id": "four-neighbors",
+      "label": "Excludes diagonal adjacency",
+      "languageKey": "cpp17",
+      "find": "if (dr == 0 && dc == 0) continue;",
+      "replace": "if (abs(dr) + abs(dc) != 1) continue;"
+    },
+    {
+      "id": "area-not-deposits",
+      "label": "Counts pockets instead of deposits",
+      "languageKey": "cpp17",
+      "find": "++answer; vector<pair<int,int>> pending{{r,c}}; grid[r][c] = '*';\n            while (!pending.empty()) {",
+      "replace": "vector<pair<int,int>> pending{{r,c}}; grid[r][c] = '*';\n            while (!pending.empty()) { ++answer;"
+    }
+  ]
+}

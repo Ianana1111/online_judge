@@ -6,10 +6,10 @@ const exec = promisify(execFile);
 
 /** No host mounts or network. Runs actual production scripts on a disposable Linux toolchain;
  * deliberately does not impersonate Vercel-specific API, kernel or performance guarantees. */
-export async function createDockerSandbox() {
+export async function createDockerSandbox(image = "oj-readiness-sandbox-fixture") {
   const name = `oj-runner-test-${randomUUID()}`;
   const docker = (args: string[]) => exec("docker", args, { maxBuffer: 20 * 1024 * 1024, timeout: 120_000 });
-  await docker(["run", "--detach", "--name", name, "--network", "none", "--env", "DATABASE_URL=synthetic-canary", "--memory", "1536m", "--cpus", "1", "--pids-limit", "256", "oj-readiness-sandbox-fixture"]);
+  await docker(["run", "--detach", "--name", name, "--network", "none", "--env", "DATABASE_URL=synthetic-canary", "--memory", "1536m", "--cpus", "1", "--pids-limit", "256", image]);
   const stop = async () => { await docker(["rm", "--force", name]); };
   const deadline = setTimeout(() => { void stop().catch(() => {}); }, 120_000); deadline.unref();
   const adapter = {

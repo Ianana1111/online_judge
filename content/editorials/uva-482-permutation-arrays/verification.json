@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/482.pdf"
+  ],
+  "constraints": [
+    "Tcases;blank-separated pairs of lines;first permutation1..N;second exactlyNnumeric tokens;output original token spelling;destination p[i]."
+  ],
+  "independentMethod": "Sort zipped (destination,original numeric token) records by destination, independent of direct indexed scatter.",
+  "oracleFile": "scripts/editorials/oracles/layouts.py",
+  "mutations": [
+    {
+      "id": "inverse-permutation",
+      "label": "Reads permutation as source positions instead of destinations",
+      "languageKey": "cpp17",
+      "find": "for (const string &value : answer) cout << value << '\\n';",
+      "replace": "for (int i = 0; i < int(position.size()); ++i) cout << answer[position[position[i] - 1] - 1] << '\\n';"
+    },
+    {
+      "id": "numeric-normalization",
+      "label": "Converts strings through floating point",
+      "languageKey": "cpp17",
+      "find": "answer[index - 1] = value;",
+      "replace": "answer[index - 1] = to_string(stod(value));"
+    }
+  ]
+}

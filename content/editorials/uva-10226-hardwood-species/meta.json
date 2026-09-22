@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10226-hardwood-species",
+  "title": "完整保留樹種名稱，以整數精確計算百分比",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/104/10420.pdf"
+  ],
+  "constraints": [
+    "At most2000 input lines including header;record length<=75;first word is country;remaining words are name;count records by country;alphabetic output."
+  ],
+  "independentMethod": "Sort extracted country labels and run-length count consecutive equal labels, independent of associative-map accumulation.",
+  "oracleFile": "scripts/editorials/oracles/counting.py",
+  "mutations": [
+    {
+      "id": "overwrite-count",
+      "label": "Resets each country to one",
+      "languageKey": "cpp17",
+      "find": "++counts[country];",
+      "replace": "counts[country] = 1;"
+    },
+    {
+      "id": "reverse-countries",
+      "label": "Lists countries descending",
+      "languageKey": "cpp17",
+      "find": "map<string, int> counts;",
+      "replace": "map<string, int, greater<string>> counts;"
+    }
+  ]
+}

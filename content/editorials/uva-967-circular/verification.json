@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/9/967.pdf"
+  ],
+  "constraints": [
+    "100<=i<=j<1000000;sentinel-1alone;all rotations must be prime;count each numeric value notrotationclasses;inclusive ranges."
+  ],
+  "independentMethod": "Independent trial division enumerates only three-to-six-digit strings over1379 (any other ending would be composite), validates all string rotations, and bisects sorted values; exhaustive all numbers through9999 cross-check.",
+  "oracleFile": "scripts/editorials/oracles/order_tracking.py",
+  "mutations": [
+    {
+      "id": "ordinary-primes",
+      "label": "Counts ordinary primes without testing rotations",
+      "languageKey": "cpp17",
+      "find": "if(!prime[rotated])good=false;",
+      "replace": "if(false)good=false;"
+    },
+    {
+      "id": "exclusive-left",
+      "label": "Drops the inclusive left endpoint",
+      "languageKey": "cpp17",
+      "find": "prefix[right]-prefix[left-1]",
+      "replace": "prefix[right]-prefix[left]"
+    }
+  ]
+}

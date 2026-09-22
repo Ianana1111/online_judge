@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/120/12019.pdf"
+  ],
+  "constraints": [
+    "valid2011dates;nonleapFeb28;Jan1Saturday;month1..12;Tcases."
+  ],
+  "independentMethod": "Python Gregorian datetime.date.weekday computes calendar independently of manual month accumulation; exhaustive365 dates checked.",
+  "oracleFile": "scripts/editorials/oracles/records.py",
+  "mutations": [
+    {
+      "id": "one-day-late",
+      "label": "Uses day instead of day minus one",
+      "languageKey": "cpp17",
+      "find": "int offset = day - 1;",
+      "replace": "int offset = day;"
+    },
+    {
+      "id": "leap-year",
+      "label": "Incorrectly adds leap day",
+      "languageKey": "cpp17",
+      "find": "{31,28,31,30",
+      "replace": "{31,29,31,30"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10101.pdf"
+  ],
+  "constraints": [
+    "0<=N<=999999999999999;EOF;case number right-aligned width4; repeated kuti allowed; skip zero components."
+  ],
+  "independentMethod": "Split decimal representation into seven-digit groups and fixed digit slices; preserve kuti separators without recursive quotient formatting.",
+  "oracleFile": "scripts/editorials/oracles/arithmetic.py",
+  "mutations": [
+    {
+      "id": "flat-kuti",
+      "label": "Prints large kuti quotient without recursive units",
+      "languageKey": "cpp17",
+      "find": "printNumber(n / 10000000);",
+      "replace": "cout << ' ' << n / 10000000;"
+    },
+    {
+      "id": "zero-remainder",
+      "label": "Prints zero for every remainder",
+      "languageKey": "cpp17",
+      "find": "if (n != 0) cout",
+      "replace": "if (n >= 0) cout"
+    }
+  ]
+}

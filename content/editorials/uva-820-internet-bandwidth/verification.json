@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/8/820.pdf"
+  ],
+  "constraints": [
+    "2<=V<=100;distinct source/sink;undirected nonnegative capacities<=1000;parallel connections allowed;no self-loops;0 sentinel."
+  ],
+  "independentMethod": "Independent Edmonds–Karp using an aggregated residual-capacity matrix; brute enumeration of all source/sink cuts on small graphs validates max-flow equality, plus parallel, reverse, zero and dense networks.",
+  "oracleFile": "scripts/editorials/oracles/graph_structures.py",
+  "mutations": [
+    {
+      "id": "directed-capacity",
+      "label": "Removes initial reverse-direction capacity",
+      "languageKey": "cpp17",
+      "find": "graph[v].push_back({u,forward,capacity});",
+      "replace": "graph[v].push_back({u,forward,0});"
+    },
+    {
+      "id": "first-path-only",
+      "label": "Stops after the first augmenting path",
+      "languageKey": "cpp17",
+      "find": "while (long long pushed = dfs(source,LLONG_MAX / 4)) total += pushed;",
+      "replace": "if (long long pushed = dfs(source,LLONG_MAX / 4)) { total += pushed; break; }"
+    }
+  ]
+}

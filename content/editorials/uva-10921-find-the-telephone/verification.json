@@ -1,0 +1,27 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/109/10921.pdf",
+    "https://cpe.mcu.edu.tw/cpe/problemPdf/10921.pdf"
+  ],
+  "constraints": [
+    "Local stored CPE statement/sample require mapped number, letter count and hyphen count;ASCII uppercase,-,0,1;length1..30;EOF;UVa original lacks extra counts."
+  ],
+  "independentMethod": "Group-membership mapping and separate string counts; validates local CPE output contract explicitly rather than importing original UVa format.",
+  "oracleFile": "scripts/editorials/oracles/textgames.py",
+  "mutations": [
+    {
+      "id": "omit-counts",
+      "label": "Uses original UVa format without local counts",
+      "languageKey": "cpp17",
+      "find": "cout << text << ' ' << letters << ' ' << hyphens << '\\n';",
+      "replace": "cout << text << '\\n';"
+    },
+    {
+      "id": "wrong-s-key",
+      "label": "Maps S to8 instead of7",
+      "languageKey": "cpp17",
+      "find": "22233344455566677778889999",
+      "replace": "22233344455566677788889999"
+    }
+  ]
+}

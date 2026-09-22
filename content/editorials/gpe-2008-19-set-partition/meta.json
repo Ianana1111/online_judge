@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-2008-19-set-partition",
+  "title": "折半枚舉等分和子集合，以位元遮罩精確排序",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

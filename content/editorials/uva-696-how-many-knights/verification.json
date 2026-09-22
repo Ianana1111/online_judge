@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/6/696.pdf"
+  ],
+  "constraints": [
+    "0<=M,N<=500;00sentinel;empty dimension zero;knight attacks offsets(1,2)/(2,1);maximize nonattacking placements;retain original row/column order."
+  ],
+  "independentMethod": "Independent actual bipartite knight matchings on thin boards and certified3/4/5/6tile matchings assembled for larger boards; checkerboard lower bound equals the pairing upper bound, with exhaustive small independent-set verification.",
+  "oracleFile": "scripts/editorials/oracles/bounds_walks.py",
+  "mutations": [
+    {
+      "id": "generic-half",
+      "label": "Uses half-area formula even on a two-row strip",
+      "languageKey": "cpp17",
+      "find": "4*(longer/4)+min(4,2*(longer%4))",
+      "replace": "(rows*columns+1)/2"
+    },
+    {
+      "id": "floor-half",
+      "label": "Rounds odd ordinary board area down",
+      "languageKey": "cpp17",
+      "find": "answer=(rows*columns+1)/2;",
+      "replace": "answer=rows*columns/2;"
+    }
+  ]
+}

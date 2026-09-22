@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-23651-the-jackpot",
+  "title": "保留有利的連續前綴，用 Kadane 演算法找最大收益",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

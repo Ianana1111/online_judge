@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10229-modular-fibonacci",
+  "title": "快速倍增，在每一層直接保留模數餘數",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10533-digit-primes",
+  "title": "質數篩加前綴和，一次回答大量區間查詢",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

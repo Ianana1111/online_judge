@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/540.pdf"
+  ],
+  "constraints": [
+    "1<=teams<=1000;<=1000 members/team;IDs0..999999;each member belongs to one team;<=200000 commands;valid dequeue;team FIFO blocks;STOP then final0."
+  ],
+  "independentMethod": "Literal flat-list insertion after the final same-team member and front removal, independent of queue-of-queues; maximum command count, team disappearance/reentry and large membership cases.",
+  "oracleFile": "scripts/editorials/oracles/discrete_structures.py",
+  "mutations": [
+    {
+      "id": "team-lifo",
+      "label": "Reverses order within a team",
+      "languageKey": "cpp17",
+      "find": "members[team].push_back(value)",
+      "replace": "members[team].push_front(value)"
+    },
+    {
+      "id": "new-team-first",
+      "label": "Places newly arriving teams at front",
+      "languageKey": "cpp17",
+      "find": "active.push_back(team)",
+      "replace": "active.push_front(team)"
+    }
+  ]
+}

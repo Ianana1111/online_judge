@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/499.pdf"
+  ],
+  "constraints": [
+    "EOF lines;only ASCII A-Z/a-z;case-sensitive;uppercase alphabet then lowercase;LOCAL no-letter line prints empty list then space0."
+  ],
+  "independentMethod": "Independent per-letter string.count scans all52letters; sorted complete tied list; letterless lines and case distinctions.",
+  "oracleFile": "scripts/editorials/oracles/explicit_domains.py",
+  "mutations": [
+    {
+      "id": "drop-ties",
+      "label": "Outputs only the first tied letter",
+      "languageKey": "cpp17",
+      "find": "if(count[(int)ch]==best && best>0)cout<<ch;",
+      "replace": "if(count[(int)ch]==best && best>0){cout<<ch;break;}"
+    },
+    {
+      "id": "zero-letters",
+      "label": "Prints every absent letter on a letterless line",
+      "languageKey": "cpp17",
+      "find": " && best>0",
+      "replace": ""
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "fbcbbfe57040f28c1ad7b80031d12c46458dda1ca0fb40a4320f0a987a26322c",
+    "file": "content/editorials/uva-499-what-s-the-frequency-kenneth/statement.md",
+    "reason": "Specify the previously unstated no-letter output without excluding valid text lines; preserve all existing letter-containing answers.",
+    "source": "https://onlinejudge.org/external/4/499.pdf"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/455.pdf"
+  ],
+  "constraints": [
+    "Tcases;nonblankstringlength1..80;blanklinesseparate;periodrequireswhole-repetitions;blanklinebetweenoutputs."
+  ],
+  "independentMethod": "Enumerate divisors and compare full reconstructed prefix repetitions against original string, independent of modulo-index comparisons.",
+  "oracleFile": "scripts/editorials/oracles/formatting.py",
+  "mutations": [
+    {
+      "id": "partial-period",
+      "label": "Allows incomplete final repetition",
+      "languageKey": "cpp17",
+      "find": "if (n % k != 0) continue;",
+      "replace": "/* ignores divisibility */"
+    },
+    {
+      "id": "largest-period",
+      "label": "Overwrites smallest period",
+      "languageKey": "cpp17",
+      "find": "answer = k; break;",
+      "replace": "answer = k;"
+    }
+  ]
+}

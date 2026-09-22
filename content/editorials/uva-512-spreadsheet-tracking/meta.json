@@ -1,0 +1,8 @@
+{
+  "slug": "uva-512-spreadsheet-tracking",
+  "title": "追蹤每份原始資料的位置，批次操作使用修改前座標",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

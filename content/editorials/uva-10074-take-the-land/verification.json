@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10074.pdf"
+  ],
+  "constraints": [
+    "1<=M,N<=100;binarymatrix;largestaxisalignedALLZEROrectangle;00terminator;area0whenallblocked."
+  ],
+  "independentMethod": "Build zero-run histogram heights per row and use a monotone stack for largest histogram rectangle, independent of row-pair intersections; exhaustive rectangles validate tiny matrices.",
+  "oracleFile": "scripts/editorials/oracles/grids.py",
+  "mutations": [
+    {
+      "id": "any-zero-column",
+      "label": "Uses OR instead of all-row intersection",
+      "languageKey": "cpp17",
+      "find": "clear[column] && (grid[bottom][column] == 0)",
+      "replace": "clear[column] || (grid[bottom][column] == 0)"
+    },
+    {
+      "id": "bridge-blocked-column",
+      "label": "Joins disjoint free runs",
+      "languageKey": "cpp17",
+      "find": "else current = 0;",
+      "replace": "else current = current;"
+    }
+  ]
+}

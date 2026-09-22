@@ -1,0 +1,8 @@
+{
+  "slug": "uva-378-intersecting-lines",
+  "title": "用行列式分類兩條直線，精確捨入交點",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

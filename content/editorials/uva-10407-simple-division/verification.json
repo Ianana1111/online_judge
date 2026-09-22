@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/104/10407.pdf"
+  ],
+  "constraints": [
+    "EOFlines;2..1000nonzerointegers notallequal;trailing0eachline;single0terminator;floor-remainders;nomagnitudeboundstated."
+  ],
+  "independentMethod": "Stein binary GCD over adjacent sorted differences, independent of Euclid on differences from first; brute-force divisor search validates small signed cases.",
+  "oracleFile": "scripts/editorials/oracles/integers.py",
+  "mutations": [
+    {
+      "id": "original-gcd",
+      "label": "Uses original numbers not differences",
+      "languageKey": "python3",
+      "find": "abs(value - first)",
+      "replace": "abs(value)"
+    },
+    {
+      "id": "include-terminator",
+      "label": "Treats sequence terminator as data",
+      "languageKey": "python3",
+      "find": "    values.pop()  # Remove this sequence's terminating zero.",
+      "replace": "    # incorrectly retains terminating zero"
+    }
+  ]
+}

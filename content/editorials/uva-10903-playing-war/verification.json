@@ -1,0 +1,48 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/109/10903.pdf"
+  ],
+  "constraints": [
+    "N1..100;K1..100;each unordered pair exactlyKgames;distinct players;movesrock,paper,scissors;draws excluded;undefined dash;3decimal;0sentinel."
+  ],
+  "independentMethod": "Independent per-player event lists count wins/losses using cyclic move indices and Fraction ratios; tournament pair multiplicities validated; exact midpoint and all-draw cases included.",
+  "oracleFile": "scripts/editorials/oracles/rational_results.py",
+  "mutations": [
+    {
+      "id": "draws-are-losses",
+      "label": "Counts tied games as losses for both players",
+      "languageKey": "cpp17",
+      "find": "if(x==y)continue;",
+      "replace": "if(x==y){++losses[a];++losses[b];continue;}"
+    },
+    {
+      "id": "reversed-winner",
+      "label": "Reverses each non-draw result",
+      "languageKey": "cpp17",
+      "find": "if(win){++wins[a];++losses[b];}",
+      "replace": "if(!win){++wins[a];++losses[b];}"
+    },
+    {
+      "id": "exact-midpoint-toward-zero",
+      "label": "Legal alternative chooses the other nearest decimal at exact rounding midpoints",
+      "languageKey": "cpp17",
+      "find": "(2*numerator*scale+denominator)",
+      "replace": "(2*numerator*scale+denominator-1)",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Use exact input-derived rational answers with required output precision. Accept both nearest printed decimals only at true rounding midpoints, retain labels, counts, order and blank separators, and reject malformed or numerically wrong answers."
+  },
+  "textCorrections": [
+    {
+      "field": "title",
+      "beforeHash": "007c2a0491cf1715d3abd3ff2b43d1744f3cc0f48e402637972c50e071f55551",
+      "value": "10903 - Rock-Paper-Scissors Tournament",
+      "reason": "The existing title Playing War belongs to a different problem; UVa10903 original statement, samples and game rules are Rock-Paper-Scissors Tournament. Preserve stable slug and problem identity.",
+      "source": "https://onlinejudge.org/external/109/10903.pdf"
+    }
+  ]
+}

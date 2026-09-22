@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/106/10666.pdf"
+  ],
+  "constraints": [
+    "N1..30;0<=X<2^N;ranking obeys only transitive tournament comparisons;0 champion."
+  ],
+  "independentMethod": "Independently walk losses by locating the first nondivisible round size, count descendant blocks by rounds; validate actual tournament graph transitive closure for every team of small tournaments.",
+  "oracleFile": "scripts/editorials/oracles/cuts_constraints.py",
+  "mutations": [
+    {
+      "id": "optimistic-offset",
+      "label": "Forgets the team itself in its best rank",
+      "languageKey": "cpp17",
+      "find": "__builtin_popcountll(x)+1",
+      "replace": "__builtin_popcountll(x)"
+    },
+    {
+      "id": "wrong-subtree",
+      "label": "Counts only one descendant regardless of the won bracket",
+      "languageKey": "cpp17",
+      "find": "(1ULL<<n)-block+1",
+      "replace": "(1ULL<<n)-1"
+    }
+  ]
+}

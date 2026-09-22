@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/107/10740.pdf"
+  ],
+  "constraints": [
+    "N2..100,M1..1000,K2..10;nonnegativeweights0..10000;source!=target;atleastonewalk;repeatedvertices/edges andequalcostmultiplicity;LOCAL parallel edges distinctedgewalks."
+  ],
+  "independentMethod": "Independent exact-edge-count dynamic programming retains topK costs at each vertex separately for every length1..N*K, combines target costs across lengths, and verifies tiny graphs by enumerating every edge sequence.",
+  "oracleFile": "scripts/editorials/oracles/bounds_walks.py",
+  "mutations": [
+    {
+      "id": "single-visit",
+      "label": "Keeps only one arrival per vertex",
+      "languageKey": "cpp17",
+      "find": "if(popped[u]>=k)continue;",
+      "replace": "if(popped[u]>=1)continue;"
+    },
+    {
+      "id": "target-terminal",
+      "label": "Forbids continuing a walk after reaching the target",
+      "languageKey": "cpp17",
+      "find": "for(auto [v,w]:graph[u])",
+      "replace": "if(u!=target)for(auto [v,w]:graph[u])"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "0f99fa691daf0a013651307006e894ba9a385e3531e3611f869ec88294371ba4",
+    "file": "content/editorials/uva-10740-first-love/statement.md",
+    "reason": "Make repeated-vertex paths and equal-length multiplicity explicit, including zero cycles and distinct parallel edges; preserve all existing cases and the original worked path table.",
+    "source": "https://onlinejudge.org/external/107/10740.pdf"
+  }
+}

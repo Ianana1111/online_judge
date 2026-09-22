@@ -1,0 +1,8 @@
+{
+  "slug": "uva-1193-radar-installation",
+  "title": "把每座島化成可放雷達區間，以最右可行點合併覆蓋",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

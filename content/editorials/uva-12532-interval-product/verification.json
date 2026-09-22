@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/125/12532.pdf"
+  ],
+  "constraints": [
+    "1<=N,K<=100000;values/updates-100..100;1-based inclusive ordered ranges;at leastone product query per case;EOF."
+  ],
+  "independentMethod": "Independent iterative segment tree multiplies only signs; direct exact multiplication validates random small operations, while100000-element/update/query stress covers endpoint, zero and parity transitions.",
+  "oracleFile": "scripts/editorials/oracles/graph_structures.py",
+  "mutations": [
+    {
+      "id": "misses-left-boundary",
+      "label": "Excludes left endpoint from range",
+      "languageKey": "cpp17",
+      "find": "prefix(right) - prefix(left-1)",
+      "replace": "prefix(right) - prefix(left)"
+    },
+    {
+      "id": "zero-becomes-negative",
+      "label": "Treats a zero-containing product as negative",
+      "languageKey": "cpp17",
+      "find": "answer += '0';",
+      "replace": "answer += '-';"
+    }
+  ]
+}

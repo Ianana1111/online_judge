@@ -1,0 +1,8 @@
+{
+  "slug": "uva-13055-inception",
+  "title": "用堆疊保存夢境路徑，Kick 只離開最內層",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

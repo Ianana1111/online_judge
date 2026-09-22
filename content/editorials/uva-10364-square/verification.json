@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/103/10364.pdf"
+  ],
+  "constraints": [
+    "4<=M<=20;positive stick lengths1..10000;all sticks once,uncut;four equal groups."
+  ],
+  "independentMethod": "Descending four-bin backtracking with normalized residual-capacity memoization and symmetric-bin pruning, independent of subset-mask remainder DP; exhaustive small assignment verifies feasibility.",
+  "oracleFile": "scripts/editorials/oracles/partitions_graph.py",
+  "mutations": [
+    {
+      "id": "necessary-only",
+      "label": "Accepts total and longest checks without partitioning",
+      "languageKey": "cpp17",
+      "find": "return remainder.back() == 0;",
+      "replace": "return true;"
+    },
+    {
+      "id": "two-sides",
+      "label": "Partitions into two sides instead of four",
+      "languageKey": "cpp17",
+      "find": "int side = total / 4;",
+      "replace": "int side = total / 2;"
+    }
+  ]
+}

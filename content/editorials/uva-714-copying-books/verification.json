@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/7/714.pdf"
+  ],
+  "constraints": [
+    "Tpositive;1<=K<=N<=500;0<pages<10000000;exactlyKnonemptycontiguousgroups;minimize maximumsum then lexicographic vector of group sums;no added brackets."
+  ],
+  "independentMethod": "Independent minimax partition DP with a monotonic-crossing optimization, then lexicographic earliest-prefix reconstruction using exact suffix DP feasibility; exhaustive all cut sets validate both objective levels.",
+  "oracleFile": "scripts/editorials/oracles/ordered_routes.py",
+  "mutations": [
+    {
+      "id": "too-few-groups",
+      "label": "Does not reserve one book per remaining scribe",
+      "languageKey": "cpp17",
+      "find": "||i+1<groups",
+      "replace": ""
+    },
+    {
+      "id": "uses-k-minus-one",
+      "label": "Tests feasibility with only K-1 scribes",
+      "languageKey": "cpp17",
+      "find": "if(groups<=k)",
+      "replace": "if(groups<k)"
+    }
+  ]
+}

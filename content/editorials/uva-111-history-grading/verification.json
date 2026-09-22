@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/1/111.pdf"
+  ],
+  "constraints": [
+    "n2..20;each line is event->rank permutation,not event order;single-number line starts new dataset;score longest common relative event order."
+  ],
+  "independentMethod": "Invert both rank permutations to event order and run independent LCS; exhaustive event-subset order comparisons validate random permutations through8events.",
+  "oracleFile": "scripts/editorials/oracles/order_tracking.py",
+  "mutations": [
+    {
+      "id": "ranking-is-order",
+      "label": "Treats event ranks as an ordered list of events",
+      "languageKey": "cpp17",
+      "find": "sequence[ranking[event]-1]=correct[event];",
+      "replace": "sequence[event]=correct[ranking[event]-1];"
+    },
+    {
+      "id": "contiguous-only",
+      "label": "Only extends an immediately adjacent element",
+      "languageKey": "cpp17",
+      "find": "if(sequence[j]<sequence[i])",
+      "replace": "if(j==i-1&&sequence[j]<sequence[i])"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10675-urn-ball-probabilities",
+  "title": "以補事件求至少一次，以對數計算極小機率的前導零",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

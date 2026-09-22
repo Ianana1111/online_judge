@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/437.pdf"
+  ],
+  "constraints": [
+    "1<=N<=30;positive integer dimensions;unlimited supply per type;three height choices;both base dimensions strictly smaller;0 sentinel."
+  ],
+  "independentMethod": "Enumerate all six ordered orientations, then memoize maximum height under an available width/depth bound without using the canonical sorted three-orientation DP; rotation/unlimited-copy cases cross-check small dimensions.",
+  "oracleFile": "scripts/editorials/oracles/combinatorics_dp.py",
+  "mutations": [
+    {
+      "id": "nonstrict-bases",
+      "label": "Allows equal base dimensions",
+      "languageKey": "cpp17",
+      "find": "blocks[j].x < blocks[i].x && blocks[j].y < blocks[i].y",
+      "replace": "blocks[j].x <= blocks[i].x && blocks[j].y <= blocks[i].y"
+    },
+    {
+      "id": "single-orientation",
+      "label": "Never rotates a block to another height",
+      "languageKey": "cpp17",
+      "find": "h < 3",
+      "replace": "h < 1"
+    }
+  ]
+}

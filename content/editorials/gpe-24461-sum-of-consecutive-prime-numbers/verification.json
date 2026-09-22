@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/12/1210.pdf"
+  ],
+  "constraints": [
+    "2<=target<=10000;0terminator;consecutive ascending primes;nonempty windows;singleton prime allowed."
+  ],
+  "independentMethod": "Enumerate every prime-start and accumulate consecutive sums until10000, building all target counts at once; independent of per-query sliding windows. Trial-prime lists verify tiny targets.",
+  "oracleFile": "scripts/editorials/oracles/missingcore.py",
+  "mutations": [
+    {
+      "id": "exclude-singleton",
+      "label": "Rejects one-prime representations",
+      "languageKey": "cpp17",
+      "find": "if (sum == target) ++answer;",
+      "replace": "if (sum == target && left < right) ++answer;"
+    },
+    {
+      "id": "single-shrink",
+      "label": "Removes at most one excessive left item",
+      "languageKey": "cpp17",
+      "find": "while (sum > target)",
+      "replace": "if (sum > target)"
+    }
+  ]
+}

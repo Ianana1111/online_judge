@@ -1,0 +1,8 @@
+{
+  "slug": "uva-111-history-grading",
+  "title": "先將事件名次反轉為順序，再求最長遞增子序列",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

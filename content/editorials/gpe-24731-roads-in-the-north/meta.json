@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-24731-roads-in-the-north",
+  "title": "在正權重樹上兩次找最遠村莊，得到直徑",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

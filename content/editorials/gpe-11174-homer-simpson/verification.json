@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/104/10465.pdf"
+  ],
+  "constraints": [
+    "EOF;1<=m,n,t<10000;unlimitedburgers;PRIMARYminleftover SECONDARYmaxcount;printleftoveronlyifpositive;zero-burgerallowed."
+  ],
+  "independentMethod": "Enumerate the count of one burger type and greedily fill remaining time with the other, maximize (time used,total burgers); independent of exact-time DP.",
+  "oracleFile": "scripts/editorials/oracles/missingstructures.py",
+  "mutations": [
+    {
+      "id": "burger-count-first",
+      "label": "Prioritizes count over minimum beer time",
+      "languageKey": "cpp17",
+      "find": "int used = t; while (best[used] < 0) --used;",
+      "replace": "int used = 0; for (int time = 1; time <= t; ++time) if (best[time] >= best[used]) used = time;"
+    },
+    {
+      "id": "ignore-empty-base",
+      "label": "Rejects zero-burger base for first type",
+      "languageKey": "cpp17",
+      "find": "best[time - m] >= 0",
+      "replace": "best[time - m] > 0"
+    }
+  ]
+}

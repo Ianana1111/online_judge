@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10038-jolly-jumpers",
+  "title": "檢查相鄰差值是否恰好覆蓋一到 N 減一",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/116/11624.pdf"
+  ],
+  "constraints": [
+    "1<=R,C<=1000;exactly one J;any number F;four-neighbor simultaneous movement;strict arrival<fire;one more minute to leave boundary."
+  ],
+  "independentMethod": "Synchronous padded bitmaps advance fire and all safe human positions minute by minute, independent of two distance BFS passes; exhaustive 3x3 boards cross-checked with time-expanded reachability.",
+  "oracleFile": "scripts/editorials/oracles/reachability.py",
+  "mutations": [
+    {
+      "id": "allows-simultaneous-fire",
+      "label": "Allows reaching a cell simultaneously with fire",
+      "languageKey": "cpp17",
+      "find": "arrival >= fire[next]",
+      "replace": "arrival > fire[next]"
+    },
+    {
+      "id": "omits-exit-minute",
+      "label": "Does not count movement outside the grid",
+      "languageKey": "cpp17",
+      "find": "answer = distance[id] + 1",
+      "replace": "answer = distance[id]"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-11179-wavio-sequence",
+  "title": "兩側嚴格遞增長度取短邊，組成等長山峰",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

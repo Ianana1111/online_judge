@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/104/10405.pdf"
+  ],
+  "constraints": [
+    "EOFlinepairs;length0..1000;alllinecharacters inclspaces;case-sensitive;CRLFnotcontent;LCSnotcontiguous."
+  ],
+  "independentMethod": "Matching-position LIS reduction with per-character position lists, independent of rolling LCS recurrence; exhaustive subsequences verify short strings including spaces.",
+  "oracleFile": "scripts/editorials/oracles/graphdp.py",
+  "mutations": [
+    {
+      "id": "substring",
+      "label": "Resets mismatched prefixes",
+      "languageKey": "cpp17",
+      "find": "max(previous[j], current[j - 1])",
+      "replace": "0"
+    },
+    {
+      "id": "reuse-character",
+      "label": "Reuses same second-string character",
+      "languageKey": "cpp17",
+      "find": "previous[j - 1] + 1",
+      "replace": "previous[j] + 1"
+    }
+  ]
+}

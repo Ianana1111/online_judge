@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/128/12882.pdf"
+  ],
+  "constraints": [
+    "N1..50000;W,H1..500;no positive-areaoverlaps;signed32bitcorners and eachcomponentarea;touchingCORNERcountsasconnected;EOF."
+  ],
+  "independentMethod": "Independent bounding-volume hierarchy recursively partitions rectangle boxes, queries all touching rectangle pairs, rejects positive-area overlaps and sums contact components. Small all-pair oracle and large50000-stone cases validate the edge-sorting solution.",
+  "oracleFile": "scripts/editorials/oracles/rational_surfaces.py",
+  "mutations": [
+    {
+      "id": "drops-corners",
+      "label": "Requires positive-length boundary overlap",
+      "languageKey": "cpp17",
+      "find": "side.begin<=end",
+      "replace": "side.begin<end"
+    },
+    {
+      "id": "vertical-only",
+      "label": "Omits all horizontal-edge contact checks",
+      "languageKey": "cpp17",
+      "find": "connect(horizontal,dsu);",
+      "replace": ""
+    }
+  ]
+}

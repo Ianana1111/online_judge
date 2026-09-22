@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/5/591.pdf"
+  ],
+  "constraints": [
+    "1<=n<=50;1<=height<=100;total divisible by n;minimum one-brick moves;0 sentinel."
+  ],
+  "independentMethod": "Explicit donor-to-deficit transfer simulation, independent of summing excess, with exhaustive small legal-height configurations.",
+  "oracleFile": "scripts/editorials/oracles/common_completion.py",
+  "mutations": [
+    {
+      "id": "double-count",
+      "label": "Counts both removed and received bricks",
+      "languageKey": "cpp17",
+      "find": "max(0, h - target)",
+      "replace": "abs(h - target)"
+    },
+    {
+      "id": "count-piles",
+      "label": "Counts high piles rather than excess bricks",
+      "languageKey": "cpp17",
+      "find": "max(0, h - target)",
+      "replace": "int(h > target)"
+    }
+  ]
+}

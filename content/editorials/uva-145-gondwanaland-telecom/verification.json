@@ -1,0 +1,33 @@
+{
+  "sources": [
+    "https://cpe.mcu.edu.tw/cpe/problemPdf/145.pdf"
+  ],
+  "constraints": [
+    "A..E; 00:00..23:59; positive whole-minute duration ≤24h; equal clock times mean 24h; fixed output columns"
+  ],
+  "independentMethod": "Interval intersections on two consecutive days; integer cents; independent from minute-by-minute reference.",
+  "oracleFile": "scripts/editorials/oracles/pilot.py",
+  "mutations": [
+    {
+      "id": "full-day",
+      "label": "Treats equal start/end as zero duration",
+      "languageKey": "cpp17",
+      "find": "finish <= start",
+      "replace": "finish < start"
+    },
+    {
+      "id": "inclusive-end",
+      "label": "Counts the end minute",
+      "languageKey": "cpp17",
+      "find": "t < finish",
+      "replace": "t <= finish"
+    },
+    {
+      "id": "day-boundary",
+      "label": "Charges 18:00 at the day rate",
+      "languageKey": "cpp17",
+      "find": "clockMinute < 1080",
+      "replace": "clockMinute <= 1080"
+    }
+  ]
+}

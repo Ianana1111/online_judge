@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12385-interesting-sequences",
+  "title": "最早結束的區間貪心，保留可共用的端點",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

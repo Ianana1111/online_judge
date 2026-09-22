@@ -1,0 +1,8 @@
+{
+  "slug": "uva-392-polynomial-showdown",
+  "title": "把符號與項內容分開，首項使用不同連接規則",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

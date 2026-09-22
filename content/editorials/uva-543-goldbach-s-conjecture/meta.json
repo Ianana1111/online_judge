@@ -1,0 +1,8 @@
+{
+  "slug": "uva-543-goldbach-s-conjecture",
+  "title": "篩出質數後，從最小的奇質數尋找配對",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

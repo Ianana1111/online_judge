@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-10582-power-strings",
+  "title": "最短候選週期必須整除字串長度",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

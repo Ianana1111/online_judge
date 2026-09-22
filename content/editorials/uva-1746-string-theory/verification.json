@@ -1,0 +1,27 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/17/1746.pdf",
+    "https://icpcarchive.github.io/World%20Finals/ICPC%20World%20Finals/2016%20ICPC%20World%20Finals/solution.pdf"
+  ],
+  "constraints": [
+    "EOF;1<=N<=100;each quote run1..100;positive nonquote separators;whole string quotation;nonempty child sequences;level1 exactly two quote characters."
+  ],
+  "independentMethod": "Independent nondeterministic automaton built directly from the recursive quotation grammar, including nonempty child and arbitrary sibling repetition; exhaustive short grammar languages validate all decompositions, independent of the reference peeling characterization.",
+  "oracleFile": "scripts/editorials/oracles/paths_mixtures.py",
+  "mutations": [
+    {
+      "id": "odd-inner",
+      "label": "Accepts an odd number of remaining quotation marks",
+      "languageKey": "cpp17",
+      "find": "if(quotes%2)return false;",
+      "replace": ""
+    },
+    {
+      "id": "many-level-one",
+      "label": "Treats multiple ordinary quotations as a single one",
+      "languageKey": "cpp17",
+      "find": "return quotes==2;",
+      "replace": "return quotes>=2;"
+    }
+  ]
+}

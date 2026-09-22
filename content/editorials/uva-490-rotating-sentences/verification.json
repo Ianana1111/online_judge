@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/4/490.pdf"
+  ],
+  "constraints": [
+    "1..100inputlines;0..100characters per line;printableASCII nottabs;preserveemptylinesandspaces;clockwise90;padmissingcellswithspaces."
+  ],
+  "independentMethod": "Pad rows to equal width, reverse row order, then zip columns into output rows, independently checked with explicit coordinate mapping on rectangular and ragged inputs.",
+  "oracleFile": "scripts/editorials/oracles/layouts.py",
+  "mutations": [
+    {
+      "id": "counterclockwise-order",
+      "label": "Keeps original row order",
+      "languageKey": "cpp17",
+      "find": "for (int row = int(lines.size()) - 1; row >= 0; --row)",
+      "replace": "for (int row = 0; row < int(lines.size()); ++row)"
+    },
+    {
+      "id": "drop-padding",
+      "label": "Skips absent cells",
+      "languageKey": "cpp17",
+      "find": "cout << (column < lines[row].size() ? lines[row][column] : ' ');",
+      "replace": "if (column < lines[row].size()) cout << lines[row][column];"
+    }
+  ]
+}

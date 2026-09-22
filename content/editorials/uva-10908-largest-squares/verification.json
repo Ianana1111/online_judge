@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/109/10908.pdf"
+  ],
+  "constraints": [
+    "1 <= T <= 20; 1 <= M,N <= 100; 0 <= Q <= 20; zero-based valid centres; odd side length"
+  ],
+  "independentMethod": "Nearest different character in Chebyshev distance bounds the radius; no border expansion shared with C++.",
+  "oracleFile": "scripts/editorials/oracles/foundations.py",
+  "mutations": [
+    {
+      "id": "radius-only",
+      "label": "Prints radius instead of side length",
+      "languageKey": "cpp17",
+      "find": "cout << 2 * radius + 1 << '\\n';",
+      "replace": "cout << radius << '\\n';"
+    },
+    {
+      "id": "corners-only",
+      "label": "Checks only four corners of each border",
+      "languageKey": "cpp17",
+      "find": "++offset) {",
+      "replace": "offset += 2 * next) {"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "c6303244d4a80bb5ce380556ebe90a2deaa59cb41b28b64f6c6d24e74d513a46",
+    "file": "content/editorials/uva-10908-largest-squares/statement.md",
+    "reason": "Existing prose describes a different sparse-grid problem; official PDF and existing samples/hidden cases describe centred uniform squares.",
+    "source": "https://onlinejudge.org/external/109/10908.pdf"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10169.pdf"
+  ],
+  "constraints": [
+    "LOCAL Q<=1000,file;0<=N<1000000;independent replacement draws;p_k=1/(k(k+1));atleastonce sixdecimals;N0 ->probability0.000000,zeroes0;allred1/(N!(N+1)!),leadingzerosfloorlogs."
+  ],
+  "independentMethod": "Independent 70-digit Decimal product of failure probabilities; factorial logarithms from exact small factorials or rigorously bounded Stirling series, not the reference cumulative logarithms. Scan all N for near-integer log counts and near-half-unit probability rounding.",
+  "oracleFile": "scripts/editorials/oracles/urn.py",
+  "mutations": [
+    {
+      "id": "last-pick-only",
+      "label": "Reports only the final pickup probability",
+      "languageKey": "cpp17",
+      "find": "target==0?0:-expm1(logSurvival)",
+      "replace": "target==0?0:1/((double)target*(target+1))"
+    },
+    {
+      "id": "one-factorial",
+      "label": "Omits the second factorial from the all-red probability",
+      "languageKey": "cpp17",
+      "find": "2*logFactorial+log10((double)target+1)",
+      "replace": "logFactorial"
+    },
+    {
+      "id": "legal-probability-sign",
+      "label": "Explicit positive sign preserves the probability value",
+      "languageKey": "cpp17",
+      "find": "<<probability",
+      "replace": "<<showpos<<probability<<noshowpos",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Verify the uniquely rounded six-decimal probability and exact zero count while accepting equivalent numeric signs."
+  },
+  "statementCorrection": {
+    "beforeHash": "7d8d07500c295b2ecc8076cf76e8188851f319da3fc735b1b98c6e1a562a1bb8",
+    "file": "content/editorials/gpe-10675-urn-ball-probabilities/statement.md",
+    "reason": "Explicit user-authorized measured per-file query bound retains the full original N<1000000 range; specify six printed probability decimals and the empty sequence convention N=0. Validate1000 queries including999999 using the real judge before publication.",
+    "source": "https://onlinejudge.org/external/101/10169.pdf"
+  }
+}

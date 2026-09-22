@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/100/10050.pdf"
+  ],
+  "constraints": [
+    "7<=N<=3650;1<=P<=100;h>0 and h%7!=0;day1Sunday;Friday/Saturday excluded; union of strike dates."
+  ],
+  "independentMethod": "For each day independently check divisibility against every party and calendar position, without periodic marking.",
+  "oracleFile": "scripts/editorials/oracles/arithmetic.py",
+  "mutations": [
+    {
+      "id": "weekend",
+      "label": "Excludes the wrong weekend days",
+      "languageKey": "cpp17",
+      "find": "day % 7 != 6 && day % 7 != 0",
+      "replace": "day % 7 != 0 && day % 7 != 1"
+    },
+    {
+      "id": "miss-last-day",
+      "label": "Omits the final simulated day",
+      "languageKey": "cpp17",
+      "find": "day <= days; ++day",
+      "replace": "day < days; ++day"
+    }
+  ]
+}

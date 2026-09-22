@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12428-enemy-at-the-gates",
+  "title": "把多餘邊集中到最小核心，留下最多橋",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

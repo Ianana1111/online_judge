@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10235.pdf"
+  ],
+  "constraints": [
+    "1<N<1000000;EOF;emirp requires original prime, reversed prime and reversed!=original."
+  ],
+  "independentMethod": "Bytearray Eratosthenes sieve for all values, with decimal-string reversal independent of trial division/digit arithmetic.",
+  "oracleFile": "scripts/editorials/oracles/counting.py",
+  "mutations": [
+    {
+      "id": "palindrome",
+      "label": "Classifies palindromic primes as emirps",
+      "languageKey": "cpp17",
+      "find": "reversed != n && isPrime(reversed)",
+      "replace": "isPrime(reversed)"
+    },
+    {
+      "id": "original-not-prime",
+      "label": "Skips checking original primality",
+      "languageKey": "cpp17",
+      "find": "if (!isPrime(n))",
+      "replace": "if (false)"
+    }
+  ]
+}

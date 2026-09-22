@@ -1,0 +1,8 @@
+{
+  "slug": "gpe-11184-opening-doors",
+  "title": "開啟的門恰為平方數，用整數牛頓法找最後一扇",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

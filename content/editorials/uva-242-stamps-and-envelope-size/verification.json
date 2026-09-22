@@ -1,0 +1,32 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/2/242.pdf"
+  ],
+  "constraints": [
+    "S1..10;N1..10;strictly ascending positive denominations<=100;numberofdenominations<=S;unlimitedcopies,maxSstamps;tiecoverage thenfewestk thenreverselex;LOCALwidth4coverage,width3denoms."
+  ],
+  "independentMethod": "Independent integer bitset reachability adds one stamp layer at a time; first missing positive amount defines coverage. Enumerated coin multisets validate every small denomination set and explicit tie reversals.",
+  "oracleFile": "scripts/editorials/oracles/order_tracking.py",
+  "mutations": [
+    {
+      "id": "forward-ties",
+      "label": "Compares smallest denominations before the largest",
+      "languageKey": "cpp17",
+      "find": "lexicographical_compare(candidate.rbegin(),candidate.rend(),best.rbegin(),best.rend())",
+      "replace": "lexicographical_compare(candidate.begin(),candidate.end(),best.begin(),best.end())"
+    },
+    {
+      "id": "maximum-not-prefix",
+      "label": "Returns greatest reachable amount instead of first-gap coverage",
+      "languageKey": "cpp17",
+      "find": "if(dp[amount]>limit)return amount-1;",
+      "replace": "if(amount==maximum)return maximum;"
+    }
+  ],
+  "statementCorrection": {
+    "beforeHash": "b24e1277b70f0a6574d37b7548cbb9dd27c704dfd9e1ab749c531938db9102ea",
+    "file": "content/editorials/uva-242-stamps-and-envelope-size/statement.md",
+    "reason": "Explicit LOCAL output widths resolve the public PDF layout versus existing hidden corpus: coverage width4 and each denomination width3. No change to the mathematical answer or tie rules; public sample normalized by token-preserving guarded correction.",
+    "source": "https://onlinejudge.org/external/2/242.pdf"
+  }
+}

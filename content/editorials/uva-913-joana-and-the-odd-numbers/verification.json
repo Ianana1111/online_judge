@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/9/913.pdf"
+  ],
+  "constraints": [
+    "Odd1<N<1e9;EOF;last three sum<2^63;row=(N+1)/2."
+  ],
+  "independentMethod": "Use count before the row ((N-1)/2)^2 and arithmetic sequence position of final three, independent of final-index formula; explicitly generate all small rows for validation.",
+  "oracleFile": "scripts/editorials/oracles/common_completion.py",
+  "mutations": [
+    {
+      "id": "wrong-row",
+      "label": "Treats row length as row number",
+      "languageKey": "cpp17",
+      "find": "(n + 1) / 2",
+      "replace": "n"
+    },
+    {
+      "id": "consecutive-integers",
+      "label": "Uses difference one instead of two",
+      "languageKey": "cpp17",
+      "find": "3 * last - 6",
+      "replace": "3 * last - 3"
+    }
+  ]
+}

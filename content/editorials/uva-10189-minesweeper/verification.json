@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10189.pdf"
+  ],
+  "constraints": [
+    "1 <= rows,cols <= 100; 0 0 terminator; eight neighbours; blank line between fields"
+  ],
+  "independentMethod": "Scatter each mine into the neighbouring count cells; C++ gathers neighbours from each safe cell.",
+  "oracleFile": "scripts/editorials/oracles/foundations.py",
+  "mutations": [
+    {
+      "id": "no-diagonals",
+      "label": "Ignores diagonal neighbours",
+      "languageKey": "cpp17",
+      "find": "if (dr == 0 && dc == 0) continue;",
+      "replace": "if (dr == dc || dr == -dc) continue;"
+    },
+    {
+      "id": "zero-boundary",
+      "label": "Excludes row and column zero",
+      "languageKey": "cpp17",
+      "find": "nr >= 0 && nr < rows && nc >= 0",
+      "replace": "nr > 0 && nr < rows && nc > 0"
+    }
+  ]
+}

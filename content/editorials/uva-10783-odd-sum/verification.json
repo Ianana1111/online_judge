@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/107/10783.pdf"
+  ],
+  "constraints": [
+    "1<=T<=100;0<=a<=b<=100;inclusive odd sum;Case numbering."
+  ],
+  "independentMethod": "Enumerate every integer in the interval and sum those with odd parity, independent of squared-prefix formula.",
+  "oracleFile": "scripts/editorials/oracles/counting.py",
+  "mutations": [
+    {
+      "id": "exclude-left",
+      "label": "Subtracts inclusive prefix at a",
+      "languageKey": "cpp17",
+      "find": "prefix(a - 1)",
+      "replace": "prefix(a)"
+    },
+    {
+      "id": "exclude-right",
+      "label": "Omits the upper endpoint",
+      "languageKey": "cpp17",
+      "find": "prefix(b)",
+      "replace": "prefix(b - 1)"
+    }
+  ]
+}

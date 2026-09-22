@@ -1,0 +1,33 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/131/13157.pdf"
+  ],
+  "constraints": [
+    "1<=T<=2000;1<=N,M<=100000;identicalcoins;unlimitedpercell;ALLoccupiedpairsprimedistance;mod1e9+7;actualsourceUVA13157notclassicsegmented-prime-gap."
+  ],
+  "independentMethod": "Enumerate normalized prime-distance support shapes and check every pair distance directly; count legal translations of each shape and multiply exact Python binomial allocations. Exhaustive weak compositions validate small complete grids independently.",
+  "oracleFile": "scripts/editorials/oracles/primecoins.py",
+  "mutations": [
+    {
+      "id": "drop-four-cells",
+      "label": "Omits valid four-cell supports",
+      "languageKey": "cpp17",
+      "find": "max(0LL, n - 7)",
+      "replace": "0"
+    },
+    {
+      "id": "one-triangle-orientation",
+      "label": "Omits reflected three-cell supports",
+      "languageKey": "cpp17",
+      "find": "2 * (n * twinCount[n - 1] - twinSum[n - 1])",
+      "replace": "(n * twinCount[n - 1] - twinSum[n - 1])"
+    },
+    {
+      "id": "zero-allowed-allocation",
+      "label": "Uses wrong stars-and-bars parameters",
+      "languageKey": "cpp17",
+      "find": "chooseSmall(m - 1, size - 1)",
+      "replace": "chooseSmall(m + size - 1, size - 1)"
+    }
+  ]
+}

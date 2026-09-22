@@ -1,0 +1,8 @@
+{
+  "slug": "uva-340-master-mind-hints",
+  "title": "先計同位命中，再用各數字總數求剩餘配對",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

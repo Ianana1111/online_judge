@@ -1,0 +1,39 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/102/10209.pdf"
+  ],
+  "constraints": [
+    "0<=a<=10000;finite real side lengths;EOF;stripe/dotted/rest totalareas;three decimals;zeroisvalidnotterminator."
+  ],
+  "independentMethod": "Independent high-precision Decimal sector/triangle areas solve a three-equation coverage system, crosschecked by numerical vertical slicing on unit square; all input rows retained.",
+  "oracleFile": "scripts/editorials/oracles/circular_geometry.py",
+  "mutations": [
+    {
+      "id": "length-not-area",
+      "label": "Scales by side length rather than its square",
+      "languageKey": "cpp17",
+      "find": "long double square=a*a;",
+      "replace": "long double square=a;"
+    },
+    {
+      "id": "swapped-patterns",
+      "label": "Exchanges dotted and corner regions",
+      "languageKey": "cpp17",
+      "find": "<<dotted<<' '<<rest",
+      "replace": "<<rest<<' '<<dotted"
+    },
+    {
+      "id": "legal-leading-sign",
+      "label": "Explicit sign on the first decimal is an equivalent value",
+      "languageKey": "cpp17",
+      "find": "<<striped",
+      "replace": "<<showpos<<striped<<noshowpos",
+      "expectation": "AC"
+    }
+  ],
+  "checkerChange": {
+    "from": "IGNORE_TRAILING_WS",
+    "to": "SPECIAL",
+    "reason": "Retain exact independently rounded decimal values and output layout, while accepting numeric signs and signed zero without accepting a wrong last digit."
+  }
+}

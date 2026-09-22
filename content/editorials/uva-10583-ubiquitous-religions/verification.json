@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/105/10583.pdf"
+  ],
+  "constraints": [
+    "1<=n<=50000;0<=m<=n(n-1)/2;same-religion pairs;maximum distinct=components;00 sentinel."
+  ],
+  "independentMethod": "Explicit undirected adjacency graph and flood-fill component counting, independent of DSU. Random small transitive-closure checks and maximum-n isolated/chain cases.",
+  "oracleFile": "scripts/editorials/oracles/partitions_graph.py",
+  "mutations": [
+    {
+      "id": "subtract-every-edge",
+      "label": "Counts redundant relations as new merges",
+      "languageKey": "cpp17",
+      "find": "if (dsu.join(a,b)) --groups;",
+      "replace": "dsu.join(a,b); --groups;"
+    },
+    {
+      "id": "omit-isolated",
+      "label": "Starts with number of relations instead of students",
+      "languageKey": "cpp17",
+      "find": "int groups = n;",
+      "replace": "int groups = m;"
+    }
+  ]
+}

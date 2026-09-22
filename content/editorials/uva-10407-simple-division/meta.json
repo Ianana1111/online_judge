@@ -1,0 +1,8 @@
+{
+  "slug": "uva-10407-simple-division",
+  "title": "同餘等價於差值整除，最大解是所有差值的 gcd",
+  "locale": "zh-TW",
+  "languages": [
+    "python3"
+  ]
+}

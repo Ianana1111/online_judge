@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/103/10309.pdf"
+  ],
+  "constraints": [
+    "fixed10x10;O on/#off;cross-neighbor toggles;minimum presses;each switch at mostonce sufficient;name/end format."
+  ],
+  "independentMethod": "Independent100-variable GF(2) Gaussian elimination with row-operation transforms and affine-nullspace weight minimization; smaller grids checked against every press subset. The10x10 matrix has full rank100, and generated cases include the unique100-press board.",
+  "oracleFile": "scripts/editorials/oracles/state_spaces.py",
+  "mutations": [
+    {
+      "id": "first-row-never-pressed",
+      "label": "Only tries empty first-row choice",
+      "languageKey": "cpp17",
+      "find": "first < 1024",
+      "replace": "first < 1"
+    },
+    {
+      "id": "misses-first-row-cost",
+      "label": "Omits first-row presses from total",
+      "languageKey": "cpp17",
+      "find": "count += __builtin_popcount((unsigned)press);",
+      "replace": "if (row > 0) count += __builtin_popcount((unsigned)press);"
+    }
+  ]
+}

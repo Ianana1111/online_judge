@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/1/165.pdf"
+  ],
+  "constraints": [
+    "PositiveH,K;H+K<=9;at mostH stamps;K distinctpositive denominations;maximize gap-free coverage from1;00sentinel;LOCALexisting output only maximumcoverage, not denominations."
+  ],
+  "independentMethod": "Independent exhaustive ascending-denomination search without pruning; each candidate uses exact-coin-count reachable-sum bitsets rather than minimum-coin DP. All36legal parameter pairs verified, plus brute coin-multiset enumeration on small searches.",
+  "oracleFile": "scripts/editorials/oracles/stamp_search.py",
+  "mutations": [
+    {
+      "id": "maximum-not-prefix",
+      "label": "Uses greatest possible postage rather than first-gap coverage",
+      "languageKey": "cpp17",
+      "find": "while(range+1<(int)next.size()&&next[range+1]<=h)++range;",
+      "replace": "range=h*denomination;"
+    },
+    {
+      "id": "strict-stamp-limit",
+      "label": "Rejects newly reached values needing exactly H stamps",
+      "languageKey": "cpp17",
+      "find": "next[range+1]<=h",
+      "replace": "next[range+1]<h"
+    }
+  ]
+}

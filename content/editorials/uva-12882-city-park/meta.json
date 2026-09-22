@@ -1,0 +1,8 @@
+{
+  "slug": "uva-12882-city-park",
+  "title": "依邊界所在直線合併接觸區間，再累計連通面積",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17"
+  ]
+}

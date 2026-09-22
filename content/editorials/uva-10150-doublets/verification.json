@@ -1,0 +1,34 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/101/10150.pdf"
+  ],
+  "constraints": [
+    "<=25143dictionarylowerwords1..16letters;blankdictionaryterminator;querypairsEOF;verticesdictionarywords;adjacentexactlyonepositiondifferent/equallength;ANYshortestchain;identitypresentwordvalid;missingendpointNo solution.;blankqueries."
+  ],
+  "independentMethod": "Independent bidirectional BFS using explicit26-letter substitutions and dictionary membership, with full pairwise Hamming-distance graph checks on small alphabets. Exact maximum-size16-letter dictionary measures memory and traversal.",
+  "oracleFile": "scripts/editorials/oracles/lexical_witnesses.py",
+  "mutations": [
+    {
+      "id": "dfs-not-shortest",
+      "label": "Uses depth-first exploration instead of shortest BFS",
+      "languageKey": "cpp17",
+      "find": "int u=queue.front();queue.pop_front();",
+      "replace": "int u=queue.back();queue.pop_back();"
+    },
+    {
+      "id": "only-one-wildcard",
+      "label": "Uses just one changeable letter position",
+      "languageKey": "cpp17",
+      "find": "for(int bucket:buckets[u])",
+      "replace": "for(int bucket:vector<int>{buckets[u].front()})"
+    },
+    {
+      "id": "legal-alternate-output",
+      "label": "Another permitted ordering, spacing or shortest path",
+      "languageKey": "cpp17",
+      "find": "for(int at=bucket;at<ending[bucket];++at)",
+      "replace": "for(int at=ending[bucket]-1;at>=bucket;--at)",
+      "expectation": "AC"
+    }
+  ]
+}

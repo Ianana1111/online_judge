@@ -1,0 +1,26 @@
+{
+  "sources": [
+    "https://onlinejudge.org/external/106/10672.pdf"
+  ],
+  "constraints": [
+    "1<=n<=10000;rooted tree arbitrary root and row order;nonnegative marbles sum n;one marble across adjacent edge per move;0 sentinel."
+  ],
+  "independentMethod": "Undirected leaf elimination transfers signed deficits across cuts, independent of rooted postorder; exhaustive configuration-space BFS proves minimum moves for all distributions on small chains.",
+  "oracleFile": "scripts/editorials/oracles/reachability.py",
+  "mutations": [
+    {
+      "id": "signed-cost",
+      "label": "Adds signed balance instead of crossing count",
+      "languageKey": "cpp17",
+      "find": "moves += llabs(balance[v])",
+      "replace": "moves += balance[v]"
+    },
+    {
+      "id": "loses-flow-direction",
+      "label": "Passes absolute flow to the parent",
+      "languageKey": "cpp17",
+      "find": "balance[parent[v]] += balance[v]",
+      "replace": "balance[parent[v]] += abs(balance[v])"
+    }
+  ]
+}
