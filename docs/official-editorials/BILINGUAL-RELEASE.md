@@ -4,9 +4,9 @@
 
 此工作接續 `485f6f6`；上一版 430 題中文草稿及程式已通過雙環境驗證，但不是本次雙語發布完成的證明。
 
-## 2026-09-23 雙語工作檢查點
+## 2026-09-23 雙語內容完成
 
-新的離線發布門檻已檢查 430 題：430 題全部完成中英文教學改寫、逐題審查及既有執行證據重新核對，待審題數為零。本次尚未進行正式資料庫發布或部署；內容完成不代表正式站已上架。
+新的離線發布門檻已檢查 430 題：430 題全部完成中英文教學改寫、逐題審查及既有執行證據重新核對，待審題數為零。正式資料庫發布、應用程式部署與正式站驗收結果記錄於下方。
 
 完整狀態與所用證據路徑保存在私人 `generated/editorial-bilingual-20260922/release.json`。430 題參考程式都與已執行的原始版本逐位元相同，沒有把翻譯日期冒充新的 Sandbox 執行日期。`pnpm check:editorials` 回報 430 份草稿、430 份雙語內容、430 份解答、902 個錯解變體且零失敗；`verify-release.ts` 回報 ready 430、pending 0。
 
@@ -36,10 +36,18 @@ API 在讀取詳解內容前，查詢資料庫中的實際帳號權益。有效�
 
 `verify-release.ts --content-revisions=<private directory>` 驗收新的雙語發布版本。`publish.ts` 必須看到中英文齊備，並驗證當前原始碼或合法的文章修訂證據，才可以發布。
 
-## 待完成
+## 正式發布與驗收
 
-- 重跑 Pro、到期、退款、語言切換、快取、實際 HTTP 與瀏覽器回歸測試。
-- 正式備份，確認 migration 與程式部署順序，再按 oracle 家族逐批預覽、發布全部題目。
-- 驗收正式網站 Pro 與免費權限、430 題雙語回應、Run／Submit；更新實際部署及發布紀錄。
+發布前以 PostgreSQL 18 建立正式資料庫備份 `/private/tmp/oj-editorials-prod-backup-20260923/before.dump`，檔案大小 27,629,186 bytes，SHA-256 為 `0d18a85ecf203009e79a905e0a4f56245b453cafc1e3ce6f6e385014ee992f42`；目錄權限為 `0700`、檔案權限為 `0600`，且已通過 `pg_restore --list`。工作目錄另存內容封存 `generated/backups/official-editorials-20260921/worktree-drafts-bilingual-430-final.tar.gz`，含 1,310 個檔案，SHA-256 為 `e4e331903e08c74c7ff0bb80e652f5e9b23de87c2594302c4c2f74ff2f875636`。
 
-使用者已授權本次完整上架，不需要再詢問是否可以發布。現有 Vercel 驗證資料傳送與費用授權仍有效。新內容發布前，必須先部署 Pro 權限。
+內容與程式 commit `3554dcb1b1b158192b63a170ec49b2c14c7f278a` 已推送到 `origin/main`。GitHub Actions Launch readiness run `35757340152` 全部成功，包含 236 項 Vitest、17 項詳解資料庫整合、33 項金流／退款整合、TypeScript、ESLint、API 與 Web build、實際 API runtime HTTP 測試，以及完整跨瀏覽器 Playwright 回歸。
+
+正式應用程式部署完成：Railway API deployment `b1eb06d0-adbd-431b-942b-348d86605699`、Judge deployment `ee87d271-7a5e-465a-8ca7-8805d2b1386f` 均為 `SUCCESS`；Vercel deployment `dpl_Bke95xrseA2kmvcMwrQhqMaBu8AF` 為 `READY`，且 `judge.tw` 已指向該版本。
+
+430 題依 81 個 oracle 群組逐批預覽並發布；三次暫時性批次錯誤均先重新預覽、確認完整後才重新套用，沒有留下半批寫入。正式資料庫發布後核對結果為：430 題、430 個唯一 slug、430 個目前發布版本、430 題中英文齊備，內容雜湊全數相符，Judge 版本全數仍為目前版本。
+
+正式 API 已驗收匿名、Free、有效 Pro、英文、到期權限與私人快取；匿名與 Free 不會收到文章或程式碼，有效 Pro 可取得中英文內容與相同的已驗證程式，到期後立即阻擋，回應使用 `Cache-Control: private, no-store` 並依 Cookie 分流。
+
+最後以全新臨時帳號在 `https://judge.tw/problems/uva-100-the-3n-1-problem` 實際驗收。匿名瀏覽器只顯示登入入口且 DOM 沒有程式碼；升級為 Pro 後，中英文標題、文章與參考程式均正確顯示，程式和已驗證來源逐字一致，桌面寬度沒有水平溢位。相同 C++17 程式經正式 Run 對輸入 `1 10` 輸出 `1 10 20` 且狀態為 `DONE`，再經正式 Submit 得到 `AC`。驗收帳號及其關聯資料已由具身分比對的清理程序刪除並確認不存在。
+
+本次 430 題雙語官方詳解、Pro 權限、正式發布與 Judge 端到端驗收已全部完成。
