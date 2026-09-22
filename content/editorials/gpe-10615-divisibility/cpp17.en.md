@@ -1,0 +1,5 @@
+Digit vectors are stored least significant first, padded to a common length, then processed backward. Each coordinate uses two bits in `code`: bit one means still equal to the lower prefix, and bit two means still equal to the upper prefix. `initial = states - 1` sets both flags for every coordinate.
+
+At a new column, `current[code * width] = dp[code]` starts its digit sum at zero. `transfer(lo, hi, nextFlag)` updates only one coordinate's flag pair and slides a sum window across the P possible partial sums. Adding the new left-bound contribution and removing the expired right-bound contribution implements the inclusive digit range without enumerating each digit separately.
+
+The four flag cases describe unrestricted, lower-tight, upper-tight, and both-tight prefixes. Strictly interior digits release both bounds; choosing an endpoint retains the corresponding flag. `active` lists avoid scanning every mask for transitions, although buffer clearing still visits the full allocation. After a column, summing across its partial sums restores the flag-only `dp`. Modular additions and subtractions normalize each intermediate count.

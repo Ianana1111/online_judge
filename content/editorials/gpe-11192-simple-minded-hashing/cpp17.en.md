@@ -1,0 +1,3 @@
+The first table index is the number of selected letters and the second is their total value. The single base state `[0][0]` represents the empty subset, allowing one-letter choices to arise naturally. For each value, the length loop runs from 26 down to one, so it never reads a row already updated with the same letter.
+
+Each query checks the true feasible bounds before indexing the compact table. The conditional operator evaluates only the selected branch, so oversized `L` or `S` values cannot access invalid memory. Case numbering advances only for an actual query; the joint zero pair terminates without output.

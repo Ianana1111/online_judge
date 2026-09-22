@@ -1,0 +1,3 @@
+`calculate` handles the three operations that do not need a divisor first. For division and remainder it rejects zero, divides absolute values, then restores the quotient sign. Remainder is derived from `a - quotient*b`, avoiding Python's floor-division convention for negative numbers.
+
+`evaluate` scans `reversed(line.split())`. Before consuming an operator it verifies that two complete values exist, and after the scan it requires exactly one. The literal check accepts only digit tokens whose numeric value is positive. The main loop removes line endings, recognizes the single-period sentinel before parsing, and prints one result per dataset.

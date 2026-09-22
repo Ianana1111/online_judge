@@ -1,0 +1,3 @@
+Each `Request` stores the start and duration, and the active test directly uses `start <= time <= start + duration`. Since one source has no overlapping intervals, the first matching request is the unique successor and the scan may stop.
+
+The `seen` array is cleared for every call. The loop checks for a repeat, marks the current extension, then searches for its successor; `next = -1` represents no rule and cannot collide with a legal extension. `setw(4)` with fill character zero formats times and extensions, while system numbers stay unpadded. When time 9000 is read, no extension token is consumed.

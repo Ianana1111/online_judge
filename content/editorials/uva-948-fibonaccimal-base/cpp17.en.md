@@ -1,0 +1,3 @@
+The `fib` vector starts with `1, 2`, which are the two lowest distinct weights, and grows until it covers every allowed input. `original` is preserved for the output while `remaining` is reduced by the greedy choices.
+
+The loop visits weights from largest to smallest. When `fib[i] <= remaining`, the code writes `1` and subtracts that weight. Otherwise it writes `0` only after `started` becomes true, which removes leading zeroes without losing any later position. The greedy remainder is automatically too small to select the adjacent lower weight, so the loop does not need to skip an index manually. Every input is positive, so at least one weight is selected and `digits` cannot remain empty.

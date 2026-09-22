@@ -1,4 +1,15 @@
 import { z } from "zod";
+import { officialEditorialSchema } from "./editorial";
+
+export const contentRevisionSchema = z.object({
+  schemaVersion: z.literal(1), previousContent: officialEditorialSchema,
+  review: z.object({
+    slug: z.string(), previousContentHash: z.string().regex(/^[a-f0-9]{64}$/),
+    revisedContentHash: z.string().regex(/^[a-f0-9]{64}$/), reviewedAt: z.string().datetime(),
+    checklist: z.object({chineseTeaching:z.literal(true),englishTeaching:z.literal(true),
+      workedExample:z.literal(true),correctnessAndComplexity:z.literal(true),sourceUnchanged:z.literal(true)}).strict(),
+  }).strict(),
+}).strict();
 
 // Private tooling evidence; never part of the public editorial DTO.
 const rowSchema=z.object({kind:z.enum(["sample","hidden"]),ord:z.number().int(),verdict:z.string()});

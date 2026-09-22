@@ -1,0 +1,3 @@
+`prime` contains one entry for every possible value. The sieve begins crossing out at `p * p` because all smaller composite multiples already have a smaller prime factor. `prefix` remains zero below 100, matching the minimum query boundary.
+
+For each `value`, `power` is the highest decimal place and `length` is the original number of digits. Both stay fixed while `rotated` moves through the cyclic positions. The loop stops as soon as one rotation is composite, and the prefix entry is still updated so a rejected value carries the previous count forward. Query input reads `left` first to recognize the standalone `-1` sentinel before attempting to read `right`. The final subtraction uses `left - 1`, preserving both endpoints.

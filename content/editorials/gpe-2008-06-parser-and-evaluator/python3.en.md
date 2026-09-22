@@ -1,0 +1,3 @@
+`PRIORITY` states the platform-specific order explicitly and keeps unary signs distinct from binary addition and subtraction. The regular expression preserves every unknown non-whitespace character as a token, allowing it to be rejected instead of silently skipped. Number tokens accept only ASCII digits.
+
+`apply` pops the right operand before the left. For division, it computes the absolute quotient and restores the sign to implement truncation toward zero; remainder then uses `a - quotient*b`. The expectation flag remains true after a unary sign because a real operand is still required. Blank input lines remain cases and correctly produce the required syntax error.

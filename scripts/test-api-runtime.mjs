@@ -47,21 +47,34 @@ try {
   // This is synthetic test content, never a published production reference.
   const { tsImport } = createRequire(new URL("../packages/db/package.json", import.meta.url))("tsx/esm/api");
   const { EDITORIAL_JUDGE_REVISION } = await tsImport("../packages/shared/src/editorial.ts", import.meta.url);
+  const { editorialFixture } = await tsImport("../tests/support/editorial-fixture.ts", import.meta.url);
   const editorialProblem = await prisma.problem.create({ data: { slug: `editorial-runtime-${suffix}`, title: "Editorial HTTP fixture", statementMd: "Synthetic echo fixture" } });
   let editorialContest;
   try {
     const path = `/problems/${editorialProblem.slug}/editorial`;
     const pending = await fetch(base + path); assert.equal(pending.status, 200); assert.equal(pending.headers.get("cache-control"), "private, no-store");
-    assert.deepEqual(await pending.json(), { status: "NOT_READY" });
-    const content = { slug: editorialProblem.slug, title: "HTTP 測試詳解", locale: "zh-TW", bodyMd: ["題意與限制", "解題思路", "範例推演", "正確性", "複雜度", "常見錯誤"].map(h => `## ${h}\n\n` + "隔離環境的詳解權限測試，不代表真實題目的評測證據。".repeat(5)).join("\n\n"), solutions: [{ languageKey: "cpp17", sourceCode: "#include <iostream>\nint main(){std::cout << 1;}\n", explanationMd: "此程式只用來驗證 HTTP 詳解回應的結構與權限。".repeat(10) }] };
+    assert.deepEqual(await pending.json(), { status: "AUTH_REQUIRED" });
+    assert.ok(pending.headers.get("vary").toLowerCase().includes("cookie"));
+    assert.deepEqual(await (await request(path)).json(), {status:"PRO_REQUIRED"});
+    await prisma.user.update({where:{id:userId},data:{plan:"PRO",planExpiresAt:new Date(Date.now()+3600_000)}});
+    assert.deepEqual(await (await request(path)).json(), {status:"NOT_READY"});
+    const content = editorialFixture(editorialProblem.slug);
     await prisma.problemEditorial.create({ data: { problemId: editorialProblem.id, revision: 1, content, contentHash: "synthetic", judgeFingerprint: "synthetic", judgeRevision: EDITORIAL_JUDGE_REVISION, verifiedProblemVersion: editorialProblem.judgeDataVersion, verifiedAt: new Date(), publishedAt: new Date(), validationReport: { canary: "private-editorial-evidence" } } });
-    const publicResponse = await fetch(base + path); const publicBody = await publicResponse.json(); assert.equal(publicBody.status, "AVAILABLE"); assert.equal(publicBody.editorial.solutions[0].sourceCode, content.solutions[0].sourceCode);
-    assert.ok(!JSON.stringify(publicBody).includes("private-editorial-evidence"));
+    assert.deepEqual(await (await fetch(base+path)).json(), {status:"AUTH_REQUIRED"});
+    const proResponse = await request(path); const proBody = await proResponse.json(); assert.equal(proBody.status, "AVAILABLE"); assert.equal(proBody.editorial.solutions[0].sourceCode, content.solutions[0].sourceCode);
+    assert.ok(!JSON.stringify(proBody).includes("private-editorial-evidence"));
+    const english=await (await request(path+"?locale=en")).json();assert.equal(english.editorial.locale,"en");assert.equal(english.editorial.bodyMd,content.translations.en.bodyMd.trim());assert.equal(english.editorial.solutions[0].sourceCode,content.solutions[0].sourceCode);assert.ok(!("translations" in english.editorial));
+    assert.equal((await request(path+"?locale=../../en")).status,400);
+    await prisma.user.update({where:{id:userId},data:{planExpiresAt:new Date(Date.now()-1000)}});
+    assert.deepEqual(await (await request(path+"?locale=en")).json(),{status:"PRO_REQUIRED"});
+    await prisma.user.update({where:{id:userId},data:{plan:"FREE",planExpiresAt:null}});
+    assert.deepEqual(await (await request(path)).json(),{status:"PRO_REQUIRED"});
+    await prisma.user.update({where:{id:userId},data:{plan:"PRO",planExpiresAt:new Date(Date.now()+3600_000)}});
     const ordinaryDetail = await (await request(`/problems/${editorialProblem.slug}`)).json(); assert.ok(!("editorials" in ordinaryDetail)); assert.ok(!JSON.stringify(ordinaryDetail).includes(content.solutions[0].sourceCode));
     editorialContest = await prisma.contest.create({ data: { slug: `editorial-runtime-${suffix}`, title: "Editorial access fixture", problems: { create: { problemId: editorialProblem.id, label: "A", ord: 1 } } } });
     const attempt = await prisma.contestParticipant.create({ data: { userId, contestId: editorialContest.id, endsAt: new Date(Date.now() + 60000) } });
     assert.deepEqual(await (await request(path)).json(), { status: "EXAM_LOCKED" });
-    assert.equal((await (await fetch(base + path)).json()).status, "AVAILABLE");
+    assert.equal((await (await fetch(base + path)).json()).status, "AUTH_REQUIRED");
     await prisma.contestParticipant.update({ where: { id: attempt.id }, data: { endsAt: new Date(Date.now() - 1000) } });
     assert.equal((await (await request(path)).json()).status, "AVAILABLE");
     await prisma.problem.update({ where: { id: editorialProblem.id }, data: { statementMd: "Changed synthetic statement" } });
@@ -69,6 +82,7 @@ try {
     await prisma.problem.update({ where: { id: editorialProblem.id }, data: { visibility: false } });
     assert.equal((await fetch(base + path)).status, 404);
   } finally {
+    await prisma.user.update({where:{id:userId},data:{plan:"FREE",planExpiresAt:null}});
     if (editorialContest) await prisma.contest.delete({ where: { id: editorialContest.id } });
     await prisma.problem.delete({ where: { id: editorialProblem.id } });
   }

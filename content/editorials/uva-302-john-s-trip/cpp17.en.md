@@ -1,0 +1,3 @@
+The first endpoint pair is saved before the rest of the block is read, so `start` cannot be changed by later streets. Each street is stored at both endpoints as `(id, neighbor)`. A self-loop therefore creates two adjacency entries and contributes degree two, while the shared `used[id]` flag still allows it to be traversed only once.
+
+After every adjacency list is sorted, `next[u]` remembers how far that vertex has already been scanned. The recursive function skips entries whose street id is used, marks a new street, visits its other endpoint, and appends the id during backtracking. The final reversal restores travel order. Comparing `route.size()` with `edges` catches disconnected leftovers, and both success and failure outputs include the required blank line.

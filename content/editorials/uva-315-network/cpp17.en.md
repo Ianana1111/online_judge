@@ -1,0 +1,3 @@
+The `linked` matrix merges repeated and reverse duplicate edge descriptions into one undirected simple graph. Discovery time zero means unvisited, and the timer starts from one, so a real timestamp is never confused with that marker.
+
+Inside DFS, `children` counts only neighbors first discovered recursively, not the vertex's total degree. A completed child's `low` value is propagated upward, while an already visited non-parent neighbor contributes its `entered` time. A boolean `critical` flag prevents multiple qualifying children from counting the same vertex repeatedly. The root rule is handled only after its loop with `children > 1`; a one-vertex graph therefore correctly contributes zero.

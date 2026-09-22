@@ -1,0 +1,3 @@
+The vector `cars` preserves the whole permutation. The outer index `i` names the left position, and `j` starts at `i + 1`, so every unordered position pair is examined exactly once. `swaps` increases only when the left value is greater than the right value.
+
+The program deliberately does not rearrange the cars: the inversion count already equals the optimal number of adjacent swaps. `swaps` is reset for every case. If `n` is zero, both loops naturally do nothing and the program prints zero without terminating the remaining input. The surrounding output text, including the period, is kept fixed.

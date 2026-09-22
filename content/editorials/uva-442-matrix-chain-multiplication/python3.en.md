@@ -1,0 +1,3 @@
+The stack stores only completed subexpression dimensions, never matrix contents. At `)`, the first pop gives the right matrix as `other_rows, cols`, and the second gives the left matrix as `rows, shared`; `shared == other_rows` is the exact compatibility test.
+
+Each merge adds its own cost to `total`, since all inner costs were added earlier. Even after incompatibility, the parser consumes and collapses the remaining well-formed syntax while `valid` stays false. Every expression starts with a fresh stack, total, and flag. Blank lines are ignored as input tolerance rather than treated as empty valid expressions.

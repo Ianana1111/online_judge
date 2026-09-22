@@ -1,0 +1,3 @@
+`intern` first looks for an equal `set<int>` and reuses its ID; only genuinely new content is appended to `values`. Every member is an already established canonical ID, so the construction remains finite and well defined.
+
+For a binary operation, `a` is popped first and `b` second. `ADD` copies `values[b]` and inserts the single ID `a`, preserving nesting. Union and intersection build fresh ordered sets through the standard algorithms. Existing canonical values are never changed, so `DUP` safely shares an ID. Each test case creates a new registry and stack, and the program still prints `***` when its operation count is zero.

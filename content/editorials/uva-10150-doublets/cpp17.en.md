@@ -1,0 +1,3 @@
+Powers of 27 give each character position an exact digit. Removing one digit, multiplying by 32, and appending length creates a collision-free wildcard key for up to sixteen letters. Sorted equal-key runs are recorded once, and each word stores the runs it belongs to.
+
+`seen` uses the query number instead of clearing every bucket flag. BFS pops from the deque front, assigns a predecessor only on first visit, and uses the start as its own reconstruction sentinel. Duplicate dictionary lines are removed because identical spelling is one vertex; missing or unequal-length endpoints fail before search.

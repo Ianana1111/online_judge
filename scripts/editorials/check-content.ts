@@ -6,12 +6,14 @@ import { loadEditorial, loadVerification } from "./evidence";
 async function main() {
   const root = process.cwd();
   const directories = await readdir(resolve(root, "content/editorials"), { withFileTypes: true });
-  let drafts = 0, solutions = 0, mutations = 0;
+  let drafts = 0, solutions = 0, mutations = 0, bilingual = 0;
   const failures: { slug: string; reason: string }[] = [];
   for (const directory of directories.filter(d => d.isDirectory()).sort((a, b) => a.name.localeCompare(b.name))) {
     try {
       const editorial = await loadEditorial(root, directory.name);
       if (!editorial) throw new Error("Missing metadata");
+      if (editorial.translations?.en) bilingual++;
+      else if (process.argv.includes("--require-bilingual")) throw new Error("English teaching explanation is not complete");
       const verification = await loadVerification(root, directory.name);
       const ids = new Set<string>();
       for (const mutation of verification.review.mutations) {
@@ -33,7 +35,7 @@ async function main() {
       failures.push({ slug: directory.name, reason: error instanceof Error ? error.message : "Invalid content" });
     }
   }
-  console.log(JSON.stringify({ scope: "Content structure only; no execution evidence", drafts, solutions, mutations, failures }, null, 2));
+  console.log(JSON.stringify({ scope: "Content structure only; no execution evidence", drafts, bilingual, solutions, mutations, failures }, null, 2));
   if (failures.length) process.exitCode = 1;
 }
 

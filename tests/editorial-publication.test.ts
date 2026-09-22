@@ -3,6 +3,7 @@ import { validatePublication } from "../scripts/editorials/publication";
 import { editorialHash, judgeFingerprint, oracleSpec, sha256, type AuditProblem } from "../scripts/editorials/evidence";
 import { EDITORIAL_JUDGE_REVISION } from "../packages/shared/src/editorial";
 import { editorialFixture } from "./support/editorial-fixture";
+import { validateContentRevision } from "../scripts/editorials/content-revision";
 
 /** Deliberately synthetic unit fixtures. They never leave this test or enter a database. */
 function fixture(){
@@ -20,6 +21,32 @@ function fixture(){
 }
 
 describe("official editorial publication gate",()=>{
+  function revisionFixture() {
+    const f=fixture(), previousContent=structuredClone(f.content);
+    f.content.bodyMd += "\n\n先從一個輸入開始，確認輸出必須保留這個值，再把相同步驟放進讀取迴圈。";
+    f.content.translations.en.bodyMd += "\n\nStart with one input value, preserve it in the output, then repeat that operation until input ends.";
+    const revision={schemaVersion:1,previousContent,review:{slug:f.problem.slug,previousContentHash:editorialHash(previousContent),revisedContentHash:editorialHash(f.content),reviewedAt:"2026-09-22T00:00:00Z",checklist:{chineseTeaching:true,englishTeaching:true,workedExample:true,correctnessAndComplexity:true,sourceUnchanged:true}}};
+    return {...f,revision};
+  }
+  it("keeps historical execution evidence intact while binding a bilingual prose revision to identical source",()=>{
+    const f=revisionFixture(), original=JSON.stringify(f.files);
+    expect(()=>validatePublication(f.problem,f.content,f.verification,f.files,f.snapshot)).toThrow();
+    const proof=validateContentRevision(f.problem,f.content,f.verification,f.files,f.snapshot,f.revision);
+    expect(proof.contentHash).toBe(editorialHash(f.content));
+    expect(proof.contentRevision.previousContentHash).toBe(editorialHash(f.revision.previousContent));
+    expect(JSON.stringify(f.files)).toBe(original);
+  });
+  it.each(["source","unreviewed-prose","invented-history","missing-english","missing-case","bad-run","changed-plan"])("does not waive %s verification for translations",kind=>{
+    const f=revisionFixture();
+    if(kind==="source"){f.content.solutions[0].sourceCode+="// changed\n";f.revision.review.revisedContentHash=editorialHash(f.content);}
+    if(kind==="unreviewed-prose")f.content.translations.en.bodyMd+="Extra unreviewed explanation.";
+    if(kind==="invented-history"){f.revision.previousContent.bodyMd+="Unverified previous text.";f.revision.review.previousContentHash=editorialHash(f.revision.previousContent);}
+    if(kind==="missing-english")Object.assign(f.content,{translations:undefined});
+    if(kind==="missing-case")f.files.vercel.reports[0].rows.pop();
+    if(kind==="bad-run")f.files.runVercel.reports[0].run.cases[0].verdict="WA";
+    if(kind==="changed-plan")f.verification.verificationHash="changed";
+    expect(()=>validateContentRevision(f.problem,f.content,f.verification,f.files,f.snapshot,f.revision)).toThrow();
+  });
   it("accepts complete cross-toolchain evidence and retains only compact private fingerprints",()=>{
     const f=fixture(),proof=validatePublication(f.problem,f.content,f.verification,f.files,f.snapshot);
     expect(proof.counts).toEqual({samples:1,hidden:2,solutions:1,mutations:2});

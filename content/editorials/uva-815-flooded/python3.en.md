@@ -1,0 +1,3 @@
+`remaining` is water not yet spent on complete elevation layers; `level` is the last reached terrain height and `count` the active prefix size. Equal next elevations require zero volume and join directly. The loop stops only when required volume is strictly greater than remaining, so exact equality reaches the next layer.
+
+`numerator/denominator` stores the final level exactly. `submerged` uses integer cross multiplication rather than `count` or formatted text. Percentage is another rational value. `fixed_ratio` handles negative levels and prints two decimals, and every region emits the required three lines plus a blank line.

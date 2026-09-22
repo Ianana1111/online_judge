@@ -1,0 +1,3 @@
+An empty `Node::value` means unassigned; legal values are positive, so the state is unambiguous. Child creation records integer indices and does not retain references across `vector::push_back`, which may reallocate storage.
+
+At `()`, BFS both validates every created node and gathers the level order. Once `valid` becomes false because of a duplicate or missing value, it remains false through that tree. The code then restores a single empty root for the next tree. Parsing permits an empty root path, and removing leading zeroes preserves arbitrarily long positive values without relying on a fixed integer width.
