@@ -11,7 +11,6 @@ import SubmissionHistory from "@/components/SubmissionHistory";
 import DiscussionPanel from "@/components/DiscussionPanel";
 import ProblemStatsPanel from "@/components/ProblemStatsPanel";
 import ProblemNotePanel from "@/components/ProblemNotePanel";
-import InfoTooltip from "@/components/InfoTooltip";
 import CopyButton from "@/components/CopyButton";
 import LockIcon from "@/components/LockIcon";
 import VerdictBadge from "@/components/VerdictBadge";
@@ -25,9 +24,6 @@ import { useT } from "@/lib/i18n/LocaleContext";
 import { useIsDesktop } from "@/lib/useIsDesktop";
 
 const OfficialEditorialPanel = dynamic(() => import("@/components/OfficialEditorialPanel"));
-
-const DIFFICULTY_EXPLANATION =
-  "Estimated from official ratings where available, otherwise from worldwide solve statistics — for reference only.";
 
 type TabKey = "statement" | "history" | "editorial" | "discussion" | "stats" | "notes" | "result";
 const TAB_ORDER: TabKey[] = ["statement", "history", "editorial", "discussion", "stats", "notes"];
@@ -144,10 +140,7 @@ export default function ProblemView({
           )}
         </h1>
         {!hideDifficulty && (
-          <span className="flex items-center gap-1.5 font-mono text-base text-brand">
-            {"★".repeat(problem.difficulty)}
-            <InfoTooltip text={t(DIFFICULTY_EXPLANATION)} />
-          </span>
+          <span className="font-mono text-base text-brand">{"★".repeat(problem.difficulty)}</span>
         )}
       </div>
       <div
