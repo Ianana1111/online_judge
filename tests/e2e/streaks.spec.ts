@@ -1,4 +1,27 @@
 import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
+test("leaderboard highlights the top three in second-first-third podium order", async ({ page }, info) => {
+  const board = [
+    { handle: "gold", avatarUrl: null, school: null, solved: 30, streak: 6, avgTimeMs: 10, avgMemoryKb: 1024, totalSubmissions: 40, rank: 1 },
+    { handle: "silver", avatarUrl: null, school: null, solved: 20, streak: 4, avgTimeMs: 20, avgMemoryKb: 2048, totalSubmissions: 30, rank: 2 },
+    { handle: "bronze", avatarUrl: null, school: null, solved: 10, streak: 2, avgTimeMs: 30, avgMemoryKb: 3072, totalSubmissions: 20, rank: 3 },
+  ];
+  await page.route("http://127.0.0.1:55440/**", (route) => {
+    const path = new URL(route.request().url()).pathname;
+    if (path === "/auth/me" || path === "/auth/refresh") return route.fulfill({ status: 401, json: {} });
+    if (path === "/leaderboard") return route.fulfill({ json: board });
+    return route.fulfill({ json: path === "/notifications" ? { items: [], unreadCount: 0 } : {} });
+  });
+  await page.goto("/leaderboard");
+  const podium = page.getByRole("region", { name: "排行榜前三名" });
+  await expect(podium).toBeVisible();
+  await expect(podium.getByRole("link")).toHaveText([/silver/, /gold/, /bronze/]);
+  await expect(podium.getByText("30 題", { exact: true })).toBeVisible();
+  expect((await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()).violations).toEqual([]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: info.outputPath("leaderboard-podium.png"), fullPage: true });
+});
 
 for (const theme of ["light", "dark"]) test(`dashboard and rankings show AC streaks without protection controls (${theme})`, async ({ page }, info) => {
   const user = { id: "c000000000000000000000000", handle: "streak_learner", email: "learner@example.test", role: "USER", isStudent: false,
