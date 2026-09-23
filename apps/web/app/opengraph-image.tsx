@@ -45,7 +45,7 @@ export default function OpengraphImage() {
           <div style={{ display: "flex", fontSize: 96, fontWeight: 700, color: "#f5f2ea" }}>judge.</div>
         </div>
         <div style={{ display: "flex", marginTop: 28, fontSize: 32, color: "#9ba3af" }}>
-          CPE / UVa 練習與虛擬模擬考平台
+          CPE / GPE 練習與虛擬模擬考平台
         </div>
       </div>
     ),

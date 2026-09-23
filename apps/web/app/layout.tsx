@@ -51,7 +51,7 @@ const statement = localFont({
   variable: "--font-statement",
 });
 
-const DEFAULT_TITLE = "judge. — online judge for CPE & UVa practice";
+const DEFAULT_TITLE = "judge. — online judge for CPE & GPE practice";
 const DEFAULT_DESCRIPTION =
   "Solve UVa problems, take timed CPE/GPE virtual exams, and track your progress — 430+ curated problems with per-exam appearance stats.";
 
