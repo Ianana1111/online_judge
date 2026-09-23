@@ -27,63 +27,6 @@ function Check({ children }: { children: React.ReactNode }) {
   );
 }
 
-function DowngradeConfirmDialog({
-  expiresLabel,
-  submitting,
-  error,
-  onCancel,
-  onConfirm,
-}: {
-  expiresLabel: string | null;
-  submitting: boolean;
-  error: string | null;
-  onCancel: () => void;
-  onConfirm: () => void;
-}) {
-  const t = useT();
-  const trapRef = useFocusTrap<HTMLDivElement>(true);
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onCancel();
-    }
-    document.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [onCancel]);
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="downgrade-title"
-      onClick={onCancel}
-    >
-      <div ref={trapRef} tabIndex={-1} className="oj-card w-full max-w-sm p-5 outline-none" onClick={(e) => e.stopPropagation()}>
-        <h2 id="downgrade-title" className="font-display text-base font-semibold text-ink-50">{t("Downgrade to Free Plan?")}</h2>
-        <p className="mt-2 text-sm text-ink-300">
-          {expiresLabel
-            ? t("You'll keep full Pro access until {date} — nothing changes right away. After that date, your account switches to Free automatically.", { date: expiresLabel })
-            : t("You'll keep full Pro access until your paid period ends — nothing changes right away. After that date, your account switches to Free automatically.")}
-        </p>
-        {error && <p className="mt-3 text-sm text-verdict-wa">{error}</p>}
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={onCancel} className="oj-btn-secondary px-4 py-2 text-sm" disabled={submitting}>
-            {t("Keep Pro")}
-          </button>
-          <button type="button" onClick={onConfirm} className="oj-btn-primary px-4 py-2 text-sm" disabled={submitting}>
-            {submitting ? t("Confirming…") : t("Confirm Downgrade")}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function RequestRefundConfirmDialog({
   submitting,
   error,
@@ -228,9 +171,6 @@ export default function UpgradePlanPage() {
   const queryClient = useQueryClient();
   const [period, setPeriod] = useState<BillingPeriod>("MONTHLY");
   const { user, status: authStatus } = useAuthStore();
-  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-  const [cancelling, setCancelling] = useState(false);
-  const [cancelError, setCancelError] = useState<string | null>(null);
   const [showUnsubscribeConfirm, setShowUnsubscribeConfirm] = useState(false);
   const [unsubscribing, setUnsubscribing] = useState(false);
   const [unsubscribeError, setUnsubscribeError] = useState<string | null>(null);
@@ -262,25 +202,8 @@ export default function UpgradePlanPage() {
     }
   }, [user?.id, user?.plan, status?.plan, status?.refundRequest?.status]);
 
-  // Legacy one-time grants expire naturally; this path only records downgrade intent.
-  // Recurring card subscriptions use confirmUnsubscribe to stop gateway charges instead.
-  async function confirmCancel() {
-    setCancelling(true);
-    setCancelError(null);
-    try {
-      await apiFetch("/billing/cancel", { method: "POST" });
-      await queryClient.invalidateQueries({ queryKey: ["billing", "me"] });
-      setShowCancelConfirm(false);
-    } catch (e) {
-      setCancelError(e instanceof ApiError ? e.message : "無法送出，請稍後再試");
-    } finally {
-      setCancelling(false);
-    }
-  }
-
-  // Behaves the same as confirmCancel above now: stops the next ECPay auto-charge, but keeps Pro
-  // running until the already-paid planExpiresAt lapses on its own — the recurring subscription's
-  // first charge already paid for a full period, so there's nothing to cut short.
+  // Stops the next ECPay auto-charge while the already-paid Pro period remains active until its
+  // planExpiresAt. The Free card below reports that scheduled transition without another action.
   async function confirmUnsubscribe() {
     setUnsubscribing(true);
     setUnsubscribeError(null);
@@ -372,31 +295,11 @@ export default function UpgradePlanPage() {
                     {t("Manage your subscription from the Pro card →")}
                   </p>
                 ) : isPro ? (
-                  status?.planCancelRequested ? (
-                    <p className="mt-4 rounded border border-ink-700 bg-ink-800/50 px-3 py-2 text-center text-xs text-ink-300">
-                      {expiresLabel
-                        ? t("✓ Downgrade confirmed — you'll move to Free on {date}.", { date: expiresLabel })
-                        : t("✓ Downgrade confirmed — you'll move to Free when your Pro period ends.")}
-                    </p>
-                  ) : (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setCancelError(null);
-                          setShowCancelConfirm(true);
-                        }}
-                        className="oj-btn-secondary w-full rounded-[10px] py-3 text-sm"
-                      >
-                        {t("Downgrade to Free Plan")}
-                      </button>
-                      <p className="mt-1.5 text-center text-[11px] text-ink-500">
-                        {expiresLabel
-                          ? t("You'll keep Pro until {date}, then switch to Free automatically — nothing else to do.", { date: expiresLabel })
-                          : t("You'll keep Pro until your paid period ends, then switch to Free automatically — nothing else to do.")}
-                      </p>
-                    </>
-                  )
+                  <p className="mt-4 rounded-lg border border-verdict-ac/20 bg-verdict-ac/5 px-3 py-3 text-center text-xs leading-5 text-ink-300">
+                    {expiresLabel
+                      ? t("You'll keep Pro until {date}, then switch to Free automatically — nothing else to do.", { date: expiresLabel })
+                      : t("You'll keep Pro until your paid period ends, then switch to Free automatically — nothing else to do.")}
+                  </p>
                 ) : (
                   <button
                     type="button"
@@ -539,15 +442,6 @@ export default function UpgradePlanPage() {
         </div>
       </div>
 
-      {showCancelConfirm && (
-        <DowngradeConfirmDialog
-          expiresLabel={expiresLabel}
-          submitting={cancelling}
-          error={cancelError}
-          onCancel={() => setShowCancelConfirm(false)}
-          onConfirm={confirmCancel}
-        />
-      )}
       {showUnsubscribeConfirm && (
         <UnsubscribeConfirmDialog
           expiresLabel={expiresLabel}
