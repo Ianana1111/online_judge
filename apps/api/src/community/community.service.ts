@@ -83,11 +83,11 @@ export class CommunityService {
   async listComments(parent: Parent, cursor?: string, ownUserId?: string) {
     await parentExists(prisma, parent);
     const result = page(await prisma.discussion.findMany({ where: { ...parent, deletedAt: null, ...afterCursor(cursor),
-      ...(ownUserId ? { userId: ownUserId } : { publishedAt: { not: null } }) }, include: { user: { select: { handle: true, role: true } },
+      ...(ownUserId ? { userId: ownUserId } : { publishedAt: { not: null } }) }, include: { user: { select: { handle: true, role: true, avatarUrl: true } },
       ...(ownUserId ? { revisions: { orderBy: [...newest], take: 1 } } : {}) }, orderBy: [...newest], take: 21 }));
     return { ...result, items: result.items.map((d) => {
       const r = ownUserId ? d.revisions?.[0] : undefined;
-      return { id: d.id, body: r?.body ?? d.body, userId: d.userId, userHandle: d.user.handle, userRole: d.user.role,
+      return { id: d.id, body: r?.body ?? d.body, userId: d.userId, userHandle: d.user.handle, userRole: d.user.role, userAvatarUrl: d.user.avatarUrl,
         createdAt: d.createdAt, publishedAt: d.publishedAt, ...(ownUserId ? { status: r?.status ?? "APPROVED", reason: r?.reason ?? null } : {}) };
     }) };
   }

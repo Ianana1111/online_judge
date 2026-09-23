@@ -1,6 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 const postId = "c000000000000000000000101", revisionId = "c000000000000000000000201", userId = "c000000000000000000000001";
+const commentAvatar = "data:image/png;base64,iVBORw0KGgo=";
 const post = { id: postId, title: "二分搜尋的邊界，為什麼要包含相等？", bodyMd: "## 從一筆資料開始\n\n當搜尋區間只剩一個元素，我們仍然需要比較它。\n\n```cpp\nwhile (left <= right) { /* compare */ }\n```", excerpt: "從一筆資料開始，理解搜尋區間與邊界條件。", bodyLength: 500, authorId: userId, authorHandle: "test_student", authorAvatarUrl: null, isOfficial: false, category: "EDITORIAL", commentCount: 0, createdAt: "2026-09-11T00:00:00.000Z", publishedAt: "2026-09-12T00:00:00.000Z" };
 async function mock(page: Page, admin = false) {
   const writes: { path: string; body: any }[] = []; let pending = true, removed = false;
@@ -15,7 +16,7 @@ async function mock(page: Page, admin = false) {
     if (path === `/posts/${postId}/mine`) return route.fulfill({ json: { ...post, status: "APPROVED", reason: null } });
     if (path === "/posts") return route.fulfill({ json: { items: !removed && (!url.searchParams.get("q") || url.searchParams.get("q") === "二分") ? [post] : [], nextCursor: null } });
     if (path === `/posts/${postId}`) return route.fulfill(removed ? { status: 404, json: { message: "Post not found" } } : { json: post });
-    if (path.startsWith("/discussions/")) return route.fulfill({ json: { items: path.endsWith("/mine") && writes.length ? [{ id: "comment-1", body: "我也遇到單一元素的情況。", userId, userHandle: "test_student", userRole: "USER", createdAt: post.createdAt, publishedAt: null, status: "PENDING", reason: null }] : [], nextCursor: null } });
+    if (path.startsWith("/discussions/")) return route.fulfill({ json: { items: path.endsWith("/mine") && writes.length ? [{ id: "comment-1", body: "我也遇到單一元素的情況。", userId, userHandle: "test_student", userRole: "USER", userAvatarUrl: commentAvatar, createdAt: post.createdAt, publishedAt: null, status: "PENDING", reason: null }] : [], nextCursor: null } });
     if (path === "/moderation") return route.fulfill({ json: { items: !removed && (pending || url.searchParams.get("state") === "reviewed") ? [{ id: revisionId, postId, discussionId: null, title: post.title, body: post.bodyMd + '\n\n<img src="https://tracker.example.test/pixel" onerror="alert(1)"><script>alert(1)</script>', category: "EDITORIAL", isOfficial: false, createdAt: post.createdAt, status: url.searchParams.get("state") === "reviewed" ? "APPROVED" : "PENDING", reason: null, reviewedAt: null, post: { title: "舊標題", bodyMd: "先前公開的內容", publishedAt: post.publishedAt, author: { handle: "test_student" } }, discussion: null }] : [], nextCursor: null } });
     return route.fulfill({ json: {} });
   });
@@ -46,6 +47,7 @@ test("article comments show private review progress after submitting", async ({ 
   await page.getByLabel("你的想法", { exact: true }).fill("我也遇到單一元素的情況。");
   await page.getByRole("button", { name: "送出審核", exact: true }).click();
   await expect(page.getByText("等待審核", { exact: true })).toBeVisible();
+  await expect(page.getByRole("img", { name: "test_student", exact: true })).toHaveAttribute("src", commentAvatar);
   expect(writes[0]).toEqual({ path: `/discussions/post/${postId}`, body: { body: "我也遇到單一元素的情況。" } });
   await accessibility(page); await page.evaluate(() => window.scrollTo(0, 0)); await page.screenshot({ path: info.outputPath("community-comments.png"), fullPage: true });
 });

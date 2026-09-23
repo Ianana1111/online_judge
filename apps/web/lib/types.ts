@@ -436,6 +436,7 @@ export interface Discussion {
   createdAt: string;
   userHandle: string;
   userRole: "USER" | "ADMIN";
+  userAvatarUrl: string | null;
 }
 
 export interface PostListItem {
@@ -582,6 +583,7 @@ export interface ClassComment {
   body: string;
   createdAt: string;
   authorHandle: string;
+  authorAvatarUrl: string | null;
   isAdmin: boolean;
 }
 

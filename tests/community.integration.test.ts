@@ -62,6 +62,9 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("community publication and rev
     expect((await service.listComments({ postId: p.id })).items).toHaveLength(0);
     expect((await service.listComments({ postId: p.id }, undefined, b.id)).items[0].body).toBe("First comment");
     await service.review(d.revisionId, admin, { decision: "APPROVED" });
+    const avatarUrl = "data:image/png;base64,iVBORw0KGgo=";
+    await prisma.user.update({ where: { id: b.id }, data: { avatarUrl } });
+    expect((await service.listComments({ postId: p.id })).items[0].userAvatarUrl).toBe(avatarUrl);
     const edit = await service.editComment(d.id, b, { body: "Unreviewed edit" });
     expect((await service.listComments({ postId: p.id })).items[0].body).toBe("First comment");
     await expect(service.editComment(d.id, a, { body: "Stolen" })).rejects.toThrow();
