@@ -181,6 +181,7 @@
 
     body.problem-workspace-active #main-content {
       flex: 1 1 0%;
+      width: 100%;
       min-height: 0;
       overflow: hidden;
     }
@@ -295,12 +296,18 @@
 
   /* Numeric matrices are figures, not source code. Keep their grid alignment without the generic
    * code-card background or inline-code colour, and remove the fenced block's outer blank line. */
-  .prose-statement pre.statement-matrix {
-    @apply mx-auto mb-3 w-fit max-w-full border-0 bg-transparent p-0 text-center font-mono text-sm text-ink-200;
+  .prose-statement .statement-matrix {
+    @apply mx-auto mb-3 w-fit max-w-full overflow-x-auto bg-transparent p-0 font-mono text-sm text-ink-200;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: normal;
   }
 
-  .prose-statement pre.statement-matrix code {
-    @apply bg-transparent p-0 text-inherit;
+  .prose-statement .statement-matrix-row {
+    @apply flex w-max gap-[1ch];
+  }
+
+  .prose-statement .statement-matrix-cell {
+    @apply inline-block text-right;
   }
 
   /* Figures extracted from source PDFs (diagrams, sample boards) are black-line-art-on-white —

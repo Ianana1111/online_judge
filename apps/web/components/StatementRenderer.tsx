@@ -16,19 +16,22 @@ function nodeText(node: ReactNode): string {
 }
 
 export function isNumericMatrix(value: string) {
-  const rows = normalizeNumericMatrix(value).split("\n");
+  const rows = parseNumericMatrix(value);
   if (rows.length < 2 || rows.length > 50) return false;
-  const cells = rows.map((row) => row.split(/\s+/));
-  return cells[0].length > 1 && cells.every((row) => row.length === cells[0].length && row.every((cell) => /^[-+]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(cell)));
+  return rows[0].length > 1 && rows.every((row) => row.length === rows[0].length && row.every((cell) => /^[-+]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(cell)));
 }
 
-export function normalizeNumericMatrix(value: string) {
-  return value.trim().split(/\r?\n/).map((row) => row.trim()).filter(Boolean).join("\n");
+function parseNumericMatrix(value: string) {
+  return value.trim().split(/\r?\n/).map((row) => row.trim()).filter(Boolean).map((row) => row.split(/\s+/));
 }
 
 function StatementPre({ children, ...props }: ComponentPropsWithoutRef<"pre">) {
   const text = nodeText(children).trim();
-  if (isNumericMatrix(text)) return <pre {...props} className="statement-matrix" aria-label="matrix" tabIndex={0}>{normalizeNumericMatrix(text)}</pre>;
+  if (isNumericMatrix(text)) {
+    const rows = parseNumericMatrix(text);
+    const widths = rows[0].map((_, column) => Math.max(...rows.map((row) => row[column].length)));
+    return <div className="statement-matrix" role="table" aria-label="matrix" tabIndex={0}>{rows.map((row, rowIndex) => <div className="statement-matrix-row" role="row" key={rowIndex}>{row.map((cell, column) => <span className="statement-matrix-cell" role="cell" style={{ width: `${widths[column]}ch` }} key={column}>{cell}</span>)}</div>)}</div>;
+  }
   return <pre {...props} tabIndex={0}>{children}</pre>;
 }
 
