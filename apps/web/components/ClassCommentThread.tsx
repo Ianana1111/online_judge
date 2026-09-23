@@ -53,7 +53,7 @@ export default function ClassCommentThread({ classId, comments }: { classId: str
         {comments.length === 0 && <p className="text-sm text-ink-500">{t("No messages yet — ask a question below.")}</p>}
         {comments.map((c) => (
           <div key={c.id} className={`flex gap-3 p-4 ${c.isAdmin ? "bg-brand/[0.03]" : ""}`}>
-            <Avatar avatarUrl={null} handle={c.authorHandle} size={36} />
+            <Avatar avatarUrl={c.authorAvatarUrl} handle={c.authorHandle} size={36} />
             <div className="min-w-0 flex-1">
               <div className="mb-2 flex flex-wrap items-center gap-2">
                 <span className="break-all text-sm font-semibold text-ink-100">{c.authorHandle}</span>

@@ -115,7 +115,7 @@ export class ClassesService {
       prisma.classComment.findMany({
         where: { classId },
         orderBy: { createdAt: "asc" },
-        include: { author: { select: { handle: true, role: true } } },
+        include: { author: { select: { handle: true, role: true, avatarUrl: true } } },
       }),
     ]);
 
@@ -145,6 +145,7 @@ export class ClassesService {
         body: c.body,
         createdAt: c.createdAt,
         authorHandle: c.author.handle,
+        authorAvatarUrl: c.author.avatarUrl,
         isAdmin: c.author.role === "ADMIN",
       })),
     };
@@ -154,7 +155,7 @@ export class ClassesService {
     const cls = await this.assertCanAccess(classId, requester);
     const comment = await prisma.classComment.create({
       data: { classId, authorId: requester.id, body },
-      include: { author: { select: { handle: true, role: true } } },
+      include: { author: { select: { handle: true, role: true, avatarUrl: true } } },
     });
 
     // Notify whichever side didn't write the comment — a student asking should reach their
@@ -175,6 +176,7 @@ export class ClassesService {
       body: comment.body,
       createdAt: comment.createdAt,
       authorHandle: comment.author.handle,
+      authorAvatarUrl: comment.author.avatarUrl,
       isAdmin: comment.author.role === "ADMIN",
     };
   }
