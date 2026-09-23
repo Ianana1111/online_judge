@@ -453,12 +453,17 @@ export default function UpgradePlanPage() {
                     {status.subscription.launchPriceLocked && <LaunchPriceLocked />}
                   </>
                 ) : isPro ? (
-                  <p className="mt-1 text-base font-semibold text-ink-50 sm:text-lg">
-                    {t("Active")}
-                    {expiresLabel ? (
-                      <span className="block text-xs font-normal text-ink-400 sm:text-sm">{t("until {date}", { date: expiresLabel })}</span>
-                    ) : null}
-                  </p>
+                  <div data-testid="pro-access-status" className="mb-6 mt-2 rounded-xl border border-verdict-ac/20 bg-verdict-ac/5 px-4 py-3">
+                    <p className="flex items-start gap-2 text-base font-semibold text-ink-50 sm:text-lg">
+                      <span aria-hidden className="mt-2 h-2 w-2 shrink-0 rounded-full bg-verdict-ac" />
+                      <span>
+                        {t("Active")}
+                        {expiresLabel ? (
+                          <span className="mt-0.5 block text-xs font-normal text-ink-400 sm:text-sm">{t("until {date}", { date: expiresLabel })}</span>
+                        ) : null}
+                      </span>
+                    </p>
+                  </div>
                 ) : !plans ? (
                   <PricingUnavailable error={pricingError} retry={() => { void refreshPrices(); }} />
                 ) : (

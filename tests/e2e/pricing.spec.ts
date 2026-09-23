@@ -4,20 +4,21 @@ import { billingCatalog } from "../../packages/shared/src/billingPricing";
 
 const campaign = { startsAt: "2026-09-15T00:00:00+08:00", endsAt: "2026-10-15T00:00:00+08:00", regularYearlyPriceNtd: "4000" };
 function catalog(ended = false) { return billingCatalog(campaign, new Date(ended ? campaign.endsAt : campaign.startsAt)); }
-async function fixture(page: Page, options: { subscriber?: boolean; anonymous?: boolean; locale?: "en" | "zh-TW"; theme?: "dark" | "light"; launch?: boolean } = {}) {
+async function fixture(page: Page, options: { subscriber?: boolean; cancelled?: boolean; anonymous?: boolean; locale?: "en" | "zh-TW"; theme?: "dark" | "light"; launch?: boolean } = {}) {
   const state = { plans: options.launch ? catalog() : billingCatalog(), failPricing: false, rejectQuote: false, writes: [] as { path: string; body: any }[] };
+  const hasPaidPro = !!(options.subscriber || options.cancelled);
   await page.addInitScript(({ locale, theme }) => { localStorage.setItem("locale", locale); localStorage.setItem("theme", theme); }, { locale: options.locale ?? "zh-TW", theme: options.theme ?? "dark" });
   await page.route("http://127.0.0.1:55440/**", async (route) => {
     const request = route.request(), path = new URL(request.url()).pathname;
     if (request.method() !== "GET") state.writes.push({ path, body: request.postDataJSON() });
     if (path === "/auth/me") return route.fulfill({ status: options.anonymous ? 401 : 200, json: options.anonymous ? {} : {
-      id: "pricing-user", handle: "launch_tester", email: "pricing@example.test", role: "USER", plan: options.subscriber ? "PRO" : "FREE", isStudent: false,
+      id: "pricing-user", handle: "launch_tester", email: "pricing@example.test", role: "USER", plan: hasPaidPro ? "PRO" : "FREE", isStudent: false,
       settings: { profileSetupDismissed: true, uiLocale: options.locale ?? "zh-TW" }, csrfToken: "fixture", school: null, schoolVerifiedAt: null, hasPassword: true,
     } });
     if (path.startsWith("/auth/")) return route.fulfill({ status: 401, json: {} });
     if (path === "/billing/plans") return route.fulfill({ status: state.failPricing ? 503 : 200, json: state.failPricing ? { message: "Unavailable" } : state.plans });
     if (path === "/billing/me") return route.fulfill({ json: {
-      plan: options.subscriber ? "PRO" : "FREE", planExpiresAt: options.subscriber ? "2026-12-15T00:00:00Z" : null, planCancelRequested: false,
+      plan: hasPaidPro ? "PRO" : "FREE", planExpiresAt: hasPaidPro ? "2026-12-15T00:00:00Z" : null, planCancelRequested: !!options.cancelled,
       subscription: options.subscriber ? { amountNtd: 200, period: "MONTHLY", nextChargeAt: "2026-12-15T00:00:00Z", launchPriceLocked: true } : null,
       refundEligibleUntil: null, refundRequest: null, pendingPayment: null, submits: { used: 0, limit: 10 }, virtualContests: { used: 0, limit: 1 },
     } });
@@ -33,6 +34,20 @@ async function fixture(page: Page, options: { subscriber?: boolean; anonymous?: 
   await page.route("https://payment-stage.ecpay.com.tw/**", (route) => route.fulfill({ contentType: "text/plain", body: "Mock hosted checkout" }));
   return state;
 }
+
+test("cancelled paid access separates the active-through date from the extension action", async ({ page }, info) => {
+  await fixture(page, { cancelled: true });
+  await page.goto("/upgrade");
+  const access = page.getByTestId("pro-access-status");
+  const extend = page.getByRole("button", { name: "延長 Pro 方案", exact: true });
+  await expect(access).toContainText("使用中");
+  await expect(access).toContainText("至 2026/12/15");
+  await expect(extend).toBeVisible();
+  const gap = await access.evaluate((node, button) => (button as HTMLElement).getBoundingClientRect().top - node.getBoundingClientRect().bottom, await extend.elementHandle());
+  expect(gap).toBeGreaterThanOrEqual(20);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2)).toBe(true);
+  await page.screenshot({ path: info.outputPath("cancelled-pro-spacing.png"), fullPage: true });
+});
 
 for (const theme of ["dark", "light"] as const) {
   test(`monthly and annual prices carry through checkout accessibly (${theme})`, async ({ page }, info) => {
