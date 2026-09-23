@@ -9,7 +9,7 @@ import { stripProblemNumber } from "@/lib/problemTitle";
 import { buildProblemNavHref, filterAndSortProblems, SORT_KEYS, type ExamKind, type SortKey } from "@/lib/problemFilter";
 import { useAuthStore } from "@/store/auth";
 import type { ProblemRow } from "@/lib/types";
-import { useT } from "@/lib/i18n/LocaleContext";
+import { useLocale, useT } from "@/lib/i18n/LocaleContext";
 
 const DIFFICULTY_EXPLANATION =
   "Estimated from official ratings where available, otherwise from worldwide solve statistics — for reference only.";
@@ -54,7 +54,7 @@ export type ListContext = { type: "problems" } | { type: "collection"; slug: str
 function buildProblemHref(
   slug: string,
   ctx: ListContext,
-  filters: { sort: SortKey | null; difficulty: string; tag: string; examKind: ExamKind },
+  filters: { sort: SortKey | null; difficulties: string[]; tags: string[]; examKind: ExamKind },
 ): string {
   return buildProblemNavHref(slug, ctx.type, ctx.type === "collection" ? ctx.slug : null, filters);
 }
@@ -62,6 +62,7 @@ function buildProblemHref(
 interface DropdownOption {
   value: string;
   label: ReactNode;
+  searchText?: string;
 }
 
 /** A from-scratch dropdown, not a styled native &lt;select&gt; — the open panel on a native select is
@@ -69,20 +70,37 @@ interface DropdownOption {
  * of CSS on the closed control can fix. This instead reuses the exact panel NavBar's own account
  * menu already uses (oj-card, solid ink-900, hover:bg-ink-800 rows) so an open filter dropdown looks
  * like it belongs to this site instead of to the OS. */
-function Dropdown({
-  value,
+function MultiSelectDropdown({
+  values,
   options,
   onChange,
+  allLabel,
+  summary,
+  panelLabel,
+  searchable = false,
+  searchPlaceholder,
+  clearLabel,
+  doneLabel,
   className = "",
 }: {
-  value: string;
+  values: string[];
   options: DropdownOption[];
-  onChange: (value: string) => void;
+  onChange: (values: string[]) => void;
+  allLabel: string;
+  summary: string;
+  panelLabel: string;
+  searchable?: boolean;
+  searchPlaceholder: string;
+  clearLabel: string;
+  doneLabel: string;
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const rootRef = useRef<HTMLDivElement>(null);
-  const current = options.find((o) => o.value === value);
+  const filteredOptions = query
+    ? options.filter((option) => (option.searchText ?? option.value).toLowerCase().includes(query.toLowerCase()))
+    : options;
 
   useEffect(() => {
     if (!open) return;
@@ -104,12 +122,14 @@ function Dropdown({
     <div ref={rootRef} className={`relative ${className}`}>
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => { setOpen((o) => !o); setQuery(""); }}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="oj-input flex items-center justify-between gap-2 text-left"
+        aria-label={panelLabel}
+        className={`oj-input flex min-h-11 items-center justify-between gap-2 text-left transition-colors ${values.length ? "border-brand/50 bg-brand/[0.04]" : ""}`}
       >
-        <span className="truncate">{current?.label}</span>
+        <span className="min-w-0 truncate">{values.length ? summary : allLabel}</span>
+        {values.length > 0 && <span className="ml-auto flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-brand px-1.5 font-mono text-[10px] font-bold text-onbrand">{values.length}</span>}
         <svg
           viewBox="0 0 10 10"
           fill="none"
@@ -122,26 +142,35 @@ function Dropdown({
       </button>
       {open && (
         <div
-          role="listbox"
-          className="oj-card absolute left-0 top-full z-20 mt-1.5 max-h-72 w-full min-w-max overflow-y-auto p-1"
+          className="oj-card absolute left-0 top-full z-30 mt-1.5 w-full min-w-[240px] overflow-hidden p-1.5 shadow-2xl shadow-black/25"
         >
-          {options.map((o) => (
+          <div className="flex items-center justify-between gap-3 px-2 py-1.5">
+            <p className="text-xs font-semibold text-ink-200">{panelLabel}</p>
+            {values.length > 0 && <button type="button" onClick={() => onChange([])} className="text-xs text-ink-400 hover:text-brand">{clearLabel}</button>}
+          </div>
+          {searchable && <input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} className="oj-input mb-1 min-h-9 w-full text-sm" placeholder={searchPlaceholder} aria-label={searchPlaceholder} />}
+          <div role="listbox" aria-multiselectable="true" aria-label={panelLabel} className="max-h-64 overflow-y-auto py-1">
+          {filteredOptions.map((o) => {
+            const selected = values.includes(o.value);
+            return (
             <button
               key={o.value}
               type="button"
               role="option"
-              aria-selected={o.value === value}
-              onClick={() => {
-                onChange(o.value);
-                setOpen(false);
-              }}
-              className={`block w-full whitespace-nowrap rounded px-3 py-1.5 text-left text-sm transition-colors hover:bg-ink-800 ${
-                o.value === value ? "text-brand" : "text-ink-200"
-              }`}
+              aria-selected={selected}
+              onClick={() => onChange(selected ? values.filter((value) => value !== o.value) : [...values, o.value])}
+              className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition-colors hover:bg-ink-800 ${selected ? "text-brand" : "text-ink-200"}`}
             >
-              {o.label}
+              <span aria-hidden className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border text-[10px] ${selected ? "border-brand bg-brand font-bold text-onbrand" : "border-ink-600"}`}>{selected ? "✓" : ""}</span>
+              <span className="min-w-0 truncate">{o.label}</span>
             </button>
-          ))}
+          );})}
+          {filteredOptions.length === 0 && <p className="px-3 py-6 text-center text-sm text-ink-400">—</p>}
+          </div>
+          <div className="flex items-center justify-between border-t border-ink-800 px-2 pt-2">
+            <span className="text-[11px] text-ink-500">{values.length ? summary : allLabel}</span>
+            <button type="button" onClick={() => setOpen(false)} className="rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-onbrand">{doneLabel}</button>
+          </div>
         </div>
       )}
     </div>
@@ -156,6 +185,7 @@ function Dropdown({
  */
 export default function ProblemFilterTable({ problems, listContext }: { problems: ProblemRow[]; listContext: ListContext }) {
   const t = useT();
+  const { locale } = useLocale();
   const isPro = useAuthStore((s) => s.user?.plan === "PRO");
   const router = useRouter();
   const pathname = usePathname();
@@ -170,19 +200,19 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
   const [sort, setSortState] = useState<SortKey | null>(
     initialSort && SORT_KEYS.includes(initialSort as SortKey) ? (initialSort as SortKey) : null,
   );
-  const [difficulty, setDifficultyState] = useState(searchParams.get("difficulty") ?? "");
-  const [tag, setTagState] = useState(searchParams.get("tag") ?? "");
+  const [difficulties, setDifficultiesState] = useState(() => [...new Set(searchParams.getAll("difficulty").filter((value) => /^[1-4]$/.test(value)))]);
+  const [tags, setTagsState] = useState(() => [...new Set(searchParams.getAll("tag").filter(Boolean))]);
   const [examKind, setExamKindState] = useState<ExamKind>(searchParams.get("examKind") === "GPE" ? "GPE" : "CPE");
 
-  function syncUrl(next: { sort?: SortKey | null; difficulty?: string; tag?: string; examKind?: ExamKind }) {
+  function syncUrl(next: { sort?: SortKey | null; difficulties?: string[]; tags?: string[]; examKind?: ExamKind }) {
     const params = new URLSearchParams(searchParams.toString());
-    const merged = { sort, difficulty, tag, examKind, ...next };
+    const merged = { sort, difficulties, tags, examKind, ...next };
     if (merged.sort) params.set("sort", merged.sort);
     else params.delete("sort");
-    if (merged.difficulty) params.set("difficulty", merged.difficulty);
-    else params.delete("difficulty");
-    if (merged.tag) params.set("tag", merged.tag);
-    else params.delete("tag");
+    params.delete("difficulty");
+    for (const difficulty of merged.difficulties) params.append("difficulty", difficulty);
+    params.delete("tag");
+    for (const tag of merged.tags) params.append("tag", tag);
     // Omitted for the default (CPE) — see buildProblemNavHref's own comment for why.
     if (merged.examKind === "GPE") params.set("examKind", merged.examKind);
     else params.delete("examKind");
@@ -205,9 +235,9 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
     }
     setSort(cycleSort(sort, pair));
   }
-  function setDifficulty(next: string) {
-    setDifficultyState(next);
-    syncUrl({ difficulty: next });
+  function setDifficulties(next: string[]) {
+    setDifficultiesState(next);
+    syncUrl({ difficulties: next });
   }
   /** Switches which exam's appearance count the column shows/sorts by — a display toggle, not a
    * row filter, so it never touches which problems are visible, only what that one column reads. */
@@ -215,20 +245,19 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
     setExamKindState(next);
     syncUrl({ examKind: next });
   }
-  function setTag(next: string) {
-    setTagState(next);
-    syncUrl({ tag: next });
+  function setTags(next: string[]) {
+    setTagsState(next);
+    syncUrl({ tags: next });
   }
 
   const DIFFICULTY_OPTIONS: DropdownOption[] = useMemo(
     () => [
-      { value: "", label: t("All difficulties") },
       { value: "1", label: "★" },
       { value: "2", label: "★★" },
       { value: "3", label: "★★★" },
       { value: "4", label: "★★★★" },
     ],
-    [t],
+    [],
   );
   const allTags = useMemo(() => {
     const set = new Set<string>();
@@ -236,19 +265,25 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
     return [...set].sort();
   }, [problems]);
   const tagOptions: DropdownOption[] = useMemo(
-    () => [{ value: "", label: t("All tags") }, ...allTags.map((tag) => ({ value: tag, label: tag }))],
-    [allTags, t],
+    () => allTags.map((tag) => ({ value: tag, label: tag, searchText: tag })),
+    [allTags],
   );
   const filteredSorted = useMemo(
-    () => filterAndSortProblems(problems, { difficulty, tag, sort, examKind }),
-    [problems, difficulty, tag, sort, examKind],
+    () => filterAndSortProblems(problems, { difficulties, tags, sort, examKind }),
+    [problems, difficulties, tags, sort, examKind],
   );
   const visible = useMemo(
     () => (q ? filteredSorted.filter((p) => p.title.toLowerCase().includes(q.toLowerCase())) : filteredSorted),
     [filteredSorted, q],
   );
 
-  const filtersActive = q !== "" || difficulty !== "" || tag !== "";
+  const filtersActive = q !== "" || difficulties.length > 0 || tags.length > 0;
+  const difficultySummary = difficulties.length === 1
+    ? "★".repeat(Number(difficulties[0]))
+    : locale === "zh-TW" ? `${difficulties.length} 個難度` : `${difficulties.length} difficulties`;
+  const tagSummary = tags.length === 1
+    ? tags[0]
+    : locale === "zh-TW" ? `${tags.length} 個標籤` : `${tags.length} tags`;
 
   return (
     <div>
@@ -259,14 +294,15 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
           placeholder={t("Search title…")}
           className="oj-input max-w-xs"
         />
-        <Dropdown value={difficulty} onChange={setDifficulty} options={DIFFICULTY_OPTIONS} className="w-[150px]" />
-        <Dropdown value={tag} onChange={setTag} options={tagOptions} className="w-[180px]" />
+        <MultiSelectDropdown values={difficulties} onChange={setDifficulties} options={DIFFICULTY_OPTIONS} allLabel={t("All difficulties")} summary={difficultySummary} panelLabel={t("Difficulty")} searchPlaceholder={t("Search…")} clearLabel={t("Clear")} doneLabel={locale === "zh-TW" ? "完成" : "Done"} className="w-[170px]" />
+        <MultiSelectDropdown values={tags} onChange={setTags} options={tagOptions} allLabel={t("All tags")} summary={tagSummary} panelLabel={t("Tags")} searchable searchPlaceholder={t("Search…")} clearLabel={t("Clear")} doneLabel={locale === "zh-TW" ? "完成" : "Done"} className="w-[210px]" />
         {filtersActive && (
           <button
             onClick={() => {
               setQ("");
-              setDifficulty("");
-              setTag("");
+              setDifficultiesState([]);
+              setTagsState([]);
+              syncUrl({ difficulties: [], tags: [] });
             }}
             className="text-xs text-ink-400 hover:text-brand"
           >
@@ -277,6 +313,11 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
           {t("{visible} of {total} shown", { visible: visible.length, total: problems.length })}
         </span>
       </div>
+
+      {(difficulties.length > 0 || tags.length > 0) && <div className="mb-4 flex flex-wrap gap-2" aria-label={locale === "zh-TW" ? "已套用的篩選" : "Applied filters"}>
+        {difficulties.map((difficulty) => <button key={`difficulty-${difficulty}`} type="button" onClick={() => setDifficulties(difficulties.filter((value) => value !== difficulty))} className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/[0.06] px-2.5 py-1 text-xs text-brand transition-colors hover:bg-brand/10"><span>{"★".repeat(Number(difficulty))}</span><span aria-hidden>×</span></button>)}
+        {tags.map((tag) => <button key={`tag-${tag}`} type="button" onClick={() => setTags(tags.filter((value) => value !== tag))} className="inline-flex items-center gap-1.5 rounded-full border border-ink-700 bg-ink-800/70 px-2.5 py-1 text-xs text-ink-200 transition-colors hover:border-brand/40 hover:text-brand"><span>{tag}</span><span aria-hidden>×</span></button>)}
+      </div>}
 
       <div className="overflow-x-auto">
       <table className="oj-table">
@@ -368,7 +409,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
               <td className="font-mono text-xs text-ink-400">{p.uvaId ?? "—"}</td>
               <td>
                 <Link
-                  href={buildProblemHref(p.slug, listContext, { sort, difficulty, tag, examKind })}
+                  href={buildProblemHref(p.slug, listContext, { sort, difficulties, tags, examKind })}
                   className="font-medium text-ink-50 hover:text-brand"
                 >
                   {stripProblemNumber(p.title, p.uvaId)}
@@ -380,7 +421,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
                   {p.tags.map((tag) => (
                     <button
                       key={tag}
-                      onClick={() => setTag(tag)}
+                      onClick={() => setTags(tags.includes(tag) ? tags : [...tags, tag])}
                       title={t("Filter by {tag}", { tag })}
                       className="rounded border border-ink-700 bg-ink-800/60 px-1.5 py-0.5 text-[11px] text-ink-300 transition-colors hover:border-brand/40 hover:text-brand"
                     >

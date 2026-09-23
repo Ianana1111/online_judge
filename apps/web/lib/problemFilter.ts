@@ -30,8 +30,8 @@ export const SORT_KEYS: SortKey[] = [
 export type ExamKind = "CPE" | "GPE";
 
 export interface ProblemFilters {
-  difficulty?: string; // "" | "1".."4", same string the <select> uses directly
-  tag?: string;
+  difficulties?: string[];
+  tags?: string[];
   sort?: SortKey | null;
   examKind?: ExamKind;
 }
@@ -51,14 +51,14 @@ export function buildProblemNavHref(
   slug: string,
   listSource: "problems" | "collection",
   listId: string | null,
-  filters: { sort: SortKey | null; difficulty: string; tag: string; examKind?: ExamKind },
+  filters: { sort: SortKey | null; difficulties: string[]; tags: string[]; examKind?: ExamKind },
 ): string {
   const params = new URLSearchParams();
   params.set("listSource", listSource);
   if (listSource === "collection" && listId) params.set("listId", listId);
   if (filters.sort) params.set("sort", filters.sort);
-  if (filters.difficulty) params.set("difficulty", filters.difficulty);
-  if (filters.tag) params.set("tag", filters.tag);
+  for (const difficulty of filters.difficulties) params.append("difficulty", difficulty);
+  for (const tag of filters.tags) params.append("tag", tag);
   // Omitted for the default (CPE) so a plain/no-toggle URL stays exactly as short as before this
   // existed — only a deliberate switch to GPE shows up in the link.
   if (filters.examKind === "GPE") params.set("examKind", filters.examKind);
@@ -67,11 +67,11 @@ export function buildProblemNavHref(
 
 export function filterAndSortProblems(
   problems: ProblemRow[],
-  { difficulty, tag, sort, examKind = "CPE" }: ProblemFilters,
+  { difficulties = [], tags = [], sort, examKind = "CPE" }: ProblemFilters,
 ): ProblemRow[] {
   const list = problems.filter((p) => {
-    if (difficulty && p.difficulty !== parseInt(difficulty, 10)) return false;
-    if (tag && !p.tags.includes(tag)) return false;
+    if (difficulties.length > 0 && !difficulties.includes(String(p.difficulty))) return false;
+    if (tags.length > 0 && !tags.some((tag) => p.tags.includes(tag))) return false;
     return true;
   });
   const appearancesOf = (p: ProblemRow) => (examKind === "GPE" ? p.gpeAppearances : p.cpeAppearances) ?? 0;
