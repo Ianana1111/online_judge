@@ -65,7 +65,6 @@ export default function OfficialEditorialPanel({ slug, examLocked }: { slug: str
         </div>
       </div>
       <h2 className="break-words text-xl font-semibold leading-8 text-ink-100 sm:text-2xl">{result.editorial.title}</h2>
-      <p className="text-xs leading-6 text-ink-400">{zh ? "參考程式已通過本站範例與完整測資驗證" : "Reference code passed this judge’s samples and full test suite"} · <time dateTime={result.verifiedAt}>{new Date(result.verifiedAt).toLocaleDateString(locale)}</time></p>
     </header>
     <div lang={result.editorial.locale}><CommunityMarkdown content={result.editorial.bodyMd} /></div>
     <section className="min-w-0 space-y-4" aria-label={zh ? "完整程式與解說" : "Reference code and explanation"}>
