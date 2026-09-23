@@ -44,9 +44,9 @@ function formatMemory(kb: number | null): string {
 function LeaderboardPodium({ rows, ranking, currentHandle, zh }: { rows: LeaderboardRow[]; ranking: "solved" | "streak"; currentHandle?: string; zh: boolean }) {
   const top = rows.slice(0, 3);
   const slots = [
-    { row: top[1], rank: 2, bar: "h-20 sm:h-24", tone: "border-ink-500/40 bg-gradient-to-b from-ink-400/15 to-ink-800/30", medal: "border-ink-400/40 bg-ink-400/10 text-ink-200" },
-    { row: top[0], rank: 1, bar: "h-28 sm:h-36", tone: "border-brand/50 bg-gradient-to-b from-brand/30 to-brand/[0.06]", medal: "border-brand/50 bg-brand/15 text-brand" },
-    { row: top[2], rank: 3, bar: "h-16 sm:h-20", tone: "border-[#cd7f32]/45 bg-gradient-to-b from-[#cd7f32]/20 to-[#cd7f32]/[0.04]", medal: "border-[#cd7f32]/50 bg-[#cd7f32]/10 text-[#d89552]" },
+    { row: top[1], rank: 2, bar: "h-20 sm:h-24", tone: "border-ink-500/40 bg-gradient-to-b from-ink-400/15 to-ink-800/30" },
+    { row: top[0], rank: 1, bar: "h-28 sm:h-36", tone: "border-brand/50 bg-gradient-to-b from-brand/30 to-brand/[0.06]" },
+    { row: top[2], rank: 3, bar: "h-16 sm:h-20", tone: "border-[#cd7f32]/45 bg-gradient-to-b from-[#cd7f32]/20 to-[#cd7f32]/[0.04]" },
   ];
   return <section className="oj-card overflow-hidden px-3 pb-0 pt-5 sm:px-8 sm:pt-6" aria-label={zh ? "排行榜前三名" : "Leaderboard top three"}>
     <div className="mb-5 flex items-center justify-between gap-3 px-1 sm:mb-6">
@@ -54,10 +54,9 @@ function LeaderboardPodium({ rows, ranking, currentHandle, zh }: { rows: Leaderb
       <p className="text-right text-xs text-ink-400">{ranking === "solved" ? (zh ? "依解題數排名" : "Ranked by solved") : (zh ? "依連續解題天數排名" : "Ranked by streak")}</p>
     </div>
     <div className="grid grid-cols-3 items-end gap-1.5 sm:gap-4">
-      {slots.map(({ row, rank, bar, tone, medal }) => row ? <Link key={rank} href={`/u/${row.handle}`} className="group flex min-w-0 flex-col items-center text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand">
-        <div className="relative transition-transform duration-200 group-hover:-translate-y-1">
+      {slots.map(({ row, rank, bar, tone }) => row ? <Link key={rank} href={`/u/${row.handle}`} className="group flex min-w-0 flex-col items-center text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand">
+        <div className="transition-transform duration-200 group-hover:-translate-y-1">
           <Avatar avatarUrl={row.avatarUrl} handle={row.handle} size={rank === 1 ? 56 : 44} />
-          <span className={`absolute -bottom-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full border px-1 font-mono text-[10px] font-bold shadow ${medal}`}>{rank}</span>
         </div>
         <p className="mt-2 w-full truncate px-1 text-xs font-semibold text-ink-100 sm:text-sm">{row.handle}</p>
         <p className={`mb-2 mt-0.5 inline-flex items-center gap-1 font-mono text-xs font-semibold ${ranking === "streak" ? "text-verdict-tle" : "text-brand"}`}>
