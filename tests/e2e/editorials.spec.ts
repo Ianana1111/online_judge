@@ -13,7 +13,7 @@ test("official editorial is lazy, keyboard reachable, responsive, and copies the
   const url=new URL(process.env.DATABASE_URL!);
   if(url.hostname!=="127.0.0.1"||url.port!=="55432"||url.pathname!=="/oj_test")throw new Error("Disposable database required");
   const requireApi=createRequire(resolve(__dirname,"../../apps/api/package.json")),{PrismaClient}=requireApi("@prisma/client"),db=new PrismaClient();
-  const problem=await db.problem.create({data:{slug:`editorial-${randomUUID()}`,title:"詳解閱讀測試",statementMd:"Read an integer and print it.",samples:{create:{ord:1,input:"1\n",output:"1\n"}},testCases:{create:{ord:1,input:"1\n",output:"1\n"}}}});
+  const problem=await db.problem.create({data:{slug:`editorial-${randomUUID()}`,title:"詳解閱讀測試",statementMd:"Read an integer and print it.\n\n```\n 0  -2\n 9   2\n-4   1\n```",samples:{create:{ord:1,input:"1\n",output:"1\n"}},testCases:{create:{ord:1,input:"1\n",output:"1\n"}}}});
   const editorial=(await loadEditorial(process.cwd(),"uva-100-the-3n-1-problem"))!;editorial.slug=problem.slug;
   let requests=0,mode="NOT_READY",copied="";
   let accessExpiresAt:string|null=null;
@@ -39,6 +39,12 @@ test("official editorial is lazy, keyboard reachable, responsive, and copies the
   try{
     await page.goto(`/problems/${problem.slug}`);
     await expect(page.getByText("Read an integer and print it.",{exact:true})).toBeVisible();
+    await expect(page.locator("pre.statement-matrix")).toHaveText("0  -2\n9   2\n-4   1");
+    if (info.project.name !== "mobile") await expect.poll(() => page.evaluate(() => ({
+      htmlOverflow: getComputedStyle(document.documentElement).overflow,
+      bodyOverflow: getComputedStyle(document.body).overflow,
+      bodyLocked: document.body.classList.contains("problem-workspace-active"),
+    }))).toEqual({ htmlOverflow: "hidden", bodyOverflow: "hidden", bodyLocked: true });
     expect(requests).toBe(0);
     const tab=page.getByRole("tab",{name:"官方詳解",exact:true});
     await tab.click();await expect(page.getByText("這題的官方詳解正在準備中")).toBeVisible();

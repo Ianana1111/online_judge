@@ -90,6 +90,18 @@ export default function ProblemView({
   const fullHeight = fillViewport && isDesktop;
   const [tab, setTab] = useState<TabKey>("statement");
   const [resultTab, setResultTab] = useState<SubmissionResultTab | null>(null);
+  // Standalone problem pages are desktop workspaces with their own pane scrollers. Lock both
+  // document roots so a wheel event over the outer gutters cannot move the whole page; the CSS
+  // flex layout also accounts for banners that appear above the navbar after hydration.
+  useEffect(() => {
+    if (!fillViewport) return;
+    document.documentElement.classList.add("problem-workspace-active");
+    document.body.classList.add("problem-workspace-active");
+    return () => {
+      document.documentElement.classList.remove("problem-workspace-active");
+      document.body.classList.remove("problem-workspace-active");
+    };
+  }, [fillViewport]);
   const tabOrder: TabKey[] = resultTab ? [...TAB_ORDER, "result"] : TAB_ORDER;
   function closeResultTab(e: React.MouseEvent) {
     e.stopPropagation();
