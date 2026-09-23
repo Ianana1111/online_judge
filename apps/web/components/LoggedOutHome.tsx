@@ -1,11 +1,83 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/store/auth";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 
 const CASES = [{ values: [2, 4, 6], target: 6, expected: 2 }, { values: [2], target: 2, expected: 0 }, { values: [2, 4, 6], target: 5, expected: -1 }];
+
+function reduceMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function TypedHeadline({ zh }: { zh: boolean }) {
+  const text = zh ? "把每一次練習，\n寫成你的實力。" : "Make every\npractice\ncount.";
+  const accent = zh ? "你的實力。" : "count.";
+  const accentAt = text.indexOf(accent);
+  const [typed, setTyped] = useState("");
+  useEffect(() => {
+    if (reduceMotion()) { setTyped(text); return; }
+    const characters = Array.from(text);
+    let index = 0, timer: ReturnType<typeof setTimeout>;
+    const next = () => {
+      index += 1;
+      setTyped(characters.slice(0, index).join(""));
+      if (index < characters.length) {
+        const character = characters[index - 1];
+        timer = setTimeout(next, character === "\n" ? 180 : /[，。.]/.test(character) ? 130 : 62);
+      }
+    };
+    setTyped("");
+    timer = setTimeout(next, 320);
+    return () => clearTimeout(timer);
+  }, [text]);
+  const plain = typed.slice(0, Math.min(typed.length, accentAt));
+  const highlighted = typed.length > accentAt ? typed.slice(accentAt) : "";
+  return <h1 className={`${zh ? "min-h-[2.44em]" : "min-h-[3.66em]"} text-[2.65rem] font-semibold leading-[1.22] tracking-normal text-ink-50 sm:text-6xl`}>
+    <span className="sr-only">{text.replaceAll("\n", " ")}</span>
+    <span aria-hidden className="whitespace-pre-line">{plain}</span><span aria-hidden className="text-brand">{highlighted}</span><span aria-hidden className="guest-typewriter-caret text-brand">|</span>
+  </h1>;
+}
+
+function CountUp({ value, suffix = "", locale }: { value: number; suffix?: string; locale: string }) {
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    if (reduceMotion()) { setShown(value); return; }
+    let frame = 0, started = 0;
+    const duration = value > 20 ? 1450 : 900;
+    const tick = (now: number) => {
+      if (!started) started = now;
+      const progress = Math.min(1, (now - started) / duration);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      setShown(Math.min(value, Math.floor(value * eased)));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    setShown(0);
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [value]);
+  return <><span aria-hidden>{shown.toLocaleString(locale)}{suffix}</span><span className="sr-only">{value.toLocaleString(locale)}{suffix}</span></>;
+}
+
+function Reveal({ children, direction = "up", delay = 0, className = "" }: { children: React.ReactNode; direction?: "up" | "right"; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (reduceMotion()) { setVisible(true); return; }
+    const node = ref.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setVisible(true); observer.disconnect();
+    }, { threshold: 0.16, rootMargin: "0px 0px -8%" });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+  const hidden = direction === "right" ? "translate-x-16" : "translate-y-8";
+  return <div ref={ref} style={{ transitionDelay: visible ? `${delay}ms` : "0ms" }} className={`${className} transition-[opacity,transform] duration-1000 ease-out motion-reduce:transform-none motion-reduce:opacity-100 ${visible ? "translate-x-0 translate-y-0 opacity-100" : `${hidden} opacity-0`}`}>{children}</div>;
+}
+
 function search(values: number[], target: number, inclusive: boolean) {
   let left = 0, right = values.length - 1;
   while (inclusive ? left <= right : left < right) {
@@ -54,16 +126,16 @@ export default function LoggedOutHome({ total }: { total: number | null }) {
   const selected = paths[path];
   return <div className="mx-auto max-w-6xl space-y-20 pb-10 sm:space-y-28">
     <section className="grid items-center gap-10 pb-5 pt-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14 lg:pt-12">
-      <div><p className="mb-6 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-brand"><span className="h-px w-8 bg-brand" aria-hidden /> YOUR NEXT ACCEPTED STARTS HERE</p>
-        <h1 className="text-[2.65rem] font-semibold leading-[1.22] tracking-normal text-ink-50 sm:text-6xl">{zh ? <>把每一次練習，<br />寫成<span className="text-brand">你的實力。</span></> : <>Make every<br />practice<br /><span className="text-brand">count.</span></>}</h1>
+      <div className="guest-hero-copy"><p className="mb-6 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-brand"><span className="h-px w-8 bg-brand" aria-hidden /> YOUR NEXT ACCEPTED STARTS HERE</p>
+        <TypedHeadline zh={zh} />
         <p className="mt-6 max-w-md text-base leading-8 text-ink-300">{zh ? "從第一個 Accepted，到從容面對整場考試。題庫練習、限時模擬、解題紀錄，在 judge. 一步步累積。" : "From your first Accepted to your next exam. Practice problems, take timed exams and see how far you've come."}</p>
         <div className="mt-8 flex flex-wrap gap-3"><Link href="/register" className="oj-btn-primary min-h-12 rounded-xl px-6">{zh ? "開始免費練習" : "Start practicing free"}<span aria-hidden>↗</span></Link><Link href="/problems" className="oj-btn-secondary min-h-12 rounded-xl px-6">{zh ? "先逛逛題庫" : "Explore problems"}</Link></div>
         <p className="mt-4 text-xs text-ink-400">{zh ? "免費開始，不需要信用卡。依自己的步調進步。" : "No credit card needed. Learn at your own pace."}</p>
-        <div className="mt-10 grid grid-cols-3 gap-4 border-t border-ink-700 pt-6"><div><p className="font-mono text-xl font-semibold text-ink-100">{total === null ? "CPE / GPE" : total.toLocaleString()}</p><p className="mt-1 text-xs text-ink-400">{zh ? "歷屆與程式練習題" : "Past exams & problems"}</p></div><div><p className="font-mono text-xl font-semibold text-ink-100">4</p><p className="mt-1 text-xs text-ink-400">{zh ? "程式語言" : "Languages"}</p></div><div><p className="font-mono text-xl font-semibold text-ink-100">1 → AC</p><p className="mt-1 text-xs text-ink-400">{zh ? "從今天這一題開始" : "One problem at a time"}</p></div></div>
+        <div className="mt-10 grid grid-cols-3 gap-4 border-t border-ink-700 pt-6"><div><p className="font-mono text-xl font-semibold tabular-nums text-ink-100">{total === null ? "CPE / GPE" : <CountUp value={total} locale={locale} />}</p><p className="mt-1 text-xs text-ink-400">{zh ? "歷屆與程式練習題" : "Past exams & problems"}</p></div><div><p className="font-mono text-xl font-semibold tabular-nums text-ink-100"><CountUp value={4} locale={locale} /></p><p className="mt-1 text-xs text-ink-400">{zh ? "程式語言" : "Languages"}</p></div><div><p className="font-mono text-xl font-semibold tabular-nums text-ink-100"><CountUp value={1} suffix=" → AC" locale={locale} /></p><p className="mt-1 text-xs text-ink-400">{zh ? "從今天這一題開始" : "One problem at a time"}</p></div></div>
       </div>
-      <FirstChallenge zh={zh} />
+      <div className="guest-hero-card"><FirstChallenge zh={zh} /></div>
     </section>
-    <section aria-labelledby="practice-path-heading"><div className="mb-8 flex flex-wrap items-end justify-between gap-4"><div><p className="mb-3 font-mono text-xs tracking-widest text-brand">A LITTLE BETTER, EVERY DAY</p><h2 id="practice-path-heading" className="text-3xl font-semibold tracking-normal text-ink-100">{zh ? "現在的你，想挑戰什麼？" : "What would you like to work on?"}</h2></div><p className="text-sm text-ink-400">{zh ? "沒有唯一的起點，只有適合你的下一步。" : "Find the next step that works for you."}</p></div>
+    <section aria-labelledby="practice-path-heading"><Reveal direction="right" className="mb-8"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="mb-3 font-mono text-xs tracking-widest text-brand">A LITTLE BETTER, EVERY DAY</p><h2 id="practice-path-heading" className="text-3xl font-semibold tracking-normal text-ink-100">{zh ? "現在的你，想挑戰什麼？" : "What would you like to work on?"}</h2></div><p className="text-sm text-ink-400">{zh ? "沒有唯一的起點，只有適合你的下一步。" : "Find the next step that works for you."}</p></div></Reveal>
       <div className="grid overflow-hidden rounded-2xl border border-ink-700 bg-ink-900 md:grid-cols-[0.8fr_1.2fr]"><div className="flex flex-col border-b border-ink-700 md:border-b-0 md:border-r" role="tablist" aria-label={zh ? "練習方向" : "Practice paths"} aria-orientation="vertical">
         {paths.map((p, i) => <button key={p.tag} type="button" id={`path-tab-${i}`} role="tab" aria-selected={path === i} aria-controls="path-panel" tabIndex={path === i ? 0 : -1} onClick={() => setPath(i)} onKeyDown={(e) => { if (["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) { e.preventDefault(); const next = e.key === "Home" ? 0 : e.key === "End" ? 2 : (i + (e.key === "ArrowDown" ? 1 : 2)) % 3; setPath(next); document.getElementById(`path-tab-${next}`)?.focus(); } }} className={`border-l-2 p-6 text-left transition-colors ${path === i ? "border-brand bg-brand/5" : "border-transparent hover:bg-ink-800"}`}><span className={`font-mono text-[10px] tracking-widest ${path === i ? "text-brand" : "text-ink-400"}`}>{p.tag}</span><span className="mt-2 flex items-center justify-between text-lg font-medium text-ink-100">{p.title}<span aria-hidden className={path === i ? "text-brand" : "text-ink-500"}>↗</span></span></button>)}
       </div><div id="path-panel" role="tabpanel" aria-labelledby={`path-tab-${path}`} tabIndex={0} className="flex flex-col justify-center p-7 sm:p-10"><p className="text-base leading-8 text-ink-200">{selected.body}</p><ul className="my-6 space-y-3">{selected.notes.map((n) => <li key={n} className="flex gap-3 text-sm text-ink-300"><span aria-hidden className="text-brand">✓</span>{n}</li>)}</ul><Link href={selected.href} className="inline-flex min-h-11 items-center gap-3 font-medium text-brand hover:underline">{selected.action}<span aria-hidden>→</span></Link></div></div>
