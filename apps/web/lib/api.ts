@@ -102,7 +102,14 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
   }
 
   if (res.status === 204) return undefined as T;
-  return res.json() as Promise<T>;
+  const data = await res.json() as T;
+  // Several session endpoints rotate the CSRF cookie. Keep the cross-origin in-memory copy in
+  // lockstep even when the caller is a background refresh rather than the auth store itself.
+  if (data && typeof data === "object" && "csrfToken" in data) {
+    const token = (data as { csrfToken?: unknown }).csrfToken;
+    if (typeof token === "string" && token) setCsrfToken(token);
+  }
+  return data;
 }
 
 export function apiUrl(path: string): string {
