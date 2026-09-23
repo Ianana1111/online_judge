@@ -6,6 +6,27 @@ import rehypeSanitize from "rehype-sanitize";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { statementSanitizeSchema } from "@/lib/sanitizeSchema";
+import { isValidElement, type ComponentPropsWithoutRef, type ReactNode } from "react";
+
+function nodeText(node: ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(nodeText).join("");
+  if (isValidElement<{ children?: ReactNode }>(node)) return nodeText(node.props.children);
+  return "";
+}
+
+export function isNumericMatrix(value: string) {
+  const rows = value.trim().split(/\r?\n/).map((row) => row.trim()).filter(Boolean);
+  if (rows.length < 2 || rows.length > 50) return false;
+  const cells = rows.map((row) => row.split(/\s+/));
+  return cells[0].length > 1 && cells.every((row) => row.length === cells[0].length && row.every((cell) => /^[-+]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(cell)));
+}
+
+function StatementPre({ children, ...props }: ComponentPropsWithoutRef<"pre">) {
+  const text = nodeText(children).trim();
+  if (isNumericMatrix(text)) return <pre {...props} className="statement-matrix" aria-label="matrix" tabIndex={0}>{text}</pre>;
+  return <pre {...props} tabIndex={0}>{children}</pre>;
+}
 
 /**
  * Renders untrusted Markdown (problem statements may originate from UVA-style
@@ -27,7 +48,7 @@ export default function StatementRenderer({ content }: { content: string }) {
         remarkPlugins={[remarkMath, remarkGfm]}
         rehypePlugins={[rehypeRaw, [rehypeSanitize, statementSanitizeSchema], rehypeKatex]}
         components={{
-        pre: ({ children, ...props }) => <pre {...props} tabIndex={0}>{children}</pre>,
+          pre: StatementPre,
           // Statements link out to original source PDFs (e.g. UVa/CPE) — open in a new tab so
           // the reader never loses their place in the editor/submission panel.
           a: ({ children, ...props }) => (

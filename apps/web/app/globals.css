@@ -273,6 +273,16 @@
     @apply oj-card mb-3 overflow-x-auto p-3;
   }
 
+  /* Numeric matrices are figures, not source code. Keep their grid alignment without the generic
+   * code-card background or inline-code colour, and remove the fenced block's outer blank line. */
+  .prose-statement pre.statement-matrix {
+    @apply mx-auto mb-3 w-fit max-w-full border-0 bg-transparent p-0 text-center font-mono text-sm text-ink-200;
+  }
+
+  .prose-statement pre.statement-matrix code {
+    @apply bg-transparent p-0 text-inherit;
+  }
+
   /* Figures extracted from source PDFs (diagrams, sample boards) are black-line-art-on-white —
    * the same in every source, never theme-aware. Matting them on an explicit white card (not just
    * "auto" background) keeps them legible in dark mode instead of black lines vanishing into it. */

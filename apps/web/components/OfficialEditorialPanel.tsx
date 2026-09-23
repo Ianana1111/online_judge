@@ -9,6 +9,7 @@ import { useAuthStore } from "@/store/auth";
 import { useExamTimerStore } from "@/store/examTimer";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import CommunityMarkdown from "@/components/CommunityMarkdown";
+import SyntaxHighlightedCode from "@/components/SyntaxHighlightedCode";
 
 const languageNames = { cpp17: "C++17", python3: "Python 3", c11: "C11", java17: "Java 17" };
 export default function OfficialEditorialPanel({ slug, examLocked }: { slug: string; examLocked: boolean }) {
@@ -87,7 +88,7 @@ function EditorialCode({ solution, zh, readingLocale }: { solution: Extract<Offi
       <div className="flex flex-wrap items-center justify-between gap-3"><span className="text-xs text-ink-400">{zh ? "複製後可直接貼入編輯器" : "Ready to copy into your editor"}</span><button className="oj-btn-secondary min-h-10 text-xs" onClick={copy} aria-label={zh ? `複製 ${language} 程式碼` : `Copy ${language} code`}>{copyState === "copied" ? (zh ? "已複製" : "Copied") : (zh ? "複製程式碼" : "Copy code")}</button></div>
       <span role="status" className="sr-only">{copyState === "copied" ? (zh ? "程式碼已複製到剪貼簿" : "Code copied to clipboard") : ""}</span>
       {copyState === "error" && <p role="alert" className="text-sm text-verdict-wa">{zh ? "無法存取剪貼簿，請選取下方程式碼並手動複製。" : "Clipboard access failed. Select the code below and copy it manually."}</p>}
-      <pre tabIndex={0} aria-label={`${language} ${zh ? "參考程式" : "reference code"}`} className="max-h-[34rem] overflow-auto rounded-lg bg-ink-950 p-4 font-mono text-xs leading-6 text-ink-100"><code>{solution.sourceCode}</code></pre>
+      <SyntaxHighlightedCode source={solution.sourceCode} languageKey={solution.languageKey} label={`${language} ${zh ? "參考程式" : "reference code"}`} />
       <div lang={readingLocale}><CommunityMarkdown content={solution.explanationMd} /></div>
     </div>
   </details>;
