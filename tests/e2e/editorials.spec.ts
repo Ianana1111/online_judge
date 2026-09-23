@@ -39,7 +39,10 @@ test("official editorial is lazy, keyboard reachable, responsive, and copies the
   try{
     await page.goto(`/problems/${problem.slug}`);
     await expect(page.getByText("Read an integer and print it.",{exact:true})).toBeVisible();
-    await expect(page.locator("pre.statement-matrix")).toHaveText("0  -2\n9   2\n-4   1");
+    const matrix = page.locator(".statement-matrix");
+    await expect(matrix.getByRole("row")).toHaveCount(3);
+    expect(await matrix.getByRole("row").evaluateAll((rows) => rows.map((row) => Array.from(row.querySelectorAll('[role="cell"]'), (cell) => cell.textContent)))).toEqual([["0", "-2"], ["9", "2"], ["-4", "1"]]);
+    expect(await matrix.evaluate((table) => Array.from({ length: 2 }, (_, column) => { const rightEdges = Array.from(table.querySelectorAll('[role="row"]'), (row) => row.querySelectorAll('[role="cell"]')[column].getBoundingClientRect().right); return Math.max(...rightEdges) - Math.min(...rightEdges); }))).toEqual([0, 0]);
     if (info.project.name !== "mobile") await expect.poll(() => page.evaluate(() => ({
       htmlOverflow: getComputedStyle(document.documentElement).overflow,
       bodyOverflow: getComputedStyle(document.body).overflow,
