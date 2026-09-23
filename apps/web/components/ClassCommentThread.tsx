@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { apiFetch, ApiError } from "@/lib/api";
 import type { ClassComment, ClassSessionDetail } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
+import Avatar from "@/components/Avatar";
 
 function timeLabel(iso: string): string {
   return new Date(iso).toLocaleString(undefined, {
@@ -48,30 +49,28 @@ export default function ClassCommentThread({ classId, comments }: { classId: str
     <div>
       <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-500">{t("Questions & discussion")}</h3>
 
-      <div className="space-y-3">
+      <div className={comments.length > 0 ? "divide-y divide-ink-800 overflow-hidden rounded-xl border border-ink-800 bg-ink-900/60" : ""}>
         {comments.length === 0 && <p className="text-sm text-ink-500">{t("No messages yet — ask a question below.")}</p>}
         {comments.map((c) => (
-          <div
-            key={c.id}
-            className={`rounded border p-3 ${
-              c.isAdmin ? "border-brand/30 bg-brand/5" : "border-ink-800 bg-ink-800/40"
-            }`}
-          >
-            <div className="mb-1 flex items-center gap-2">
-              <span className={`text-sm font-semibold ${c.isAdmin ? "text-brand" : "text-ink-100"}`}>{c.authorHandle}</span>
-              {c.isAdmin && (
-                <span className="rounded border border-brand/40 bg-brand/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-brand">
-                  {t("Teacher")}
-                </span>
-              )}
-              <span className="font-mono text-xs text-ink-500">{timeLabel(c.createdAt)}</span>
+          <div key={c.id} className={`flex gap-3 p-4 ${c.isAdmin ? "bg-brand/[0.03]" : ""}`}>
+            <Avatar avatarUrl={null} handle={c.authorHandle} size={36} />
+            <div className="min-w-0 flex-1">
+              <div className="mb-2 flex flex-wrap items-center gap-2">
+                <span className="break-all text-sm font-semibold text-ink-100">{c.authorHandle}</span>
+                {c.isAdmin && (
+                  <span className="rounded border border-brand/40 bg-brand/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-brand">
+                    {t("Teacher")}
+                  </span>
+                )}
+                <span className="font-mono text-xs text-ink-500">{timeLabel(c.createdAt)}</span>
+              </div>
+              <p className="whitespace-pre-wrap break-words text-[15px] leading-7 text-ink-200">{c.body}</p>
             </div>
-            <p className="whitespace-pre-wrap text-sm text-ink-200">{c.body}</p>
           </div>
         ))}
       </div>
 
-      <form onSubmit={send} className="mt-4 space-y-2">
+      <form onSubmit={send} className="oj-card mt-4 space-y-3 p-4">
         <textarea
           className="oj-input h-24 text-sm"
           value={body}
