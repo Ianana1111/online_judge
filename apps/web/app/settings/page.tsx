@@ -319,7 +319,7 @@ function ProfileSettingsForm() {
           </>
         ) : (
           <>
-            <p className="mb-2 text-xs leading-5 text-ink-400">{t("School catalog")} · {SCHOOL_CATALOG_ACADEMIC_YEAR} 學年度 · <a href="https://udb.moe.edu.tw/ulist/Resource" target="_blank" rel="noopener noreferrer" className="text-brand underline">教育部名錄</a></p>
+            <p className="mb-2 text-xs leading-5 text-ink-400">{t("School catalog")} · {SCHOOL_CATALOG_ACADEMIC_YEAR} 學年度</p>
             <SchoolCombobox id="settings-school" value={user.school} onChange={onSchoolChange} />
             <p className="mt-1 text-xs text-ink-500">
               {schoolSaving ? t("Saving…") : t("Shown on your public profile and the leaderboard.")}

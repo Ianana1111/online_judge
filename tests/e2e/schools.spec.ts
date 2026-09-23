@@ -68,6 +68,34 @@ test("school picker supports old names, keyboard selection, and institution-spec
   await page.evaluate(() => window.scrollTo(0, 0)); await page.screenshot({ path: info.outputPath("school-settings.png"), fullPage: true });
 });
 
+test("background school verification refresh keeps the latest CSRF token for school changes", async ({ page }) => {
+  const user = schoolUser();
+  let authReads = 0;
+  let csrfHeader = "";
+  await page.route("http://127.0.0.1:55440/**", (route) => {
+    const request = route.request();
+    const path = new URL(request.url()).pathname;
+    if (path === "/auth/me") {
+      authReads++;
+      return route.fulfill({ json: { ...user, csrfToken: `csrf-${authReads}` } });
+    }
+    if (path === "/users/me/school/domains") return route.fulfill({ json: { roots: ["ntu.edu.tw"], exact: [] } });
+    if (path === "/users/me/profile") {
+      csrfHeader = request.headers()["x-csrf-token"] ?? "";
+      return route.fulfill({ json: { ...user, school: "台鋼科技大學", schoolEmail: null, schoolVerifiedAt: null } });
+    }
+    return route.fulfill({ json: path === "/notifications" ? { items: [], unreadCount: 0 } : [] });
+  });
+
+  await page.goto("/settings");
+  await expect.poll(() => authReads).toBeGreaterThanOrEqual(2);
+  await page.getByRole("button", { name: "學校", exact: true }).click();
+  const search = page.getByRole("combobox", { name: "搜尋學校", exact: true });
+  await search.fill("台鋼科技大學");
+  await search.press("Enter");
+  await expect.poll(() => csrfHeader).toBe(`csrf-${authReads}`);
+});
+
 const verifiedAccount = { handle: "original_student", school: "國立臺灣大學" };
 const schoolUser = (handle = verifiedAccount.handle) => ({
   id: `c0000000000000000000000${handle === verifiedAccount.handle ? "31" : "32"}`, handle, email: "login@example.test", role: "USER",
