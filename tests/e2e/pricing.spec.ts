@@ -43,6 +43,8 @@ test("cancelled paid access separates the active-through date from the extension
   await expect(access).toContainText("使用中");
   await expect(access).toContainText("至 2026/12/15");
   await expect(extend).toBeVisible();
+  await expect(page.getByRole("button", { name: "降回免費方案", exact: true })).toHaveCount(0);
+  await expect(page.getByText("你會保留 Pro 到 2026/12/15，之後自動切換回免費方案——不需要再做任何事。", { exact: true })).toBeVisible();
   const gap = await access.evaluate((node, button) => (button as HTMLElement).getBoundingClientRect().top - node.getBoundingClientRect().bottom, await extend.elementHandle());
   expect(gap).toBeGreaterThanOrEqual(20);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2)).toBe(true);
