@@ -94,24 +94,36 @@ function StatTile({ value, label, valueClassName = "text-ink-50" }: { value: Rea
   );
 }
 
-/** The flame grows with the number of consecutive days with an accepted solution. */
-function StreakFlame({ streak, atRisk }: { streak: number; atRisk: boolean }) {
+/** Login and solve streaks share one place in the hero. Pointer users preview the solve streak on
+ * hover, keyboard users get the same view on focus, and the compact mobile tile toggles on tap. */
+function StreakSwitcher({ loginStreak, solveStreak, atRisk, mode }: { loginStreak: number; solveStreak: number; atRisk: boolean; mode: "hover" | "tap" }) {
   const t = useT();
-  if (streak <= 0) {
-    return (
-      <div className="flex flex-col items-center gap-1">
-        <FlameIcon className="h-6 w-6 text-ink-500" />
-        <span className="text-[10px] uppercase tracking-wide text-ink-400">{t("no streak yet")}</span>
-      </div>
-    );
-  }
-  const size = streak >= 30 ? "h-10 w-10" : streak >= 7 ? "h-8 w-8" : "h-6 w-6";
+  const [showSolve, setShowSolve] = useState(false);
+  const sentence = showSolve
+    ? solveStreak > 0 ? t("{n} days solving in a row", { n: solveStreak }) : t("No solve streak yet")
+    : loginStreak > 0 ? t("{n} days in a row you've shown up", { n: loginStreak }) : t("No login streak yet");
+  const hint = mode === "tap"
+    ? t("Tap to switch streak")
+    : showSolve ? t("Move away to see your login streak") : t("Hover to see your solve streak");
+  const Icon = showSolve ? FlameIcon : CalendarCheckIcon;
   return (
-    <div className="flex flex-col items-center gap-1">
-      <FlameIcon className={`${size} text-verdict-tle ${atRisk ? "animate-pulse-soft" : ""}`} />
-      <span className={`font-display font-bold tabular-nums ${atRisk ? "text-verdict-wa" : "text-verdict-tle"}`}>{streak}</span>
-      <span className="text-[10px] uppercase tracking-wide text-ink-500">{atRisk ? t("at risk today") : t("day streak")}</span>
-    </div>
+    <button
+      type="button"
+      data-testid="hero-streak-switcher"
+      aria-label={`${sentence}. ${hint}`}
+      aria-pressed={mode === "tap" ? showSolve : undefined}
+      onMouseEnter={mode === "hover" ? () => setShowSolve(true) : undefined}
+      onMouseLeave={mode === "hover" ? () => setShowSolve(false) : undefined}
+      onFocus={mode === "hover" ? () => setShowSolve(true) : undefined}
+      onBlur={mode === "hover" ? () => setShowSolve(false) : undefined}
+      onClick={() => mode === "tap" ? setShowSolve((value) => !value) : setShowSolve(true)}
+      className={`group rounded-xl bg-ink-950/50 text-center transition-colors hover:bg-ink-800/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand ${mode === "tap" ? "flex h-full w-full flex-col items-center justify-center px-2 py-3" : "flex min-w-44 flex-col items-center px-4 py-4"}`}
+    >
+      <Icon className={`mb-2 ${mode === "tap" ? "h-5 w-5" : "h-7 w-7"} ${showSolve ? atRisk ? "animate-pulse-soft text-verdict-wa" : "text-verdict-tle" : "text-verdict-pending"}`} />
+      <span aria-live="polite" className={`font-display font-semibold leading-5 text-ink-100 ${mode === "tap" ? "text-xs" : "text-sm"}`}>{sentence}</span>
+      {showSolve && atRisk && <span className="mt-1 text-[10px] font-medium text-verdict-wa">{t("at risk today")}</span>}
+      <span className="mt-1 text-[9px] leading-4 text-ink-500">{hint}</span>
+    </button>
   );
 }
 
@@ -245,9 +257,6 @@ export default function HomeDashboard() {
     weekBoardQuery,
   ].some((q) => q.isError);
 
-  const latestAchievement = achievements?.length
-    ? [...achievements].sort((a, b) => +new Date(b.earnedAt) - +new Date(a.earnedAt))[0]
-    : null;
   const myRank = weekBoard?.find((r) => r.handle === user.handle)?.rank ?? null;
 
   const suggestions = [
@@ -307,17 +316,6 @@ export default function HomeDashboard() {
                 {user.school}
               </span>
             )}
-            {latestAchievement && (
-              <Link href={`/u/${user.handle}`} className="mt-1 inline-flex items-center gap-1 text-xs text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand">
-                <TrophyIcon className="h-3.5 w-3.5" /> {t("Latest: {title}", { title: latestAchievement.title })}
-              </Link>
-            )}
-            {daily && daily.loginStreak > 1 && (
-              <p className="mt-1 flex items-center gap-1 text-xs text-ink-500">
-                <CalendarCheckIcon className="h-3.5 w-3.5 text-verdict-pending" />
-                {t("{n} days in a row you've shown up", { n: daily.loginStreak })}
-              </p>
-            )}
             <Link
               href={continueSlug ? `/problems/${continueSlug}` : "/problems"}
               className="oj-btn-primary mt-3 inline-flex items-center gap-1.5 px-4 py-2 text-sm"
@@ -325,32 +323,14 @@ export default function HomeDashboard() {
               {draftSlug ? t("Continue your recent draft") : t("Continue solving")} <span aria-hidden>→</span>
             </Link>
           </div>
-          <div className="hidden flex-col items-center gap-2 sm:flex">
-            <StreakFlame streak={daily?.currentStreak ?? 0} atRisk={!!daily?.atRisk} />
+          <div className="hidden sm:block">
+            <StreakSwitcher loginStreak={daily?.loginStreak ?? 0} solveStreak={daily?.currentStreak ?? 0} atRisk={!!daily?.atRisk} mode="hover" />
           </div>
         </div>
 
         <div className="relative mt-6 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
           <div className="sm:hidden">
-            <StatTile
-              value={
-                daily && daily.currentStreak > 0 ? (
-                  <span className="inline-flex items-center gap-1">
-                    <FlameIcon className="h-4 w-4" /> {daily.currentStreak}
-                  </span>
-                ) : (
-                  "–"
-                )
-              }
-              label={daily?.atRisk ? t("at risk today") : t("day streak")}
-              valueClassName={
-                daily?.atRisk
-                  ? "text-verdict-wa animate-pulse-soft"
-                  : daily && daily.currentStreak > 0
-                    ? "text-verdict-tle"
-                    : "text-ink-400"
-              }
-            />
+            <StreakSwitcher loginStreak={daily?.loginStreak ?? 0} solveStreak={daily?.currentStreak ?? 0} atRisk={!!daily?.atRisk} mode="tap" />
           </div>
           <StatTile value={<DifficultyStars d={recommended?.tier ?? 1} />} label={t("current tier")} />
           <StatTile value={profile ? profile.solvedCount : "–"} label={t("solved")} />

@@ -16,6 +16,7 @@ for (const theme of ["light", "dark"]) test(`dashboard and rankings show AC stre
     if (path === "/problems/recommended") return route.fulfill({ json: { tier: 1, consolidate: [], stretch: null, collectionNext: null } });
     if (path === "/submissions") return route.fulfill({ json: { items: [] } });
     if (path === `/users/${user.handle}`) return route.fulfill({ json: { ...user, solvedCount: 3 } });
+    if (path === `/achievements/${user.handle}`) return route.fulfill({ json: [{ code: "first_ac", title: "第一題 AC", description: "完成第一題", earnedAt: "2026-09-22T00:00:00.000Z" }] });
     if (path.endsWith("/stats")) return route.fulfill({ json: { heatmap: [], languageBreakdown: [], verdictBreakdown: [], solvedByDifficulty: [] } });
     if (path === "/leaderboard") return route.fulfill({ json: board });
     if (path === "/notifications") return route.fulfill({ json: { items: [], unreadCount: 0, nextCursor: null } });
@@ -23,8 +24,16 @@ for (const theme of ["light", "dark"]) test(`dashboard and rankings show AC stre
     return route.fulfill({ json: [] });
   });
   await page.goto("/");
-  await expect(page.getByText("連續 7 天都有上線", { exact: true })).toBeVisible();
-  await expect(page.getByText("今日岌岌可危", { exact: true }).filter({ visible: true })).toBeVisible();
+  const streakSwitcher = page.getByTestId("hero-streak-switcher").filter({ visible: true });
+  await expect(streakSwitcher).toContainText("連續 7 天都有上線");
+  await expect(page.locator("main")).not.toContainText("最新成就");
+  if ((page.viewportSize()?.width ?? 0) < 640) await streakSwitcher.click();
+  else await streakSwitcher.hover();
+  await expect(streakSwitcher).toContainText("連續 2 天都有解題");
+  await expect(streakSwitcher).toContainText("今日岌岌可危");
+  if ((page.viewportSize()?.width ?? 0) < 640) await streakSwitcher.click();
+  else await page.getByRole("heading", { name: /streak_learner/ }).hover();
+  await expect(streakSwitcher).toContainText("連續 7 天都有上線");
   await expect(page.locator("main")).not.toContainText(/凍結|保護|freeze|protected/i);
   expect(writes.filter((path) => path.includes("freeze"))).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);

@@ -26,8 +26,15 @@ async function audit(page: Page) {
 }
 for (const theme of ["dark", "light"]) test(`collections: responsive design, search, empty state and detail (${theme})`, async ({ page }, info) => {
   await mock(page); await page.addInitScript((theme) => localStorage.setItem("theme", theme), theme);
-  await page.goto("/collections"); await expect(page.getByRole("heading", { name: "考前必刷" })).toBeVisible();
+  await page.goto("/collections"); await expect(page.getByRole("heading", { name: "CPE 必考 49 題" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "考試專區", exact: true })).toBeVisible(); await expect(page.getByRole("heading", { name: "主題專區", exact: true })).toBeVisible();
+  await expect(page.getByText("CPE 核心必考清單", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /開始刷必考 49 題/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "考前必刷", exact: true })).toBeVisible();
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior)).toBe("smooth");
+  await page.getByRole("link", { name: /^主題專區/ }).click();
+  await expect(page).toHaveURL(/#topic-collections$/);
+  await expect(page.locator("#topic-collections")).toBeInViewport();
   await audit(page); await page.screenshot({ path: info.outputPath(`collections-${theme}.png`), fullPage: true });
   const search = page.getByRole("searchbox", { name: "搜尋主題題庫" }); await search.fill("DP");
   await expect(page.getByRole("heading", { name: "動態規劃", exact: true })).toBeVisible(); await expect(page.getByRole("heading", { name: "數學與數論" })).toHaveCount(0);
@@ -42,5 +49,5 @@ test("collection list and detail recover from network failures", async ({ page }
   await mock(page); let failed = true;
   await page.route("http://127.0.0.1:55440/collections", (route) => route.fulfill(failed ? { status: 503, json: { message: "Unavailable" } } : { json: collections }));
   await page.goto("/collections"); await expect(page.getByRole("alert").filter({ hasText: "暫時無法載入題目集" })).toContainText("暫時無法載入題目集", { timeout: 20000 }); failed = false;
-  await page.getByRole("button", { name: "重新載入" }).click(); await expect(page.getByRole("heading", { name: "考前必刷" })).toBeVisible();
+  await page.getByRole("button", { name: "重新載入" }).click(); await expect(page.getByRole("heading", { name: "CPE 必考 49 題" })).toBeVisible();
 });
