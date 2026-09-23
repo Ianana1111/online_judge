@@ -71,7 +71,7 @@ export default async function ProblemPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />
       {/* Desktop panes scroll independently; stacked mobile content must remain reachable. */}
-      <div className="lg:h-[calc(100dvh-56px-3rem)] lg:overflow-hidden">
+      <div className="problem-workspace lg:h-full lg:overflow-hidden">
         <ProblemView
           problem={problem}
           contestId={contestId}

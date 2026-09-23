@@ -16,15 +16,19 @@ function nodeText(node: ReactNode): string {
 }
 
 export function isNumericMatrix(value: string) {
-  const rows = value.trim().split(/\r?\n/).map((row) => row.trim()).filter(Boolean);
+  const rows = normalizeNumericMatrix(value).split("\n");
   if (rows.length < 2 || rows.length > 50) return false;
   const cells = rows.map((row) => row.split(/\s+/));
   return cells[0].length > 1 && cells.every((row) => row.length === cells[0].length && row.every((cell) => /^[-+]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(cell)));
 }
 
+export function normalizeNumericMatrix(value: string) {
+  return value.trim().split(/\r?\n/).map((row) => row.trim()).filter(Boolean).join("\n");
+}
+
 function StatementPre({ children, ...props }: ComponentPropsWithoutRef<"pre">) {
   const text = nodeText(children).trim();
-  if (isNumericMatrix(text)) return <pre {...props} className="statement-matrix" aria-label="matrix" tabIndex={0}>{text}</pre>;
+  if (isNumericMatrix(text)) return <pre {...props} className="statement-matrix" aria-label="matrix" tabIndex={0}>{normalizeNumericMatrix(text)}</pre>;
   return <pre {...props} tabIndex={0}>{children}</pre>;
 }
 
