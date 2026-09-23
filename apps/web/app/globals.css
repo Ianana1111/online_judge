@@ -12,6 +12,18 @@
   0%, 100% { border-color: transparent; }
   50% { border-color: currentColor; }
 }
+@keyframes guest-hero-copy-in {
+  from { opacity: 0; transform: translate3d(-18px, 10px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes guest-hero-card-in {
+  from { opacity: 0; transform: translate3d(28px, 14px, 0) scale(0.985); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes guest-typewriter-caret {
+  0%, 46% { opacity: 1; }
+  47%, 100% { opacity: 0; }
+}
 
 @layer base {
   /* Color tokens as "R G B" triplets (not hex) so Tailwind's opacity modifiers, e.g.
@@ -361,11 +373,35 @@
       hero-caret 0.8s step-end infinite 0.3s;
   }
 
+  .guest-hero-copy {
+    animation: guest-hero-copy-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .guest-hero-card {
+    animation: guest-hero-card-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both;
+  }
+
+  .guest-typewriter-caret {
+    display: inline-block;
+    margin-left: 0.06em;
+    font-weight: 400;
+    animation: guest-typewriter-caret 0.72s steps(1, end) infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .hero-typewriter {
       animation: none;
       width: auto;
       border-right: none;
+    }
+    .guest-hero-copy,
+    .guest-hero-card,
+    .guest-typewriter-caret {
+      animation: none;
+      transform: none;
+    }
+    .guest-typewriter-caret {
+      display: none;
     }
   }
 }
