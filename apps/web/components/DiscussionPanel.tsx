@@ -1,16 +1,30 @@
 "use client";
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
-import type { Discussion } from "@/lib/types";
+import type { Discussion, UserProfile } from "@/lib/types";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import { reviewLabels, type CommunityPage } from "@/lib/community";
 import CommunityMarkdown from "./CommunityMarkdown";
 import Avatar from "./Avatar";
 
 type Props = { problemId: string; postId?: never } | { postId: string; problemId?: never };
+
+function DiscussionAvatar({ discussion }: { discussion: Discussion }) {
+  // Older API deployments did not include userAvatarUrl on comments. Resolve only that legacy
+  // shape from the public profile; an explicit null still means the author has no avatar.
+  const needsFallback = !Object.prototype.hasOwnProperty.call(discussion, "userAvatarUrl");
+  const profile = useQuery({
+    queryKey: ["user-profile", discussion.userHandle],
+    queryFn: () => apiFetch<UserProfile>(`/users/${encodeURIComponent(discussion.userHandle)}`),
+    enabled: needsFallback,
+    staleTime: 5 * 60_000,
+  });
+  return <Avatar avatarUrl={needsFallback ? profile.data?.avatarUrl ?? null : discussion.userAvatarUrl} handle={discussion.userHandle} size={32} />;
+}
+
 export default function DiscussionPanel(props: Props) {
   const user = useAuthStore((s) => s.user);
   return <Comments key={`${user?.id ?? "anonymous"}:${props.problemId ?? props.postId}`} {...props} />;
@@ -46,7 +60,19 @@ function Comments(props: Props) {
     {query.isPending && <p role="status" className="text-sm text-ink-400">{zh ? "載入留言…" : "Loading comments…"}</p>}
     {query.isError && <div role="alert" className="text-sm text-ink-300"><p>{zh ? "暫時無法載入留言。" : "Could not load comments."}</p><button className="oj-btn-ghost mt-2" onClick={() => query.refetch()}>{zh ? "重試" : "Retry"}</button></div>}
     {!query.isPending && !query.isError && items.length === 0 && <p className="py-8 text-center text-sm text-ink-400">{mine ? (zh ? "還沒有你的留言。" : "You have no comments here yet.") : (zh ? "還沒有公開留言，歡迎分享你的想法。" : "No published comments yet. Share your thoughts.")}</p>}
-    {items.length > 0 && <ul className="divide-y divide-ink-800 overflow-hidden rounded-xl border border-ink-800 bg-ink-900/60">{items.map((d) => <li key={d.id} className="flex min-w-0 gap-3 p-4 sm:gap-4 sm:p-5"><Avatar avatarUrl={d.userAvatarUrl} handle={d.userHandle} size={36} /><div className="min-w-0 flex-1"><div className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-400"><Link href={`/u/${d.userHandle}`} className="break-all text-sm font-semibold text-ink-100 hover:text-brand">{d.userHandle}</Link>{d.userRole === "ADMIN" && <span className="rounded-full bg-brand/10 px-2 py-0.5 font-semibold text-brand">{zh ? "管理員" : "Admin"}</span>}<time dateTime={d.createdAt}>{new Date(d.createdAt).toLocaleDateString(locale)}</time>{mine && d.status && <span className="rounded-full bg-ink-800 px-2 py-0.5 text-ink-200">{reviewLabels[d.status][zh ? 0 : 1]}</span>}</div><div className="text-[15px] leading-7"><CommunityMarkdown content={d.body} /></div>{mine && d.reason && <p className="mt-3 whitespace-pre-wrap rounded-lg border-l-2 border-brand bg-ink-800/70 px-3 py-2 text-sm text-ink-300">{zh ? "審核建議：" : "Review feedback: "}{d.reason}</p>}<div className="mt-3 flex justify-end gap-4 border-t border-ink-800 pt-2 text-xs">{mine && user?.id === d.userId && <button className="min-h-8 font-medium text-brand" onClick={() => { setEditing(d.id); setBody(d.body); inputRef.current?.focus(); }}>{zh ? "修改並重新送審" : "Edit and resubmit"}</button>}{(user?.id === d.userId || user?.role === "ADMIN") && <button disabled={busy} onClick={() => remove(d.id)} className="min-h-8 text-ink-400 hover:text-verdict-wa">{zh ? "刪除" : "Delete"}</button>}</div></div></li>)}</ul>}
+    {items.length > 0 && <ul className="divide-y divide-ink-800 overflow-hidden rounded-xl border border-ink-800 bg-ink-900/60">{items.map((d) => {
+      const canEdit = mine && user?.id === d.userId;
+      const canDelete = user?.id === d.userId || user?.role === "ADMIN";
+      return <li key={d.id} className="flex min-w-0 gap-3 px-4 py-3 sm:px-5">
+        <DiscussionAvatar discussion={d} />
+        <div className="min-w-0 flex-1">
+          <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-400"><Link href={`/u/${d.userHandle}`} className="break-all text-sm font-semibold text-ink-100 hover:text-brand">{d.userHandle}</Link>{d.userRole === "ADMIN" && <span className="rounded-full bg-brand/10 px-2 py-0.5 font-semibold text-brand">{zh ? "管理員" : "Admin"}</span>}<time dateTime={d.createdAt}>{new Date(d.createdAt).toLocaleDateString(locale)}</time>{mine && d.status && <span className="rounded-full bg-ink-800 px-2 py-0.5 text-ink-200">{reviewLabels[d.status][zh ? 0 : 1]}</span>}</div>
+          <div className="[&_.prose-statement]:text-[15px] [&_.prose-statement]:leading-6 [&_.prose-statement>p:last-child]:mb-0"><CommunityMarkdown content={d.body} /></div>
+          {mine && d.reason && <p className="mt-2 whitespace-pre-wrap rounded-lg border-l-2 border-brand bg-ink-800/70 px-3 py-2 text-sm text-ink-300">{zh ? "審核建議：" : "Review feedback: "}{d.reason}</p>}
+          {(canEdit || canDelete) && <div className="mt-2 flex justify-end gap-4 border-t border-ink-800 pt-1.5 text-xs">{canEdit && <button className="min-h-8 font-medium text-brand" onClick={() => { setEditing(d.id); setBody(d.body); inputRef.current?.focus(); }}>{zh ? "修改並重新送審" : "Edit and resubmit"}</button>}{canDelete && <button disabled={busy} onClick={() => remove(d.id)} className="min-h-8 text-ink-400 hover:text-verdict-wa">{zh ? "刪除" : "Delete"}</button>}</div>}
+        </div>
+      </li>;
+    })}</ul>}
     {query.hasNextPage && <button className="oj-btn-ghost w-full" disabled={query.isFetchingNextPage} onClick={() => query.fetchNextPage()}>{zh ? "載入更多留言" : "Load more comments"}</button>}
   </section>;
 }
