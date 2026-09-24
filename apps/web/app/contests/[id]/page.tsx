@@ -24,5 +24,6 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function ContestDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return <ContestDetailClient contestId={id} />;
+  const initialContest = await serverFetch<ContestDetail>(`/contests/${id}`);
+  return <ContestDetailClient contestId={id} initialContest={initialContest} />;
 }

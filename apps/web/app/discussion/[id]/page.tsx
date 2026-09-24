@@ -43,7 +43,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
   return (
     <>
       {jsonLd && <script nonce={(await headers()).get("x-nonce") ?? undefined} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />}
-      <PostDetailClient id={id} />
+      <PostDetailClient id={id} initialPost={post} />
     </>
   );
 }

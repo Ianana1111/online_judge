@@ -12,9 +12,9 @@ import { useAuthStore } from "@/store/auth";
 import CommunityMarkdown from "./CommunityMarkdown";
 import DiscussionPanel from "./DiscussionPanel";
 import AdminDeletePostButton from "./AdminDeletePostButton";
-export default function PostDetailClient({ id }: { id: string }) {
+export default function PostDetailClient({ id, initialPost }: { id: string; initialPost: PostDetail | null }) {
   const { locale } = useLocale(), zh = locale === "zh-TW", user = useAuthStore((s) => s.user);
-  const query = useQuery({ queryKey: ["posts", "detail", id], queryFn: ({ signal }) => apiFetch<PostDetail>(`/posts/${id}`, { signal }) });
+  const query = useQuery({ queryKey: ["posts", "detail", id], queryFn: ({ signal }) => apiFetch<PostDetail>(`/posts/${id}`, { signal }), initialData: initialPost ?? undefined });
   if (query.isPending) return <div className="mx-auto max-w-3xl space-y-4"><Skeleton className="h-10 w-2/3" /><Skeleton className="h-5 w-1/3" /><Skeleton className="h-72 w-full" /></div>;
   const data = query.data;
   if (!data) return <div role="alert" className="oj-card mx-auto max-w-3xl space-y-4 p-8"><p>{query.error instanceof ApiError && query.error.status === 404 ? (zh ? "找不到已公開的文章。若這是你的投稿，請到「我的投稿」查看審核進度。" : "No published post was found. If this is your post, check My posts for its review status.") : (zh ? "暫時無法載入文章。" : "Could not load the post.")}</p><div className="flex flex-wrap gap-3"><button className="oj-btn-ghost" onClick={() => query.refetch()}>{zh ? "重試" : "Retry"}</button><Link href="/discussion/mine" className="oj-btn-ghost">{zh ? "我的投稿" : "My posts"}</Link><Link href="/discussion" className="oj-btn-ghost">{zh ? "返回討論区" : "Back to discussions"}</Link></div></div>;

@@ -23,10 +23,10 @@ function CollectionCard({ item, index, zh }: { item: CollectionListItem; index: 
   </a>;
 }
 
-export default function CollectionsListClient() {
+export default function CollectionsListClient({ initialCollections }: { initialCollections: CollectionListItem[] | null }) {
   const { locale } = useLocale(), zh = locale === "zh-TW";
   const [search, setSearch] = useState("");
-  const query = useQuery({ queryKey: ["collections"], queryFn: () => apiFetch<CollectionListItem[]>("/collections") });
+  const query = useQuery({ queryKey: ["collections"], queryFn: () => apiFetch<CollectionListItem[]>("/collections"), initialData: initialCollections ?? undefined });
   const collections = query.data ?? [];
   const feature = collections.find((c) => c.slug === "cpe-basic-49");
   const exams = collections.filter((c) => categoryName(c.category) === "考試專區" && c !== feature);

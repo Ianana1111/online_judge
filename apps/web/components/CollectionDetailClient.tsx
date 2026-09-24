@@ -9,7 +9,7 @@ import { useAuthStore } from "@/store/auth";
 import { Skeleton, SkeletonList } from "@/components/Skeleton";
 import { useLocale, useT } from "@/lib/i18n/LocaleContext";
 
-export default function CollectionDetailClient({ slug }: { slug: string }) {
+export default function CollectionDetailClient({ slug, initialCollection }: { slug: string; initialCollection: CollectionDetail | null }) {
   const t = useT();
   const { locale } = useLocale(), zh = locale === "zh-TW";
   // See ProblemsBrowser: this response's cpeAppearances field depends on the requester's Pro
@@ -20,6 +20,7 @@ export default function CollectionDetailClient({ slug }: { slug: string }) {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["collections", slug, user?.id, plan],
     queryFn: () => apiFetch<CollectionDetail>(`/collections/${slug}`),
+    initialData: user ? undefined : initialCollection ?? undefined,
   });
 
   if (isLoading) {

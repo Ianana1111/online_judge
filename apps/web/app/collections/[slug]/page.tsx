@@ -24,5 +24,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function CollectionDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  return <CollectionDetailClient slug={slug} />;
+  const initialCollection = await serverFetch<CollectionDetail>(`/collections/${slug}`);
+  return <CollectionDetailClient slug={slug} initialCollection={initialCollection} />;
 }
