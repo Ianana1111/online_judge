@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { DiscordIcon } from "@/components/DiscordLink";
+import { DISCORD_INVITE_URL } from "@/lib/discord";
 import { useAuthStore } from "@/store/auth";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 
@@ -140,6 +142,27 @@ export default function LoggedOutHome({ total }: { total: number | null }) {
         {paths.map((p, i) => <button key={p.tag} type="button" id={`path-tab-${i}`} role="tab" aria-selected={path === i} aria-controls="path-panel" tabIndex={path === i ? 0 : -1} onClick={() => setPath(i)} onKeyDown={(e) => { if (["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) { e.preventDefault(); const next = e.key === "Home" ? 0 : e.key === "End" ? 2 : (i + (e.key === "ArrowDown" ? 1 : 2)) % 3; setPath(next); document.getElementById(`path-tab-${next}`)?.focus(); } }} className={`border-l-2 p-6 text-left transition-colors ${path === i ? "border-brand bg-brand/5" : "border-transparent hover:bg-ink-800"}`}><span className={`font-mono text-[10px] tracking-widest ${path === i ? "text-brand" : "text-ink-400"}`}>{p.tag}</span><span className="mt-2 flex items-center justify-between text-lg font-medium text-ink-100">{p.title}<span aria-hidden className={path === i ? "text-brand" : "text-ink-500"}>↗</span></span></button>)}
       </div><div id="path-panel" role="tabpanel" aria-labelledby={`path-tab-${path}`} tabIndex={0} className="flex flex-col justify-center p-7 sm:p-10"><p className="text-base leading-8 text-ink-200">{selected.body}</p><ul className="my-6 space-y-3">{selected.notes.map((n) => <li key={n} className="flex gap-3 text-sm text-ink-300"><span aria-hidden className="text-brand">✓</span>{n}</li>)}</ul><Link href={selected.href} className="inline-flex min-h-11 items-center gap-3 font-medium text-brand hover:underline">{selected.action}<span aria-hidden>→</span></Link></div></div>
     </section>
+    <Reveal>
+      <section aria-labelledby="discord-community-heading" className="relative isolate overflow-hidden rounded-2xl border border-[#5865f2]/30 bg-ink-900 px-6 py-8 sm:px-9 sm:py-9">
+        <div aria-hidden className="pointer-events-none absolute -right-12 -top-24 h-72 w-72 rounded-full bg-[#5865f2]/15 blur-3xl" />
+        <div className="relative flex flex-col gap-7 md:flex-row md:items-center md:justify-between">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#5865f2] text-white shadow-lg shadow-[#5865f2]/20"><DiscordIcon className="h-5 w-5" /></span>
+              <span className="font-mono text-xs font-semibold tracking-[0.15em] text-[#aab1ff]">DISCORD COMMUNITY</span>
+            </div>
+            <h2 id="discord-community-heading" className="mt-5 text-2xl font-semibold tracking-normal text-ink-100 sm:text-3xl">{zh ? "練題之外，也來聊聊。" : "Practice together. Talk it through."}</h2>
+            <p className="mt-3 text-sm leading-7 text-ink-300">{zh ? "我們有 Discord 社群！來聊解題想法、交流練習心得，認識一起努力的朋友。歡迎加入我們～" : "Join our Discord community to talk through problems, share your practice journey, and meet fellow learners. Everyone is welcome."}</p>
+          </div>
+          <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 w-full shrink-0 items-center justify-center gap-3 rounded-xl bg-[#5865f2] px-6 font-semibold text-white transition-colors hover:bg-[#4752c4] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#aab1ff] sm:w-auto">
+            {zh ? "加入 Discord 社群" : "Join our Discord"}<span aria-hidden>↗</span>
+          </a>
+        </div>
+        <div className="relative mt-7 flex flex-wrap gap-2 border-t border-ink-700 pt-5 text-xs text-ink-300">
+          {(zh ? ["聊聊解題思路", "交流練習心得", "認識新朋友"] : ["Talk through solutions", "Share practice tips", "Meet new friends"]).map((label) => <span key={label} className="rounded-full border border-ink-700 bg-ink-800/60 px-3 py-1.5">{label}</span>)}
+        </div>
+      </section>
+    </Reveal>
     <section className="relative overflow-hidden rounded-2xl border border-brand/30 bg-brand/[0.04] px-6 py-12 text-center sm:py-16"><p className="font-mono text-xs tracking-widest text-brand">ONE MORE TRY.</p><h2 className="mt-4 text-3xl font-semibold tracking-normal text-ink-100 sm:text-4xl">{zh ? "下一個 Accepted，從這裡開始。" : "Your next Accepted is waiting."}</h2><p className="mx-auto mt-4 max-w-lg text-sm leading-7 text-ink-300">{zh ? "今天不用解完所有題目。先選一題，寫下你的想法，再往前走一步。" : "You don't have to solve everything today. Pick one problem, try an idea and take the next step."}</p><Link href="/problems" className="oj-btn-primary mt-7 min-h-12 rounded-xl px-7">{zh ? "找到我的第一題 →" : "Find my first problem →"}</Link><div className="mt-5 flex justify-center gap-6 text-xs text-ink-400"><Link href="/faq" className="hover:text-brand">{zh ? "有問題？看看 FAQ" : "Questions? Read the FAQ"}</Link><Link href="/upgrade" className="hover:text-brand">{zh ? "了解 Free 與 Pro" : "Compare Free & Pro"}</Link></div></section>
   </div>;
 }
