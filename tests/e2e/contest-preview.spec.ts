@@ -39,8 +39,8 @@ for (const reducedMotion of [false, true]) test(`archive previews push later row
   if (await trigger.getAttribute("aria-expanded") === "false") await page.keyboard.press("Enter");
   await expect(trigger).toHaveAttribute("aria-expanded", "true");
   await page.keyboard.press("Escape"); await expect(trigger).toHaveAttribute("aria-expanded", "false");
-  await page.getByRole("button", { name: "GPE (1)" }).click();
-  await page.getByRole("button", { name: "GPE (1)" }).evaluate(async (element) => { await Promise.all(element.getAnimations().map((animation) => animation.finished)); });
+  await page.getByRole("link", { name: "GPE (1)" }).click();
+  await page.getByRole("link", { name: "GPE (1)" }).evaluate(async (element) => { await Promise.all(element.getAnimations().map((animation) => animation.finished)); });
   const gpe = page.getByRole("article", { name: "GPE 2026-06-01", exact: true });
   await expect(gpe).toBeVisible();
   await expect(page.getByRole("article", { name: exams[0].title, exact: true })).toHaveCount(0);

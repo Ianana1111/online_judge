@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
@@ -101,6 +101,7 @@ export default function ContestsClient({ initialContests, initialTab }: { initia
   const t = useT();
   const { user, status: authStatus } = useAuthStore();
   const [tab, setTab] = useState<"CPE" | "GPE">(initialTab);
+  useEffect(() => setTab(initialTab), [initialTab]);
 
   const {
     data: all,
@@ -222,15 +223,18 @@ export default function ContestsClient({ initialContests, initialTab }: { initia
             </div>
             <div className="flex rounded border border-ink-700 p-0.5">
               {(["CPE", "GPE"] as const).map((k) => (
-                <button
+                <Link
                   key={k}
+                  href={`/contests?tab=${k}`}
+                  scroll={false}
                   onClick={() => setTab(k)}
+                  aria-current={tab === k ? "page" : undefined}
                   className={`rounded px-3 py-1 text-xs font-semibold transition-colors ${
                     tab === k ? "bg-brand text-onbrand" : "text-ink-400 hover:text-ink-100"
                   }`}
                 >
                   {k} ({k === "CPE" ? cpeSorted.length : gpeSorted.length})
-                </button>
+                </Link>
               ))}
             </div>
           </div>
