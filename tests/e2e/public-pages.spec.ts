@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("Discord header button opens the server widget", async ({ page }, info) => {
-  test.skip(info.project.name === "mobile", "The compact header intentionally hides this button");
+  test.skip(["mobile", "ios-webkit"].includes(info.project.name), "The compact header intentionally hides this button");
   await page.route("https://discord.com/widget**", (route) => route.fulfill({ contentType: "text/html", body: "<body>Discord server widget</body>" }));
   const response = await page.goto("/");
   expect(response?.headers()["content-security-policy"]).toContain("frame-src https://discord.com");
