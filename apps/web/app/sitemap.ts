@@ -2,12 +2,12 @@ import type { CommunityPage } from "@/lib/community";
 import type { MetadataRoute } from "next";
 import { serverFetchDetailed } from "@/lib/serverApi";
 import { SITE_URL } from "@/lib/site";
-import type { ProblemListResponse, CollectionListItem } from "@/lib/types";
+import type { ProblemListResponse, CollectionListItem, ContestListItem } from "@/lib/types";
 type SitemapPost = { id: string; createdAt: string; updatedAt: string };
 
-// Crawlers re-fetch this on their own schedule; an hour of staleness on "did a new problem/post
-// get added" is a non-issue, and it saves hammering the API every time a bot requests it.
-export const revalidate = 3600;
+// A build can run while the API is temporarily unavailable. Generate this on request so an
+// incomplete build-time snapshot never becomes the sitemap crawlers first see after deploy.
+export const dynamic = "force-dynamic";
 
 const STATIC_ROUTES: { path: string; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"]; priority: number }[] = [
   { path: "", changeFrequency: "daily", priority: 1 },
@@ -25,23 +25,18 @@ const STATIC_ROUTES: { path: string; changeFrequency: MetadataRoute.Sitemap[numb
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Next.js attempts to prerender this route at BUILD time (revalidate alone doesn't skip that
-  // first static pass) — throwing on a fetch failure here was tried and rejected: it turned "the
-  // API happened to be unreachable/cold right as a build ran" into a hard build failure that
-  // blocks the ENTIRE site from deploying, which is a much worse outcome than a temporarily
-  // incomplete sitemap. None of these three endpoints ever legitimately 404s (they're always-200
-  // list endpoints), so a failure here really is transient infrastructure trouble, not a "this
-  // doesn't exist" case — logged loudly (Sentry once configured, console in the meantime) so it's
-  // at least visible instead of being a silent, undetectable degradation, while still letting the
-  // build/deploy succeed with whatever static routes are always safe to list.
-  const [problemsResult, collectionsResult, postsResult] = await Promise.all([
+  // A transient API failure still yields static routes, and the next crawler request retries.
+  // These list endpoints normally return 200; log failures so a partial response is visible.
+  const [problemsResult, collectionsResult, contestsResult, postsResult] = await Promise.all([
     serverFetchDetailed<ProblemListResponse>("/problems?pageSize=1000"),
     serverFetchDetailed<CollectionListItem[]>("/collections"),
+    serverFetchDetailed<ContestListItem[]>("/contests"),
     serverFetchDetailed<CommunityPage<SitemapPost>>("/posts/sitemap"),
   ]);
   for (const [name, result] of [
     ["problems", problemsResult],
     ["collections", collectionsResult],
+    ["contests", contestsResult],
     ["posts", postsResult],
   ] as const) {
     if (!result.ok) console.error(`sitemap: failed to fetch ${name} — falling back to static routes only for this entry`);
@@ -61,7 +56,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ? collectionsResult.data.map((c) => ({ url: `${SITE_URL}/collections/${c.slug}`, changeFrequency: "weekly" as const, priority: 0.6 }))
     : [];
 
-  const entries = [...staticEntries, ...problemEntries, ...collectionEntries];
+  const contestEntries: MetadataRoute.Sitemap = contestsResult.ok
+    ? contestsResult.data.map((c) => ({ url: `${SITE_URL}/contests/${c.id}`, changeFrequency: "monthly" as const, priority: 0.6 }))
+    : [];
+
+  const entries = [...staticEntries, ...problemEntries, ...collectionEntries, ...contestEntries];
   const seen = new Set<string>();
   const cursors = new Set<string>();
   let current = postsResult;
@@ -72,7 +71,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       if (seen.has(p.id)) continue;
       if (entries.length >= 50_000) { console.error("sitemap: URL limit reached; split into a sitemap index"); return entries; }
       seen.add(p.id);
-      entries.push({ url: `${SITE_URL}/discussion/${p.id}`, lastModified: new Date(p.updatedAt), changeFrequency: "monthly", priority: 0.5 });
+      entries.push({ url: `${SITE_URL}/discussion/${p.id}`, lastModified: Number.isFinite(Date.parse(p.updatedAt)) ? new Date(p.updatedAt) : undefined, changeFrequency: "monthly", priority: 0.5 });
     }
     const cursor = current.data.nextCursor;
     if (!cursor) break;

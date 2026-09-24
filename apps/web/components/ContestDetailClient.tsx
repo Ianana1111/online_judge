@@ -84,7 +84,7 @@ function ContestProblemNav({
   );
 }
 
-export default function ContestDetailClient({ contestId }: { contestId: string }) {
+export default function ContestDetailClient({ contestId, initialContest }: { contestId: string; initialContest: ContestDetail | null }) {
   const t = useT();
   const qc = useQueryClient();
   const { user } = useAuthStore();
@@ -105,6 +105,7 @@ export default function ContestDetailClient({ contestId }: { contestId: string }
     },
     refetchOnWindowFocus: true,
     refetchInterval: 15_000,
+    initialData: user ? undefined : initialContest ?? undefined,
   });
 
   useEffect(() => {

@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/site";
 
-// contests/page.tsx is a client component (needs useAuthStore/useSearchParams for the
-// logged-in/tab-filter UI), so metadata can't be exported from it directly — a layout.tsx at the
-// same segment is the standard way to attach static metadata to a client page.
 export const metadata: Metadata = {
-  title: "Contests",
-  description: "Timed CPE/GPE virtual exams — recreate any past sitting under real exam conditions, on your own schedule.",
+  title: "考試專區｜CPE／GPE 歷屆虛擬測驗",
+  description: "選擇 CPE 或 GPE 歷屆試題，進行獨立計時的虛擬測驗，練習考場節奏與題型。",
   alternates: { canonical: `${SITE_URL}/contests` },
 };
 

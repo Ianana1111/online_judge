@@ -9,7 +9,7 @@ import QueryBoundary from "@/components/QueryBoundary";
 import { useAuthStore } from "@/store/auth";
 import { useT } from "@/lib/i18n/LocaleContext";
 
-export default function ProblemsBrowser() {
+export default function ProblemsBrowser({ initialProblems }: { initialProblems: ProblemListResponse | null }) {
   const t = useT();
   // Client-side (authenticated) so the solved ✓ reflects the logged-in user. One request pulls the
   // whole set; ProblemFilterTable filters/sorts it client-side, identical to the collection pages.
@@ -21,6 +21,9 @@ export default function ProblemsBrowser() {
   const query = useQuery({
     queryKey: ["problems", "all", plan],
     queryFn: () => apiFetch<ProblemListResponse>("/problems?pageSize=1000"),
+    // Anonymous catalog is safe to render on the server. Signed-in readers fetch their own
+    // solved state and Pro-only fields under the plan-specific query key.
+    initialData: plan ? undefined : initialProblems ?? undefined,
   });
 
   return (

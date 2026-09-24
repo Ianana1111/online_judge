@@ -11,12 +11,13 @@ import { categories, type CommunityPage, type PostCategory } from "@/lib/communi
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import { useAuthStore } from "@/store/auth";
 
-export default function DiscussionListClient() {
+export default function DiscussionListClient({ initialPage }: { initialPage: CommunityPage<PostListItem> | null }) {
   const { locale } = useLocale(), zh = locale === "zh-TW", user = useAuthStore((s) => s.user);
   const [category, setCategory] = useState<PostCategory | "">(""), [input, setInput] = useState(""), [search, setSearch] = useState("");
   const query = useInfiniteQuery({ queryKey: ["posts", "list", category, search], initialPageParam: "",
     queryFn: ({ pageParam }) => { const p = new URLSearchParams(); if (category) p.set("category", category); if (search) p.set("q", search); if (pageParam) p.set("cursor", pageParam); return apiFetch<CommunityPage<PostListItem>>(`/posts?${p}`); },
-    getNextPageParam: (p) => p.nextCursor ?? undefined });
+    getNextPageParam: (p) => p.nextCursor ?? undefined,
+    initialData: !category && !search && initialPage ? { pages: [initialPage], pageParams: [""] } : undefined });
   const posts = query.data?.pages.flatMap((p) => p.items) ?? [];
   return <div className="mx-auto max-w-6xl space-y-8">
     <header className="relative overflow-hidden rounded-2xl border border-ink-700 bg-ink-900 p-6 sm:p-9">
