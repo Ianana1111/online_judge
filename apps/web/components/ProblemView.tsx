@@ -220,19 +220,19 @@ export default function ProblemView({
           )}
           {problem.samples.map((s) => (
             <div key={s.ord} className="mt-4 grid gap-2 sm:grid-cols-2">
-              <div>
+              <div className="min-w-0">
                 <div className="mb-1 flex items-center justify-between">
                   <p className="text-xs font-medium text-ink-400">{t("Sample input {n}", { n: s.ord })}</p>
                   <CopyButton text={s.input} />
                 </div>
-                <pre className="oj-card overflow-x-auto p-2 font-mono text-xs">{s.input}</pre>
+                <pre className="oj-card max-w-full overflow-x-auto p-2 font-mono text-xs">{s.input}</pre>
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="mb-1 flex items-center justify-between">
                   <p className="text-xs font-medium text-ink-400">{t("Sample output {n}", { n: s.ord })}</p>
                   <CopyButton text={s.output} />
                 </div>
-                <pre className="oj-card overflow-x-auto p-2 font-mono text-xs">{s.output}</pre>
+                <pre className="oj-card max-w-full overflow-x-auto p-2 font-mono text-xs">{s.output}</pre>
               </div>
             </div>
           ))}
