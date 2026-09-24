@@ -291,6 +291,7 @@
 
   .prose-statement p {
     @apply mb-3;
+    overflow-wrap: anywhere;
   }
 
   /* Archived statements sometimes display a full source URL as the link text. */
