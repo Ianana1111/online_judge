@@ -25,6 +25,18 @@ function parseNumericMatrix(value: string) {
   return value.trim().split(/\r?\n/).map((row) => row.trim()).filter(Boolean).map((row) => row.split(/\s+/));
 }
 
+function isDisplayEquation(value: string) {
+  const lines = value.trim().split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  return lines.length > 0 && lines.length <= 8 && lines.every((line) =>
+    line.length <= 120 && /\S\s*=\s*\S/.test(line) && !/[{};]/.test(line) && !/\S {2,}\S/.test(line)
+  );
+}
+
+function isStandaloneEquation(value: string) {
+  const line = value.trim();
+  return line.length <= 120 && /^[A-Za-z][A-Za-z0-9_]*(?:\([^)]*\))?\s*=\s*\S/.test(line) && !/[.!?]\s+[A-Z]/.test(line);
+}
+
 function StatementPre({ children, ...props }: ComponentPropsWithoutRef<"pre">) {
   const text = nodeText(children).trim();
   if (isNumericMatrix(text)) {
@@ -32,7 +44,7 @@ function StatementPre({ children, ...props }: ComponentPropsWithoutRef<"pre">) {
     const widths = rows[0].map((_, column) => Math.max(...rows.map((row) => row[column].length)));
     return <div className="statement-matrix" role="table" aria-label="matrix" tabIndex={0}>{rows.map((row, rowIndex) => <div className="statement-matrix-row" role="row" key={rowIndex}>{row.map((cell, column) => <span className="statement-matrix-cell" role="cell" style={{ width: `${widths[column]}ch` }} key={column}>{cell}</span>)}</div>)}</div>;
   }
-  return <pre {...props} tabIndex={0}>{children}</pre>;
+  return <pre {...props} className={isDisplayEquation(text) ? "statement-equation" : props.className} tabIndex={0}>{children}</pre>;
 }
 
 /**
@@ -56,6 +68,9 @@ export default function StatementRenderer({ content }: { content: string }) {
         rehypePlugins={[rehypeRaw, [rehypeSanitize, statementSanitizeSchema], rehypeKatex]}
         components={{
           pre: StatementPre,
+          p: ({ children, ...props }) => (
+            <p {...props} className={isStandaloneEquation(nodeText(children)) ? "statement-equation" : props.className}>{children}</p>
+          ),
           // Statements link out to original source PDFs (e.g. UVa/CPE) — open in a new tab so
           // the reader never loses their place in the editor/submission panel.
           a: ({ children, ...props }) => (
@@ -68,7 +83,7 @@ export default function StatementRenderer({ content }: { content: string }) {
           // on a narrow screen it forced the whole page to scroll horizontally instead of just the
           // table, the same class of bug already fixed for ProblemFilterTable.
           table: ({ children, ...props }) => (
-            <div className="overflow-x-auto" tabIndex={0}>
+            <div className="max-w-full overflow-x-auto" tabIndex={0}>
               <table {...props}>{children}</table>
             </div>
           ),
