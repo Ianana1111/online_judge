@@ -39,18 +39,25 @@ test("email confirmation never consumes a link on page load", async ({ page }) =
 
 test("security settings enroll an authenticator and require recovery-code acknowledgement", async ({ page }, info) => {
   const user = fixture(), secret = "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ";
+  const uri = `otpauth://totp/judge.tw:test?secret=${secret}&issuer=judge.tw`;
   await page.route("http://127.0.0.1:55440/**", (route) => {
     const path = new URL(route.request().url()).pathname;
     if (path === "/auth/me") return route.fulfill({ json: user });
     if (path === "/auth/security" || path === "/contests/me") return route.fulfill({ json: [] });
     if (path === "/notifications") return route.fulfill({ json: { items: [], unreadCount: 0, asOf: new Date().toISOString(), nextCursor: null } });
-    if (path === "/auth/mfa/setup") { expect(route.request().postDataJSON()).toEqual({ password: "current-password" }); return route.fulfill({ json: { secret, uri: `otpauth://totp/judge.tw:test?secret=${secret}&issuer=judge.tw`, expiresInSeconds: 600 } }); }
+    if (path === "/auth/mfa/setup") { expect(route.request().postDataJSON()).toEqual({ password: "current-password" }); return route.fulfill({ json: { secret, uri, expiresInSeconds: 600 } }); }
     if (path === "/auth/mfa/enable") { expect(route.request().postDataJSON()).toEqual({ code: "123456" }); user.mfaEnabled = true; return route.fulfill({ json: { csrfToken: "new-test", recoveryCodes: ["abcde-12345-abcde-12345", "12345-abcde-12345-abcde"] } }); }
     return route.fulfill({ json: {} });
   });
   await page.goto("/settings?section=security"); await expect(page.getByRole("tab", { name: "安全性" })).toHaveAttribute("aria-selected", "true"); await page.getByLabel("目前密碼", { exact: true }).fill("current-password"); await page.getByRole("button", { name: "開始設定" }).click();
-  await expect(page.getByText(secret, { exact: true })).toBeVisible(); await page.getByLabel("驗證碼", { exact: true }).fill("123456"); await page.getByRole("button", { name: "確認啟用" }).click();
+  const qr = page.getByRole("img", { name: "judge.tw 雙因素驗證設定 QR code" });
+  await expect(qr).toBeVisible(); expect(await qr.locator("path").count()).toBeGreaterThan(0);
+  await expect(page.getByRole("link", { name: "在此裝置開啟驗證器" })).toHaveAttribute("href", uri);
+  await page.getByText("無法掃描？改用手動金鑰").click(); await expect(page.getByText(secret, { exact: true })).toBeVisible();
+  await page.screenshot({ path: info.outputPath("mfa-setup-qr.png"), fullPage: true });
+  await page.getByLabel("驗證碼", { exact: true }).fill("123456"); await page.getByRole("button", { name: "確認啟用" }).click();
   await expect(page.getByRole("heading", { name: "保存備用碼" })).toBeVisible(); await expect(page.getByText("abcde-12345-abcde-12345", { exact: false })).toBeVisible();
+  await expect(qr).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect((await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze()).violations).toEqual([]);
   await page.evaluate(() => window.scrollTo(0, 0)); await page.screenshot({ path: info.outputPath("mfa-recovery-codes.png"), fullPage: true });
