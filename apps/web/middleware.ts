@@ -28,6 +28,7 @@ export function middleware(request: NextRequest) {
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https:",
     "font-src 'self' data:",
+    "frame-src https://discord.com",
     `connect-src 'self' ${API_ORIGIN} https://accounts.google.com${SENTRY_ORIGIN ? ` ${SENTRY_ORIGIN}` : ""}`,
     "worker-src 'self' blob:",
     "form-action 'self' https://accounts.google.com https://payment.ecpay.com.tw https://payment-stage.ecpay.com.tw",

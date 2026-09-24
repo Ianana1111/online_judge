@@ -5,6 +5,24 @@ test.beforeEach(async ({ page }) => {
   await page.route("http://127.0.0.1:55440/**", (route) => route.fulfill({ status: route.request().url().includes("/auth/") ? 401 : 200, json: {} }));
 });
 
+test("Discord header button opens the server widget", async ({ page }, info) => {
+  test.skip(info.project.name === "mobile", "The compact header intentionally hides this button");
+  await page.route("https://discord.com/widget**", (route) => route.fulfill({ contentType: "text/html", body: "<body>Discord server widget</body>" }));
+  const response = await page.goto("/");
+  expect(response?.headers()["content-security-policy"]).toContain("frame-src https://discord.com");
+
+  const button = page.getByRole("button", { name: "加入我們的 Discord" });
+  await button.click();
+  await expect(button).toHaveAttribute("aria-expanded", "true");
+  const widget = page.locator('iframe[src="https://discord.com/widget?id=1542874383322972262&theme=dark"]');
+  await expect(widget).toBeVisible();
+  await expect(page.frameLocator('iframe[src^="https://discord.com/widget"]').locator("body")).toContainText("Discord server widget");
+
+  await page.keyboard.press("Escape");
+  await expect(widget).toHaveCount(0);
+  await expect(button).toBeFocused();
+});
+
 for (const theme of ["dark", "light"]) {
   test(`homepage challenge and practice paths (${theme})`, async ({ page }, info) => {
     await page.addInitScript((value) => localStorage.setItem("theme", value), theme);
