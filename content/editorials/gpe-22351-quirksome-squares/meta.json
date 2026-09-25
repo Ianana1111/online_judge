@@ -3,6 +3,9 @@
   "title": "只枚舉可能的平方根，再檢查十進位左右半部",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

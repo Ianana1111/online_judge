@@ -1,0 +1,7 @@
+The future of the game depends only on the number of stones remaining, not the full history. Let `winning[s]` mean that the player whose turn begins with `s` stones can force a win.
+
+With zero stones, the current player has no move and loses, so `winning[0]=false`. For positive `s`, if any legal removal `take<=s` reaches a losing state `winning[s-take]=false`, the current player chooses it and wins. If every legal successor is winning, every move gives the opponent a winning strategy and the state is losing.
+
+Compute states in increasing stone count. All moves are positive, so every dependency has already been computed. Once one losing successor is found, no more moves need to be tested for that state.
+
+Stop checking moves after finding one winning choice and rebuild the state table for each case.

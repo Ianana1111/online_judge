@@ -20,7 +20,7 @@
       "label": "Assumes all moves1..maximum are legal",
       "languageKey": "cpp17",
       "find": "winning[n] ?",
-      "replace": "(n % (*max_element(moves.begin(), moves.end()) + 1) != 0) ?"
+      "replace": "([&]() { long long largest = 0; for (long long move : moves) if (move > largest) largest = move; return n % (largest + 1) != 0; }()) ?"
     }
   ]
 }

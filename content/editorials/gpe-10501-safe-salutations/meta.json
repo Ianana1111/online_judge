@@ -3,6 +3,9 @@
   "title": "固定第一個人的握手對象，把圓內分成兩個子問題",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

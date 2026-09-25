@@ -3,6 +3,9 @@
   "title": "保留有利的連續前綴，用 Kadane 演算法找最大收益",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

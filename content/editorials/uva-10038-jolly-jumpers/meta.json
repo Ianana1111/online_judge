@@ -3,6 +3,9 @@
   "title": "檢查相鄰差值是否恰好覆蓋一到 N 減一",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

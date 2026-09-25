@@ -1,0 +1,7 @@
+Substring search is too restrictive: `ab` can be obtained from `axb` even though it is not a contiguous block. Character counts alone are too permissive: `ba` cannot be obtained from `ab`.
+
+Keep a pointer to the next character needed from s. Scan t from left to right. When its current character matches that required character, advance the pointer; otherwise discard it. At the end, success means the pointer reached the end of s.
+
+Why accept the earliest match without trying later ones? Choosing an earlier occurrence leaves at least as much remaining text for all later required characters. Delaying a match cannot create an opportunity that the earlier choice would lose. This is the greedy property that makes backtracking unnecessary.
+
+Check `matched < shortText.length()` before indexing after a complete match.

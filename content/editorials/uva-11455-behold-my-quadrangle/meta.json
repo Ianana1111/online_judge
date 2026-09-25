@@ -3,6 +3,9 @@
   "title": "依優先順序判斷正方形、矩形與四邊形",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

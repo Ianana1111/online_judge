@@ -3,6 +3,9 @@
   "title": "建立二進位表示並計算一的個數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

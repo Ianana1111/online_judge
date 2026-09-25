@@ -3,6 +3,9 @@
   "title": "以十進位陣列累乘階乘，同步保存各 N 的位數和",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

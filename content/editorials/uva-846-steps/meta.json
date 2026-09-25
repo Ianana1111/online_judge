@@ -3,6 +3,9 @@
   "title": "用步長山形的最大距離，判斷最少步數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

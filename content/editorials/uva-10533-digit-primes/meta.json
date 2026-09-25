@@ -3,6 +3,9 @@
   "title": "質數篩加前綴和，一次回答大量區間查詢",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

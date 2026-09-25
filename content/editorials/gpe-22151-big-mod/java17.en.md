@@ -1,0 +1,7 @@
+The binary form of an exponent decomposes it into powers of two. For example, `13=8+4+1`, so only `B^8`, `B^4`, and `B` are needed. Repeated squaring produces exactly these powers.
+
+Keep `result` as the product selected by processed bits and `base` as the current power-of-two residue. If the exponent's low bit is one, multiply `base` into `result`. Then square `base` modulo `M` and shift the exponent right. Initialize with `base=B mod M` and `result=1 mod M`; the latter correctly handles both zero exponent and modulus one.
+
+Reducing after every multiplication is safe because modular multiplication respects congruence, and it prevents the full power from ever being formed.
+
+The modulus is at most 46340, so intermediate products fit in `long` without building the full power.

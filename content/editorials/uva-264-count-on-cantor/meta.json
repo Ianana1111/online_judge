@@ -3,6 +3,9 @@
   "title": "三角形數定位斜線，再依奇偶決定方向",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "合併大小寫，依頻率與字母雙重排序",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

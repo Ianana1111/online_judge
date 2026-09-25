@@ -3,6 +3,9 @@
   "title": "先查是否會做，再比較準時與寬限五日的邊界",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

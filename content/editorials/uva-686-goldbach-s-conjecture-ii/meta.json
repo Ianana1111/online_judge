@@ -3,6 +3,9 @@
   "title": "只枚舉不大於一半的質數，計算無序配對",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

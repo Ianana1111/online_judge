@@ -3,6 +3,9 @@
   "title": "完整保存狀態判重，新一輪必須同時更新",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
