@@ -3,6 +3,9 @@
   "title": "保留原句，計算不分大小寫的完整關鍵字出現次數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

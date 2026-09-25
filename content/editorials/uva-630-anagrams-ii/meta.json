@@ -3,6 +3,9 @@
   "title": "用字母排序簽章找出全部重排單字",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

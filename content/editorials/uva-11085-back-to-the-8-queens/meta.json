@@ -3,6 +3,9 @@
   "title": "枚舉所有合法八皇后配置，計算需要換列的皇后數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

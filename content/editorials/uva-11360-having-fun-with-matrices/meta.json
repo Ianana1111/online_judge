@@ -3,6 +3,9 @@
   "title": "逐項模擬五種矩陣操作，特別處理模十與轉置",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
