@@ -3,6 +3,9 @@
   "title": "按行解析命令，以四方向洪水填色模擬圖形編輯器",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
