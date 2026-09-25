@@ -3,6 +3,9 @@
   "title": "先排除兩條邊界，再以相對方向決定象限",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

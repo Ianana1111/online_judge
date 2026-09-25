@@ -12,7 +12,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { createDockerSandbox } from "../../tests/support/docker-sandbox";
 import { createVercelSandbox } from "../../tests/support/vercel-sandbox";
-import { compileInSandbox, runOneCase } from "../../apps/judge/src/local/sandboxRun";
+import { runOneCase } from "../../apps/judge/src/local/sandboxRun";
 import { evaluateInSandbox } from "../../apps/judge/src/local/evaluate";
 import { checkProblemOutput } from "../../apps/judge/src/local/checkers";
 import { runtimeVerdict } from "../../apps/judge/src/local/runVerdict";
@@ -81,8 +81,11 @@ async function main() {
       const rows:CaseResult[]=[];let compileStatus="OK",submitStatus:string|undefined;
       try {
         const lang=LANGUAGES[candidate.languageKey];if(!lang)throw new Error("Unsupported candidate language");
-        const compile=await compileInSandbox(fixture.sandbox,lang,candidate.sourceCode);
-        if(!compile.ok) { compileStatus="CE";rows.push({kind:"hidden",ord:-1,verdict:"CE",diagnostic:compile.compileError}); }
+        // Submit compiles the source once. Keep that compiled program for the
+        // subsequent per-case audit, including Java's frozen Main.class.
+        const submission=await evaluateInSandbox(fixture.sandbox,p,p.testCases,candidate.languageKey,candidate.sourceCode);
+        submitStatus=submission.status;
+        if(submission.status==="CE") { compileStatus="CE";rows.push({kind:"hidden",ord:-1,verdict:"CE",diagnostic:submission.compileError}); }
         else {
           for(const group of [{kind:"sample" as const,cases:p.samples},{kind:"hidden" as const,cases:p.testCases}]) for(const tc of group.cases) {
             try {
@@ -90,18 +93,6 @@ async function main() {
               const verdict=runtimeVerdict(run,p.memoryLimitKb)??(checkProblemOutput(p,tc.input,tc.output,run.stdout)?"AC":"WA");
               rows.push({kind:group.kind,ord:tc.ord,verdict,timeMs:run.timeMs,memoryKb:run.memoryKb,actualOutput:run.stdout,diagnostic:run.stderr});
             } catch { rows.push({kind:group.kind,ord:tc.ord,verdict:"SE"}); }
-          }
-          // Exercise Submit's actual aggregate evaluator too; this is separate from the loop
-          // above, which deliberately keeps running every case after a mismatch.
-          // javac writes Main.class in place. The first compile deliberately freezes
-          // program files, so a second compile in this sandbox would fail with CE even
-          // though a real submission always starts in a fresh sandbox.
-          if(candidate.languageKey==="java17") {
-            const submitFixture=backend==="docker"?await createDockerSandbox(toolchain):await createVercelSandbox();
-            try { submitStatus=(await evaluateInSandbox(submitFixture.sandbox,p,p.testCases,candidate.languageKey,candidate.sourceCode)).status; }
-            finally { await submitFixture.stop(); }
-          } else {
-            submitStatus=(await evaluateInSandbox(fixture.sandbox,p,p.testCases,candidate.languageKey,candidate.sourceCode)).status;
           }
         }
       } catch { compileStatus="SE"; }

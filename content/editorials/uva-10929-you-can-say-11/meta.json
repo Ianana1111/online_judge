@@ -3,6 +3,9 @@
   "title": "串流計算模十一，原始千位字串不轉窄整數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
