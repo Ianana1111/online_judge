@@ -3,6 +3,9 @@
   "title": "合併相同信仰關係，剩餘連通分量就是最大數量",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "辨認起點的陸地字元，先排除原大陸再找最大區塊",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

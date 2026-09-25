@@ -3,6 +3,9 @@
   "title": "八方向相鄰的油格屬於同一片油田",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
