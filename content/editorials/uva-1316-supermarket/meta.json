@@ -3,6 +3,9 @@
   "title": "依期限掃描，以最小堆保留最有價值的可售商品",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

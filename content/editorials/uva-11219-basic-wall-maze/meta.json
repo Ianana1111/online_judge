@@ -3,6 +3,9 @@
   "title": "先判未出生日期，再按生日是否已過計算周歲",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

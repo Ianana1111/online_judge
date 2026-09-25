@@ -3,6 +3,9 @@
   "title": "用滑動視窗找出覆蓋一到 K 的最短連續區段",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

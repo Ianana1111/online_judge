@@ -3,6 +3,9 @@
   "title": "預留移到最上方的位置，用 Fenwick tree 查詢上方盒數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
