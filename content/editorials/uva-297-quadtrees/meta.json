@@ -3,6 +3,9 @@
   "title": "解碼兩棵四分樹，在同一張黑白像素表取聯集",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

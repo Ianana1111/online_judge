@@ -3,6 +3,9 @@
   "title": "逐字套用明文字母表，保留所有未映射字元與空白",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
