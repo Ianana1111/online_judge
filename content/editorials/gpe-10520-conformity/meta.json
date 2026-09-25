@@ -3,6 +3,9 @@
   "title": "課程先排序當鍵，再加總所有最高人氣組合的人數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "逆向還原淘汰輪次，讓質數步長與剩餘人數正確對齊",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

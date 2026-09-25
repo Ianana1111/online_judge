@@ -3,6 +3,9 @@
   "title": "維護最小結尾，以二分搜尋求 LIS 長度",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

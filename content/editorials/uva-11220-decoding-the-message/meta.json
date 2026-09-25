@@ -3,6 +3,9 @@
   "title": "只有成功取到字母時，才前進下一個字母位置",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

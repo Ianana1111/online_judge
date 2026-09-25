@@ -3,6 +3,9 @@
   "title": "用最小堆合併週期事件，相同時間依查詢編號排序",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

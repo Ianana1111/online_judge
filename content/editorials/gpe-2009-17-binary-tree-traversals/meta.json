@@ -3,6 +3,9 @@
   "title": "由前序與中序分割子樹，產生後序",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

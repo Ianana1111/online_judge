@@ -20,7 +20,7 @@
       "label": "Erases genuine spaces from input line",
       "languageKey": "cpp17",
       "find": "int n = s.size();",
-      "replace": "s.erase(remove(s.begin(), s.end(), ' '), s.end()); if (s.empty()) s = \"x\"; int n = s.size();"
+      "replace": "for (size_t at = s.find(' '); at != string::npos; at = s.find(' ')) s.erase(at, 1); if (s.empty()) s = \"x\"; int n = s.size();"
     }
   ]
 }

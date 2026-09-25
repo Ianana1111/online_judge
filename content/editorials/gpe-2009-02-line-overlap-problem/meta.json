@@ -3,6 +3,9 @@
   "title": "掃描端點，累加每一對線段的重疊長度",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

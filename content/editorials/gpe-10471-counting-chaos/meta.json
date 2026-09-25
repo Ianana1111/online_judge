@@ -3,6 +3,9 @@
   "title": "依題目忽略前導零，查找嚴格下一個回文時刻",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

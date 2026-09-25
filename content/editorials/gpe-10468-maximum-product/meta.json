@@ -3,6 +3,9 @@
   "title": "枚舉每個起點，累乘所有連續區間",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
