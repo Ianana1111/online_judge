@@ -3,6 +3,9 @@
   "title": "先移除第一區，再以 Josephus 生存位置搜尋最小步長",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

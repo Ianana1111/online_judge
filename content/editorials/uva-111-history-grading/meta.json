@@ -3,6 +3,9 @@
   "title": "先將事件名次反轉為順序，再求最長遞增子序列",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

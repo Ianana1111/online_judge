@@ -3,6 +3,9 @@
   "title": "由上往下加入箱子，用最小堆重維持最佳高度",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

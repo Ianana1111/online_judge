@@ -3,6 +3,9 @@
   "title": "限制因數非遞減，以回溯列出所有不同乘法分解",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

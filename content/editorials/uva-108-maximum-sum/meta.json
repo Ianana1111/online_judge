@@ -3,6 +3,9 @@
   "title": "固定上下邊界，將最大子矩形化為一維最大子段",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
