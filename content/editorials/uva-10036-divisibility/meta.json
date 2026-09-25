@@ -3,6 +3,9 @@
   "title": "只保留可達餘數，每次加入正負兩種轉移",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

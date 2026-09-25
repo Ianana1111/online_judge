@@ -3,6 +3,9 @@
   "title": "從所有手動推倒的位置搜尋，計算有向可達聯集",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

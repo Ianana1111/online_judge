@@ -3,6 +3,9 @@
   "title": "每一欄獨立選最多的字母，同票取字典序最小",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

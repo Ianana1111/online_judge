@@ -3,6 +3,9 @@
   "title": "先判原數為質數，再檢查不同的反轉值",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

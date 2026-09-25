@@ -3,6 +3,9 @@
   "title": "把金額化成整數分，分別計算必付與必收下界",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "完整保留樹種名稱，以整數精確計算百分比",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

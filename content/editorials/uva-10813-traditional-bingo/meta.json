@@ -3,6 +3,9 @@
   "title": "以每一格被叫到的時間，求最早完成的連線",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

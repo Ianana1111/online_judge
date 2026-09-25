@@ -3,6 +3,9 @@
   "title": "以所有非英文字母為分隔，建立不重複的小寫字典",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
