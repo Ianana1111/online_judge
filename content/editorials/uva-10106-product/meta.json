@@ -3,6 +3,9 @@
   "title": "以十進位位數做直式乘法，最後統一處理進位",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

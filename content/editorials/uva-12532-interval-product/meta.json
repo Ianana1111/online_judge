@@ -3,6 +3,9 @@
   "title": "用兩棵 Fenwick tree 記錄零數量與負數奇偶",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

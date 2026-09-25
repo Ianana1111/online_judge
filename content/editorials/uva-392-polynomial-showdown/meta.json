@@ -3,6 +3,9 @@
   "title": "把符號與項內容分開，首項使用不同連接規則",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

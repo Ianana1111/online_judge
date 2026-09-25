@@ -3,6 +3,9 @@
   "title": "用多重集合的排列區塊定位指定排名",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

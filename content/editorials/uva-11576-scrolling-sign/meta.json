@@ -3,6 +3,9 @@
   "title": "找前字尾與後字首的最長重疊，只補新字元",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
