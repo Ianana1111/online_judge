@@ -3,6 +3,9 @@
   "title": "只取每行第一個單字，統計各國紀錄數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

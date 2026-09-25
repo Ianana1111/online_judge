@@ -3,6 +3,9 @@
   "title": "逐步模擬機器人與共用氣味地圖",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

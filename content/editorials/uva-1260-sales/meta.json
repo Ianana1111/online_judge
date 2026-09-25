@@ -3,6 +3,9 @@
   "title": "用頻率前綴查詢，計算之前不大於今天的天數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

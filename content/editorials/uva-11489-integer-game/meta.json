@@ -3,6 +3,9 @@
   "title": "先讓數位和成為三的倍數，再計算可移除零餘數數位的奇偶",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

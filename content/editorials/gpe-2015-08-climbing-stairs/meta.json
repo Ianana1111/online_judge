@@ -3,6 +3,9 @@
   "title": "從最後一步分類，精確計算一百階樓梯",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

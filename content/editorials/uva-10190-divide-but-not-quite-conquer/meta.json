@@ -3,6 +3,9 @@
   "title": "以整除序列判斷是否為正整數冪",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

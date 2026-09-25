@@ -3,6 +3,9 @@
   "title": "先下降再上升，貪心保留每段的極值",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

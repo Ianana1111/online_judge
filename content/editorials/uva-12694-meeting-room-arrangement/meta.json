@@ -3,6 +3,9 @@
   "title": "每次選最早結束的可接續活動",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "逐筆配對反向需求，次數也必須完全相同",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

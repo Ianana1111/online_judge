@@ -3,6 +3,9 @@
   "title": "把中心對稱化為陣列前後配對",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

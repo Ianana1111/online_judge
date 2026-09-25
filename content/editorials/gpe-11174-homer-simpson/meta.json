@@ -3,6 +3,9 @@
   "title": "先讓剩餘時間最少，再最大化漢堡數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
