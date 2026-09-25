@@ -3,6 +3,9 @@
   "title": "檢查字母嚴格遞增，以組合數計算長度優先的排名",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

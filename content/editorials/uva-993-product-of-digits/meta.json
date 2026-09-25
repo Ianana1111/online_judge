@@ -3,6 +3,9 @@
   "title": "枚舉數字六的用量，再壓縮剩餘質因數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

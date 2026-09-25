@@ -3,6 +3,9 @@
   "title": "檢查唯一根、入度與從根可達的全部節點",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

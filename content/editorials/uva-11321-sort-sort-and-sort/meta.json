@@ -3,6 +3,9 @@
   "title": "把多層排序規則寫成比較函式",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
