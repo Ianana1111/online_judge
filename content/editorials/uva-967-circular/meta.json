@@ -3,6 +3,9 @@
   "title": "質數篩與循環位數檢查，前綴和回答區間",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "逐位計算完整循環，另外扣除前導零",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "先找出可達路徑，再只標記通往終點的前驅鏈",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

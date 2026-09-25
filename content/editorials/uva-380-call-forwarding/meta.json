@@ -3,6 +3,9 @@
   "title": "固定來電時間追蹤轉接鏈，重訪任何分機即判循環",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

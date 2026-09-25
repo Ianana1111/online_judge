@@ -3,6 +3,9 @@
   "title": "保留最昂貴的生成樹，把監視器放在其餘道路",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

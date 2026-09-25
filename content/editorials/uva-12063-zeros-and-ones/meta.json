@@ -3,6 +3,9 @@
   "title": "固定最高位為一，用位數、已用一的數量與餘數計數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

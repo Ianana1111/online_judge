@@ -3,6 +3,9 @@
   "title": "依路徑建立節點，檢查完整性後做層序遍歷",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
