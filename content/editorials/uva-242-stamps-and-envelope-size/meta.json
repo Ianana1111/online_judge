@@ -3,6 +3,9 @@
   "title": "最少郵票動態規劃與由大面額往小的同分比較",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

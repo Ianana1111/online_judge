@@ -3,6 +3,9 @@
   "title": "依數字出現次數回溯所有非零開頭整數，再查質數表",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
