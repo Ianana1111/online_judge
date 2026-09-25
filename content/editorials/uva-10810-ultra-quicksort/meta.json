@@ -3,6 +3,9 @@
   "title": "相鄰交換的最少次數等於逆序數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

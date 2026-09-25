@@ -3,6 +3,9 @@
   "title": "用子樹盈虧決定每條邊必須搬運的彈珠數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

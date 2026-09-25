@@ -3,6 +3,9 @@
   "title": "先選固定點，再對其他指定位置做容斥",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

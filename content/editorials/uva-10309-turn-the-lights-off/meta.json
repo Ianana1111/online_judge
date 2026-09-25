@@ -3,6 +3,9 @@
   "title": "枚舉第一列按鈕，讓後面每列唯一決定",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "依列向上傳遞路徑數，只有遇到黑棋時才能跳躍",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

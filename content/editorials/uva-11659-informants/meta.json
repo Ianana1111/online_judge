@@ -3,6 +3,9 @@
   "title": "枚舉可靠者集合，只要求可靠者的陳述全部成立",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

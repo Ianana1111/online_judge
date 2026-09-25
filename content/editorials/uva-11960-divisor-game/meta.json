@@ -3,6 +3,9 @@
   "title": "用倍數篩計算因數個數，前綴維護同分時最大的編號",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
