@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+#include <iomanip>
+#include <iostream>
+#include <string>
 using namespace std;
 
 string preorder, inorder;

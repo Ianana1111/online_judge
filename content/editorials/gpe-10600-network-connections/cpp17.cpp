@@ -1,4 +1,9 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <numeric>
+#include <sstream>
+#include <string>
+#include <vector>
 using namespace std;
 struct DSU {
     vector<int> parent, size;

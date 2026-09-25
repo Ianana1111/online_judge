@@ -1,4 +1,12 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
 using namespace std;
 using Edge=pair<string,string>;
 struct DSU {

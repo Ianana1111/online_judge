@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <numeric>
+#include <vector>
 using namespace std;
 bool valid(vector<int> runs,int level){
     int quotes=accumulate(runs.begin(),runs.end(),0);

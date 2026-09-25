@@ -1,4 +1,9 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+#include <string>
 using namespace std;
 int main(){
     ios::sync_with_stdio(false);cin.tie(nullptr);string city;

@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <set>
+#include <string>
+#include <utility>
 using namespace std;
 string canonical(string board,int n) {
     string best=board;

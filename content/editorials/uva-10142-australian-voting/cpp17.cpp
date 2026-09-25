@@ -1,4 +1,10 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <climits>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
 using namespace std;
 int main(){
     ios::sync_with_stdio(false);cin.tie(nullptr);string line;getline(cin,line);int tests=stoi(line);

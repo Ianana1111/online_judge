@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <array>
+#include <climits>
+#include <iostream>
+#include <vector>
 using namespace std;
 
 int main() {

@@ -1,4 +1,12 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cstdint>
+#include <iomanip>
+#include <iostream>
+#include <numeric>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
 using namespace std;
 using ll=long long;
 vector<pair<ll,uint32_t>> half_sums(const vector<ll>& a,int begin,int length){

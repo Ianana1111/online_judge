@@ -1,4 +1,10 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <array>
+#include <cctype>
+#include <iostream>
+#include <limits>
+#include <string>
+#include <vector>
 using namespace std;
 
 int main() {

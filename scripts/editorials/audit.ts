@@ -93,7 +93,16 @@ async function main() {
           }
           // Exercise Submit's actual aggregate evaluator too; this is separate from the loop
           // above, which deliberately keeps running every case after a mismatch.
-          submitStatus=(await evaluateInSandbox(fixture.sandbox,p,p.testCases,candidate.languageKey,candidate.sourceCode)).status;
+          // javac writes Main.class in place. The first compile deliberately freezes
+          // program files, so a second compile in this sandbox would fail with CE even
+          // though a real submission always starts in a fresh sandbox.
+          if(candidate.languageKey==="java17") {
+            const submitFixture=backend==="docker"?await createDockerSandbox(toolchain):await createVercelSandbox();
+            try { submitStatus=(await evaluateInSandbox(submitFixture.sandbox,p,p.testCases,candidate.languageKey,candidate.sourceCode)).status; }
+            finally { await submitFixture.stop(); }
+          } else {
+            submitStatus=(await evaluateInSandbox(fixture.sandbox,p,p.testCases,candidate.languageKey,candidate.sourceCode)).status;
+          }
         }
       } catch { compileStatus="SE"; }
       finally { await fixture.stop(); }

@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <iomanip>
+#include <iostream>
 using namespace std;
 bool uniqueDigits(int numerator, int denominator) {
     int used = 0;

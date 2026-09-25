@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
 using namespace std;
 int bits(int value) { int total = 0; while (value) { total += value % 2; value /= 2; } return total; }
 int main() {

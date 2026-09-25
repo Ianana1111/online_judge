@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <numeric>
+#include <vector>
 using namespace std;
 struct DSU {
     vector<int> parent,size;vector<long long> area;

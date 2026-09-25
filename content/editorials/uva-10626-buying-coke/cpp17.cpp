@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <vector>
 using namespace std;
 int totalC,totalValue,maxFive,maxTen;
 vector<int> memo;

@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <iomanip>
+#include <iostream>
+#include <numeric>
+#include <vector>
 using namespace std;
 int main() {
     ios::sync_with_stdio(false); cin.tie(nullptr);

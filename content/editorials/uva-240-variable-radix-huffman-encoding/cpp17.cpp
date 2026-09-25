@@ -1,4 +1,12 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <climits>
+#include <functional>
+#include <iostream>
+#include <queue>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
 using namespace std;
 struct Node{int weight,letter;vector<int> children;};
 struct Item{int weight,letter,id;bool operator>(const Item &other)const{

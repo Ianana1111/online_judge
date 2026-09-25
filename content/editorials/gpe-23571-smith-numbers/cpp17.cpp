@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
 using namespace std;
 int digitSum(long long value) {
     int sum = 0;

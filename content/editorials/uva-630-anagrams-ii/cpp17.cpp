@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <string>
+#include <vector>
 using namespace std;
 string signature(string word){sort(word.begin(),word.end());return word;}
 int main(){

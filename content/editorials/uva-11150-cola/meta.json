@@ -3,6 +3,9 @@
   "title": "借瓶只幫最後一步，每多喝一瓶淨消耗兩個空瓶",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <vector>
 using namespace std;
 const long long MOD = 1000000007;
 long long chooseSmall(long long n, int r) {

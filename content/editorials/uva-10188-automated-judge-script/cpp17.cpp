@@ -1,4 +1,9 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cctype>
+#include <iostream>
+#include <limits>
+#include <string>
+#include <vector>
 using namespace std;
 
 vector<string> readLines(int n) {

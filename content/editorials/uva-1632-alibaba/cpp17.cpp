@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <vector>
 using namespace std;
 long long earliest(long long a,long long b){if(a<0)return b;if(b<0)return a;return min(a,b);}
 long long arrive(long long time,__int128 distance,long long deadline){

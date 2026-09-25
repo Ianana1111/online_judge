@@ -1,4 +1,10 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <deque>
+#include <iostream>
+#include <queue>
+#include <string>
+#include <unordered_map>
+#include <vector>
 using namespace std;
 using Key=unsigned __int128;
 struct Pattern{Key key;int word;};

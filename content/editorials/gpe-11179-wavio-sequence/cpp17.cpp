@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <vector>
 using namespace std;
 vector<int> ending(const vector<long long> &a) {
     vector<long long> tails; vector<int> length;

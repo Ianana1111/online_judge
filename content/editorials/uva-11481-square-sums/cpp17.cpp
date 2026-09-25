@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
 using namespace std;
 const long long MOD=1000000007;
 long long power(long long a,long long e){long long result=1;while(e){if(e&1)result=result*a%MOD;a=a*a%MOD;e>>=1;}return result;}

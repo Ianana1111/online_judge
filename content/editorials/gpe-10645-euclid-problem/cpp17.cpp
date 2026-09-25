@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <cstdlib>
+#include <iostream>
+#include <tuple>
+#include <vector>
 using namespace std;
 long long floorDiv(long long a, long long b) {
     long long q = a / b, r = a % b;

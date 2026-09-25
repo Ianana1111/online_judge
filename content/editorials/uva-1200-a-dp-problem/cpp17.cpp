@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cctype>
+#include <iostream>
+#include <string>
+#include <utility>
 using namespace std;
 pair<long long,long long> parse(const string &s) {
     long long coefficient=0,constant=0;int i=0;

@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
 using namespace std;
 int digitSum(const string& text) { int total = 0; for (char ch : text) total += ch - '0'; return total; }
 int main() {

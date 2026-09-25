@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
 using namespace std;
 long long prefix(long long n) {
     if (n<0) return 0;

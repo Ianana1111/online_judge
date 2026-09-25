@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 long long position(long long x, long long y) {
     long long diagonal = x + y;
