@@ -3,6 +3,9 @@
   "title": "在樹上換根，計算所有住處的年度加權來回時間",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

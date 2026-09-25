@@ -3,6 +3,9 @@
   "title": "折半枚舉子集合和，將相同和的選法數相乘",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "在樹上選最少頂點，確保每條邊至少有一端受守衛",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
