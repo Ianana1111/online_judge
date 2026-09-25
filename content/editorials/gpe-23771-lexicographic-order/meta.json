@@ -3,6 +3,9 @@
   "title": "用階乘區塊反推每個符號在未知字母表中的順位",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

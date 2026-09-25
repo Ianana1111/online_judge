@@ -3,6 +3,9 @@
   "title": "以兩個候選起點線性淘汰，求最小循環字串的位置",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "以列與欄前綴收益，規劃不交叉的直線輸送帶",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "利用上下半部的自相似結構，計算紅氣球列前綴",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

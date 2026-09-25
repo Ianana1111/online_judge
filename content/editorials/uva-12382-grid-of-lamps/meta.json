@@ -3,6 +3,9 @@
   "title": "用最小割界線直接算出最少亮燈數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
