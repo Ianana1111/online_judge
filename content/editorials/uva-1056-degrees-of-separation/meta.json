@@ -3,6 +3,9 @@
   "title": "以 Floyd–Warshall 求最短關係距離，再取全圖最大值",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

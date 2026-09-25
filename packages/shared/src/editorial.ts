@@ -2,7 +2,7 @@ import { z } from "zod";
 
 // A regression test binds this to the production compile/run/checker sources. Changing the
 // pipeline requires a new revision and invalidates old publication evidence automatically.
-export const EDITORIAL_JUDGE_REVISION = "a65e36e2f56fe46c3c9ec98f4a3c3ad6c1150cc95483843e3b360e149c0b01e6";
+export const EDITORIAL_JUDGE_REVISION = "e6d221ab1c342e5b03144a9763eabe222c21cc8052e20defa9561afdaa338950";
 export const editorialSolutionSchema = z.object({
   languageKey: z.enum(["cpp17", "python3", "c11", "java17"]),
   sourceCode: z.string().min(30).max(100_000),

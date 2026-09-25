@@ -3,6 +3,9 @@
   "title": "先轉成從紀元起算的天數，再分解兩個循環",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

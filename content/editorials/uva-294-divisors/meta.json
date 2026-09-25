@@ -3,6 +3,9 @@
   "title": "對窄區間做分段質因數分解，計算每個數的因數數量",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

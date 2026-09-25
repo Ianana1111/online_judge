@@ -31,7 +31,7 @@ export const LANGUAGES: Record<string, LanguageSpec> = {
   },
   c11: {
     sourceFileName: "main.c",
-    compile: { cmd: "gcc", args: ["-O2", "-std=c11", "-fmax-errors=20", "-o", "main", "main.c"] },
+    compile: { cmd: "gcc", args: ["-O2", "-std=c11", "-fmax-errors=20", "-o", "main", "main.c", "-lm"] },
     runCmd: () => ({ cmd: "./main", args: [] }),
     timeMultiplier: 1,
     ulimitMemory: true,

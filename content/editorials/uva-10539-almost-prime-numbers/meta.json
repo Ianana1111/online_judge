@@ -3,6 +3,9 @@
   "title": "列出質數的二次以上冪，再以二分查詢區間個數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
