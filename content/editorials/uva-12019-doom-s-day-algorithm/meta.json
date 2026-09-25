@@ -3,6 +3,9 @@
   "title": "以一月一日為基準，把日期轉為天數位移",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

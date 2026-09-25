@@ -3,6 +3,9 @@
   "title": "每根金屬棒只能選一次的精確子集合和",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

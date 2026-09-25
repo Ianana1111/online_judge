@@ -1,0 +1,5 @@
+The complete sum is `T(N)=N(N+1)/2`, and the missing page is `T(N)-s`. Requiring it between 1 and N is equivalent to `T(N-1)<=s<T(N)`. Thus `N` is the first index whose triangular number is strictly greater than `s`.
+
+Binary-search this monotone condition in a range ending at 20,000, whose triangular value exceeds the maximum input. Then subtract `s` from the found complete sum.
+
+Store page counts and triangular totals in `long`, then print missing page before total pages.

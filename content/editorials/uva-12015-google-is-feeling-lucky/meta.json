@@ -3,6 +3,9 @@
   "title": "先求最高分，再依輸入順序保留全部並列網站",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

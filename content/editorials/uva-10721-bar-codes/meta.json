@@ -3,6 +3,9 @@
   "title": "把條碼視為有上限的正整數有序分拆",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

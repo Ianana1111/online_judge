@@ -3,6 +3,9 @@
   "title": "由範例推得 ASCII 位移七，換行保持原樣",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

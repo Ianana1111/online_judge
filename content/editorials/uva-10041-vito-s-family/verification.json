@@ -13,7 +13,7 @@
       "label": "Uses arithmetic mean",
       "languageKey": "cpp17",
       "find": "positions[count / 2]",
-      "replace": "accumulate(positions.begin(), positions.end(), 0LL) / count"
+      "replace": "[&]() { long long sum = 0; for (int x : positions) sum += x; return int(sum / count); }()"
     },
     {
       "id": "no-absolute",

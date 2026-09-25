@@ -3,6 +3,9 @@
   "title": "逐行統計英文字母，按大小寫次序列出最高頻率",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

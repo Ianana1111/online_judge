@@ -3,6 +3,9 @@
   "title": "枚舉整數邊長因數，最小化長方體表面積",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "保留不會觸發下一面額的最小收集金額",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

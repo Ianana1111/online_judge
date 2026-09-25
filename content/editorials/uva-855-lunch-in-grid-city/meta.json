@@ -3,6 +3,9 @@
   "title": "把曼哈頓距離拆成兩軸，各取較小中位數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "因數成對：只有完全平方數的燈最後亮著",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -1,0 +1,7 @@
+Sort the data. Let `low=values[(N-1)/2]` be the lower median and `high=values[N/2]` the upper median. Every integer in the closed interval `[low,high]` minimizes total absolute deviation, and no value outside it does.
+
+The first output is therefore `low`. The number of distinct integer choices is `high-low+1`. To count input occurrences that are optimal, count all sorted elements within the complete interval using `upper_bound(high)-lower_bound(low)`.
+
+For odd N the two medians coincide. For even N both endpoints and all integers between them are optimal, so duplicates at both ends contribute to the second field.
+
+Take the two central positions after sorting; for odd length they refer to the same value.

@@ -3,6 +3,9 @@
   "title": "依較大端點累加所有互異數對的最大公因數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

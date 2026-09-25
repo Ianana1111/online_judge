@@ -3,6 +3,9 @@
   "title": "保留十六位字串，從右端定位 Luhn 加倍位置",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

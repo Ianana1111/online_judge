@@ -3,6 +3,9 @@
   "title": "區分單行、雙行與一般棋盤，配對證明最大數量",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

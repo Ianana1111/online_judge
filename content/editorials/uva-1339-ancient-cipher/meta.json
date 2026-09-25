@@ -3,6 +3,9 @@
   "title": "替換改字母名稱，重排改位置，但頻率多重集合不變",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

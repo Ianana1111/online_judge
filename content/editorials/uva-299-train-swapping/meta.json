@@ -3,6 +3,9 @@
   "title": "每個逆序對都必須交換一次相對順序",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "正規化六個面，檢查成對及三條邊的相容性",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

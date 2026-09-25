@@ -3,6 +3,9 @@
   "title": "保留千位數字字串，反覆求數字和直到九",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

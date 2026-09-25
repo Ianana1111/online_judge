@@ -3,6 +3,9 @@
   "title": "先去重，再取雙方獨有種類數的較小值",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

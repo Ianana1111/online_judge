@@ -3,6 +3,9 @@
   "title": "把巨大十進位數逐位取餘，檢查所有指定因數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

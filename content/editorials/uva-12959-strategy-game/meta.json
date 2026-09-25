@@ -3,6 +3,9 @@
   "title": "按輪次累計，總分平手選最後出手者",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "由勝負關係樹求最好與最壞名次",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

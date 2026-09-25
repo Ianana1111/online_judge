@@ -3,6 +3,9 @@
   "title": "分開追蹤雄蜂、雌蜂與不死蜂后",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "記錄已出現值，遇到重複時停止平方中取",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
