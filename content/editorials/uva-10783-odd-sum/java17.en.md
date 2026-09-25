@@ -1,0 +1,3 @@
+Turn the range query into a prefix-sum question. There are `floor((n+1)/2)` positive odd numbers at most n, and the first k odd numbers sum to `k²`. Thus `oddPrefix(n)` computes k and returns its square. For the inclusive interval `[a,b]`, subtract `oddPrefix(a-1)` from `oddPrefix(b)`; this removes values strictly before a while keeping both endpoints. If a is zero, `oddPrefix(-1)` is zero as required. Number cases from one and preserve the exact `Case X: Y` output format.
+
+The java17 program turns this reasoning into direct computation or lookup while preserving the required input and output format.

@@ -1,0 +1,3 @@
+A new dream is nested inside the previous one, and waking up removes only the most recently entered layer. That is last-in-first-out behavior. Use the end of an array or list as the stack top: `Sleep X` appends X, `Kick` removes the last item only when nonempty, and `Test` prints that item. If the stack is empty, print `Not in a dream`. Storing only the current name would lose the outer layer after a kick, and duplicate names must remain separate layers. Read and process exactly the stated number of commands.
+
+The java17 program updates the state using this invariant and handles every input branch explicitly.

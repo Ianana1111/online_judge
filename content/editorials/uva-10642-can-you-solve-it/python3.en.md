@@ -1,0 +1,3 @@
+The drawn route visits points by diagonals, but every point has a unique sequence number. Point `(x,y)` lies on diagonal `d=x+y`. Earlier complete diagonals contain `1+2+...+d=d(d+1)/2` points, and x is the offset within this diagonal, which starts at x=0. This gives `position(x,y)`. The number of traversed edges is the destination position minus the starting position; no long simulation is needed. Coordinates can reach 100000, so C and Java use 64-bit arithmetic before computing the triangular number.
+
+The python3 program turns this reasoning into direct computation or lookup while preserving the required input and output format.

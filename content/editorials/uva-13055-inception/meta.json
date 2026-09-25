@@ -3,6 +3,9 @@
   "title": "用堆疊保存夢境路徑，Kick 只離開最內層",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

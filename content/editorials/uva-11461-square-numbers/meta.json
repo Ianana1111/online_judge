@@ -3,6 +3,9 @@
   "title": "預先列出所有平方數，用上下界查詢閉區間",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
