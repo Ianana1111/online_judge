@@ -3,6 +3,9 @@
   "title": "保留原始編號，重建嚴格重量與智商鏈",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

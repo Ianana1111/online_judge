@@ -3,6 +3,9 @@
   "title": "沿六邊形外圈走訪，建立格號與座標對照",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

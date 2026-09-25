@@ -3,6 +3,9 @@
   "title": "每次選能把已覆蓋前綴延伸最遠的區間",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
