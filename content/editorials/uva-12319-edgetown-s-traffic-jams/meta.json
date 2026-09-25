@@ -3,6 +3,9 @@
   "title": "分別算出新舊有向最短距離，逐對檢查改道限制",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

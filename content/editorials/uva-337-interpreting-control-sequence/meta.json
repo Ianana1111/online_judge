@@ -3,6 +3,9 @@
   "title": "把游標、畫面與插入模式分開，逐個命令模擬終端機",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
