@@ -1,0 +1,5 @@
+Follow the definition with two nested loops. The outer loop runs while the current value has at least two digits. For one round, reset `sum` to zero, repeatedly add `value % 10`, and remove that digit with integer division by 10. When all digits have been consumed, assign the round's sum back to `value`.
+
+An input already between 1 and 9 skips the outer loop and is its own answer. Direct simulation also avoids the special case needed by a modulo-nine formula, where positive multiples of nine must map to 9 rather than 0.
+
+Do not sum digits just once; the final result is reached only when `value < 10`.

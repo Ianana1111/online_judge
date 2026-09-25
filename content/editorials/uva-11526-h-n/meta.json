@@ -3,6 +3,9 @@
   "title": "把整數除法總和看成雙曲線下的格點",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

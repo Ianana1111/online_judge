@@ -3,6 +3,9 @@
   "title": "維護先前最高分，求有先後限制的最大差",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

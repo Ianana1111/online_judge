@@ -3,6 +3,9 @@
   "title": "比較相鄰牆高，上升與下降各自計數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "有效 love 值就是大於一的共同因數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

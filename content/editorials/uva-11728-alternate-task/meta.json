@@ -3,6 +3,9 @@
   "title": "先篩出每個數的因數和，再反查最大的原數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

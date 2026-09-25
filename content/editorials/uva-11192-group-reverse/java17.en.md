@@ -1,0 +1,3 @@
+Reverse the characters inside each group, not the entire string. If the length is L and there are G groups, each group has exactly L/G characters. Take slices beginning at 0, L/G, 2L/G, and so on; reverse each slice and concatenate them in the original group order. Reversing the whole string would also change the group order. A zero group count ends the input and must not be processed. Every character participates in one reversal, so the work is O(L).
+
+Each `substring` isolates one group before `StringBuilder.reverse()` changes its internal order.

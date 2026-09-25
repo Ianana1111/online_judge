@@ -3,6 +3,9 @@
   "title": "只反轉非空白區段，所有分隔符原樣保留",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

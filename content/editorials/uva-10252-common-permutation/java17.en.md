@@ -1,0 +1,7 @@
+The word “subsequence” may suggest longest common subsequence, but the two allowed permutations remove all relative-order constraints. Only the number of available copies of each letter matters, so the problem is the intersection of two multisets.
+
+Count every letter in both strings. For a letter `c`, an answer can use at most `min(countA[c],countB[c])` copies because both inputs must supply them. Taking exactly that minimum for all 26 letters maximizes the total length. Printing those copies from `a` through `z` gives the smallest lexicographic ordering of that maximum multiset.
+
+The inputs must be read with `getline`: an empty line is valid data and still consumes one half of a case.
+
+Process a case only after reading both lines; still print a blank line if no letters overlap.

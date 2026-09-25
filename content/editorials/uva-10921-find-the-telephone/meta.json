@@ -3,6 +3,9 @@
   "title": "按電話鍵盤轉碼，同時計算字母與連字號",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

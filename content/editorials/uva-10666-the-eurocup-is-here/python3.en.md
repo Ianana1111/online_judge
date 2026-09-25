@@ -1,0 +1,9 @@
+Direct every match edge from winner to loser. These comparisons form a rooted relation tree at team zero. For nonzero `X`, the opponent that eventually defeats it is obtained by clearing its lowest set bit. Repeating this operation walks through every ancestor known to be stronger. The number of such clear operations is the number of set bits in `X`, so the best rank is `popcount(X)+1`, including X itself.
+
+Let the lowest set bit of `X` be `B=2^k`. Before losing, X wins the bracket block of size `B` beginning at X, so exactly `B-1` descendants are forced below it. Every other incomparable team may be placed ahead in a legal ranking. With `2^N` teams, the worst rank is therefore
+
+`2^N-(B-1)`.
+
+Handle `X=0` separately because it has no lowest set bit and is known to defeat the entire tournament.
+
+Team zero is the champion special case; others count `1` characters in the binary representation and use the lowest set bit.

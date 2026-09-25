@@ -1,0 +1,5 @@
+The range has at most 1,000 inputs, so enumerate all of them. Evaluate with Horner form `(a*x+b)*x+c` and increment the answer when `value%d==0`. Count inputs, even when several produce the same output.
+
+C++ may return a negative remainder for negative values, but divisibility depends only on equality with zero, so no normalization is required. A zero polynomial value is divisible by every nonzero `d`.
+
+`long` holds coefficients and intermediate products; Horner form avoids needless multiplication.

@@ -3,6 +3,9 @@
   "title": "將音符長度放大六十四倍，用整數判定完整小節",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

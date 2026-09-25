@@ -3,6 +3,9 @@
   "title": "拆出最後一位，列出全部可能的原數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "早班由短到長，晚班由長到短配對",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

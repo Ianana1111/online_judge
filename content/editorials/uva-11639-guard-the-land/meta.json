@@ -3,6 +3,9 @@
   "title": "由矩形交集計算雙重、單重與未守衛面積",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

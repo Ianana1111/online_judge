@@ -3,6 +3,9 @@
   "title": "計算不含連續三個 U 的安全排列，再取補集",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

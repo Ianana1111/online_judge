@@ -3,6 +3,9 @@
   "title": "選擇中位數讓絕對距離總和最小",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "枚舉包含零與上限的整數，用餘數判斷整除",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

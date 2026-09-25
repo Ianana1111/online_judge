@@ -1,0 +1,9 @@
+Let `ways[s]` count combinations for sum `s` using denominations processed so far. Initialize `ways[0]=1` and all others zero. For each denomination `coin`, scan amounts upward from `coin` and perform
+
+`ways[s] += ways[s-coin]`.
+
+The existing value represents combinations using no new coin. Every combination at `s-coin` becomes one using at least one after appending a coin. The upward scan lets that smaller state already contain the current denomination, allowing unlimited copies. Keeping denominations in the outer loop introduces every multiset once and avoids counting different coin orders.
+
+Precompute the whole legal range once so every input query becomes a table lookup.
+
+Precompute every amount once; any number of queries then becomes an array lookup.

@@ -3,6 +3,9 @@
   "title": "找第一個嚴格超過已知和的三角形數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

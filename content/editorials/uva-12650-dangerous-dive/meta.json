@@ -3,6 +3,9 @@
   "title": "標記已返回者，再由小到大列出缺少的編號",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

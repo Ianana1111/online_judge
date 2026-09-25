@@ -3,6 +3,9 @@
   "title": "每次選非負位元，再以負二除去最低位",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

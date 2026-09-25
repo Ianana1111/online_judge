@@ -1,0 +1,5 @@
+Permuting the dimensions changes neither volume nor area, so enumerate only `a<=b<=c`. The smallest side must satisfy `a^3<=N` and divide `N`. After choosing it, `b*c=N/a`; because `b<=c`, we need `b^2<=N/a`, and `b` must divide that remaining product. Then `c` is determined exactly.
+
+For every valid factor triple, compute the six-face surface area and keep the minimum. Integer multiplication conditions avoid floating-point cube-root or square-root boundary errors. The box `1*1*N` always exists, so `6N` is a safe initial upper bound.
+
+The three dimensions must multiply to the block count; surface area is twice the sum of three face products.

@@ -3,6 +3,9 @@
   "title": "反覆相加直到剩下一位數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

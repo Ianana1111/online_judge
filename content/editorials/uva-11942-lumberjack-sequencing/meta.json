@@ -3,6 +3,9 @@
   "title": "整列必須保持同一方向，不能只比較頭尾",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

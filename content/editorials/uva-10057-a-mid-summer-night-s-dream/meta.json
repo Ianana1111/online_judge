@@ -3,6 +3,9 @@
   "title": "中位數區間決定所有最小絕對偏差的答案",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
