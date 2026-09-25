@@ -3,6 +3,9 @@
   "title": "把不重複路線的共同子序列轉成位置 LIS",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

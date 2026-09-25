@@ -3,6 +3,9 @@
   "title": "枚舉下一個合法整數，以後綴 DP 最大化總和",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
