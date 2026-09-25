@@ -3,6 +3,9 @@
   "title": "先算火的抵達時間，再搜尋嚴格早於火的逃生路徑",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
