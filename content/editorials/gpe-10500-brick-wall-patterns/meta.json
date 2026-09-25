@@ -3,6 +3,9 @@
   "title": "依最左邊磚塊分類，得到費波那契遞迴",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

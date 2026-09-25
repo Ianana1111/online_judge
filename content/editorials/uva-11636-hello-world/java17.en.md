@@ -1,0 +1,3 @@
+One line already exists, so N=1 needs zero pastes. A paste can add at most as many lines as currently exist, making the reachable maximum double each time. While that maximum is below N, no strategy can reach the target. Double `capacity` until it first reaches or exceeds N; the number of doublings is the answer. The final paste may copy only the missing lines, so this maximum need not be the actual final count. Stop on a nonpositive input and number only processed cases.
+
+The Java version reads tokens with `Scanner`, uses an integer type wide enough for the bounds, and obeys the specified terminator.

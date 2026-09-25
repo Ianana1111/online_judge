@@ -3,6 +3,9 @@
   "title": "一次最多翻倍，找第一次足以達到目標的次數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

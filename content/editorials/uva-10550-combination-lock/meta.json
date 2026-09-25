@@ -3,6 +3,9 @@
   "title": "以有向圓周距離加總密碼鎖轉動角度",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

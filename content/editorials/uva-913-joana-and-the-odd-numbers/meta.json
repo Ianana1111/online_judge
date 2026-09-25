@@ -3,6 +3,9 @@
   "title": "利用前幾個奇數和，直接求最後三項",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

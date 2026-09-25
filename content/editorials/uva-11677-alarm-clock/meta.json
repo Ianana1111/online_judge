@@ -3,6 +3,9 @@
   "title": "將時間換成分鐘，在一天的環上做差",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
