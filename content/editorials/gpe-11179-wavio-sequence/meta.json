@@ -3,6 +3,9 @@
   "title": "兩側嚴格遞增長度取短邊，組成等長山峰",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "質數遞增且全為正，用滑動視窗找指定和",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
