@@ -3,6 +3,9 @@
   "title": "以雙棋盤模擬每天同時發生的戰鬥",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

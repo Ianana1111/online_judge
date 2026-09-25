@@ -3,6 +3,9 @@
   "title": "以 Legendre 公式計算階乘中的質因數次方",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

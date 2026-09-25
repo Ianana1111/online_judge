@@ -3,6 +3,9 @@
   "title": "正整數運算式：加法優先取最大，乘法優先取最小",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

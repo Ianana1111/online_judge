@@ -3,6 +3,9 @@
   "title": "由最高位決定 OR，並保留區間內的最小遮罩",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
