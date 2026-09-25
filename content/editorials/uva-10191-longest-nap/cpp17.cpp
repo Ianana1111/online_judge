@@ -1,4 +1,10 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
 using namespace std;
 int minutes(const string &time) { return stoi(time.substr(0,2)) * 60 + stoi(time.substr(3,2)); }
 int main() {

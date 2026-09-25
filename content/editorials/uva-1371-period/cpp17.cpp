@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <numeric>
+#include <string>
+#include <vector>
 using namespace std;
 bool possible(const string &y,const string &x,int bound) {
     int m=y.size();vector<int> previous(m+1),current(m+1);iota(previous.begin(),previous.end(),0);

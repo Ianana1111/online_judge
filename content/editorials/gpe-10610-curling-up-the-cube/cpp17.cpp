@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <array>
+#include <iostream>
+#include <queue>
+#include <set>
+#include <utility>
 using namespace std;
 using Vec=array<int,3>;
 using Frame=array<Vec,3>;

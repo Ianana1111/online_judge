@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <array>
+#include <iomanip>
+#include <iostream>
+#include <vector>
 using namespace std;
 struct Request { int source,start,duration,target; };
 int main() {

@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <unordered_set>
+#include <vector>
 using namespace std;
 int main(){
     ios::sync_with_stdio(false);cin.tie(nullptr);int k,e,test=0;

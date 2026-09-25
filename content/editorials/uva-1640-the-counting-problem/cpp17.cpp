@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <array>
+#include <iostream>
 using namespace std;
 array<long long,10> prefix(long long n) {
     array<long long,10> answer{};

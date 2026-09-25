@@ -1,4 +1,10 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+#include <numeric>
+#include <utility>
+#include <vector>
 using namespace std;
 void accumulate(double value,double &sum,double &compensation){
     double corrected=value-compensation,next=sum+corrected;

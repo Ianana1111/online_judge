@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <numeric>
+#include <string>
 using namespace std;
 int value(const string &bits) { int result = 0; for (char ch : bits) result = result * 2 + ch - '0'; return result; }
 int main() {

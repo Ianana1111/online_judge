@@ -1,4 +1,9 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <array>
+#include <iostream>
+#include <queue>
+#include <string>
+#include <vector>
 using namespace std;
 struct Node { array<int,2> child{{-1,-1}}; string value; };
 int main() {

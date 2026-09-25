@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <utility>
+#include <vector>
 using namespace std;
 using Pair=pair<int,int>;
 vector<vector<Pair>> solve(int n){

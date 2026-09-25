@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <tuple>
+#include <utility>
 using namespace std;
 tuple<int,int,int> readDate() {
     int day,month,year;char slash;cin>>day>>slash>>month>>slash>>year;

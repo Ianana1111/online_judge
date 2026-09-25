@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <string>
 using namespace std;
 int digitValue(char c) {
     if (c >= '0' && c <= '9') return c - '0';

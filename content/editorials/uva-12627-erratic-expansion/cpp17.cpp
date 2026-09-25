@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 long long power3[31];
 long long prefix(int k,long long rows) {

@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <climits>
+#include <iostream>
+#include <utility>
+#include <vector>
 using namespace std;
 using ll=long long;
 using Runs=vector<pair<char,ll>>;

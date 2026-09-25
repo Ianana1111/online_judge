@@ -3,6 +3,9 @@
   "title": "使用足夠寬的整數求兩軍人數的絕對差",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

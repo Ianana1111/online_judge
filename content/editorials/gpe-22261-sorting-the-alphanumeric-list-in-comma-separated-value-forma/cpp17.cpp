@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <utility>
+#include <vector>
 using namespace std;
 string trim(const string &value) {
     size_t first=value.find_first_not_of(' ');if(first==string::npos)return "";

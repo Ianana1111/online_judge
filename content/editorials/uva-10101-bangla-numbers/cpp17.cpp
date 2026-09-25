@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <iomanip>
+#include <iostream>
 using namespace std;
 void printNumber(long long n) {
     if (n >= 10000000) { printNumber(n / 10000000); cout << " kuti"; n %= 10000000; }

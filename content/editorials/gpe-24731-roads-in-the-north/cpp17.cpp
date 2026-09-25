@@ -1,4 +1,10 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+#include <tuple>
+#include <utility>
+#include <vector>
 using namespace std;
 using Graph = map<int, vector<pair<int,long long>>>;
 pair<int,long long> farthest(const Graph& graph, int start) {

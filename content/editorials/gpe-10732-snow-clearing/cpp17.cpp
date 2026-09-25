@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
+#include <string>
 using namespace std;
 int main(){
     ios::sync_with_stdio(false);cin.tie(nullptr);string line;getline(cin,line);int tests=stoi(line);

@@ -3,6 +3,9 @@
   "title": "用中點速度直接求兩倍時間的位移",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <utility>
+#include <vector>
 using namespace std;
 bool queenCanReach(int from,int to,int king) {
     if (from == to || to == king) return false;

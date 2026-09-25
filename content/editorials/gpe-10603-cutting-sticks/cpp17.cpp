@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <climits>
+#include <iomanip>
+#include <iostream>
+#include <vector>
 using namespace std;
 int main() {
     ios::sync_with_stdio(false); cin.tie(nullptr);

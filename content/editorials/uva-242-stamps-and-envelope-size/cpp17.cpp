@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <vector>
 using namespace std;
 int coverage(int limit,const vector<int>& stamps) {
     int maximum=limit*stamps.back();vector<int> dp(maximum+1,limit+1);dp[0]=0;

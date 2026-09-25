@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
 using namespace std;
 long long evaluate(const vector<long long>& values, const vector<char>& operators, char first) {
     long long answer = first == '+' ? 1 : 0, group = values[0];

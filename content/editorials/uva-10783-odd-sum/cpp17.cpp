@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
 using namespace std;
 int prefix(int bound) {
     int count = (bound + 1) / 2;

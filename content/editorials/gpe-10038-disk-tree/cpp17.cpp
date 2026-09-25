@@ -1,4 +1,9 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 using namespace std;
 struct Node { map<string,int> children; };
 void printTree(const vector<Node>& nodes, int u, int depth) {

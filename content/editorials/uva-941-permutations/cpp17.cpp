@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <array>
+#include <iostream>
+#include <string>
+#include <vector>
 using namespace std;
 using ll=long long;
 int main(){

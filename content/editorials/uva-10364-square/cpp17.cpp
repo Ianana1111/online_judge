@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <numeric>
+#include <vector>
 using namespace std;
 bool square(vector<int> sticks) {
     int total = accumulate(sticks.begin(), sticks.end(), 0);

@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <iomanip>
+#include <iostream>
+#include <string>
+#include <vector>
 using namespace std;
 struct Fenwick {
     vector<int> tree;

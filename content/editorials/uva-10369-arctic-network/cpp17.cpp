@@ -1,4 +1,11 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+#include <numeric>
+#include <tuple>
+#include <utility>
+#include <vector>
 using namespace std;
 struct DSU{vector<int> p,s;DSU(int n):p(n),s(n,1){iota(p.begin(),p.end(),0);}int find(int a){return p[a]==a?a:p[a]=find(p[a]);}bool join(int a,int b){a=find(a);b=find(b);if(a==b)return false;if(s[a]<s[b])swap(a,b);p[b]=a;s[a]+=s[b];return true;}};
 int main(){

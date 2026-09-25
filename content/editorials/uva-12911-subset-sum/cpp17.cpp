@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <vector>
 using namespace std;
 vector<long long> sums(const vector<long long>& values,int begin,int end) {
     vector<long long> result;result.reserve(1<<(end-begin));result.push_back(0);
