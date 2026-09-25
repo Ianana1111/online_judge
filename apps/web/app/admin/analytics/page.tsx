@@ -28,6 +28,7 @@ import type {
 } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 import { useChartColors } from "@/lib/useChartColors";
+import AdminProductDashboard from "@/components/AdminProductDashboard";
 
 // Ordered easiest -> hardest (algorithmic sophistication required), not by frequency — so the
 // stacked bars and legend read as "simple techniques first, advanced ones stacking on top".
@@ -157,6 +158,8 @@ export default function AdminAnalyticsPage() {
           )}
         </p>
       </div>
+
+      {isAdmin && <AdminProductDashboard />}
 
       <section>
         <div className="mb-3 flex items-baseline justify-between">
