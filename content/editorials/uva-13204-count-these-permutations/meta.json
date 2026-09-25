@@ -3,6 +3,9 @@
   "title": "用每條切線的交叉上界，數出最大位移排列的分組方式",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

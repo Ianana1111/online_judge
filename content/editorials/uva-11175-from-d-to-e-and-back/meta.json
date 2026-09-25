@@ -3,6 +3,9 @@
   "title": "共同後繼必須帶來相同後繼集合，辨認有向線圖",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

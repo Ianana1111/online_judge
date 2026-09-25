@@ -3,6 +3,9 @@
   "title": "以編輯距離 DP 比較插入、刪除與替換",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

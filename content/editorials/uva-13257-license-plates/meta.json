@@ -3,6 +3,9 @@
   "title": "用下一次出現位置驗證全部三字母字串",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
