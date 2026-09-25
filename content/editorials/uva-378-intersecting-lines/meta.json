@@ -3,6 +3,9 @@
   "title": "用行列式分類兩條直線，精確捨入交點",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "cpp17",
+    "c11",
+    "java17"
   ]
 }
