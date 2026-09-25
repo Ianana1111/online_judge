@@ -3,6 +3,9 @@
   "title": "以兩個堆維持即時中位數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

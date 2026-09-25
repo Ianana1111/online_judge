@@ -3,6 +3,9 @@
   "title": "遞迴處理 kuti，再由大到小拆分單位",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

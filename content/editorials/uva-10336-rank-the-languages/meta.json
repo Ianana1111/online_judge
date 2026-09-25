@@ -3,6 +3,9 @@
   "title": "先數同字母的四方向連通區，再依區塊數排名",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

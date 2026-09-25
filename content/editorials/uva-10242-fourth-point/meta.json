@@ -3,6 +3,9 @@
   "title": "利用共用頂點還原平行四邊形",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
