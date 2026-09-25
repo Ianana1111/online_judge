@@ -3,6 +3,9 @@
   "title": "同步淘汰最低票候選人，依選票排名重新計票",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

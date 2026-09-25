@@ -3,6 +3,9 @@
   "title": "以七段線條與固定欄寬畫出數字",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
