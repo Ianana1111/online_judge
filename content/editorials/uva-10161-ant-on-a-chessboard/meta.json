@@ -3,6 +3,9 @@
   "title": "以平方層與奇偶方向定位螞蟻",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

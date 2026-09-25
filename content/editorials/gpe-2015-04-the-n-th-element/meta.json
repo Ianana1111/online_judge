@@ -3,6 +3,9 @@
   "title": "二分搜尋兩個分割點，找出第 N 小元素",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

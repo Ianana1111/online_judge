@@ -3,6 +3,9 @@
   "title": "以整行保留字元，再用滾動陣列計算 LCS",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

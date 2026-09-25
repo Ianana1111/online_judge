@@ -3,6 +3,9 @@
   "title": "固定上下邊界，找可用欄位的最長連續段",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
