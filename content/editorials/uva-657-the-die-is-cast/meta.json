@@ -3,6 +3,9 @@
   "title": "先找骰子連通區，再計算其中點數連通區",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
