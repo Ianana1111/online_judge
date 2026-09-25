@@ -177,7 +177,9 @@ export class AnalyticsService {
       const ownOrigins = (process.env.WEB_ORIGIN ?? "").split(",").map((o) => o.trim());
       try {
         const refOrigin = new URL(referrer).origin;
-        if (ownOrigins.includes(refOrigin)) referrer = null;
+        // Keep only the origin. External referral URLs may contain private search terms,
+        // invitation tokens or campaign parameters that analytics does not need.
+        referrer = ownOrigins.includes(refOrigin) ? null : refOrigin;
       } catch {
         referrer = null; // not a valid absolute URL — not useful as a referrer, drop it
       }
@@ -204,7 +206,7 @@ export class AnalyticsService {
   async dailyTraffic(days: number) {
     const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
     const rows = await prisma.$queryRaw<{ date: string; count: bigint }[]>`
-      SELECT to_char(date_trunc('day', "createdAt"), 'YYYY-MM-DD') AS date, COUNT(*)::bigint AS count
+      SELECT to_char(date_trunc('day', "createdAt" AT TIME ZONE 'Asia/Taipei'), 'YYYY-MM-DD') AS date, COUNT(*)::bigint AS count
       FROM "page_views"
       WHERE "createdAt" >= ${since}
       GROUP BY 1
@@ -235,5 +237,56 @@ export class AnalyticsService {
       take: limit,
     });
     return rows.map((r) => ({ referrer: r.referrer!, count: r._count.referrer }));
+  }
+
+  /** Admin-only product view. Time buckets use Taiwan local time; amounts count confirmed
+   * payments only. A card authorization is a hold, never booked as revenue. */
+  async productDashboard(days: number) {
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const [hours, signups, loggedInViews, solvers, acceptedUsers, submissions, examStarts,
+      publishedPosts, publishedComments, paidPayments, paymentStatuses, activeSubscriptions,
+      cancelledSubscriptions, cancellations, refundStatuses, recentPayments, recentCancellations] = await Promise.all([
+      prisma.$queryRaw<{ hour: number; views: bigint }[]>`
+        SELECT EXTRACT(HOUR FROM "createdAt" AT TIME ZONE 'Asia/Taipei')::int AS hour,
+               COUNT(*)::bigint AS views
+        FROM "page_views" WHERE "createdAt" >= ${since}
+        GROUP BY 1 ORDER BY 1`,
+      prisma.user.count({ where: { createdAt: { gte: since }, deletionRequestedAt: null, role: "USER" } }),
+      prisma.$queryRaw<{ count: bigint }[]>`SELECT COUNT(DISTINCT "userId")::bigint AS count FROM "page_views" WHERE "createdAt" >= ${since} AND "userId" IS NOT NULL`,
+      prisma.$queryRaw<{ count: bigint }[]>`SELECT COUNT(DISTINCT "userId")::bigint AS count FROM "submissions" WHERE "createdAt" >= ${since}`,
+      prisma.$queryRaw<{ count: bigint }[]>`SELECT COUNT(DISTINCT "userId")::bigint AS count FROM "submissions" WHERE "createdAt" >= ${since} AND "verdict" = 'AC'`,
+      prisma.submission.groupBy({ by: ["verdict"], where: { createdAt: { gte: since } }, _count: { _all: true } }),
+      prisma.contestParticipant.count({ where: { startedAt: { gte: since } } }),
+      prisma.post.count({ where: { publishedAt: { gte: since }, deletedAt: null } }),
+      prisma.discussion.count({ where: { publishedAt: { gte: since }, deletedAt: null } }),
+      prisma.payment.aggregate({ where: { status: "APPROVED", paidAt: { gte: since } }, _count: { _all: true }, _sum: { amountNtd: true } }),
+      prisma.payment.groupBy({ by: ["status"], where: { createdAt: { gte: since } }, _count: { _all: true } }),
+      prisma.subscription.count({ where: { status: "ACTIVE" } }),
+      prisma.subscription.count({ where: { status: "CANCELLED", cancelledAt: { gte: since } } }),
+      prisma.subscription.groupBy({ by: ["amountNtd", "period"], where: { status: "ACTIVE" }, _count: { _all: true } }),
+      prisma.refundRequest.groupBy({ by: ["status"], where: { requestedAt: { gte: since } }, _count: { _all: true } }),
+      prisma.payment.findMany({ where: { createdAt: { gte: since }, status: { in: ["APPROVED", "AUTHORIZED", "REFUNDED"] } },
+        orderBy: { createdAt: "desc" }, take: 30,
+        select: { id: true, amountNtd: true, period: true, status: true, method: true, createdAt: true, paidAt: true, user: { select: { handle: true } } } }),
+      prisma.subscription.findMany({ where: { status: "CANCELLED", cancelledAt: { gte: since } },
+        orderBy: { cancelledAt: "desc" }, take: 30,
+        select: { id: true, amountNtd: true, period: true, cancelledAt: true, user: { select: { handle: true } } } }),
+    ]);
+    const byHour = new Map(hours.map(row => [row.hour, Number(row.views)]));
+    const hourlyTraffic = Array.from({ length: 24 }, (_, hour) => ({ hour, views: byHour.get(hour) ?? 0 }));
+    const paidAt200 = await prisma.payment.count({ where: { status: "APPROVED", amountNtd: 200, paidAt: { gte: since } } });
+    const paidAt2000 = await prisma.payment.count({ where: { status: "APPROVED", amountNtd: 2000, paidAt: { gte: since } } });
+    return {
+      days, timezone: "Asia/Taipei", hourlyTraffic,
+      usage: { signups, loggedInVisitors: Number(loggedInViews[0]?.count ?? 0), solvers: Number(solvers[0]?.count ?? 0),
+        acceptedUsers: Number(acceptedUsers[0]?.count ?? 0), submissions: Object.fromEntries(submissions.map(row => [row.verdict, row._count._all])),
+        examStarts, publishedPosts, publishedComments },
+      billing: { confirmedPaymentCount: paidPayments._count._all, confirmedGrossNtd: paidPayments._sum.amountNtd ?? 0,
+        paidAt200, paidAt2000, paymentStatuses: Object.fromEntries(paymentStatuses.map(row => [row.status, row._count._all])),
+        activeSubscriptions, cancelledSubscriptions,
+        committedRecurringNtdPerMonth: cancellations.reduce((sum, row) => sum + row.amountNtd * row._count._all / (row.period === "YEARLY" ? 12 : 1), 0),
+        refundStatuses: Object.fromEntries(refundStatuses.map(row => [row.status, row._count._all])),
+        recentPayments, recentCancellations },
+    };
   }
 }

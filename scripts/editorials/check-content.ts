@@ -6,7 +6,8 @@ import { loadEditorial, loadVerification } from "./evidence";
 async function main() {
   const root = process.cwd();
   const directories = await readdir(resolve(root, "content/editorials"), { withFileTypes: true });
-  let drafts = 0, solutions = 0, mutations = 0, bilingual = 0;
+  let drafts = 0, solutions = 0, mutations = 0, bilingual = 0, fourLanguage = 0;
+  const languageCoverage = { cpp17: 0, c11: 0, python3: 0, java17: 0 };
   const failures: { slug: string; reason: string }[] = [];
   for (const directory of directories.filter(d => d.isDirectory()).sort((a, b) => a.name.localeCompare(b.name))) {
     try {
@@ -14,6 +15,7 @@ async function main() {
       if (!editorial) throw new Error("Missing metadata");
       if (editorial.translations?.en) bilingual++;
       else if (process.argv.includes("--require-bilingual")) throw new Error("English teaching explanation is not complete");
+      if (process.argv.includes("--require-four") && editorial.solutions.length !== 4) throw new Error("Missing one or more of C, C++, Python and Java reference solutions");
       const verification = await loadVerification(root, directory.name);
       const ids = new Set<string>();
       for (const mutation of verification.review.mutations) {
@@ -27,6 +29,8 @@ async function main() {
         if (mutation.expectation !== undefined && !["AC", "REJECT"].includes(mutation.expectation))
           throw new Error("Unknown mutation expectation");
       }
+      for (const solution of editorial.solutions) languageCoverage[solution.languageKey]++;
+      if (editorial.solutions.length === 4) fourLanguage++;
       drafts++;
       solutions += editorial.solutions.length;
       mutations += verification.review.mutations.length;
@@ -35,7 +39,7 @@ async function main() {
       failures.push({ slug: directory.name, reason: error instanceof Error ? error.message : "Invalid content" });
     }
   }
-  console.log(JSON.stringify({ scope: "Content structure only; no execution evidence", drafts, bilingual, solutions, mutations, failures }, null, 2));
+  console.log(JSON.stringify({ scope: "Content structure only; no execution evidence", drafts, bilingual, solutions, fourLanguage, languageCoverage, mutations, failures }, null, 2));
   if (failures.length) process.exitCode = 1;
 }
 

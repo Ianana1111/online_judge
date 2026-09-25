@@ -15,6 +15,7 @@ const languageNames = { cpp17: "C++17", python3: "Python 3", c11: "C11", java17:
 export default function OfficialEditorialPanel({ slug, examLocked }: { slug: string; examLocked: boolean }) {
   const { locale } = useLocale(), zh = locale === "zh-TW";
   const [readingLocale, setReadingLocale] = useState<EditorialLocale>(locale);
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [, tick] = useState(0);
   useEffect(() => { setReadingLocale(locale); }, [locale]);
   const { user, status } = useAuthStore();
@@ -56,6 +57,9 @@ export default function OfficialEditorialPanel({ slug, examLocked }: { slug: str
     <p className="font-semibold text-ink-100">{result?.status === "REVIEW_REQUIRED" ? (zh ? "這題的詳解正在重新驗證" : "This editorial is being reverified") : (zh ? "這題的官方詳解正在準備中" : "This official editorial is being prepared")}</p>
     <p className="text-sm leading-7 text-ink-300">{zh ? "我們會確認解說、參考程式與目前測資一致，再開放完整詳解。你可以先嘗試解題，或在討論區交流思路。" : "We check the explanation and reference code against the current tests before publication. You can keep solving or discuss your approach in the meantime."}</p>
   </div>;
+  const solutions = result.editorial.solutions;
+  const currentLanguage = solutions.some(solution => solution.languageKey === selectedLanguage) ? selectedLanguage : solutions[0].languageKey;
+  const selectedSolution = solutions.find(solution => solution.languageKey === currentLanguage)!;
   return <article className="min-w-0 space-y-8 pb-6" aria-label={zh ? "官方詳解內容" : "Official editorial content"}>
     <header className="space-y-3 border-b border-ink-700 pb-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -69,7 +73,10 @@ export default function OfficialEditorialPanel({ slug, examLocked }: { slug: str
     <div lang={result.editorial.locale}><CommunityMarkdown content={result.editorial.bodyMd} /></div>
     <section className="min-w-0 space-y-4" aria-label={zh ? "完整程式與解說" : "Reference code and explanation"}>
       <h3 className="text-lg font-semibold text-ink-100">{zh ? "完整程式與逐段解說" : "Reference code, explained"}</h3>
-      {result.editorial.solutions.map(solution => <EditorialCode key={`${solution.languageKey}:${result.revision}:${result.editorial.locale}`} solution={solution} zh={zh} readingLocale={result.editorial.locale} />)}
+      {solutions.length > 1 && <div role="group" aria-label={zh ? "選擇參考程式語言" : "Select reference language"} className="flex flex-wrap gap-2">
+        {solutions.map(solution => <button key={solution.languageKey} type="button" aria-pressed={currentLanguage === solution.languageKey} onClick={() => setSelectedLanguage(solution.languageKey)} className={`min-h-10 rounded-lg border px-4 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand ${currentLanguage === solution.languageKey ? "border-brand/60 bg-brand/15 text-ink-50" : "border-ink-700 text-ink-300 hover:border-ink-500 hover:text-ink-50"}`}>{languageNames[solution.languageKey]}</button>)}
+      </div>}
+      <EditorialCode key={`${selectedSolution.languageKey}:${result.revision}:${result.editorial.locale}`} solution={selectedSolution} zh={zh} readingLocale={result.editorial.locale} />
     </section>
   </article>;
 }

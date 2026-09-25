@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post, Query, Req } from "@nestjs/common";
+import { Body, Controller, Get, Header, HttpCode, Post, Query, Req } from "@nestjs/common";
 import { Throttle } from "@nestjs/throttler";
 import type { Request } from "express";
 import { recordPageviewSchema, type RecordPageviewDto } from "@oj/shared";
@@ -40,6 +40,13 @@ export class AnalyticsController {
     @CurrentUser() user: RequestUser | null,
   ) {
     await this.analytics.recordPageview(body, req.headers["user-agent"], user?.id ?? null);
+  }
+
+  @Roles("ADMIN")
+  @Header("Cache-Control", "private, no-store")
+  @Get("product-dashboard")
+  productDashboard(@Query("days") days?: string) {
+    return this.analytics.productDashboard(clampDays(days));
   }
 
   @Roles("ADMIN")

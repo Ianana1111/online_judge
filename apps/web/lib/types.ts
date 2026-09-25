@@ -494,6 +494,23 @@ export interface AdminAuthorizedPayment {
   createdAt: string;
 }
 
+export interface ProductDashboard {
+  days: number;
+  timezone: string;
+  hourlyTraffic: { hour: number; views: number }[];
+  usage: {
+    signups: number; loggedInVisitors: number; solvers: number; acceptedUsers: number;
+    submissions: Record<string, number>; examStarts: number; publishedPosts: number; publishedComments: number;
+  };
+  billing: {
+    confirmedPaymentCount: number; confirmedGrossNtd: number; paidAt200: number; paidAt2000: number;
+    paymentStatuses: Record<string, number>; activeSubscriptions: number; cancelledSubscriptions: number;
+    committedRecurringNtdPerMonth: number; refundStatuses: Record<string, number>;
+    recentPayments: { id: string; amountNtd: number; period: "MONTHLY" | "YEARLY"; status: string; method: string; createdAt: string; paidAt: string | null; user: { handle: string } }[];
+    recentCancellations: { id: string; amountNtd: number; period: "MONTHLY" | "YEARLY"; cancelledAt: string | null; user: { handle: string } }[];
+  };
+}
+
 export type RefundStatus = "REQUESTED" | "PROCESSING" | "NEEDS_REVIEW" | "COMPLETED";
 export interface AdminRefund {
   id: string;
