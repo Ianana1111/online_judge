@@ -3,6 +3,9 @@
   "title": "從兩端剝除引號層，將最內層化為偶數計數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "還原數值減一，再重新做質因數分解",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

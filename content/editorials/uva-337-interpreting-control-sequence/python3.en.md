@@ -1,0 +1,3 @@
+Represent the screen as ten lists of ten characters, keeping cursor position and insert mode separately. Scan each data line by index. A `^` consumes the next command character and a coordinate command consumes one more digit. Newlines between data lines do nothing, but spaces within lines are normal display characters.
+
+Each control command changes only its specified state. Turn `^^` into an ordinary `^` and pass it through the same write logic. Insert mode shifts cells rightward from the right end, avoiding overwritten source characters; the cursor cannot pass column 9. Print the fixed border after each case.

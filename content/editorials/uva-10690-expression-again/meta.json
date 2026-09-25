@@ -3,6 +3,9 @@
   "title": "固定選取數量的有號子集合和，求兩組乘積極值",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

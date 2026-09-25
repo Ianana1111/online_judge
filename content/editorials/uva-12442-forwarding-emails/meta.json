@@ -3,6 +3,9 @@
   "title": "剝除入度零節點，計算環長後反向還原可達人數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

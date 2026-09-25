@@ -3,6 +3,9 @@
   "title": "解線段與球面的交點，累加參數區間長度",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
