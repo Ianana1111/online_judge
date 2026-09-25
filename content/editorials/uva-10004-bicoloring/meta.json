@@ -3,6 +3,9 @@
   "title": "以 BFS 交替染色，邊的兩端同色就出現矛盾",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

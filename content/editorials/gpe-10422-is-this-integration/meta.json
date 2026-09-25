@@ -3,6 +3,9 @@
   "title": "用扇形與等邊三角形分解三種區域",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

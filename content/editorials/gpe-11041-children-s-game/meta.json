@@ -3,6 +3,9 @@
   "title": "比較兩種拼接順序，決定誰應排在前面",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

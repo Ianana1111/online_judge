@@ -1,0 +1,9 @@
+Directly tracing each curved boundary looks complicated. Instead, name the three unknown totals X, Y, and Z, and count the same areas in several easier ways. Let S = a². First, the regions partition the square, so `X + Y + Z = S`.
+
+Next add the areas of all four quarter-circles. Their sum is πS. A point in the central region is counted four times, a dotted point three times, and an edge-region point twice. Hence `4X + 3Y + 2Z = πS`.
+
+We need one more independent relation. The overlap of two circles centered at adjacent corners, restricted to the square, is half a symmetric lens. Two 60-degree sectors minus an equilateral triangle give `L = (π/3 − √3/4)S`. Summing the four adjacent-corner overlaps counts X four times, Y twice, and Z once: `4X + 2Y + Z = 4L`.
+
+Solving gives `X = (1 − √3 + π/3)S`, `Y = (2√3 − 4 + π/3)S`, and `Z = (4 − √3 − 2π/3)S`. Integration is unnecessary; coverage counts turn the picture into linear equations.
+
+`Locale.US` fixes the decimal point across runtime locales.

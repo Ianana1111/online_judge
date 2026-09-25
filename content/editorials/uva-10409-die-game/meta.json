@@ -3,6 +3,9 @@
   "title": "用六個方向完整追蹤骰子姿態",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

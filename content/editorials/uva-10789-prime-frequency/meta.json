@@ -3,6 +3,9 @@
   "title": "統計字元次數並以質數表篩選",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

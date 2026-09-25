@@ -3,6 +3,9 @@
   "title": "以堆疊配對括號，完整保留空字串案例",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

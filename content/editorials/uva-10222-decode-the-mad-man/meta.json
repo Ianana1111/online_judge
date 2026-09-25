@@ -1,1 +1,11 @@
-{"slug":"uva-10222-decode-the-mad-man","title":"建立鍵盤對照表，逐字還原訊息","locale":"zh-TW","languages":["cpp17"]}
+{
+  "slug": "uva-10222-decode-the-mad-man",
+  "title": "建立鍵盤對照表，逐字還原訊息",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
+  ]
+}

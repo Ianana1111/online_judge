@@ -3,6 +3,9 @@
   "title": "用二進位拆解指數，每一步都先取模",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

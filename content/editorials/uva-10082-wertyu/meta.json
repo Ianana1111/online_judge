@@ -3,6 +3,9 @@
   "title": "建立逐鍵左移表，保留整段訊息格式",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "每次選最大可用 Fibonacci 數，得到不相鄰的一表示",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

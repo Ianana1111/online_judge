@@ -3,6 +3,9 @@
   "title": "找出不同質因數，用歐拉函數扣除不互質分子",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
