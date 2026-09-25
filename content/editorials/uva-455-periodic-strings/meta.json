@@ -3,6 +3,9 @@
   "title": "只嘗試能整除全長的週期，再逐位檢查重複",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

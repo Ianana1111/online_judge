@@ -3,6 +3,9 @@
   "title": "相鄰交換比較，按工期除罰金排序",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "保留題目中的一，再對稱截取中央質數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

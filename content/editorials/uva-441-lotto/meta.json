@@ -1,1 +1,11 @@
-{"slug":"uva-441-lotto","title":"用遞增索引列舉六個數的所有組合","locale":"zh-TW","languages":["cpp17"]}
+{
+  "slug": "uva-441-lotto",
+  "title": "用遞增索引列舉六個數的所有組合",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
+  ]
+}

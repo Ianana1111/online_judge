@@ -3,6 +3,9 @@
   "title": "從中心逐圈擴張最大正方形",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "按尺寸排序後，每段連續同色只取一層",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

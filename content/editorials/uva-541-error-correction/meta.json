@@ -3,6 +3,9 @@
   "title": "奇數行與奇數列的交點，決定能否單點修復",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

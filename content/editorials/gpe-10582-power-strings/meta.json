@@ -3,6 +3,9 @@
   "title": "最短候選週期必須整除字串長度",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

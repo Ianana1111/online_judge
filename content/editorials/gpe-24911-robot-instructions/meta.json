@@ -3,6 +3,9 @@
   "title": "把每條指令解析成位移，直接複用已解析的動作",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

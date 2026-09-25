@@ -20,7 +20,7 @@
       "label": "Allows a negative result when no positive interval",
       "languageKey": "cpp17",
       "find": "long long answer = 0;",
-      "replace": "long long answer = LLONG_MIN;"
+      "replace": "long long answer = -1000000000000000001LL;"
     }
   ]
 }

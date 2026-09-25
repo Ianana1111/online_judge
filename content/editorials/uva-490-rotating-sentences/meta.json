@@ -3,6 +3,9 @@
   "title": "從左到右取字元欄，再由最後一句往上輸出",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
