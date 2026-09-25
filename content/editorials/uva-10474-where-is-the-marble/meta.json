@@ -3,6 +3,9 @@
   "title": "排序後找出第一顆相同編號的彈珠",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

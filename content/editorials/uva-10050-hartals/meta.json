@@ -3,6 +3,9 @@
   "title": "標記罷工日期，再排除週五與週六",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

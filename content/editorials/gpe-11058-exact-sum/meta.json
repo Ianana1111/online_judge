@@ -3,6 +3,9 @@
   "title": "排序後雙指標收縮，找總價固定且差距最小的兩本書",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "完整讀取多位次數，再展開游程編碼",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

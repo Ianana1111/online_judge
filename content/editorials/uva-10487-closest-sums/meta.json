@@ -3,6 +3,9 @@
   "title": "預先排序兩數和，再二分尋找最近答案",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

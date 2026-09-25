@@ -3,6 +3,9 @@
   "title": "先檢查正且嚴格遞增，再檢查含自身的兩數和",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

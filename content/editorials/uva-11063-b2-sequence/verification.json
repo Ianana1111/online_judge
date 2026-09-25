@@ -20,7 +20,7 @@
       "label": "Sorts an invalid original order",
       "languageKey": "cpp17",
       "find": "bool good = true;",
-      "replace": "sort(a.begin(), a.end()); bool good = true;"
+      "replace": "for (int i = 1; i < n; ++i) for (int j = i; j > 0 && a[j] < a[j-1]; --j) { auto temp = a[j]; a[j] = a[j-1]; a[j-1] = temp; } bool good = true;"
     }
   ]
 }
