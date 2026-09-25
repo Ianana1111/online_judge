@@ -3,6 +3,9 @@
   "title": "預算兩數和，再由最大候選 d 反查另一半",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

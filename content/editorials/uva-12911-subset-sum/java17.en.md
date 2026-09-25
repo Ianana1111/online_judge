@@ -1,0 +1,7 @@
+Split the array into halves of at most 20 elements and enumerate every subset sum of each half, including the empty sum zero. Sort both lists without deduplicating them.
+
+Use one pointer at the smallest left sum and one at the largest right sum. Move left up when the total is too small and right down when too large. On equality, count consecutive copies of both values and add their product, then skip both groups. If the target is zero, subtract the single pairing in which both halves are empty.
+
+Split elements in half and sort all left subset sums. Enumerate right subsets in Gray-code order so only one value changes each step, then binary-search how many left sums complement it. Subtract the all-empty subset when the target is zero.
+
+Build left sums in a compact numeric array and enumerate right subsets in Gray-code order, avoiding two simultaneous million-entry sum arrays under the memory limit.

@@ -3,6 +3,9 @@
   "title": "以非字母切詞、忽略大小寫，輸出指定頻率的字",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
