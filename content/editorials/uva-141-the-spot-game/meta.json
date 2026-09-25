@@ -3,6 +3,9 @@
   "title": "旋轉四次取唯一表示，記住每個完成回合的盤面",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

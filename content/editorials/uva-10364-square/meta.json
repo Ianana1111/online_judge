@@ -3,6 +3,9 @@
   "title": "以已用木棒集合記錄完成邊的餘長",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

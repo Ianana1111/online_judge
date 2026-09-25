@@ -3,6 +3,9 @@
   "title": "兩個堆維持前 K 小元素，隨 GET 提升排名",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
