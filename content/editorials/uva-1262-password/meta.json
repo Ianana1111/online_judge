@@ -3,6 +3,9 @@
   "title": "每欄取交集去重，再以混合進位定位第 K 個密碼",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

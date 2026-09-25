@@ -1,0 +1,5 @@
+Binary-search the optimal maximum load `L` between the largest book and total pages. For a fixed `L`, scan left to right, keeping each group as long as possible and opening a new one only when the next book would exceed `L`. This greedy scan uses the minimum number of groups. The limit is feasible when that count is at most `K`, because positive-page groups may be split further to reach exactly `K` nonempty groups. Feasibility is monotone in `L`.
+
+After finding the minimum `L`, reconstruct from right to left. Put as many books as possible into the last group, then the preceding group. Insert a boundary when adding the current book would exceed `L`, or when the books left are just enough to give every remaining group one. Filling later groups this way pushes work rightward and lexicographically minimizes earlier group sums.
+
+Binary-search the minimum feasible maximum pages. Reconstruct groups from right to left: split when adding a book exceeds the limit or when remaining books must each form a group. This gives the required lexicographic tie break.

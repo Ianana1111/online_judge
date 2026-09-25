@@ -3,6 +3,9 @@
   "title": "只枚舉取餐次數改變的份量，用分數精確比較成本",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

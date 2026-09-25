@@ -3,6 +3,9 @@
   "title": "利用串接長度定位字元，將極大階數縮到同奇偶前綴",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "用五分為單位，逐種面額統計無序找零組合",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

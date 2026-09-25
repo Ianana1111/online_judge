@@ -3,6 +3,9 @@
   "title": "記錄每一段畫在哪個高度，再由上到下輸出最小畫布",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
