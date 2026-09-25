@@ -3,6 +3,9 @@
   "title": "以對角線三角數替每個位置編號",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -1,0 +1,3 @@
+There is no need to drop all earlier balls. At any node, the first, third, and fifth arrivals go left, while the second, fourth, and sixth go right. If the target is the Ith arrival at this node, an odd I goes left and becomes arrival `(I+1)/2` in that subtree; an even I goes right and becomes arrival `I/2`. Starting at root node one, apply this rule for `D−1` levels while updating the node number. Restart from the root for each test. The extra trailing sentinel is not another test case.
+
+The python3 program updates the state using this invariant and handles every input branch explicitly.

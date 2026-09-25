@@ -1,0 +1,3 @@
+The number of bricks is fixed, so the final height of every stack must be the arithmetic mean `target=total/count`. Each stack above the mean must send out `height−target` bricks. Summing these excess amounts is a lower bound on moves, and moving each excess brick directly to a short stack attains it. Count only excesses so that one move is not counted at both its source and destination. Equal-height stacks naturally give zero. Preserve the `Set #` label, exact English sentence, and blank line after each case; stop when the stack count is zero.
+
+The python3 program updates the state using this invariant and handles every input branch explicitly.

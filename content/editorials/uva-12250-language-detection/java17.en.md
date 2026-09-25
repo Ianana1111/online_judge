@@ -1,0 +1,3 @@
+The problem recognizes exactly six complete greetings, so a small lookup table is the clearest representation. Match the entire token, not a prefix or approximate spelling: `HELLOO` must be `UNKNOWN`, and `HELLO` differs from `HALLO`. Increment the case number for each processed greeting and print the required `Case number: language` format. The standalone `#` token terminates input without becoming a case; any other unrecognized token is still a case with the answer `UNKNOWN`.
+
+The java17 program turns this reasoning into direct computation or lookup while preserving the required input and output format.

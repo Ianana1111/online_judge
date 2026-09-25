@@ -3,6 +3,9 @@
   "title": "用局部到訪次序的奇偶，直接追蹤第 I 顆球",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

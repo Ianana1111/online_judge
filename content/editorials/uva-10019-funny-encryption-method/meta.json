@@ -3,6 +3,9 @@
   "title": "同一串數字的兩種進位解讀，分別計算二進位一的個數",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

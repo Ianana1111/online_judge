@@ -3,6 +3,9 @@
   "title": "依生成元由小到大建表，只保留第一個來源",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
