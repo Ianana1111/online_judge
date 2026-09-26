@@ -239,10 +239,6 @@
       transform: translateY(0);
     }
 
-    body:has(.practice-workspace) .site-navbar > div {
-      max-width: none;
-      padding-inline: clamp(12px, 1.1vw, 24px);
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
