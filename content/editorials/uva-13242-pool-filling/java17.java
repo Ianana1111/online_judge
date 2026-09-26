@@ -1,0 +1,16 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.util.StringTokenizer;
+
+public class Main {
+    static BufferedReader in=new BufferedReader(new InputStreamReader(System.in));static StringTokenizer tokens=new StringTokenizer("");
+    static String word()throws Exception{while(!tokens.hasMoreTokens())tokens=new StringTokenizer(in.readLine());return tokens.nextToken();}
+    static int compareFraction(long a,long b,long c,long d){int direction=1;while(true){long qa=a/b,qc=c/d;if(qa!=qc)return direction*(qa>qc?1:-1);long ra=a%b,rc=c%d;if(ra==0||rc==0)return direction*(Long.compare(ra,0)-Long.compare(rc,0));a=b;b=ra;c=d;d=rc;direction=-direction;}}
+    static int[] small(long capacity,long[] amount,long[] deviation){int first=-1,last=-1;long bestError=0,bestVolume=1;for(int start=0;start<amount.length;start++){long volume=0,difference=0;for(int end=start;end<amount.length;end++){if(amount[end]<0||amount[end]>capacity-volume)break;volume+=amount[end];difference+=deviation[end];if(volume==0||volume<capacity/2+capacity%2)continue;long error=Math.abs(difference);if(volume<=Long.MAX_VALUE/5&&error>5*volume)continue;if(first<0||compareFraction(error,volume,bestError,bestVolume)<0){first=start;last=end;bestError=error;bestVolume=volume;if(error==0)return new int[]{first,last};}}}return new int[]{first,last};}
+    static int[] large(BigInteger capacity,BigInteger[] amount,BigInteger[] deviation){int first=-1,last=-1;BigInteger bestError=BigInteger.ZERO,bestVolume=BigInteger.ONE;for(int start=0;start<amount.length;start++){BigInteger volume=BigInteger.ZERO,difference=BigInteger.ZERO;for(int end=start;end<amount.length;end++){volume=volume.add(amount[end]);if(volume.compareTo(capacity)>0)break;difference=difference.add(deviation[end]);if(volume.signum()==0||volume.multiply(BigInteger.TWO).compareTo(capacity)<0)continue;BigInteger error=difference.abs();if(error.compareTo(volume.multiply(BigInteger.valueOf(5)))>0)continue;if(first<0||error.multiply(bestVolume).compareTo(bestError.multiply(volume))<0){first=start;last=end;bestError=error;bestVolume=volume;if(error.signum()==0)return new int[]{first,last};}}}return new int[]{first,last};}
+    public static void main(String[] args)throws Exception{int cases=Integer.parseInt(word());while(cases-->0){BigInteger capacity=new BigInteger(word()),target=new BigInteger(word());int n=Integer.parseInt(word());BigInteger[] amount=new BigInteger[n],deviation=new BigInteger[n],delta=new BigInteger[n];BigInteger maxDifference=BigInteger.ZERO;for(int i=0;i<n;i++){amount[i]=new BigInteger(word());delta[i]=new BigInteger(word()).subtract(target);deviation[i]=amount[i].multiply(delta[i]);if(amount[i].compareTo(capacity)<=0)maxDifference=maxDifference.max(delta[i].abs());}int[] answer;
+        if(capacity.bitLength()<=63&&capacity.multiply(maxDifference).bitLength()<=63){long[] smallAmount=new long[n],smallDeviation=new long[n];for(int i=0;i<n;i++){if(amount[i].compareTo(capacity)>0)smallAmount[i]=-1;else{smallAmount[i]=amount[i].longValue();smallDeviation[i]=deviation[i].longValue();}}answer=small(capacity.longValue(),smallAmount,smallDeviation);}else answer=large(capacity,amount,deviation);
+        System.out.println(answer[0]<0?"Not possible":answer[0]+" "+answer[1]);
+    }}
+}

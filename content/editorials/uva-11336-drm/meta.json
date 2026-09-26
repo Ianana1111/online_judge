@@ -3,6 +3,9 @@
   "title": "只合併新增地點，檢查舊街道是否能被合法細分",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

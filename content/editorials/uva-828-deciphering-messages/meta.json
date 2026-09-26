@@ -3,6 +3,9 @@
   "title": "完整驗證三字元包裹，維持跨單字的金鑰位置",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

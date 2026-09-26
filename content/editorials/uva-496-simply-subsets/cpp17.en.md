@@ -1,0 +1,5 @@
+Ask whether comparing sets requires arithmetic on their elements. It does not: only equality matters. C/C++ therefore keep canonical decimal strings, removing a plus sign and redundant leading zeros and turning -0 into 0. Java uses BigInteger. Large values cannot overflow this representation.
+
+Read complete lines: a blank line represents an empty set and must not be skipped. C sorts and deduplicates both lists, then counts their intersection with two pointers. C++ and Java use sets. Lexical order need not match numeric order; consistent ordering and equality are sufficient here.
+
+Let c be the intersection size. If c equals both sizes, the sets are equal. If it equals only A's size, A is a proper subset of B; conversely for B. Only afterwards check c=0 for disjointness. This order matters: two empty sets are equal, while an empty set is a proper subset of a nonempty set. All other cases produce I'm confused!. Excluding string-comparison costs, the C sorting approach takes O(n log n+m log m); set operations depend on the chosen container. Memory stores only the current pair.

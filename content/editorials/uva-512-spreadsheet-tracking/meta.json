@@ -3,6 +3,9 @@
   "title": "追蹤每份原始資料的位置，批次操作使用修改前座標",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

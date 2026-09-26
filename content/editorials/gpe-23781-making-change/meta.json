@@ -3,6 +3,9 @@
   "title": "有限錢包與無限找零分開計算，用可行交易導出安全金額上界",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

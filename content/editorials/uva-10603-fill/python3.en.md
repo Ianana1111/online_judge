@@ -1,0 +1,3 @@
+The objective counts poured water, not pouring operations. Give each transition the amount transferred as its cost and run Dijkstra. Total water is conserved, so keeping only the first two volumes a and b determines the third and removes one state dimension.
+
+For each valid shortest-path state, update best[volume] for all three cups. Enumerate ordered source/destination pairs; the amount moved is the smaller of available water and remaining destination space. After exploring, scan downward from target to choose the largest reachable volume not exceeding it, then report that volume's minimum cost. Capacities are at most 200, so the flattened state arrays are bounded.

@@ -56,6 +56,19 @@ describe.skipIf(process.env.RUN_DB_TESTS!=="1")("official editorial publication 
     expect(await service.detail(p.slug,reader)).toEqual({status:"REVIEW_REQUIRED"});
     expect(await service.detail(p.slug,reader,"en")).toEqual({status:"REVIEW_REQUIRED"});
   });
+  it("keeps only the logging-equivalent predecessor readable while retaining live entitlement and data gates", async () => {
+    const p=await problem(), account=await user();
+    await publish(p.id,{judgeRevision:"e6d221ab1c342e5b03144a9763eabe222c21cc8052e20defa9561afdaa338950"});
+    expect((await service.detail(p.slug,account,"en")).status).toBe("AVAILABLE");
+    await prisma.user.update({where:{id:account.id},data:{plan:"FREE",planExpiresAt:null}});
+    expect(await service.detail(p.slug,account)).toEqual({status:"PRO_REQUIRED"});
+    await prisma.user.update({where:{id:account.id},data:{plan:"PRO",planExpiresAt:new Date(Date.now()+3600_000)}});
+    await publish(p.id,{judgeRevision:"stale"});
+    expect(await service.detail(p.slug,account)).toEqual({status:"REVIEW_REQUIRED"});
+    await publish(p.id,{judgeRevision:"e6d221ab1c342e5b03144a9763eabe222c21cc8052e20defa9561afdaa338950"});
+    await prisma.testCase.create({data:{problemId:p.id,ord:1,input:"1\n",output:"1\n"}});
+    expect(await service.detail(p.slug,account)).toEqual({status:"REVIEW_REQUIRED"});
+  });
   it("checks current administrator authority before revealing hidden problem content", async () => {
     const p=await problem(), account=await user();await publish(p.id);
     await prisma.problem.update({where:{id:p.id},data:{visibility:false}});

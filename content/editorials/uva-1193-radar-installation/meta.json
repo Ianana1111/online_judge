@@ -3,6 +3,9 @@
   "title": "把每座島化成可放雷達區間，以最右可行點合併覆蓋",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

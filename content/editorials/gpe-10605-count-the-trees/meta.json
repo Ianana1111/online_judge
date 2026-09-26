@@ -3,6 +3,9 @@
   "title": "Catalan 樹形乘上所有標記排列，使用精確大整數",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

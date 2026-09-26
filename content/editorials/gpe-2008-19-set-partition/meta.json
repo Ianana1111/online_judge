@@ -3,6 +3,9 @@
   "title": "折半枚舉等分和子集合，以位元遮罩精確排序",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

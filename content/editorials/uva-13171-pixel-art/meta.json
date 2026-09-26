@@ -3,6 +3,9 @@
   "title": "把每個顏色轉成三種原色的需求位元",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

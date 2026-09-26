@@ -3,6 +3,9 @@
   "title": "依道路編號搜尋歐拉迴路，以回溯順序接合支路",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

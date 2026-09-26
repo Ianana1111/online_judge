@@ -3,6 +3,9 @@
   "title": "按提交順序累計首次 AC，最後依題數、罰時與隊號排序",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

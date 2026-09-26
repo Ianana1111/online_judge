@@ -3,6 +3,9 @@
   "title": "枚舉十種字母的大小寫選擇，再找最短路",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

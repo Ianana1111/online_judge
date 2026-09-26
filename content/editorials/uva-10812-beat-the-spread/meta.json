@@ -3,6 +3,9 @@
   "title": "由總分與分差解方程，先檢查非負與整數條件",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

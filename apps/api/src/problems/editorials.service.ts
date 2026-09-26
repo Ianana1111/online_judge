@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { prisma } from "@oj/db";
-import { EDITORIAL_JUDGE_REVISION, officialEditorialSchema, localizeEditorial, type EditorialLocale, type OfficialEditorialResponse } from "@oj/shared";
+import { isEditorialJudgeRevisionReadable, officialEditorialSchema, localizeEditorial, type EditorialLocale, type OfficialEditorialResponse } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
 import { isUnlimited } from "../billing/billing.service";
 
@@ -28,7 +28,7 @@ export class EditorialsService {
       problemId: problem.id, publishedAt: { not: null }, supersededAt: null,
     }, select: { content: true, revision: true, verifiedAt: true, publishedAt: true, verifiedProblemVersion: true, judgeRevision: true } });
     if (!current) return { status: "NOT_READY" };
-    if (current.verifiedProblemVersion !== problem.judgeDataVersion || current.judgeRevision !== EDITORIAL_JUDGE_REVISION) return { status: "REVIEW_REQUIRED" };
+    if (current.verifiedProblemVersion !== problem.judgeDataVersion || !isEditorialJudgeRevisionReadable(current.judgeRevision)) return { status: "REVIEW_REQUIRED" };
     const parsed = officialEditorialSchema.safeParse(current.content);
     if (!parsed.success || parsed.data.slug !== slug) return { status: "REVIEW_REQUIRED" };
     const editorial = localizeEditorial(parsed.data, locale);

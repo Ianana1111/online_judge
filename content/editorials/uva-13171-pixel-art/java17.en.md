@@ -1,0 +1,3 @@
+Decompose each pixel into magenta M, yellow Y and cyan C. A three-bit mask identifies its primaries: R uses M/Y, G uses Y/C, V uses M/C, black B uses all three, and white W uses none. Count the entire picture's requirements before checking stock; an early rejection must not leave unread pixels in the input.
+
+Demand is bounded by the pixel count, but stock has no imported small integer bound. C/C++ keep stock as decimal strings and compare/subtract the demand exactly; Java uses BigInteger. Print only NO if any channel is short, otherwise YES and the remaining M/Y/C stocks in that order. Counting primaries explicitly prevents missing a component of a mixed color.

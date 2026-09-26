@@ -2,7 +2,20 @@ import { z } from "zod";
 
 // A regression test binds this to the production compile/run/checker sources. Changing the
 // pipeline requires a new revision and invalidates old publication evidence automatically.
-export const EDITORIAL_JUDGE_REVISION = "e6d221ab1c342e5b03144a9763eabe222c21cc8052e20defa9561afdaa338950";
+export const EDITORIAL_JUDGE_REVISION = "0653a66f645c5cb090ca0bbe613b777de86fc1568a586dea30e6fec1e5cf428d";
+/** Read compatibility for the logging-only transition in 10d3af5/f073d37.
+ * Compilation, execution and checking are identical to e6d221ab. Publication still
+ * requires fresh evidence for EDITORIAL_JUDGE_REVISION. A future pipeline revision
+ * automatically loses this exception rather than accepting arbitrary old proofs. */
+const readablePredecessors: Readonly<Record<string, readonly string[]>> = {
+  "0653a66f645c5cb090ca0bbe613b777de86fc1568a586dea30e6fec1e5cf428d": [
+    "e6d221ab1c342e5b03144a9763eabe222c21cc8052e20defa9561afdaa338950",
+  ],
+};
+export function isEditorialJudgeRevisionReadable(revision: string): boolean {
+  return revision === EDITORIAL_JUDGE_REVISION ||
+    (readablePredecessors[EDITORIAL_JUDGE_REVISION]?.includes(revision) ?? false);
+}
 export const editorialSolutionSchema = z.object({
   languageKey: z.enum(["cpp17", "python3", "c11", "java17"]),
   sourceCode: z.string().min(30).max(100_000),

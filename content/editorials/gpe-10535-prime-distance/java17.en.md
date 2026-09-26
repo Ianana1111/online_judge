@@ -1,0 +1,3 @@
+This platform's problem distributes identical coins on a line of cells, requiring every occupied pair to have prime distance; it is not the classic adjacent-prime-gap problem. Count legal occupied supports separately from positive coin allocations. For a fixed support of size s, the allocation count is C(M−1,s−1).
+
+A legal support has at most four cells. Singletons have N positions; a pair at prime distance p has N−p translations; triples come from twin-prime structures with two orientations; the four-cell structure has offsets 0,2,5,7. Sieve prefix counts and sums of primes and twin-prime endpoints give each support count in constant time. Sum the four cases. Divisions by 2 or 6 in modular binomial coefficients require modular inverses, not ordinary truncated division.

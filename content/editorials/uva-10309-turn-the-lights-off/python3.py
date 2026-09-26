@@ -11,7 +11,7 @@ while at<len(data):
     for first in range(1024):
         previous=0;press=first;count=0
         for row in lights:
-            count+=press.bit_count()
+            count+=bin(press).count("1")
             next_press=row^press^((press<<1)&1023)^(press>>1)^previous
             previous,press=press,next_press
         if press==0 and count<best:best=count

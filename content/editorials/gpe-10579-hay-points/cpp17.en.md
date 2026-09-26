@@ -1,0 +1,5 @@
+There is no need to understand an entire job description. Treat every word as an independent dictionary lookup. Add its value if present, otherwise add zero. A standalone period ends a description and triggers its salary output. Repeated words contribute repeatedly.
+
+Values may contain decimals, so avoid accumulating floating-point errors. C/C++ find the maximum decimal scale in the dictionary, pad every value to that scale, and add exact decimal integers. Restore the decimal point for output and remove unnecessary trailing zeros. Java uses BigDecimal, while the existing Python version uses Fraction.
+
+C/C++ `lookup` binary-searches the sorted dictionary, `add` sums integer strings, and `print_decimal` restores the salary format. Java uses a map. Do not treat one line as one description: descriptions can span lines. With M dictionary entries and W description words, the sorted version takes O(M log M + W log M) time and O(M) storage, excluding numeric-string lengths; hash lookups average O(1).

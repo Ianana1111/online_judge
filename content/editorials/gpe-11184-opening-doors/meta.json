@@ -3,6 +3,9 @@
   "title": "開啟的門恰為平方數，用整數牛頓法找最後一扇",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "把等式兩側化成一次式，精確求解並向下取整",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

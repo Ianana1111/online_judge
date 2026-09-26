@@ -3,6 +3,9 @@
   "title": "用 Kruskal 選出總守衛數最小的連通道路",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

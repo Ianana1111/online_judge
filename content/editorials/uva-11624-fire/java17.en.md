@@ -3,3 +3,5 @@ First run a multi-source BFS with every fire cell at time zero. This produces th
 When Joe's BFS removes a boundary cell, return its distance plus one for the step outside. There is no need for that old cell to remain safe during the next minute because Joe has left it. Checking the boundary before enumerating neighbors also makes all later neighbor coordinates valid.
 
 Run multi-source BFS from all fires to find each cell’s earliest fire time. Then BFS from J, entering a cell only strictly before the fire. Leaving from a boundary cell costs one extra step.
+
+Java reads grid characters directly and reuses the same maximum-size buffers across test cases, avoiding large arrays awaiting garbage collection. Both BFS passes remain exact and use O(RC) time and space.

@@ -3,6 +3,9 @@
   "title": "建立插頭類型流量網路，保留轉接方向與無限供應",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

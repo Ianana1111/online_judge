@@ -3,6 +3,9 @@
   "title": "用兩條邊不相交路徑判斷是否存在環形項鍊",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

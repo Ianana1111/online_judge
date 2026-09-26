@@ -3,6 +3,9 @@
   "title": "枚舉最後用三柱移動的盤數，以已知上界安全剪枝",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

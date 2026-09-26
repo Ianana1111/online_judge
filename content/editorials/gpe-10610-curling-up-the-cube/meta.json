@@ -3,6 +3,9 @@
   "title": "沿紙面傳播三維方向，確認六格恰好成為六個不同面",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

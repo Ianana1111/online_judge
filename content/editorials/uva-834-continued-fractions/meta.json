@@ -3,6 +3,9 @@
   "title": "使用向下取整的歐幾里得除法展開連分數",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

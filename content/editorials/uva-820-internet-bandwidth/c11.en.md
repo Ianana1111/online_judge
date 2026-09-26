@@ -1,0 +1,3 @@
+Bandwidth combines multiple routes; it is not the capacity of a single widest path. Add each undirected connection to both directions and accumulate parallel connections. Sending f units subtracts f from the forward residual capacity and adds f to the reverse one, allowing later paths to revise earlier choices.
+
+Dinic builds BFS levels, then sends flow only to the next level. A per-vertex next pointer remembers which neighbor to try, avoiding repeated scans of exhausted edges. Rebuild levels when the blocking flow is exhausted. Stop only when BFS cannot reach the sink. With at most 100 vertices, a capacity matrix makes parallel edges and residual updates explicit.

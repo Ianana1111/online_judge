@@ -1,0 +1,3 @@
+Door k is toggled once per divisor. Divisors pair up except for the square root of a perfect square, so exactly square-numbered doors remain open. The last one is floor(sqrt(N)) squared.
+
+N can have 101 decimal digits; floating-point square roots cannot distinguish the required boundaries. C/C++ process decimal digits in pairs. Append the next pair to the remainder, then choose the largest digit d from 0 to 9 for which (20·root+d)·d fits. Subtract that trial value and append d to the root. This is the integer square-expansion identity, with no rounding. Java's BigInteger.sqrt() supplies the floor square root directly. Print its exact square.

@@ -3,6 +3,9 @@
   "title": "分行動態規劃，加上整段空白序列的同分比較",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

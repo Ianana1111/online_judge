@@ -3,6 +3,9 @@
   "title": "把圓形灑水範圍轉成區間，貪心延伸已覆蓋前綴",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

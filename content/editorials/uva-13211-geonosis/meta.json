@@ -3,6 +3,9 @@
   "title": "將刪塔順序反轉，逐步開放 Floyd 的中繼點",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

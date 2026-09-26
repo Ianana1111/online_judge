@@ -3,6 +3,9 @@
   "title": "先放每格的一，再用容量十九的流還原剩餘數值",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

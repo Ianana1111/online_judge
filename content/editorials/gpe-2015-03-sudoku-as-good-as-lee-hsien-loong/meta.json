@@ -3,6 +3,9 @@
   "title": "以行、列與宮的位元遮罩回溯，優先填候選最少的格子",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

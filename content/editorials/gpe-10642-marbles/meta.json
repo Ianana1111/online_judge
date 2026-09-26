@@ -3,6 +3,9 @@
   "title": "依最後一顆彈珠所在盒子的大小建立遞迴",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

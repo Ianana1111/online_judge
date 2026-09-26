@@ -3,6 +3,9 @@
   "title": "依括號用堆疊合併矩陣尺寸，累加指定運算次數",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

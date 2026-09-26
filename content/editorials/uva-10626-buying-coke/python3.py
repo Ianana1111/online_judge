@@ -1,46 +1,30 @@
-from array import array
-from collections import defaultdict
 import sys
 
-data=list(map(int,sys.stdin.buffer.read().split()))
-groups=defaultdict(list)
-for index in range(data[0]) if data else []:
-    remaining,ones,fives,tens=data[1+4*index:5+4*index]
-    groups[remaining,ones+5*fives+10*tens].append((index,fives,tens))
-out=['']*(data[0] if data else 0)
 
-for (total_c,total_value),cases in groups.items():
-    max_five=max(five+ten for _,five,ten in cases)
-    max_ten=max(ten for _,_,ten in cases)
-    five_width=max_five+1
-    ten_width=max_ten+1
-    memo=array('i',[-1])*((total_c+1)*five_width*ten_width)
+def minimum_coins(cokes, ones, fives, tens):
+    # Every useful ten pays for one drink. A converted ten costs three extra coins.
+    tens_used = min(cokes, tens)
+    remaining = cokes - tens_used
+    converted = min(tens_used, max(0, remaining - fives))
+    available_fives = fives + converted
 
-    def solve(remaining,fives,tens):
-        if remaining==0:return 0
-        key=(remaining*five_width+fives)*ten_width+tens
-        saved=memo[key]
-        if saved>=0:return saved
-        ones=total_value-8*(total_c-remaining)-5*fives-10*tens
-        answer=1000000
-        if ones>=8:
-            candidate=8+solve(remaining-1,fives,tens)
-            if candidate<answer:answer=candidate
-        if fives>=1 and ones>=3:
-            candidate=4+solve(remaining-1,fives-1,tens)
-            if candidate<answer:answer=candidate
-        if fives>=2:
-            candidate=2+solve(remaining-1,fives-2,tens)
-            if candidate<answer:answer=candidate
-        if tens>=1:
-            candidate=1+solve(remaining-1,fives,tens-1)
-            if candidate<answer:answer=candidate
-        if tens>=1 and ones>=3:
-            candidate=4+solve(remaining-1,fives+1,tens-1)
-            if candidate<answer:answer=candidate
-        memo[key]=answer
-        return answer
+    if available_fives <= remaining:
+        without_tens = 4 * available_fives + 8 * (remaining - available_fives)
+    elif available_fives <= 2 * remaining:
+        pairs = available_fives - remaining
+        singles = remaining - pairs
+        without_tens = 2 * pairs + 4 * singles
+    else:
+        without_tens = 2 * remaining
+    return tens_used + 3 * converted + without_tens
 
-    for index,fives,tens in cases:
-        out[index]=str(solve(total_c,fives,tens))
-sys.stdout.write('\n'.join(out)+'\n' if out else '')
+
+def numbers():
+    for line in sys.stdin.buffer:
+        yield from map(int, line.split())
+
+
+values = iter(numbers())
+for _ in range(next(values)):
+    cokes, ones, fives, tens = (next(values) for _ in range(4))
+    print(minimum_coins(cokes, ones, fives, tens))

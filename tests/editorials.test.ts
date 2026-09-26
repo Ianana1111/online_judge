@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EDITORIAL_JUDGE_REVISION, officialEditorialSchema, localizeEditorial } from "../packages/shared/src/editorial";
+import { EDITORIAL_JUDGE_REVISION, isEditorialJudgeRevisionReadable, officialEditorialSchema, localizeEditorial } from "../packages/shared/src/editorial";
 import { currentJudgeRevision, judgeFingerprint, loadStatementCorrection, sha256, validateSpecChanges, validateTextCorrections, type AuditProblem } from "../scripts/editorials/evidence";
 
 import { editorialFixture } from "./support/editorial-fixture";
@@ -13,6 +13,12 @@ describe("official editorial content and evidence fingerprints", () => {
   });
   it("binds the revision to the actual Submit and Run pipeline, not a manually asserted label", async () => {
     expect(await currentJudgeRevision()).toBe(EDITORIAL_JUDGE_REVISION);
+  });
+  it("keeps the verified logging-only predecessor readable without accepting other revisions", () => {
+    expect(isEditorialJudgeRevisionReadable(EDITORIAL_JUDGE_REVISION)).toBe(true);
+    expect(isEditorialJudgeRevisionReadable("e6d221ab1c342e5b03144a9763eabe222c21cc8052e20defa9561afdaa338950")).toBe(true);
+    for (const revision of ["", "stale", "0".repeat(64), "971cee353c78c83645b392ef952149b617639f90c465fa635e63fa083777ccd4"])
+      expect(isEditorialJudgeRevisionReadable(revision)).toBe(false);
   });
   it("requires complete English explanations and shares the exact judged source across languages", () => {
     const content = editorialFixture();

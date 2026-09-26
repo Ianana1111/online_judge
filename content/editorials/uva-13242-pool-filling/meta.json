@@ -3,6 +3,9 @@
   "title": "枚舉連續水罐，以整數交叉相乘精確比較溫差",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

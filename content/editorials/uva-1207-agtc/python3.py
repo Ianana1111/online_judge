@@ -1,13 +1,37 @@
 import sys
-data=iter(sys.stdin.buffer.read().split());out=[]
-for token in data:
-    m=int(token);x=next(data) if m else b''
-    n=int(next(data));y=next(data) if n else b''
-    previous=list(range(n+1))
-    for i,ch in enumerate(x,1):
-        current=[i]+[0]*n
-        for j,target in enumerate(y,1):
-            current[j]=min(previous[j]+1,current[j-1]+1,previous[j-1]+(ch!=target))
-        previous=current
-    out.append(str(previous[n]))
-sys.stdout.write('\n'.join(out))
+
+def distance(source, target):
+    if len(source) > len(target):
+        source, target = target, source
+    size = len(source)
+    if not size:
+        return len(target)
+    matches = {}
+    for i, ch in enumerate(source):
+        matches[ch] = matches.get(ch, 0) | (1 << i)
+    mask = (1 << size)-1
+    highest = 1 << (size-1)
+    positive, negative = mask, 0
+    score = size
+    for ch in target:
+        equal = matches.get(ch, 0)
+        vertical = equal | negative
+        horizontal = (((equal & positive)+positive) ^ positive) | equal
+        up = negative | ~(horizontal | positive)
+        down = positive & horizontal
+        score += bool(up & highest)-bool(down & highest)
+        up = (up << 1) | 1
+        down <<= 1
+        positive = (down | ~(vertical | up)) & mask
+        negative = up & vertical
+    return score
+
+values = iter(sys.stdin.buffer.read().split())
+answers = []
+for token in values:
+    m = int(token)
+    source = next(values) if m else b''
+    n = int(next(values))
+    target = next(values) if n else b''
+    answers.append(str(distance(source, target)))
+sys.stdout.write('\n'.join(answers))

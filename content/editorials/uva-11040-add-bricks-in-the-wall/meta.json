@@ -3,6 +3,9 @@
   "title": "由隔兩層的加總關係，還原每個未知磚塊",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }
