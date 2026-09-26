@@ -230,7 +230,9 @@ export default function NavBar() {
   const showUpgrade = !!user && !isAdmin && !user.isStudent;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-ink-800 bg-ink-950/90 backdrop-blur">
+    <div className="site-navigation sticky top-0 z-40">
+      <button type="button" className="practice-nav-trigger" aria-label={t("Show navigation")} />
+    <header className="site-navbar border-b border-ink-800 bg-ink-950/90 backdrop-blur">
       <div ref={headerRef} className="relative mx-auto flex max-w-[1400px] items-center justify-between gap-3 px-4 py-2 sm:px-6">
         <div className="flex min-w-0 items-center gap-2 xl:gap-5">
           <button
@@ -329,5 +331,6 @@ export default function NavBar() {
         {mobileOpen && <MobileMenu links={navLinks} onNavigate={() => setMobileOpen(false)} />}
       </div>
     </header>
+    </div>
   );
 }

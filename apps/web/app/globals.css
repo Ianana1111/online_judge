@@ -199,6 +199,58 @@
     }
   }
 
+  /* Only standalone practice opts in; timed contest workspaces keep their own chrome. */
+  body:has(.practice-workspace) #main-content {
+    max-width: none;
+    padding: 12px clamp(12px, 1.1vw, 24px);
+  }
+
+  .practice-nav-trigger {
+    display: none;
+  }
+
+  @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+    body:has(.practice-workspace) .site-navigation {
+      position: fixed;
+      inset: 0 0 auto;
+      height: 6px;
+      z-index: 50;
+    }
+
+    body:has(.practice-workspace) .practice-nav-trigger {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 6px;
+    }
+
+    body:has(.practice-workspace) .site-navbar {
+      position: absolute;
+      inset: 0 0 auto;
+      transform: translateY(calc(-100% - 4px));
+      transition: transform 220ms ease;
+      box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+    }
+
+    body:has(.practice-workspace) .site-navigation:hover .site-navbar,
+    body:has(.practice-workspace) .site-navigation:has(:focus-visible) .site-navbar,
+    body:has(.practice-workspace) .site-navigation:has([aria-expanded="true"]) .site-navbar {
+      transform: translateY(0);
+    }
+
+    body:has(.practice-workspace) .site-navbar > div {
+      max-width: none;
+      padding-inline: clamp(12px, 1.1vw, 24px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body:has(.practice-workspace) .site-navbar {
+      transition: none;
+    }
+  }
+
   /* CJK glyphs sit flush against each other at the same letter-spacing that reads fine for Latin
      text — a little extra tracking keeps 繁體中文 from looking cramped. Scoped to [lang="zh-TW"]
      (set on <html> by LocaleContext) so switching back to English isn't affected. */
