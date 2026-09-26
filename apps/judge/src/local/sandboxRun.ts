@@ -55,7 +55,9 @@ async function inlineWriteOrFallback(sandbox: Sandbox, relPath: string, content:
 /** Provider response bodies can contain commands, source code or credentials. Keep only a
  * numeric HTTP status and our own operation context in production logs. */
 export function logSandboxApiError(context: string, err: unknown): void {
-  const status = (err as { status?: unknown; statusCode?: unknown } | null)?.status ?? (err as { statusCode?: unknown } | null)?.statusCode;
+  // The Sandbox SDK's APIError keeps the HTTP status on its Response, not on the error itself.
+  const error = err as { response?: { status?: unknown; statusCode?: unknown }; status?: unknown; statusCode?: unknown } | null;
+  const status = error?.response?.status ?? error?.response?.statusCode ?? error?.status ?? error?.statusCode;
   console.error(`[${context}] sandbox operation failed`, { status: typeof status === "number" && Number.isInteger(status) && status >= 100 && status <= 599 ? status : null });
 }
 
