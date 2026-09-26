@@ -18,8 +18,10 @@ async function main(){
   if(!originalFile||!proposedFile||!evidenceDir||!slugs?.length||slugs.length>25||new Set(slugs).size!==slugs.length)throw new Error("Explicit snapshots, evidence and at most 25 unique slugs are required");
   if(await currentJudgeRevision()!==EDITORIAL_JUDGE_REVISION)throw new Error("Judge revision changed");
   const read=async(file:string)=>JSON.parse(await readFile(file,"utf8"));
-  const original=await read(originalFile),proposed=await read(proposedFile);
-  for(const snapshot of [original,proposed])if(snapshot.contentHash!==sha256(JSON.stringify({problems:snapshot.problems,contests:snapshot.contests})))throw new Error("Snapshot fingerprint mismatch");
+  // A source-only publication uses the same immutable snapshot twice. Avoid parsing
+  // and hashing hundreds of megabytes again while keeping distinct snapshots checked.
+  const original=await read(originalFile),proposed=resolve(originalFile)===resolve(proposedFile)?original:await read(proposedFile);
+  for(const snapshot of new Set([original,proposed]))if(snapshot.contentHash!==sha256(JSON.stringify({problems:snapshot.problems,contests:snapshot.contests})))throw new Error("Snapshot fingerprint mismatch");
   const oracle=await read(resolve(evidenceDir,"corrected-oracle/oracle-report.json"));
   const plans:PublicationPlan[]=[];
   for(const slug of slugs){

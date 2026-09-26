@@ -1,5 +1,7 @@
 # Four-language editorials and product analytics — 2026-09-25
 
+> 最新四語詳解驗證與發布進度請見 [2026-09-26 紀錄](CONTINUATION-20260926.md)。以下保留較早日期的歷史紀錄，不代表目前正式站狀態。
+
 ## Current verified scope
 
 - Canonical editorial inventory: 430 problems and 430 bilingual teaching texts. Current draft coverage is C++17 395, Python 3 388, C11 353, Java 17 353. **353/430 have all four languages in the working tree**; 231 additional programs and matching Chinese/English code explanations remain. A draft counts as release-ready only after its current source passes the full-case audit on both backends and the Run/publication gates.
