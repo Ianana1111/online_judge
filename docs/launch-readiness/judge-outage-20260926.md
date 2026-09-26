@@ -17,4 +17,13 @@ The outage affects both Run and local Submit because both create sandboxes throu
 
 The existing sanitized logger read `error.status` / `error.statusCode`, while the installed Sandbox SDK stores HTTP status in `error.response.status`. Consequently production logged `status: null`, masking the provider's 402.
 
-The logger now recognizes the SDK Response status while retaining support for the existing flat error shapes. It still logs only a validated numeric HTTP status and application context, never provider bodies, user source, or credentials. Ten focused privacy/status tests, Judge TypeScript checks and focused lint passed. This diagnostics change does not remove the provider quota restriction; production recovery remains pending.
+The logger now recognizes the SDK Response status while retaining support for the existing flat error shapes. It logs a validated numeric HTTP status and application context, never provider bodies, user source, or credentials. The initial ten focused privacy/status tests, Judge TypeScript checks and focused lint passed. This diagnostics change alone did not remove the provider quota restriction.
+
+## Recovery verification after owner upgrade
+
+- A read-only lookup confirmed the actual production Vercel team is now `pro`, with active billing. Snapshot sandbox creation and a direct isolated C++ compile/sample run using the production credentials succeeded.
+- The first production API Run still failed before sandbox creation completed, with no HTTP status, after approximately 25 seconds. This was a separate failure from the earlier confirmed 402. Its exact transport cause was not captured; do not claim that Pro alone immediately restored the worker.
+- Commit `f073d37` added a fixed allowlist of nested network error codes to sanitized diagnostics. Eleven focused tests, Judge typecheck and focused lint passed. The diagnostic deployment restarted the worker. Subsequent production checks succeeded; no new matching Sandbox failure logs were returned by the final check. No SSH key or new management access was added.
+- The [recovery evidence](judge-recovery-20260926.json) records 16 successful checks: UVa 100 plus randomly selected UVa 10783 and 679. All three were tested with C++ Run and full production Submit; UVa 10783 also passed in C, Python and Java. Wrong output produced WA in Run and Submit, and invalid source produced COMPILE_ERROR / CE respectively.
+- Initial Submit polls returned `JUDGING` for correct programs. Their final AC results were independently observed through read-only queries scoped to the exact temporary test account before cleanup; the report preserves both observations. No unfinished verdict is treated as acceptance.
+- The temporary FREE account and its dependent records were removed using exact ID, handle, email, role, plan and creation-time guards. This was a bounded spot check, not a fresh audit of all 430 problems or a guarantee against future provider/transport outages.
