@@ -3,6 +3,9 @@
   "title": "用精確有理數求最小包覆圓，再比較給定半徑",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

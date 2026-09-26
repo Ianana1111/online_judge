@@ -10,18 +10,19 @@ public class Main{
  }
  public static void main(String[]args)throws Exception{
   Scanner fs=new Scanner();int tests=Integer.parseInt(fs.next());StringBuilder out=new StringBuilder();
+  int[]next=new int[100001*26];
   while(tests-->0){
-   String word=fs.next();int n=word.length();int[][]next=new int[n+1][26];
-   Arrays.fill(next[n],n);
+   String word=fs.next();int n=word.length();
+   Arrays.fill(next,n*26,(n+1)*26,n);
    for(int i=n-1;i>=0;i--){
-    System.arraycopy(next[i+1],0,next[i],0,26);next[i][word.charAt(i)-'A']=i;
+    System.arraycopy(next,(i+1)*26,next,i*26,26);next[i*26+word.charAt(i)-'A']=i;
    }
    int answer=0;
    for(int a=0;a<26;a++){
-    int first=next[0][a];if(first==n)continue;
+    int first=next[a];if(first==n)continue;
     for(int b=0;b<26;b++){
-     int second=next[first+1][b];if(second==n)continue;
-     for(int c=0;c<26;c++)if(next[second+1][c]<n)answer++;
+     int second=next[(first+1)*26+b];if(second==n)continue;
+     for(int c=0;c<26;c++)if(next[(second+1)*26+c]<n)answer++;
     }
    }
    out.append(answer).append('\n');

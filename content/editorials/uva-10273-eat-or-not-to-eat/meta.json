@@ -3,6 +3,9 @@
   "title": "依共同週期預排產奶量，用兩個活牛指標快速找唯一最小者",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "從最內層開始，分清累加與累乘的索引",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

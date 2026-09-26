@@ -10,7 +10,7 @@ while at<len(data):
         else:negative[speaker]|=1<<(-target-1)
     best=0
     for mask in range(1<<n):
-        count=mask.bit_count()
+        count=bin(mask).count("1")
         if count<=best:continue
         selected=mask;valid=True
         while selected:

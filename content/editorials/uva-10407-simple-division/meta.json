@@ -3,6 +3,9 @@
   "title": "同餘等價於差值整除，最大解是所有差值的 gcd",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

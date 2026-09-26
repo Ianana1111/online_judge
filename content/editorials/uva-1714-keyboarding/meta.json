@@ -3,6 +3,9 @@
   "title": "保留游標格子，逐字用多起點最短路徑選擇下一個按鍵",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

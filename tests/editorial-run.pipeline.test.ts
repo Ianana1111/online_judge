@@ -12,6 +12,7 @@ import { createDockerSandbox } from "./support/docker-sandbox";
 import { runTestCases } from "../apps/judge/src/local/testRun";
 import { evaluateInSandbox } from "../apps/judge/src/local/evaluate";
 import { sampleRevision } from "../packages/shared/src/sampleRevision";
+import { runSchema } from "../packages/shared/src/editorialEvidence";
 import { EDITORIAL_JUDGE_REVISION } from "../packages/shared/src/editorial";
 import { currentJudgeRevision, editorialHash, judgeFingerprint, loadEditorial, sha256, type AuditProblem } from "../scripts/editorials/evidence";
 
@@ -42,16 +43,38 @@ it.skipIf(!process.env.EDITORIAL_RUN_SNAPSHOT)("executes every available editori
     for(const p of (snapshot.problems as AuditProblem[]).filter(p=>!selected||selected.includes(p.slug))){
       const content=await loadEditorial(process.cwd(),p.slug);
       if(!content){if(selected)throw new Error("Selected Run problem has no editorial");continue;}
+      if (process.env.EDITORIAL_RUN_RESUME === "1") {
+        try {
+          const previous = runSchema.parse(JSON.parse(await readFile(resolve(output, `${p.slug}.json`), "utf8")));
+          if (previous.backend === backend && previous.toolchain === toolchain &&
+              previous.judgeRevision === EDITORIAL_JUDGE_REVISION && previous.judgeFingerprint === judgeFingerprint(p) &&
+              previous.editorialContentHash === editorialHash(content) && previous.reports.length === content.solutions.length &&
+              content.solutions.every(solution => previous.reports.some(report => report.languageKey === solution.languageKey &&
+                report.sourceHash === sha256(solution.sourceCode) && report.run.cases?.length === p.samples.length &&
+                p.samples.every(sample => report.run.cases?.some(row => row.id === `sample-${sample.ord}`))))) {
+            checked++; continue;
+          }
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== "ENOENT" && !(error instanceof SyntaxError) &&
+              (error as { name?: string }).name !== "ZodError") throw error;
+        }
+      }
       state.problem={...p,visibility:true};
       const reports=[];
       for(const solution of content.solutions){
-        const fixture=backend==="docker"?await createDockerSandbox(toolchain):await (async()=>{const sandbox=await actual.createJudgeSandbox(toolchain,120_000);return {sandbox,stop:()=>sandbox.stop()};})();
+        const createFixture=async()=>backend==="docker"?createDockerSandbox(toolchain):
+          (async()=>{const sandbox=await actual.createJudgeSandbox(toolchain,120_000);return {sandbox,stop:()=>sandbox.stop()};})();
+        // Real Submit and Run jobs always get separate disposable sandboxes. Reusing one here
+        // leaves root-owned Main.class files that javac cannot overwrite on its second compile.
+        const submitFixture=await createFixture();
+        let submit;
+        try { submit=await evaluateInSandbox(submitFixture.sandbox,p,p.samples,solution.languageKey,solution.sourceCode); }
+        finally { await submitFixture.stop(); }
+        const fixture=await createFixture();
         let stopped:Promise<unknown>|undefined;
         const stop=()=>stopped??=fixture.stop();
         state.sandbox=new Proxy(fixture.sandbox,{get(target,property){if(property==="stop")return stop;const value=Reflect.get(target,property);return typeof value==="function"?value.bind(target):value;}}) as Sandbox;
         try{
-          // Submit is exercised first because Run stops its sandbox on completion.
-          const submit=await evaluateInSandbox(fixture.sandbox,p,p.samples,solution.languageKey,solution.sourceCode);
           const run=await runTestCases(`editorial-${p.slug}`,p.id,solution.languageKey,solution.sourceCode,await Promise.all(p.samples.map(async sample=>({id:`sample-${sample.ord}`,sampleOrd:sample.ord,sampleRevision:await sampleRevision(sample.input,sample.output)}))));
           reports.push({languageKey:solution.languageKey,sourceHash:sha256(solution.sourceCode),run,submit});
         }finally{await stop();}

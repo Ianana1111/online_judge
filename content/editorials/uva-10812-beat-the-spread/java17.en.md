@@ -1,0 +1,3 @@
+Let a be the larger score and b the smaller. The equations a+b=s and a−b=d give b=(s−d)/2 and a=(s+d)/2. There is only one candidate, so validate it instead of searching: require s≥d and matching parity.
+
+C/C++ implement decimal-string addition, subtraction and halving. Strip leading zeros before comparing length and lexical order, avoiding an unstated 64-bit bound. Parity depends only on the final digit. Java uses BigInteger comparisons, testBit and shiftRight. Subtraction and halving occur only after feasibility is established, so neither a negative score nor a half-integer is silently truncated into an answer.

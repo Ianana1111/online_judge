@@ -3,6 +3,9 @@
   "title": "逐輪刪除已能確定的數對，模擬共同知識",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

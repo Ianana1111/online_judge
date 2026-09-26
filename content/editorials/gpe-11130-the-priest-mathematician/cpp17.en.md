@@ -1,0 +1,3 @@
+The optimal four-peg move counts have increments 1 once, 2 twice, 4 three times, 8 four times, and so on. This is the block structure of the Frame–Stewart split in the main explanation: the optimal three-peg bottom size persists across a consecutive block and increases at triangular-number boundaries.
+
+Maintain the current increment and the number of uses remaining in its block. Add that increment for each new disk. At the end of a block, double it and increase the next block length by one. This avoids retrying every split for every query. Exact large integers are still needed through 10,000 disks; C/C++ need only addition and doubling, while Java uses BigInteger. Preserve the zero-disk answer and read until EOF.

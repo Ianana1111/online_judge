@@ -3,6 +3,9 @@
   "title": "把每隊與每張桌子的限制轉成整數流",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

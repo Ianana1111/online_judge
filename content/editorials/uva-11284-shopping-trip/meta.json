@@ -3,6 +3,9 @@
   "title": "用整數分計價，最短路徑加子集合規劃選擇划算的購物行程",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

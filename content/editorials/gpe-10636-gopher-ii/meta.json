@@ -3,6 +3,9 @@
   "title": "先建立可及洞口關係，再用增廣路徑安排最多地鼠逃生",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

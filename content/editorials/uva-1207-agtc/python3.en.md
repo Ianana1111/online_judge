@@ -1,9 +1,7 @@
-Let `D[i][j]` be minimum cost to transform the first `i` source characters into the first `j` target characters. The final operation is one of:
+Start with ordinary edit distance: the last operation between two prefixes is deletion, insertion, or alignment of their last characters. Alignment costs zero for a match and one for replacement. Take the minimum; an empty prefix costs the other prefix's length.
 
-- delete `x[i-1]`: `D[i-1][j]+1`;
-- insert `y[j-1]`: `D[i][j-1]+1`;
-- align the last characters: `D[i-1][j-1]` plus one when different.
+Updating a large matrix cell by cell is expensive in Python. This solution uses Myers bit vectors to encode adjacent differences within a row. `positive` marks +1 differences and `negative` marks −1; neither bit is set for zero. Adjacent edit distances differ by at most one, so these vectors represent the whole row.
 
-Take the minimum. Empty source to `j` characters costs `j`, and `i` characters to empty costs `i`. Each row depends only on the previous row and its completed left neighbor, so retain two rows.
+`matches` stores a bit mask of source positions for each character. For each target character, addition and its carries in `horizontal` propagate the cellwise recurrence in parallel. `up` and `down` represent the new positive and negative differences. Their highest bits determine whether the full-source score increases or decreases. Shifting aligns the vectors for the next row, and `mask` discards bits beyond the source length.
 
-Edit distance considers deletion, insertion, and matching or replacing the final character. Keep only two DP rows, and avoid consuming a nonexistent string token when either declared length is zero.
+This computes exact unit-cost insertion, deletion, and substitution distance. It neither replaces the problem with LCS nor truncates the search. Use the shorter string as source; an empty source returns the target length. With B bits per integer word and string lengths m≤n, the main loop takes O(n⌈m/B⌉) time. The four DNA masks and work vectors use O(m) bits.

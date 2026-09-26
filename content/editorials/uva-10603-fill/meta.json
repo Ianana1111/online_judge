@@ -3,6 +3,9 @@
   "title": "以倒水量為邊成本，搜尋三個水壺的最短路徑",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

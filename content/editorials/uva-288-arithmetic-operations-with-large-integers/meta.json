@@ -3,6 +3,9 @@
   "title": "分三個優先級精確計算大整數運算式",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

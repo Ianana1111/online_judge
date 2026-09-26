@@ -3,6 +3,9 @@
   "title": "把有限小數轉成整數冪，再精確放回小數點",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

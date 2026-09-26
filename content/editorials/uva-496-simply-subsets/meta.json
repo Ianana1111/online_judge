@@ -3,6 +3,9 @@
   "title": "保留空行，以集合包含關係判斷五種結果",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

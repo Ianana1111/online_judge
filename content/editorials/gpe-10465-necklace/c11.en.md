@@ -1,0 +1,3 @@
+This platform's Necklace problem asks for two edge-disjoint paths between specified endpoints. Give each undirected edge unit residual capacity in both directions. A flow of two establishes two edge-disjoint paths. Keep parallel edges as distinct connections.
+
+After each BFS augmentation, subtract one from the forward capacity and add one to the reverse. The second path may need to reroute part of the first; deleting the first path without reverse residual edges can incorrectly report failure. At most two augmentations are needed. Store paired edges in adjacency arrays so index^1 identifies the reverse edge and memory remains linear in the input size.

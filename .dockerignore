@@ -3,6 +3,7 @@
 .codex
 .claude
 .vercel
+generated
 **/node_modules
 **/.next
 **/dist

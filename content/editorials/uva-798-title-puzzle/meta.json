@@ -3,6 +3,9 @@
   "title": "以第一個空格固定下一片位置，記憶化占用與各組餘量",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "擴展歐幾里得求特解，再最小化係數絕對值",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

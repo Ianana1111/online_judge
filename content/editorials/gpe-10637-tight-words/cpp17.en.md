@@ -1,0 +1,3 @@
+Group valid strings by their last digit. At length one, every digit has one string. To append d, the previous digit must be d−1, d or d+1. Alternate two arrays to count all strings with adjacent difference at most one.
+
+There are (K+1)^N total strings, including those with leading zeros. Counts are huge, but the final percentage lies between 0 and 100. Compute `floor((2·100·validCount·10^5+totalCount)/(2·totalCount))` with integers for exact half-up rounding. C/C++ find the bounded quotient by large-integer comparisons and binary search; Java uses BigInteger division. Print the integer part and a five-digit padded fractional part.

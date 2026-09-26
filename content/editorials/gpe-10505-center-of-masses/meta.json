@@ -3,6 +3,9 @@
   "title": "先排出凸多邊形邊界，以有向面積計算質心",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

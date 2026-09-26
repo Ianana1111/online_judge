@@ -2,25 +2,21 @@ import java.io.*;
 import java.util.*;
 public class Main{
  static class Scanner{
-  BufferedReader reader=new BufferedReader(new InputStreamReader(System.in));
-  StringTokenizer tokens=new StringTokenizer("");
-  String next()throws IOException{while(!tokens.hasMoreTokens()){
-   String line=reader.readLine();if(line==null)return null;tokens=new StringTokenizer(line);
-  }return tokens.nextToken();}
-  int nextInt()throws IOException{return Integer.parseInt(next());}
+  BufferedInputStream in=new BufferedInputStream(System.in);
+  int character()throws IOException{int c;do{c=in.read();}while(c>=0&&c<=32);return c;}
+  int nextInt()throws IOException{int c=character(),value=0;while(c>32){value=value*10+c-'0';c=in.read();}return value;}
  }
  public static void main(String[]args)throws Exception{
   Scanner fs=new Scanner();int tests=fs.nextInt();StringBuilder out=new StringBuilder();
   int[]dy={1,-1,0,0},dx={0,0,1,-1};
+  byte[]grid=new byte[1000000];int[]fire=new int[1000000],queue=new int[1000000];
   while(tests-->0){
    int rows=fs.nextInt(),cols=fs.nextInt(),cells=rows*cols;
-   byte[]grid=new byte[cells];int[]fire=new int[cells],queue=new int[cells];
-   Arrays.fill(fire,Integer.MAX_VALUE);
+   Arrays.fill(fire,0,cells,Integer.MAX_VALUE);
    int front=0,back=0,start=-1;
    for(int y=0;y<rows;y++){
-    String line=fs.next();
     for(int x=0;x<cols;x++){
-     int id=y*cols+x;char ch=line.charAt(x);grid[id]=(byte)ch;
+     int id=y*cols+x;char ch=(char)fs.character();grid[id]=(byte)ch;
      if(ch=='F'){fire[id]=0;queue[back++]=id;}
      if(ch=='J')start=id;
     }

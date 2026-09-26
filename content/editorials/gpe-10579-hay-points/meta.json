@@ -3,6 +3,9 @@
   "title": "精確累加每個單字的薪資權重",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

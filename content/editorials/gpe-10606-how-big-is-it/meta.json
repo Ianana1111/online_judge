@@ -3,6 +3,9 @@
   "title": "列舉圓心左右順序，每次考慮所有已放入的圓",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

@@ -3,6 +3,9 @@
   "title": "把一、二、三步的節奏納入狀態，逐段確認牆壁",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

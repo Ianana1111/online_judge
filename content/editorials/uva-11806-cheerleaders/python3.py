@@ -16,6 +16,6 @@ for tc in range(1,data[0]+1) if data else []:
         c=cols-bool(mask&4)-bool(mask&8)
         cells=r*c
         ways=choose[cells][k] if k<=cells else 0
-        answer+=-ways if mask.bit_count()%2 else ways
+        answer+=-ways if bin(mask).count("1")%2 else ways
     out.append(f'Case {tc}: {answer%MOD}')
 sys.stdout.write('\n'.join(out))

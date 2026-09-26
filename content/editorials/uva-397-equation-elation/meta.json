@@ -3,6 +3,9 @@
   "title": "依指定優先序逐步縮減算式，保留完整推導過程",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

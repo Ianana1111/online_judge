@@ -1,0 +1,9 @@
+Model the keyboard as a directed graph. Each arrow jumps to the first different character in that direction, rather than moving one grid step. Precompute all destinations.
+
+Every successful solution makes exactly target length plus one Enter selections, so only arrow moves need optimization. At a chosen key, an entire consecutive run of equal target characters can be selected before leaving. Moving between identical selections cannot reduce their count, and those moves can be postponed. Compress the target including Enter into character runs, but still add the original number of selections at the end.
+
+A cursor-by-prefix search expands many Python states. Instead, precompute shortest arrow distances between cells and use DP over character runs. After a run, the cursor must be at a cell bearing that character. `costs` stores minimum accumulated arrows to each such cell. For a next-run cell v, minimize cost[u]+distance[u][v] over all previous-run cells u. This considers every selection position, rather than greedily choosing the nearest key.
+
+First merge equivalent cursor positions. Group cells by key character, then repeatedly refine by reachable group sets. At stability, cells in one group share their key and successor classes. Movement/selection paths correspond exactly between the original graph and its quotient, preserving shortest answers. `distances` runs BFS from each quotient vertex and stores distances in short integer arrays; a shortest simple path is shorter than the vertex count, with 65535 reserved for unreachable cells.
+
+For V quotient vertices, E edges, and S_k candidates in run k, distance preprocessing takes O(V(V+E)); DP takes O(ΣS_{k−1}S_k), with O(V²) distance storage. Partition refinement has at most the original cell count rounds. This exact, smaller DP avoids expanding every cursor/prefix state for a 10000-character target.

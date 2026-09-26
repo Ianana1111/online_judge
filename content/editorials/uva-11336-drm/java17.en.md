@@ -1,0 +1,5 @@
+A more detailed map must do more than preserve connectivity. Each old street u—v needs a replacement road whose internal vertices are all new places. A detour through a different old place is not allowed.
+
+First verify that every old place still exists. Temporarily remove old places and use a disjoint-set structure to connect only new places. Each component is a region traversable without touching any old place. Record the new components attached to each old vertex, and separately record direct streets between old vertices.
+
+For an old street u—v, accept a direct replacement street immediately. Otherwise, the attachment sets of u and v must share a component. This is exactly the condition for a route with only new internal vertices. `find` identifies a component; attachment sets record its old endpoints. A self-route needs no street, but its place must still exist. Storage is O(E+V). After sorting or building sets, an old edge checks its endpoint attachments instead of searching the whole graph again.

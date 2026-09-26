@@ -3,6 +3,9 @@
   "title": "按網格累加避開狼的路徑，保留精確中間計數",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

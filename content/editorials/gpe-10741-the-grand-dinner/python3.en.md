@@ -1,0 +1,3 @@
+View seating as a 0/1 matrix: rows are teams and columns are tables, with at most one entry per team/table pair. Process the largest team first and place its members at distinct tables with the most remaining seats. This is the bipartite Havel–Hakimi construction, not arbitrary per-person greedy seating.
+
+An exchange argument transforms a feasible assignment that uses a smaller-capacity table into one using a larger-capacity table for the current team, without making later smaller teams harder to place. Sort tables once per team, take the first k distinct tables, and reduce each capacity by one. If the kth table has no capacity, feasibility fails. Preserve original team indices so output order remains correct.

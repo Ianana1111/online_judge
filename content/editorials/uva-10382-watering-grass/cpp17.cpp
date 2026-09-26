@@ -1,0 +1,107 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
+using namespace std;
+char *word(void){
+    int c;do{c=getchar();}while(c!=EOF&&isspace((unsigned char)c));
+    if(c==EOF)return NULL;
+    size_t size=0,capacity=32;char *text=(char*)malloc(capacity);
+    do{if(size+1==capacity){capacity*=2;text=(char*)realloc(text,capacity);}text[size++]=(char)c;c=getchar();}while(c!=EOF&&!isspace((unsigned char)c));
+    text[size]='\0';return text;
+}
+
+char *readLine(void) {
+    size_t used=0,capacity=64;char *s=(char*)malloc(capacity);int c;
+    while((c=getchar())!=EOF&&c!='\n') {
+        if(used+1==capacity){capacity*=2;s=(char*)realloc(s,capacity);}
+        s[used++]=(char)c;
+    }
+    if(c==EOF&&used==0){free(s);return NULL;}
+    s[used]='\0';return s;
+}
+
+char *copy(const char *s){char *result=(char*)malloc(strlen(s)+1);strcpy(result,s);return result;}
+int compare(const char *a,const char *b){size_t x=strlen(a),y=strlen(b);if(x!=y)return x>y?1:-1;int sign=strcmp(a,b);return (sign>0)-(sign<0);}
+
+char *signed_normalize(char *s){
+    int negative=*s=='-';char *digits=s+(*s=='-'||*s=='+');
+    while(digits[0]=='0'&&digits[1])digits++;if(strcmp(digits,"0")==0)negative=0;
+    memmove(s+negative,digits,strlen(digits)+1);if(negative)s[0]='-';return s;
+}
+
+char *with_sign(char *magnitude,int negative){
+    if(negative&&strcmp(magnitude,"0")){size_t n=strlen(magnitude);magnitude=(char*)realloc(magnitude,n+2);memmove(magnitude+1,magnitude,n+1);magnitude[0]='-';}return magnitude;
+}
+char *normalize(char *text){size_t first=0;while(text[first]=='0'&&text[first+1])first++;if(first)memmove(text,text+first,strlen(text+first)+1);return text;}
+char *add(const char *a,const char *b){
+    size_t x=strlen(a),y=strlen(b),size=(x>y?x:y)+1;
+    char *result=(char*)malloc(size+1);result[size]='\0';int carry=0;
+    for(size_t i=0;i<size;i++){int value=carry+(i<x?a[x-1-i]-'0':0)+(i<y?b[y-1-i]-'0':0);result[size-1-i]=(char)('0'+value%10);carry=value/10;}
+    return normalize(result);
+}
+char *subtract(const char *a,const char *b){
+    size_t x=strlen(a),y=strlen(b);char *result=(char*)malloc(x+1);result[x]='\0';int borrow=0;
+    for(size_t i=0;i<x;i++){int value=a[x-1-i]-'0'-(i<y?b[y-1-i]-'0':0)-borrow;borrow=value<0;if(borrow)value+=10;result[x-1-i]=(char)('0'+value);}
+    return normalize(result);
+}
+
+char *signed_add(const char *a,const char *b){
+    int an=*a=='-',bn=*b=='-';const char *x=a+an,*y=b+bn;
+    if(an==bn)return with_sign(add(x,y),an);
+    int order=compare(x,y);if(order>=0)return with_sign(subtract(x,y),an);return with_sign(subtract(y,x),bn);
+}
+
+char *negate(const char *s){if(*s=='-')return copy(s+1);return with_sign(copy(s),1);}
+
+char *signed_subtract(const char *a,const char *b){char *negative=negate(b),*result=signed_add(a,negative);free(negative);return result;}
+
+char *unsigned_multiply(const char *a,const char *b){
+    size_t n=strlen(a),m=strlen(b);unsigned char *digit=(unsigned char*)calloc(n+m,1);
+    for(size_t i=0;i<n;i++){
+        int carry=0;
+        for(size_t j=0;j<m;j++){int value=digit[i+j]+(a[n-1-i]-'0')*(b[m-1-j]-'0')+carry;digit[i+j]=(unsigned char)(value%10);carry=value/10;}
+        size_t at=i+m;while(carry){int value=digit[at]+carry;digit[at++]=(unsigned char)(value%10);carry=value/10;}
+    }
+    char *result=(char*)malloc(n+m+1);for(size_t i=0;i<n+m;i++)result[n+m-1-i]=(char)('0'+digit[i]);result[n+m]='\0';free(digit);return normalize(result);
+}
+
+char *signed_multiply(const char *a,const char *b){int an=*a=='-',bn=*b=='-';return with_sign(unsigned_multiply(a+an,b+bn),an!=bn);}
+
+void unsigned_divide(const char *a,const char *b,char **quotient,char **remainder){
+    size_t n=strlen(a);char *q=(char*)malloc(n+1),*r=copy("0");
+    for(size_t i=0;i<n;i++){
+        size_t length=strlen(r);r=(char*)realloc(r,length+2);r[length]=a[i];r[length+1]='\0';normalize(r);
+        int digit=0;
+        while(compare(r,b)>=0){char *next=subtract(r,b);free(r);r=next;digit++;}
+        q[i]=(char)('0'+digit);
+    }
+    q[n]='\0';*quotient=normalize(q);*remainder=r;
+}
+
+int sign(const char *s){return strcmp(s,"0")==0?0:*s=='-'?-1:1;}
+int signed_compare(const char *a,const char *b){int an=*a=='-',bn=*b=='-';if(an!=bn)return an?-1:1;int c=compare(a+an,b+bn);return an?-c:c;}
+char *times(const char *a,int factor){char text[32];sprintf(text,"%d",factor);return signed_multiply(a,text);}
+char *format_ratio(const char *numerator,const char *denominator,int places){
+    int negative=(*numerator=='-')!=(*denominator=='-');const char *a=numerator+(*numerator=='-'),*b=denominator+(*denominator=='-');int scale=1;for(int i=0;i<places;i++)scale*=10;
+    char text[32];sprintf(text,"%d",2*scale);char *product=unsigned_multiply(a,text),*sum=add(product,b),*twice=add(b,b),*q,*r;unsigned_divide(sum,twice,&q,&r);free(product);free(sum);free(twice);free(r);
+    if(strcmp(q,"0")==0)negative=0;size_t n=strlen(q);if(n<=(size_t)places){char *p=(char*)malloc(places+2);int zeros=places+1-(int)n;memset(p,'0',zeros);strcpy(p+zeros,q);free(q);q=p;n=places+1;}
+    int whole=(int)n-places;char *answer=(char*)malloc(n+negative+2),*out=answer;if(negative)*out++='-';memcpy(out,q,whole);out+=whole;*out++='.';memcpy(out,q+whole,places);out+=places;*out='\0';free(q);return answer;
+}
+
+#include <math.h>
+typedef struct {char *center,*square;int side;long double lower,upper;} Endpoint;
+typedef struct {Endpoint left,right;} Interval;
+Endpoint endpoint(char *center,int side,char *square){Endpoint result={center,square,side,-INFINITY,INFINITY};long double c=strtold(center,NULL),b=strtold(square,NULL);if(!isfinite(c)||!isfinite(b))return result;long double cl=nextafterl(c,-INFINITY),cu=nextafterl(c,INFINITY),bl=nextafterl(b,-INFINITY),bu=nextafterl(b,INFINITY);if(bl<0)bl=0;long double rl=nextafterl(sqrtl(bl),-INFINITY),ru=nextafterl(sqrtl(bu),INFINITY);result.lower=nextafterl(side>0?cl+rl:cl-ru,-INFINITY);result.upper=nextafterl(side>0?cu+ru:cu-rl,INFINITY);return result;}
+int one_root(const char *constant,const char *coefficient,const char *square){int a=sign(constant),b=sign(coefficient);if(!b||strcmp(square,"0")==0)return a;if(!a||a==b)return b;char *left=signed_multiply(constant,constant),*factor=signed_multiply(coefficient,coefficient),*right=signed_multiply(factor,square),*delta=signed_subtract(left,right);int result=a*sign(delta);free(left);free(factor);free(right);free(delta);return result;}
+int endpoint_compare(Endpoint a,Endpoint b){if(a.upper<b.lower)return -1;if(a.lower>b.upper)return 1;char *constant=signed_subtract(a.center,b.center);int first=one_root(constant,a.side>0?"1":"-1",a.square),right_sign=-b.side;int result;
+    if(strcmp(b.square,"0")==0)result=first;else if(!first||first==right_sign)result=right_sign;else{char *cc=signed_multiply(constant,constant),*sum=signed_add(cc,a.square),*base=signed_subtract(sum,b.square),*coefficient=times(constant,2*a.side);result=first*one_root(base,coefficient,a.square);free(cc);free(sum);free(base);free(coefficient);}free(constant);return result;}
+int left_compare(const void *a,const void *b){return endpoint_compare(((const Interval*)a)->left,((const Interval*)b)->left);}
+int right_compare(const void *a,const void *b){return endpoint_compare(((const Interval*)a)->right,((const Interval*)b)->right);}
+
+int main(void){char *token;while((token=word())!=NULL){int n=atoi(token);free(token);char *length=signed_normalize(word()),*width=signed_normalize(word()),*ww=signed_multiply(width,width);Interval *intervals=(Interval*)malloc((n+1)*sizeof(Interval));int count=0;
+    for(int i=0;i<n;i++){char *x=signed_normalize(word()),*radius=signed_normalize(word()),*rr=signed_multiply(radius,radius),*four=times(rr,4),*square=signed_subtract(four,ww),*center=times(x,2);if(sign(square)>0)intervals[count++]=(Interval){endpoint(center,-1,square),endpoint(center,1,square)};else{free(center);free(square);}free(x);free(radius);free(rr);free(four);}
+    qsort(intervals,count,sizeof(Interval),left_compare);char *end=times(length,2);char zero[]="0";Endpoint covered=endpoint(zero,1,zero),goal=endpoint(end,1,zero);int at=0,answer=0;
+    while(endpoint_compare(covered,goal)<0){Endpoint farthest=covered;while(at<count&&endpoint_compare(intervals[at].left,covered)<=0){if(endpoint_compare(intervals[at].right,farthest)>0)farthest=intervals[at].right;at++;}if(endpoint_compare(farthest,covered)<=0){answer=-1;break;}covered=farthest;answer++;}
+    printf("%d\n",answer);for(int i=0;i<count;i++){free(intervals[i].left.center);free(intervals[i].left.square);}free(intervals);free(length);free(width);free(ww);free(end);
+}return 0;}

@@ -3,6 +3,9 @@
   "title": "用 Horner 法精確計算多項式導數",
   "locale": "zh-TW",
   "languages": [
-    "python3"
+    "python3",
+    "c11",
+    "cpp17",
+    "java17"
   ]
 }

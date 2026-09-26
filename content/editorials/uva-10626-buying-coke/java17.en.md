@@ -1,19 +1,7 @@
-After removing redundant payments, five forms are needed:
+This Java solution compresses the five payment forms into a batch allocation, avoiding a large DP for every one of the possible fifty cases. Assign `min(cokes,tens)` ten-coins to distinct drinks. A direct ten payment costs one inserted coin. Let R be the remaining drinks and F the available five-coins.
 
-- eight ones, costing eight inserted coins;
-- one five and three ones, costing four;
-- two fives, receiving two ones, costing two;
-- one ten, receiving two ones, costing one;
-- one ten and three ones, receiving one five, costing four.
+If F≤R, use one five and three ones on F drinks, and eight ones on the rest: the cost is 8R−4F. If R≤F≤2R, give every drink one five, then use the extra F−R fives to replace single-five payments with two-five payments: the cost becomes 6R−2F. Above 2R, every remaining drink costs two coins. In the first range, spreading fives across drinks is better than spending two on one drink and leaving another to be paid with eight ones.
 
-The last conversion can be worthwhile because it creates a five for later.
+Paying a ten plus three ones returns a five. Compared with a direct ten payment, each conversion costs three extra inserted coins. Before F reaches R, that new five saves four coins, so conversion improves the total by one. After F reaches R, it saves only two and is no longer worthwhile. Thus convert `min(tens_used,max(0,R-F))` tens. Sufficient initial total value is guaranteed; the ones count determines feasibility rather than the optimum batch allocation, and the payments can be ordered to make the change available when needed.
 
-Memoize `(remaining, fives, tens)`. If the initial value is `V` and `B` bottles have been bought, current wallet value is fixed at `V-8B`. Therefore ones are uniquely
-
-`V-8B-5*fives-10*tens`,
-
-and do not need their own state dimension. Try every affordable payment, add its inserted-coin count, and recurse with one fewer bottle.
-
-Ten-coin count never increases. Each spent ten can create at most one five, so the five dimension need not exceed initial fives plus initial tens.
-
-Store only remaining bottles and counts of five- and ten-unit coins; infer one-unit coins from the remaining total value. Try the five relevant payment-and-change transitions and minimize inserted coins plus future cost.
+The implementation performs O(1) arithmetic per case and streams the input. The DP versions in the other languages remain useful for learning the general state model; this version shows how inspecting transition costs can expose a simpler global structure.

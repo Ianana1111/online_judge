@@ -1,0 +1,3 @@
+Separate tree shapes from labels. There are Catalan(n) binary-tree shapes, and each shape admits n! distinct labelings. Simplifying consecutive answers gives A[n]=A[n−1]·(4n−2)·n/(n+1), starting from A[0]=1, so enormous factorials are unnecessary.
+
+The result exceeds 64-bit arithmetic. C and C++ store nine decimal digits per limb and need only multiplication and division by small integers. Perform both multiplications before division; the Catalan identity guarantees an exact integer quotient. Java uses BigInteger with the same recurrence. Precompute through n=300 and stop at the zero sentinel.

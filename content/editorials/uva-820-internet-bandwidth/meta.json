@@ -3,6 +3,9 @@
   "title": "用殘餘網路與 Dinic 計算雙向網路最大流",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

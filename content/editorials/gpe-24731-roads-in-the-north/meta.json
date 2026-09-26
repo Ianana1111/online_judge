@@ -3,6 +3,9 @@
   "title": "在正權重樹上兩次找最遠村莊，得到直徑",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

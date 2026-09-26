@@ -3,6 +3,9 @@
   "title": "正規化整數直線方程，精確去除重複直線",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

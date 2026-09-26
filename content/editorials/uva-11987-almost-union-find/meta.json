@@ -3,6 +3,9 @@
   "title": "分離元素身分與 DSU 節點，搬移時配置新節點",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }

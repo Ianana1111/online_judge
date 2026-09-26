@@ -3,6 +3,9 @@
   "title": "補零頻率虛擬字母，依確定的同頻規則建立 R 元 Huffman 樹",
   "locale": "zh-TW",
   "languages": [
-    "cpp17"
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
   ]
 }
