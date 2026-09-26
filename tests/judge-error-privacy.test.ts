@@ -27,6 +27,18 @@ it.each([
   expect(JSON.stringify(logs.mock.calls)).not.toMatch(/bearer-secret|private-code/);
 });
 
+it("records nested transport codes without logging arbitrary provider fields", () => {
+  const logs = vi.spyOn(console, "error").mockImplementation(() => {});
+  logSandboxApiError("fixture", { message: "bearer-secret", cause: { errors: [
+    { code: "UND_ERR_CONNECT_TIMEOUT", message: "private-code" },
+    { code: "ENETUNREACH" }, { code: "bearer-secret" },
+  ] } });
+  expect(logs).toHaveBeenCalledWith("[fixture] sandbox operation failed", {
+    status: null, networkCodes: ["ENETUNREACH", "UND_ERR_CONNECT_TIMEOUT"],
+  });
+  expect(JSON.stringify(logs.mock.calls)).not.toMatch(/bearer-secret|private-code/);
+});
+
 it.each(["local", "run", "remote"])("%s infrastructure failure does not expose provider secrets or source text", async (kind) => {
   vi.stubEnv("JUDGE_SANDBOX_SNAPSHOT_ID", "fixture-snapshot"); vi.stubEnv("UVA_BOT_USERNAME", "fixture"); vi.stubEnv("UVA_BOT_PASSWORD", "fixture");
   const logs = vi.spyOn(console, "error").mockImplementation(() => {}); vi.spyOn(console, "log").mockImplementation(() => {});
