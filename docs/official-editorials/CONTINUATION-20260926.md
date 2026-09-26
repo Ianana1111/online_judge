@@ -2,7 +2,7 @@
 
 **430／430 題已備齊 C11、C++17、Python 3、Java 17 原始碼，以及每份程式的中英文教學說明，共 1720 份解答。** 沒有仍缺語言的題目。`pnpm check:editorials` 驗證全部雙語內容與 902 個錯解／替代解控制的結構，零失敗。
 
-此處的草稿完成數、評測證據與正式發布是不同狀態。**本輪目前尚未寫入正式資料庫、部署、commit 或 push；正式站維持既有詳解。** 必須收齊最新四語的完整測資、Run／Submit 與獨立 oracle 證據，再通過發布閘門，才可上架。
+**430 題已全部正式發布，2026-09-26 21:05 台北時間正式站驗收通過。** 正式 DB 的 430 份有效詳解／1720 份程式與 canonical 來源逐一吻合；17 項正式 API／權限檢查全部通過，臨時帳號已精確清理。沒有仍缺語言、待驗證或待發布的題目。原始碼已 commit／push：`718975d`（跳過 CI），API 與 Judge 已成功部署。
 
 ## 本輪已完成
 
@@ -48,19 +48,29 @@
 
 新增的讀取相容性只接受這組已審查的 logging 過渡，且仍檢查即時 Pro、題目測資版本與考試狀態。其他 revision 一律封鎖；未來 Judge revision 變更會自動失去本次例外。**發布閘門完全不接受舊 revision：新上架的每份程式仍需要最新完整證據。** 這能在部署與逐批發布之間保留既有詳解，不必讓全站暫時變成 REVIEW_REQUIRED。
 
-## 還需要完成的發布步驟
+## 已完成的發布步驟
 
 1. Docker／Vercel 完整測資與 Run／Submit 全 430 題已完成。
 2. 最終 `verify-release.ts` 已通過 `ready=430,pending=0`，結果存於私有 `release.json`。
-3. 先預覽全部 `publish.ts` 批次，再部署 API 的 logging 相容過渡。
-4. 使用 `publish.ts` 逐組原子發布，維持每批最多 25 題與 live-state guard；正式驗收匿名／Free／Pro／到期等權益及四語來源，精確清理臨時驗收帳號。
-5. Commit、push（既有要求跳過 CI），確認部署成功，再更新本文件及發布紀錄。不要只以 push 成功或草稿齊備宣稱已上架。
+3. 全部 `publish.ts` 唯讀預覽已通過，API 的 logging 相容過渡已成功部署。
+4. `publish.ts` 已完成 430 題原子發布（最終續跑新發布 372 題，58 題由先前成功交易保留），每批最多十題，維持 live-state guard 與 Serializable。
+5. 正式 DB 全量內容比對及 17 項 HTTP 驗收通過，臨時帳號已清理。結果存於私有 `production-acceptance.json`。
+6. 主內容提交 `718975d` 已 push／部署（跳過 CI）；最終文件與發布工具優化另行提交。詳見 [發布紀錄](RELEASE-20260926.md)。
 
 ## 接續執行
 
 - Audit：`node --import ./packages/db/node_modules/tsx/dist/loader.mjs scripts/editorials/audit.ts --snapshot=generated/editorial-audit-20260926/current-snapshot.json --out=<private> --only=<slugs> --backend=docker --resume`。
 - Vercel 使用 `RUN_VERCEL_SANDBOX_TESTS=1 railway run --service judge --environment production --no-local ...`；測資上傳與 Sandbox 執行費用已有使用者授權。不得顯示環境憑證。
 - Run 使用 `EDITORIAL_RUN_SNAPSHOT`、`EDITORIAL_RUN_OUT`、`EDITORIAL_RUN_ONLY`、`EDITORIAL_RUN_RESUME=1`，每批 15 題跑 `tests/editorial-run.pipeline.test.ts`。
-- `/private/tmp/oj-parallel-run.py` 的四個程序互不重疊，共用 `all-run-vercel/` 的逐題檔案；選單在 `parallel-run-selection.json`，結果在 `parallel-<n>-summary.json`。原 coordinator 已停止，只保留當時那一批自行完成，資訊在 `inflight-old-run.json`。不要重新啟動原 coordinator 造成重複。
+- `/private/tmp/oj-parallel-run.py` 的四個程序互不重疊，共用 `all-run-vercel/` 的逐題檔案；選單在 `parallel-run-selection.json`，結果在 `parallel-<n>-summary.json`。原 coordinator 已停止，資訊在 `inflight-old-run.json`；其缺少完整證據的十題已另行補跑，最終全 430 題通過。不要重新啟動原 coordinator 造成重複。
 - `/private/tmp/oj-collect-current-evidence.py` 只複製原始成功報告；仍必須跑 audit resume／發布閘門判斷是否過期。
 - `verify-release.ts` 與 `publish.ts` 維持嚴格 oracle／judge／content／toolchain／Run／Submit 核對，不可為求完成而放寬。
+
+## 本次發布執行器
+
+- `/private/tmp/oj-preview-parallel.py`：四組唯讀預覽，`publication-preview.json` 已為 complete／430。
+- `/private/tmp/oj-apply-parallel.py`：目前使用單一寫入程序、每批最多十題，仍呼叫正式 `publish.ts` 並維持 Serializable／即時指紋／證據／版本檢查。四組並行發布曾觸發 PostgreSQL Serializable 寫入衝突，失敗交易已回滾，沒有放寬隔離層級；改成序列續跑並保留全部成功／拒絕日誌。舊 coordinator 均在當前交易完成後停止。
+- 發布結果：私有 `publication-apply.json`，`complete=true`、430 題；完成日誌為 `publication-apply-serial-resume.log`。逐批原始日誌保留於 `publication-evidence/`，正式 DB 全量核對也已通過，不只依據程序成功。
+- `/private/tmp/oj-four-language-production-check.ts`：正式資料與 canonical 430 題比對，以及中英文四語、匿名／Free／Pro／到期／撤銷權限檢查；臨時帳號使用精確身分與建立時間清理。已執行通過，私有 `production-acceptance.json` 為 `passed=true,cleaned=true`。
+
+發布 CLI 同一原始／提案快照只解析與計算一次指紋，減少大快照的重複工作；不同快照仍分別完整驗證。該工具的 TypeScript、ESLint 與 26 項發布閘門單元測試已通過。
