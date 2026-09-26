@@ -118,6 +118,7 @@ export const batch1Dictionary: Record<string, string> = {
   "Dec": "12月",
 
   // --- components/NavBar.tsx ---
+  "Show navigation": "顯示導覽列",
   "Admin": "管理員",
   "Pro Plan": "Pro 方案",
   "Free Plan": "免費方案",
