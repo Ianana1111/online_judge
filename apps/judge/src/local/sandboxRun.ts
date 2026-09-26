@@ -58,7 +58,22 @@ export function logSandboxApiError(context: string, err: unknown): void {
   // The Sandbox SDK's APIError keeps the HTTP status on its Response, not on the error itself.
   const error = err as { response?: { status?: unknown; statusCode?: unknown }; status?: unknown; statusCode?: unknown } | null;
   const status = error?.response?.status ?? error?.response?.statusCode ?? error?.status ?? error?.statusCode;
-  console.error(`[${context}] sandbox operation failed`, { status: typeof status === "number" && Number.isInteger(status) && status >= 100 && status <= 599 ? status : null });
+  // Fetch transport failures have no HTTP response. Only emit fixed, known network codes,
+  // never error messages (which can contain URLs, credentials or submitted commands).
+  const networkCodes = new Set(["UND_ERR_CONNECT_TIMEOUT", "UND_ERR_HEADERS_TIMEOUT", "UND_ERR_SOCKET", "ENOTFOUND", "EAI_AGAIN", "ECONNREFUSED", "ECONNRESET", "ETIMEDOUT", "ENETUNREACH", "EHOSTUNREACH", "CERT_HAS_EXPIRED", "UNABLE_TO_VERIFY_LEAF_SIGNATURE"]);
+  const codes = new Set<string>();
+  const visit = (value: unknown, depth: number): void => {
+    if (!value || typeof value !== "object" || depth > 4) return;
+    const item = value as { code?: unknown; cause?: unknown; errors?: unknown };
+    if (typeof item.code === "string" && networkCodes.has(item.code)) codes.add(item.code);
+    visit(item.cause, depth + 1);
+    if (Array.isArray(item.errors)) item.errors.slice(0, 8).forEach((nested) => visit(nested, depth + 1));
+  };
+  visit(err, 0);
+  console.error(`[${context}] sandbox operation failed`, {
+    status: typeof status === "number" && Number.isInteger(status) && status >= 100 && status <= 599 ? status : null,
+    ...(codes.size ? { networkCodes: [...codes].sort() } : {}),
+  });
 }
 
 export interface RunResult {
