@@ -28,6 +28,8 @@ test("sample Run uses server comparisons; edits and language changes invalidate 
   });
   try {
     await page.goto(`/problems/${problem.slug}`);
+    await expect(page.getByText("Read and echo an integer.", { exact: true })).toBeVisible();
+    await expect(page.getByRole("textbox", { name: "Editor content", exact: true })).toBeAttached();
     const run = page.getByRole("button", { name: "▶ 執行", exact: true }), input = page.getByRole("textbox", { name: "輸入", exact: true });
     await expect(run).toBeEnabled(); await run.click(); await expect(page.getByText("與預期相符", { exact: true })).toBeVisible();
     expect(lastCases).toEqual([{ id: "sample-1", input: "1\n", sampleOrd: 1, sampleRevision: expect.stringMatching(/^[a-f0-9]{64}$/) }]);

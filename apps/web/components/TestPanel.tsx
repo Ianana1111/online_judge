@@ -61,10 +61,16 @@ function TestPanelSession({
   const [now, setNow] = useState(Date.now());
   const cooldownSeconds = Math.max(0, Math.ceil((cooldownUntil - now) / 1000));
   useEffect(() => {
-    if (usage.data) { setNow(Date.now()); setCooldownUntil(Date.now() + usage.data.cooldownMs); }
+    if (usage.data) {
+      const receivedAt = Date.now();
+      setNow(receivedAt); setCooldownUntil(receivedAt + usage.data.cooldownMs);
+    }
   }, [usage.data, usage.dataUpdatedAt]);
   useEffect(() => {
-    if (cooldownUntil <= Date.now()) return;
+    const time = Date.now();
+    // An expired response must also advance the displayed clock. Otherwise a
+    // delayed effect can leave the button stuck at "1 second" without a timer.
+    if (cooldownUntil <= time) { setNow(time); return; }
     const timer = setInterval(() => {
       const time = Date.now(); setNow(time);
       if (time >= cooldownUntil) clearInterval(timer);
