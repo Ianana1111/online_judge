@@ -73,3 +73,19 @@ The editorial fingerprint includes the new orchestration/data-loading helpers.
 Old published evidence remains explicitly readable because compiler commands,
 checker logic, test bytes/order and problem limits are unchanged; new publication
 still requires evidence under the new revision. Old evidence is not relabeled.
+
+## Production acceptance results
+
+September 27: the 5-user phase passed 5 Submit AC + 5 Run sample AC, with all 10
+SSE streams completed. The 50-user phase passed 50 Submit AC + 50 Run sample AC,
+with all 100 SSE streams completed and no service errors. The latter burst finished
+in 11 seconds; HTTP admission P95 was 691 ms. Observed peaks were 50 active Submit,
+20 active Run, 95 live/closing Sandbox leases, worker RSS 245 MiB and Redis 3 MiB.
+The isolated two-replica test separately reached 50 + 50 active jobs simultaneously.
+
+Afterwards all three queues were empty, no Sandbox lease remained, Redis had 21
+connections, PostgreSQL had 21 connections, and no operational alert was active.
+Both test phases removed their own fixture users/jobs. These measurements concern
+four verified solutions for Hashmat, and do not claim sustained capacity for every
+large-input/slow problem. The Redis 7 Pub/Sub reconnect regression is covered by a
+real HTTP test with 50 SSE readers and the six-stream per-account boundary.
