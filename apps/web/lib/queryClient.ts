@@ -1,6 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 
-export const queryClient = new QueryClient({
+export function createQueryClient() {
+  return new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 15_000,
@@ -8,4 +9,13 @@ export const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
     },
   },
-});
+  });
+}
+
+// Auth transitions and browser consumers must clear the same browser cache.
+export const queryClient = createQueryClient();
+
+/** Never share SSR query data between requests or seed a new page from an old render. */
+export function getQueryClient() {
+  return typeof window === "undefined" ? createQueryClient() : queryClient;
+}
