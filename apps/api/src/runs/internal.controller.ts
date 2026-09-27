@@ -1,3 +1,4 @@
+import { SkipThrottle } from "@nestjs/throttler";
 import { Body, Controller, HttpCode, Param, Post, UseGuards } from "@nestjs/common";
 import { testRunResultSchema, type TestRunResultDto } from "@oj/shared";
 import { Public } from "../common/decorators";
@@ -11,6 +12,7 @@ import { RunsService } from "./runs.service";
  * normal cookie-based AuthGuard/CSRF guard, authenticated purely via x-internal-token.
  */
 @Public()
+@SkipThrottle()
 @UseGuards(InternalTokenGuard)
 @Controller("internal/runs")
 export class InternalRunsController {

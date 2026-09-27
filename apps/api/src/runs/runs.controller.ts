@@ -20,6 +20,9 @@ export class RunsController {
     return this.runs.create(user.id, body);
   }
 
+  @Get("usage")
+  usage(@CurrentUser() user: RequestUser) { return this.runs.usage(user.id); }
+
   @Get(":id/stream")
   async stream(@Param("id") id: string, @CurrentUser() user: RequestUser, @Req() req: Request, @Res() res: Response) {
     await this.runs.assertOwner(id, user.id);

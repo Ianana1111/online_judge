@@ -39,7 +39,7 @@ export class SubmissionsController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    return serveStatusStream(req, res, submissionResultChannel(id), () => this.submissions.detail(id, user),
+    return serveStatusStream(req, res, submissionResultChannel(id), async () => ({ ...await this.submissions.detail(id, user), sourceCode: undefined }),
       (value) => isTerminalVerdict(value.verdict as Verdict));
   }
 

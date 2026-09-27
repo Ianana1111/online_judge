@@ -1,20 +1,12 @@
-import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable, NotFoundException, ServiceUnavailableException, type OnModuleInit, type OnModuleDestroy } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
 import type { Queue } from "bullmq";
 import type Redis from "ioredis";
 import { prisma } from "@oj/db";
-import { FREE_RUN_QUOTA, TEST_RUN_QUEUE_NAME, testRunResultChannel, sampleRevision, type CreateRunDto, type TestRunResultDto } from "@oj/shared";
+import { FREE_RUN_QUOTA, TEST_RUN_QUEUE_NAME, sampleRevision, reserveWork, finishRun, workKey, MAX_QUEUE_WAIT_MS, WORK_LEASE_MS, type CreateRunDto, type TestRunResultDto } from "@oj/shared";
 import { currentMonthKey, isUnlimited } from "../billing/billing.service";
+import { workloadHttpError } from "../common/workload-error";
 import { REDIS_CLIENT, TEST_RUN_QUEUE } from "../common/redis.providers";
-
-const COOLDOWN_MS = 3_000;
-// Results live in Redis only (never Postgres) — a Run is meant to be thrown away, not audited —
-// so the TTL just needs to comfortably outlast "job queued, sandbox boots, code runs, client
-// reconnects if its tab was backgrounded."
-const RESULT_TTL_SEC = 600;
-// A month's worth of quota keys clean themselves up well after the month they count is over —
-// no separate reset job needed, same reasoning as the cooldown key's own TTL.
-const QUOTA_TTL_SEC = 40 * 24 * 60 * 60;
 
 function resultKey(runId: string): string {
   return `testrun:${runId}:result`;
@@ -29,7 +21,7 @@ function quotaKey(userId: string, monthKey: string): string {
 }
 
 @Injectable()
-export class RunsService {
+export class RunsService implements OnModuleInit, OnModuleDestroy {
   constructor(
     @Inject(TEST_RUN_QUEUE) private readonly queue: Queue,
     @Inject(REDIS_CLIENT) private readonly redis: Redis,
@@ -46,47 +38,20 @@ export class RunsService {
       }
     }
 
-    // Same atomic-claim cooldown as submit (see SubmissionsService) — shorter, since Run is meant
-    // for fast iterate-and-check, not a scarce resource, but a sandbox still costs real compute
-    // per click.
-    const claimed = await this.redis.set(`run_cooldown:${userId}`, "1", "PX", COOLDOWN_MS, "NX");
-    if (!claimed) {
-      throw new HttpException("You're running tests too fast — wait a moment and try again.", HttpStatus.TOO_MANY_REQUESTS);
-    }
-
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException("User not found");
-    if (!isUnlimited(user)) {
-      // INCR (not a read-then-write) so concurrent requests can't all read "under quota" before
-      // any of them commits — same race the submit-quota check guards against. Renewing the TTL
-      // on every call is harmless: the key's identity (which month it counts) already comes from
-      // its name, so resetting the countdown just means "clean up well after last use."
-      const key = quotaKey(userId, currentMonthKey());
-      const used = await this.redis.incr(key);
-      await this.redis.expire(key, QUOTA_TTL_SEC);
-      if (used > FREE_RUN_QUOTA) {
-        throw new ForbiddenException(`Free plan test-run limit reached (${FREE_RUN_QUOTA}/month). Upgrade to Pro for unlimited runs.`);
-      }
-    }
-
     const runId = randomUUID();
-    // Seed a "still running" snapshot before the job is even picked up, so a client that opens
-    // the SSE stream immediately after this response always finds *something* cached — see
-    // applyResult's doc comment for why this matters (pub/sub alone has no replay).
-    const pending: TestRunResultDto = { runId, status: "RUNNING" };
-    await this.redis.set(resultKey(runId), JSON.stringify(pending), "EX", RESULT_TTL_SEC);
-    // Recorded separately from the result itself (which the internal judge callback also writes,
-    // unauthenticated except for its own internal token) so ownership can be checked without
-    // threading userId through the judge worker's result-reporting DTO at all.
-    await this.redis.set(ownerKey(runId), userId, "EX", RESULT_TTL_SEC);
-
-    await this.queue.add(TEST_RUN_QUEUE_NAME, {
-      runId,
-      problemId: dto.problemId,
-      languageKey: dto.languageKey,
-      sourceCode: dto.sourceCode,
-      cases: dto.cases,
-    });
+    try {
+      await reserveWork(this.redis, "run", userId, runId, isUnlimited(user) ? undefined : { key: quotaKey(userId, currentMonthKey()), limit: FREE_RUN_QUOTA });
+    } catch (error) { workloadHttpError(error); }
+    try {
+      await this.queue.add(TEST_RUN_QUEUE_NAME, {
+        runId, problemId: dto.problemId, languageKey: dto.languageKey, sourceCode: dto.sourceCode, cases: dto.cases,
+      }, { jobId: runId, attempts: 3, backoff: { type: "exponential", delay: 2000 } });
+    } catch {
+      await finishRun(this.redis, { runId, status: "ERROR", compileError: "Could not queue this run. Your run allowance has been restored." }).catch(() => {});
+      throw new ServiceUnavailableException("Could not queue this run. Please try again shortly.");
+    }
 
     return { id: runId };
   }
@@ -113,7 +78,42 @@ export class RunsService {
    * opens even a moment after the worker finishes still gets the final result instead of hanging
    * on a pub/sub message that already fired and vanished. */
   async applyResult(dto: TestRunResultDto): Promise<void> {
-    await this.redis.set(resultKey(dto.runId), JSON.stringify(dto), "EX", RESULT_TTL_SEC);
-    await this.redis.publish(testRunResultChannel(dto.runId), JSON.stringify(dto));
+    await finishRun(this.redis, dto);
+  }
+
+  async usage(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException("User not found");
+    const month = currentMonthKey();
+    const used = Number(await this.redis.get(quotaKey(userId, month)) ?? 0);
+    const limit = isUnlimited(user) ? null : FREE_RUN_QUOTA;
+    const cooldownMs = Math.max(0, await this.redis.pttl(`run_cooldown:${userId}`));
+    return { month, used, limit, remaining: limit === null ? null : Math.max(0, limit - used), cooldownMs };
+  }
+
+  private timer?: NodeJS.Timeout;
+  private sweeping = false;
+  onModuleInit() {
+    if (process.env.NODE_ENV === "test") return;
+    this.timer = setInterval(() => void this.recoverExpiredRuns().catch(() => {}), 30_000);
+    this.timer.unref();
+  }
+  onModuleDestroy() { if (this.timer) clearInterval(this.timer); }
+
+  async recoverExpiredRuns() {
+    if (this.sweeping) return;
+    this.sweeping = true;
+    try {
+      // A short, bounded scan, never KEYS or a full job-history download.
+      const ids = await this.redis.zrangebyscore(workKey("run"), "-inf", Date.now() + WORK_LEASE_MS - MAX_QUEUE_WAIT_MS, "LIMIT", 0, 100);
+      const stranded = await this.queue.getJobs(["wait", "delayed", "failed", "active"], 0, 99, true);
+      for (const job of stranded) if (Date.now() - job.timestamp > MAX_QUEUE_WAIT_MS && job.data.runId) ids.push(job.data.runId);
+      for (const id of new Set(ids)) {
+        const job = await this.queue.getJob(id);
+        if (job && await job.getState() === "active" && (job.processedOn ?? Date.now()) > Date.now() - 5 * 60_000) continue;
+        await finishRun(this.redis, { runId: id, status: "ERROR", compileError: "This run could not finish in time. Your run allowance has been restored. Please try again." });
+        if (job) await job.remove().catch(() => {});
+      }
+    } finally { this.sweeping = false; }
   }
 }

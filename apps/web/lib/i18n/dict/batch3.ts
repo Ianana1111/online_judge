@@ -116,6 +116,8 @@ export const batch3Dictionary: Record<string, string> = {
   "Free": "免費",
   "forever": "永久",
   "{used}/{limit} submissions this month": "本月已用 {used}/{limit} 次送出",
+  "{limit} test runs / month": "每月 {limit} 次執行",
+  "Unlimited test runs": "無限次執行",
   "10 submissions / month": "每月 10 次送出",
   "{used}/{limit} virtual CPE/GPE contests this month": "本月已用 {used}/{limit} 次自辦模擬 CPE/GPE",
   "1 self-run virtual CPE/GPE contest / month": "每月 1 次自辦模擬 CPE/GPE",

@@ -1,3 +1,4 @@
+import { reserveSandbox, attachSandboxLease, noteSandboxFailure } from "./sandboxCapacity.js";
 import { Sandbox } from "@vercel/sandbox";
 import type { LanguageSpec } from "./languages.js";
 
@@ -201,14 +202,20 @@ function resolveSandboxCredentials() {
  * scripts/build-snapshot.ts) — shared by both the real judge (judge.ts) and the ad-hoc "Run"
  * feature (testRun.ts) so a sandbox is always created the exact same way. */
 export async function createJudgeSandbox(snapshotId: string, timeoutMs: number): Promise<Sandbox> {
-  return Sandbox.create({
+  const lease = await reserveSandbox(timeoutMs);
+  try {
+  const sandbox = await Sandbox.create({
     ...resolveSandboxCredentials(),
     source: { type: "snapshot", snapshotId },
     persistent: false,
     resources: { vcpus: 1 },
     timeout: timeoutMs,
     networkPolicy: "deny-all",
+    signal: AbortSignal.timeout(30_000),
   });
+  attachSandboxLease(sandbox, lease);
+  return sandbox;
+  } catch (error) { await noteSandboxFailure(error); throw error; }
 }
 
 /** Writes the source file and compiles it (no-op for interpreted languages). Returns the compiler

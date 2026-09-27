@@ -6,7 +6,7 @@ import type { LegacyRetirement } from "./candidates";
 
 export const sha256 = (text: string | Buffer) => createHash("sha256").update(text).digest("hex");
 export const judgeFiles = [
-  ...["evaluate", "testRun", "sandboxRun", "runVerdict", "checkers", "gpeCheckers", "doubletsChecker", "percentageChecker", "roundedOutput", "rationalCheckers", "constructionCheckers", "textWitnessCheckers", "setTreeCheckers", "fixedDecimalOutput", "geometricWitnessCheckers", "formattingTextChecker", "languages"].map(n => `apps/judge/src/local/${n}.ts`),
+  ...["evaluate", "testRun", "sandboxRun", "sandboxCapacity", "testData", "runVerdict", "checkers", "gpeCheckers", "doubletsChecker", "percentageChecker", "roundedOutput", "rationalCheckers", "constructionCheckers", "textWitnessCheckers", "setTreeCheckers", "fixedDecimalOutput", "geometricWitnessCheckers", "formattingTextChecker", "languages"].map(n => `apps/judge/src/local/${n}.ts`),
   "packages/shared/src/judge.ts", "packages/shared/src/sampleRevision.ts",
 ];
 export async function currentJudgeRevision(root = process.cwd()) {

@@ -11,19 +11,21 @@ import { runtimeVerdict } from "./runVerdict.js";
 export async function evaluateInSandbox(
   sandbox: Sandbox,
   problem: Pick<Problem, "timeLimitMs" | "memoryLimitKb" | "checkerType" | "floatEps" | "uvaId"> & Partial<Pick<Problem, "slug">>,
-  testCases: Pick<TestCase, "ord" | "input" | "output">[],
+  testCases: Pick<TestCase, "ord" | "input" | "output">[] | AsyncIterable<Pick<TestCase, "ord" | "input" | "output">>,
   languageKey: string,
   sourceCode: string,
   trace?: { compiled?: () => void; caseFinished?: (ord: number, wallMs: number) => void },
 ): Promise<JudgeOutcome> {
   const lang = LANGUAGES[languageKey];
-  if (!lang || !testCases.length) throw new Error("Unsupported language or missing test data");
+  if (!lang || Array.isArray(testCases) && !testCases.length) throw new Error("Unsupported language or missing test data");
   const compiled = await compileInSandbox(sandbox, lang, sourceCode);
   trace?.compiled?.();
   if (!compiled.ok) return { status: "CE", compileError: compiled.compileError };
   const timeLimitMs = problem.timeLimitMs * lang.timeMultiplier;
   let maxTimeMs = 0, maxMemoryKb: number | undefined;
-  for (const tc of testCases) {
+  let count = 0;
+  for await (const tc of testCases) {
+    count++;
     const started = Date.now();
     const run = await runOneCase(sandbox, lang.runCmd({ memKb: problem.memoryLimitKb }), tc.input, timeLimitMs, problem.memoryLimitKb, lang.ulimitMemory);
     trace?.caseFinished?.(tc.ord, Date.now() - started);
@@ -34,5 +36,6 @@ export async function evaluateInSandbox(
     if (failure) return { status: failure, ...metrics };
     if (!checkProblemOutput(problem, tc.input, tc.output, run.stdout)) return { status: "WA", ...metrics };
   }
+  if (!count) throw new Error("Missing test data");
   return { status: "AC", timeMs: maxTimeMs, memoryKb: maxMemoryKb, score: 100 };
 }

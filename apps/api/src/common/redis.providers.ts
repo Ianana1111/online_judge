@@ -17,12 +17,12 @@ export const TEST_RUN_QUEUE = "TEST_RUN_QUEUE";
  * connection.
  */
 export function createRedisConnection(): Redis {
-  return new Redis(REDIS_URL);
+  return new Redis(REDIS_URL, { maxRetriesPerRequest: 1, commandTimeout: 3000 });
 }
 
 export const redisClientProvider = {
   provide: REDIS_CLIENT,
-  useFactory: (): Redis => new Redis(REDIS_URL),
+  useFactory: (): Redis => new Redis(REDIS_URL, { maxRetriesPerRequest: 1, commandTimeout: 3000, enableOfflineQueue: false }),
 };
 
 // Neither queue had a cleanup policy before this — every completed AND failed job stayed in
@@ -34,8 +34,8 @@ export const redisClientProvider = {
 // Failures are kept longer/more of them since they're exactly what you'd want to inspect when
 // something in the judge pipeline is broken.
 const DEFAULT_JOB_OPTIONS = {
-  removeOnComplete: { count: 500 },
-  removeOnFail: { count: 5000 },
+  removeOnComplete: { age: 3600, count: 100 },
+  removeOnFail: { age: 86400, count: 200 },
 };
 
 export const judgeLocalQueueProvider = {
@@ -47,7 +47,7 @@ export const judgeLocalQueueProvider = {
   // Letting BullMQ build its client internally sidesteps that (matches apps/judge's approach).
   useFactory: (): Queue =>
     new Queue(JUDGE_LOCAL_QUEUE_NAME, {
-      connection: { url: REDIS_URL, maxRetriesPerRequest: null },
+      connection: { url: REDIS_URL, maxRetriesPerRequest: 1, commandTimeout: 3000, enableOfflineQueue: false },
       defaultJobOptions: DEFAULT_JOB_OPTIONS,
     }),
 };
@@ -56,7 +56,7 @@ export const judgeRemoteQueueProvider = {
   provide: JUDGE_REMOTE_QUEUE,
   useFactory: (): Queue =>
     new Queue(JUDGE_REMOTE_QUEUE_NAME, {
-      connection: { url: REDIS_URL, maxRetriesPerRequest: null },
+      connection: { url: REDIS_URL, maxRetriesPerRequest: 1, commandTimeout: 3000, enableOfflineQueue: false },
       defaultJobOptions: DEFAULT_JOB_OPTIONS,
     }),
 };
@@ -65,7 +65,7 @@ export const testRunQueueProvider = {
   provide: TEST_RUN_QUEUE,
   useFactory: (): Queue =>
     new Queue(TEST_RUN_QUEUE_NAME, {
-      connection: { url: REDIS_URL, maxRetriesPerRequest: null },
+      connection: { url: REDIS_URL, maxRetriesPerRequest: 1, commandTimeout: 3000, enableOfflineQueue: false },
       defaultJobOptions: DEFAULT_JOB_OPTIONS,
     }),
 };

@@ -8,9 +8,9 @@ export function judgeRuntimeConfig(env: NodeJS.ProcessEnv = process.env) {
   }
   const concurrency = (name: string, fallback: string) => {
     const raw = env[name] ?? fallback;
-    if (!/^[1-9]\d*$/.test(raw) || Number(raw) > 64) throw new Error(`${name} must be an integer between 1 and 64`);
+    if (!/^[1-9]\d*$/.test(raw) || Number(raw) > 100) throw new Error(`${name} must be an integer between 1 and 100`);
     return Number(raw);
   };
   if (env.JUDGE_CONCURRENCY && env.JUDGE_CONCURRENCY !== "1") throw new Error("The shared UVa account requires JUDGE_CONCURRENCY=1");
-  return { localConcurrency: concurrency("JUDGE_LOCAL_CONCURRENCY", "6"), testRunConcurrency: concurrency("TEST_RUN_CONCURRENCY", "3") };
+  return { localConcurrency: concurrency("JUDGE_LOCAL_CONCURRENCY", "50"), testRunConcurrency: concurrency("TEST_RUN_CONCURRENCY", "50") };
 }

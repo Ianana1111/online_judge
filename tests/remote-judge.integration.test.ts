@@ -17,7 +17,7 @@ it("never forwards UVa session cookies to a redirect on another origin", async (
 });
 it("rejects unsafe production credentials and remote/local concurrency settings", () => {
   expect(() => judgeRuntimeConfig({ NODE_ENV: "production", INTERNAL_SERVICE_TOKEN: "dev_internal_token" })).toThrow();
-  for (const v of ["0", "-1", "6junk", "100", "NaN"]) expect(() => judgeRuntimeConfig({ JUDGE_LOCAL_CONCURRENCY: v })).toThrow();
+  for (const v of ["0", "-1", "6junk", "101", "NaN"]) expect(() => judgeRuntimeConfig({ JUDGE_LOCAL_CONCURRENCY: v })).toThrow();
   expect(() => judgeRuntimeConfig({ JUDGE_CONCURRENCY: "2" })).toThrow();
 });
 describe.skipIf(process.env.RUN_DB_TESTS !== "1")("remote queue across worker replicas", () => {
