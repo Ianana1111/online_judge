@@ -11,6 +11,8 @@ export default defineConfig({
     ] : []),
   ],
   webServer: [...(process.env.RUN_FULL_SITE_E2E === "1" ? [{ command: "node scripts/serve-test-api.mjs", url: "http://127.0.0.1:55440/health", reuseExistingServer: false, timeout: 30_000 }] : []), { command: `pnpm --filter @oj/web exec next ${process.env.PLAYWRIGHT_PRODUCTION === "1" ? "start" : "dev"} --hostname 127.0.0.1 --port 55430`, url: "http://127.0.0.1:55430", reuseExistingServer: !process.env.CI,
-    env: { API_INTERNAL_URL: "http://127.0.0.1:55440", NEXT_PUBLIC_API_URL: "http://127.0.0.1:55440", NEXT_PUBLIC_SENTRY_DSN: "", NEXT_TELEMETRY_DISABLED: "1" }, timeout: 120_000 },
+    // A distinct SSR origin prevents cached real-API responses leaking into
+    // browser-route fixture tests, including Next's stale-on-error fetch cache.
+    env: { API_INTERNAL_URL: process.env.RUN_FULL_SITE_E2E === "1" ? "http://127.0.0.1:55440" : "http://127.0.0.1:55441", NEXT_PUBLIC_API_URL: "http://127.0.0.1:55440", NEXT_PUBLIC_SENTRY_DSN: "", NEXT_TELEMETRY_DISABLED: "1" }, timeout: 120_000 },
   ],
 });
