@@ -473,6 +473,11 @@
       border-color: transparent;
       padding-inline: 0;
     }
+
+    .problem-tag-filter .problem-filter-popover {
+      left: auto;
+      right: 0;
+    }
   }
 
   .guest-typewriter-caret {
