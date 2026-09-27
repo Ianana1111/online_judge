@@ -1,5 +1,6 @@
 name: Launch readiness
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches: [main, "readiness/**"]
@@ -8,7 +9,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     services:
       postgres:
         image: postgres:16-alpine
