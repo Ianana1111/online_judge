@@ -46,5 +46,6 @@ for (const reducedMotion of [false, true]) test(`archive previews push later row
   await expect(page.getByRole("article", { name: exams[0].title, exact: true })).toHaveCount(0);
   expect(requests.filter((path) => path.startsWith("/contests/") || path.startsWith("/problems/"))).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await expect(page).toHaveTitle(/judge\./);
   const audit = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze(); expect(audit.violations).toEqual([]);
 });

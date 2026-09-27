@@ -37,6 +37,7 @@ test("problem difficulty and tag filters support multiple selections and preserv
   expect(params.getAll("difficulty")).toEqual(["2", "4"]);
   expect(params.getAll("tag")).toEqual(["DP", "Graph"]);
   await expect(page).toHaveURL(/difficulty=2.*difficulty=4.*tag=DP.*tag=Graph/);
+  await expect(page).toHaveTitle(/judge\./);
   expect((await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()).violations).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: info.outputPath("problem-multi-filters.png"), fullPage: true });
