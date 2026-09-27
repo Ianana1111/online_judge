@@ -329,12 +329,10 @@
     @apply border-b border-ink-800 px-3 py-2;
   }
 
-  /* The source PDFs are set in a serif LaTeX font (Computer Modern/Latin Modern) — the sitewide
-   * sans-serif body face reads noticeably less like "the problem" to someone used to the original
-   * paper. font-statement (STIX Two Text, see app/layout.tsx) is scoped to this class only, so
-   * nothing else on the site changes. */
+  /* Use the reference judge's 16px native sans-serif reading style for problem text. */
   .prose-statement {
-    @apply max-w-none font-statement text-sm leading-relaxed text-ink-200;
+    @apply max-w-none font-statement text-base leading-normal text-ink-200;
+    letter-spacing: normal;
   }
 
   .prose-statement p {
@@ -388,7 +386,7 @@
   }
 
   .prose-statement h1, .prose-statement h2, .prose-statement h3 {
-    @apply mb-2 mt-5 font-statement text-lg font-semibold text-ink-50;
+    @apply mb-2 mt-5 font-statement text-lg font-semibold tracking-normal text-ink-50;
   }
 
   .prose-statement ul {
@@ -400,7 +398,7 @@
   }
 
   .prose-statement table {
-    @apply mx-auto mb-3 w-max border-collapse text-sm;
+    @apply mx-auto mb-3 w-max border-collapse text-base;
   }
 
   .prose-statement th, .prose-statement td {
