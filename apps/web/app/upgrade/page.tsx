@@ -12,7 +12,7 @@ import { useBillingPlans } from "@/lib/useBillingPlans";
 import { LaunchOffer, LaunchPriceLocked, PricingUnavailable } from "@/components/LaunchOffer";
 import { useT } from "@/lib/i18n/LocaleContext";
 import { useFocusTrap } from "@/lib/useFocusTrap";
-import type { BillingPeriod } from "@oj/shared";
+import { FREE_RUN_QUOTA, type BillingPeriod } from "@oj/shared";
 import { BillingPeriodPicker, BillingPriceDetails } from "@/components/BillingPeriodPicker";
 import pricingStyles from "@/components/PricingDesign.module.css";
 
@@ -311,6 +311,7 @@ export default function UpgradePlanPage() {
                   </button>
                 )}
                 <ul className="mt-6 space-y-3 border-t border-ink-700/70 pt-6">
+                  <Check>{t("{limit} test runs / month", { limit: FREE_RUN_QUOTA })}</Check>
                   <Check>
                     {status
                       ? t("{used}/{limit} submissions this month", { used: status.submits.used, limit: status.submits.limit ?? 0 })
@@ -407,6 +408,7 @@ export default function UpgradePlanPage() {
                 {!isPro && <p className="mt-3 text-center text-[11px] leading-relaxed text-ink-400">{t("Request a full refund within 7 days of your first payment")}</p>}
                 <ul className="mt-6 space-y-3 border-t border-ink-700/70 pt-6">
                   <Check>{t("Unlimited submissions")}</Check>
+                  <Check>{t("Unlimited test runs")}</Check>
                   <Check>{t("Unlimited self-run virtual CPE/GPE contests")}</Check>
                   <Check>{t("See & sort by past CPE/GPE appearance count")}</Check>
                   <Check>{t("Official editorials in Chinese and English, with judge-verified code")}</Check>

@@ -72,7 +72,7 @@ export default function SubmissionPanel({
   const t = useT();
   const { user, status: authStatus } = useAuthStore();
   const runFormId = useId();
-  const [runState, setRunState] = useState({ running: false, disabled: true });
+  const [runState, setRunState] = useState({ running: false, disabled: true, cooldownSeconds: 0 });
   // Scoped per-account (not just per-problem): an unscoped key meant any browser session — logged
   // out, or logged into a different account — would read back whatever the last signed-in user on
   // this device had typed, which is both a privacy leak on shared/public machines and confusing on
@@ -261,7 +261,7 @@ export default function SubmissionPanel({
         <div className="ml-auto flex shrink-0 items-center gap-2">
         <button type="submit" form={runFormId} disabled={runState.disabled || locked}
           className="inline-flex min-h-10 min-w-24 items-center justify-center gap-1.5 rounded-lg border border-white/20 bg-[#111111] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#262626] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-50">
-          {runState.running ? t("Running…") : t("▶ Run")}
+          {runState.running ? t("Running…") : runState.cooldownSeconds > 0 ? t("Wait {n}s", { n: runState.cooldownSeconds }) : t("▶ Run")}
         </button>
         <button type="button" onClick={handleSubmit} disabled={!canSubmit} className="oj-btn-primary min-h-10 min-w-24 px-3">
           {!judgeable

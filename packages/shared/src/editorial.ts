@@ -2,13 +2,14 @@ import { z } from "zod";
 
 // A regression test binds this to the production compile/run/checker sources. Changing the
 // pipeline requires a new revision and invalidates old publication evidence automatically.
-export const EDITORIAL_JUDGE_REVISION = "0653a66f645c5cb090ca0bbe613b777de86fc1568a586dea30e6fec1e5cf428d";
-/** Read compatibility for the logging-only transition in 10d3af5/f073d37.
- * Compilation, execution and checking are identical to e6d221ab. Publication still
- * requires fresh evidence for EDITORIAL_JUDGE_REVISION. A future pipeline revision
- * automatically loses this exception rather than accepting arbitrary old proofs. */
+export const EDITORIAL_JUDGE_REVISION = "3ea9c255c123cc56278cc93705ac9af12dcc2d900e16079792d9ea22bd496679";
+/** Read compatibility for the capacity rollout: test cases are streamed without changing their
+ * bytes/order, compiler commands, time/memory limits or checker decisions. Array and streamed
+ * verdict parity is covered by run-consistency tests. New publication still requires evidence
+ * for the current revision; this allowlist does not upgrade or relabel old execution evidence. */
 const readablePredecessors: Readonly<Record<string, readonly string[]>> = {
-  "0653a66f645c5cb090ca0bbe613b777de86fc1568a586dea30e6fec1e5cf428d": [
+  "3ea9c255c123cc56278cc93705ac9af12dcc2d900e16079792d9ea22bd496679": [
+    "0653a66f645c5cb090ca0bbe613b777de86fc1568a586dea30e6fec1e5cf428d",
     "e6d221ab1c342e5b03144a9763eabe222c21cc8052e20defa9561afdaa338950",
   ],
 };

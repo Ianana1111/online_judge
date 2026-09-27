@@ -4,7 +4,7 @@ import { RunsService } from "../apps/api/src/runs/runs.service";
 const fixture = vi.hoisted(() => ({ problem: vi.fn(), user: vi.fn() }));
 vi.mock("../packages/db/src/index.ts", () => ({ prisma: { problem: { findFirst: fixture.problem }, user: { findUnique: fixture.user } } }));
 vi.mock("../apps/api/src/billing/billing.service", () => ({ currentMonthKey: () => "2026-09", isUnlimited: () => true }));
-const queue = { add: vi.fn() }, redis = { set: vi.fn(async () => "OK"), get: vi.fn(), publish: vi.fn() };
+const queue = { add: vi.fn() }, redis = { set: vi.fn(async () => "OK"), get: vi.fn(), publish: vi.fn(), eval: vi.fn(async () => [0, 0]) };
 const dto = { problemId: "c000000000000000000000001", languageKey: "cpp17" as const, sourceCode: "source", cases: [{ id: "sample", sampleOrd: 1, input: "1\n" }] };
 beforeEach(() => { fixture.problem.mockResolvedValue({ id: dto.problemId, samples: [{ ord: 1, input: "1\n", output: "1\n" }] }); fixture.user.mockResolvedValue({ id: "owner" }); });
 it("validates public sample membership before charging quota or enqueuing", async () => {
@@ -13,7 +13,7 @@ it("validates public sample membership before charging quota or enqueuing", asyn
   expect(redis.set).not.toHaveBeenCalled(); expect(queue.add).not.toHaveBeenCalled();
   await service.create("owner", dto);
   expect(fixture.problem.mock.calls.at(-1)?.[0].where).toEqual({ id: dto.problemId, visibility: true });
-  expect(queue.add).toHaveBeenCalledWith("judge-test-runs", expect.objectContaining({ cases: dto.cases }));
+  expect(queue.add).toHaveBeenCalledWith("judge-test-runs", expect.objectContaining({ cases: dto.cases }), expect.objectContaining({ jobId: expect.any(String), attempts: 3 }));
 });
 it("does not expose hidden or missing problems through Run", async () => {
   fixture.problem.mockResolvedValue(null);

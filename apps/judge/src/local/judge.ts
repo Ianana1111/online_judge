@@ -1,3 +1,4 @@
+import { stopJudgeSandbox } from "./sandboxCapacity.js";
 import type { Sandbox } from "@vercel/sandbox";
 import type { Problem, TestCase } from "@oj/db";
 import type { Verdict } from "@oj/shared";
@@ -18,7 +19,7 @@ const JUDGE_SANDBOX_TIMEOUT_MS = 90_000;
  */
 export async function judgeLocally(
   problem: Problem,
-  testCases: TestCase[],
+  testCases: TestCase[] | AsyncIterable<Pick<TestCase, "ord" | "input" | "output">>,
   languageKey: string,
   sourceCode: string,
 ): Promise<JudgeOutcome> {
@@ -30,7 +31,7 @@ export async function judgeLocally(
   if (!lang) {
     return { status: "SE" as Verdict, compileError: `Language "${languageKey}" has no local judge support.` };
   }
-  if (testCases.length === 0) {
+  if (Array.isArray(testCases) && testCases.length === 0) {
     return { status: "SE" as Verdict, compileError: "This problem has no local test cases configured." };
   }
 
@@ -79,8 +80,7 @@ export async function judgeLocally(
     const tDone = Date.now();
     if (sandbox) {
       const s = sandbox;
-      void s
-        .stop()
+      void stopJudgeSandbox(s)
         .catch((err) => logSandboxApiError("judgeLocally cleanup", err))
         .finally(() => console.log(`[judgeLocally] problem=${problem.uvaId ?? problem.id} backgroundStopMs=${Date.now() - tDone}`));
     }

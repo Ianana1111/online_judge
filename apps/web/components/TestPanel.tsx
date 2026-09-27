@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { sampleRevision } from "@oj/shared";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { CODE_COOLDOWN_MS, sampleRevision } from "@oj/shared";
 import { apiFetch, ApiError, openRunStream } from "@/lib/api";
 import type { RunCaseResult, RunResult, Sample } from "@/lib/types";
 import { useLocale, useT } from "@/lib/i18n/LocaleContext";
@@ -34,7 +35,7 @@ type TestPanelProps = {
   samples: Sample[];
   checkerType?: "EXACT" | "IGNORE_TRAILING_WS" | "FLOAT" | "SPECIAL";
   formId: string;
-  onRunStateChange: (state: { running: boolean; disabled: boolean }) => void;
+  onRunStateChange: (state: { running: boolean; disabled: boolean; cooldownSeconds: number }) => void;
   locked?: boolean;
 };
 
@@ -54,6 +55,22 @@ function TestPanelSession({
   locked = false,
 }: TestPanelProps) {
   const t = useT();
+  const qc = useQueryClient();
+  const usage = useQuery({ queryKey: ["runs", "usage", userId], queryFn: () => apiFetch<{ used: number; limit: number | null; remaining: number | null; cooldownMs: number }>("/runs/usage"), staleTime: 0 });
+  const [cooldownUntil, setCooldownUntil] = useState(0);
+  const [now, setNow] = useState(Date.now());
+  const cooldownSeconds = Math.max(0, Math.ceil((cooldownUntil - now) / 1000));
+  useEffect(() => {
+    if (usage.data) { setNow(Date.now()); setCooldownUntil(Date.now() + usage.data.cooldownMs); }
+  }, [usage.data, usage.dataUpdatedAt]);
+  useEffect(() => {
+    if (cooldownUntil <= Date.now()) return;
+    const timer = setInterval(() => {
+      const time = Date.now(); setNow(time);
+      if (time >= cooldownUntil) clearInterval(timer);
+    }, 250);
+    return () => clearInterval(timer);
+  }, [cooldownUntil]);
   const { locale } = useLocale();
   const zh = locale === "zh-TW";
   const isDesktop = useIsDesktop();
@@ -164,6 +181,8 @@ function TestPanelSession({
   async function handleRun() {
     if (!canRun || runningRef.current) return;
     runningRef.current = true;
+    setNow(Date.now());
+    setCooldownUntil(Date.now() + CODE_COOLDOWN_MS);
     const sequence = ++runSequence.current;
     setExecutedFingerprint(fingerprint);
     setStatus("running");
@@ -189,6 +208,7 @@ function TestPanelSession({
         },
       });
 
+      void qc.invalidateQueries({ queryKey: ["runs", "usage", userId] });
       if (!mounted.current || runSequence.current !== sequence) return;
       const es = openRunStream(id);
       esRef.current = es;
@@ -196,6 +216,7 @@ function TestPanelSession({
         if (!mounted.current || runSequence.current !== sequence) return;
         const payload = JSON.parse((evt as MessageEvent).data) as RunResult;
         if (payload.status === "RUNNING") return;
+        void qc.invalidateQueries({ queryKey: ["runs", "usage", userId] });
         runningRef.current = false;
         if (payload.status === "DONE") {
           const byId: Record<string, RunCaseResult> = {};
@@ -222,11 +243,21 @@ function TestPanelSession({
       if (!mounted.current || runSequence.current !== sequence) return;
       runningRef.current = false;
       if (e instanceof ApiError) {
-        setRunError(e.status === 429 ? t("You're running tests too fast — wait a moment and try again.") : e.message);
+        const body = e.body as { code?: string; retryAfterSeconds?: number } | undefined;
+        const messages: Record<string, string> = {
+          COOLDOWN: zh ? "每次執行須間隔 10 秒，請稍候再試。" : "Wait 10 seconds between runs.",
+          QUOTA: zh ? "本月 20 次免費執行已用完，升級 Pro 即可繼續執行。" : "Your 20 free runs this month are used. Upgrade to Pro to continue.",
+          USER_LIMIT: zh ? "你已有 3 筆尚未完成的工作，請等其中一筆完成。" : "You have three unfinished jobs. Wait for one to finish.",
+          BUSY: zh ? "目前執行人數較多，請稍候再試；本次不扣額度。" : "The judge is busy. Try again shortly; no allowance was charged.",
+          UNAVAILABLE: zh ? "評測服務暫時忙碌，請稍候再試；本次不扣額度。" : "Judging is temporarily unavailable; no allowance was charged.",
+        };
+        if (body?.code === "COOLDOWN") setCooldownUntil(Date.now() + (body.retryAfterSeconds ?? 10) * 1000);
+        setRunError(messages[body?.code ?? ""] ?? e.message);
       } else {
         setRunError(t("Something went wrong running your code."));
       }
       setStatus("error");
+      void qc.invalidateQueries({ queryKey: ["runs", "usage", userId] });
     }
   }
 
@@ -234,8 +265,8 @@ function TestPanelSession({
   const activeResult = active && !stale ? results[active.id] : undefined;
   const activeMatch = activeResult?.verdict === "AC" ? true : activeResult?.verdict === "WA" ? false : null;
   const invalidInput = cases.some((c) => (edits[c.id] ?? c.input).length > MAX_INPUT_CHARS && (!c.isSample || edits[c.id] !== undefined && edits[c.id] !== c.input));
-  const canRun = loaded && !locked && status !== "running" && cases.length > 0 && cases.length <= MAX_CASES && sourceCode.trim().length > 0 && !invalidInput;
-  useEffect(() => { onRunStateChange({ running: status === "running", disabled: !canRun }); }, [status, canRun, onRunStateChange]);
+  const canRun = cooldownSeconds === 0 && usage.data?.remaining !== 0 && loaded && !locked && status !== "running" && cases.length > 0 && cases.length <= MAX_CASES && sourceCode.trim().length > 0 && !invalidInput;
+  useEffect(() => { onRunStateChange({ running: status === "running", disabled: !canRun, cooldownSeconds }); }, [status, canRun, cooldownSeconds, onRunStateChange]);
   useEffect(() => {
     if (pane !== "result" || !resultOpen) return;
     resultTabRef.current?.focus({ preventScroll: true });
@@ -249,6 +280,7 @@ function TestPanelSession({
 
   return (
     <form ref={panelRef} id={formId} onSubmit={(e) => { e.preventDefault(); void handleRun(); }} className="oj-card scroll-mt-24 p-3">
+      {usage.data?.limit != null && <p className="mb-3 text-xs text-ink-400" aria-live="polite">{zh ? `本月剩餘 ${usage.data.remaining} / ${usage.data.limit} 次執行` : `${usage.data.remaining} / ${usage.data.limit} runs remaining this month`}{usage.data.remaining === 0 && <> · <a href="/upgrade" className="text-brand underline">{zh ? "升級 Pro" : "Upgrade to Pro"}</a></>}</p>}
       <div className="mb-3 flex items-center gap-1 border-b border-ink-700">
         <div role="tablist" aria-label={zh ? "程式測試" : "Code tests"} className="flex min-w-0 items-center gap-3"
           onKeyDown={(e) => {

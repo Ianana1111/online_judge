@@ -30,6 +30,10 @@ it.each([
   fixture.run.mockResolvedValue(run);
   const sample = await runTestCases("run", "problem", "cpp17", "source", [{ id: "sample", sampleOrd: 1 }]);
   const submit = await evaluateInSandbox({} as Sandbox, problem, [problem.samples[0]], "cpp17", "source");
+  let released = false;
+  async function* cases() { try { yield problem.samples[0]; } finally { released = true; } }
+  const streamed = await evaluateInSandbox({} as Sandbox, problem, cases(), "cpp17", "source");
+  expect(streamed).toEqual(submit); expect(released).toBe(true);
   expect(sample.cases?.[0].verdict).toBe(verdict); expect(submit.status).toBe(verdict);
 });
 it("runs edited inputs without comparing them against the original sample", async () => {

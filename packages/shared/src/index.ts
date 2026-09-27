@@ -1,6 +1,7 @@
 export * from "./verdicts.js";
 export * from "./schemas.js";
 export * from "./queue.js";
+export * from "./workload.js";
 export * from "./billing.js";
 export * from "./billingPricing.js";
 export * from "./billingPolicy.js";

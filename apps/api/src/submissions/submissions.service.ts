@@ -1,4 +1,5 @@
-import { problemJudgeMode } from "@oj/shared";
+import { problemJudgeMode, reserveWork, releaseWork, type WorkKind } from "@oj/shared";
+import { workloadHttpError } from "../common/workload-error";
 import {
   BadRequestException,
   ConflictException,
@@ -25,12 +26,12 @@ import {
 } from "@oj/shared";
 import type { RequestUser } from "../common/decorators";
 import { JUDGE_LOCAL_QUEUE, JUDGE_REMOTE_QUEUE, REDIS_CLIENT } from "../common/redis.providers";
-import { randomUUID } from "node:crypto";
+
 import { BillingService, currentMonthKey } from "../billing/billing.service";
 import { AchievementsService } from "../achievements/achievements.service";
 
 const PAGE_SIZE = 20;
-const COOLDOWN_MS = 10_000;
+
 
 @Injectable()
 export class SubmissionsService {
@@ -44,8 +45,7 @@ export class SubmissionsService {
   ) {}
 
   async create(userId: string, dto: CreateSubmissionDto): Promise<{ id: string }> {
-    const cooldownToken = randomUUID();
-    let claimedCooldown = false;
+    let reserved: { id: string; kind: WorkKind } | undefined;
     try {
       const submission = await prisma.$transaction(async (tx) => {
         await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${userId}))`;
@@ -75,23 +75,27 @@ export class SubmissionsService {
           }
           participantId = participant.id;
         }
-        const claimed = await this.redis.set(`submit_cooldown:${userId}`, cooldownToken, "PX", COOLDOWN_MS, "NX");
-        if (!claimed) throw new HttpException("You are submitting too fast. Please wait a few seconds.", HttpStatus.TOO_MANY_REQUESTS);
-        claimedCooldown = true;
+        if (await tx.submission.count({ where: { userId, verdict: { in: ["PENDING", "JUDGING"] } } }) >= 3) {
+          throw new HttpException("You already have three unfinished submissions. Wait for one to finish.", HttpStatus.TOO_MANY_REQUESTS);
+        }
         await this.billing.assertCanSubmit(userId, tx);
-        return tx.submission.create({ data: {
+        const row = await tx.submission.create({ data: {
           userId, problemId: dto.problemId, contestId: dto.contestId, contestParticipantId: participantId,
           clientRequestId: dto.clientRequestId, languageKey: dto.languageKey, sourceCode: dto.sourceCode,
           status: "PENDING", verdict: "PENDING", createdAt: receivedAt, quotaMonth: currentMonthKey(receivedAt),
           judgedOn: problem._count.testCases ? "SELF" : "REMOTE",
         } });
+        const kind = row.judgedOn === "SELF" ? "submit" : "remote";
+        await reserveWork(this.redis, kind, userId, row.id);
+        reserved = { id: row.id, kind };
+        return row;
       });
       // The committed submission is the outbox. A queue outage is recovered by the dispatcher.
       void this.dispatchOne(submission.id).catch(() => this.logger.warn(`Submission ${submission.id} awaiting queue recovery`));
       return { id: submission.id };
     } catch (error) {
-      if (claimedCooldown) await this.redis.eval("if redis.call('GET', KEYS[1]) == ARGV[1] then return redis.call('DEL', KEYS[1]) end return 0", 1, `submit_cooldown:${userId}`, cooldownToken).catch(() => {});
-      throw error;
+      if (reserved) await releaseWork(this.redis, reserved.kind, userId, reserved.id, true).catch(() => {});
+      workloadHttpError(error);
     }
   }
 
@@ -100,7 +104,7 @@ export class SubmissionsService {
     if (!row || row.queuedAt || row.verdict !== "PENDING") return;
     const local = row.judgedOn === "SELF";
     await (local ? this.localQueue : this.remoteQueue).add(local ? JUDGE_LOCAL_QUEUE_NAME : JUDGE_REMOTE_QUEUE_NAME,
-      { submissionId: row.id, evaluationVersion: row.evaluationVersion }, { jobId: `${row.id}-${row.evaluationVersion}` });
+      { submissionId: row.id, evaluationVersion: row.evaluationVersion }, { jobId: `${row.id}-${row.evaluationVersion}`, attempts: 3, backoff: { type: "exponential", delay: 2000 } });
     await prisma.submission.updateMany({ where: { id, evaluationVersion: row.evaluationVersion, queuedAt: null }, data: { queuedAt: new Date() } });
   }
 
@@ -216,6 +220,8 @@ export class SubmissionsService {
     }
 
     const updated = await this.findWithResults(submissionId);
+    if (terminal && updated) await releaseWork(this.redis, updated.judgedOn === "SELF" ? "submit" : "remote", updated.userId, submissionId)
+      .catch(() => this.logger.warn("Could not release judge admission; lease will expire"));
     const publicDetail = this.toPublicDetail(updated!, false);
     await this.redis.publish(submissionResultChannel(submissionId), JSON.stringify(publicDetail)).catch(() => this.logger.warn(`Result ${submissionId} saved; live notification unavailable`));
 

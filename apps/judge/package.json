@@ -14,7 +14,8 @@
     "@oj/shared": "workspace:*",
     "@sentry/node": "^10.70.0",
     "@vercel/sandbox": "^2.6.0",
-    "bullmq": "^5.34.0"
+    "bullmq": "^5.34.0",
+    "ioredis": "^5.4.1"
   },
   "devDependencies": {
     "@types/node": "^20.16.0",

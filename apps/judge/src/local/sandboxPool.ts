@@ -1,3 +1,4 @@
+import { stopJudgeSandbox } from "./sandboxCapacity.js";
 import type { Sandbox } from "@vercel/sandbox";
 import { createJudgeSandbox } from "./sandboxRun.js";
 
@@ -27,7 +28,7 @@ interface PoolMember {
   createdAt: number;
 }
 
-const POOL_SIZE = Math.max(0, parseInt(process.env.JUDGE_POOL_SIZE ?? "1", 10));
+const POOL_SIZE = Math.max(0, parseInt(process.env.JUDGE_POOL_SIZE ?? "0", 10));
 // A pooled sandbox older than this is treated as stale and discarded rather than handed out, even
 // though Vercel's own MEMBER_INITIAL_TIMEOUT_MS below hasn't expired it yet — a deliberately tighter
 // self-imposed bound than the hard safety net, so we never try to trust a member that's been sitting
@@ -53,7 +54,7 @@ function isFresh(member: PoolMember): boolean {
 }
 
 async function stopSafely(sandbox: Sandbox): Promise<void> {
-  await sandbox.stop().catch(() => {});
+  await stopJudgeSandbox(sandbox).catch(() => {});
 }
 
 /**

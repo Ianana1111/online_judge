@@ -1,3 +1,4 @@
+import { stopJudgeSandbox } from "./sandboxCapacity.js";
 import type { Sandbox } from "@vercel/sandbox";
 import { prisma } from "@oj/db";
 import type { RunCaseResultDto, TestRunResultDto, TestRunJobData } from "@oj/shared";
@@ -110,8 +111,7 @@ export async function runTestCases(
     const tDone = Date.now();
     if (sandbox) {
       const s = sandbox;
-      void s
-        .stop()
+      void stopJudgeSandbox(s)
         .catch((err) => logSandboxApiError("runTestCases cleanup", err))
         .finally(() => console.log(`[runTestCases] problem=${problemId} backgroundStopMs=${Date.now() - tDone}`));
     }

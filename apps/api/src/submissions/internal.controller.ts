@@ -1,3 +1,4 @@
+import { SkipThrottle } from "@nestjs/throttler";
 import { Body, Controller, HttpCode, Param, Post, UseGuards } from "@nestjs/common";
 import { judgeResultSchema, type JudgeResultDto } from "@oj/shared";
 import { Public } from "../common/decorators";
@@ -11,6 +12,7 @@ import { SubmissionsService } from "./submissions.service";
  * guard - authenticated purely via the x-internal-token header checked by InternalTokenGuard.
  */
 @Public()
+@SkipThrottle()
 @UseGuards(InternalTokenGuard)
 @Controller("internal/submissions")
 export class InternalSubmissionsController {
