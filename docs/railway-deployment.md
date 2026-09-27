@@ -101,3 +101,13 @@ to be recreated on a new Railway project*, not to explain them.
 - Review [production content gaps](launch-readiness/production-content-gaps.json):
   16 existing GPE problems have no judge route, blocking 42 archive exams.
   Earlier local-corpus lifecycle results do not certify this production corpus.
+
+## September 27 capacity rollout
+
+The judge now defaults to Redis-wide concurrency 50 for local Submit and 50 for
+Run (UVa remains 1), with a separate 100-slot Sandbox lease budget. See
+[judge capacity](launch-readiness/judge-capacity.md) for admission limits, recovery,
+free Run quotas, burst-test evidence and operational limits. No schema migration
+was needed. Direct CLI deployment and the configured GitHub integration both
+completed this rollout; the historical CI gate notes above do not prove the
+current integration still waits for CI.

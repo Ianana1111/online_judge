@@ -1,0 +1,23 @@
+{
+  "testedAt": "2026-09-27T12:52:12.777Z",
+  "environment": "Production Railway API/worker + Redis + PostgreSQL + real Vercel Sandbox",
+  "users": 5,
+  "requests": 10,
+  "elapsedSeconds": 7,
+  "verdicts": {
+    "AC": 5,
+    "runAC": 5,
+    "errors": 0
+  },
+  "streamsCompleted": 10,
+  "peaks": {
+    "submit": 5,
+    "run": 5,
+    "sandbox": 10,
+    "workerRssMb": 156,
+    "redisMb": 3
+  },
+  "apiP95Ms": 508,
+  "scope": "Bounded burst using four verified Hashmat solutions; not a sustained test or proof of arbitrary workload capacity.",
+  "cleanupComplete": true
+}

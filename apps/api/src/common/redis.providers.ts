@@ -9,15 +9,10 @@ export const JUDGE_LOCAL_QUEUE = "JUDGE_LOCAL_QUEUE";
 export const JUDGE_REMOTE_QUEUE = "JUDGE_REMOTE_QUEUE";
 export const TEST_RUN_QUEUE = "TEST_RUN_QUEUE";
 
-/**
- * Dedicated connection factory for the SSE endpoint's Redis pub/sub subscriber. Each open
- * `/submissions/:id/stream` connection gets its own ioredis client here (a connection in
- * subscribe mode can't also run other commands), separate from the shared REDIS_CLIENT used for
- * ordinary commands (session storage, publishing) and separate from BullMQ's own internal
- * connection.
- */
+/** Shared SSE Pub/Sub connection. Skip the INFO ready-check: subscriber-mode connections
+ * cannot execute INFO on Redis 7, including during reconnect/resubscription. */
 export function createRedisConnection(): Redis {
-  return new Redis(REDIS_URL, { maxRetriesPerRequest: 1, commandTimeout: 3000 });
+  return new Redis(REDIS_URL, { maxRetriesPerRequest: 1, commandTimeout: 3000, enableReadyCheck: false });
 }
 
 export const redisClientProvider = {
