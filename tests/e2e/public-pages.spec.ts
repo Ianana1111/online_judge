@@ -18,6 +18,9 @@ for (const theme of ["dark", "light"]) {
     await page.getByRole("button", { name: "執行測試", exact: true }).click();
     await expect(page.getByRole("status")).toContainText("Wrong Answer");
     await page.getByRole("combobox", { name: "修改搜尋邊界條件" }).selectOption("inclusive");
+    // Wait for React to apply the boundary change and clear the previous result
+    // before running again; native WebKit selection events can arrive later.
+    await expect(page.getByRole("status")).toContainText("從一個小小的邊界，找到解題的手感。");
     await page.getByRole("button", { name: "執行測試", exact: true }).click();
     await expect(page.getByRole("status")).toContainText("Accepted");
     }
