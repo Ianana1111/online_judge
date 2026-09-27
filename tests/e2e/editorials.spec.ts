@@ -8,7 +8,7 @@ import { localizeEditorial } from "../../packages/shared/src/editorial";
 
 const user={id:"c000000000000000000000001",handle:"reader",email:"reader@example.test",role:"USER",plan:"PRO",settings:{profileSetupDismissed:true,defaultLanguage:"cpp17"},bio:"",avatarUrl:null,school:null,isStudent:false,hasPassword:true,csrfToken:"test"};
 
-test("official editorial is lazy, keyboard reachable, responsive, and copies the exact validated source",async({page},info)=>{
+test("official editorial is lazy, keyboard reachable, responsive, and copies the exact validated source",async({page,isMobile},info)=>{
   test.skip(process.env.RUN_FULL_SITE_E2E!=="1","Requires the isolated server-rendered problem fixture");
   const url=new URL(process.env.DATABASE_URL!);
   if(url.hostname!=="127.0.0.1"||url.port!=="55432"||url.pathname!=="/oj_test")throw new Error("Disposable database required");
@@ -21,7 +21,7 @@ test("official editorial is lazy, keyboard reachable, responsive, and copies the
   await page.addInitScript((theme)=>{
     localStorage.setItem("theme",theme);
     Object.defineProperty(navigator,"clipboard",{value:{writeText:(text:string)=>(window as unknown as {captureEditorialCopy:(text:string)=>Promise<void>}).captureEditorialCopy(text)}});
-  },info.project.name==="mobile"?"dark":"light");
+  },isMobile?"dark":"light");
   await page.route("http://127.0.0.1:55440/**",async route=>{
     const path=new URL(route.request().url()).pathname;
     if(path==="/auth/me")return route.fulfill({json:user});
@@ -43,7 +43,7 @@ test("official editorial is lazy, keyboard reachable, responsive, and copies the
     await expect(matrix.getByRole("row")).toHaveCount(3);
     expect(await matrix.getByRole("row").evaluateAll((rows) => rows.map((row) => Array.from(row.querySelectorAll('[role="cell"]'), (cell) => cell.textContent)))).toEqual([["0", "-2"], ["9", "2"], ["-4", "1"]]);
     expect(await matrix.evaluate((table) => Array.from({ length: 2 }, (_, column) => { const rightEdges = Array.from(table.querySelectorAll('[role="row"]'), (row) => row.querySelectorAll('[role="cell"]')[column].getBoundingClientRect().right); return Math.max(...rightEdges) - Math.min(...rightEdges); }))).toEqual([0, 0]);
-    if (info.project.name !== "mobile") await expect.poll(() => page.evaluate(() => ({
+    if (!isMobile) await expect.poll(() => page.evaluate(() => ({
       htmlOverflow: getComputedStyle(document.documentElement).overflow,
       bodyOverflow: getComputedStyle(document.body).overflow,
       bodyLocked: document.body.classList.contains("problem-workspace-active"),
@@ -85,7 +85,7 @@ test("official editorial is lazy, keyboard reachable, responsive, and copies the
   }finally{await db.problem.delete({where:{id:problem.id}});await db.$disconnect();}
 });
 
-test("active exam tab explains the lock without requesting or rendering an answer",async({page},info)=>{
+test("active exam tab explains the lock without requesting or rendering an answer",async({page,isMobile})=>{
   const problem={id:"editorial-exam-problem",slug:"editorial-exam",title:"Exam editorial fixture",statementMd:"Read an integer.",tags:[],samples:[{ord:1,input:"1\n",output:"1\n"}],judgeable:true,checkerType:"IGNORE_TRAILING_WS",timeLimitMs:1000,memoryLimitKb:65536,difficulty:1,cpeAppearances:null,uvaId:null};
   const contest={id:"editorial-exam-contest",slug:"cpe-editorial-exam",title:"Editorial exam",kind:"CPE",startAt:null,durationMin:180,penaltyMin:20,isPublic:true,problems:[{ord:1,label:"A",problem}],myParticipant:{id:"editorial-exam-participant",startedAt:new Date().toISOString(),endsAt:new Date(Date.now()+3600_000).toISOString(),status:"RUNNING",attemptNumber:1},solvedProblemIds:[],myAttempts:[],serverNow:new Date().toISOString()};
   let answerRequests=0;
@@ -105,7 +105,7 @@ test("active exam tab explains the lock without requesting or rendering an answe
   const timer = page.getByRole("timer", { name: "剩餘時間" });
   await expect(page.locator(".site-navbar")).toHaveCount(0);
   expect((await page.locator("#main-content").boundingBox())!.width).toBe(page.viewportSize()!.width);
-  if (info.project.name === "mobile") {
+  if (isMobile) {
     await expect(toolbar).toBeVisible();
     expect(await toolbar.evaluate(el => el.getBoundingClientRect().top)).toBeGreaterThanOrEqual(0);
   } else {
