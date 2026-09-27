@@ -16,6 +16,7 @@ import LockIcon from "@/components/LockIcon";
 import VerdictBadge from "@/components/VerdictBadge";
 import { ArchiveIcon } from "@/components/icons";
 import SplitPane from "@/components/SplitPane";
+import { Skeleton } from "@/components/Skeleton";
 import ProblemPrevNext from "@/components/ProblemPrevNext";
 import type { ProblemDetail, SubmissionResultTab } from "@/lib/types";
 import { useExamTimerStore } from "@/store/examTimer";
@@ -23,7 +24,10 @@ import { stripProblemNumber } from "@/lib/problemTitle";
 import { useT } from "@/lib/i18n/LocaleContext";
 import { useIsDesktop } from "@/lib/useIsDesktop";
 
-const OfficialEditorialPanel = dynamic(() => import("@/components/OfficialEditorialPanel"));
+// Keep first-load suspense inside this tab so it cannot hide/dispose the editor.
+const OfficialEditorialPanel = dynamic(() => import("@/components/OfficialEditorialPanel"), {
+  loading: () => <Skeleton className="h-64 w-full" />,
+});
 
 type TabKey = "statement" | "history" | "editorial" | "discussion" | "stats" | "notes" | "result";
 const TAB_ORDER: TabKey[] = ["statement", "history", "editorial", "discussion", "stats", "notes"];

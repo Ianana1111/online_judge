@@ -85,7 +85,7 @@ test("official editorial is lazy, keyboard reachable, responsive, and copies the
   }finally{await db.problem.delete({where:{id:problem.id}});await db.$disconnect();}
 });
 
-test("active exam tab explains the lock without requesting or rendering an answer",async({page})=>{
+test("active exam tab explains the lock without requesting or rendering an answer",async({page},info)=>{
   const problem={id:"editorial-exam-problem",slug:"editorial-exam",title:"Exam editorial fixture",statementMd:"Read an integer.",tags:[],samples:[{ord:1,input:"1\n",output:"1\n"}],judgeable:true,checkerType:"IGNORE_TRAILING_WS",timeLimitMs:1000,memoryLimitKb:65536,difficulty:1,cpeAppearances:null,uvaId:null};
   const contest={id:"editorial-exam-contest",slug:"cpe-editorial-exam",title:"Editorial exam",kind:"CPE",startAt:null,durationMin:180,penaltyMin:20,isPublic:true,problems:[{ord:1,label:"A",problem}],myParticipant:{id:"editorial-exam-participant",startedAt:new Date().toISOString(),endsAt:new Date(Date.now()+3600_000).toISOString(),status:"RUNNING",attemptNumber:1},solvedProblemIds:[],myAttempts:[],serverNow:new Date().toISOString()};
   let answerRequests=0;
@@ -101,7 +101,37 @@ test("active exam tab explains the lock without requesting or rendering an answe
     return route.fulfill({json:{items:[],total:0,page:1}});
   });
   await page.goto(`/contests/${contest.id}`);await page.getByRole("button",{name:`A ${problem.title}`,exact:true}).click();
+  const toolbar = page.locator(".exam-toolbar");
+  const timer = page.getByRole("timer", { name: "剩餘時間" });
+  await expect(page.locator(".site-navbar")).toHaveCount(0);
+  expect((await page.locator("#main-content").boundingBox())!.width).toBe(page.viewportSize()!.width);
+  if (info.project.name === "mobile") {
+    await expect(toolbar).toBeVisible();
+    expect(await toolbar.evaluate(el => el.getBoundingClientRect().top)).toBeGreaterThanOrEqual(0);
+  } else {
+    await page.mouse.move(700, 300);
+    await expect.poll(() => toolbar.evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThanOrEqual(0);
+    const initialTime = await timer.textContent();
+    await expect.poll(() => timer.textContent()).not.toBe(initialTime);
+    const bounds = await page.locator(".exam-workspace").boundingBox();
+    await page.mouse.move(700, 1);
+    await expect.poll(() => toolbar.evaluate(el => el.getBoundingClientRect().top)).toBe(0);
+    expect(await page.locator(".exam-workspace").boundingBox()).toEqual(bounds);
+    await expect(timer).toBeVisible();
+    await page.mouse.move(700, 300);
+    await expect.poll(() => toolbar.evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThanOrEqual(0);
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.getByRole("tab",{name:"官方詳解",exact:true}).click();
   await expect(page.locator("#problem-tabpanel-editorial")).toContainText("先完成測驗");
   expect(answerRequests).toBe(0);
+  await page.getByRole("button", { name: "← 回到題目列表", exact: true }).click();
+  await expect(page.locator(".exam-workspace")).toHaveCount(0);
+  expect((await page.locator("#main-content").boundingBox())!.width).toBe(Math.min(page.viewportSize()!.width, 1400));
+  await expect.poll(() => toolbar.evaluate(el => el.getBoundingClientRect().top)).toBeGreaterThanOrEqual(0);
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe("hidden");
+  await page.getByRole("button", { name: "結束測驗", exact: true }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.getByRole("button", { name: "繼續作答", exact: true }).click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
 });

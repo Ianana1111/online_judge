@@ -86,25 +86,31 @@ export default function ExamModeShell({
   }
 
   return (
-    <div className={`bg-ink-950 ${fillViewport ? "flex h-[calc(100vh-3rem)] flex-col overflow-hidden" : "min-h-screen"}`}>
-      <header className="sticky top-0 z-50 flex shrink-0 items-center justify-between border-b border-ink-800 bg-ink-950/95 px-4 py-2.5 backdrop-blur">
-        <div className="flex items-center gap-3">
-          <Link href={homeHref} className="font-display text-sm font-bold text-ink-50">
+    <div className={`bg-ink-950 ${fullHeight ? "exam-workspace" : ""} ${fillViewport ? "flex h-full min-h-0 flex-col overflow-hidden" : "min-h-screen"}`}>
+      <div className="exam-navigation sticky top-0 z-50">
+        <button type="button" className="exam-nav-trigger" aria-label={t("Show navigation")} />
+      <header className="exam-toolbar border-b border-ink-800 bg-ink-950/95 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-3 px-4 py-2.5">
+        <div className="flex min-w-0 items-center gap-3">
+          <Link href={homeHref} className="shrink-0 font-display text-sm font-bold text-ink-50">
             judge<span className="text-brand">.</span>
           </Link>
-          <span className="text-sm text-ink-300">{title}</span>
+          <span className="truncate text-sm text-ink-300" title={title}>{title}</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3">
           {onEnd && !isOver && (
             <button
               type="button"
               onClick={() => setConfirmingEnd(true)}
+              aria-expanded={confirmingEnd}
               className="rounded border border-ink-700 px-2.5 py-1 text-xs font-medium text-ink-400 transition-colors hover:border-verdict-wa/50 hover:text-verdict-wa"
             >
               {t("End exam")}
             </button>
           )}
           <div
+            role="timer"
+            aria-label={t("Time remaining")}
             className={`font-mono text-lg font-semibold tabular-nums ${
               isOver ? "text-ink-500" : urgent ? "text-verdict-wa animate-pulse-soft" : "text-brand"
             }`}
@@ -112,7 +118,9 @@ export default function ExamModeShell({
             {isOver ? t("Time's up") : formatDuration(remaining)}
           </div>
         </div>
+        </div>
       </header>
+      </div>
 
       {confirmingEnd && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-ink-950/70 p-4" role="dialog" aria-modal="true">
@@ -155,7 +163,7 @@ export default function ExamModeShell({
       )}
 
       <div
-        className={`mx-auto w-full max-w-[1400px] px-3 sm:px-6 ${fillViewport ? "min-h-0 flex-1 overflow-hidden py-3" : "py-6"}`}
+        className={`mx-auto w-full ${fullHeight ? "max-w-none" : "max-w-[1400px] px-3 sm:px-6 py-6"} ${fillViewport ? "min-h-0 flex-1 overflow-hidden" : ""}`}
       >
         {children}
       </div>
