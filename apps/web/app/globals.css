@@ -447,7 +447,7 @@
   @media (max-width: 639px) {
     .guest-hero.grid {
       display: flex;
-      min-height: calc(100svh - 84px);
+      min-height: calc(100svh - var(--guest-hero-offset, 84px));
       padding: 0 8px 48px;
     }
 

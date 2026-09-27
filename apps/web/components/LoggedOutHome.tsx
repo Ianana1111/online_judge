@@ -119,6 +119,29 @@ function FirstChallenge({ zh }: { zh: boolean }) {
 export default function LoggedOutHome({ total }: { total: number | null }) {
   const { locale } = useLocale(); const zh = locale === "zh-TW";
   const { user, status } = useAuthStore(); const [path, setPath] = useState(0);
+  const heroRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+    let previousOffset = -1;
+    let frame = 0;
+    const updateOffset = () => {
+      // The offer banner can appear after loading; keep the hero inside the first viewport.
+      const offset = Math.ceil(hero.getBoundingClientRect().top + window.scrollY);
+      if (offset === previousOffset) return;
+      previousOffset = offset;
+      hero.style.setProperty("--guest-hero-offset", `${offset}px`);
+    };
+    const scheduleUpdate = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(updateOffset);
+    };
+    updateOffset();
+    const observer = new ResizeObserver(scheduleUpdate);
+    observer.observe(document.body);
+    window.addEventListener("resize", scheduleUpdate);
+    return () => { observer.disconnect(); cancelAnimationFrame(frame); window.removeEventListener("resize", scheduleUpdate); };
+  }, [status, user?.id]);
   const paths = [
     { title: zh ? "從第一題開始" : "Build your foundation", tag: "01 / PRACTICE", body: zh ? "先練基本輸入輸出，再走向排序、搜尋與資料結構。每次提交的結果，都幫你找到下一個需要釐清的地方。" : "Start with input and output, then explore sorting, search and data structures. Learn from every submission.", href: "/problems", action: zh ? "探索題庫" : "Explore problems", notes: zh ? ["依難度與主題找題", "程式編輯與自訂測試", "保留自己的作答紀錄"] : ["Browse by difficulty and topic", "Editor and custom tests", "Review your submission history"] },
     { title: zh ? "為下一場考試準備" : "Practice under pressure", tag: "02 / SIMULATE", body: zh ? "挑一份 CPE／GPE 歷屆試題，進入自己的限時測驗。練習分配時間，也練習在卡住時做選擇。" : "Choose a past CPE or GPE exam and start your own timed attempt. Practice pacing and deciding when to move on.", href: "/contests", action: zh ? "選一場虛擬測驗" : "Find a virtual exam", notes: zh ? ["每人獨立的作答時段", "伺服器校準倒數計時", "題目、成績與罰時紀錄"] : ["Your own exam window", "Server-synchronized timer", "Results and penalty history"] },
@@ -127,7 +150,7 @@ export default function LoggedOutHome({ total }: { total: number | null }) {
   if (status === "ready" && user) return null;
   const selected = paths[path];
   return <div className="mx-auto max-w-6xl space-y-20 pb-10 sm:space-y-28">
-    <section className="guest-hero grid items-center gap-10 pb-5 pt-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14 lg:pt-12">
+    <section ref={heroRef} className="guest-hero grid items-center gap-10 pb-5 pt-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14 lg:pt-12">
       <div className="guest-hero-copy"><p className="mb-6 hidden items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-brand sm:flex"><span className="h-px w-8 bg-brand" aria-hidden /> YOUR NEXT ACCEPTED STARTS HERE</p>
         <TypedHeadline zh={zh} />
         <p className="guest-hero-description mt-6 max-w-md text-base leading-8 text-ink-300"><span className="hidden sm:inline">{zh ? "從第一個 Accepted，到從容面對整場考試。題庫練習、限時模擬、解題紀錄，在 judge. 一步步累積。" : "From your first Accepted to your next exam. Practice problems, take timed exams and see how far you've come."}</span><span className="sm:hidden">{zh ? "題庫練習、限時模擬，從今天這一題開始。" : "Practice a problem. Build your confidence. One Accepted at a time."}</span></p>
