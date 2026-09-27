@@ -28,8 +28,8 @@ for (const theme of ["dark", "light"]) test(`collections: responsive design, sea
   await mock(page); await page.addInitScript((theme) => localStorage.setItem("theme", theme), theme);
   await page.goto("/collections"); await expect(page.getByRole("heading", { name: "CPE 必考 49 題" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "考試專區", exact: true })).toBeVisible(); await expect(page.getByRole("heading", { name: "主題專區", exact: true })).toBeVisible();
-  await expect(page.getByText("CPE 核心必考清單", { exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: /開始刷必考 49 題/ })).toBeVisible();
+  await expect(page.getByText("核心必考清單", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /CPE 必考 49 題.*開始練習/ })).toBeVisible();
   await expect(page.getByRole("heading", { name: "考前必刷", exact: true })).toBeVisible();
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior)).toBe("smooth");
   await page.getByRole("link", { name: /^主題專區/ }).click();
