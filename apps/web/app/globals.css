@@ -180,18 +180,26 @@
 
   @media (min-width: 1024px) {
     html.problem-workspace-active,
-    body.problem-workspace-active {
+    body.problem-workspace-active,
+    html:has(.problem-workspace),
+    body:has(.problem-workspace),
+    html:has(.exam-workspace),
+    body:has(.exam-workspace) {
       height: 100dvh;
       overflow: hidden;
       overscroll-behavior: none;
     }
 
-    body.problem-workspace-active {
+    body.problem-workspace-active,
+    body:has(.problem-workspace),
+    body:has(.exam-workspace) {
       display: flex;
       flex-direction: column;
     }
 
-    body.problem-workspace-active #main-content {
+    body.problem-workspace-active #main-content,
+    body:has(.problem-workspace) #main-content,
+    body:has(.exam-workspace) #main-content {
       flex: 1 1 0%;
       width: 100%;
       min-height: 0;
@@ -199,25 +207,29 @@
     }
   }
 
-  /* Only standalone practice opts in; timed contest workspaces keep their own chrome. */
-  body:has(.practice-workspace) #main-content {
+  /* Standalone practice and active exam problems share the same outer spacing. */
+  body:has(.practice-workspace) #main-content,
+  body:has(.exam-workspace) #main-content {
     max-width: none;
     padding: 12px clamp(12px, 1.1vw, 24px);
   }
 
-  .practice-nav-trigger {
+  .practice-nav-trigger,
+  .exam-nav-trigger {
     display: none;
   }
 
   @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
-    body:has(.practice-workspace) .site-navigation {
+    body:has(.practice-workspace) .site-navigation,
+    .exam-workspace .exam-navigation {
       position: fixed;
       inset: 0 0 auto;
       height: 6px;
       z-index: 50;
     }
 
-    body:has(.practice-workspace) .practice-nav-trigger {
+    body:has(.practice-workspace) .practice-nav-trigger,
+    .exam-workspace .exam-nav-trigger {
       display: block;
       position: absolute;
       inset: 0;
@@ -225,7 +237,8 @@
       height: 6px;
     }
 
-    body:has(.practice-workspace) .site-navbar {
+    body:has(.practice-workspace) .site-navbar,
+    .exam-workspace .exam-toolbar {
       position: absolute;
       inset: 0 0 auto;
       transform: translateY(calc(-100% - 4px));
@@ -235,14 +248,18 @@
 
     body:has(.practice-workspace) .site-navigation:hover .site-navbar,
     body:has(.practice-workspace) .site-navigation:has(:focus-visible) .site-navbar,
-    body:has(.practice-workspace) .site-navigation:has([aria-expanded="true"]) .site-navbar {
+    body:has(.practice-workspace) .site-navigation:has([aria-expanded="true"]) .site-navbar,
+    .exam-workspace .exam-navigation:hover .exam-toolbar,
+    .exam-workspace .exam-navigation:has(:focus-visible) .exam-toolbar,
+    .exam-workspace .exam-navigation:has([aria-expanded="true"]) .exam-toolbar {
       transform: translateY(0);
     }
 
   }
 
   @media (prefers-reduced-motion: reduce) {
-    body:has(.practice-workspace) .site-navbar {
+    body:has(.practice-workspace) .site-navbar,
+    .exam-workspace .exam-toolbar {
       transition: none;
     }
   }
