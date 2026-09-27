@@ -13,6 +13,7 @@ test("sample Run uses server comparisons; edits and language changes invalidate 
   const user = { id: "c000000000000000000000001", handle: "runner", email: "runner@example.test", role: "USER", plan: "FREE", settings: { profileSetupDismissed: true, defaultLanguage: "python3" }, bio: "", avatarUrl: null, school: null, isStudent: false, hasPassword: true, csrfToken: "test" };
   await page.route("http://127.0.0.1:55440/**", async (route) => {
     const path = new URL(route.request().url()).pathname;
+    if (path === "/runs/usage") return route.fulfill({ json: { used: 0, limit: 20, remaining: 20, cooldownMs: 0 } });
     if (path === "/auth/me") return route.fulfill({ json: user });
     if (path === "/contests/me") return route.fulfill({ json: [] });
     if (path === "/notifications") return route.fulfill({ json: { items: [], unreadCount: 0, nextCursor: null, asOf: new Date().toISOString() } });
@@ -52,6 +53,7 @@ for (const verdict of ["AC", "WA"] as const) test(`Run beside Submit opens a clo
   await page.addInitScript((theme) => localStorage.setItem("theme", theme), verdict === "AC" ? "light" : "dark");
   await page.route("http://127.0.0.1:55440/**", async (route) => {
     const path = new URL(route.request().url()).pathname;
+    if (path === "/runs/usage") return route.fulfill({ json: { used: 0, limit: 20, remaining: 20, cooldownMs: 0 } });
     if (path === "/auth/me") return route.fulfill({ json: user });
     if (path === "/contests/run-ui-contest") return route.fulfill({ json: { ...contest, serverNow: new Date().toISOString() } });
     if (path === "/contests/me") return route.fulfill({ json: [] });

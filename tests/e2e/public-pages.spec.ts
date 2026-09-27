@@ -6,20 +6,30 @@ test.beforeEach(async ({ page }) => {
 });
 
 for (const theme of ["dark", "light"]) {
-  test(`homepage challenge and practice paths (${theme})`, async ({ page }, info) => {
+  test(`homepage challenge and practice paths (${theme})`, async ({ page, isMobile }, info) => {
     await page.addInitScript((value) => localStorage.setItem("theme", value), theme);
     const errors: string[] = []; page.on("pageerror", (error) => errors.push(error.message));
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("把每一次練習");
+    if (isMobile) {
+      await expect(page.getByRole("button", { name: "執行測試", exact: true })).toBeHidden();
+      await expect(page.getByRole("link", { name: "開始免費練習" })).toBeInViewport();
+    } else {
     await page.getByRole("button", { name: "執行測試", exact: true }).click();
     await expect(page.getByRole("status")).toContainText("Wrong Answer");
     await page.getByRole("combobox", { name: "修改搜尋邊界條件" }).selectOption("inclusive");
     await page.getByRole("button", { name: "執行測試", exact: true }).click();
     await expect(page.getByRole("status")).toContainText("Accepted");
+    }
     await page.getByRole("tab", { name: /為下一場考試準備/ }).click();
     await expect(page.getByRole("tabpanel")).toContainText("選一場虛擬測驗");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     expect(errors).toEqual([]);
+    // Audit the revealed content, not text partway through its opacity animation.
+    const community = page.locator('section[aria-labelledby="discord-community-heading"]');
+    await community.scrollIntoViewIfNeeded();
+    await expect(community.locator("..")).toHaveCSS("opacity", "1");
+    await expect(page).toHaveTitle(/judge\./);
     const audit = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
     expect(audit.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.target) }))).toEqual([]);
     await page.evaluate(() => window.scrollTo(0, 0));

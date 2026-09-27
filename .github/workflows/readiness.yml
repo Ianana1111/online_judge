@@ -76,9 +76,10 @@ jobs:
       # Browser route fixtures cannot intercept server-side fetches. Keep the
       # real API separate so empty SSR data cannot mask the browser fixtures.
       - name: Check all pages against the real API
-        run: pnpm exec playwright test tests/e2e/full-site.spec.ts --output=test-results/full-site
+        run: pnpm exec playwright test tests/e2e/full-site.spec.ts tests/e2e/editorials.spec.ts tests/e2e/editor-recovery.spec.ts tests/e2e/practice-workspace.spec.ts tests/e2e/run-consistency.spec.ts --output=test-results/full-site
         env:
           RUN_FULL_SITE_E2E: "1"
+          CROSS_BROWSER_E2E: "1"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

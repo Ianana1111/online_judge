@@ -172,7 +172,7 @@ export default function LoggedOutHome({ total }: { total: number | null }) {
           <div className="max-w-2xl">
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#5865f2] text-white shadow-lg shadow-[#5865f2]/20"><DiscordIcon className="h-5 w-5" /></span>
-              <span className="font-mono text-xs font-semibold tracking-[0.15em] text-[#aab1ff]">DISCORD COMMUNITY</span>
+              <span className="font-mono text-xs font-semibold tracking-[0.15em] text-ink-200">DISCORD COMMUNITY</span>
             </div>
             <h2 id="discord-community-heading" className="mt-5 text-2xl font-semibold tracking-normal text-ink-100 sm:text-3xl">{zh ? "練題之外，也來聊聊。" : "Practice together. Talk it through."}</h2>
             <p className="mt-3 text-sm leading-7 text-ink-300">{zh ? "我們有 Discord 社群！來聊解題想法、交流練習心得，認識一起努力的朋友。歡迎加入我們～" : "Join our Discord community to talk through problems, share your practice journey, and meet fellow learners. Everyone is welcome."}</p>
