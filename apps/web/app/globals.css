@@ -448,7 +448,7 @@
     .guest-hero.grid {
       display: flex;
       min-height: calc(100svh - var(--guest-hero-offset, 84px));
-      padding: 0 8px 48px;
+      padding: 0 8px;
     }
 
     .guest-hero-copy {
