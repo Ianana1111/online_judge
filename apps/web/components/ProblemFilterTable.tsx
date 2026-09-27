@@ -142,7 +142,7 @@ function MultiSelectDropdown({
       </button>
       {open && (
         <div
-          className="oj-card absolute left-0 top-full z-30 mt-1.5 w-full min-w-[240px] overflow-hidden p-1.5 shadow-2xl shadow-black/25"
+          className="problem-filter-popover oj-card absolute left-0 top-full z-30 mt-1.5 w-full min-w-[240px] overflow-hidden p-1.5 shadow-2xl shadow-black/25"
         >
           <div className="flex items-center justify-between gap-3 px-2 py-1.5">
             <p className="text-xs font-semibold text-ink-200">{panelLabel}</p>
@@ -292,10 +292,12 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder={t("Search title…")}
-          className="oj-input max-w-xs"
+          className="oj-input w-full sm:w-auto sm:max-w-xs"
         />
-        <MultiSelectDropdown values={difficulties} onChange={setDifficulties} options={DIFFICULTY_OPTIONS} allLabel={t("All difficulties")} summary={difficultySummary} panelLabel={t("Difficulty")} searchPlaceholder={t("Search…")} clearLabel={t("Clear")} doneLabel={locale === "zh-TW" ? "完成" : "Done"} className="w-[170px]" />
-        <MultiSelectDropdown values={tags} onChange={setTags} options={tagOptions} allLabel={t("All tags")} summary={tagSummary} panelLabel={t("Tags")} searchable searchPlaceholder={t("Search…")} clearLabel={t("Clear")} doneLabel={locale === "zh-TW" ? "完成" : "Done"} className="w-[210px]" />
+        <div className="flex w-full gap-3 sm:contents">
+          <MultiSelectDropdown values={difficulties} onChange={setDifficulties} options={DIFFICULTY_OPTIONS} allLabel={t("All difficulties")} summary={difficultySummary} panelLabel={t("Difficulty")} searchPlaceholder={t("Search…")} clearLabel={t("Clear")} doneLabel={locale === "zh-TW" ? "完成" : "Done"} className="min-w-0 flex-1 sm:w-[170px] sm:flex-none" />
+          <MultiSelectDropdown values={tags} onChange={setTags} options={tagOptions} allLabel={t("All tags")} summary={tagSummary} panelLabel={t("Tags")} searchable searchPlaceholder={t("Search…")} clearLabel={t("Clear")} doneLabel={locale === "zh-TW" ? "完成" : "Done"} className="problem-tag-filter min-w-0 flex-1 sm:w-[210px] sm:flex-none" />
+        </div>
         {filtersActive && (
           <button
             onClick={() => {
@@ -316,12 +318,12 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
 
       {(difficulties.length > 0 || tags.length > 0) && <div className="mb-4 flex flex-wrap gap-2" aria-label={locale === "zh-TW" ? "已套用的篩選" : "Applied filters"}>
         {difficulties.map((difficulty) => <button key={`difficulty-${difficulty}`} type="button" onClick={() => setDifficulties(difficulties.filter((value) => value !== difficulty))} className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/[0.06] px-2.5 py-1 text-xs text-brand transition-colors hover:bg-brand/10"><span>{"★".repeat(Number(difficulty))}</span><span aria-hidden>×</span></button>)}
-        {tags.map((tag) => <button key={`tag-${tag}`} type="button" onClick={() => setTags(tags.filter((value) => value !== tag))} className="inline-flex items-center gap-1.5 rounded-full border border-ink-700 bg-ink-800/70 px-2.5 py-1 text-xs text-ink-200 transition-colors hover:border-brand/40 hover:text-brand"><span>{tag}</span><span aria-hidden>×</span></button>)}
+        {tags.map((tag) => <button key={`tag-${tag}`} type="button" title={tag} onClick={() => setTags(tags.filter((value) => value !== tag))} className="inline-flex items-center gap-1.5 rounded-full border border-ink-700 bg-ink-800/70 px-2.5 py-1 text-xs text-ink-200 transition-colors hover:border-brand/40 hover:text-brand"><span className="max-w-[100px] truncate sm:max-w-none">{tag}</span><span aria-hidden>×</span></button>)}
       </div>}
 
       <div className="overflow-x-auto">
       <table className="oj-table">
-        <thead>
+        <thead className="whitespace-nowrap">
           <tr>
             <th className="w-10">
               <span className="inline-flex items-center gap-1">
@@ -410,12 +412,13 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
               <td>
                 <Link
                   href={buildProblemHref(p.slug, listContext, { sort, difficulties, tags, examKind })}
-                  className="font-medium text-ink-50 hover:text-brand"
+                  title={stripProblemNumber(p.title, p.uvaId)}
+                  className="block max-w-[min(42vw,180px)] truncate font-medium text-ink-50 hover:text-brand sm:inline sm:max-w-none sm:overflow-visible sm:whitespace-normal"
                 >
                   {stripProblemNumber(p.title, p.uvaId)}
                 </Link>
               </td>
-              <td className="font-mono text-xs text-brand">{"★".repeat(p.difficulty)}</td>
+              <td className="whitespace-nowrap font-mono text-xs text-brand">{"★".repeat(p.difficulty)}</td>
               <td>
                 <div className="flex flex-wrap gap-1">
                   {p.tags.map((tag) => (
@@ -423,14 +426,14 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
                       key={tag}
                       onClick={() => setTags(tags.includes(tag) ? tags : [...tags, tag])}
                       title={t("Filter by {tag}", { tag })}
-                      className="rounded border border-ink-700 bg-ink-800/60 px-1.5 py-0.5 text-[11px] text-ink-300 transition-colors hover:border-brand/40 hover:text-brand"
+                      className="max-w-[100px] truncate rounded border border-ink-700 bg-ink-800/60 px-1.5 py-0.5 text-[11px] text-ink-300 transition-colors hover:border-brand/40 hover:text-brand sm:max-w-none sm:overflow-visible sm:whitespace-normal"
                     >
                       {tag}
                     </button>
                   ))}
                 </div>
               </td>
-              <td className="text-center font-mono text-xs">
+              <td className="whitespace-nowrap text-center font-mono text-xs">
                 {isPro ? (
                   (() => {
                     const appearances = examKind === "GPE" ? p.gpeAppearances : p.cpeAppearances;
