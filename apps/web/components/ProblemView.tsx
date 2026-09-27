@@ -127,7 +127,7 @@ export default function ProblemView({
   const leftBody = (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="font-statement text-3xl font-bold text-ink-50">
+        <h1 className="font-statement text-3xl font-bold tracking-normal text-ink-50">
           {problem.uvaId != null && (
             <span className="mr-2 align-middle font-mono text-lg font-normal text-ink-500">#{problem.uvaId}</span>
           )}
@@ -208,13 +208,13 @@ export default function ProblemView({
           {statementNode}
           {inputSpecNode && (
             <>
-              <h3 className="mb-2 mt-5 font-display text-lg font-semibold text-ink-50">{t("Input")}</h3>
+              <h3 className="mb-2 mt-5 font-statement text-lg font-semibold tracking-normal text-ink-50">{t("Input")}</h3>
               {inputSpecNode}
             </>
           )}
           {outputSpecNode && (
             <>
-              <h3 className="mb-2 mt-5 font-display text-lg font-semibold text-ink-50">{t("Output")}</h3>
+              <h3 className="mb-2 mt-5 font-statement text-lg font-semibold tracking-normal text-ink-50">{t("Output")}</h3>
               {outputSpecNode}
             </>
           )}

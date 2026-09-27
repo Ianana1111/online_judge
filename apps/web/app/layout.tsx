@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import localFont from "next/font/local";
+import { Noto_Sans_TC } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Providers from "@/components/Providers";
@@ -35,18 +36,10 @@ const mono = localFont({
   variable: "--font-mono",
 });
 
-// Used only for problem statements and their title — the source PDFs are LaTeX-typeset in
-// Computer Modern/Latin Modern (confirmed via pdffonts on the cached PDFs), which isn't itself
-// a Google Font; STIX Two Text is the closest widely-available match (same Times-derived,
-// scientific-publishing lineage, and — unlike a generic serif — properly supports the
-// sub/superscript-heavy math notation these statements actually contain). Deliberately its own
-// variable rather than replacing --font-body/--font-display: this is scoped to statement/title
-// rendering only, the rest of the site's chrome keeps its existing sans-serif look.
-const statement = localFont({
-  src: [
-    { path: "./fonts/stix-two-text.woff2", weight: "400 700", style: "normal" },
-    { path: "./fonts/stix-two-text-italic.woff2", weight: "400 700", style: "italic" },
-  ],
+// Self-host the Traditional Chinese fallback; Apple devices use their native
+// system/PingFang faces first via the scoped statement font stack.
+const statement = Noto_Sans_TC({
+  subsets: ["latin"],
   display: "swap",
   variable: "--font-statement",
 });
