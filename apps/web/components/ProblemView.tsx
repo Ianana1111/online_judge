@@ -88,6 +88,7 @@ export default function ProblemView({
   const isDesktop = useIsDesktop();
   // Stacked mobile panes need normal document flow and the editor's explicit height.
   const fullHeight = fillViewport && isDesktop;
+  const [actionsContainer, setActionsContainer] = useState<HTMLDivElement | null>(null);
   const [tab, setTab] = useState<TabKey>("statement");
   const [resultTab, setResultTab] = useState<SubmissionResultTab | null>(null);
   // Standalone problem pages are desktop workspaces with their own pane scrollers. Lock both
@@ -128,29 +129,11 @@ export default function ProblemView({
 
   const leftHeader = prevNextNode ?? <ProblemPrevNext slug={problem.slug} />;
 
-  const leftBody = (
-    <div>
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="font-statement text-3xl font-bold tracking-normal text-ink-50">
-          {problem.uvaId != null && (
-            <span className="mr-2 align-middle font-mono text-lg font-normal text-ink-500">#{problem.uvaId}</span>
-          )}
-          {problem.sourceUrl ? (
-            <a href={problem.sourceUrl} target="_blank" rel="noopener noreferrer" className="hover:text-brand">
-              {stripProblemNumber(problem.title, problem.uvaId)}
-            </a>
-          ) : (
-            stripProblemNumber(problem.title, problem.uvaId)
-          )}
-        </h1>
-        {!hideDifficulty && (
-          <span className="font-mono text-base text-brand">{"★".repeat(problem.difficulty)}</span>
-        )}
-      </div>
+  const problemTabs = (
       <div
         role="tablist"
         aria-label={t("Problem sections")}
-        className="mb-4 flex gap-4 overflow-x-auto border-b border-ink-800 text-sm [&>button]:shrink-0 [&>button]:whitespace-nowrap"
+        className="flex shrink-0 gap-4 overflow-x-auto border-b border-ink-700 bg-ink-800/35 px-4 text-sm sm:px-5 [&>button]:shrink-0 [&>button]:whitespace-nowrap"
         onKeyDown={(e) => {
           if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
           e.preventDefault();
@@ -202,6 +185,28 @@ export default function ProblemView({
           ),
         )}
       </div>
+  );
+
+  const leftBody = (
+    <div>
+      <div className="mb-5 flex items-start justify-between gap-3">
+        <h1 className="min-w-0 font-statement text-[28px] leading-tight font-bold tracking-normal text-ink-50">
+          {problem.uvaId != null && (
+            <span className="mr-2 align-middle font-mono text-lg font-normal text-ink-500">#{problem.uvaId}</span>
+          )}
+          {problem.sourceUrl ? (
+            <a href={problem.sourceUrl} target="_blank" rel="noopener noreferrer" className="hover:text-brand">
+              {stripProblemNumber(problem.title, problem.uvaId)}
+            </a>
+          ) : (
+            stripProblemNumber(problem.title, problem.uvaId)
+          )}
+        </h1>
+        {!hideDifficulty && (
+          <span className="shrink-0 pt-1 font-mono text-sm text-brand">{"★".repeat(problem.difficulty)}</span>
+        )}
+      </div>
+
 
       {tab === "statement" && (
         <div id="problem-tabpanel-statement" role="tabpanel" aria-labelledby="problem-tab-statement">
@@ -307,16 +312,13 @@ export default function ProblemView({
     </div>
   );
 
-  const left = fullHeight ? (
-    <div className="flex h-full flex-col">
-      <div className="shrink-0 pr-4">{leftHeader}</div>
-      <div className="min-h-0 flex-1 overscroll-y-contain overflow-y-auto pr-4 [scrollbar-gutter:stable]">{leftBody}</div>
-    </div>
-  ) : (
-    <div>
-      {leftHeader}
-      {leftBody}
-    </div>
+  const left = (
+    <section className={`problem-panel flex min-w-0 flex-col overflow-hidden rounded-xl border border-ink-700 bg-ink-900 ${fullHeight ? "h-full" : ""}`}>
+      {problemTabs}
+      <div className={`problem-panel-content px-4 py-5 sm:px-5 ${fullHeight ? "min-h-0 flex-1 overflow-y-auto overscroll-y-contain [scrollbar-gutter:stable]" : ""}`}>
+        {leftBody}
+      </div>
+    </section>
   );
 
   const right = (
@@ -330,6 +332,7 @@ export default function ProblemView({
       samples={problem.samples}
       checkerType={problem.checkerType}
       fullHeight={fullHeight}
+      actionsContainer={isDesktop ? actionsContainer : undefined}
       attemptNumber={attemptNumber}
       onResult={(result) => {
         setResultTab(result);
@@ -338,5 +341,15 @@ export default function ProblemView({
     />
   );
 
-  return <SplitPane left={left} right={right} fullHeight={fullHeight} />;
+  return (
+    <div className={`coding-workspace flex min-h-0 flex-col gap-3 ${fullHeight ? "h-full" : ""}`}>
+      <div className="problem-toolbar grid min-h-10 shrink-0 grid-cols-1 items-center gap-2 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+        <div className="min-w-0 lg:col-start-1 lg:row-start-1">{leftHeader}</div>
+        <div ref={setActionsContainer} className="problem-actions hidden items-center justify-center lg:col-start-2 lg:row-start-1 lg:flex" />
+      </div>
+      <div className={fullHeight ? "min-h-0 flex-1" : "min-w-0"}>
+        <SplitPane left={left} right={right} fullHeight={fullHeight} />
+      </div>
+    </div>
+  );
 }

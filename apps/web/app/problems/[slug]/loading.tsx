@@ -12,9 +12,13 @@ export default function Loading() {
   return (
     <div className={`problem-workspace ${practice ? "practice-workspace" : ""} lg:h-full lg:overflow-hidden`}
       role="status" aria-label={locale === "zh-TW" ? "正在載入題目" : "Loading problem"}>
-      <div aria-hidden="true" className="flex flex-col gap-6 lg:h-full lg:flex-row lg:gap-0">
-        <div className="min-w-0 space-y-4 lg:h-full lg:basis-1/2 lg:overflow-hidden lg:pr-4">
-          {hasList && <Skeleton className="h-10 w-full" />}
+      <div aria-hidden="true" className="flex min-h-0 flex-col gap-3 lg:h-full">
+        <div className="grid min-h-10 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center">
+          <Skeleton className={hasList ? "h-8 w-40" : "h-8 w-20"} />
+          <Skeleton className="hidden h-10 w-52 lg:block" />
+        </div>
+        <div className="split-pane flex min-h-0 flex-1 flex-col gap-6 lg:flex-row lg:gap-0">
+        <div className="min-w-0 space-y-4 rounded-xl border border-ink-700 bg-ink-900 p-5 lg:h-full lg:basis-1/2 lg:overflow-hidden">
           <Skeleton className="h-9 w-2/3" />
           <div className="flex gap-4 border-b border-ink-800 py-3">
             {[0, 1, 2, 3].map((key) => <Skeleton key={key} className="h-4 w-16" />)}
@@ -32,7 +36,8 @@ export default function Loading() {
         <div className="hidden w-3 shrink-0 items-center justify-center lg:flex">
           <div className="h-full w-px bg-ink-800" />
         </div>
-        <Skeleton className="h-[520px] min-w-0 lg:h-full lg:flex-1 lg:basis-1/2" />
+        <Skeleton className="h-[520px] min-w-0 rounded-xl lg:h-full lg:flex-1 lg:basis-1/2" />
+        </div>
       </div>
     </div>
   );

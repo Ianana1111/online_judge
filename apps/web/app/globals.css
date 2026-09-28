@@ -352,6 +352,11 @@
     letter-spacing: normal;
   }
 
+  .problem-panel #problem-tabpanel-statement .prose-statement {
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+
   .prose-statement p {
     @apply mb-3;
     overflow-wrap: anywhere;
