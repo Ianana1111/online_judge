@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTheme } from "@/lib/useTheme";
 import { useT } from "@/lib/i18n/LocaleContext";
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ compact = false }: { compact?: boolean }) {
   const t = useT();
   const theme = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -17,9 +17,11 @@ export default function ThemeToggle() {
     document.documentElement.setAttribute("data-theme", next);
   }
 
+  const size = compact ? "h-11 w-11 lg:h-8 lg:w-8" : "h-11 w-11";
+
   // Avoid a server/client mismatch flash: render an empty placeholder until mounted.
   if (!mounted) {
-    return <span className="block h-11 w-11" />;
+    return <span className={`block ${size}`} />;
   }
 
   return (
@@ -28,7 +30,7 @@ export default function ThemeToggle() {
       onClick={toggle}
       aria-label={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")}
       title={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")}
-      className="flex h-11 w-11 items-center justify-center rounded text-ink-400 transition-colors hover:bg-ink-800 hover:text-ink-50"
+      className={`flex ${size} items-center justify-center rounded text-ink-400 transition-colors hover:bg-ink-800 hover:text-ink-50`}
     >
       {theme === "dark" ? (
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

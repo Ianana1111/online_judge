@@ -10,15 +10,11 @@ import { stripProblemNumber } from "@/lib/problemTitle";
 import type { CollectionDetail, ProblemListResponse } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
-/**
- * Previous/Next across whatever filtered, sorted list of problems the user actually browsed here
- * from — see ProblemFilterTable's buildProblemHref, which is what puts listSource/listId/sort/
- * difficulty/tag on the link in the first place. Renders nothing when those aren't present: a
- * direct link, a Discussion/FAQ link, or a problem opened inside a running exam (ContestDetailClient
- * renders ProblemView straight from client state, never through this URL at all) has no "list" to
- * walk, so there's nothing to compute Previous/Next from — that's a feature, not a fallback to hide.
+/** Walk the filtered list supplied by ProblemFilterTable's URL parameters.
+ * Direct links have no list to walk; compact mode omits the fallback list label because the
+ * workspace supplies its own logo. Active exams supply their own navigation through ProblemView.
  */
-export default function ProblemPrevNext({ slug }: { slug: string }) {
+export default function ProblemPrevNext({ slug, compact = false }: { slug: string; compact?: boolean }) {
   const t = useT();
   const searchParams = useSearchParams();
   const plan = useAuthStore((s) => s.user?.plan);
@@ -46,7 +42,7 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
     enabled: enabled && listSource === "collection" && !!listId,
   });
 
-  if (!enabled) return <Link href="/problems" className="inline-flex min-h-10 items-center gap-2 px-1 text-sm font-medium text-ink-200 hover:text-brand"><span aria-hidden>☰</span>{t("Problems")}</Link>;
+  if (!enabled) return compact ? null : <Link href="/problems" className="inline-flex min-h-10 items-center gap-2 px-1 text-sm font-medium text-ink-200 hover:text-brand"><span aria-hidden>☰</span>{t("Problems")}</Link>;
 
   const pool = listSource === "problems" ? allProblems?.items : collection?.problems;
   if (!pool) return null; // still loading — say nothing rather than a layout-shifting skeleton
@@ -62,18 +58,18 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
   const contextLabel = listSource === "collection" ? (collection?.title ?? t("collection")) : t("Problems");
 
   return (
-    <nav aria-label={t("Problems")} className="flex min-h-10 min-w-0 items-center gap-1">
-      <span className="mr-2 truncate px-1 text-sm font-medium text-ink-200" title={contextLabel}>{contextLabel}</span>
+    <nav aria-label={t("Problems")} className="flex min-h-11 min-w-0 items-center gap-1 lg:min-h-8">
+      {!compact && <span className="mr-2 truncate px-1 text-sm font-medium text-ink-200" title={contextLabel}>{contextLabel}</span>}
       {prev ? (
         <Link href={buildProblemNavHref(prev.slug, listSource as "problems" | "collection", listId, { sort, difficulties, tags, examKind })}
           aria-label={stripProblemNumber(prev.title, prev.uvaId)} title={stripProblemNumber(prev.title, prev.uvaId)}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg text-ink-300 hover:bg-ink-800 hover:text-brand"><span aria-hidden>‹</span></Link>
-      ) : <span title={t("← Start of list")} aria-label={t("← Start of list")} className="flex h-9 w-9 shrink-0 items-center justify-center text-lg text-ink-600">‹</span>}
+          className="flex h-11 w-9 lg:h-8 lg:w-8 shrink-0 items-center justify-center rounded-lg text-lg text-ink-300 hover:bg-ink-800 hover:text-brand"><span aria-hidden>‹</span></Link>
+      ) : <span title={t("← Start of list")} aria-label={t("← Start of list")} className="flex h-11 w-9 lg:h-8 lg:w-8 shrink-0 items-center justify-center text-lg text-ink-600">‹</span>}
       {next ? (
         <Link href={buildProblemNavHref(next.slug, listSource as "problems" | "collection", listId, { sort, difficulties, tags, examKind })}
           aria-label={stripProblemNumber(next.title, next.uvaId)} title={stripProblemNumber(next.title, next.uvaId)}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg text-ink-300 hover:bg-ink-800 hover:text-brand"><span aria-hidden>›</span></Link>
-      ) : <span title={t("End of list →")} aria-label={t("End of list →")} className="flex h-9 w-9 shrink-0 items-center justify-center text-lg text-ink-600">›</span>}
+          className="flex h-11 w-9 lg:h-8 lg:w-8 shrink-0 items-center justify-center rounded-lg text-lg text-ink-300 hover:bg-ink-800 hover:text-brand"><span aria-hidden>›</span></Link>
+      ) : <span title={t("End of list →")} aria-label={t("End of list →")} className="flex h-11 w-9 lg:h-8 lg:w-8 shrink-0 items-center justify-center text-lg text-ink-600">›</span>}
       <span className="ml-2 shrink-0 font-mono text-xs tabular-nums text-ink-400">{index + 1} / {ordered.length}</span>
     </nav>
   );

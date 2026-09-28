@@ -3,7 +3,7 @@ import { createRequire } from "node:module";
 import { randomUUID } from "node:crypto";
 import { resolve } from "node:path";
 
-test("standalone practice fills the screen and reveals navigation without moving the workspace", async ({ page }, info) => {
+test("standalone practice uses compact chrome without moving the workspace", async ({ page }, info) => {
   test.skip(process.env.RUN_FULL_SITE_E2E !== "1", "Requires the disposable problem database");
   const url = new URL(process.env.DATABASE_URL!);
   if (url.hostname !== "127.0.0.1" || url.port !== "55432" || url.pathname !== "/oj_test") throw new Error("Disposable database required");
@@ -36,27 +36,24 @@ test("standalone practice fills the screen and reveals navigation without moving
     expect(await main.evaluate(el => parseFloat(getComputedStyle(el).paddingLeft))).toBeGreaterThanOrEqual(12);
     expect(await main.evaluate(el => parseFloat(getComputedStyle(el).paddingLeft))).toBeLessThanOrEqual(24);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    if (info.project.name === "mobile") {
-      await expect(page.getByRole("button", { name: "開啟選單" })).toBeVisible();
-      await page.getByRole("button", { name: "開啟選單" }).click();
-      await expect(page.getByRole("navigation", { name: "主要導覽", exact: true }).getByRole("link", { name: "題目", exact: true })).toBeVisible();
-    } else {
-      await page.mouse.move(700, 300);
-      await expect.poll(() => nav.evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThanOrEqual(0);
+    await expect(nav).toBeHidden();
+    await expect(page.getByRole("button", { name: "顯示導覽列" })).toHaveCount(0);
+    const toolbar = page.locator(".problem-toolbar");
+    await expect(toolbar.getByRole("link", { name: "judge.tw" })).toBeVisible();
+    await expect(toolbar.getByRole("link", { name: "登入", exact: true })).toBeVisible();
+    const logoBounds = await toolbar.locator(".workspace-logo").boundingBox();
+    const panelBounds = await page.locator(".problem-panel").boundingBox();
+    expect(logoBounds!.x).toBe(panelBounds!.x);
+    const themeToggle = toolbar.getByRole("button", { name: /切換成/ });
+    const nextTheme = (await themeToggle.getAttribute("aria-label"))!.includes("淺色") ? "light" : "dark";
+    await themeToggle.click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", nextTheme);
+    if (info.project.name !== "mobile") {
+      expect((await toolbar.boundingBox())!.height).toBe(32);
       const workspaceBefore = await page.locator(".practice-workspace").boundingBox();
       await page.mouse.move(700, 1);
-      await expect.poll(() => nav.evaluate(el => el.getBoundingClientRect().top)).toBe(0);
-      await page.mouse.move(700, 25);
-      await expect.poll(() => nav.evaluate(el => el.getBoundingClientRect().top)).toBe(0);
+      await expect(nav).toBeHidden();
       expect(await page.locator(".practice-workspace").boundingBox()).toEqual(workspaceBefore);
-      await page.mouse.move(700, 300);
-      await expect.poll(() => nav.evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThanOrEqual(0);
-      await page.keyboard.press("Tab"); // skip link
-      await page.keyboard.press("Tab"); // navigation reveal button
-      await expect(page.getByRole("button", { name: "顯示導覽列" })).toBeFocused();
-      await expect.poll(() => nav.evaluate(el => el.getBoundingClientRect().top)).toBe(0);
-      await page.locator('#main-content [role="tab"]').first().focus();
-      await expect.poll(() => nav.evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThanOrEqual(0);
     }
     await page.screenshot({ path: info.outputPath("practice-workspace.png"), fullPage: true });
     // Delay the isolated database lookup while allowing Next to stream its loading boundary.
@@ -88,7 +85,7 @@ test("standalone practice fills the screen and reveals navigation without moving
       if (info.project.name !== "mobile") {
         expect(loadingBounds!.height).toBe(readyBounds!.height);
         await page.mouse.move(700, 300);
-        await expect.poll(() => nav.evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThanOrEqual(0);
+        await expect(nav).toBeHidden();
         expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe("hidden");
       }
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
