@@ -22,7 +22,8 @@ test("standalone practice uses compact chrome without moving the workspace", asy
     const path = new URL(route.request().url()).pathname;
     if (path === "/auth/me") return route.fulfill({ status: 401, json: { message: "Unauthorized" } });
     if (path === "/contests/me") return route.fulfill({ json: [] });
-    if (path === "/problems") return route.fulfill({ json: { items: [problem, nextProblem].map(p => ({ ...p, tags: [], solvedByMe: false })), total: 2, page: 1 } });
+    if (path === "/problems") return route.fulfill({ json: { items: [problem, nextProblem].map(p => ({ ...p, tags: ["math"], solvedByMe: false })), total: 2, page: 1 } });
+    if (path === "/collections/cpe-basic-49") return route.fulfill({ json: { slug: "cpe-basic-49", title: "CPE 必考 49 題", problems: [problem, nextProblem].map(p => ({ ...p, tags: ["math"], solvedByMe: false })) } });
     return route.fulfill({ json: { items: [], total: 0, page: 1 } });
   });
   try {
@@ -41,6 +42,8 @@ test("standalone practice uses compact chrome without moving the workspace", asy
     const toolbar = page.locator(".problem-toolbar");
     await expect(toolbar.getByRole("link", { name: "judge.tw" })).toBeVisible();
     await expect(toolbar.getByRole("link", { name: "登入", exact: true })).toBeVisible();
+    await expect(toolbar.getByRole("link", { name: "回到題目列表" })).toHaveAttribute("href", "/problems");
+    await expect(toolbar.getByRole("link", { name: "來去考試吧" })).toHaveAttribute("href", "/contests");
     const logoBounds = await toolbar.locator(".workspace-logo").boundingBox();
     const panelBounds = await page.locator(".problem-panel").boundingBox();
     expect(logoBounds!.x).toBe(panelBounds!.x);
@@ -92,6 +95,22 @@ test("standalone practice uses compact chrome without moving the workspace", asy
       await page.screenshot({ path: info.outputPath("problem-loading.png"), fullPage: true });
     } finally { releaseNext(); await heldLookup; }
     await expect(page.getByText("The next problem is ready.", { exact: true })).toBeVisible();
+    // Returning after navigating between problems retains the source and all list filters.
+    const filterQuery = "sort=number-asc&difficulty=1&difficulty=2&tag=math&tag=dp&examKind=GPE&q=Practice";
+    for (const source of ["problems", "collection"]) {
+      const context = source === "collection" ? "listSource=collection&listId=cpe-basic-49" : "listSource=problems";
+      const target = source === "collection" ? "/collections/cpe-basic-49" : "/problems";
+      await page.goto(`/problems/${problem.slug}?${context}&${filterQuery}`);
+      await page.getByRole("link", { name: nextProblem.title, exact: true }).click();
+      const back = toolbar.getByRole("link", { name: "回到題目列表" });
+      await expect(back).toHaveAttribute("href", `${target}?${filterQuery}`);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await back.click();
+      await expect(page).toHaveURL(new RegExp(`${target}\\?`));
+      await expect(page.getByPlaceholder("搜尋題目名稱…")).toHaveValue("Practice");
+      await expect(page.getByRole("button", { name: "難度", exact: true })).toContainText("2 個難度");
+      await expect(page.getByRole("button", { name: "標籤", exact: true })).toContainText("2 個標籤");
+    }
     // Legacy contest-linked problems must retain the original layout too.
     await page.goto(`/problems/${problem.slug}?contestId=fixture`);
     await expect(page.getByText("Read an integer and print it.", { exact: true })).toBeVisible();

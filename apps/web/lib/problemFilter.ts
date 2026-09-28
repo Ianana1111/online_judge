@@ -51,11 +51,12 @@ export function buildProblemNavHref(
   slug: string,
   listSource: "problems" | "collection",
   listId: string | null,
-  filters: { sort: SortKey | null; difficulties: string[]; tags: string[]; examKind?: ExamKind },
+  filters: { sort: SortKey | null; difficulties: string[]; tags: string[]; examKind?: ExamKind; q?: string },
 ): string {
   const params = new URLSearchParams();
   params.set("listSource", listSource);
   if (listSource === "collection" && listId) params.set("listId", listId);
+  if (filters.q) params.set("q", filters.q);
   if (filters.sort) params.set("sort", filters.sort);
   for (const difficulty of filters.difficulties) params.append("difficulty", difficulty);
   for (const tag of filters.tags) params.append("tag", tag);
@@ -63,6 +64,21 @@ export function buildProblemNavHref(
   // existed — only a deliberate switch to GPE shows up in the link.
   if (filters.examKind === "GPE") params.set("examKind", filters.examKind);
   return `/problems/${slug}?${params.toString()}`;
+}
+
+/** Build a local list URL from the context carried between problem pages. */
+export function buildProblemListHref(params: Pick<URLSearchParams, "get" | "getAll">): string {
+  const listId = params.get("listId");
+  const path = params.get("listSource") === "collection" && listId && /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(listId)
+    ? `/collections/${encodeURIComponent(listId)}` : "/problems";
+  const filters = new URLSearchParams();
+  const sort = params.get("sort");
+  if (sort && SORT_KEYS.includes(sort as SortKey)) filters.set("sort", sort);
+  for (const difficulty of params.getAll("difficulty")) if (/^[1-4]$/.test(difficulty)) filters.append("difficulty", difficulty);
+  for (const tag of params.getAll("tag")) if (tag) filters.append("tag", tag);
+  if (params.get("examKind") === "GPE") filters.set("examKind", "GPE");
+  if (params.get("q")) filters.set("q", params.get("q")!);
+  return filters.size ? `${path}?${filters}` : path;
 }
 
 export function filterAndSortProblems(

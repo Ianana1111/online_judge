@@ -286,9 +286,8 @@ function TestPanelSession({
 
   return (
     <form ref={panelRef} id={formId} onSubmit={(e) => { e.preventDefault(); void handleRun(); }} className="oj-card min-h-full scroll-mt-24 rounded-xl p-3">
-      {usage.data?.limit != null && <p className="mb-3 text-xs text-ink-400" aria-live="polite">{zh ? `本月剩餘 ${usage.data.remaining} / ${usage.data.limit} 次執行` : `${usage.data.remaining} / ${usage.data.limit} runs remaining this month`}{usage.data.remaining === 0 && <> · <a href="/upgrade" className="text-brand underline">{zh ? "升級 Pro" : "Upgrade to Pro"}</a></>}</p>}
-      <div className="mb-3 flex items-center gap-1 border-b border-ink-700">
-        <div role="tablist" aria-label={zh ? "程式測試" : "Code tests"} className="flex min-w-0 items-center gap-3"
+      <div className="test-panel-tabs mb-3 flex items-center gap-1 border-b border-ink-700">
+        <div role="tablist" aria-label={zh ? "程式測試" : "Code tests"} className="flex shrink-0 items-center gap-2"
           onKeyDown={(e) => {
             if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
             e.preventDefault();
@@ -296,15 +295,16 @@ function TestPanelSession({
             setPane(next); (next === "cases" ? caseTabRef : resultTabRef).current?.focus();
           }}>
           <button ref={caseTabRef} type="button" role="tab" id={`${formId}-cases-tab`} aria-controls={`${formId}-cases`} aria-selected={pane === "cases"} tabIndex={pane === "cases" ? 0 : -1}
-            onClick={() => setPane("cases")} className={`min-h-10 border-b-2 px-1 text-sm font-medium ${pane === "cases" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}>
+            onClick={() => setPane("cases")} className={`min-h-10 whitespace-nowrap border-b-2 px-1 text-sm font-medium ${pane === "cases" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}>
             {zh ? "測試資料" : "Test cases"}
           </button>
           {resultOpen && <button ref={resultTabRef} type="button" role="tab" id={`${formId}-result-tab`} aria-controls={`${formId}-result`} aria-selected={pane === "result"} tabIndex={pane === "result" ? 0 : -1}
-            onClick={() => setPane("result")} className={`min-h-10 border-b-2 px-1 text-sm font-medium ${pane === "result" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}>
+            onClick={() => setPane("result")} className={`min-h-10 whitespace-nowrap border-b-2 px-1 text-sm font-medium ${pane === "result" ? "border-brand text-brand" : "border-transparent text-ink-400"}`}>
             {zh ? "執行結果" : "Run result"}{status === "running" && <span aria-hidden className="ml-2 inline-block h-2 w-2 animate-pulse rounded-full bg-current" />}
           </button>}
         </div>
-        {resultOpen && <button type="button" onClick={closeResult} aria-label={zh ? "關閉執行結果" : "Close run result"} className="flex h-9 w-9 items-center justify-center rounded-md text-lg text-ink-400 hover:bg-ink-800 hover:text-ink-100">×</button>}
+        {resultOpen && <button type="button" onClick={closeResult} aria-label={zh ? "關閉執行結果" : "Close run result"} className="flex h-9 w-7 shrink-0 items-center justify-center rounded-md text-lg text-ink-400 hover:bg-ink-800 hover:text-ink-100">×</button>}
+        {usage.data?.limit != null && <p className="run-usage ml-auto min-w-0 py-1 text-right text-[11px] leading-4 tabular-nums text-ink-400" aria-live="polite">{zh ? `本月剩餘 ${usage.data.remaining} / ${usage.data.limit} 次執行` : `${usage.data.remaining} / ${usage.data.limit} runs remaining this month`}{usage.data.remaining === 0 && <> · <a href="/upgrade" className="text-brand underline">{zh ? "升級 Pro" : "Upgrade to Pro"}</a></>}</p>}
       </div>
       <div role="tabpanel" id={`${formId}-${pane}`} aria-labelledby={`${formId}-${pane}-tab`}>
       {pane === "result" && <p role="status" className="mb-3 text-sm font-medium text-ink-200">{status === "running" ? t("Running…") : status === "done" ? (zh ? "執行完成" : "Run complete") : status === "compile_error" ? "Compile Error" : (zh ? "執行未完成" : "Run failed")}</p>}

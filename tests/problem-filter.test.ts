@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildProblemNavHref, filterAndSortProblems } from "../apps/web/lib/problemFilter";
+import { buildProblemNavHref, buildProblemListHref, filterAndSortProblems } from "../apps/web/lib/problemFilter";
 import type { ProblemRow } from "../apps/web/lib/types";
 
 const row = (id: string, difficulty: number, tags: string[]): ProblemRow => ({
@@ -22,9 +22,10 @@ describe("multi-value problem filters", () => {
   });
 
   it("carries every selected value into problem navigation links", () => {
-    const href = buildProblemNavHref("p2", "problems", null, { sort: null, difficulties: ["2", "4"], tags: ["DP", "Graph"] });
+    const href = buildProblemNavHref("p2", "problems", null, { sort: null, difficulties: ["2", "4"], tags: ["DP", "Graph"], q: "sum & matrix" });
     const params = new URL(href, "https://judge.tw").searchParams;
     expect(params.getAll("difficulty")).toEqual(["2", "4"]);
     expect(params.getAll("tag")).toEqual(["DP", "Graph"]);
+    expect(new URL(buildProblemListHref(params), "https://judge.tw").searchParams.get("q")).toBe("sum & matrix");
   });
 });
