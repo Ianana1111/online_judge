@@ -46,7 +46,7 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
     enabled: enabled && listSource === "collection" && !!listId,
   });
 
-  if (!enabled) return null;
+  if (!enabled) return <Link href="/problems" className="inline-flex min-h-10 items-center gap-2 px-1 text-sm font-medium text-ink-200 hover:text-brand"><span aria-hidden>☰</span>{t("Problems")}</Link>;
 
   const pool = listSource === "problems" ? allProblems?.items : collection?.problems;
   if (!pool) return null; // still loading — say nothing rather than a layout-shifting skeleton
@@ -62,38 +62,19 @@ export default function ProblemPrevNext({ slug }: { slug: string }) {
   const contextLabel = listSource === "collection" ? (collection?.title ?? t("collection")) : t("Problems");
 
   return (
-    <div className="oj-card mb-4 flex items-center justify-between gap-3 px-3 py-2">
+    <nav aria-label={t("Problems")} className="flex min-h-10 min-w-0 items-center gap-1">
+      <span className="mr-2 truncate px-1 text-sm font-medium text-ink-200" title={contextLabel}>{contextLabel}</span>
       {prev ? (
-        <Link
-          href={buildProblemNavHref(prev.slug, listSource as "problems" | "collection", listId, { sort, difficulties, tags, examKind })}
-          className="group flex min-w-0 flex-1 items-center gap-1.5 text-sm text-ink-300 hover:text-brand"
-        >
-          <span aria-hidden className="shrink-0 transition-transform group-hover:-translate-x-0.5">
-            ←
-          </span>
-          <span className="truncate">{stripProblemNumber(prev.title, prev.uvaId)}</span>
-        </Link>
-      ) : (
-        <span className="flex-1 text-sm text-ink-500">{t("← Start of list")}</span>
-      )}
-
-      <span className="shrink-0 font-mono text-xs text-ink-500">
-        {t("{n} / {total} · {context}", { n: index + 1, total: ordered.length, context: contextLabel })}
-      </span>
-
+        <Link href={buildProblemNavHref(prev.slug, listSource as "problems" | "collection", listId, { sort, difficulties, tags, examKind })}
+          aria-label={stripProblemNumber(prev.title, prev.uvaId)} title={stripProblemNumber(prev.title, prev.uvaId)}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg text-ink-300 hover:bg-ink-800 hover:text-brand"><span aria-hidden>‹</span></Link>
+      ) : <span title={t("← Start of list")} aria-label={t("← Start of list")} className="flex h-9 w-9 shrink-0 items-center justify-center text-lg text-ink-600">‹</span>}
       {next ? (
-        <Link
-          href={buildProblemNavHref(next.slug, listSource as "problems" | "collection", listId, { sort, difficulties, tags, examKind })}
-          className="group flex min-w-0 flex-1 items-center justify-end gap-1.5 text-right text-sm text-ink-300 hover:text-brand"
-        >
-          <span className="truncate">{stripProblemNumber(next.title, next.uvaId)}</span>
-          <span aria-hidden className="shrink-0 transition-transform group-hover:translate-x-0.5">
-            →
-          </span>
-        </Link>
-      ) : (
-        <span className="flex-1 text-right text-sm text-ink-500">{t("End of list →")}</span>
-      )}
-    </div>
+        <Link href={buildProblemNavHref(next.slug, listSource as "problems" | "collection", listId, { sort, difficulties, tags, examKind })}
+          aria-label={stripProblemNumber(next.title, next.uvaId)} title={stripProblemNumber(next.title, next.uvaId)}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg text-ink-300 hover:bg-ink-800 hover:text-brand"><span aria-hidden>›</span></Link>
+      ) : <span title={t("End of list →")} aria-label={t("End of list →")} className="flex h-9 w-9 shrink-0 items-center justify-center text-lg text-ink-600">›</span>}
+      <span className="ml-2 shrink-0 font-mono text-xs tabular-nums text-ink-400">{index + 1} / {ordered.length}</span>
+    </nav>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import TestPanel from "@/components/TestPanel";
@@ -43,6 +44,7 @@ export default function SubmissionPanel({
   samples = [],
   checkerType = "IGNORE_TRAILING_WS",
   fullHeight = false,
+  actionsContainer,
   attemptNumber,
   onResult,
 }: {
@@ -64,6 +66,8 @@ export default function SubmissionPanel({
    * into their own independently-resizable, independently-scrolling halves instead of the normal
    * one-after-another stack a contest-embedded ProblemView still uses. */
   fullHeight?: boolean;
+  /** Desktop workspace toolbar; undefined keeps the actions beside the mobile editor. */
+  actionsContainer?: HTMLElement | null;
   /** Called once a submission reaches a terminal verdict — ProblemView shows this as a dynamic
    * last tab (see its own TAB_ORDER) instead of this panel rendering the result inline. Not called
    * for PENDING/JUDGING; the submit button's own "Pending…" state covers that in-between window. */
@@ -220,11 +224,11 @@ export default function SubmissionPanel({
   // session (see the storageKey comment above). Loading state first so this doesn't flash before
   // hydrate() resolves.
   if (authStatus !== "ready") {
-    return <div className={`oj-card animate-pulse bg-ink-900 ${fullHeight ? "h-full" : "h-[480px]"}`} />;
+    return <div className={`oj-card rounded-xl animate-pulse bg-ink-900 ${fullHeight ? "h-full" : "h-[480px]"}`} />;
   }
   if (!user) {
     return (
-      <div className={`oj-card flex flex-col items-center justify-center gap-3 p-6 text-center ${fullHeight ? "h-full" : "h-[480px]"}`}>
+      <div className={`oj-card rounded-xl flex flex-col items-center justify-center gap-3 p-6 text-center ${fullHeight ? "h-full" : "h-[480px]"}`}>
         <p className="text-sm text-ink-300">{t("Log in to write and submit code for this problem.")}</p>
         <Link href="/login" className="oj-btn-primary px-4 py-2 text-sm">
           {t("Log in")}
@@ -233,37 +237,13 @@ export default function SubmissionPanel({
     );
   }
 
-  const controls = (
-    <div className="space-y-3">
-      {!judgeable && (
-        <p className="rounded border border-ink-700 bg-ink-800/60 px-3 py-2 text-xs text-ink-400">
-          {t("This problem has no matching UVa judge, so it isn't gradeable here — reference-only. Use it for reading/practice; submitting is disabled.")}
-        </p>
-      )}
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <select
-          aria-label={t("Language")}
-          value={languageKey}
-          onChange={(e) => {
-            const next = e.target.value;
-            languageDrafts.current[languageKey] = sourceCode;
-            setLanguageKey(next);
-            setSourceCode(languageDrafts.current[next] ?? STUB[next] ?? "");
-          }}
-          className="oj-input min-w-0 max-w-40 flex-1 basis-28"
-        >
-          {LANGUAGES.map((l) => (
-            <option key={l} value={l}>
-              {t(LANGUAGE_LABEL[l])}
-            </option>
-          ))}
-        </select>
-        <div className="ml-auto flex shrink-0 items-center gap-2">
-        <button type="submit" form={runFormId} disabled={runState.disabled || locked}
+  const actions = (
+    <div className="flex shrink-0 items-center justify-center gap-2">
+      <button type="submit" form={runFormId} disabled={runState.disabled || locked}
           className="inline-flex min-h-10 min-w-24 items-center justify-center gap-1.5 rounded-lg border border-white/20 bg-[#111111] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#262626] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-50">
           {runState.running ? t("Running…") : runState.cooldownSeconds > 0 ? t("Wait {n}s", { n: runState.cooldownSeconds }) : t("▶ Run")}
-        </button>
-        <button type="button" onClick={handleSubmit} disabled={!canSubmit} className="oj-btn-primary min-h-10 min-w-24 px-3">
+      </button>
+      <button type="button" onClick={handleSubmit} disabled={!canSubmit} className="oj-btn-primary min-h-10 min-w-24 px-3">
           {!judgeable
             ? t("Not gradeable")
             : locked
@@ -275,9 +255,39 @@ export default function SubmissionPanel({
                   : cooldownRemaining > 0
                     ? t("Wait {n}s", { n: Math.ceil(cooldownRemaining / 1000) })
                     : t("Submit")}
-        </button>
-        </div>
+      </button>
+    </div>
+  );
+
+  const controls = (
+    <div className="space-y-2">
+      {!judgeable && (
+        <p className="rounded border border-ink-700 bg-ink-800/60 px-3 py-2 text-xs text-ink-400">
+          {t("This problem has no matching UVa judge, so it isn't gradeable here — reference-only. Use it for reading/practice; submitting is disabled.")}
+        </p>
+      )}
+      <div className="flex items-center justify-between gap-3">
+        <span className="flex items-center gap-2 text-sm font-semibold text-ink-200"><span aria-hidden="true" className="font-mono text-brand">&lt;/&gt;</span>{t("Code")}</span>
+        <select
+          aria-label={t("Language")}
+          value={languageKey}
+          onChange={(e) => {
+            const next = e.target.value;
+            languageDrafts.current[languageKey] = sourceCode;
+            setLanguageKey(next);
+            setSourceCode(languageDrafts.current[next] ?? STUB[next] ?? "");
+          }}
+          className="max-w-40 rounded-md border border-transparent bg-transparent px-2 py-1.5 text-sm text-ink-200 hover:bg-ink-800 focus:border-brand focus:outline-none"
+        >
+          {LANGUAGES.map((l) => (
+            <option key={l} value={l}>
+              {t(LANGUAGE_LABEL[l])}
+            </option>
+          ))}
+        </select>
       </div>
+
+      {actionsContainer === undefined && <div className="flex justify-center py-1">{actions}</div>}
 
       {billing && billing.submits.limit != null && (
         <p className="text-right text-xs text-ink-500">
@@ -328,34 +338,23 @@ export default function SubmissionPanel({
     />
   );
 
-  if (fullHeight) {
-    // CodeEditor needs a flex-1/min-h-0 ancestor with an actual pixel height to fill — a plain
-    // space-y-3 stack (as in the non-fullHeight branch below) sizes to its content instead, which
-    // collapsed the editor to ~0px when this was first wired up. The controls block above it stays
-    // its natural content height (shrink-0); the editor takes whatever's left.
-    const topContent = (
-      <div className="flex h-full min-h-0 flex-col gap-3 overflow-y-auto pr-1">
-        <div className="shrink-0">{controls}</div>
-        <div className="min-h-[200px] flex-1">
-          <CodeEditor languageKey={languageKey} value={sourceCode} onChange={setSourceCode} fillHeight />
-        </div>
+  const editorPanel = (
+    <div className={`code-panel flex min-w-0 flex-col overflow-hidden rounded-xl border border-ink-700 bg-ink-900 ${fullHeight ? "h-full min-h-0" : ""}`}>
+      <div className="shrink-0 border-b border-ink-700 bg-ink-800/35 px-3 py-2.5">{controls}</div>
+      <div className={fullHeight ? "min-h-0 flex-1" : ""}>
+        <CodeEditor languageKey={languageKey} value={sourceCode} onChange={setSourceCode} fillHeight={fullHeight} embedded />
       </div>
-    );
-    return (
-      <div className="flex h-full min-h-0 flex-col">
-        <VerticalSplitPane
-          top={topContent}
-          bottom={<div className="h-full min-h-0 overflow-y-auto pr-1">{bottomContent}</div>}
-        />
-      </div>
-    );
-  }
+    </div>
+  );
 
   return (
-    <div className="space-y-3">
-      {controls}
-      <CodeEditor languageKey={languageKey} value={sourceCode} onChange={setSourceCode} />
-      {bottomContent}
-    </div>
+    <>
+      {actionsContainer && createPortal(actions, actionsContainer)}
+      {fullHeight ? (
+        <VerticalSplitPane top={editorPanel} bottom={<div className="h-full min-h-0 overflow-y-auto rounded-xl">{bottomContent}</div>} />
+      ) : (
+        <div className="space-y-3">{editorPanel}{bottomContent}</div>
+      )}
+    </>
   );
 }

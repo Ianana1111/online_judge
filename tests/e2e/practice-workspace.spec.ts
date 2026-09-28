@@ -39,7 +39,7 @@ test("standalone practice fills the screen and reveals navigation without moving
     if (info.project.name === "mobile") {
       await expect(page.getByRole("button", { name: "開啟選單" })).toBeVisible();
       await page.getByRole("button", { name: "開啟選單" }).click();
-      await expect(page.getByRole("link", { name: "題目", exact: true })).toBeVisible();
+      await expect(page.getByRole("navigation", { name: "主要導覽", exact: true }).getByRole("link", { name: "題目", exact: true })).toBeVisible();
     } else {
       await page.mouse.move(700, 300);
       await expect.poll(() => nav.evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThanOrEqual(0);
@@ -65,7 +65,7 @@ test("standalone practice fills the screen and reveals navigation without moving
     await page.goto(`/problems/${problem.slug}?listSource=problems`);
     await expect(page.getByRole("link", { name: nextProblem.title, exact: true })).toBeVisible();
     const readyBounds = await page.locator(".practice-workspace").boundingBox();
-    const readyRight = await page.locator(".practice-workspace > div > div").last().boundingBox();
+    const readyRight = await page.locator(".practice-workspace .split-pane > div").last().boundingBox();
     let lockReady!: () => void;
     const locked = new Promise<void>(resolve => { lockReady = resolve; });
     const heldLookup = db.$transaction(async (tx: { $executeRawUnsafe: (sql: string) => Promise<unknown> }) => {
@@ -81,7 +81,7 @@ test("standalone practice fills the screen and reveals navigation without moving
       const loadingBounds = await loading.boundingBox();
       expect(loadingBounds!.x).toBe(readyBounds!.x);
       expect(loadingBounds!.width).toBe(readyBounds!.width);
-      const loadingRight = await loading.locator(":scope > div > div").last().boundingBox();
+      const loadingRight = await loading.locator(".split-pane > div").last().boundingBox();
       // Flexbox can distribute fractions of a CSS pixel differently between skeletons and content.
       expect(loadingRight!.x).toBeCloseTo(readyRight!.x, 0);
       expect(loadingRight!.width).toBeCloseTo(readyRight!.width, 0);

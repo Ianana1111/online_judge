@@ -16,6 +16,7 @@ export default function CodeEditor({
   value,
   onChange,
   fillHeight = false,
+  embedded = false,
 }: {
   languageKey: string;
   value: string;
@@ -26,11 +27,12 @@ export default function CodeEditor({
    * the fixed height, since "fill height" only means something inside an ancestor that actually
    * has one to fill. */
   fillHeight?: boolean;
+  embedded?: boolean;
 }) {
   const theme = useTheme();
 
   return (
-    <div className={`oj-card overflow-hidden ${fillHeight ? "h-full" : ""}`}>
+    <div className={`${embedded ? "" : "oj-card"} overflow-hidden ${fillHeight ? "h-full" : ""}`}>
       <Editor
         height={fillHeight ? "100%" : "480px"}
         theme={theme === "dark" ? "vs-dark" : "light"}
@@ -39,6 +41,7 @@ export default function CodeEditor({
         onChange={(v) => onChange(v ?? "")}
         options={{
           fontSize: 13,
+          padding: { top: 12, bottom: 12 },
           fontFamily: "var(--font-mono)",
           minimap: { enabled: false },
           scrollBeyondLastLine: false,

@@ -44,7 +44,7 @@ export default function OfficialEditorialPanel({ slug, examLocked }: { slug: str
   if (query.isPending || status !== "ready") return <div role="status" className="oj-card p-8 text-sm text-ink-300">{zh ? "正在載入官方詳解…" : "Loading the official editorial…"}</div>;
   if (query.isError) return <div role="alert" className="oj-card space-y-4 p-6"><p>{zh ? "暫時無法載入詳解，請再試一次。" : "The editorial could not be loaded. Please try again."}</p><button className="oj-btn-secondary" onClick={() => query.refetch()}>{zh ? "重試" : "Retry"}</button></div>;
   if (!user || query.data?.status === "AUTH_REQUIRED" || query.data?.status === "PRO_REQUIRED" || (expiresAt && new Date(expiresAt).getTime() <= Date.now())) return <section className="oj-card space-y-5 p-6 sm:p-8" aria-label={zh ? "Pro 官方詳解" : "Pro official editorials"}>
-    <span className="inline-flex rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-xs font-semibold text-brand">Pro</span>
+    <span className="inline-flex rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-xs font-semibold text-brand-light">Pro</span>
     <h2 className="text-xl font-semibold leading-8 text-ink-100">{zh ? "不只看懂答案，也學會怎麼想到解法。" : "Understand how to find the solution, not just read the code."}</h2>
     <p className="max-w-2xl text-sm leading-7 text-ink-300">{zh ? "Pro 官方詳解會從題意和直覺解法出發，帶你拆解關鍵觀察、一步步推演範例，再連到已通過本站 Judge 的參考程式。每題都有繁體中文與英文解說。" : "Pro editorials guide you from the problem and a first approach through the key observation and a worked example to reference code verified by our judge. Read in Traditional Chinese or English."}</p>
     <div className="flex flex-wrap gap-3">
@@ -63,7 +63,7 @@ export default function OfficialEditorialPanel({ slug, examLocked }: { slug: str
   return <article className="min-w-0 space-y-8 pb-6" aria-label={zh ? "官方詳解內容" : "Official editorial content"}>
     <header className="space-y-3 border-b border-ink-700 pb-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2 text-xs"><span className="rounded-full border border-brand/25 bg-brand/10 px-3 py-1 font-semibold text-brand">{zh ? "Pro 官方詳解" : "Pro official editorial"}</span><span className="text-ink-400">v{result.revision}</span></div>
+        <div className="flex flex-wrap items-center gap-2 text-xs"><span className="rounded-full border border-brand/25 bg-brand/10 px-3 py-1 font-semibold text-brand-light">{zh ? "Pro 官方詳解" : "Pro official editorial"}</span><span className="text-ink-400">v{result.revision}</span></div>
         <div role="group" aria-label={zh ? "詳解語言" : "Editorial language"} className="inline-flex rounded-lg border border-ink-700 p-1">
           {([['zh-TW', '繁體中文'], ['en', 'English']] as const).map(([value, label]) => <button key={value} type="button" aria-pressed={readingLocale === value} onClick={() => setReadingLocale(value)} className={`min-h-10 rounded-md px-3 text-sm focus-visible:outline focus-visible:outline-brand ${readingLocale === value ? 'bg-brand/15 font-semibold text-ink-100' : 'text-ink-300 hover:bg-ink-800'}`}>{label}</button>)}
         </div>

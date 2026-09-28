@@ -65,7 +65,7 @@ export default function SplitPane({
 
   if (!isDesktop) {
     return (
-      <div className="space-y-6">
+      <div className="split-pane space-y-6">
         <div>{left}</div>
         <div>{right}</div>
       </div>
@@ -73,7 +73,7 @@ export default function SplitPane({
   }
 
   return (
-    <div ref={containerRef} className={`flex w-full items-stretch ${fullHeight ? "h-full min-h-0" : ""}`}>
+    <div ref={containerRef} className={`split-pane flex w-full items-stretch ${fullHeight ? "h-full min-h-0" : ""}`}>
       <div style={{ flexBasis: `${leftPercent}%` }} className={`min-w-0 overflow-hidden ${fullHeight ? "h-full" : ""}`}>
         {left}
       </div>

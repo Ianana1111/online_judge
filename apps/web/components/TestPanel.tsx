@@ -285,7 +285,7 @@ function TestPanelSession({
   }
 
   return (
-    <form ref={panelRef} id={formId} onSubmit={(e) => { e.preventDefault(); void handleRun(); }} className="oj-card scroll-mt-24 p-3">
+    <form ref={panelRef} id={formId} onSubmit={(e) => { e.preventDefault(); void handleRun(); }} className="oj-card min-h-full scroll-mt-24 rounded-xl p-3">
       {usage.data?.limit != null && <p className="mb-3 text-xs text-ink-400" aria-live="polite">{zh ? `本月剩餘 ${usage.data.remaining} / ${usage.data.limit} 次執行` : `${usage.data.remaining} / ${usage.data.limit} runs remaining this month`}{usage.data.remaining === 0 && <> · <a href="/upgrade" className="text-brand underline">{zh ? "升級 Pro" : "Upgrade to Pro"}</a></>}</p>}
       <div className="mb-3 flex items-center gap-1 border-b border-ink-700">
         <div role="tablist" aria-label={zh ? "程式測試" : "Code tests"} className="flex min-w-0 items-center gap-3"
