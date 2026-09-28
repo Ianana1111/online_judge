@@ -54,7 +54,7 @@ export type ListContext = { type: "problems" } | { type: "collection"; slug: str
 function buildProblemHref(
   slug: string,
   ctx: ListContext,
-  filters: { sort: SortKey | null; difficulties: string[]; tags: string[]; examKind: ExamKind },
+  filters: { sort: SortKey | null; difficulties: string[]; tags: string[]; examKind: ExamKind; q: string },
 ): string {
   return buildProblemNavHref(slug, ctx.type, ctx.type === "collection" ? ctx.slug : null, filters);
 }
@@ -190,12 +190,12 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(() => searchParams.get("q") ?? "");
 
   // difficulty, tag, and sort all round-trip through the URL (not just component state) so they
   // survive navigating to a problem and coming back, AND so a fresh mount of the problem detail
   // page's Previous/Next can read the exact same three values back out of the link it was given.
-  // Free-text search deliberately doesn't — see filterAndSortProblems's doc comment.
+  // Search is carried into problem links for returning to this list, without changing prev/next order.
   const initialSort = searchParams.get("sort");
   const [sort, setSortState] = useState<SortKey | null>(
     initialSort && SORT_KEYS.includes(initialSort as SortKey) ? (initialSort as SortKey) : null,
@@ -204,9 +204,11 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
   const [tags, setTagsState] = useState(() => [...new Set(searchParams.getAll("tag").filter(Boolean))]);
   const [examKind, setExamKindState] = useState<ExamKind>(searchParams.get("examKind") === "GPE" ? "GPE" : "CPE");
 
-  function syncUrl(next: { sort?: SortKey | null; difficulties?: string[]; tags?: string[]; examKind?: ExamKind }) {
+  function syncUrl(next: { sort?: SortKey | null; difficulties?: string[]; tags?: string[]; examKind?: ExamKind; q?: string }) {
     const params = new URLSearchParams(searchParams.toString());
-    const merged = { sort, difficulties, tags, examKind, ...next };
+    const merged = { sort, difficulties, tags, examKind, q, ...next };
+    if (merged.q) params.set("q", merged.q);
+    else params.delete("q");
     if (merged.sort) params.set("sort", merged.sort);
     else params.delete("sort");
     params.delete("difficulty");
@@ -304,7 +306,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
               setQ("");
               setDifficultiesState([]);
               setTagsState([]);
-              syncUrl({ difficulties: [], tags: [] });
+              syncUrl({ difficulties: [], tags: [], q: "" });
             }}
             className="text-xs text-ink-400 hover:text-brand"
           >
@@ -411,7 +413,7 @@ export default function ProblemFilterTable({ problems, listContext }: { problems
               <td className="font-mono text-xs text-ink-400">{p.uvaId ?? "—"}</td>
               <td>
                 <Link
-                  href={buildProblemHref(p.slug, listContext, { sort, difficulties, tags, examKind })}
+                  href={buildProblemHref(p.slug, listContext, { sort, difficulties, tags, examKind, q })}
                   title={stripProblemNumber(p.title, p.uvaId)}
                   className="block max-w-[min(42vw,180px)] truncate font-medium text-ink-50 hover:text-brand sm:inline sm:max-w-none sm:overflow-visible sm:whitespace-normal"
                 >

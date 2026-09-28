@@ -43,6 +43,14 @@ test("sample Run uses server comparisons; edits and language changes invalidate 
     }
     const run = page.getByRole("button", { name: "▶ 執行", exact: true }), input = page.getByRole("textbox", { name: "輸入", exact: true });
     await expect(run).toBeEnabled(); await run.click(); await expect(page.getByText("與預期相符", { exact: true })).toBeVisible();
+    // Read both rectangles in one frame while mobile scrollIntoView may still be animating.
+    const alignment = await page.locator(".test-panel-tabs").evaluate(el => {
+      const usage = el.querySelector(".run-usage")!.getBoundingClientRect();
+      const tab = el.querySelector('[role="tab"]')!.getBoundingClientRect();
+      return { centerOffset: Math.abs(usage.y + usage.height / 2 - tab.y - tab.height / 2), rightOfTab: usage.x > tab.right };
+    });
+    expect(alignment.centerOffset).toBeLessThan(2);
+    expect(alignment.rightOfTab).toBe(true);
     expect(lastCases).toEqual([{ id: "sample-1", input: "1\n", sampleOrd: 1, sampleRevision: expect.stringMatching(/^[a-f0-9]{64}$/) }]);
     await page.getByRole("tab", { name: "測試資料", exact: true }).click();
     await input.fill("2\n"); await expect(page.getByText("與預期相符", { exact: true })).toHaveCount(0); await expect(page.getByText(/已修改輸入：只顯示/)).toBeVisible();

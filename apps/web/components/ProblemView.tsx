@@ -345,7 +345,7 @@ export default function ProblemView({
   return (
     <div className={`coding-workspace flex min-h-0 flex-col gap-3 ${fullHeight ? "h-full" : ""}`}>
       <div className="problem-toolbar relative z-30 grid min-h-11 shrink-0 grid-cols-[minmax(0,1fr)_auto] lg:min-h-8 items-center gap-2 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
-        <div className="flex min-w-0 items-center gap-2 lg:col-start-1 lg:row-start-1">{!contestId && <WorkspaceLogo />}{leftHeader}</div>
+        <div className="flex min-w-0 items-start gap-2 lg:items-center lg:col-start-1 lg:row-start-1">{!contestId && <WorkspaceLogo />}{leftHeader}</div>
         <div ref={setActionsContainer} className="problem-actions hidden items-center justify-center lg:col-start-2 lg:row-start-1 lg:flex" />
         {!contestId && <div className="justify-self-end lg:col-start-3 lg:row-start-1"><WorkspaceAccountControls /></div>}
       </div>

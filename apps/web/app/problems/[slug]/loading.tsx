@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { WorkspaceLogo, WorkspaceAccountControls } from "@/components/WorkspaceChrome";
+import { WorkspaceLogo, WorkspaceBackLink, WorkspaceAccountControls } from "@/components/WorkspaceChrome";
 import { Skeleton } from "@/components/Skeleton";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 
@@ -15,7 +15,7 @@ export default function Loading() {
       role="status" aria-label={locale === "zh-TW" ? "正在載入題目" : "Loading problem"}>
       <div className="flex min-h-0 flex-col gap-3 lg:h-full">
         <div className="relative z-30 grid min-h-11 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 lg:min-h-8 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
-          <div className="flex items-center gap-2">{practice ? <WorkspaceLogo /> : <Skeleton className="h-8 w-20" />}{hasList && <Skeleton className="h-8 w-28" />}</div>
+          <div className="flex min-w-0 flex-wrap items-center gap-2">{practice ? <><WorkspaceLogo /><WorkspaceBackLink /></> : <Skeleton className="h-8 w-20" />}{hasList && <Skeleton className="h-8 w-20" />}</div>
           <Skeleton className="hidden h-8 w-44 lg:block" />
           {practice && <div className="justify-self-end"><WorkspaceAccountControls /></div>}
         </div>
