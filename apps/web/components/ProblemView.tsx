@@ -17,6 +17,7 @@ import VerdictBadge from "@/components/VerdictBadge";
 import { ArchiveIcon } from "@/components/icons";
 import SplitPane from "@/components/SplitPane";
 import { Skeleton } from "@/components/Skeleton";
+import { WorkspaceLogo, WorkspaceAccountControls } from "@/components/WorkspaceChrome";
 import ProblemPrevNext from "@/components/ProblemPrevNext";
 import type { ProblemDetail, SubmissionResultTab } from "@/lib/types";
 import { useExamTimerStore } from "@/store/examTimer";
@@ -127,7 +128,7 @@ export default function ProblemView({
   const remaining = endsAt ? Math.max(0, endsAt - now) : 0;
   const locked = examActive && remaining <= 0;
 
-  const leftHeader = prevNextNode ?? <ProblemPrevNext slug={problem.slug} />;
+  const leftHeader = prevNextNode ?? <ProblemPrevNext slug={problem.slug} compact={!contestId} />;
 
   const problemTabs = (
       <div
@@ -190,7 +191,7 @@ export default function ProblemView({
   const leftBody = (
     <div>
       <div className="mb-5 flex items-start justify-between gap-3">
-        <h1 className="min-w-0 font-statement text-[28px] leading-tight font-bold tracking-normal text-ink-50">
+        <h1 className="min-w-0 font-statement text-[27px] leading-tight font-bold tracking-normal text-ink-50">
           {problem.uvaId != null && (
             <span className="mr-2 align-middle font-mono text-lg font-normal text-ink-500">#{problem.uvaId}</span>
           )}
@@ -343,9 +344,10 @@ export default function ProblemView({
 
   return (
     <div className={`coding-workspace flex min-h-0 flex-col gap-3 ${fullHeight ? "h-full" : ""}`}>
-      <div className="problem-toolbar grid min-h-10 shrink-0 grid-cols-1 items-center gap-2 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
-        <div className="min-w-0 lg:col-start-1 lg:row-start-1">{leftHeader}</div>
+      <div className="problem-toolbar relative z-30 grid min-h-11 shrink-0 grid-cols-[minmax(0,1fr)_auto] lg:min-h-8 items-center gap-2 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+        <div className="flex min-w-0 items-center gap-2 lg:col-start-1 lg:row-start-1">{!contestId && <WorkspaceLogo />}{leftHeader}</div>
         <div ref={setActionsContainer} className="problem-actions hidden items-center justify-center lg:col-start-2 lg:row-start-1 lg:flex" />
+        {!contestId && <div className="justify-self-end lg:col-start-3 lg:row-start-1"><WorkspaceAccountControls /></div>}
       </div>
       <div className={fullHeight ? "min-h-0 flex-1" : "min-w-0"}>
         <SplitPane left={left} right={right} fullHeight={fullHeight} />

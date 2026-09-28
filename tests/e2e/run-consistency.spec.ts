@@ -30,12 +30,16 @@ test("sample Run uses server comparisons; edits and language changes invalidate 
     await page.goto(`/problems/${problem.slug}`);
     await expect(page.getByRole("tabpanel", { name: "題目敘述", exact: true }).getByText("Read and echo an integer.", { exact: true })).toBeVisible();
     await expect(page.getByRole("textbox", { name: "Editor content", exact: true })).toBeAttached();
+    const account = page.locator(".problem-toolbar").getByRole("button", { name: /runner/ });
+    await account.click();
+    await expect(page.locator(".problem-toolbar").getByRole("link", { name: "設定", exact: true })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(account).toHaveAttribute("aria-expanded", "false");
     if (!isMobile) {
-      // Playwright starts the pointer at (0, 0), inside the navigation reveal strip.
-      // Leave the header before clicking the editor toolbar underneath it, as a user
-      // moving from the statement would. Keep the normal click hit-target checks.
+      expect((await page.locator(".code-panel > div").first().boundingBox())!.height).toBeLessThanOrEqual(40);
+      expect((await page.locator(".problem-actions button").first().boundingBox())!.height).toBe(32);
       await page.mouse.move(700, 300);
-      await expect.poll(() => page.locator(".site-navbar").evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThanOrEqual(0);
+      await expect(page.locator(".site-navbar")).toBeHidden();
     }
     const run = page.getByRole("button", { name: "▶ 執行", exact: true }), input = page.getByRole("textbox", { name: "輸入", exact: true });
     await expect(run).toBeEnabled(); await run.click(); await expect(page.getByText("與預期相符", { exact: true })).toBeVisible();

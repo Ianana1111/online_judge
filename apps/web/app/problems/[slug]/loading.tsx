@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { WorkspaceLogo, WorkspaceAccountControls } from "@/components/WorkspaceChrome";
 import { Skeleton } from "@/components/Skeleton";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 
@@ -12,10 +13,11 @@ export default function Loading() {
   return (
     <div className={`problem-workspace ${practice ? "practice-workspace" : ""} lg:h-full lg:overflow-hidden`}
       role="status" aria-label={locale === "zh-TW" ? "正在載入題目" : "Loading problem"}>
-      <div aria-hidden="true" className="flex min-h-0 flex-col gap-3 lg:h-full">
-        <div className="grid min-h-10 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center">
-          <Skeleton className={hasList ? "h-8 w-40" : "h-8 w-20"} />
-          <Skeleton className="hidden h-10 w-52 lg:block" />
+      <div className="flex min-h-0 flex-col gap-3 lg:h-full">
+        <div className="relative z-30 grid min-h-11 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 lg:min-h-8 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+          <div className="flex items-center gap-2">{practice ? <WorkspaceLogo /> : <Skeleton className="h-8 w-20" />}{hasList && <Skeleton className="h-8 w-28" />}</div>
+          <Skeleton className="hidden h-8 w-44 lg:block" />
+          {practice && <div className="justify-self-end"><WorkspaceAccountControls /></div>}
         </div>
         <div className="split-pane flex min-h-0 flex-1 flex-col gap-6 lg:flex-row lg:gap-0">
         <div className="min-w-0 space-y-4 rounded-xl border border-ink-700 bg-ink-900 p-5 lg:h-full lg:basis-1/2 lg:overflow-hidden">

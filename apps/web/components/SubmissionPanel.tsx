@@ -240,10 +240,10 @@ export default function SubmissionPanel({
   const actions = (
     <div className="flex shrink-0 items-center justify-center gap-2">
       <button type="submit" form={runFormId} disabled={runState.disabled || locked}
-          className="inline-flex min-h-10 min-w-24 items-center justify-center gap-1.5 rounded-lg border border-white/20 bg-[#111111] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#262626] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-50">
+          className="inline-flex min-h-10 min-w-20 lg:min-h-8 items-center justify-center gap-1.5 rounded-lg border border-white/20 bg-[#111111] px-3 py-1 text-sm font-semibold text-white transition-colors hover:bg-[#262626] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-50">
           {runState.running ? t("Running…") : runState.cooldownSeconds > 0 ? t("Wait {n}s", { n: runState.cooldownSeconds }) : t("▶ Run")}
       </button>
-      <button type="button" onClick={handleSubmit} disabled={!canSubmit} className="oj-btn-primary min-h-10 min-w-24 px-3">
+      <button type="button" onClick={handleSubmit} disabled={!canSubmit} className="oj-btn-primary min-h-10 min-w-20 lg:min-h-8 rounded-lg px-3 py-1">
           {!judgeable
             ? t("Not gradeable")
             : locked
@@ -266,54 +266,55 @@ export default function SubmissionPanel({
           {t("This problem has no matching UVa judge, so it isn't gradeable here — reference-only. Use it for reading/practice; submitting is disabled.")}
         </p>
       )}
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className="flex items-center gap-2 text-sm font-semibold text-ink-200"><span aria-hidden="true" className="font-mono text-brand">&lt;/&gt;</span>{t("Code")}</span>
-        <select
-          aria-label={t("Language")}
-          value={languageKey}
-          onChange={(e) => {
-            const next = e.target.value;
-            languageDrafts.current[languageKey] = sourceCode;
-            setLanguageKey(next);
-            setSourceCode(languageDrafts.current[next] ?? STUB[next] ?? "");
-          }}
-          className="max-w-40 rounded-md border border-transparent bg-transparent px-2 py-1.5 text-sm text-ink-200 hover:bg-ink-800 focus:border-brand focus:outline-none"
-        >
-          {LANGUAGES.map((l) => (
-            <option key={l} value={l}>
-              {t(LANGUAGE_LABEL[l])}
-            </option>
-          ))}
-        </select>
+        <div className="ml-auto flex min-w-0 items-center gap-3">
+          {billing && billing.submits.limit != null && (
+            <p className="min-w-0 text-right text-[11px] leading-4 text-ink-400">
+              {billing.submits.used >= billing.submits.limit ? (
+                <span className="text-verdict-wa">
+                  {t("You've used all {limit} free submissions —", { limit: billing.submits.limit })}{" "}
+                  <Link href="/upgrade" className="underline hover:text-brand">
+                    {t("upgrade to Pro")}
+                  </Link>{" "}
+                  {t("for unlimited.")}
+                </span>
+              ) : (
+                <>
+                  {t("{used}/{limit} free submissions used", { used: billing.submits.used, limit: billing.submits.limit })}
+                  {billing.submits.limit - billing.submits.used <= 3 && (
+                    <>
+                      {" · "}
+                      <Link href="/upgrade" className="underline hover:text-brand">
+                        {t("upgrade to Pro")}
+                      </Link>
+                    </>
+                  )}
+                </>
+              )}
+            </p>
+          )}
+          <select
+            aria-label={t("Language")}
+            value={languageKey}
+            onChange={(e) => {
+              const next = e.target.value;
+              languageDrafts.current[languageKey] = sourceCode;
+              setLanguageKey(next);
+              setSourceCode(languageDrafts.current[next] ?? STUB[next] ?? "");
+            }}
+            className="max-w-40 rounded-md border border-transparent bg-transparent px-2 py-0.5 text-sm text-ink-200 hover:bg-ink-800 focus:border-brand focus:outline-none"
+          >
+            {LANGUAGES.map((l) => (
+              <option key={l} value={l}>
+                {t(LANGUAGE_LABEL[l])}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {actionsContainer === undefined && <div className="flex justify-center py-1">{actions}</div>}
-
-      {billing && billing.submits.limit != null && (
-        <p className="text-right text-xs text-ink-500">
-          {billing.submits.used >= billing.submits.limit ? (
-            <span className="text-verdict-wa">
-              {t("You've used all {limit} free submissions —", { limit: billing.submits.limit })}{" "}
-              <Link href="/upgrade" className="underline hover:text-brand">
-                {t("upgrade to Pro")}
-              </Link>{" "}
-              {t("for unlimited.")}
-            </span>
-          ) : (
-            <>
-              {t("{used}/{limit} free submissions used", { used: billing.submits.used, limit: billing.submits.limit })}
-              {billing.submits.limit - billing.submits.used <= 3 && (
-                <>
-                  {" · "}
-                  <Link href="/upgrade" className="underline hover:text-brand">
-                    {t("upgrade to Pro")}
-                  </Link>
-                </>
-              )}
-            </>
-          )}
-        </p>
-      )}
 
       {error && (
         <p className="rounded border border-verdict-wa/40 bg-verdict-wa/10 px-3 py-2 text-sm text-verdict-wa">
@@ -340,7 +341,7 @@ export default function SubmissionPanel({
 
   const editorPanel = (
     <div className={`code-panel flex min-w-0 flex-col overflow-hidden rounded-xl border border-ink-700 bg-ink-900 ${fullHeight ? "h-full min-h-0" : ""}`}>
-      <div className="shrink-0 border-b border-ink-700 bg-ink-800/35 px-3 py-2.5">{controls}</div>
+      <div className="shrink-0 border-b border-ink-700 bg-ink-800/35 px-3 py-1.5">{controls}</div>
       <div className={fullHeight ? "min-h-0 flex-1" : ""}>
         <CodeEditor languageKey={languageKey} value={sourceCode} onChange={setSourceCode} fillHeight={fullHeight} embedded />
       </div>

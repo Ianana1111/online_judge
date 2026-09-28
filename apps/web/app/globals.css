@@ -214,13 +214,16 @@
     padding: 12px clamp(12px, 1.1vw, 24px);
   }
 
-  .practice-nav-trigger,
+  /* The problem toolbar supplies the workspace logo and account controls. */
+  body:has(.practice-workspace) .site-navigation {
+    display: none;
+  }
+
   .exam-nav-trigger {
     display: none;
   }
 
   @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
-    body:has(.practice-workspace) .site-navigation,
     .exam-workspace .exam-navigation {
       position: fixed;
       inset: 0 0 auto;
@@ -228,7 +231,6 @@
       z-index: 50;
     }
 
-    body:has(.practice-workspace) .practice-nav-trigger,
     .exam-workspace .exam-nav-trigger {
       display: block;
       position: absolute;
@@ -237,7 +239,6 @@
       height: 6px;
     }
 
-    body:has(.practice-workspace) .site-navbar,
     .exam-workspace .exam-toolbar {
       position: absolute;
       inset: 0 0 auto;
@@ -246,9 +247,6 @@
       box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
     }
 
-    body:has(.practice-workspace) .site-navigation:hover .site-navbar,
-    body:has(.practice-workspace) .site-navigation:has(:focus-visible) .site-navbar,
-    body:has(.practice-workspace) .site-navigation:has([aria-expanded="true"]) .site-navbar,
     .exam-workspace .exam-navigation:hover .exam-toolbar,
     .exam-workspace .exam-navigation:has(:focus-visible) .exam-toolbar,
     .exam-workspace .exam-navigation:has([aria-expanded="true"]) .exam-toolbar {
@@ -258,7 +256,6 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    body:has(.practice-workspace) .site-navbar,
     .exam-workspace .exam-toolbar {
       transition: none;
     }
@@ -353,7 +350,7 @@
   }
 
   .problem-panel #problem-tabpanel-statement .prose-statement {
-    font-size: 15.5px;
+    font-size: 15px;
     line-height: 1.6;
   }
 
