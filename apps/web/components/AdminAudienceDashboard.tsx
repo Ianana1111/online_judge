@@ -12,7 +12,14 @@ const sources: Record<string, string> = { DIRECT: "直接／來源未知", REFER
 export default function AdminAudienceDashboard() {
   const [days, setDays] = useState(30);
   const [source, setSource] = useState<AudienceDashboard["source"]>("all");
-  const query = useQuery({ queryKey: ["analytics", "audience", days, source], queryFn: () => apiFetch<AudienceDashboard>(`/analytics/audience?days=${days}&source=${source}`), staleTime: 30_000 });
+  const query = useQuery({
+    queryKey: ["analytics", "audience", days, source],
+    queryFn: ({ signal }) => apiFetch<AudienceDashboard>(`/analytics/audience?days=${days}&source=${source}`, { signal }),
+    staleTime: 30_000,
+    refetchInterval: 30_000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: "always",
+  });
   const data = query.data;
   const taiwan = data?.regions.filter(row => row.country === "TW") ?? [];
   const taiwanTotal = taiwan.reduce((sum, row) => sum + row.visitors, 0);
@@ -35,11 +42,19 @@ export default function AdminAudienceDashboard() {
         <label className="space-y-1 text-xs text-ink-300"><span className="block">進站來源</span><select className="oj-input" value={source} onChange={e => setSource(e.target.value as AudienceDashboard["source"])}><option value="all">所有來源</option><option value="direct">直接／來源未知</option><option value="referral">外部網站導入</option></select></label>
       </div>
     </div>
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-ink-700 bg-ink-900/40 px-4 py-3">
+      <div className="text-xs leading-5 text-ink-300">
+        <p>畫面開啟時每 30 秒自動更新，切回此分頁也會更新。含報表快取，資料可能延遲約 1 分鐘。</p>
+        {data && <p className="text-ink-400">資料更新時間：<time dateTime={data.generatedAt}>{new Date(data.generatedAt).toLocaleString("zh-TW", { timeZone: "Asia/Taipei" })}</time>（台灣時間）</p>}
+      </div>
+      <button type="button" className="oj-btn-secondary shrink-0 text-xs" disabled={query.isFetching} onClick={() => void query.refetch()}>{query.isFetching ? "更新中…" : "更新資料"}</button>
+    </div>
     {query.isPending && <p role="status" className="oj-card p-6 text-ink-300">正在整理訪客資料…</p>}
     {query.isError && <div role="alert" className="oj-card p-6 text-ink-200">無法載入訪客資料。<button className="oj-btn-secondary ml-3" onClick={() => void query.refetch()}>重試</button></div>}
     {data && <>
       <div className="oj-panel p-4 text-sm leading-6 text-ink-300">
-        <strong className="text-ink-100">如何判讀：</strong>「有互動」需頁面可見累計至少 10 秒，且有點擊、捲動或鍵盤操作，並排除已知機器人與管理員。這是估計，不是真人身分驗證。
+        <p className="mb-2 font-medium text-ink-100">已追蹤 {n(data.totals.visitors)} 個瀏覽器，其中 {n(Math.max(0, data.totals.visitors - data.totals.engaged))} 個尚未達到互動門檻。</p>
+        <strong className="text-ink-100">如何判讀：</strong>「有互動」需在同一頁可見累計至少 10 秒，且有點擊、捲動或鍵盤操作。快速切換頁面仍會記錄瀏覽，但不一定計入下方互動數字。已知機器人與管理員會被排除；這是估計，不是真人身分驗證。
         <p className="mt-1">數字以不重複瀏覽器計算；不同裝置、清除 Cookie 會分開計算。未登入不代表從未註冊，來源未知也可能來自 LINE、Discord 或隱藏來源的連結。</p>
       </div>
       {!data.coverage.configured && <p role="alert" className="oj-card border-brand/40 p-4 text-sm text-ink-200">追蹤尚未啟用：需要在網站與 API 設定相同的分析簽章金鑰。</p>}
