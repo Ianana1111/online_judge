@@ -60,78 +60,7 @@
     color-scheme: dark;
   }
 
-  /* System preference for light, honored only when the user hasn't explicitly picked a theme
-   * (the [data-theme] rules below are more specific and always win once stamped). */
-  @media (prefers-color-scheme: light) {
-    :root {
-      --ink-950: 247 248 249;
-      --ink-900: 238 240 242;
-      --ink-800: 227 230 233;
-      --ink-700: 210 215 220;
-      --ink-600: 183 191 198;
-      --ink-500: 89 101 113;
-      --ink-400: 78 89 100;
-      --ink-300: 72 84 95;
-      --ink-200: 49 60 70;
-      --ink-100: 28 37 46;
-      --ink-50: 14 21 27;
-
-      --brand: 143 92 22;
-      --onbrand: 255 255 255;
-      --brand-light: 120 77 18;
-      --brand-dark: 143 92 22;
-
-      --verdict-ac: 18 91 44;
-      --verdict-wa: 141 44 41;
-      --verdict-tle: 117 67 16;
-      --verdict-mle: 117 66 18;
-      --verdict-re: 139 44 68;
-      --verdict-rf: 129 44 113;
-      --verdict-ce: 76 79 89;
-      --verdict-pe: 97 77 19;
-      --verdict-ole: 120 65 21;
-      --verdict-se: 88 58 163;
-      --verdict-pending: 48 79 127;
-
-      color-scheme: light;
-    }
-  }
-
-  /* Explicit toggle (see ThemeToggle.tsx) — a stamped [data-theme] always overrides system
-   * preference in either direction, since [data-theme="..."] out-specifies a plain :root. */
-  :root[data-theme="dark"] {
-    --onbrand: 13 17 23;
-    --ink-950: 10 13 18;
-    --ink-900: 14 18 24;
-    --ink-800: 20 26 34;
-    --ink-700: 28 37 48;
-    --ink-600: 42 52 65;
-    --ink-500: 122 137 152;
-    --ink-400: 139 153 167;
-    --ink-300: 154 168 181;
-    --ink-200: 199 208 216;
-    --ink-100: 232 236 239;
-    --ink-50: 245 247 248;
-
-    --brand: 232 163 61;
-    --brand-light: 240 182 96;
-    --brand-dark: 200 132 42;
-
-    --verdict-ac: 49 181 98;
-    --verdict-wa: 228 132 129;
-    --verdict-tle: 224 138 47;
-    --verdict-mle: 214 143 80;
-    --verdict-re: 215 137 155;
-    --verdict-rf: 206 137 192;
-    --verdict-ce: 156 160 170;
-    --verdict-pe: 201 161 59;
-    --verdict-ole: 212 144 93;
-    --verdict-se: 168 149 220;
-    --verdict-pending: 135 162 201;
-
-    color-scheme: dark;
-  }
-
+  /* Light mode is opt-in; new visitors always start with the dark palette above. */
   :root[data-theme="light"] {
     --ink-950: 247 248 249;
     --ink-900: 238 240 242;
@@ -434,6 +363,10 @@
       hero-caret 0.8s step-end infinite 0.3s;
   }
 
+  .guest-hero {
+    min-height: calc(100svh - var(--guest-hero-offset, 84px));
+  }
+
   .guest-hero-copy {
     animation: guest-hero-copy-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
@@ -441,12 +374,7 @@
   @media (max-width: 639px) {
     .guest-hero.grid {
       display: flex;
-      min-height: calc(100svh - var(--guest-hero-offset, 84px));
       padding: 0 8px;
-    }
-
-    .guest-hero-copy h1 {
-      font-size: clamp(1.875rem, 9vw, 2.65rem);
     }
 
     .guest-hero .guest-hero-description {
@@ -466,6 +394,7 @@
   }
 
   .guest-typewriter-caret {
+    position: absolute;
     display: inline-block;
     margin-left: 0.06em;
     font-weight: 400;

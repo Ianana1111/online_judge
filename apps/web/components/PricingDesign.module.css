@@ -35,8 +35,3 @@
 
 :global(html[data-theme="light"]) .surface,
 :global(html[data-theme="light"]) .selected { background: #fff; }
-
-@media (prefers-color-scheme: light) {
-  :global(html:not([data-theme])) .surface,
-  :global(html:not([data-theme])) .selected { background: #fff; }
-}

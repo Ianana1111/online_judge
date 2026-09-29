@@ -10,7 +10,7 @@ for (const theme of ["dark", "light"]) {
     await page.addInitScript((value) => localStorage.setItem("theme", value), theme);
     const errors: string[] = []; page.on("pageerror", (error) => errors.push(error.message));
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("把每一次練習");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveAccessibleName("judge. 讓 CPE 不再耽誤你");
     await expect(page.getByRole("link", { name: "開始免費練習" })).toHaveAttribute("href", "/register");
     if (isMobile) {
       await expect(page.getByRole("link", { name: "開始免費練習" })).toBeInViewport();
@@ -19,11 +19,13 @@ for (const theme of ["dark", "light"]) {
     await expect(page.getByRole("button", { name: "執行測試", exact: true })).toHaveCount(0);
     await expect(page.getByRole("tablist", { name: "練習方向" })).toHaveCount(0);
     const paths = page.locator('section[aria-labelledby="practice-path-heading"]');
+    expect((await paths.boundingBox())!.y).toBeGreaterThanOrEqual(page.viewportSize()!.height - 1);
     await expect(paths.getByRole("link")).toHaveCount(3);
     await expect(paths.getByRole("link").first()).toHaveAttribute("href", "/collections/cpe-basic-49");
     await expect(paths.getByRole("link").last()).toHaveAttribute("href", "/contests");
     await expect(page.getByRole("link", { name: "加入 Discord 社群" })).toHaveAttribute("href", "https://discord.gg/FbVqG8vd6a");
-    await expect(page.locator(".guest-hero-copy h1 > .text-brand").first()).toHaveText("你的實力。");
+    await expect(page.locator("[data-typed-brand]")).toHaveText("judge.");
+    await expect(page.locator("[data-typed-tagline]")).toHaveText("讓 CPE 不再耽誤你");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     expect(errors).toEqual([]);
     await expect(page).toHaveTitle(/judge\./);
@@ -31,8 +33,25 @@ for (const theme of ["dark", "light"]) {
     expect(audit.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.target) }))).toEqual([]);
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.screenshot({ path: info.outputPath(`home-${theme}.png`), fullPage: true });
+    await paths.scrollIntoViewIfNeeded();
+    await expect(page.getByRole("heading", { name: "找到你的起點" })).toBeInViewport();
   });
 }
+
+test("new visitors start dark even on a light OS and keep their chosen theme", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.locator("html")).toHaveCSS("color-scheme", "dark");
+  await page.getByRole("button", { name: "切換成淺色模式" }).click();
+  await expect(page.locator("html")).toHaveCSS("color-scheme", "light");
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await page.emulateMedia({ colorScheme: "dark" });
+  await expect(page.locator("html")).toHaveCSS("color-scheme", "light");
+  await page.getByRole("button", { name: "切換成深色模式" }).click();
+  await expect(page.locator("html")).toHaveCSS("color-scheme", "dark");
+});
 
 test("FAQ search uses the same answers as structured data", async ({ page }, info) => {
   await page.goto("/faq");

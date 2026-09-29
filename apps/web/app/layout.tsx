@@ -85,15 +85,14 @@ const WEBSITE_JSON_LD = {
   url: SITE_URL,
 };
 
-// Runs before paint so a stored theme choice applies immediately — otherwise the page would
-// flash the wrong theme for a frame while React hydrates. No stored choice means "follow system
-// preference," handled entirely by the @media (prefers-color-scheme) rule in globals.css, so
-// this script deliberately does nothing in that case rather than guessing.
+// Apply a saved choice before paint. New visitors (including browsers that block storage)
+// start dark, consistently with the CSS palette and useTheme's fallback.
 const THEME_BOOTSTRAP_SCRIPT = `
+  var t = "dark";
   try {
-    var t = localStorage.getItem("theme");
-    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+    if (localStorage.getItem("theme") === "light") t = "light";
   } catch (e) {}
+  document.documentElement.setAttribute("data-theme", t);
 `;
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -101,7 +100,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // for why the nonce can't just live in a static config.
   const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
-    <html lang="zh-TW" className={`${display.variable} ${body.variable} ${mono.variable} ${statement.variable}`}>
+    <html lang="zh-TW" suppressHydrationWarning className={`${display.variable} ${body.variable} ${mono.variable} ${statement.variable}`}>
       <head>
         <script nonce={nonce} dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
         <script nonce={nonce} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(ORGANIZATION_JSON_LD) }} />

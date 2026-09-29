@@ -13,8 +13,8 @@ export default function ThemeToggle({ compact = false }: { compact?: boolean }) 
 
   function toggle() {
     const next = theme === "dark" ? "light" : "dark";
-    localStorage.setItem("theme", next);
     document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch { /* Still switch when storage is blocked. */ }
   }
 
   const size = compact ? "h-11 w-11 lg:h-8 lg:w-8" : "h-11 w-11";
