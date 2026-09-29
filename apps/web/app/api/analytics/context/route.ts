@@ -1,6 +1,7 @@
 import { createHmac, randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { ANALYTICS_CONTEXT_TTL, signAnalyticsContext } from "@oj/shared/analyticsContext";
+import { normalizeTaiwanRegion } from "../../../../lib/analytics-geo";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -19,7 +20,9 @@ export function GET(request: NextRequest) {
   const countryValue = process.env.VERCEL === "1" ? request.headers.get("x-vercel-ip-country") : null;
   const regionValue = process.env.VERCEL === "1" ? request.headers.get("x-vercel-ip-country-region") : null;
   const country = countryValue && /^[A-Z]{2}$/.test(countryValue) ? countryValue : null;
-  const region = regionValue && /^[A-Z0-9-]{1,8}$/.test(regionValue) ? regionValue : null;
+  const cityValue = process.env.VERCEL === "1" ? request.headers.get("x-vercel-ip-city") : null;
+  const region = country === "TW" ? normalizeTaiwanRegion(regionValue, cityValue)
+    : regionValue && /^[A-Z0-9-]{1,8}$/.test(regionValue) ? regionValue : null;
   const issuedAt = Math.floor(Date.now() / 1000);
   const token = signAnalyticsContext({ visitorId: createHmac("sha256", secret).update(`visitor:${id}`).digest("hex"), country, region, issuedAt, expiresAt: issuedAt + ANALYTICS_CONTEXT_TTL }, secret);
   const response = NextResponse.json({ token, expiresAt: (issuedAt + ANALYTICS_CONTEXT_TTL) * 1000 }, { headers });

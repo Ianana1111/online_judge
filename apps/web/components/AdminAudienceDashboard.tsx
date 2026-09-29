@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import type { AudienceDashboard } from "@/lib/types";
+import { taiwanRegionLabels } from "@/lib/analytics-geo";
 
 const n = (value: number) => value.toLocaleString("zh-TW");
-const regions: Record<string, string> = { TPE: "臺北市", NWT: "新北市", TAO: "桃園市", TXG: "臺中市", TNN: "臺南市", KHH: "高雄市", KEE: "基隆市", HSZ: "新竹市", CYI: "嘉義市", HSQ: "新竹縣", MIA: "苗栗縣", CHA: "彰化縣", NAN: "南投縣", YUN: "雲林縣", CYQ: "嘉義縣", PIF: "屏東縣", ILA: "宜蘭縣", HUA: "花蓮縣", TTT: "臺東縣", PEN: "澎湖縣", KIN: "金門縣", LIE: "連江縣" };
 const sources: Record<string, string> = { DIRECT: "直接／來源未知", REFERRAL: "外部網站導入", INTERNAL: "站內來源／無法還原入口" };
 
 export default function AdminAudienceDashboard() {
@@ -20,7 +20,7 @@ export default function AdminAudienceDashboard() {
   const unknown = data?.regions.filter(row => !row.country).reduce((sum, row) => sum + row.visitors, 0) ?? 0;
   const regionTotals = new Map<string, { visitors: number; anonymous: number }>();
   taiwan.forEach(row => {
-    const label = regions[row.region?.replace(/^TW-/, "") ?? ""] ?? "台灣・縣市未知";
+    const label = taiwanRegionLabels[row.region?.replace(/^TW-/, "") ?? ""] ?? "台灣・縣市未知";
     const old = regionTotals.get(label) ?? { visitors: 0, anonymous: 0 };
     regionTotals.set(label, { visitors: old.visitors + row.visitors, anonymous: old.anonymous + row.anonymous });
   });
