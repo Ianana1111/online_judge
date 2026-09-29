@@ -9,6 +9,7 @@ const SECTIONS = [
   { href: "/admin/contests", title: "Contests", description: "Set up CPE sittings and other timed contests." },
   { href: "/admin/classes", title: "Classes", description: "Track every student's progress and homework status." },
   { href: "/admin/users", title: "Users", description: "Create accounts and mark who's your actual student." },
+  { href: "/admin/audience", title: "訪客分析", description: "互動訪客、未登入／未訂閱族群與台灣地區分布。" },
   { href: "/admin/analytics", title: "Analytics", description: "CPE-wide stats: topics, difficulty, repeat problems." },
 ];
 

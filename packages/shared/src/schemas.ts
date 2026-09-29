@@ -275,8 +275,14 @@ export const createClassCommentSchema = z.object({
 export type CreateClassCommentDto = z.infer<typeof createClassCommentSchema>;
 
 export const recordPageviewSchema = z.object({
-  path: z.string().min(1).max(500),
+  path: z.string().min(1).max(500).regex(/^\/(?!\/)[^?#]*$/),
   referrer: z.string().max(500).optional(),
+  context: z.string().max(2000).optional(),
+  eventId: z.string().uuid().optional(),
+  sessionId: z.string().uuid().optional(),
+  engaged: z.boolean().optional(),
+  activeMs: z.number().int().min(0).max(3600000).optional(),
+  interacted: z.boolean().optional(),
 });
 export type RecordPageviewDto = z.infer<typeof recordPageviewSchema>;
 

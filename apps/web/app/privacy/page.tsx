@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/privacy` },
 };
 
-const LAST_UPDATED = "2026-08-23";
+const LAST_UPDATED = "2026-09-29";
 
 // Server Component, zh-TW only — see terms/page.tsx's file-level comment for why this isn't run
 // through useT()/split into a client component like about/faq.
@@ -45,7 +45,7 @@ export default function PrivacyPage() {
             <strong className="text-ink-100">金流資訊：</strong>若你訂閱 Pro 方案，付款由第三方金流商綠界科技（ECPay）處理；本站不會接觸或儲存你的完整卡號，只會保留訂單編號、金額、付款狀態等交易紀錄。
           </li>
           <li>
-            <strong className="text-ink-100">使用紀錄：</strong>造訪的頁面路徑、造訪時間、referrer 網域，用於了解流量與改善服務，最長保留 400 天後自動清除。這項紀錄不含 IP 位址對應到帳號的追蹤，也不用於廣告投放。
+            <strong className="text-ink-100">使用紀錄：</strong>造訪的頁面路徑、時間、來源網域、登入／方案狀態，以及是否有停留至少 10 秒與操作，用於了解流量與改善服務。本站以第一方隨機 Cookie 辨識同一瀏覽器（最後使用後最長 180 天），不使用裝置指紋，也不記錄輸入內容。Vercel 依連線 IP 提供概略國家與縣市；本站分析資料只保存地區與隨機識別碼，不保存完整 IP 或精確位置。瀏覽紀錄最長保留 400 天後自動清除，僅管理員可查看彙整報表，不用於廣告投放；此項自有分析尊重瀏覽器的 Do Not Track 與 Global Privacy Control 設定。
           </li>
         </ul>
       </section>

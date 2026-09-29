@@ -7,6 +7,7 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./analyticsContext": "./src/analyticsContext.ts",
     "./telemetryPrivacy": "./src/telemetryPrivacy.ts"
   },
   "dependencies": {
@@ -15,5 +16,15 @@
   "devDependencies": {
     "typescript": "^5.6.0",
     "@types/node": "^22.9.0"
+  },
+  "typesVersions": {
+    "*": {
+      "analyticsContext": [
+        "src/analyticsContext.ts"
+      ],
+      "telemetryPrivacy": [
+        "src/telemetryPrivacy.ts"
+      ]
+    }
   }
 }

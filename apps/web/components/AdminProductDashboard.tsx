@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -73,7 +74,7 @@ export default function AdminProductDashboard() {
             <Stat label="發表留言" value={data.usage.publishedComments} />
             <Stat label="累計提交" value={submissionCount} />
           </dl>
-          <p className="mt-6 border-t border-ink-700 pt-4 text-xs leading-5 text-ink-400">匿名訪客沒有可識別 ID，這裡的「登入訪客」只計有登入且成功送出瀏覽事件的人；瀏覽次數不等於不重複訪客數。</p>
+          <p className="mt-6 border-t border-ink-700 pt-4 text-xs leading-5 text-ink-400">這裡的「登入訪客」依帳號計算；瀏覽次數不等於不重複訪客數。匿名訪客與 IP 地區分布請看 <Link href="/admin/audience" className="text-brand-light underline">訪客分析 →</Link>。</p>
         </div>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">

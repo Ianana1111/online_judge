@@ -746,3 +746,12 @@ export interface NotificationList {
   nextCursor: string | null;
   asOf: string;
 }
+
+export interface AudienceDashboard {
+  days: number; source: "all" | "direct" | "referral"; timezone: string; generatedAt: string; trackingSince: string | null;
+  coverage: { trackedPageviews: number; legacyPageviews: number; configured: boolean };
+  totals: { visitors: number; engaged: number; anonymous: number; free: number; pro: number; unsubscribed: number; direct: number };
+  sources: { source: string; visitors: number; anonymous: number }[];
+  regions: { country: string | null; region: string | null; visitors: number; anonymous: number }[];
+  daily: { date: string; visitors: number; anonymous: number }[];
+}
