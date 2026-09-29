@@ -3,6 +3,35 @@ import AxeBuilder from "@axe-core/playwright";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import { randomUUID, createHash } from "node:crypto";
+import type { AudienceDashboard } from "../../apps/web/lib/types";
+
+test("audience shows recorded browsers before engagement and refreshes without a page reload", async ({ page }) => {
+  await page.clock.install();
+  let visitors = 2;
+  await page.route("http://127.0.0.1:55440/**", async route => {
+    const path = new URL(route.request().url()).pathname;
+    if (path === "/auth/me") return route.fulfill({ json: { id: "admin", handle: "operator", role: "ADMIN", plan: "PRO", mfaEnabled: true, settings: { profileSetupDismissed: true }, csrfToken: "fixture" } });
+    if (path === "/analytics/audience") {
+      const data: AudienceDashboard = {
+        days: 30, source: "all", timezone: "Asia/Taipei", generatedAt: new Date().toISOString(), trackingSince: new Date().toISOString(),
+        coverage: { configured: true, trackedPageviews: visitors, legacyPageviews: 0 },
+        totals: { visitors, engaged: visitors - 2, anonymous: visitors - 2, free: 0, pro: 0, unsubscribed: 0, direct: visitors - 2 },
+        sources: [], regions: [], daily: [],
+      };
+      return route.fulfill({ json: data });
+    }
+    return route.fulfill({ json: [] });
+  });
+  await page.goto("/admin/audience");
+  await expect(page.getByText("已追蹤 2 個瀏覽器，其中 2 個尚未達到互動門檻。", { exact: true })).toBeVisible();
+  visitors = 3;
+  await page.clock.fastForward(31_000);
+  await expect(page.getByText("已追蹤 3 個瀏覽器，其中 2 個尚未達到互動門檻。", { exact: true })).toBeVisible();
+  visitors = 4;
+  await page.getByRole("button", { name: "更新資料", exact: true }).click();
+  await expect(page.getByText("已追蹤 4 個瀏覽器，其中 2 個尚未達到互動門檻。", { exact: true })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
 
 test("admin audience reports use real data, filter sources, and enforce API roles", async ({ page }, info) => {
   test.skip(process.env.RUN_FULL_SITE_E2E !== "1", "Disposable API required");
