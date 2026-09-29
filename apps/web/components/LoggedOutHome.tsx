@@ -12,9 +12,8 @@ function reduceMotion() {
 }
 
 function TypedHeadline({ zh }: { zh: boolean }) {
-  const text = zh ? "把每一次練習，\n寫成你的實力。" : "Make every\npractice count.";
-  const accent = zh ? "你的實力。" : "count.";
-  const accentAt = text.indexOf(accent);
+  const tagline = zh ? "讓 CPE 不再耽誤你" : "Don't let CPE hold you back.";
+  const text = `judge.\n${tagline}`;
   const [typed, setTyped] = useState("");
   useEffect(() => {
     if (reduceMotion()) { setTyped(text); return; }
@@ -25,18 +24,30 @@ function TypedHeadline({ zh }: { zh: boolean }) {
       setTyped(characters.slice(0, index).join(""));
       if (index < characters.length) {
         const character = characters[index - 1];
-        timer = setTimeout(next, character === "\n" ? 180 : /[，。.]/.test(character) ? 130 : 62);
+        timer = setTimeout(next, character === "\n" ? 260 : character === "." ? 180 : 85);
       }
     };
     setTyped("");
     timer = setTimeout(next, 320);
     return () => clearTimeout(timer);
   }, [text]);
-  const plain = typed.slice(0, Math.min(typed.length, accentAt));
-  const highlighted = typed.length > accentAt ? typed.slice(accentAt) : "";
-  return <h1 className="min-h-[2.44em] text-[2.65rem] font-semibold leading-[1.22] tracking-normal text-ink-50 sm:text-6xl lg:text-7xl">
+  const [brand, typedTagline = ""] = typed.split("\n");
+  const typingTagline = typed.includes("\n");
+  const caret = <span className="guest-typewriter-caret text-brand">|</span>;
+  return <h1 className="font-semibold text-ink-50">
     <span className="sr-only">{text.replaceAll("\n", " ")}</span>
-    <span aria-hidden className="whitespace-pre-line">{plain}</span><span aria-hidden className="text-brand">{highlighted}</span><span aria-hidden className="guest-typewriter-caret text-brand">|</span>
+    <span aria-hidden className="block text-[clamp(5.5rem,18vw,10rem)] leading-none tracking-[-0.065em]">
+      <span className="relative inline-block text-left">
+        <span className="invisible">judge.</span>
+        <span className="absolute inset-0"><span data-typed-brand>{brand.slice(0, 5)}<span className="text-brand">{brand.slice(5)}</span></span>{!typingTagline && caret}</span>
+      </span>
+    </span>
+    <span aria-hidden className="mt-5 block text-[clamp(1.35rem,5.8vw,2.5rem)] leading-[1.4] tracking-tight text-brand sm:mt-6">
+      <span className="relative inline-block text-left">
+        <span className="invisible">{tagline}</span>
+        <span className="absolute inset-0"><span data-typed-tagline>{typedTagline}</span>{typingTagline && typed !== text && caret}</span>
+      </span>
+    </span>
   </h1>;
 }
 
@@ -93,7 +104,7 @@ export default function LoggedOutHome({ total }: { total: number | null }) {
   ];
   if (status === "ready" && user) return null;
   return <div className="mx-auto max-w-5xl pb-6 sm:pb-12">
-    <section ref={heroRef} className="guest-hero grid items-center py-16 sm:py-24 lg:py-28">
+    <section ref={heroRef} className="guest-hero grid items-center py-10 sm:py-12">
       <div className="guest-hero-copy mx-auto w-full max-w-3xl text-left sm:text-center">
         <p className="mb-6 font-mono text-xs font-medium tracking-[0.14em] text-brand">{zh ? "CPE · GPE · 程式練習" : "CPE · GPE · CODING PRACTICE"}</p>
         <TypedHeadline zh={zh} />
