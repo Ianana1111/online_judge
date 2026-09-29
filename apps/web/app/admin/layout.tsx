@@ -13,6 +13,7 @@ const SIDEBAR_LINKS = [
   { href: "/admin/assignments", label: "Assignments" },
   { href: "/admin/users", label: "Users" },
   { href: "/admin/billing", label: "Billing" },
+  { href: "/admin/audience", label: "訪客分析" },
   { href: "/admin/analytics", label: "Analytics" },
   { href: "/admin/moderation", label: "Content review" },
   { href: "/admin/schools", label: "School domain review" },

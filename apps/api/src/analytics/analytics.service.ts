@@ -1,5 +1,9 @@
+import { createHash } from "node:crypto";
+import { verifyAnalyticsContext } from "@oj/shared/analyticsContext";
+import { isProActive } from "../billing/billing.service";
 import { Injectable } from "@nestjs/common";
 import { prisma } from "@oj/db";
+import { Prisma } from "@prisma/client";
 import type { RecordPageviewDto } from "@oj/shared";
 import { isBotUserAgent, isSpamReferrer } from "./pageview-filters";
 
@@ -185,9 +189,95 @@ export class AnalyticsService {
       }
     }
 
-    await prisma.pageView.create({
-      data: { path: dto.path, referrer, userAgent: userAgent ?? null, userId },
-    });
+    if (dto.path.startsWith("/admin")) return;
+    const account = userId ? await prisma.user.findUnique({ where: { id: userId }, select: { role: true, plan: true, planExpiresAt: true, isStudent: true, subscriptions: { where: { status: "ACTIVE" }, select: { id: true }, take: 1 } } }) : null;
+    if (account?.role === "ADMIN") return;
+    const context = verifyAnalyticsContext(dto.context, process.env.ANALYTICS_CONTEXT_SECRET);
+    if (!context || !dto.eventId || !dto.sessionId) {
+      // Old clients still contribute pageviews, never invented unique visitors or locations.
+      if (!dto.engaged) await prisma.pageView.create({ data: { path: dto.path, referrer, userAgent: userAgent?.slice(0, 500), userId } });
+      return;
+    }
+    const eventKey = createHash("sha256").update(`${context.visitorId}:${dto.eventId}`).digest("hex");
+    const sessionId = createHash("sha256").update(`${context.visitorId}:${dto.sessionId}`).digest("hex");
+    const audience = account ? (isProActive(account) ? "PRO" : "FREE") : "ANONYMOUS";
+    const subscriber = (account?.subscriptions.length ?? 0) > 0;
+    if (dto.engaged) {
+      if (!dto.interacted || (dto.activeMs ?? 0) < 10_000) return;
+      // Updates must match an existing view; retries cannot count a second pageview. The browser
+      // timer alone is not enough: require at least 9s of server-observed elapsed time as well.
+      await prisma.pageView.updateMany({ where: { eventKey, visitorId: context.visitorId, path: dto.path, createdAt: { lte: new Date(Date.now() - 9000) } }, data: { engaged: true, ...(userId ? { userId, audience, subscriber } : {}) } });
+      return;
+    }
+    await prisma.pageView.createMany({ skipDuplicates: true, data: [{
+      path: dto.path, referrer, userAgent: userAgent?.slice(0, 500), userId, eventKey,
+      visitorId: context.visitorId, sessionId, audience, subscriber,
+      acquisition: referrer ? "REFERRAL" : dto.referrer ? "INTERNAL" : "DIRECT",
+      country: context.country, region: context.region,
+    }] });
+  }
+
+  private audienceCache = new Map<string, { expires: number; value: Promise<unknown> }>();
+
+  audienceDashboard(days: number, source: "all" | "direct" | "referral") {
+    const key = `${days}:${source}`, cached = this.audienceCache.get(key);
+    if (cached && cached.expires > Date.now()) return cached.value;
+    if (this.audienceCache.size >= 32) this.audienceCache.clear();
+    const value = this.loadAudienceDashboard(days, source).catch(error => { this.audienceCache.delete(key); throw error; });
+    this.audienceCache.set(key, { expires: Date.now() + 30_000, value });
+    return value;
+  }
+
+  private async loadAudienceDashboard(days: number, source: "all" | "direct" | "referral") {
+    const since = new Date(Date.now() - days * 86400000);
+    const acquisition = source === "direct" ? "DIRECT" : source === "referral" ? "REFERRAL" : null;
+    const base = Prisma.sql`WITH base AS (
+      SELECT * FROM page_views WHERE "createdAt" >= ${since} AND "visitorId" IS NOT NULL
+        AND (${acquisition}::text IS NULL OR acquisition = ${acquisition})
+    ), visitors AS (
+      SELECT "visitorId", BOOL_OR(engaged) engaged,
+        BOOL_OR(audience <> 'ANONYMOUS') registered, BOOL_OR(audience = 'PRO') pro,
+        BOOL_OR(COALESCE(subscriber, false)) subscribed, BOOL_OR(acquisition = 'DIRECT') direct
+      FROM base GROUP BY "visitorId"
+    )`;
+    const [totals, sources, regions, trend, coverage] = await Promise.all([
+      prisma.$queryRaw<{ visitors: bigint; engaged: bigint; anonymous: bigint; free: bigint; pro: bigint; unsubscribed: bigint; direct: bigint }[]>(Prisma.sql`${base}
+        SELECT COUNT(*) visitors, COUNT(*) FILTER (WHERE engaged) engaged,
+          COUNT(*) FILTER (WHERE engaged AND NOT registered) anonymous,
+          COUNT(*) FILTER (WHERE engaged AND registered AND NOT pro) free,
+          COUNT(*) FILTER (WHERE engaged AND pro) pro,
+          COUNT(*) FILTER (WHERE engaged AND registered AND NOT subscribed) unsubscribed,
+          COUNT(*) FILTER (WHERE engaged AND direct) direct FROM visitors`),
+      prisma.$queryRaw<{ source: string; visitors: bigint; anonymous: bigint }[]>(Prisma.sql`${base}
+        SELECT b.acquisition source, COUNT(DISTINCT b."visitorId") visitors,
+          COUNT(DISTINCT b."visitorId") FILTER (WHERE NOT v.registered) anonymous
+        FROM base b JOIN visitors v USING ("visitorId") WHERE b.engaged
+        GROUP BY b.acquisition ORDER BY visitors DESC`),
+      prisma.$queryRaw<{ country: string | null; region: string | null; visitors: bigint; anonymous: bigint }[]>(Prisma.sql`${base}, location AS (
+        SELECT DISTINCT ON ("visitorId") "visitorId", country, region FROM base
+        ORDER BY "visitorId", (country IS NOT NULL) DESC, "createdAt" DESC, id DESC
+      ) SELECT l.country, CASE WHEN l.country = 'TW' THEN l.region ELSE NULL END region,
+        COUNT(*) visitors, COUNT(*) FILTER (WHERE NOT v.registered) anonymous
+        FROM location l JOIN visitors v USING ("visitorId") WHERE v.engaged
+        GROUP BY 1, 2 ORDER BY visitors DESC`),
+      prisma.$queryRaw<{ date: string; visitors: bigint; anonymous: bigint }[]>(Prisma.sql`${base}
+        SELECT to_char((b."createdAt" AT TIME ZONE 'UTC') AT TIME ZONE 'Asia/Taipei', 'YYYY-MM-DD') date,
+          COUNT(DISTINCT b."visitorId") visitors,
+          COUNT(DISTINCT b."visitorId") FILTER (WHERE NOT v.registered) anonymous
+        FROM base b JOIN visitors v USING ("visitorId") WHERE b.engaged GROUP BY 1 ORDER BY 1`),
+      prisma.$queryRaw<{ first: Date | null; tracked: bigint; legacy: bigint }[]>`
+        SELECT MIN("createdAt") FILTER (WHERE "visitorId" IS NOT NULL) first,
+          COUNT(*) FILTER (WHERE "visitorId" IS NOT NULL AND "createdAt" >= ${since}) tracked,
+          COUNT(*) FILTER (WHERE "visitorId" IS NULL AND "createdAt" >= ${since}) legacy FROM page_views`,
+    ]);
+    return { days, source, timezone: "Asia/Taipei", generatedAt: new Date().toISOString(),
+      trackingSince: coverage[0]?.first?.toISOString() ?? null,
+      coverage: { trackedPageviews: Number(coverage[0]?.tracked ?? 0), legacyPageviews: Number(coverage[0]?.legacy ?? 0), configured: Boolean(process.env.ANALYTICS_CONTEXT_SECRET?.length && process.env.ANALYTICS_CONTEXT_SECRET.length >= 32) },
+      totals: Object.fromEntries(Object.entries(totals[0]).map(([key, count]) => [key, Number(count)])),
+      sources: sources.map(row => ({ ...row, visitors: Number(row.visitors), anonymous: Number(row.anonymous) })),
+      regions: regions.map(row => ({ ...row, visitors: Number(row.visitors), anonymous: Number(row.anonymous) })),
+      daily: trend.map(row => ({ ...row, visitors: Number(row.visitors), anonymous: Number(row.anonymous) })),
+    };
   }
 
   async trafficSummary(days: number) {
@@ -206,7 +296,7 @@ export class AnalyticsService {
   async dailyTraffic(days: number) {
     const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
     const rows = await prisma.$queryRaw<{ date: string; count: bigint }[]>`
-      SELECT to_char(date_trunc('day', "createdAt" AT TIME ZONE 'Asia/Taipei'), 'YYYY-MM-DD') AS date, COUNT(*)::bigint AS count
+      SELECT to_char(date_trunc('day', ("createdAt" AT TIME ZONE 'UTC') AT TIME ZONE 'Asia/Taipei'), 'YYYY-MM-DD') AS date, COUNT(*)::bigint AS count
       FROM "page_views"
       WHERE "createdAt" >= ${since}
       GROUP BY 1
@@ -247,7 +337,7 @@ export class AnalyticsService {
       publishedPosts, publishedComments, paidPayments, paymentStatuses, activeSubscriptions,
       cancelledSubscriptions, cancellations, refundStatuses, recentPayments, recentCancellations] = await Promise.all([
       prisma.$queryRaw<{ hour: number; views: bigint }[]>`
-        SELECT EXTRACT(HOUR FROM "createdAt" AT TIME ZONE 'Asia/Taipei')::int AS hour,
+        SELECT EXTRACT(HOUR FROM ("createdAt" AT TIME ZONE 'UTC') AT TIME ZONE 'Asia/Taipei')::int AS hour,
                COUNT(*)::bigint AS views
         FROM "page_views" WHERE "createdAt" >= ${since}
         GROUP BY 1 ORDER BY 1`,

@@ -1,14 +1,5 @@
-/**
- * Server-side filtering for the self-hosted pageview beacon (see PageviewTracker on the frontend,
- * recordPageview in analytics.service.ts). A client-side beacon can be hit by anything that loads
- * the page's JS — real browsers, but also headless crawlers and (for the referrer field
- * specifically) nothing forges this from outside since it's read from the browser's own
- * document.referrer, not attacker-controlled at the network level. The two things worth filtering
- * before insertion are known bot/crawler user agents and known referrer-spam domains — bots that
- * fake a Referer header pointing at their own site hoping a site owner reviewing analytics clicks
- * through out of curiosity (a long-standing, purely cosmetic annoyance, not a security issue, but
- * it pollutes traffic data if left in).
- */
+/** Best-effort exclusion of known crawlers and referral spam. User agents, referrers and
+ * engagement events can be forged, so these heuristics are never proof of a human identity. */
 
 const BOT_UA_PATTERNS = [
   /bot\b/i,

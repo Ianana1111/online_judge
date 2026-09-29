@@ -346,6 +346,15 @@ model PageView {
   /// same-origin navigation. Already spam-filtered before insertion.
   referrer  String?
   userAgent String?
+  eventKey String? @unique
+  visitorId String?
+  sessionId String?
+  audience String?
+  subscriber Boolean?
+  engaged Boolean @default(false)
+  acquisition String?
+  country String?
+  region String?
   userId    String?
   createdAt DateTime @default(now())
 
@@ -353,6 +362,7 @@ model PageView {
 
   @@index([createdAt])
   @@index([path])
+  @@index([visitorId, createdAt])
   @@map("page_views")
 }
 

@@ -39,7 +39,15 @@ export class AnalyticsController {
     @Req() req: Request,
     @CurrentUser() user: RequestUser | null,
   ) {
+    if (req.headers.dnt === "1" || req.headers["sec-gpc"] === "1") return;
     await this.analytics.recordPageview(body, req.headers["user-agent"], user?.id ?? null);
+  }
+
+  @Roles("ADMIN")
+  @Header("Cache-Control", "private, no-store")
+  @Get("audience")
+  audience(@Query("days") days?: string, @Query("source") source?: string) {
+    return this.analytics.audienceDashboard(clampDays(days), source === "direct" || source === "referral" ? source : "all");
   }
 
   @Roles("ADMIN")
