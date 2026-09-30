@@ -137,6 +137,13 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("Stripe ledger with isolated P
     const f = await fixture(); await f.billing.markCreditAuthorized(f.order.merchantTradeNo!, "external");
     expect((await prisma.payment.findUniqueOrThrow({ where: { id: f.order.id } })).status).toBe("PENDING");
   });
+  it("a delayed ECPay authorization cannot create another subscription after Stripe starts", async () => {
+    const f = await fixture(); await f.event("invoice.paid", f.invoices.first.id);
+    const order = await prisma.payment.create({ data: { userId: f.user.id, method: "ECPAY", ecpayMethod: "CREDIT", isRecurring: true, period: "MONTHLY", amountNtd: 200, merchantTradeNo: `EC${randomUUID()}` } });
+    await expect(f.billing.markCreditAuthorized(order.merchantTradeNo!, "external")).rejects.toThrow("provider reconciliation");
+    expect((await prisma.payment.findUniqueOrThrow({ where: { id: order.id } })).status).toBe("PENDING");
+    expect(await prisma.subscription.count({ where: { userId: f.user.id, status: "ACTIVE" } })).toBe(1);
+  });
   it("rejects changed quotes and reuses one pending checkout for repeated clicks", async () => {
     const f = await fixture(); await prisma.payment.delete({ where: { id: f.order.id } });
     const catalog = currentBillingCatalog(), quote = { pricingVersion: catalog.pricingVersion, expectedAmountNtd: catalog.effectivePricing.MONTHLY };

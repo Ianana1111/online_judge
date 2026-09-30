@@ -181,6 +181,12 @@ export class BillingService {
   private async ensureSubscription(tx: Prisma.TransactionClient, payment: {
     id: string; userId: string; period: BillingPeriod; amountNtd: number; pricingVersion: string; merchantTradeNo: string | null;
   }) {
+    // A dismissed legacy ECPay checkout can still be paid after a provider cutover.
+    // Its callback must not create a second recurring agreement beside Stripe.
+    if (await tx.subscription.findFirst({ where: { userId: payment.userId, status: "ACTIVE", provider: "STRIPE" } })) {
+      this.logger.error(`ECPay payment ${payment.id} conflicts with an active Stripe subscription; reconcile the gateway charge`);
+      throw new ConflictException("Payment requires provider reconciliation");
+    }
     const subscription = await tx.subscription.upsert({
       where: { merchantTradeNo: payment.merchantTradeNo! },
       create: {
@@ -515,6 +521,7 @@ export class BillingService {
       // concurrent UPDATEs to the same row, so only the first actually matches count=1; a second
       // redelivery arriving a moment later sees count=0 and is a no-op instead of double-approving.
       const captured = await prisma.$transaction(async (tx) => {
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('billing_order'), hashtext(${payment.userId}))`;
         const claimed = await tx.payment.updateMany({
           where: { id: payment.id, status: "AUTHORIZED" },
           data: { status: "APPROVED", paidAt: payment.paidAt ?? paidAt, refundDeadlineAt: deadline, ecpayTradeNo: body.TradeNo, reviewedAt: new Date(), reviewedBy: "ECPAY_AUTO" },
@@ -535,6 +542,7 @@ export class BillingService {
     // ECPay auto-captures those itself every cycle), or the rare race where a one-time capture
     // webhook arrived before our authorization poll caught up. Grant Pro now.
     const approved = await prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('billing_order'), hashtext(${payment.userId}))`;
       // Same conditional-claim reasoning as the AUTHORIZED branch above: this is the operation
       // that actually gates extendPlan running, so it — not the read at the top of this method —
       // is what must be race-proof.
@@ -773,6 +781,7 @@ export class BillingService {
     if (!payment || payment.method !== "ECPAY" || payment.status !== "PENDING") return;
 
     await prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('billing_order'), hashtext(${payment.userId}))`;
       const claimed = await tx.payment.updateMany({
         where: { id: payment.id, status: "PENDING" },
         data: {
