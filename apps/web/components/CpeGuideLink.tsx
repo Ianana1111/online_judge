@@ -24,7 +24,7 @@ export default function CpeGuideLink({ placement }: { placement: "collection" | 
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span className="font-display text-sm font-semibold text-ink-100">CPE Guide</span>
-          <span className="text-[10px] text-ink-400">{zh ? "合作夥伴" : "Partner"}</span>
+          <span className="text-[10px] text-ink-400">{zh ? "合作資源" : "Partner resource"}</span>
         </span>
         <span className="mt-0.5 block text-xs leading-5 text-ink-300">{description}</span>
       </span>
