@@ -108,6 +108,8 @@ model User {
   mfaLastStep Int?
   mfaRecoveryHashes String[] @default([])
   googleId     String?  @unique
+  stripeCustomerId String? @unique
+  stripeLivemode Boolean?
   role         Role     @default(USER)
   /// Set by an admin to mark this account as one of their actual tutoring students (distinct
   /// from role=USER, which now also covers anyone who self-registered out of general interest).
@@ -420,6 +422,14 @@ model Payment {
   subscriptionId String?
   subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
 
+  stripeCheckoutId String? @unique
+  stripeCheckoutExpiresAt DateTime?
+  stripeInvoiceId String? @unique
+  stripePaymentIntentId String? @unique
+  stripeAccessNotBeforeAt DateTime?
+  stripeProductId String?
+  stripeLivemode Boolean?
+
   @@index([status, createdAt])
   @@index([userId, status])
   @@unique([subscriptionId, cycleNumber])
@@ -436,6 +446,8 @@ enum RefundRequestStatus {
 /// Durable first-purchase refund; userId uniqueness prevents reusing the guarantee.
 /// Unknown external outcomes require reconciliation, never a blind repeat of a card action.
 model RefundRequest {
+  provider String @default("ECPAY")
+  stripeRefundId String? @unique
   id String @id @default(cuid())
   userId String @unique
   paymentId String @unique
@@ -507,6 +519,10 @@ model Subscription {
   createdAt         DateTime  @default(now())
   cancelledAt       DateTime?
 
+  provider String @default("ECPAY")
+  stripeSubscriptionId String? @unique
+  stripeState String?
+  stripeCurrentPeriodEnd DateTime?
   payments Payment[]
 
   @@index([userId, status])
@@ -968,4 +984,19 @@ model ExternalServiceRecord {
   updatedById String?
   updatedAt DateTime @updatedAt
   @@map("external_service_records")
+}
+
+/// Webhook delivery ledger; no raw payload or customer personal information.
+model StripeWebhookEvent {
+  id String @id
+  type String
+  objectId String
+  livemode Boolean
+  receivedAt DateTime @default(now())
+  processedAt DateTime?
+  attempts Int @default(0)
+  reviewRequired Boolean @default(false)
+  errorCode String?
+  @@index([processedAt, receivedAt])
+  @@map("stripe_webhook_events")
 }

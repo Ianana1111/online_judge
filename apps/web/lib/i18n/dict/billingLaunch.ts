@@ -1,4 +1,9 @@
 export const billingLaunchDictionary: Record<string, string> = {
+  "Payment method & invoices": "付款方式與收據",
+  "Opening payment settings…": "正在開啟付款設定…",
+  "Could not open payment settings. Please try again.": "無法開啟付款設定，請稍後再試。",
+  "Redirecting to Stripe…": "正在前往 Stripe…",
+  "Secure checkout via Stripe": "由 Stripe 提供安全付款服務",
   "New subscription price after launch": "開幕優惠結束後的新訂閱價格",
   "Join during launch and keep this renewal price while your subscription continues.": "開幕期間加入，持續續訂就維持此優惠價。",
   "This only cancels renewal; it does not request a refund. After the 7-day first-payment refund window, your paid monthly or annual access continues until expiry.": "這個操作只取消續訂，不會退還已付款項。首次付款的 7 天退款期限已過，已付費的月繳或年繳權限仍可使用到到期日。",

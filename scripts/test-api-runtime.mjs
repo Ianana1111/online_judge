@@ -14,7 +14,7 @@ const OTPAuth = requireApi("otpauth");
 const prisma = new PrismaClient({ errorFormat: "minimal" });
 const child = spawn(process.execPath, ["dist/main.js"], {
   cwd: fileURLToPath(new URL("../apps/api/", import.meta.url)),
-  env: { ...process.env, NODE_ENV: "test", API_HOST: "127.0.0.1", API_PORT: "55440", ECPAY_ENV: "sandbox", SENTRY_DSN: "", RESEND_API_KEY: "", WEB_ORIGIN: "http://127.0.0.1:55430", ACCOUNT_SECURITY_KEY: randomBytes(32).toString("hex"), ADMIN_MFA_REQUIRED: "false" },
+  env: { ...process.env, NODE_ENV: "test", API_HOST: "127.0.0.1", API_PORT: "55440", ECPAY_ENV: "sandbox", BILLING_PROVIDER: "ecpay", STRIPE_ENABLED: "false", SENTRY_DSN: "", RESEND_API_KEY: "", WEB_ORIGIN: "http://127.0.0.1:55430", ACCOUNT_SECURITY_KEY: randomBytes(32).toString("hex"), ADMIN_MFA_REQUIRED: "false" },
   stdio: ["ignore", "pipe", "pipe"],
 });
 let logs = "", userId, foreignUserId;
@@ -35,6 +35,9 @@ try {
     if (healthy) break; await delay(200);
   }
   assert.ok(healthy, `API did not become healthy: ${logs}`);
+  assert.equal((await (await request("/billing/plans")).json()).checkoutProvider, "ecpay");
+  assert.equal((await request("/billing/stripe/webhook", "POST", {})).status, 404);
+  assert.equal((await request("/billing/stripe/readiness")).status, 401);
   assert.equal((await request("/notifications")).status, 401);
   const suffix = randomUUID().replaceAll("-", "").slice(0, 14);
   const password = `Test_${randomUUID()}!`, handle = `runtime_${suffix}`, email = `${suffix}@example.test`;
@@ -43,6 +46,8 @@ try {
   const account = await registered.json(); userId = account.id;
   assert.ok(userId); assert.ok(cookies.get("access_token"));
   const me = await request("/auth/me"); assert.equal(me.status, 200); const current = await me.json(); assert.equal(current.id, userId);
+  assert.equal((await request("/billing/stripe/readiness")).status, 403);
+  assert.equal((await request("/billing/checkout", "POST", {})).status, 403);
   // Official editorials use the real built route, auth guard and private cache header.
   // This is synthetic test content, never a published production reference.
   const { tsImport } = createRequire(new URL("../packages/db/package.json", import.meta.url))("tsx/esm/api");
@@ -116,6 +121,9 @@ try {
   assert.equal((await request(`/posts/${foreignPost.id}`, "DELETE", { role: "ADMIN", authorId: userId }, current.csrfToken)).status, 404);
   assert.equal((await request(`/posts/${foreignPost.id}`)).status, 200);
   await prisma.user.update({ where: { id: userId }, data: { role: "ADMIN" } });
+  const stripeReadiness = await request("/billing/stripe/readiness");
+  assert.equal(stripeReadiness.status, 200); assert.equal(stripeReadiness.headers.get("cache-control"), "private, no-store");
+  assert.equal((await stripeReadiness.json()).enabled, false);
   assert.equal((await request(`/posts/${foreignPost.id}`, "DELETE")).status, 403);
   assert.equal((await request(`/posts/${foreignPost.id}`, "DELETE", undefined, current.csrfToken)).status, 200);
   assert.equal((await request(`/posts/${foreignPost.id}`, "DELETE", undefined, current.csrfToken)).status, 200);

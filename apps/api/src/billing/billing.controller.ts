@@ -15,6 +15,7 @@ import { CurrentUser, Public, Roles, type RequestUser } from "../common/decorato
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { BillingService } from "./billing.service";
 import { RefundReconciliationService } from "./refund-reconciliation.service";
+import { checkoutProvider } from "./stripe.config";
 import { currentBillingCatalog } from "./pricing.config";
 
 @Controller("billing")
@@ -26,7 +27,7 @@ export class BillingController {
   @Get("plans")
   @Header("Cache-Control", "no-store")
   plans() {
-    return currentBillingCatalog();
+    return { ...currentBillingCatalog(), checkoutProvider: checkoutProvider() };
   }
 
   @Get("me")
@@ -102,6 +103,12 @@ export class BillingController {
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
   resolveRefund(@Param("id") id: string, @CurrentUser() user: RequestUser, @Body(new ZodValidationPipe(resolveRefundSchema)) body: ResolveRefundDto) {
     return this.reconciliation.resolve(id, user, body);
+  }
+
+  @Post("checkout")
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  checkout(@Body(new ZodValidationPipe(ecpayCreateSchema)) body: EcpayCreateDto, @CurrentUser() user: RequestUser) {
+    return this.billing.checkout(user.id, body);
   }
 
   // --- ECPay (綠界) automated checkout flow (credit-card subscriptions only) ---

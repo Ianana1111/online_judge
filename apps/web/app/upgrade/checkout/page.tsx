@@ -72,6 +72,7 @@ function CheckoutPage() {
   const isSubscribed = !!status?.subscription;
   const pending = status?.pendingPayment;
 
+  const stripeCheckout = plans?.checkoutProvider === "stripe";
   const amount = plans?.effectivePricing[period];
   const promo = plans?.promo;
   const quoteKey = plans ? `${plans.pricingVersion}/${period}/${amount}` : null;
@@ -82,12 +83,18 @@ function CheckoutPage() {
     setEcpayError(null);
     setEcpayLoading(true);
     try {
-      const res = await apiFetch<{ actionUrl: string; fields: Record<string, string | number>; sandbox: boolean }>(
-        "/billing/ecpay/create",
+      const res = await apiFetch<{ actionUrl: string; fields: Record<string, string | number>; sandbox: boolean } | { provider: "stripe"; url: string; sandbox: boolean }>(
+        stripeCheckout ? "/billing/checkout" : "/billing/ecpay/create",
         { method: "POST", body: { period, expectedAmountNtd: amount, pricingVersion: plans.pricingVersion } },
       );
       // ECPay's checkout is a hosted page, not a JSON API — the browser itself has to navigate
       // there via a form POST carrying the signed order fields.
+      if ("url" in res) {
+        const target = new URL(res.url);
+        if (target.protocol !== "https:" || target.hostname !== "checkout.stripe.com") throw new Error("Unexpected checkout URL");
+        window.location.assign(target.href);
+        return;
+      }
       const form = document.createElement("form");
       form.method = "POST";
       form.action = res.actionUrl;
@@ -185,7 +192,7 @@ function CheckoutPage() {
           ) : pending ? (
             <div className="space-y-3">
               <div className="oj-card border-verdict-tle/40 p-5 text-sm">
-                {pending.method === "ECPAY" ? (
+                {pending.method === "ECPAY" || pending.method === "STRIPE" ? (
                   <>
                     <p className="font-semibold text-verdict-tle">{t("Confirming your card payment…")}</p>
                     <p className="mt-1 text-ink-300">{t("This is usually instant. This page updates automatically once it clears.")}</p>
@@ -292,7 +299,7 @@ function CheckoutPage() {
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                         </svg>
-                        {t("Redirecting to ECPay…")}
+                        {t(stripeCheckout ? "Redirecting to Stripe…" : "Redirecting to ECPay…")}
                       </span>
                     ) : (
                       t("Subscribe — NT${amount}/{period}", { amount: amount!, period: period === "MONTHLY" ? t("month") : t("year") })
@@ -300,7 +307,7 @@ function CheckoutPage() {
                   </button>
 
                   <p className="flex items-center justify-center gap-1 text-center text-[11px] text-ink-500">
-                    🔒 {t("Secure checkout via ECPay — Taiwan's leading payment gateway")}
+                    🔒 {t(stripeCheckout ? "Secure checkout via Stripe" : "Secure checkout via ECPay — Taiwan's leading payment gateway")}
                   </p>
                 </div>
               </div>

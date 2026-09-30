@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { BadRequestException, ConflictException, ForbiddenException, Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, Logger, NotFoundException, Optional } from "@nestjs/common";
 import { prisma, Prisma } from "@oj/db";
 import type { User } from "@oj/db";
 import {
@@ -27,6 +27,8 @@ import {
   refundActions,
   verifyCheckMacValue,
 } from "./ecpay.util";
+import { StripeBillingService } from "./stripe-billing.service";
+import { checkoutProvider } from "./stripe.config";
 import { currentBillingCatalog } from "./pricing.config";
 
 // ECPay has no "forever" recurring option — ExecTimes must be finite. These are the max values
@@ -100,6 +102,15 @@ function currentMonthStart(d: Date = new Date()): Date {
 @Injectable()
 export class BillingService {
   private readonly logger = new Logger(BillingService.name);
+  constructor(@Optional() private readonly stripe?: StripeBillingService) {}
+  private stripeService() {
+    if (!this.stripe) throw new BadRequestException("Stripe is unavailable");
+    return this.stripe;
+  }
+  async checkout(userId: string, body: EcpayCreateDto) {
+    if (checkoutProvider() === "stripe") return this.stripeService().createCheckout(userId, body.period, body);
+    return { provider: "ecpay" as const, ...await this.createEcpayOrder(userId, body.period, body) };
+  }
 
   /** Shared base for every "grant/extend Pro" path (real payments, admin grants, and the
    * yearly-subscription first-charge bonus): extends from whichever is later (now, or the user's
@@ -140,7 +151,7 @@ export class BillingService {
    * rather than a plain `prisma` read that could still see pre-lock state. */
   private async findRefundableFirstPayment(userId: string, db: Prisma.TransactionClient | typeof prisma = prisma, receivedAt = new Date()) {
     const first = await db.payment.findFirst({
-      where: { userId, method: "ECPAY", ecpayMethod: "CREDIT", paidAt: { not: null } },
+      where: { userId, OR: [{ method: "ECPAY", ecpayMethod: "CREDIT" }, { method: "STRIPE" }], paidAt: { not: null } },
       orderBy: [{ paidAt: "asc" }, { id: "asc" }],
     });
     if (!first || !["APPROVED", "AUTHORIZED"].includes(first.status)) return null;
@@ -240,9 +251,9 @@ export class BillingService {
       planCancelRequested: pro && user.planCancelRequested,
       refundEligibleUntil: !refundRequest ? refundablePayment?.refundDeadlineAt ?? null : null,
       refundRequest: shownRefundRequest ? { id: shownRefundRequest.id, status: shownRefundRequest.status, requestedAt: shownRefundRequest.requestedAt, completedAt: shownRefundRequest.completedAt } : null,
-      subscription: subscription ? { period: subscription.period, amountNtd: subscription.amountNtd,
+      subscription: subscription ? { provider: subscription.provider, period: subscription.period, amountNtd: subscription.amountNtd,
         launchPriceLocked: hasLaunchPriceLock(subscription.pricingVersion),
-        nextChargeAt: firstCharge?.paidAt ? billingCycleEnd(firstCharge.paidAt, subscription.period, subscription.totalSuccessTimes) : null } : null,
+        nextChargeAt: subscription.provider === "STRIPE" ? subscription.stripeCurrentPeriodEnd : firstCharge?.paidAt ? billingCycleEnd(firstCharge.paidAt, subscription.period, subscription.totalSuccessTimes) : null } : null,
       submits: { used: submitsUsedThisMonth, limit: unlimited ? null : FREE_SUBMIT_QUOTA },
       virtualContests: { used: virtualUsed, limit: unlimited ? null : FREE_VIRTUAL_ATTEMPTS },
       pendingPayment: pending
@@ -268,6 +279,7 @@ export class BillingService {
   async cancelPlan(userId: string) {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException("User not found");
+    if (await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE", provider: "STRIPE" } })) return this.stripeService().cancelSubscription(userId);
     if (!isProActive(user)) throw new BadRequestException("You're not currently on Pro.");
     await prisma.user.update({ where: { id: userId }, data: { planCancelRequested: true } });
     return { ok: true };
@@ -284,6 +296,7 @@ export class BillingService {
       orderBy: { createdAt: "desc" },
     });
     if (!pending) return { ok: true };
+    if (pending.method === "STRIPE") return this.stripeService().dismiss(pending);
     await prisma.payment.update({ where: { id: pending.id }, data: { dismissedByUser: true } });
     return { ok: true };
   }
@@ -332,7 +345,8 @@ export class BillingService {
     if (!user) throw new NotFoundException("User not found");
 
     const subscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
-    if (subscription) {
+    if (subscription?.provider === "STRIPE") await this.stripeService().cancelSubscription(userId);
+    if (subscription && subscription.provider !== "STRIPE") {
       try {
         const config = ecpayConfig();
         const result = await cancelEcpayPeriod(subscription.merchantTradeNo, config);
@@ -367,6 +381,7 @@ export class BillingService {
    * this first charge via the ReturnURL webhook (RtnCode "1" = paid); handleEcpayReturn spins up
    * the Subscription row there. */
   async createEcpayOrder(userId: string, period: BillingPeriod, quote?: Pick<EcpayCreateDto, "expectedAmountNtd" | "pricingVersion">) {
+    if (checkoutProvider() !== "ecpay") throw new ConflictException("Checkout provider changed. Refresh and try again.");
     const config = ecpayConfig();
     const apiPublicUrl = process.env.API_PUBLIC_URL || (process.env.RAILWAY_SERVICE_API_URL ? `https://${process.env.RAILWAY_SERVICE_API_URL}` : "http://localhost:4000");
     const webOrigin = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",")[0].trim();
@@ -467,6 +482,7 @@ export class BillingService {
     if (!payment) {
       throw new NotFoundException("Payment order not found");
     }
+    if (payment.method !== "ECPAY") throw new BadRequestException("Payment provider mismatch");
     if (["APPROVED", "REJECTED", "REFUNDED"].includes(payment.status)) return; // already finalized — idempotent no-op
 
     // Belt-and-suspenders: TradeAmt is itself covered by the CheckMacValue signature above, so a
@@ -552,6 +568,7 @@ export class BillingService {
     if (!subscription) {
       throw new NotFoundException("Subscription notification arrived before its first payment; retry required");
     }
+    if (subscription.provider !== "ECPAY") throw new BadRequestException("Subscription provider mismatch");
     if (body.RtnCode !== "1") {
       // ECPay retries on its own and auto-cancels the recurring order after 6 consecutive
       // failures — nothing for us to actively do here beyond a record of it.
@@ -600,6 +617,7 @@ export class BillingService {
     const subscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
     if (!subscription) throw new NotFoundException("No active subscription found.");
 
+    if (subscription.provider === "STRIPE") return this.stripeService().cancelSubscription(userId);
     const config = ecpayConfig();
     const result = await cancelEcpayPeriod(subscription.merchantTradeNo, config);
     if (result.RtnCode !== 1) {
@@ -629,8 +647,13 @@ export class BillingService {
       const payment = await this.findRefundableFirstPayment(userId, tx, receivedAt);
       if (!payment?.merchantTradeNo) throw new BadRequestException("Your first-payment refund window has ended or this payment is not eligible.");
       return tx.refundRequest.create({ data: { userId, paymentId: payment.id, requestedAt: receivedAt,
-        amountNtd: payment.amountNtd, merchantTradeNo: payment.merchantTradeNo } });
+        amountNtd: payment.amountNtd, merchantTradeNo: payment.merchantTradeNo, provider: payment.method === "STRIPE" ? "STRIPE" : "ECPAY" } });
     });
+    if (request.provider === "STRIPE" && request.status === "REQUESTED") {
+      await this.stripeService().processRefund(request.id);
+      const current = await prisma.refundRequest.findUniqueOrThrow({ where: { id: request.id } });
+      return { id: current.id, status: current.status };
+    }
     return { id: request.id, status: request.status };
   }
 
@@ -669,6 +692,8 @@ export class BillingService {
 
   /** One worker claim at a time across API replicas. Unknown card actions are never repeated. */
   async processRefund(id: string): Promise<void> {
+    const target = await prisma.refundRequest.findUnique({ where: { id } });
+    if (target?.provider === "STRIPE") return this.stripeService().processRefund(id);
     const processingToken = randomBytes(16).toString("hex");
     const claim = await prisma.refundRequest.updateMany({ where: { id, status: "REQUESTED", nextAttemptAt: { lte: new Date() } },
       data: { status: "PROCESSING", processingToken, attempts: { increment: 1 } } });
@@ -745,7 +770,7 @@ export class BillingService {
    * first) is a silent no-op. */
   async markCreditAuthorized(merchantTradeNo: string, tradeId: string): Promise<void> {
     const payment = await prisma.payment.findUnique({ where: { merchantTradeNo } });
-    if (!payment || payment.status !== "PENDING") return;
+    if (!payment || payment.method !== "ECPAY" || payment.status !== "PENDING") return;
 
     await prisma.$transaction(async (tx) => {
       const claimed = await tx.payment.updateMany({
