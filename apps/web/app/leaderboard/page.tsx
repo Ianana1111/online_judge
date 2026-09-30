@@ -103,7 +103,6 @@ export default function LeaderboardPage() {
     if (!rows) return rows;
     if (ranking === "solved") return rows;
     return [...rows]
-      .filter((r) => r.streak > 0)
       .sort((a, b) => b.streak - a.streak || b.solved - a.solved)
       .map((r, i) => ({ ...r, rank: i + 1 }));
   }, [rows, ranking]);
@@ -268,24 +267,7 @@ export default function LeaderboardPage() {
 
       {!isLoading && displayRows?.length === 0 && (
         <div className="oj-card p-4 text-sm text-ink-400">
-          {ranking === "streak" ? (
-            <p>{t("Nobody has an active streak right now — solve something today to start one.")}</p>
-          ) : school === UNVERIFIED_SCHOOL_FILTER ? (
-            <p>{t("Nobody unaffiliated has solved anything yet — be the first.")}</p>
-          ) : school ? (
-            <p>{t("Nobody from {school} has solved anything yet — be the first.", { school })}</p>
-          ) : (
-            <>
-              <p>
-                {period === "all"
-                  ? t("Nobody's solved anything yet — be the first.")
-                  : t("Nobody's solved anything in this period — be the first.")}
-              </p>
-              <Link href="/problems" className="mt-2 inline-block text-brand hover:underline">
-                {t("Browse problems →")}
-              </Link>
-            </>
-          )}
+          <p>{zh ? "目前沒有符合篩選條件的使用者。" : "No users match these filters."}</p>
         </div>
       )}
     </div>

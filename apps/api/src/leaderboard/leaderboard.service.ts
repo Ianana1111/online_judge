@@ -37,7 +37,7 @@ export class LeaderboardService {
   async get(period: LeaderboardPeriod, scope: LeaderboardScope = "all", school?: string) {
     // Recomputing this is a full AC-history scan (see below) — cache it briefly. A 60s-stale
     // leaderboard is an acceptable tradeoff for not re-scanning on every poll/page-load.
-    return this.cache.getOrSet(`leaderboard:ac-only:${period}:${scope}:${school ?? ""}`, 60, () =>
+    return this.cache.getOrSet(`leaderboard:registered:${period}:${scope}:${school ?? ""}`, 60, () =>
       this.compute(period, scope, school),
     );
   }
@@ -48,7 +48,7 @@ export class LeaderboardService {
     // ranking against classmates is a far stronger motivator than an all-time-stranger global
     // board, and this site's real primary users are a tutor with named students.
     const userWhere = {
-      role: "USER" as const,
+      deletionRequestedAt: null,
       ...(scope === "students" ? { isStudent: true } : {}),
       // A school filter only ever matches *verified* claims — see requestSchoolVerification's
       // domain check for why an unverified one can't be trusted to group correctly.
@@ -131,8 +131,7 @@ export class LeaderboardService {
 
     rows.sort((a, b) => b.solved - a.solved || b.streak - a.streak || a.handle.localeCompare(b.handle));
 
-    return rows
-      .filter((r) => r.solved > 0 || r.streak > 0)
-      .map((r, i) => ({ ...r, rank: i + 1 }));
+    // Registration is enough to appear; users without solves retain honest zero stats.
+    return rows.map((r, i) => ({ ...r, rank: i + 1 }));
   }
 }
