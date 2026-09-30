@@ -4,7 +4,7 @@ import { billingCatalog } from "../../packages/shared/src/billingPricing";
 
 const campaign = { startsAt: "2026-09-15T00:00:00+08:00", endsAt: "2026-10-15T00:00:00+08:00", regularYearlyPriceNtd: "4000" };
 function catalog(ended = false) { return billingCatalog(campaign, new Date(ended ? campaign.endsAt : campaign.startsAt)); }
-async function fixture(page: Page, options: { subscriber?: boolean; cancelled?: boolean; anonymous?: boolean; locale?: "en" | "zh-TW"; theme?: "dark" | "light"; launch?: boolean } = {}) {
+async function fixture(page: Page, options: { provider?: "stripe" | "ecpay"; subscriber?: boolean; cancelled?: boolean; anonymous?: boolean; locale?: "en" | "zh-TW"; theme?: "dark" | "light"; launch?: boolean } = {}) {
   const state = { plans: options.launch ? catalog() : billingCatalog(), failPricing: false, rejectQuote: false, writes: [] as { path: string; body: any }[] };
   const hasPaidPro = !!(options.subscriber || options.cancelled);
   await page.addInitScript(({ locale, theme }) => { localStorage.setItem("locale", locale); localStorage.setItem("theme", theme); }, { locale: options.locale ?? "zh-TW", theme: options.theme ?? "dark" });
@@ -16,12 +16,14 @@ async function fixture(page: Page, options: { subscriber?: boolean; cancelled?: 
       settings: { profileSetupDismissed: true, uiLocale: options.locale ?? "zh-TW" }, csrfToken: "fixture", school: null, schoolVerifiedAt: null, hasPassword: true,
     } });
     if (path.startsWith("/auth/")) return route.fulfill({ status: 401, json: {} });
-    if (path === "/billing/plans") return route.fulfill({ status: state.failPricing ? 503 : 200, json: state.failPricing ? { message: "Unavailable" } : state.plans });
+    if (path === "/billing/plans") return route.fulfill({ status: state.failPricing ? 503 : 200, json: state.failPricing ? { message: "Unavailable" } : { ...state.plans, checkoutProvider: options.provider ?? "ecpay" } });
     if (path === "/billing/me") return route.fulfill({ json: {
       plan: hasPaidPro ? "PRO" : "FREE", planExpiresAt: hasPaidPro ? "2026-12-15T00:00:00Z" : null, planCancelRequested: !!options.cancelled,
-      subscription: options.subscriber ? { amountNtd: 200, period: "MONTHLY", nextChargeAt: "2026-12-15T00:00:00Z", launchPriceLocked: true } : null,
+      subscription: options.subscriber ? { provider: options.provider === "stripe" ? "STRIPE" : "ECPAY", amountNtd: 200, period: "MONTHLY", nextChargeAt: "2026-12-15T00:00:00Z", launchPriceLocked: true } : null,
       refundEligibleUntil: null, refundRequest: null, pendingPayment: null, submits: { used: 0, limit: 10 }, virtualContests: { used: 0, limit: 1 },
     } });
+    if (path === "/billing/checkout") return route.fulfill({ json: { provider: "stripe", url: "https://checkout.stripe.com/c/pay/test_fixture", sandbox: true } });
+    if (path === "/billing/stripe/portal") return route.fulfill({ json: { url: "https://billing.stripe.com/p/session/test_fixture" } });
     if (path === "/billing/ecpay/create") {
       if (state.rejectQuote) { state.plans = catalog(true); return route.fulfill({ status: 409, json: { code: "PRICE_CHANGED", message: "Pricing changed. Review the current price and confirm again." } }); }
       return route.fulfill({ json: { actionUrl: "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5", sandbox: true, fields: { TotalAmount: request.postDataJSON().expectedAmountNtd } } });
@@ -32,8 +34,27 @@ async function fixture(page: Page, options: { subscriber?: boolean; cancelled?: 
   });
   // Intercept the allowed CSP form target completely; this never contacts ECPay.
   await page.route("https://payment-stage.ecpay.com.tw/**", (route) => route.fulfill({ contentType: "text/plain", body: "Mock hosted checkout" }));
+  await page.route(/^https:\/\/(checkout|billing)\.stripe\.com\//, (route) => route.fulfill({ contentType: "text/plain", body: "Mock Stripe hosted page" }));
   return state;
 }
+
+test("Stripe checkout uses the quoted plan and redirects to the hosted checkout", async ({ page }) => {
+  const state = await fixture(page, { provider: "stripe" });
+  await page.goto("/upgrade/checkout?period=YEARLY");
+  await expect(page.getByText("由 Stripe 提供安全付款服務")).toBeVisible();
+  await page.getByRole("checkbox").check();
+  await page.getByRole("button", { name: /訂閱.*2000/ }).click();
+  await expect(page).toHaveURL("https://checkout.stripe.com/c/pay/test_fixture");
+  expect(state.writes.filter(w => w.path === "/billing/checkout")).toEqual([{ path: "/billing/checkout", body: { period: "YEARLY", expectedAmountNtd: 2000, pricingVersion: state.plans.pricingVersion } }]);
+  expect(state.writes.filter(w => w.path === "/billing/ecpay/create")).toHaveLength(0);
+});
+
+test("only Stripe subscribers see the hosted payment management action", async ({ page }) => {
+  await fixture(page, { provider: "stripe", subscriber: true });
+  await page.goto("/upgrade");
+  await page.getByRole("button", { name: "付款方式與收據", exact: true }).click();
+  await expect(page).toHaveURL("https://billing.stripe.com/p/session/test_fixture");
+});
 
 test("cancelled paid access separates the active-through date from the extension action", async ({ page }, info) => {
   await fixture(page, { cancelled: true });

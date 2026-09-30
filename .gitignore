@@ -25,3 +25,6 @@ apps/web/public/vs
 # Cached source PDFs for the statement-fidelity audit (packages/db/scripts/audit-statement-fidelity.ts)
 # — large, re-fetchable from onlinejudge.org/cpe.mcu.edu.tw, not source.
 packages/db/audit/pdf-cache/
+
+# Local payment test credentials and signing secrets
+.env.stripe.local

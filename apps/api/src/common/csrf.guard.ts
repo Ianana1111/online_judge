@@ -6,7 +6,7 @@ const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 // /analytics/pageview is exempt for the same chicken-and-egg reason: most requests are from
 // anonymous visitors with no session/CSRF token at all, and a forged pageview event is low-stakes
 // (it only pollutes traffic counts, no state affecting the requester or another user changes).
-const EXEMPT_PATHS = new Set(["/auth/login", "/auth/register", "/auth/refresh", "/analytics/pageview", "/billing/ecpay/return", "/billing/ecpay/period-return"]);
+const EXEMPT_PATHS = new Set(["/auth/login", "/auth/register", "/auth/refresh", "/analytics/pageview", "/billing/ecpay/return", "/billing/ecpay/period-return", "/billing/stripe/webhook"]);
 const BROWSER_BOOTSTRAP_PATHS = new Set(["/auth/login", "/auth/register", "/auth/refresh", "/analytics/pageview"]);
 for (const path of ["/auth/forgot-password", "/auth/reset-password", "/auth/email/verify", "/users/school/verify/confirm"]) { EXEMPT_PATHS.add(path); BROWSER_BOOTSTRAP_PATHS.add(path); }
 

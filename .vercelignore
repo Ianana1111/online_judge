@@ -12,6 +12,7 @@ dist
 *.log
 .env
 .env.local
+.env.stripe.local
 .DS_Store
 coverage
 .pnpm-store

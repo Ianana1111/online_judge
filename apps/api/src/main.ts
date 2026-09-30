@@ -5,9 +5,10 @@ import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import type { NestExpressApplication } from "@nestjs/platform-express";
 import cookieParser from "cookie-parser";
-import { json, urlencoded } from "express";
+import { json, raw, urlencoded } from "express";
 import helmet from "helmet";
 import { assertRuntimeConfig } from "./common/runtime-config";
+import { stripeConfig } from "./billing/stripe.config";
 import { ecpayConfig } from "./billing/ecpay.util";
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./common/all-exceptions.filter";
@@ -16,6 +17,7 @@ import { requestIdMiddleware } from "./common/request-id.middleware";
 
 async function bootstrap() {
   assertRuntimeConfig();
+  stripeConfig();
   ecpayConfig();
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bodyParser: false,
@@ -27,6 +29,8 @@ async function bootstrap() {
   // Default Express/Nest body limit is 100kb — too small for a base64 avatar upload (see
   // users.service updateProfile). ECPay's webhooks (urlencoded) stay far under this too, so
   // raising it is strictly safer for them, never a regression.
+  // Stripe signatures cover the exact bytes. This route must precede JSON parsing.
+  app.use("/billing/stripe/webhook", raw({ type: "application/json", limit: "1mb" }));
   app.use(json({ limit: "1mb" }));
   app.use(urlencoded({ extended: true, limit: "1mb" }));
   app.useGlobalFilters(new AllExceptionsFilter());

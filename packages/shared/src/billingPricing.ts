@@ -9,6 +9,7 @@ export interface LaunchPricingConfig {
   regularYearlyPriceNtd?: string;
 }
 export interface BillingCatalog {
+  checkoutProvider?: "ecpay" | "stripe";
   pricing: typeof PLAN_PRICING;
   effectivePricing: Record<BillingPeriod, number>;
   pricingVersion: string;

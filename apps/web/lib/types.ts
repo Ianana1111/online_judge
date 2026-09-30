@@ -87,7 +87,7 @@ export interface BillingStatus {
   refundRequest?: { id: string; status: "REQUESTED" | "PROCESSING" | "NEEDS_REVIEW" | "COMPLETED"; requestedAt: string; completedAt: string | null } | null;
   // Present only while an ECPay recurring (定期定額) subscription is ACTIVE — planExpiresAt
   // doubles as "renews on" for this case, since it auto-extends every successful auto-charge.
-  subscription: { period: "MONTHLY" | "YEARLY"; amountNtd: number; nextChargeAt: string | null; launchPriceLocked: boolean } | null;
+  subscription: { provider?: "ECPAY" | "STRIPE"; period: "MONTHLY" | "YEARLY"; amountNtd: number; nextChargeAt: string | null; launchPriceLocked: boolean } | null;
   submits: { used: number; limit: number | null };
   virtualContests: { used: number; limit: number | null };
   pendingPayment: {

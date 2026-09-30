@@ -177,6 +177,8 @@ export default function UpgradePlanPage() {
   const [showRefundConfirm, setShowRefundConfirm] = useState(false);
   const [refunding, setRefunding] = useState(false);
   const [refundError, setRefundError] = useState<string | null>(null);
+  const [openingPortal, setOpeningPortal] = useState(false);
+  const [portalError, setPortalError] = useState<string | null>(null);
 
   const { data: status, isLoading } = useQuery({
     queryKey: ["billing", "me"],
@@ -230,6 +232,21 @@ export default function UpgradePlanPage() {
       setRefundError(e instanceof ApiError ? e.message : "無法處理退款，請稍後再試");
     } finally {
       setRefunding(false);
+    }
+  }
+
+  async function openPaymentPortal() {
+    setOpeningPortal(true);
+    setPortalError(null);
+    try {
+      const { url } = await apiFetch<{ url: string }>("/billing/stripe/portal", { method: "POST" });
+      const target = new URL(url);
+      if (target.protocol !== "https:" || target.hostname !== "billing.stripe.com") throw new Error("Unexpected payment portal URL");
+      window.location.assign(target.href);
+    } catch {
+      setPortalError(t("Could not open payment settings. Please try again."));
+    } finally {
+      setOpeningPortal(false);
     }
   }
 
@@ -378,6 +395,12 @@ export default function UpgradePlanPage() {
                 )}
                 {isPro && status?.subscription ? (
                   <>
+                    {status.subscription.provider === "STRIPE" && <>
+                      <button type="button" onClick={openPaymentPortal} disabled={openingPortal} className="oj-btn-secondary mb-2 w-full rounded-[10px] py-3 text-sm disabled:opacity-50">
+                        {t(openingPortal ? "Opening payment settings…" : "Payment method & invoices")}
+                      </button>
+                      {portalError && <p role="alert" className="mb-2 text-sm text-verdict-wa">{portalError}</p>}
+                    </>}
                     <button
                       type="button"
                       onClick={() => {
