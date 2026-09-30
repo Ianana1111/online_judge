@@ -36,7 +36,7 @@ export default function AdminAudienceDashboard() {
 
   return <div className="space-y-6">
     <div className="flex flex-wrap items-end justify-between gap-4">
-      <div><p className="text-xs font-semibold tracking-widest text-brand-light">AUDIENCE INSIGHTS</p><h1 className="mt-2 font-display text-2xl font-semibold text-ink-50">訪客與台灣地區分析</h1><p className="mt-2 text-sm leading-6 text-ink-300">觀察有實際互動、尚未登入或尚未訂閱的瀏覽者。</p></div>
+      <div><p className="text-xs font-semibold tracking-widest text-brand-light">AUDIENCE INSIGHTS</p><h2 className="mt-2 font-display text-2xl font-semibold text-ink-50">訪客與台灣地區分析</h2><p className="mt-2 text-sm leading-6 text-ink-300">觀察有實際互動、尚未登入或尚未訂閱的瀏覽者。</p></div>
       <div className="flex flex-wrap gap-3">
         <label className="space-y-1 text-xs text-ink-300"><span className="block">期間（台灣時間）</span><select className="oj-input" value={days} onChange={e => setDays(Number(e.target.value))}><option value={7}>近 7 天</option><option value={30}>近 30 天</option><option value={90}>近 90 天</option><option value={365}>近 365 天</option></select></label>
         <label className="space-y-1 text-xs text-ink-300"><span className="block">進站來源</span><select className="oj-input" value={source} onChange={e => setSource(e.target.value as AudienceDashboard["source"])}><option value="all">所有來源</option><option value="direct">直接／來源未知</option><option value="referral">外部網站導入</option></select></label>

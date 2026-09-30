@@ -1,2 +1,2 @@
-import AdminAudienceDashboard from "@/components/AdminAudienceDashboard";
-export default function Page() { return <AdminAudienceDashboard />; }
+import { redirect } from "next/navigation";
+export default function Page() { redirect("/admin/analytics?tab=audience"); }

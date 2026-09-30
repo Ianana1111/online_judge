@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { officialEditorialSchema } from "./editorial";
+import { officialEditorialSchema } from "./editorial.js";
 
 export const contentRevisionSchema = z.object({
   schemaVersion: z.literal(1), previousContent: officialEditorialSchema,

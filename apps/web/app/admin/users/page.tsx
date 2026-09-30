@@ -7,20 +7,14 @@ import { useAuthStore } from "@/store/auth";
 import type { AdminUser } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
-const EMPTY_FORM = { handle: "", email: "", password: "", role: "USER" as "USER" | "ADMIN" };
-
 export default function AdminUsersPage() {
   const t = useT();
   const { user, status } = useAuthStore();
   const qc = useQueryClient();
-  const [form, setForm] = useState(EMPTY_FORM);
-  const [error, setError] = useState<string | null>(null);
-  const [created, setCreated] = useState<{ handle: string; password: string } | null>(null);
-  const [saving, setSaving] = useState(false);
   const [actingId, setActingId] = useState<string | null>(null);
   const [planError, setPlanError] = useState<string | null>(null);
 
-  const { data } = useQuery({
+  const { data, isPending, isError, isFetching, refetch } = useQuery({
     queryKey: ["users", "admin"],
     queryFn: () => apiFetch<AdminUser[]>("/users"),
     enabled: user?.role === "ADMIN",
@@ -28,22 +22,6 @@ export default function AdminUsersPage() {
 
   if (status === "ready" && user?.role !== "ADMIN") {
     return <p className="text-sm text-verdict-wa">{t("Admins only.")}</p>;
-  }
-
-  async function createUser(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setSaving(true);
-    try {
-      await apiFetch("/users", { method: "POST", body: form });
-      setCreated({ handle: form.handle, password: form.password });
-      setForm(EMPTY_FORM);
-      await qc.invalidateQueries({ queryKey: ["users", "admin"] });
-    } catch (e) {
-      setError(e instanceof ApiError ? e.message : t("Could not create account"));
-    } finally {
-      setSaving(false);
-    }
   }
 
   async function toggleStudent(id: string, isStudent: boolean) {
@@ -85,76 +63,10 @@ export default function AdminUsersPage() {
   return (
     <div className="space-y-8">
       <h1 className="font-display text-2xl font-bold text-ink-50">{t("Admin · Students & Users")}</h1>
-      <p className="text-sm text-ink-400">
-        {t(
-          "Anyone can create their own account now — use the toggle below to mark someone as your actual tutoring student, which is what gives them the Class-tracking features. You can still provision an account directly here too.",
-        )}
-      </p>
-
-      <form onSubmit={createUser} className="oj-card grid gap-3 p-4 sm:grid-cols-2">
-        <div>
-          <label htmlFor="new-user-handle" className="mb-1 block text-sm text-ink-300">{t("Handle")}</label>
-          <input
-            id="new-user-handle"
-            className="oj-input"
-            value={form.handle}
-            onChange={(e) => setForm((f) => ({ ...f, handle: e.target.value }))}
-            pattern="[a-zA-Z0-9_]+"
-            minLength={3}
-            maxLength={24}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="new-user-email" className="mb-1 block text-sm text-ink-300">{t("Email")}</label>
-          <input
-            id="new-user-email"
-            type="email"
-            className="oj-input"
-            value={form.email}
-            onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="new-user-password" className="mb-1 block text-sm text-ink-300">{t("Initial password")}</label>
-          <input
-            id="new-user-password"
-            type="text"
-            className="oj-input"
-            value={form.password}
-            onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-            minLength={8}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="new-user-role" className="mb-1 block text-sm text-ink-300">{t("Role")}</label>
-          <select
-            id="new-user-role"
-            className="oj-input"
-            value={form.role}
-            onChange={(e) => setForm((f) => ({ ...f, role: e.target.value as "USER" | "ADMIN" }))}
-          >
-            <option value="USER">{t("Student")}</option>
-            <option value="ADMIN">{t("Admin")}</option>
-          </select>
-        </div>
-        {error && <p className="text-sm text-verdict-wa sm:col-span-2">{error}</p>}
-        <button type="submit" disabled={saving} className="oj-btn-primary sm:col-span-2">
-          {saving ? t("Creating…") : t("Create account")}
-        </button>
-      </form>
-
-      {created && (
-        <p className="oj-card p-3 text-sm text-ink-200">
-          {t("Created")} <span className="font-mono text-brand">{created.handle}</span> / {t("password")}{" "}
-          <span className="font-mono text-brand">{created.password}</span> —{" "}
-          {t("share these with the student now, they won't be shown again here.")}
-        </p>
-      )}
-
-      <div>
+      <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-ink-400"><p>查看帳號、學生身分與 Pro 權限。{data ? `共 ${data.length} 個帳號` : ""}</p><button className="oj-btn-secondary" disabled={isFetching} onClick={() => void refetch()}>更新列表</button></div>
+      {isPending && <p role="status" className="text-sm text-ink-400">載入使用者中…</p>}
+      {isError && <p role="alert" className="text-sm text-verdict-wa">無法取得使用者，請重新載入。</p>}
+      <div className="overflow-x-auto">
         <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("All accounts")}</h2>
         <p className="mb-2 text-xs text-ink-500">
           {t("Use Grant if someone paid but wasn't upgraded — extends from their current expiry, same as a real purchase.")}
