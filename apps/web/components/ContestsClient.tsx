@@ -9,6 +9,7 @@ import { SkeletonList } from "@/components/Skeleton";
 import type { ContestListItem, MyContest } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 import ContestArchiveRow from "@/components/ContestArchiveRow";
+import CpeGuideLink from "@/components/CpeGuideLink";
 
 // CPE/GPE sittings are virtual (no fixed startAt) but their slugs always embed the real exam
 // date (e.g. "cpe-2026-05-26", "gpe-2018-01-03-9781") — the one reliable way to sort/label them
@@ -145,14 +146,17 @@ export default function ContestsClient({ initialContests, initialTab }: { initia
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-display text-2xl font-bold text-ink-50">{t("Contests")}</h1>
-        <p className="mt-1 text-sm text-ink-400">
-          {t(
-            "Every past CPE and GPE sitting, packaged as a timed virtual exam — start one whenever you're ready and it runs its own private countdown, exactly like the real thing.",
-          )}
-        </p>
-      </div>
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+        <div className="min-w-0">
+          <h1 className="font-display text-2xl font-bold text-ink-50">{t("Contests")}</h1>
+          <p className="mt-1 max-w-3xl text-sm leading-6 text-ink-400">
+            {t(
+              "Every past CPE and GPE sitting, packaged as a timed virtual exam — start one whenever you're ready and it runs its own private countdown, exactly like the real thing.",
+            )}
+          </p>
+        </div>
+        <CpeGuideLink placement="contests" />
+      </header>
 
       {authStatus === "ready" && !user && (
         <div className="oj-card p-6 text-center">

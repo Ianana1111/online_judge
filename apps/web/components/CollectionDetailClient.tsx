@@ -8,6 +8,7 @@ import ProblemFilterTable from "@/components/ProblemFilterTable";
 import { useAuthStore } from "@/store/auth";
 import { Skeleton, SkeletonList } from "@/components/Skeleton";
 import { useLocale, useT } from "@/lib/i18n/LocaleContext";
+import CpeGuideLink from "@/components/CpeGuideLink";
 
 export default function CollectionDetailClient({ slug, initialCollection }: { slug: string; initialCollection: CollectionDetail | null }) {
   const t = useT();
@@ -44,10 +45,13 @@ export default function CollectionDetailClient({ slug, initialCollection }: { sl
   return (
     <div className="space-y-6">
       <Link href="/collections" className="inline-flex min-h-11 items-center text-sm text-brand">{zh ? "← 返回題目集" : "← Back to collections"}</Link>
-      <header className="rounded-2xl border border-ink-700 bg-ink-900 p-6 sm:p-8">
-        {data.category && <p className="mb-3 text-xs font-semibold tracking-wider text-brand">{data.category}</p>}
-        <h1 className="font-display text-3xl font-bold text-ink-50 [overflow-wrap:anywhere]">{data.title}</h1>
-        {data.description && <p className="mt-3 max-w-3xl text-sm leading-7 text-ink-300">{data.description}</p>}
+      <header className="flex flex-col gap-5 rounded-2xl border border-ink-700 bg-ink-900 p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+        <div className="min-w-0">
+          {data.category && <p className="mb-3 text-xs font-semibold tracking-wider text-brand">{data.category}</p>}
+          <h1 className="font-display text-3xl font-bold text-ink-50 [overflow-wrap:anywhere]">{data.title}</h1>
+          {data.description && <p className="mt-3 max-w-3xl text-sm leading-7 text-ink-300">{data.description}</p>}
+        </div>
+        {slug === "cpe-basic-49" && <CpeGuideLink placement="collection" />}
       </header>
 
       <div className="rounded-xl border border-ink-700 p-5">
