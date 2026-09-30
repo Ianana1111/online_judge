@@ -36,6 +36,7 @@ import type {
 } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 import { readRecentPractice } from "@/lib/recentPractice";
+import CpeGuideLink from "@/components/CpeGuideLink";
 
 const REASON_ICON = { collection: BookOpenIcon, consolidate: LayersIcon, stretch: RocketIcon } as const;
 // Fills the recommendation card's left accent stripe — one color per reason a problem was
@@ -472,14 +473,17 @@ export default function HomeDashboard() {
           cards are the only boxes here. Alternating between boxed regions and bare ones is what
           gives the page a rhythm instead of a uniform grid of outlined rectangles. */}
       <div>
-        <div className="mb-4 flex items-end justify-between gap-3">
+        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
           <div>
-            <h2 className="font-display text-lg font-bold text-ink-50">{t("Recommended for you")}</h2>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <h2 className="font-display text-lg font-bold text-ink-50">{t("Recommended for you")}</h2>
+              <Link href="/problems" className="shrink-0 text-xs text-ink-500 transition-colors hover:text-brand">
+                {t("browse all →")}
+              </Link>
+            </div>
             <p className="mt-0.5 text-xs text-ink-500">{t("Picked from where you are right now.")}</p>
           </div>
-          <Link href="/problems" className="shrink-0 text-xs text-ink-500 transition-colors hover:text-brand">
-            {t("browse all →")}
-          </Link>
+          <CpeGuideLink placement="dashboard" />
         </div>
         {suggestions.length === 0 ? (
           <p className="oj-panel p-5 text-sm text-ink-400">
