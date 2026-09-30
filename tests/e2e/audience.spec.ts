@@ -11,6 +11,7 @@ test("audience shows recorded browsers before engagement and refreshes without a
   await page.route("http://127.0.0.1:55440/**", async route => {
     const path = new URL(route.request().url()).pathname;
     if (path === "/auth/me") return route.fulfill({ json: { id: "admin", handle: "operator", role: "ADMIN", plan: "PRO", mfaEnabled: true, settings: { profileSetupDismissed: true }, csrfToken: "fixture" } });
+    if (path === "/analytics/traffic/summary") return route.fulfill({ json: { totalViews: visitors, distinctPaths: 1 } });
     if (path === "/analytics/audience") {
       const data: AudienceDashboard = {
         days: 30, source: "all", timezone: "Asia/Taipei", generatedAt: new Date().toISOString(), trackingSince: new Date().toISOString(),

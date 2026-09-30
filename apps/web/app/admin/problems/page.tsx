@@ -1,40 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { apiFetch, ApiError } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import type { ProblemListResponse } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
-const EMPTY_FORM = {
-  slug: "",
-  title: "",
-  statementMd: "",
-  inputSpecMd: "",
-  outputSpecMd: "",
-  timeLimitMs: 1000,
-  memoryLimitKb: 65536,
-  difficulty: 1,
-  source: "CUSTOM" as const,
-  // A problem judges locally once it has TestCase rows (added separately, after creation), and
-  // relays to UVa's own judge otherwise — but only if it has this. Without either, every
-  // submission to a problem created here would come back SE ("Remote judging is not configured"),
-  // since there was previously no way to set this at creation time at all.
-  uvaId: "",
-};
-
 export default function AdminProblemsPage() {
   const t = useT();
   const { user, status } = useAuthStore();
-  const qc = useQueryClient();
-  const [form, setForm] = useState(EMPTY_FORM);
-  const [error, setError] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
-
-  const { data } = useQuery({
-    queryKey: ["problems", "admin"],
-    queryFn: () => apiFetch<ProblemListResponse>("/problems?page=1"),
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const { data, isPending, isError, refetch } = useQuery({
+    queryKey: ["problems", "admin", page, search],
+    queryFn: () => apiFetch<ProblemListResponse>(`/problems?page=${page}&pageSize=50&q=${encodeURIComponent(search)}`),
     enabled: user?.role === "ADMIN",
   });
 
@@ -42,129 +22,14 @@ export default function AdminProblemsPage() {
     return <p className="text-sm text-verdict-wa">{t("Admins only.")}</p>;
   }
 
-  async function createProblem(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setSaving(true);
-    try {
-      const { uvaId, ...rest } = form;
-      const body = uvaId.trim() ? { ...rest, uvaId: Number(uvaId) } : rest;
-      await apiFetch("/problems", { method: "POST", body });
-      setForm(EMPTY_FORM);
-      await qc.invalidateQueries({ queryKey: ["problems", "admin"] });
-    } catch (e) {
-      setError(e instanceof ApiError ? e.message : t("Could not create problem"));
-    } finally {
-      setSaving(false);
-    }
-  }
-
   return (
     <div className="space-y-8">
       <h1 className="font-display text-2xl font-bold text-ink-50">{t("Admin · Problems")}</h1>
 
-      <form onSubmit={createProblem} className="oj-card grid gap-3 p-4 sm:grid-cols-2">
-        <div className="sm:col-span-2">
-          <label htmlFor="problem-title" className="mb-1 block text-sm text-ink-300">{t("Title")}</label>
-          <input
-            id="problem-title"
-            className="oj-input"
-            value={form.title}
-            onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="problem-slug" className="mb-1 block text-sm text-ink-300">{t("Slug")}</label>
-          <input
-            id="problem-slug"
-            className="oj-input"
-            value={form.slug}
-            onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="problem-source" className="mb-1 block text-sm text-ink-300">{t("Source")}</label>
-          <select
-            id="problem-source"
-            className="oj-input"
-            value={form.source}
-            onChange={(e) => setForm((f) => ({ ...f, source: e.target.value as typeof form.source }))}
-          >
-            <option value="CUSTOM">{t("Custom")}</option>
-            <option value="UVA">UVa</option>
-            <option value="CPE">CPE</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="problem-uva-id" className="mb-1 block text-sm text-ink-300">{t("UVa problem number (optional)")}</label>
-          <input
-            id="problem-uva-id"
-            type="number"
-            className="oj-input"
-            value={form.uvaId}
-            onChange={(e) => setForm((f) => ({ ...f, uvaId: e.target.value }))}
-            placeholder="100"
-          />
-          <p className="mt-1 text-xs text-ink-500">
-            {t("Required for judging unless you add local test cases after creating this problem — otherwise every submission will come back as a system error.")}
-          </p>
-        </div>
-        <div className="sm:col-span-2">
-          <label htmlFor="problem-statement" className="mb-1 block text-sm text-ink-300">{t("Statement (Markdown)")}</label>
-          <textarea
-            id="problem-statement"
-            className="oj-input h-32 font-mono text-xs"
-            value={form.statementMd}
-            onChange={(e) => setForm((f) => ({ ...f, statementMd: e.target.value }))}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="problem-time-limit" className="mb-1 block text-sm text-ink-300">{t("Time limit (ms)")}</label>
-          <input
-            id="problem-time-limit"
-            type="number"
-            className="oj-input"
-            value={form.timeLimitMs}
-            onChange={(e) => setForm((f) => ({ ...f, timeLimitMs: Number(e.target.value) }))}
-          />
-        </div>
-        <div>
-          <label htmlFor="problem-memory-limit" className="mb-1 block text-sm text-ink-300">{t("Memory limit (KB)")}</label>
-          <input
-            id="problem-memory-limit"
-            type="number"
-            className="oj-input"
-            value={form.memoryLimitKb}
-            onChange={(e) => setForm((f) => ({ ...f, memoryLimitKb: Number(e.target.value) }))}
-          />
-        </div>
-        <div>
-          <label htmlFor="problem-difficulty" className="mb-1 block text-sm text-ink-300">{t("Difficulty (1-4)")}</label>
-          <input
-            id="problem-difficulty"
-            type="number"
-            min={1}
-            max={4}
-            className="oj-input"
-            value={form.difficulty}
-            onChange={(e) => setForm((f) => ({ ...f, difficulty: Number(e.target.value) }))}
-          />
-        </div>
-        {error && <p className="text-sm text-verdict-wa sm:col-span-2">{error}</p>}
-        <button type="submit" disabled={saving} className="oj-btn-primary sm:col-span-2">
-          {saving ? t("Creating…") : t("Create problem")}
-        </button>
-        <p className="text-xs text-ink-500 sm:col-span-2">
-          {t(
-            "Submissions are judged by the real UVa Online Judge, not locally — set a UVa problem id above so students' submissions have somewhere to be judged against.",
-          )}
-        </p>
-      </form>
-
-      <div>
+      <input aria-label="搜尋題目" placeholder="搜尋題名或題號" className="oj-input max-w-md" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
+      {isPending && <p role="status" className="text-sm text-ink-400">載入題目中…</p>}
+      {isError && <p role="alert" className="text-sm text-verdict-wa">無法取得題目。<button className="ml-2 underline" onClick={() => void refetch()}>重試</button></p>}
+      <div className="overflow-x-auto">
         <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Existing problems")}</h2>
         <table className="oj-table">
           <thead>
@@ -186,6 +51,7 @@ export default function AdminProblemsPage() {
             ))}
           </tbody>
         </table>
+        {data && <div className="mt-4 flex items-center justify-between gap-3 text-sm text-ink-300"><span>共 {data.total} 題 · 第 {page} 頁</span><div className="flex gap-2"><button className="oj-btn-secondary" disabled={page === 1} onClick={() => setPage(p => p - 1)}>上一頁</button><button className="oj-btn-secondary" disabled={page * 50 >= data.total} onClick={() => setPage(p => p + 1)}>下一頁</button></div></div>}
       </div>
     </div>
   );

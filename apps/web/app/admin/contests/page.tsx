@@ -1,207 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { apiFetch, ApiError } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
-import type { ContestListItem, ProblemListResponse } from "@/lib/types";
+import type { ContestListItem } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
-
-const LABELS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
 export default function AdminContestsPage() {
   const t = useT();
   const { user, status } = useAuthStore();
-  const qc = useQueryClient();
-
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [kind, setKind] = useState<"CPE" | "VIRTUAL" | "PUBLIC">("PUBLIC");
-  const [scheduled, setScheduled] = useState(false);
-  const [startAt, setStartAt] = useState("");
-  const [durationMin, setDurationMin] = useState(180);
-  const [freezeMin, setFreezeMin] = useState(0);
-  const [problemQuery, setProblemQuery] = useState("");
-  const [selectedProblems, setSelectedProblems] = useState<{ id: string; title: string }[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
-
   const isAdmin = user?.role === "ADMIN";
 
-  const { data: contests } = useQuery({
+  const { data: contests, isPending, isError, refetch } = useQuery({
     queryKey: ["contests"],
     queryFn: () => apiFetch<ContestListItem[]>("/contests"),
     enabled: isAdmin,
-  });
-
-  const { data: problemResults } = useQuery({
-    queryKey: ["problems", "picker", problemQuery],
-    queryFn: () => apiFetch<ProblemListResponse>(`/problems?page=1&q=${encodeURIComponent(problemQuery)}`),
-    enabled: isAdmin && problemQuery.length > 0,
   });
 
   if (status === "ready" && !isAdmin) {
     return <p className="text-sm text-verdict-wa">{t("Admins only.")}</p>;
   }
 
-  function addProblem(p: { id: string; title: string }) {
-    if (selectedProblems.some((sp) => sp.id === p.id)) return;
-    if (selectedProblems.length >= LABELS.length) return;
-    setSelectedProblems((prev) => [...prev, p]);
-  }
-
-  function removeProblem(id: string) {
-    setSelectedProblems((prev) => prev.filter((p) => p.id !== id));
-  }
-
-  async function createContest(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    if (selectedProblems.length === 0) {
-      setError(t("Pick at least one problem"));
-      return;
-    }
-    if (scheduled && !startAt) {
-      setError(t("Pick a start time for a scheduled/group session"));
-      return;
-    }
-    setSaving(true);
-    try {
-      await apiFetch("/contests", {
-        method: "POST",
-        body: {
-          title,
-          slug,
-          kind,
-          startAt: scheduled ? new Date(startAt).toISOString() : undefined,
-          durationMin,
-          freezeMin,
-          problems: selectedProblems.map((p, i) => ({ problemId: p.id, label: LABELS[i] })),
-        },
-      });
-      setTitle("");
-      setSlug("");
-      setStartAt("");
-      setSelectedProblems([]);
-      await qc.invalidateQueries({ queryKey: ["contests"] });
-    } catch (e) {
-      setError(e instanceof ApiError ? e.message : t("Could not create contest"));
-    } finally {
-      setSaving(false);
-    }
-  }
-
   return (
     <div className="space-y-8">
       <h1 className="font-display text-2xl font-bold text-ink-50">{t("Admin · Contests")}</h1>
 
-      <form onSubmit={createContest} className="oj-card space-y-4 p-4">
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <label htmlFor="contest-title" className="mb-1 block text-sm text-ink-300">{t("Title")}</label>
-            <input id="contest-title" className="oj-input" value={title} onChange={(e) => setTitle(e.target.value)} required />
-          </div>
-          <div>
-            <label htmlFor="contest-slug" className="mb-1 block text-sm text-ink-300">{t("Slug")}</label>
-            <input id="contest-slug" className="oj-input" value={slug} onChange={(e) => setSlug(e.target.value)} required />
-          </div>
-          <div>
-            <label htmlFor="contest-kind" className="mb-1 block text-sm text-ink-300">{t("Kind")}</label>
-            <select id="contest-kind" className="oj-input" value={kind} onChange={(e) => setKind(e.target.value as typeof kind)}>
-              <option value="PUBLIC">{t("Public")}</option>
-              <option value="CPE">CPE</option>
-              <option value="VIRTUAL">{t("Virtual")}</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="contest-duration" className="mb-1 block text-sm text-ink-300">{t("Duration (minutes)")}</label>
-            <input
-              id="contest-duration"
-              type="number"
-              className="oj-input"
-              value={durationMin}
-              onChange={(e) => setDurationMin(Number(e.target.value))}
-              min={10}
-              max={600}
-            />
-          </div>
-        </div>
-
-        <div>
-          <label htmlFor="contest-freeze" className="mb-1 block text-sm text-ink-300">{t("Scoreboard freeze (minutes)")}</label>
-          <input id="contest-freeze" type="number" min={0} max={durationMin} value={freezeMin} onChange={(e) => setFreezeMin(Number(e.target.value))} className="oj-input max-w-xs" required />
-          <p className="mt-1 text-xs text-ink-500">{t("Set 0 to keep standings live throughout the exam.")}</p>
-        </div>
-
-        <div>
-          <label className="flex items-center gap-2 text-sm text-ink-300">
-            <input type="checkbox" checked={scheduled} onChange={(e) => setScheduled(e.target.checked)} />
-            {t("Scheduled group session (everyone shares one clock — start it live for multiple students at once)")}
-          </label>
-          {scheduled ? (
-            <div className="mt-2">
-              <label htmlFor="contest-start" className="mb-1 block text-sm text-ink-300">{t("Start time")}</label>
-              <input
-                id="contest-start"
-                type="datetime-local"
-                className="oj-input max-w-xs"
-                value={startAt}
-                onChange={(e) => setStartAt(e.target.value)}
-              />
-            </div>
-          ) : (
-            <p className="mt-1 text-xs text-ink-500">
-              {t("Unscheduled = virtual mode: each student gets their own personal {min}-minute window whenever they click \"start\".", {
-                min: durationMin,
-              })}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="contest-problem-search" className="mb-1 block text-sm text-ink-300">{t("Problems (labeled A, B, C… in the order added)")}</label>
-          <input
-            id="contest-problem-search"
-            className="oj-input"
-            placeholder={t("Search problems by title…")}
-            value={problemQuery}
-            onChange={(e) => setProblemQuery(e.target.value)}
-          />
-          {problemResults && problemResults.items.length > 0 && (
-            <div className="oj-card mt-1 max-h-40 overflow-y-auto p-1">
-              {problemResults.items.map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => addProblem({ id: p.id, title: p.title })}
-                  className="block w-full rounded px-2 py-1 text-left text-sm text-ink-200 hover:bg-ink-800"
-                >
-                  {p.title}
-                </button>
-              ))}
-            </div>
-          )}
-          {selectedProblems.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-2">
-              {selectedProblems.map((p, i) => (
-                <span key={p.id} className="oj-card flex items-center gap-1 px-2 py-1 text-xs text-ink-200">
-                  <span className="font-mono text-brand">{LABELS[i]}</span> {p.title}
-                  <button type="button" onClick={() => removeProblem(p.id)} className="text-ink-500 hover:text-verdict-wa">
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {error && <p className="text-sm text-verdict-wa">{error}</p>}
-        <button type="submit" disabled={saving} className="oj-btn-primary">
-          {saving ? t("Creating…") : t("Create contest")}
-        </button>
-      </form>
-
-      <div>
+      {isPending && <p role="status" className="text-sm text-ink-400">載入測驗中…</p>}
+      {isError && <p role="alert" className="text-sm text-verdict-wa">無法取得測驗。<button className="ml-2 underline" onClick={() => void refetch()}>重試</button></p>}
+      {contests && <p className="text-sm text-ink-400">共 {contests.length} 場 · CPE {contests.filter(c => c.kind === "CPE").length} 場 · GPE {contests.filter(c => c.kind === "GPE").length} 場</p>}
+      <div className="overflow-x-auto">
         <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("Existing contests")}</h2>
         <table className="oj-table">
           <thead>

@@ -951,3 +951,21 @@ model Note {
   @@unique([userId, problemId])
   @@map("notes")
 }
+
+/// Owner-maintained costs and imported provider reports, never API keys or raw invoices.
+model ExternalServiceRecord {
+  key String @id
+  plan String @default("")
+  currency String @default("USD")
+  billingCycle String @default("UNKNOWN")
+  amountMinor Int?
+  budgetMinor Int?
+  renewsAt DateTime?
+  notes String @default("")
+  managementUrl String?
+  billingSnapshot Json?
+  billingCheckedAt DateTime?
+  updatedById String?
+  updatedAt DateTime @updatedAt
+  @@map("external_service_records")
+}
