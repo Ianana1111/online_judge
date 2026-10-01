@@ -269,7 +269,15 @@ function TestPanelSession({
 
   const activeModified = active?.isSample && activeInput !== active.input;
   const activeResult = active && !stale ? results[active.id] : undefined;
-  const activeMatch = activeResult?.verdict === "AC" ? true : activeResult?.verdict === "WA" ? false : null;
+  const resultLabel = status === "running" ? t("Running…") : status === "compile_error" ? "CE" : status === "error" ? "ERROR" : activeResult?.verdict ?? (zh ? "完成" : "Done");
+  const resultTone = status === "compile_error" ? "text-verdict-ce" : activeResult?.verdict === "AC" ? "text-verdict-ac" : status === "error" || activeResult?.verdict ? "text-verdict-wa" : "text-ink-200";
+  const diagnostics: Partial<Record<NonNullable<RunCaseResult["verdict"]>, string>> = {
+    WA: zh ? "輸出與預期答案不符。" : "Output differs from the expected answer.",
+    TLE: zh ? "超過執行時間限制。" : "Time limit exceeded.",
+    MLE: zh ? "超過記憶體限制。" : "Memory limit exceeded.",
+    RE: zh ? "程式執行時發生錯誤。" : "The program failed during execution.",
+    OLE: zh ? "超過輸出大小限制。" : "Output limit exceeded.",
+  };
   const invalidInput = cases.some((c) => (edits[c.id] ?? c.input).length > MAX_INPUT_CHARS && (!c.isSample || edits[c.id] !== undefined && edits[c.id] !== c.input));
   const canRun = cooldownSeconds === 0 && usage.data?.remaining !== 0 && loaded && !locked && status !== "running" && cases.length > 0 && cases.length <= MAX_CASES && sourceCode.trim().length > 0 && !invalidInput;
   useEffect(() => { onRunStateChange({ running: status === "running", disabled: !canRun, cooldownSeconds }); }, [status, canRun, cooldownSeconds, onRunStateChange]);
@@ -307,7 +315,7 @@ function TestPanelSession({
         {usage.data?.limit != null && <p className="run-usage ml-auto min-w-0 py-1 text-right text-[11px] leading-4 tabular-nums text-ink-400" aria-live="polite">{zh ? `本月剩餘 ${usage.data.remaining} / ${usage.data.limit} 次執行` : `${usage.data.remaining} / ${usage.data.limit} runs remaining this month`}{usage.data.remaining === 0 && <> · <a href="/upgrade" className="text-brand underline">{zh ? "升級 Pro" : "Upgrade to Pro"}</a></>}</p>}
       </div>
       <div role="tabpanel" id={`${formId}-${pane}`} aria-labelledby={`${formId}-${pane}-tab`}>
-      {pane === "result" && <p role="status" className="mb-3 text-sm font-medium text-ink-200">{status === "running" ? t("Running…") : status === "done" ? (zh ? "執行完成" : "Run complete") : status === "compile_error" ? "Compile Error" : (zh ? "執行未完成" : "Run failed")}</p>}
+      {pane === "result" && !stale && <p role="status" className={`mb-3 font-mono text-sm font-semibold ${resultTone}`}>{resultLabel}</p>}
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-1.5">
           {cases.map((c) => (
@@ -324,7 +332,7 @@ function TestPanelSession({
                   {c.isSample ? c.label : customLabelById.get(c.id)}
                   {!stale && results[c.id]?.verdict && (
                     results[c.id].verdict === "AC"
-                      ? <span className="text-verdict-ac" aria-label={t("Matches expected")}>✓</span>
+                      ? <span className="text-verdict-ac" aria-label="AC">✓</span>
                       : <span className="text-verdict-wa" aria-label={results[c.id].verdict}>✗</span>
                   )}
                 </span>
@@ -383,22 +391,15 @@ function TestPanelSession({
 
           {pane === "result" && activeResult && (
             <div>
-              <p className="mb-2 text-xs text-ink-400">{activeResult.verdict === "AC" || activeResult.verdict === "WA" ? (zh ? "使用正式判題規則比對此範例；完整測資請使用提交。" : "Compared with the submission checker for this sample. Submit to check the full test suite.") : !activeResult.verdict ? (zh ? "此結果僅供檢視輸出，未進行答案比對。" : "Output only; no expected answer was checked.") : null}</p>
-              <div className="mb-1 flex flex-wrap items-center gap-2">
-                <p className="text-xs font-medium text-ink-400">{t("Output")}</p>
-                {activeMatch === true && <span className="text-xs font-medium text-verdict-ac">{t("Matches expected")}</span>}
-                {activeMatch === false && <span className="text-xs font-medium text-verdict-wa">{t("Doesn't match")}</span>}
-                {activeResult.verdict && !["AC", "WA"].includes(activeResult.verdict) && <span className="text-xs font-medium text-verdict-re">{activeResult.verdict}{activeResult.verdict === "TLE" ? ` · ${t("Timed out")}` : ""}</span>}
-                <span className="ml-auto font-mono text-[11px] text-ink-500">{activeResult.timeMs} ms</span>
-              </div>
+              <p className="mb-1 text-xs font-medium text-ink-400">{t("Output")}{activeResult.outputTruncated && <span>{zh ? "（已截斷）" : " (truncated)"}</span>}</p>
               <pre tabIndex={0} className="oj-card overflow-x-auto p-2 font-mono text-xs">{activeResult.stdout || t("(no output)")}</pre>
-              {activeResult.outputTruncated && <p className="text-xs text-ink-400">{zh ? "輸出過長，僅顯示前 100,000 個字元；答案比對使用完整輸出。" : "Showing the first 100,000 characters. Comparison used the full output."}</p>}
-              {activeResult.stderr && (
+              {activeResult.verdict && diagnostics[activeResult.verdict] && <p className="mt-2 text-xs text-verdict-wa">{diagnostics[activeResult.verdict]}</p>}
+              {activeResult.verdict !== "AC" && activeResult.stderr && (
                 <pre tabIndex={0} className="mt-1.5 overflow-x-auto rounded bg-ink-800 p-2 font-mono text-xs text-verdict-re">
                   {activeResult.stderr}
                 </pre>
               )}
-              {active.isSample && !activeModified && <details className="mt-3 text-xs text-ink-400"><summary className="cursor-pointer">{t("Expected output")}</summary><pre tabIndex={0} className="oj-card mt-2 overflow-x-auto p-2 font-mono">{active.expectedOutput}</pre></details>}
+              {activeResult.verdict === "WA" && active.isSample && !activeModified && <details className="mt-2 text-xs text-ink-400"><summary className="cursor-pointer">{t("Expected output")}</summary><pre tabIndex={0} className="oj-card mt-2 overflow-x-auto p-2 font-mono">{active.expectedOutput}</pre></details>}
             </div>
           )}
         </div>
@@ -408,7 +409,6 @@ function TestPanelSession({
 
       {pane === "result" && !stale && compileError && (
         <div className="mt-2.5">
-          <p className="mb-1 text-xs font-medium text-verdict-ce">{t("Compile error")}</p>
           <pre tabIndex={0} className="oj-card overflow-x-auto p-2 font-mono text-xs text-verdict-ce">{compileError}</pre>
         </div>
       )}

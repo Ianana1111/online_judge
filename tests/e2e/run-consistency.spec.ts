@@ -42,7 +42,7 @@ test("sample Run uses server comparisons; edits and language changes invalidate 
       await expect(page.locator(".site-navbar")).toBeHidden();
     }
     const run = page.getByRole("button", { name: "▶ 執行", exact: true }), input = page.getByRole("textbox", { name: "輸入", exact: true });
-    await expect(run).toBeEnabled(); await run.click(); await expect(page.getByText("與預期相符", { exact: true })).toBeVisible();
+    await expect(run).toBeEnabled(); await run.click(); await expect(page.getByText("AC", { exact: true })).toBeVisible();
     // Read both rectangles in one frame while mobile scrollIntoView may still be animating.
     const alignment = await page.locator(".test-panel-tabs").evaluate(el => {
       const usage = el.querySelector(".run-usage")!.getBoundingClientRect();
@@ -53,13 +53,13 @@ test("sample Run uses server comparisons; edits and language changes invalidate 
     expect(alignment.rightOfTab).toBe(true);
     expect(lastCases).toEqual([{ id: "sample-1", input: "1\n", sampleOrd: 1, sampleRevision: expect.stringMatching(/^[a-f0-9]{64}$/) }]);
     await page.getByRole("tab", { name: "測試資料", exact: true }).click();
-    await input.fill("2\n"); await expect(page.getByText("與預期相符", { exact: true })).toHaveCount(0); await expect(page.getByText(/已修改輸入：只顯示/)).toBeVisible();
-    await run.click(); await expect(page.getByText("此結果僅供檢視輸出，未進行答案比對。")).toBeVisible(); expect(lastCases).toEqual([{ id: "sample-1", input: "2\n" }]);
+    await input.fill("2\n"); await expect(page.getByText("AC", { exact: true })).toHaveCount(0); await expect(page.getByText(/已修改輸入：只顯示/)).toBeVisible();
+    await run.click(); await expect(page.getByRole("tabpanel", { name: "執行結果", exact: true }).getByRole("status")).toHaveText("完成"); await expect(page.getByText("AC", { exact: true })).toHaveCount(0); expect(lastCases).toEqual([{ id: "sample-1", input: "2\n" }]);
     await page.getByRole("tab", { name: "測試資料", exact: true }).click();
     await page.getByRole("button", { name: "還原範例" }).click(); delayed = true; await run.click();
     await page.getByRole("tab", { name: "測試資料", exact: true }).click(); await input.fill("3\n");
-    await expect(run).toBeEnabled(); await expect(page.getByText(/程式碼、語言或輸入已變更/)).toBeVisible(); await expect(page.getByText("與預期相符", { exact: true })).toHaveCount(0);
-    await page.getByRole("button", { name: "還原範例" }).click(); await run.click(); await expect(page.getByText("與預期相符", { exact: true })).toBeVisible();
+    await expect(run).toBeEnabled(); await expect(page.getByText(/程式碼、語言或輸入已變更/)).toBeVisible(); await expect(page.getByText("AC", { exact: true })).toHaveCount(0);
+    await page.getByRole("button", { name: "還原範例" }).click(); await run.click(); await expect(page.getByText("AC", { exact: true })).toBeVisible();
     await page.getByRole("combobox", { name: "語言", exact: true }).selectOption("cpp17"); await expect(page.getByText(/程式碼、語言或輸入已變更/)).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); await page.screenshot({ path: info.outputPath("run-stale-result.png"), fullPage: true });
   } finally { await db.problem.delete({ where: { id: problem.id } }); await db.$disconnect(); }
@@ -115,7 +115,9 @@ for (const verdict of ["AC", "WA"] as const) test(`Run beside Submit opens a clo
   expect(Math.abs(rb.y - sb.y)).toBeLessThan(4); expect(sb.x - (rb.x + rb.width)).toBeLessThan(16);
   await run.click();
   const result = page.getByRole("tabpanel", { name: "執行結果", exact: true });
-  await expect(result).toContainText(verdict === "AC" ? "與預期相符" : "與預期不符");
+  await expect(result.getByRole("status")).toHaveText(verdict);
+  await expect(result).not.toContainText(/使用正式判題規則|完整測資請使用|與預期相符|執行完成/);
+  if (verdict === "WA") await expect(result).toContainText("輸出與預期答案不符。");
   await expect(result).toBeInViewport();
   await expect(page.getByRole("textbox", { name: "輸入", exact: true })).toHaveCount(0);
   expect(runs).toBe(1); expect(submissions).toBe(0);
@@ -125,11 +127,11 @@ for (const verdict of ["AC", "WA"] as const) test(`Run beside Submit opens a clo
   await page.getByRole("button", { name: "關閉執行結果", exact: true }).click();
   await expect(page.getByRole("tab", { name: "執行結果", exact: true })).toHaveCount(0);
   const input = page.getByRole("textbox", { name: "輸入", exact: true }); await expect(input).toHaveValue("1\n");
-  await run.click(); await expect(result).toContainText("執行完成");
+  await run.click(); await expect(result.getByRole("status")).toHaveText(verdict);
   await page.getByRole("combobox", { name: "語言", exact: true }).selectOption("cpp17");
   await expect(result).toContainText("程式碼、語言或輸入已變更");
-  await expect(result.getByText("與預期相符", { exact: true })).toHaveCount(0);
-  failCompile = true; await run.click(); await expect(result).toContainText("Synthetic compiler diagnostic");
+  await expect(result.getByText("AC", { exact: true })).toHaveCount(0);
+  failCompile = true; await run.click(); await expect(result.getByRole("status")).toHaveText("CE"); await expect(result).toContainText("Synthetic compiler diagnostic");
   await submit.click();
   await expect(page.getByRole("heading", { name: verdict === "AC" ? "Accept" : "Wrong Answer", exact: true })).toBeVisible();
   await expect(page.locator("#problem-tabpanel-result")).not.toContainText(/答案正確|答案錯誤/);
