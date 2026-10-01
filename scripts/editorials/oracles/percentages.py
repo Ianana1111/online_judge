@@ -70,7 +70,11 @@ def valid_answer(slug,data,answer):
 
 ORACLES={'uva-10056-what-is-the-probability':probability,'uva-10226-hardwood-species':hardwood}
 def additions():
-    cases=[(1,'0',1),(1,'1',1),(1,'0.00000000000000000001',1),(2,'0',1),(2,'1',2),(2,'0.4',2),(1000,'0.00000000000000000001',1000),(32,'0.00000000000000000001',1),(32,'0.00000000000000000001',32)]
+    # UVa specifies four output decimals, but no extended-precision input contract.
+    # Keep small positive probabilities representable in the usual double geometric
+    # formula: 1e-20 makes 1-p round to 1 and rejects otherwise correct UVa solutions.
+    # Six fractional digits match the sample and retain nontrivial small-p coverage.
+    cases=[(1,'0',1),(1,'1',1),(1,'0.000001',1),(2,'0',1),(2,'1',2),(2,'0.4',2),(1000,'0.000001',1000),(32,'0.000001',1),(32,'0.000001',32)]
     cases += [(n,p,i) for n in [2,3,7,32,99,1000] for p in ['0.000001','0.01','0.5','0.99','0.999999'] for i in sorted({1,n//2 or 1,n})]
     rng=random.Random(10056)
     while len(cases)<1000:
