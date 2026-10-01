@@ -37,7 +37,7 @@ export class LeaderboardService {
   async get(period: LeaderboardPeriod, scope: LeaderboardScope = "all", school?: string) {
     // Recomputing this is a full AC-history scan (see below) — cache it briefly. A 60s-stale
     // leaderboard is an acceptable tradeoff for not re-scanning on every poll/page-load.
-    return this.cache.getOrSet(`leaderboard:registered:${period}:${scope}:${school ?? ""}`, 60, () =>
+    return this.cache.getOrSet(`leaderboard:registered-v2:${period}:${scope}:${school ?? ""}`, 60, () =>
       this.compute(period, scope, school),
     );
   }
@@ -49,6 +49,7 @@ export class LeaderboardService {
     // board, and this site's real primary users are a tutor with named students.
     const userWhere = {
       deletionRequestedAt: null,
+      handle: { not: "judge", mode: "insensitive" as const },
       ...(scope === "students" ? { isStudent: true } : {}),
       // A school filter only ever matches *verified* claims — see requestSchoolVerification's
       // domain check for why an unverified one can't be trusted to group correctly.
