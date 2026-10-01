@@ -1,7 +1,19 @@
 import unittest
+import math
 from fractions import Fraction
 import percentages as p
 class PercentageOracles(unittest.TestCase):
+    def test_probability_corpus_accepts_standard_double_formula(self):
+        data=p.additions()['uva-10056-what-is-the-probability']
+        lines=data.splitlines()
+        self.assertEqual(len(lines)-1,1000)
+        actual=[]
+        for row in lines[1:]:
+            n,token,i=row.split();n=int(n);i=int(i);chance=float(token)
+            self.assertTrue(chance==0 or chance>=0.000001)
+            answer=chance*math.pow(1-chance,i-1)/(1-math.pow(1-chance,n)) if chance else 0
+            actual.append(f'{answer:.4f}')
+        self.assertTrue(p.valid_answer('uva-10056',data,'\n'.join(actual)))
     def test_geometric_rational_and_extremes(self):
         self.assertEqual(p.probability('5\n2 .4 1\n2 .4 2\n1 1e-50 1\n2 0 1\n2 1 2\n'),'0.6250\n0.3750\n1.0000\n0.0000\n0.0000\n')
         self.assertEqual(sum(p.probability_values('3\n3 .35 1\n3 .35 2\n3 .35 3\n')),Fraction(1))
