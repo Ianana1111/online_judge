@@ -1,4 +1,6 @@
 export const billingLaunchDictionary: Record<string, string> = {
+  "Welcome gift · 30 days of Pro": "新會員贈禮 · 免費 Pro 30 天",
+  "Your welcome gift is free. No card required and no automatic charge when it ends.": "這份註冊禮免費提供，無需綁卡，到期不會自動扣款。",
   "Payment method & invoices": "付款方式與收據",
   "Opening payment settings…": "正在開啟付款設定…",
   "Could not open payment settings. Please try again.": "無法開啟付款設定，請稍後再試。",

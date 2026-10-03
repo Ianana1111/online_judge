@@ -203,8 +203,45 @@ model User {
   usedSchoolEmails      UsedSchoolEmail[]
   authChallenges        AuthChallenge[]
   securityEvents        SecurityEvent[]
+  signupProGrants       SignupProGrant[]
 
   @@map("users")
+}
+
+/// Activated explicitly by an operator. The insert trigger awards slots atomically,
+/// including signups served by an older API instance during a rolling deployment.
+model SignupProCampaign {
+  id                String   @id
+  startsAt          DateTime
+  baselineUserCount Int
+  capacity          Int      @default(50)
+  grantedCount      Int      @default(0)
+  durationDays      Int      @default(30)
+  enabled           Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  grants            SignupProGrant[]
+
+  @@map("signup_pro_campaigns")
+}
+
+/// Slots remain consumed after account deletion. Only a digest of the email is
+/// retained to prevent the same address from claiming the same campaign again.
+model SignupProGrant {
+  id         String   @id @default(cuid())
+  campaignId String
+  campaign   SignupProCampaign @relation(fields: [campaignId], references: [id])
+  slot       Int
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  emailHash  String
+  grantedAt  DateTime @default(now())
+  expiresAt  DateTime
+
+  @@unique([campaignId, slot])
+  @@unique([campaignId, userId])
+  @@unique([campaignId, emailHash])
+  @@index([userId])
+  @@map("signup_pro_grants")
 }
 
 /// Only a digest validates a bearer token. The encrypted delivery copy is erased after send.

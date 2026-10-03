@@ -43,4 +43,5 @@ export type AdminOverview = {
   confirmedGross30d: number; refunds30d: number; cancelledSubscriptions30d: number;
   pendingPosts: number; pendingComments: number; pendingSchools: number; pendingRefunds: number;
   problems: number; visibleProblems: number; contests: number; assignments: number; liveExams: number;
+  signupProCampaign?: { startsAt: string; baselineUserCount: number; capacity: number; grantedCount: number; remaining: number; durationDays: number; enabled: boolean } | null;
 };

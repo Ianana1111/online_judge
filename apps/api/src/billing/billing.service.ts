@@ -233,6 +233,7 @@ export class BillingService {
       orderBy: { createdAt: "desc" },
     });
     const subscription = await prisma.subscription.findFirst({ where: { userId, status: "ACTIVE" } });
+    const signupGift = await prisma.signupProGrant.findFirst({ where: { userId, expiresAt: { gt: new Date() } }, orderBy: { grantedAt: "desc" } });
     const firstCharge = subscription ? await prisma.payment.findUnique({ where: { merchantTradeNo: subscription.merchantTradeNo } }) : null;
     const refundablePayment = await this.findRefundableFirstPayment(userId);
     const refundRequest = await prisma.refundRequest.findUnique({ where: { userId } });
@@ -255,6 +256,7 @@ export class BillingService {
       plan: unlimited ? "PRO" : "FREE",
       planExpiresAt: pro ? user.planExpiresAt : null,
       planCancelRequested: pro && user.planCancelRequested,
+      signupGift: pro && signupGift ? { grantedAt: signupGift.grantedAt, expiresAt: signupGift.expiresAt } : null,
       refundEligibleUntil: !refundRequest ? refundablePayment?.refundDeadlineAt ?? null : null,
       refundRequest: shownRefundRequest ? { id: shownRefundRequest.id, status: shownRefundRequest.status, requestedAt: shownRefundRequest.requestedAt, completedAt: shownRefundRequest.completedAt } : null,
       subscription: subscription ? { provider: subscription.provider, period: subscription.period, amountNtd: subscription.amountNtd,

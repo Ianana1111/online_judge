@@ -4,9 +4,9 @@ import { billingCatalog } from "../../packages/shared/src/billingPricing";
 
 const campaign = { startsAt: "2026-09-15T00:00:00+08:00", endsAt: "2026-10-15T00:00:00+08:00", regularYearlyPriceNtd: "4000" };
 function catalog(ended = false) { return billingCatalog(campaign, new Date(ended ? campaign.endsAt : campaign.startsAt)); }
-async function fixture(page: Page, options: { provider?: "stripe" | "ecpay"; subscriber?: boolean; cancelled?: boolean; anonymous?: boolean; locale?: "en" | "zh-TW"; theme?: "dark" | "light"; launch?: boolean } = {}) {
+async function fixture(page: Page, options: { provider?: "stripe" | "ecpay"; subscriber?: boolean; cancelled?: boolean; gift?: boolean; anonymous?: boolean; locale?: "en" | "zh-TW"; theme?: "dark" | "light"; launch?: boolean } = {}) {
   const state = { plans: options.launch ? catalog() : billingCatalog(), failPricing: false, rejectQuote: false, writes: [] as { path: string; body: any }[] };
-  const hasPaidPro = !!(options.subscriber || options.cancelled);
+  const hasPaidPro = !!(options.subscriber || options.cancelled || options.gift);
   await page.addInitScript(({ locale, theme }) => { localStorage.setItem("locale", locale); localStorage.setItem("theme", theme); }, { locale: options.locale ?? "zh-TW", theme: options.theme ?? "dark" });
   await page.route("http://127.0.0.1:55440/**", async (route) => {
     const request = route.request(), path = new URL(request.url()).pathname;
@@ -19,6 +19,7 @@ async function fixture(page: Page, options: { provider?: "stripe" | "ecpay"; sub
     if (path === "/billing/plans") return route.fulfill({ status: state.failPricing ? 503 : 200, json: state.failPricing ? { message: "Unavailable" } : { ...state.plans, checkoutProvider: options.provider ?? "ecpay" } });
     if (path === "/billing/me") return route.fulfill({ json: {
       plan: hasPaidPro ? "PRO" : "FREE", planExpiresAt: hasPaidPro ? "2026-12-15T00:00:00Z" : null, planCancelRequested: !!options.cancelled,
+      signupGift: options.gift ? { grantedAt: "2026-11-15T00:00:00Z", expiresAt: "2026-12-15T00:00:00Z" } : null,
       subscription: options.subscriber ? { provider: options.provider === "stripe" ? "STRIPE" : "ECPAY", amountNtd: 200, period: "MONTHLY", nextChargeAt: "2026-12-15T00:00:00Z", launchPriceLocked: true } : null,
       refundEligibleUntil: null, refundRequest: null, pendingPayment: null, submits: { used: 0, limit: 10 }, virtualContests: { used: 0, limit: 1 },
     } });
@@ -70,6 +71,19 @@ test("cancelled paid access separates the active-through date from the extension
   expect(gap).toBeGreaterThanOrEqual(20);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2)).toBe(true);
   await page.screenshot({ path: info.outputPath("cancelled-pro-spacing.png"), fullPage: true });
+});
+
+test("signup gift shows its expiry without implying payment or automatic renewal", async ({ page }, info) => {
+  await fixture(page, { gift: true });
+  await page.goto("/upgrade");
+  const access = page.getByTestId("pro-access-status");
+  await expect(access).toContainText("新會員贈禮 · 免費 Pro 30 天");
+  await expect(access).toContainText("至 2026/12/15");
+  await expect(access).toContainText("到期不會自動扣款");
+  await expect(page.getByRole("button", { name: "降回免費方案", exact: true })).toHaveCount(0);
+  await expect(page.getByText("已訂閱 — 自動續訂", { exact: true })).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2)).toBe(true);
+  await page.screenshot({ path: info.outputPath("signup-gift.png"), fullPage: true });
 });
 
 for (const theme of ["dark", "light"] as const) {

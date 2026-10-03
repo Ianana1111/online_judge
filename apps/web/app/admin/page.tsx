@@ -26,6 +26,16 @@ export default function AdminConsolePage() {
       <Metric label="近 30 天確認款項" value={d ? `NT$${number(d.confirmedGross30d)}` : "—"} note="已確認且未退款；不含僅授權" href="/admin/billing" />
       <Metric label="近 30 天退訂" value={number(d?.cancelledSubscriptions30d)} note={`同期退款／撤銷 NT$${number(d?.refunds30d)}`} href="/admin/analytics?tab=product" />
     </div>
+    {d?.signupProCampaign && <section className="oj-card p-5" aria-labelledby="signup-gift-title">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div><h2 id="signup-gift-title" className="text-sm font-semibold text-ink-100">新會員 Pro 贈禮</h2>
+          <p className="mt-1 text-xs leading-5 text-ink-400">起算時 {d.signupProCampaign.baselineUserCount} 個帳戶 · 後續前 {d.signupProCampaign.capacity} 個新帳戶免費獲得 {d.signupProCampaign.durationDays} 天 Pro</p></div>
+        <div className="text-right"><p className="font-mono text-xl font-semibold tabular-nums text-brand">{d.signupProCampaign.grantedCount}<span className="text-sm font-normal text-ink-400"> / {d.signupProCampaign.capacity}</span></p>
+          <p className="mt-1 text-xs text-ink-400">{!d.signupProCampaign.enabled ? "活動已暫停" : d.signupProCampaign.remaining ? `剩餘 ${d.signupProCampaign.remaining} 個名額` : "名額已送完"}</p></div>
+      </div>
+      <progress aria-label="已發送的 Pro 贈禮" max={d.signupProCampaign.capacity} value={d.signupProCampaign.grantedCount} className="mt-4 h-1.5 w-full overflow-hidden rounded-full accent-brand" />
+      <p className="mt-2 text-[11px] leading-5 text-ink-500">{new Date(d.signupProCampaign.startsAt).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false })} 起算（台灣時間）· 到期不自動扣款 · 每 30 秒更新</p>
+    </section>}
     <section aria-labelledby="admin-tasks"><div className="mb-3 flex flex-wrap items-baseline justify-between gap-2"><h2 id="admin-tasks" className="text-sm font-semibold text-ink-100">待處理事項</h2><p className="text-[11px] text-ink-400">每 30 秒更新 · {d ? new Date(d.measuredAt).toLocaleTimeString("zh-TW", { timeZone: "Asia/Taipei", hour12: false }) : "載入中…"}</p></div><div className="grid gap-3 lg:grid-cols-3">{actions.map(action => <Link key={action.href} href={action.href} className={`group flex items-center justify-between gap-3 rounded-xl border p-4 transition-colors hover:border-brand/50 ${action.value ? "border-brand/25 bg-brand/[0.04]" : "border-ink-700 bg-ink-900/40"}`}><div><h3 className="text-sm font-medium text-ink-100">{action.label}</h3><p className="mt-1.5 text-[11px] leading-5 text-ink-400">{action.note}</p></div><span className={`font-mono text-2xl ${action.value ? "text-brand" : "text-ink-400"}`}>{number(action.value)}<span className="ml-2 text-sm text-ink-500 group-hover:text-brand" aria-hidden>↗</span></span></Link>)}</div></section>
     <OperationalStatus />
     <section className="grid gap-4 lg:grid-cols-2">
