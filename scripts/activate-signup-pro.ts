@@ -1,12 +1,14 @@
 /** Explicit, idempotent activation; never run by deploy/seed. Capture the baseline
  * with database time before implementation, then pass it here. Default is preview.
- * --starts-at=<ISO> --baseline-count=<integer> [--apply]
+ * --starts-at=<ISO> --baseline-count=<integer> [--capacity=<integer>] [--apply]
  */
 import { prisma } from "../packages/db/src/index";
 
 async function main() {
   const option = (key: string) => process.argv.find(s => s.startsWith(`--${key}=`))?.slice(key.length + 3);
   const startsAt = new Date(option("starts-at") ?? ""), baselineUserCount = Number(option("baseline-count"));
+  const requestedCapacity = option("capacity") === undefined ? undefined : Number(option("capacity"));
+  if (requestedCapacity !== undefined && (!Number.isSafeInteger(requestedCapacity) || requestedCapacity < 1)) throw new Error("Capacity must be a positive integer");
   if (!Number.isFinite(+startsAt) || +startsAt > Date.now() || !Number.isSafeInteger(baselineUserCount) || baselineUserCount < 0) throw new Error("Explicit baseline timestamp and count required");
   const apply = process.argv.includes("--apply"), id = "signup-pro-20261003";
   const result = await prisma.$transaction(async tx => {
@@ -15,10 +17,14 @@ async function main() {
     if (apply) await tx.$executeRawUnsafe("LOCK TABLE users IN SHARE ROW EXCLUSIVE MODE");
     else await tx.$executeRawUnsafe("SET TRANSACTION READ ONLY");
     let campaign = await tx.signupProCampaign.findUnique({ where: { id } });
-    if (campaign && (+campaign.startsAt !== +startsAt || campaign.baselineUserCount !== baselineUserCount || campaign.capacity !== 50 || campaign.durationDays !== 30)) throw new Error("Campaign baseline differs; refusing to reset or overwrite it");
+    if (campaign && (+campaign.startsAt !== +startsAt || campaign.baselineUserCount !== baselineUserCount || campaign.durationDays !== 30)) throw new Error("Campaign baseline differs; refusing to reset or overwrite it");
+    const capacity = requestedCapacity ?? campaign?.capacity ?? 100;
+    if (campaign && capacity < campaign.capacity) throw new Error("Capacity may only increase; existing grants and slots must be preserved");
     const candidates = await tx.user.findMany({ where: { role: "USER", createdAt: { gte: startsAt }, deletionRequestedAt: null }, orderBy: [{ createdAt: "asc" }, { id: "asc" }], select: { id: true } });
-    if (!apply) return { apply, startsAt, baselineUserCount, capacity: 50, granted: campaign?.grantedCount ?? 0, registrationsSinceBaseline: candidates.length };
-    campaign ??= await tx.signupProCampaign.create({ data: { id, startsAt, baselineUserCount } });
+    if (!apply) return { apply, startsAt, baselineUserCount, capacity, previousCapacity: campaign?.capacity ?? null, granted: campaign?.grantedCount ?? 0, registrationsSinceBaseline: candidates.length };
+    campaign = campaign
+      ? await tx.signupProCampaign.update({ where: { id }, data: { capacity } })
+      : await tx.signupProCampaign.create({ data: { id, startsAt, baselineUserCount, capacity } });
     let granted = campaign.grantedCount;
     for (const user of candidates) {
       if (granted >= campaign.capacity) break;
