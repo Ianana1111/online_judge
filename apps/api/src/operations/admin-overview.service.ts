@@ -9,7 +9,7 @@ export class AdminOverviewService {
     const now = new Date(), since = new Date(+now - 30 * 86400000);
     const account = { role: "USER" as const, deletionRequestedAt: null };
     const [accounts, newAccounts30d, activePro, activeSubscriptions, paid, refunded, cancelledSubscriptions30d,
-      pendingPosts, pendingComments, pendingSchools, pendingRefunds, problems, visibleProblems, contests, assignments, liveExams] = await Promise.all([
+      pendingPosts, pendingComments, pendingSchools, pendingRefunds, problems, visibleProblems, contests, assignments, liveExams, signupCampaign] = await Promise.all([
       prisma.user.count({ where: account }), prisma.user.count({ where: { ...account, createdAt: { gte: since } } }),
       prisma.user.count({ where: { ...account, plan: "PRO", planExpiresAt: { gt: now }, isStudent: false } }),
       prisma.subscription.count({ where: { status: "ACTIVE" } }),
@@ -22,10 +22,14 @@ export class AdminOverviewService {
       prisma.refundRequest.count({ where: { status: { in: ["REQUESTED", "PROCESSING", "NEEDS_REVIEW"] } } }),
       prisma.problem.count(), prisma.problem.count({ where: { visibility: true } }), prisma.contest.count(), prisma.assignment.count(),
       prisma.contestParticipant.count({ where: { status: "RUNNING", endsAt: { gt: now } } }),
+      prisma.signupProCampaign.findUnique({ where: { id: "signup-pro-20261003" } }),
     ]);
     const data = { measuredAt: now.toISOString(), accounts, newAccounts30d, activePro, activeSubscriptions,
       confirmedGross30d: paid._sum.amountNtd ?? 0, refunds30d: refunded._sum.amountNtd ?? 0, cancelledSubscriptions30d,
-      pendingPosts, pendingComments, pendingSchools, pendingRefunds, problems, visibleProblems, contests, assignments, liveExams };
+      pendingPosts, pendingComments, pendingSchools, pendingRefunds, problems, visibleProblems, contests, assignments, liveExams,
+      signupProCampaign: signupCampaign ? { startsAt: signupCampaign.startsAt.toISOString(), baselineUserCount: signupCampaign.baselineUserCount,
+        capacity: signupCampaign.capacity, grantedCount: signupCampaign.grantedCount, remaining: Math.max(0, signupCampaign.capacity - signupCampaign.grantedCount),
+        durationDays: signupCampaign.durationDays, enabled: signupCampaign.enabled } : null };
     this.cached = { until: Date.now() + 30000, data }; return data;
   }
 }

@@ -80,6 +80,7 @@ export interface BillingStatus {
   plan: "FREE" | "PRO";
   planExpiresAt: string | null;
   planCancelRequested: boolean;
+  signupGift?: { grantedAt: string; expiresAt: string } | null;
   // Non-null while the user can still self-serve a full refund of their first credit-card charge
   // (see POST /billing/refund/request) — null once used, expired, or never applicable (no credit
   // subscription on file). Replaces the old free-trial mechanism.
