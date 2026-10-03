@@ -90,4 +90,15 @@ describe.skipIf(process.env.RUN_DB_TESTS !== "1")("limited signup Pro gift with 
     const after = await account("fifty_first");
     expect((await prisma.user.findUniqueOrThrow({ where: { id: after.id } })).plan).toBe("FREE");
   });
+  it("expands to 100 without resetting existing grants and stops at the new limit", async () => {
+    const first = await prisma.signupProGrant.findFirstOrThrow({ where: { campaignId }, orderBy: { slot: "asc" } });
+    await prisma.signupProCampaign.update({ where: { id: campaignId }, data: { capacity: 100 } });
+    const registrations = await Promise.all(Array.from({ length: 60 }, (_, i) => account(`expanded_${i}`)));
+    expect(await prisma.signupProGrant.count({ where: { userId: { in: registrations.map(u => u.id) } } })).toBe(50);
+    expect((await prisma.signupProCampaign.findUniqueOrThrow({ where: { id: campaignId } })).grantedCount).toBe(100);
+    expect(await prisma.signupProGrant.count({ where: { campaignId } })).toBe(100);
+    expect(await prisma.signupProGrant.findUniqueOrThrow({ where: { id: first.id } })).toEqual(first);
+    const overflow = await account("hundred_first");
+    expect((await prisma.user.findUniqueOrThrow({ where: { id: overflow.id } })).plan).toBe("FREE");
+  });
 });
