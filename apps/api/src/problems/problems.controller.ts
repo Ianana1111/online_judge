@@ -51,12 +51,15 @@ export class ProblemsController {
   }
 
   @OptionalAuth()
+  @Header("Cache-Control", "private, no-store")
+  @Header("Vary", "Cookie, Origin")
   @Get(":slug/stats")
   stats(
     @Param("slug") slug: string,
     @CurrentUser() user: RequestUser | null,
     @Query("runTimeMs") runTimeMs?: string,
     @Query("runMemoryKb") runMemoryKb?: string,
+    @Query("language") language?: string,
   ) {
     // Optional — set by the "just submitted" result tab (ProblemView) to ask "how does *this*
     // specific run compare", separately from yourBest (this problem's Stats tab, which always
@@ -70,6 +73,7 @@ export class ProblemsController {
       user,
       parsedTimeMs !== undefined && Number.isFinite(parsedTimeMs) && parsedTimeMs >= 0 ? parsedTimeMs : undefined,
       parsedMemoryKb !== undefined && Number.isFinite(parsedMemoryKb) && parsedMemoryKb >= 0 ? parsedMemoryKb : undefined,
+      language,
     );
   }
 

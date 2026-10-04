@@ -187,6 +187,10 @@ export default function SubmissionPanel({
         const payload = JSON.parse((evt as MessageEvent).data) as SubmissionDetail;
         if (payload.verdict === "PENDING" || payload.verdict === "JUDGING") return;
         setJudging(false);
+        if (payload.verdict === "AC") {
+          void qc.invalidateQueries({ queryKey: ["problem-stats"] });
+          void qc.invalidateQueries({ queryKey: ["problem-stats-run"] });
+        }
         onResult?.({
           verdict: payload.verdict,
           timeMs: payload.timeMs,

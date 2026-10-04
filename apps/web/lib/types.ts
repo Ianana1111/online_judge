@@ -248,7 +248,8 @@ export interface ProblemStats {
   solvedCount: number;
   time: { minMs: number; medianMs: number; maxMs: number } | null;
   memoryAvailable: boolean;
-  yourBest: { timeMs: number; beatsPct: number | null } | null;
+  yourBest: { timeMs: number; beatsPct: number | null; languageKey?: string; memoryKb?: number | null; timeRank?: number; timeTies?: number; memoryRank?: number | null; beatsMemoryPct?: number | null } | null;
+  memory?: { minKb: number; medianKb: number; maxKb: number; solverCount: number } | null;
   // Percentiles for one specific run (passed as ?runTimeMs=&runMemoryKb= — see the submission
   // result tab in ProblemView), as opposed to yourBest which always means "your fastest ever for
   // this problem". null unless the request asked for a specific run.
