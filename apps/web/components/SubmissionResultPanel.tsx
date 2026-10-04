@@ -1,7 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import dynamic from "next/dynamic";
+import DistributionChart from "@/components/DistributionChart";
+import { useAuthStore } from "@/store/auth";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import {
@@ -19,13 +20,6 @@ import {
 import type { ProblemStats, SubmissionResultTab, Verdict } from "@/lib/types";
 import { LANGUAGE_LABEL } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
-
-// recharts is a large charting bundle — deferred the same way ProblemStatsPanel defers it, since
-// this only renders once a submission actually comes back AC, not on first paint of the tab.
-const DistributionChart = dynamic(() => import("@/components/DistributionChart"), {
-  ssr: false,
-  loading: () => <div className="h-[140px] animate-pulse rounded bg-ink-900" />,
-}) as typeof import("@/components/DistributionChart").default;
 
 // A full-word heading + a dedicated line-art glyph per verdict — this is the "how it's presented"
 // layer for this panel. Deliberately separate from VerdictBadge's short-code labels (VERDICT_LABEL,
@@ -106,12 +100,13 @@ export default function SubmissionResultPanel({
   memoryLimitKb?: number;
 }) {
   const t = useT();
+  const userId = useAuthStore(state => state.user?.id);
   const { verdict } = resultTab;
   const isAc = verdict === "AC";
   const isCe = verdict === "CE";
 
   const { data } = useQuery({
-    queryKey: ["problem-stats-run", slug, resultTab.timeMs, resultTab.memoryKb],
+    queryKey: ["problem-stats-run", slug, userId, resultTab.timeMs, resultTab.memoryKb],
     queryFn: () =>
       apiFetch<ProblemStats>(
         `/problems/${slug}/stats?runTimeMs=${resultTab.timeMs}` +

@@ -1,5 +1,5 @@
 import { problemJudgeMode } from "@oj/shared";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import type { CreateProblemDto } from "@oj/shared";
 import { prisma } from "@oj/db";
 import type { RequestUser } from "../common/decorators";
@@ -32,6 +32,7 @@ interface HistogramBucket {
 function buildHistogram(
   points: { userId: string; value: number; languageKey: string }[],
 ): { buckets: HistogramBucket[]; bucketIndexByUserId: Map<string, number> } {
+  if (!points.length) return { buckets: [], bucketIndexByUserId: new Map() };
   const values = points.map((p) => p.value);
   const min = Math.min(...values);
   const max = Math.max(...values);
@@ -67,13 +68,17 @@ function bucketIndexForValue(buckets: HistogramBucket[], value: number): number 
   return 0;
 }
 
-/** Percentage of `values` that are >= `x` — "you beat this fraction of solvers" for a
+/** Percentage of `values` strictly greater than `x` — ties are not outperformed. For a
  * lower-is-better metric (runtime, memory). Shared by both the time and memory computations in
  * stats() below. */
 function percentileOfIn(values: number[], x: number): number | null {
   if (values.length === 0) return null;
-  const slowerOrEqual = values.filter((v) => v >= x).length;
-  return Math.round((slowerOrEqual / values.length) * 100);
+  return Math.round((values.filter((v) => v > x).length / values.length) * 1000) / 10;
+}
+
+function median(values: number[]): number {
+  const middle = Math.floor(values.length / 2);
+  return values.length % 2 ? values[middle] : (values[middle - 1] + values[middle]) / 2;
 }
 
 /**
@@ -394,13 +399,15 @@ export class ProblemsService {
    * doesn't publish memory (that column is literally commented out in their markup), so every
    * submission judged through the remote adapter has memoryKb=null; only locally-judged problems
    * ever have real memory data to chart. */
-  async stats(slug: string, requester: RequestUser | null, runTimeMs?: number, runMemoryKb?: number) {
+  async stats(slug: string, requester: RequestUser | null, runTimeMs?: number, runMemoryKb?: number, languageKey?: string) {
+    if (languageKey && !["cpp17", "c11", "python3", "java17"].includes(languageKey)) throw new BadRequestException("Unsupported comparison language");
     const problem = await prisma.problem.findUnique({ where: { slug }, select: { id: true } });
     if (!problem) throw new NotFoundException("Problem not found");
 
     const acSubs = await prisma.submission.findMany({
-      where: { problemId: problem.id, verdict: "AC", timeMs: { not: null } },
+      where: { problemId: problem.id, verdict: "AC", timeMs: { not: null }, ...(languageKey ? { languageKey } : {}) },
       select: { userId: true, timeMs: true, memoryKb: true, languageKey: true },
+      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
     });
 
     const bestByUser = new Map<string, { timeMs: number; memoryKb: number | null; languageKey: string }>();
@@ -413,10 +420,12 @@ export class ProblemsService {
     const entries = [...bestByUser.entries()];
     const times = entries.map(([, v]) => v.timeMs).sort((a, b) => a - b);
 
-    let yourBest: { timeMs: number; beatsPct: number | null } | null = null;
+    let yourBest: { timeMs: number; beatsPct: number | null; languageKey: string; memoryKb: number | null; timeRank: number; timeTies: number; memoryRank: number | null; beatsMemoryPct: number | null } | null = null;
     if (requester) {
       const mine = bestByUser.get(requester.id);
-      if (mine !== undefined) yourBest = { timeMs: mine.timeMs, beatsPct: percentileOfIn(times, mine.timeMs) };
+      if (mine !== undefined) yourBest = { ...mine, beatsPct: percentileOfIn(times, mine.timeMs),
+        timeRank: 1 + times.filter(v => v < mine.timeMs).length, timeTies: times.filter(v => v === mine.timeMs).length,
+        memoryRank: null, beatsMemoryPct: null };
     }
 
     const timePoints = entries.map(([userId, v]) => ({ userId, value: v.timeMs, languageKey: v.languageKey }));
@@ -427,6 +436,11 @@ export class ProblemsService {
       .map(([userId, v]) => ({ userId, value: v.memoryKb!, languageKey: v.languageKey }));
     const memHist = memPoints.length > 0 ? buildHistogram(memPoints) : null;
     const memValues = memPoints.map((p) => p.value).sort((a, b) => a - b);
+    if (yourBest?.memoryKb != null) {
+      const memoryKb = yourBest.memoryKb;
+      yourBest.memoryRank = 1 + memValues.filter(v => v < memoryKb).length;
+      yourBest.beatsMemoryPct = percentileOfIn(memValues, yourBest.memoryKb);
+    }
 
     // "How does *this one submission* compare" — distinct from yourBest (always your fastest ever)
     // so a re-run that's slower than an earlier AC still gets an honest percentile for the run that
@@ -451,8 +465,9 @@ export class ProblemsService {
       solvedCount: times.length,
       time:
         times.length > 0
-          ? { minMs: times[0], medianMs: times[Math.floor(times.length / 2)], maxMs: times[times.length - 1] }
+          ? { minMs: times[0], medianMs: median(times), maxMs: times[times.length - 1] }
           : null,
+      memory: memValues.length ? { minKb: memValues[0], medianKb: median(memValues), maxKb: memValues[memValues.length - 1], solverCount: memValues.length } : null,
       memoryAvailable: memHist !== null,
       yourBest,
       yourRun,

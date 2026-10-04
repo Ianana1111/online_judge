@@ -3,6 +3,7 @@ import { batch2Dictionary } from "./dict/batch2";
 import { batch3Dictionary } from "./dict/batch3";
 import { batch4Dictionary } from "./dict/batch4";
 import { batch5Dictionary } from "./dict/batch5";
+import { problemStatsDictionary } from "./dict/problemStats";
 import { billingLaunchDictionary } from "./dict/billingLaunch";
 
 /**
@@ -194,6 +195,7 @@ export const dictionary: Record<string, string> = {
   ...batch4Dictionary,
   ...batch5Dictionary,
   ...billingLaunchDictionary,
+  ...problemStatsDictionary,
 
   // --- conflict resolutions (must stay last so they win) ---
   "This problem uses a special comparison. Submit to check the result.": "這題會檢查數值誤差或答案是否符合題意，請正式提交以取得判定。",
