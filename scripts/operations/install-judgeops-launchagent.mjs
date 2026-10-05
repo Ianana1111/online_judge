@@ -4,6 +4,7 @@ import { homedir } from "node:os";
 import { dirname, resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { setTimeout as delay } from "node:timers/promises";
 
 if (process.platform !== "darwin") throw new Error("This installer supports macOS; see docs/judgeops.md for the foreground executor.");
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
@@ -44,6 +45,12 @@ if (process.argv.includes("--uninstall")) {
   if (lint.status !== 0) { await rm(temporary, { force: true }); throw new Error("Invalid launch agent configuration"); }
   launchctl("bootout", `${domain}/${label}`);
   await writeFile(target, plist, { mode: 0o600 }); await rm(temporary, { force: true });
-  if (launchctl("bootstrap", domain, target).status !== 0) throw new Error("launchctl could not start JudgeOps. Run this command in the logged-in macOS user session.");
+  // bootout can return before launchd has finished unloading the previous process.
+  let started = false;
+  for (let attempt = 0; attempt < 10; attempt++) {
+    if (launchctl("bootstrap", domain, target).status === 0) { started = true; break; }
+    if (attempt < 9) await delay(500);
+  }
+  if (!started) throw new Error("launchctl could not start JudgeOps. Run this command in the logged-in macOS user session.");
   console.log("JudgeOps executor installed and started. Login starts it automatically; sleeping/shutting down the Mac pauses execution. No API-key fallback.");
 }
