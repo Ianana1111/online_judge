@@ -2,6 +2,71 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// JudgeOps never grants deployment, billing, or database mutation capabilities to agents.
+model AgentOpsState {
+  id String @id @default("global")
+  dispatchEnabled Boolean @default(false)
+  dailyRunLimit Int @default(4)
+  budgetDay String @default("")
+  attemptsToday Int @default(0)
+  lastCollectedAt DateTime?
+  monitorError Boolean @default(false)
+  snapshot Json?
+  updatedAt DateTime @updatedAt
+}
+
+model AgentOpsCredential {
+  id String @id @default(cuid())
+  name String
+  tokenHash String @unique
+  createdById String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  lastSeenAt DateTime?
+  revokedAt DateTime?
+  runs AgentOpsRun[]
+}
+
+model AgentOpsIncident {
+  id String @id @default(cuid())
+  activeKey String? @unique
+  code String
+  title String
+  severity String
+  firstSeenAt DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+  recoveredAt DateTime?
+  healthyChecks Int @default(0)
+  runs AgentOpsRun[]
+  @@index([recoveredAt, lastSeenAt])
+}
+
+model AgentOpsRun {
+  id String @id @default(cuid())
+  queueKey String @unique
+  kind String
+  title String
+  status String @default("QUEUED")
+  incidentId String?
+  incident AgentOpsIncident? @relation(fields: [incidentId], references: [id], onDelete: SetNull)
+  evidence Json
+  steps Json @default("[]")
+  stepReceipts Json @default("[]")
+  attempts Int @default(0)
+  availableAt DateTime @default(now())
+  credentialId String?
+  credential AgentOpsCredential? @relation(fields: [credentialId], references: [id], onDelete: SetNull)
+  leaseHash String?
+  leaseUntil DateTime?
+  attemptDeadline DateTime?
+  errorCode String?
+  createdAt DateTime @default(now())
+  startedAt DateTime?
+  completedAt DateTime?
+  @@index([status, availableAt, createdAt])
+  @@index([startedAt])
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

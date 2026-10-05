@@ -14,3 +14,4 @@ export * from "./taiwanUniversityDomains.js";
 export * from "./taiwanSchoolCatalog.js";
 export * from "./telemetryPrivacy.js";
 export * from "./operations.js";
+export * from "./agentOps.js";

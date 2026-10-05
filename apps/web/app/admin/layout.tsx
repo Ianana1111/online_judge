@@ -8,6 +8,7 @@ import { useT } from "@/lib/i18n/LocaleContext";
 const SIDEBAR_GROUPS = [
   { label: "營運", links: [
     { href: "/admin", label: "營運總覽" },
+    { href: "/admin/agent-ops", label: "AI 維運中心" },
     { href: "/admin/analytics", label: "數據分析" },
     { href: "/admin/billing", label: "金流與退款" },
     { href: "/admin/services", label: "外部服務與費用" },
