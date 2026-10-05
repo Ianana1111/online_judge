@@ -26,3 +26,5 @@ apps/judge/boxes
 apps/web/public/vs
 packages/db/audit/pdf-cache
 packages/db/prisma/dev.db
+
+apps/ops-runner/runtime

@@ -1,0 +1,26 @@
+FROM node:22-bookworm
+RUN apt-get update && apt-get install -y --no-install-recommends postgresql postgresql-contrib redis-server rsync openssl \
+    && rm -rf /var/lib/apt/lists/*
+RUN npm install -g pnpm@10.8.1
+WORKDIR /opt/oj
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json turbo.json ./
+COPY packages/config ./packages/config
+COPY packages/shared/package.json ./packages/shared/package.json
+COPY packages/db/package.json ./packages/db/package.json
+COPY apps/api/package.json ./apps/api/package.json
+COPY apps/judge/package.json ./apps/judge/package.json
+COPY apps/web/package.json ./apps/web/package.json
+COPY apps/ops-runner/package.json ./apps/ops-runner/package.json
+COPY apps/ops-monitor/package.json ./apps/ops-monitor/package.json
+RUN pnpm install --frozen-lockfile --ignore-scripts
+RUN pnpm exec playwright install --with-deps chromium
+COPY . .
+RUN pnpm db:generate && cd apps/web && node scripts/copy-monaco.js
+# Compile and warm the font cache using trusted source before any agent edits exist.
+RUN NEXT_TELEMETRY_DISABLED=1 pnpm --filter @oj/web build
+RUN node scripts/operations/sandbox/prepare-fonts.mjs
+RUN chmod -R a+rX /opt/oj /root/.cache/ms-playwright && mv /root/.cache/ms-playwright /opt/browsers
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/browsers
+RUN mkdir /results /work && chown node:node /results /work
+USER node
+ENTRYPOINT ["node", "/opt/oj/scripts/operations/sandbox/check.mjs"]

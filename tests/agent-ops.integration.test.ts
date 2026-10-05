@@ -11,7 +11,7 @@ describe.skipIf(process.env.RUN_JUDGEOPS_DB_TESTS !== "1")("JudgeOps durable orc
   let credentialId: string, token: string;
   beforeAll(() => {
     const url = new URL(process.env.DATABASE_URL ?? "invalid:");
-    if (url.hostname !== "127.0.0.1" || url.port !== "56432" || url.pathname !== "/oj_test") throw new Error("Dedicated JudgeOps disposable database required");
+    if (url.hostname !== "127.0.0.1" || url.port !== (process.env.JUDGEOPS_SANDBOX === "1" ? "55432" : "56432") || url.pathname !== "/oj_test") throw new Error("Dedicated JudgeOps disposable database required");
   });
   beforeEach(async () => {
     await prisma.agentOpsRun.deleteMany(); await prisma.agentOpsIncident.deleteMany(); await prisma.agentOpsCredential.deleteMany(); await prisma.agentOpsState.deleteMany();

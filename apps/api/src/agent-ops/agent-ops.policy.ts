@@ -2,6 +2,8 @@ import type { OperationalSnapshot } from "../operations/operations.service";
 import type { OpsEvidence } from "@oj/shared";
 
 export const OPS_ALERTS: Record<string, { title: string; severity: "HIGH" | "MEDIUM" }> = {
+  FUNCTIONAL_VERIFICATION_FAILED: { title: "功能巡檢未通過", severity: "HIGH" },
+  INDEPENDENT_MONITOR_ALERT: { title: "獨立監控偵測異常或資料過期", severity: "HIGH" },
   JUDGE_PENDING_OVER_5_MINUTES: { title: "提交等待超過五分鐘", severity: "HIGH" },
   JUDGE_QUEUE_BACKLOG: { title: "判題佇列累積", severity: "MEDIUM" },
   JUDGE_SYSTEM_ERROR_RATE: { title: "判題服務錯誤率升高", severity: "HIGH" },

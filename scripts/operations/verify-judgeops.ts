@@ -5,7 +5,11 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
 import { createRequire } from "node:module";
 import { setTimeout as delay } from "node:timers/promises";
-import { resolve } from "node:path";
+import { resolve, join } from "node:path";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { processWorkflow } from "../../apps/ops-runner/src/workflow";
+import type { OpsWorkflowClaim, OpsWorkflowDashboard, OpsWorkflowResult } from "@oj/shared";
 import { prisma } from "../../packages/db/src/index";
 import { createTransport, processTask } from "../../apps/ops-runner/src/runner";
 import { checkCodexAuth, executeCodexStage } from "../../apps/ops-runner/src/codex";
@@ -13,7 +17,7 @@ import type { OpsClaim, OpsDashboard } from "../../packages/shared/src/agentOps"
 
 async function main() {
   const database = new URL(process.env.DATABASE_URL ?? "invalid:");
-  if (database.hostname !== "127.0.0.1" || database.port !== "56432" || database.pathname !== "/oj_test" || process.env.REDIS_URL !== "redis://127.0.0.1:57379") throw new Error("Only dedicated local JudgeOps test services are allowed");
+  if (database.hostname !== "127.0.0.1" || database.port !== (process.env.JUDGEOPS_SANDBOX === "1" ? "55432" : "56432") || database.pathname !== "/oj_test" || process.env.REDIS_URL !== (process.env.JUDGEOPS_SANDBOX === "1" ? "redis://127.0.0.1:56379" : "redis://127.0.0.1:57379")) throw new Error("Only dedicated local JudgeOps test services are allowed");
   if (await prisma.agentOpsRun.count() || await prisma.agentOpsCredential.count()) throw new Error("JudgeOps fixtures must start empty");
   const live = process.env.JUDGEOPS_LIVE_CODEX === "1";
   if (live) await checkCodexAuth();
@@ -26,7 +30,7 @@ async function main() {
   const address = web.address(); if (!address || typeof address === "string") throw new Error("No web fixture port");
   const child = spawn(process.execPath, ["dist/main.js"], { cwd: resolve("apps/api"), stdio: ["ignore", "ignore", "pipe"], env: {
     PATH: process.env.PATH, HOME: process.env.HOME, NODE_ENV: "test", DATABASE_URL: process.env.DATABASE_URL, REDIS_URL: process.env.REDIS_URL,
-    API_HOST: "127.0.0.1", API_PORT: "56440", WEB_ORIGIN: `http://127.0.0.1:${address.port}`, API_ORIGIN: "http://127.0.0.1:56440", ECPAY_ENV: "sandbox", BILLING_PROVIDER: "ecpay", STRIPE_ENABLED: "false", AGENT_OPS_MONITOR_ENABLED: "false",
+    API_HOST: "127.0.0.1", API_PORT: "56440", WEB_ORIGIN: `http://127.0.0.1:${address.port}`, API_ORIGIN: "http://127.0.0.1:56440", ECPAY_ENV: "sandbox", BILLING_PROVIDER: "ecpay", STRIPE_ENABLED: "false", AGENT_OPS_MONITOR_ENABLED: "false", AGENT_OPS_WORKFLOWS_ENABLED: "true",
     JWT_ACCESS_SECRET: randomBytes(32).toString("hex"), JWT_REFRESH_SECRET: randomBytes(32).toString("hex"), CSRF_SECRET: randomBytes(32).toString("hex"), INTERNAL_SERVICE_TOKEN: randomBytes(32).toString("hex"), SCHOOL_VERIFY_SECRET: randomBytes(32).toString("hex"), ACCOUNT_SECURITY_KEY: randomBytes(32).toString("hex"),
   } });
   child.stderr.on("data", () => {});
@@ -46,13 +50,17 @@ async function main() {
     for (let i = 0; i < 60; i++) { try { if ((await fetch(`${base}/health`)).ok) { ready = true; break; } } catch {} await delay(300); }
     assert.ok(ready, "Built API starts");
     assert.equal((await request("/agent-ops")).status, 401);
+    assert.equal((await request("/agent-ops/workflows")).status, 401);
+    assert.equal((await request("/internal/agent-ops/tasks/claim", "POST", {})).status, 401);
     assert.equal((await request("/internal/agent-ops/claim", "POST", {})).status, 401);
     const login = await request("/auth/login", "POST", { handle: user.handle, password }); assert.ok(login.ok);
     csrf = (await (await request("/auth/me")).json()).csrfToken;
     assert.equal((await request("/agent-ops/settings", "PATCH", { dispatchEnabled: true, dailyRunLimit: 1 }, false)).status, 403);
+    assert.equal((await request("/agent-ops/workflows", "POST", { kind: "VERIFY", requestId: randomUUID() }, false)).status, 403);
     assert.equal((await request("/agent-ops/settings", "PATCH", { dispatchEnabled: true, dailyRunLimit: 1000 })).status, 400);
     await prisma.user.update({ where: { id: user.id }, data: { role: "USER" } });
     assert.equal((await request("/agent-ops")).status, 403);
+    assert.equal((await request("/agent-ops/workflows")).status, 403);
     assert.equal((await request("/agent-ops/credentials", "POST", { name: "unauthorized" })).status, 403);
     await prisma.user.update({ where: { id: user.id }, data: { role: "ADMIN" } });
     assert.ok((await request("/agent-ops/collect", "POST", {})).ok);
@@ -73,14 +81,33 @@ async function main() {
     const dashboard = await response.json() as OpsDashboard;
     const report = dashboard.runs.find(r => r.id === first.id); assert.equal(report?.status, "COMPLETED"); assert.equal(report.steps.length, 3);
     assert.ok(!JSON.stringify(dashboard).includes(token)); assert.ok(!JSON.stringify(dashboard).includes(task.lease));
+    const runtime = await mkdtemp(join(tmpdir(), "judgeops-http-"));
+    try {
+      const verified: OpsWorkflowResult = { summary: "Synthetic HTTP wiring only; no external action performed", outcome: "PASS", checks: [{ name: "fixture", status: "PASS", durationMs: 0, detail: "Synthetic" }], artifacts: [], review: "NOT_REVIEWED", inputTokens: 0, outputTokens: 0, modelCalls: 0, metrics: {} };
+      assert.ok((await request("/agent-ops/workflows", "POST", { kind: "VERIFY", requestId: randomUUID() })).ok);
+      const workflow = (await transport<{ task: OpsWorkflowClaim }>("/tasks/claim")).task; assert.equal(workflow.task.kind, "VERIFY");
+      assert.equal(await processWorkflow(workflow, transport, runtime, signal, async (_claim, _dir, _signal, progress) => { await progress("FIXTURE", "Synthetic handoff"); return verified; }), "PASS");
+      assert.ok((await request("/agent-ops/workflows", "POST", { kind: "REPAIR", requestId: randomUUID(), objective: "Synthetic wiring fixture", files: ["apps/web/lib/api.ts"] })).ok);
+      const repair = (await transport<{ task: OpsWorkflowClaim }>("/tasks/claim")).task; assert.equal(repair.task.kind, "REPAIR");
+      const result: OpsWorkflowResult = { ...verified, outcome: "READY", review: "APPROVED", checks: ["regression-proof", "full-suite", "qa-review", "security-review"].map(name => ({ name, status: "PASS", durationMs: 0, detail: "Synthetic wiring fixture" })), baseSha: "a".repeat(40), headSha: "b".repeat(40), patchHash: "c".repeat(64), branch: "judgeops/fixture", pullNumber: 1, pullUrl: "https://github.com/Ianana1111/online_judge/pull/1" };
+      assert.equal(await processWorkflow(repair, transport, runtime, signal, async () => result), "READY");
+      const tasks = await (await request("/agent-ops/workflows")).json() as OpsWorkflowDashboard;
+      const ready = tasks.tasks.find(t => t.id === repair.task.id)!;
+      assert.equal((await request(`/agent-ops/workflows/${ready.id}/approve`, "POST", { digest: ready.approvalDigest }, false)).status, 403);
+      assert.equal((await request(`/agent-ops/workflows/${ready.id}/approve`, "POST", { digest: "d".repeat(64) })).status, 409);
+      assert.ok((await request(`/agent-ops/workflows/${ready.id}/approve`, "POST", { digest: ready.approvalDigest })).ok);
+      const release = (await transport<{ task: OpsWorkflowClaim }>("/tasks/claim")).task;
+      assert.equal(release.task.kind, "RELEASE"); assert.equal(release.task.approvalDigest, ready.approvalDigest);
+      assert.equal(await processWorkflow(release, transport, runtime, signal, async () => ({ ...verified, outcome: "RELEASED" })), "RELEASED");
+    } finally { await rm(runtime, { recursive: true, force: true }); }
     assert.equal((await request("/internal/operations", "GET")).status, 401);
     const elevated = await fetch(`${base}/internal/operations`, { headers: { "x-internal-token": token } }); assert.equal(elevated.status, 401);
     assert.ok((await request(`/agent-ops/credentials/${credentialId}/revoke`, "POST", {})).ok);
     await assert.rejects(() => transport("/claim"));
-    console.log(JSON.stringify({ mode: live ? "live-codex" : "synthetic", stages: report.steps.map(s => s.role), inputs: report.steps.reduce((n, s) => n + s.inputTokens, 0), outputs: report.steps.reduce((n, s) => n + s.outputTokens, 0), auth: "passed", csrf: "passed", revocation: "passed", reportStored: true }));
+    console.log(JSON.stringify({ mode: live ? "live-codex" : "synthetic", stages: report.steps.map(s => s.role), inputs: report.steps.reduce((n, s) => n + s.inputTokens, 0), outputs: report.steps.reduce((n, s) => n + s.outputTokens, 0), auth: "passed", csrf: "passed", revocation: "passed", reportStored: true, workflowHandoffs: "passed", exactApproval: "passed" }));
   } finally {
     child.kill("SIGTERM"); web.close();
-    await prisma.agentOpsRun.deleteMany(); await prisma.agentOpsIncident.deleteMany(); await prisma.agentOpsCredential.deleteMany(); await prisma.agentOpsState.deleteMany();
+    await prisma.agentOpsTask.deleteMany(); await prisma.agentOpsRun.deleteMany(); await prisma.agentOpsIncident.deleteMany(); await prisma.agentOpsCredential.deleteMany(); await prisma.agentOpsState.deleteMany();
     await prisma.user.delete({ where: { id: user.id } }); await prisma.$disconnect();
   }
 }

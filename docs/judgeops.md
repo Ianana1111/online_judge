@@ -1,6 +1,6 @@
 # JudgeOps：雲端監控＋Codex 執行器
 
-第一版實作日期：2026-10-05。報告入口：`https://judge.tw/admin/agent-ops`（僅管理員）；後台總覽也有入口。
+第一版實作日期：2026-10-05。第二階段的驗證、修復 PR、版本核准發布與独立 GCP 監控，請參閱 [工作流程文件](judgeops-workflows.md)。本頁保留第一版報告流程說明。報告入口：`https://judge.tw/admin/agent-ops`（僅管理員）；後台總覽也有入口。
 
 ## 已實作的流程
 
@@ -34,8 +34,8 @@ flowchart LR
 ```dotenv
 JUDGEOPS_API_URL=https://api.judge.tw
 JUDGEOPS_RUNNER_TOKEN=填入後台產生的憑證
-# 留空時用 CLI 預設模型；可設定自己帳號可用的模型名稱。
-# JUDGEOPS_CODEX_MODEL=
+# 固定使用 GPT-6 Sol，推理強度 high；不會切換更強模型。
+JUDGEOPS_CODEX_MODEL=gpt-6-sol
 ```
 
 前景執行（在 repo 根目錄）：
