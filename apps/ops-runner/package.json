@@ -1,0 +1,9 @@
+{
+  "name": "@oj/ops-runner",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": { "start": "tsx src/cli.ts", "typecheck": "tsc --noEmit", "build": "tsc --noEmit" },
+  "dependencies": { "@oj/shared": "workspace:*", "tsx": "^4.19.0", "zod": "^3.23.8" },
+  "devDependencies": { "@types/node": "^22.9.0", "typescript": "^5.6.0" }
+}

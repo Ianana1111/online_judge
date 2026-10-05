@@ -3,5 +3,5 @@ import { AdminOverviewService } from "./admin-overview.service";
 import { Module } from "@nestjs/common";
 import { OperationsService } from "./operations.service";
 import { OperationsController, InternalOperationsController } from "./operations.controller";
-@Module({ controllers: [OperationsController, InternalOperationsController], providers: [OperationsService, ExternalServicesService, AdminOverviewService] })
+@Module({ controllers: [OperationsController, InternalOperationsController], providers: [OperationsService, ExternalServicesService, AdminOverviewService], exports: [OperationsService] })
 export class OperationsModule {}

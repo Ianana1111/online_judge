@@ -7,6 +7,7 @@ import { AchievementsModule } from "./achievements/achievements.module";
 import { AnalyticsModule } from "./analytics/analytics.module";
 import { AssignmentsModule } from "./assignments/assignments.module";
 import { AuthGuard } from "./auth/auth.guard";
+import { AgentOpsModule } from "./agent-ops/agent-ops.module";
 import { AuthModule } from "./auth/auth.module";
 import { BillingModule } from "./billing/billing.module";
 import { ClassesModule } from "./classes/classes.module";
@@ -55,6 +56,7 @@ import { UsersModule } from "./users/users.module";
     AchievementsModule,
     PostsModule,
     OperationsModule,
+    AgentOpsModule,
   ],
   controllers: [HealthController],
   providers: [
