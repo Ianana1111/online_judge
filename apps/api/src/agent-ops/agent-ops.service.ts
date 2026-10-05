@@ -1,6 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException, type OnModuleDestroy, type OnModuleInit } from "@nestjs/common";
 import { createHash, randomBytes } from "node:crypto";
-import { prisma, type Prisma } from "@oj/db";
+import { independentEvidence, verificationEvidence } from "./ops-evidence";
+import { prisma, Prisma } from "@oj/db";
 import { opsRoleForStep, validateOpsEvidence, type OpsCompleteInput, type OpsDashboard, type OpsEvidence, type OpsFailure, type OpsRun, type OpsStep } from "@oj/shared";
 import { OperationsService } from "../operations/operations.service";
 import { dailyReportDue, makeOpsEvidence, OPS_ALERTS, taipeiDay } from "./agent-ops.policy";
@@ -45,7 +46,17 @@ export class AgentOpsService implements OnModuleInit, OnModuleDestroy {
     const alerts = snapshot ? snapshot.alerts.filter(a => a in OPS_ALERTS) : ["OPS_SNAPSHOT_UNAVAILABLE"];
     if (snapshot?.judge && (snapshot.judge.heartbeatAgeSeconds === null || snapshot.judge.heartbeatAgeSeconds > 120) && !alerts.includes("JUDGE_WORKER_UNREACHABLE")) alerts.push("JUDGE_WORKER_UNREACHABLE");
     if (!web.ok) alerts.push("PUBLIC_WEB_UNAVAILABLE");
-    await this.recordObservation(makeOpsEvidence(snapshot, web, measuredAt), alerts, !snapshot, measuredAt);
+    const evidence = makeOpsEvidence(snapshot, web, measuredAt);
+    if (process.env.AGENT_OPS_WORKFLOWS_ENABLED === "true") {
+      const latest = await prisma.agentOpsTask.findFirst({ where: { kind: "VERIFY", result: { not: Prisma.JsonNull } }, orderBy: { completedAt: "desc" } });
+      const verified = verificationEvidence(latest, measuredAt); evidence.push(verified);
+      if (verified.data.outcome === "FAIL" && typeof verified.data.ageSeconds === "number" && verified.data.ageSeconds < 36 * 3600) alerts.push("FUNCTIONAL_VERIFICATION_FAILED");
+    }
+    if (process.env.JUDGEOPS_MONITOR_URL) {
+      const independent = await independentEvidence(process.env.JUDGEOPS_MONITOR_URL, measuredAt); evidence.push(independent);
+      if (["INCIDENT", "STALE", "UNKNOWN"].includes(String(independent.data.status))) alerts.push("INDEPENDENT_MONITOR_ALERT");
+    }
+    await this.recordObservation(evidence, alerts, !snapshot, measuredAt);
   }
   private async probeWeb() {
     const started = Date.now();
@@ -143,7 +154,7 @@ export class AgentOpsService implements OnModuleInit, OnModuleDestroy {
       const today = taipeiDay(now), used = state.budgetDay === today ? state.attemptsToday : 0;
       if (used >= state.dailyRunLimit) return { task: null, reason: "DAILY_LIMIT", retryAfterSeconds: 300 };
       // Initial deployment deliberately permits just one active investigation globally.
-      if (await tx.agentOpsRun.count({ where: { status: "RUNNING" } })) return { task: null, reason: "BUSY", retryAfterSeconds: 30 };
+      if (await tx.agentOpsTask.count({ where: { status: "RUNNING", leaseUntil: { gt: now } } }) || await tx.agentOpsRun.count({ where: { status: "RUNNING" } })) return { task: null, reason: "BUSY", retryAfterSeconds: 30 };
       const run = await tx.agentOpsRun.findFirst({ where: { status: "QUEUED", availableAt: { lte: now } }, orderBy: { createdAt: "asc" } });
       if (!run) return { task: null, reason: "IDLE", retryAfterSeconds: 30 };
       const lease = randomBytes(32).toString("hex");

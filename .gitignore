@@ -28,3 +28,6 @@ packages/db/audit/pdf-cache/
 
 # Local payment test credentials and signing secrets
 .env.stripe.local
+
+# Private JudgeOps worktrees and validation artifacts
+apps/ops-runner/runtime/

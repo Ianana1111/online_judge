@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { OPS_REASONING_EFFORT, selectedOpsModel } from "./model.js";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -17,10 +18,11 @@ export function codexEnvironment(env: NodeJS.ProcessEnv = process.env): NodeJS.P
 }
 export const DISABLED_FEATURES = ["apps", "plugins", "hooks", "shell_tool", "unified_exec", "browser_use", "browser_use_external", "browser_use_full_cdp_access", "computer_use", "in_app_browser", "in_app_local_automation", "image_generation", "multi_agent", "multi_agent_v2", "memories", "skill_search", "skill_mcp_dependency_install", "tool_suggest", "view_image", "goals", "sleep_tool", "code_mode", "code_mode_host"];
 export function codexArgs(workspace: string, schema: string, output: string, model?: string) {
+  const selectedModel = selectedOpsModel(model);
   return ["exec", "--ignore-user-config", "--ignore-rules", "--ephemeral", "--skip-git-repo-check", "--sandbox", "read-only", "--json", "--color", "never", "--cd", workspace,
-    "-c", 'approval_policy="never"', "-c", 'forced_login_method="chatgpt"', "-c", 'model_provider="openai"', "-c", 'model_reasoning_effort="low"',
+    "-c", 'approval_policy="never"', "-c", 'forced_login_method="chatgpt"', "-c", 'model_provider="openai"', "-c", `model_reasoning_effort="${OPS_REASONING_EFFORT}"`,
     "-c", 'web_search="disabled"', "-c", "project_doc_max_bytes=0", "-c", "features.skip_host_skill_discovery=true", "-c", "allow_login_shell=false",
-    ...DISABLED_FEATURES.flatMap(feature => ["--disable", feature]), ...(model ? ["--model", model] : []), "--output-schema", schema, "--output-last-message", output, "-"];
+    ...DISABLED_FEATURES.flatMap(feature => ["--disable", feature]), "--model", selectedModel, "--output-schema", schema, "--output-last-message", output, "-"];
 }
 const ROLE_TASK: Record<OpsRole, string> = {
   TRIAGE: "你是事件主管。整理影響和資料缺口，選擇 SRE、JUDGE 或 ENGINEER 作為專責人員，交付可執行的調查方向。review 必須為 NOT_REVIEWED。",
@@ -56,13 +58,21 @@ export async function checkCodexAuth(binary = "codex") {
   });
   if (!/logged in using ChatGPT/i.test(output)) throw new RunnerFailure("AUTH");
 }
-export async function executeCodexStage(task: OpsClaim, signal: AbortSignal, options: { binary?: string; model?: string; timeoutMs?: number; diagnostic?: (message: string) => void } = {}): Promise<OpsCompleteInput> {
+export type CodexOptions = { binary?: string; model?: string; timeoutMs?: number; diagnostic?: (message: string) => void; maxBytes?: number };
+export async function executeCodexStage(task: OpsClaim, signal: AbortSignal, options: CodexOptions = {}): Promise<OpsCompleteInput> {
+  const result = await executeCodexJson(buildPrompt(task), OPS_OUTPUT_JSON_SCHEMA, value => {
+    const output = opsAgentOutputSchema.parse(value);
+    validateOpsEvidence(output, task.run.evidence, task.role); return output;
+  }, signal, options);
+  return { lease: task.lease, step: task.step, ...result };
+}
+export async function executeCodexJson<T>(prompt: string, schema: unknown, validate: (value: unknown) => T, signal: AbortSignal, options: CodexOptions = {}): Promise<{ output: T; model: string; inputTokens: number; outputTokens: number }> {
   if (signal.aborted) throw new RunnerFailure("INTERRUPTED");
   const workspace = await mkdtemp(join(tmpdir(), "judgeops-"));
   const outputPath = join(workspace, "response.json"), schemaPath = join(workspace, "schema.json");
   try {
-    await writeFile(schemaPath, JSON.stringify(OPS_OUTPUT_JSON_SCHEMA), { mode: 0o600 });
-    let inputTokens = 0, outputTokens = 0, finished = false, model = options.model ?? "codex-default";
+    await writeFile(schemaPath, JSON.stringify(schema), { mode: 0o600 });
+    let inputTokens = 0, outputTokens = 0, finished = false, model = selectedOpsModel(options.model);
     await new Promise<void>((resolve, reject) => {
       const child = spawn(options.binary ?? "codex", codexArgs(workspace, schemaPath, outputPath, options.model), { env: codexEnvironment(), stdio: ["pipe", "pipe", "pipe"], detached: true });
       let buffer = "", diagnostic = "", bytes = 0, failure: OpsFailure | undefined;
@@ -98,14 +108,13 @@ export async function executeCodexStage(task: OpsClaim, signal: AbortSignal, opt
         else if (code !== 0 || !finished) reject(new RunnerFailure(classifyCodexFailure(diagnostic)));
         else resolve();
       });
-      child.stdin.end(buildPrompt(task));
+      child.stdin.end(prompt);
     });
     const content = await readFile(outputPath, "utf8");
-    if (Buffer.byteLength(content) > 48_000) throw new RunnerFailure("INVALID_OUTPUT");
+    if (Buffer.byteLength(content) > Math.min(options.maxBytes ?? 48_000, 160_000)) throw new RunnerFailure("INVALID_OUTPUT");
     try {
-      const output = opsAgentOutputSchema.parse(JSON.parse(content));
-      validateOpsEvidence(output, task.run.evidence, task.role);
-      return { lease: task.lease, step: task.step, output, inputTokens, outputTokens, model };
+      const output = validate(JSON.parse(content));
+      return { output, inputTokens, outputTokens, model };
     } catch (error) {
       const issues = (error as { issues?: { path: (string | number)[]; code: string }[] }).issues;
       options.diagnostic?.(issues ? `Output schema: ${issues.map(i => `${i.path.join(".")}:${i.code}`).join(", ")}` : "Output JSON or evidence validation failed");

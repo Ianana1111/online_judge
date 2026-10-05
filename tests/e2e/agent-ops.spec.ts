@@ -14,7 +14,8 @@ test("JudgeOps reports, controls and executor onboarding work on desktop/mobile"
     const path = new URL(route.request().url()).pathname;
     if (path === "/auth/me") return route.fulfill({ json: { id: "opsadmin", handle: "operator", role: "ADMIN", plan: "PRO", settings: { profileSetupDismissed: true }, csrfToken: "fixture" } });
     if (path === "/agent-ops") return route.fulfill({ json: data });
-    if (path.startsWith("/agent-ops/")) expect(route.request().headers()["x-csrf-token"]).toBe("fixture");
+    if (path === "/agent-ops/workflows") return route.fulfill({ json: { tasks: [], latestVerification: null, evaluation: null, enabled: true, autoVerify: true, monitorUrl: null, approvedReleases: 0, revertedReleases: 0 } });
+    if (path.startsWith("/agent-ops/") && route.request().method() !== "GET") expect(route.request().headers()["x-csrf-token"]).toBe("fixture");
     if (path === "/agent-ops/settings") { data.settings = route.request().postDataJSON(); return route.fulfill({ json: {} }); }
     if (path === "/agent-ops/runs/paused1/retry") { paused.status = "QUEUED"; paused.errorCode = null; return route.fulfill({ json: { ok: true } }); }
     if (path === "/agent-ops/credentials") return route.fulfill({ json: { token: "jo_" + "a".repeat(64) } });
@@ -57,4 +58,26 @@ test("JudgeOps shows stale/offline data without reporting everything healthy", a
   await page.goto("/admin/agent-ops");
   await expect(page.locator("main [role=alert]")).toContainText("無法取得最新維運資料", { timeout: 20000 });
   await expect(page.getByText("運作中", { exact: true })).toHaveCount(0);
+});
+
+test("JudgeOps requires explicit approval of a reviewed revision and shows verification limits", async ({ page }) => {
+  const now = new Date().toISOString(), digest = "d".repeat(64), head = "a".repeat(40);
+  const task = { id: "repair1", kind: "REPAIR", title: "修复測試工作", status: "AWAITING_APPROVAL", createdAt: now, completedAt: now, payload: {}, events: [{ sequence: 0, label: "QA", detail: "完整測試已通過", at: now, data: {} }], approvalDigest: digest, result: { summary: "已修正輸入邊界條件，等待你的核准。", outcome: "READY", checks: [{ name: "regression-proof", status: "PASS", detail: "原版失敗，修復後通過", durationMs: 1 }], artifacts: [], headSha: head, pullUrl: "https://github.com/Ianana1111/online_judge/pull/1", pullNumber: 1, modelCalls: 3, inputTokens: 1500, outputTokens: 300 } };
+  const workflows = { tasks: [task], enabled: true, autoVerify: true, monitorUrl: "https://judgeops-status-example.run.app", latestVerification: null, evaluation: null, approvedReleases: 0, revertedReleases: 0 };
+  const dashboard = { measuredAt: now, settings: { dispatchEnabled: true, dailyRunLimit: 4 }, monitor: { enabled: true, lastCollectedAt: now, error: false }, counts: { queued: 0, running: 0, paused: 0, completed24h: 0, openIncidents: 0, startsToday: 1 }, credentials: [], incidents: [], runs: [] };
+  let approved = false;
+  await page.route("http://127.0.0.1:55440/**", async route => {
+    const path = new URL(route.request().url()).pathname;
+    if (path === "/auth/me") return route.fulfill({ json: { id: "admin", handle: "operator", role: "ADMIN", plan: "PRO", csrfToken: "fixture", settings: { profileSetupDismissed: true } } });
+    if (path === "/agent-ops") return route.fulfill({ json: dashboard });
+    if (path === "/agent-ops/workflows") return route.fulfill({ json: workflows });
+    if (path === "/agent-ops/workflows/repair1/approve") { expect(route.request().postDataJSON()).toEqual({ digest }); expect(route.request().headers()["x-csrf-token"]).toBe("fixture"); approved = true; task.status = "APPROVED"; return route.fulfill({ json: { id: "release1" } }); }
+    return route.fulfill({ json: [] });
+  });
+  await page.goto("/admin/agent-ops");
+  const button = page.getByRole("button", { name: "核准並發布" });
+  await expect(button).toBeDisabled(); await expect(page.getByText(head, { exact: true })).toBeVisible();
+  await page.getByRole("checkbox", { name: /我已查看 PR/ }).check(); await expect(button).toBeEnabled();
+  await button.click(); await expect(page.getByText("已核准", { exact: true }).first()).toBeVisible(); expect(approved).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

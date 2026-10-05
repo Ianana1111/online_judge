@@ -1,22 +1,38 @@
 import { setTimeout as delay } from "node:timers/promises";
-import type { OpsClaim } from "@oj/shared";
+import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
+import { processWorkflow } from "./workflow.js";
+import { selectedOpsModel } from "./model.js";
+import type { OpsWorkflowClaim, OpsClaim } from "@oj/shared";
 import { checkCodexAuth, executeCodexStage, RunnerFailure } from "./codex.js";
 import { createTransport, processTask, TransportError } from "./runner.js";
 
 const stop = new AbortController();
 process.once("SIGINT", () => stop.abort()); process.once("SIGTERM", () => stop.abort());
 async function main() {
+  selectedOpsModel(process.env.JUDGEOPS_CODEX_MODEL);
   await checkCodexAuth();
   if (process.argv.includes("--check")) { console.log("Codex ChatGPT authentication: OK. No model request made."); return; }
   const api = process.env.JUDGEOPS_API_URL ?? "https://api.judge.tw";
   const token = process.env.JUDGEOPS_RUNNER_TOKEN ?? "";
   const transport = createTransport(api, token);
   const once = process.argv.includes("--once");
-  console.log("JudgeOps executor started. ChatGPT authentication; no API fallback; reports only.");
+  console.log("JudgeOps executor started. ChatGPT authentication; GPT-6 Sol / high; no API fallback; production releases require exact revision approval.");
   while (!stop.signal.aborted) {
     let wait = 30;
     try {
       await checkCodexAuth();
+      if (process.env.JUDGEOPS_WORKFLOWS_ENABLED === "true") {
+        const workflow = await transport<{ task: OpsWorkflowClaim | null }>("/tasks/claim");
+        if (workflow.task) {
+          const id = workflow.task.task.id;
+          console.log(JSON.stringify({ event: "workflow_claimed", id, kind: workflow.task.task.kind }));
+          const result = await processWorkflow(workflow.task, transport, resolve(process.env.JUDGEOPS_RUNTIME_DIR ?? fileURLToPath(new URL("../runtime", import.meta.url))), stop.signal);
+          console.log(JSON.stringify({ event: "workflow_finished", id, result }));
+          if (once || ["QUOTA", "AUTH"].includes(result)) break;
+          continue;
+        }
+      }
       const { task, retryAfterSeconds, reason } = await transport<{ task: OpsClaim | null; retryAfterSeconds: number; reason?: string }>("/claim");
       wait = Math.max(10, Math.min(300, retryAfterSeconds));
       if (task) {

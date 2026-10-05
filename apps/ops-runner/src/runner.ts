@@ -9,7 +9,7 @@ export function createTransport(origin: string, token: string): Transport {
   if (url.username || url.password || url.search || url.hash || url.pathname !== "/" || !(url.protocol === "https:" || url.protocol === "http:" && ["127.0.0.1", "localhost"].includes(url.hostname))) throw new Error("JUDGEOPS_API_URL must be an HTTPS origin (HTTP is allowed only on localhost)");
   if (!/^jo_[a-f0-9]{64}$/.test(token)) throw new Error("Invalid JudgeOps executor token");
   return async <T>(path: string, body: unknown = {}) => {
-    if (!/^\/(claim|runs\/[a-z0-9]+\/(heartbeat|steps|fail))$/.test(path)) throw new Error("Invalid runner route");
+    if (!/^\/(claim|runs\/[a-z0-9]+\/(heartbeat|steps|fail)|tasks\/claim|tasks\/[a-z0-9]+\/(heartbeat|events|complete|fail))$/.test(path)) throw new Error("Invalid runner route");
     const response = await fetch(`${url.origin}/internal/agent-ops${path}`, { method: "POST", redirect: "error", signal: AbortSignal.timeout(12_000), headers: { authorization: `Bearer ${token}`, "content-type": "application/json" }, body: JSON.stringify(body) });
     if (!response.ok) { await response.body?.cancel(); throw new TransportError(response.status); }
     const text = await response.text();

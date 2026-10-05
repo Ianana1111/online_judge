@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { WorkflowPanel } from "./workflows";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { OPS_FAILURE_LABELS, type OpsDashboard, type OpsRole, type OpsRun } from "@oj/shared";
 import { apiFetch } from "@/lib/api";
@@ -70,19 +71,20 @@ export default function AgentOpsPage() {
           {active ? <Report run={active} busy={busy} onAction={action => mutation.mutate({ path: `/agent-ops/runs/${active.id}/${action}` })} /> : <div className="oj-card flex min-h-60 items-center justify-center p-6 text-sm text-ink-400">報告會在這裡顯示，包含調查交接與證據。</div>}
         </div>
       </section>
+      {user && <WorkflowPanel userId={user.id} />}
       <section id="executor" className="oj-card scroll-mt-24 p-4 sm:p-5" aria-labelledby="executor-title">
-        <h2 id="executor-title" className="font-semibold text-ink-100">執行器與額度</h2><p className="mt-2 text-sm leading-6 text-ink-400">使用你已登入 ChatGPT 的 Codex CLI。每個工作最多三個角色，僅分析監控證據；不會操作正式資料或自動改用付費 API。</p>
+        <h2 id="executor-title" className="font-semibold text-ink-100">執行器與額度</h2><p className="mt-2 text-sm leading-6 text-ink-400">使用你已登入 ChatGPT 的 Codex CLI。報告與修復每個最多三次模型呼叫，成效比較最多八次。全部固定 GPT-6 Sol／high，不會自動改用付費 API；正式發布須由你核准。</p>
         <div className="mt-5 flex flex-wrap items-end gap-3">
-          <label className="text-xs text-ink-300">每天最多啟動次數（含重試）<input className="oj-input mt-2 block w-32" type="number" min={1} max={20} value={limit ?? data.settings.dailyRunLimit} onChange={e => setLimit(Number(e.target.value))} /></label>
+          <label className="text-xs text-ink-300">每天 AI 工作額度（含重試）<input className="oj-input mt-2 block w-32" type="number" min={1} max={20} value={limit ?? data.settings.dailyRunLimit} onChange={e => setLimit(Number(e.target.value))} /></label>
           <button className="oj-btn-secondary text-xs" disabled={busy || !Number.isInteger(limit ?? data.settings.dailyRunLimit) || (limit ?? data.settings.dailyRunLimit) < 1 || (limit ?? data.settings.dailyRunLimit) > 20} onClick={() => mutation.mutate({ path: "/agent-ops/settings", method: "PATCH", body: { ...data.settings, dailyRunLimit: limit ?? data.settings.dailyRunLimit } })}>儲存上限</button>
           <button className="oj-btn-secondary text-xs" disabled={busy} onClick={() => mutation.mutate({ path: "/agent-ops/settings", method: "PATCH", body: { ...data.settings, dispatchEnabled: !data.settings.dispatchEnabled } })}>{data.settings.dispatchEnabled ? "暫停所有派工" : "開啟調查派工"}</button>
         </div>
-        <p className="mt-3 text-xs leading-5 text-ink-400">台灣時間每日重置。這是工作次數限制，不是 Codex 剩餘 token 額度；遇到額度或登入問題會自動暫停派工。</p>
+        <p className="mt-3 text-xs leading-5 text-ink-400">台灣時間每日重置。報告／修復各占 1 份，成效比較占 3 份；巡檢及已核准發布不占 AI 額度。這不是 Codex 剩餘 token；遇到額度或登入問題會自動暫停派工。</p>
         <div className="mt-5 border-t border-ink-700 pt-5">
           <div className="flex flex-wrap items-end gap-3"><label className="min-w-0 text-xs text-ink-300">執行器名稱<input className="oj-input mt-2 block w-full sm:w-60" maxLength={60} value={name} onChange={e => setName(e.target.value)} /></label><button disabled={busy || !name.trim()} className="oj-btn-secondary text-xs" onClick={() => mutation.mutate({ path: "/agent-ops/credentials", body: { name: name.trim() } })}>建立連線憑證</button></div>
           {secret && <div className="mt-4 rounded-lg border border-brand/30 p-4"><p className="text-sm font-medium text-ink-100">憑證只顯示這一次，有效 90 天</p><p className="mt-1 text-xs leading-5 text-ink-400">將憑證保存到執行機的私密環境設定，請勿提交到 Git。</p><div className="mt-3 flex flex-wrap gap-2"><input aria-label="新的執行器憑證" type="password" value={secret} readOnly className="oj-input min-w-0 flex-1 font-mono text-xs" /><button className="oj-btn-secondary text-xs" onClick={() => void navigator.clipboard.writeText(secret).then(() => setCopied(true)).catch(() => setNotice("無法使用剪貼簿，請從憑證欄位手動複製。"))}>{copied ? "已複製" : "複製憑證"}</button><button className="oj-btn-secondary text-xs" onClick={() => setSecret(null)}>已保存，關閉</button></div></div>}
           <ol className="mt-4 list-decimal space-y-2 pl-5 text-xs leading-6 text-ink-300"><li>在執行機執行 <code>codex login</code>，使用 ChatGPT 帳號登入。</li><li>設定 <code>JUDGEOPS_API_URL</code> 和 <code>JUDGEOPS_RUNNER_TOKEN</code>。</li><li>在專案執行 <code>pnpm --filter @oj/ops-runner start --check</code> 檢查登入，再執行 <code>pnpm --filter @oj/ops-runner start</code>。</li></ol>
-          <p className="mt-2 text-xs text-ink-400">電腦睡眠或關機時會停止接工作；工作會保留，未完成階段會在重新連線後接續。</p>
+          <p className="mt-2 text-xs text-ink-400">電腦睡眠或關機時會停止接工作；工作會保留；修復或發布若中途斷線，會暫停等待核對外部狀態。</p>
           <div className="mt-4 divide-y divide-ink-700">{data.credentials.map(c => <div key={c.id} className="flex flex-wrap items-center justify-between gap-3 py-3"><div><p className="text-sm text-ink-100">{c.name}{c.revokedAt ? " · 已撤銷" : +new Date(c.expiresAt) < Date.now() ? " · 已到期" : ""}</p><p className="mt-1 text-xs text-ink-400">最近連線 {time(c.lastSeenAt)} · 到期 {time(c.expiresAt)}</p></div>{!c.revokedAt && <button className="oj-btn-secondary text-xs" disabled={busy} onClick={() => mutation.mutate({ path: `/agent-ops/credentials/${c.id}/revoke` })}>撤銷憑證</button>}</div>)}</div>
         </div>
       </section>
@@ -106,7 +108,7 @@ function Report({ run, busy, onAction }: { run: OpsRun; busy: boolean; onAction:
     </div> : <p className="py-6 text-sm leading-6 text-ink-400">{run.status === "RUNNING" ? "事件主管正在整理資料。" : "尚未產生 AI 結論。執行器連線且派工開啟後會接手。"}</p>}
     <details className="mt-5 border-t border-ink-700 pt-4"><summary className="cursor-pointer text-xs font-medium text-ink-300">查看交接紀錄與用量</summary><div className="mt-3 space-y-4">{run.steps.map((step, i) => <div key={i} className="border-l border-ink-600 pl-3"><p className="text-xs font-semibold text-ink-100">{roles[step.role]} · {time(step.completedAt)}</p><p className="mt-1 whitespace-pre-wrap break-words text-xs leading-6 text-ink-300">{step.output.summary}</p><p className="mt-1 break-all font-mono text-[10px] text-ink-400">{step.model} · 輸入 {step.inputTokens.toLocaleString()} / 輸出 {step.outputTokens.toLocaleString()} tokens</p></div>)}{!run.steps.length && <p className="text-xs text-ink-400">尚無交接紀錄。</p>}</div></details>
     <details className="mt-4 border-t border-ink-700 pt-4"><summary className="cursor-pointer text-xs font-medium text-ink-300">查看原始指標</summary><div className="mt-3 space-y-4">{run.evidence.map(e => <div key={e.id}><p className="text-xs font-medium text-ink-200">{e.label} · {e.id}</p><p className="mt-1 text-[10px] text-ink-400">採樣 {time(e.observedAt)}</p><dl className="mt-2 grid grid-cols-1 gap-1 sm:grid-cols-2">{Object.entries(e.data).map(([key, value]) => <div key={key} className="flex min-w-0 justify-between gap-2 text-[11px] leading-5"><dt className="break-all text-ink-400">{key}</dt><dd className="shrink-0 font-mono text-ink-200">{value === null ? "未知" : String(value)}</dd></div>)}</dl></div>)}</div></details>
-    <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-ink-700 pt-4">{["FAILED", "PAUSED"].includes(run.status) && <button className="oj-btn-secondary text-xs" disabled={busy} onClick={() => onAction("retry")}>接續重試</button>}{["QUEUED", "RUNNING", "PAUSED"].includes(run.status) && <button className="oj-btn-secondary text-xs" disabled={busy} onClick={() => onAction("cancel")}>取消工作</button>}<p className="text-[11px] leading-5 text-ink-400">報告完成不代表服務已修復；本版本不執行正式環境修改。</p></div>
+    <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-ink-700 pt-4">{["FAILED", "PAUSED"].includes(run.status) && <button className="oj-btn-secondary text-xs" disabled={busy} onClick={() => onAction("retry")}>接續重試</button>}{["QUEUED", "RUNNING", "PAUSED"].includes(run.status) && <button className="oj-btn-secondary text-xs" disabled={busy} onClick={() => onAction("cancel")}>取消工作</button>}<p className="text-[11px] leading-5 text-ink-400">報告完成不代表服務已修復；需要修改時，請建立修復工作並查看驗證結果。</p></div>
   </article>;
 }
 function TextList({ title, values }: { title: string; values: string[] }) { return <div><h4 className="text-sm font-semibold text-ink-100">{title}</h4><ul className="mt-2 list-disc space-y-2 pl-4 text-xs leading-6 text-ink-300">{values.map((value, i) => <li className="whitespace-pre-wrap break-words" key={i}>{value}</li>)}</ul></div>; }

@@ -67,6 +67,33 @@ model AgentOpsRun {
   @@index([startedAt])
 }
 
+model AgentOpsTask {
+  id String @id @default(cuid())
+  requestKey String @unique
+  kind String
+  status String @default("QUEUED")
+  title String
+  sourceRunId String?
+  payload Json
+  events Json @default("[]")
+  result Json?
+  resultHash String?
+  credentialId String?
+  leaseHash String?
+  leaseUntil DateTime?
+  deadlineAt DateTime?
+  attempts Int @default(0)
+  availableAt DateTime @default(now())
+  errorCode String?
+  approvalDigest String?
+  approvedById String?
+  approvedAt DateTime?
+  createdAt DateTime @default(now())
+  completedAt DateTime?
+  @@index([status, availableAt, createdAt])
+  @@index([kind, createdAt])
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
