@@ -3,7 +3,7 @@ import { spawn } from "node:child_process";
 import { mkdtemp, cp, writeFile, rm, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-const project = process.env.JUDGEOPS_GCP_PROJECT ?? "black-agility-476214-s6", region = "asia-east1";
+const project = process.env.JUDGEOPS_GCP_PROJECT ?? "cpe-judge", region = "asia-east1";
 if (!/^[a-z][a-z0-9-]{4,60}[a-z0-9]$/.test(project)) throw new Error("Invalid project id");
 const bucket = `${project}-judgeops-monitor`, registry = "judgeops", writer = "judgeops-monitor-writer", reader = "judgeops-status", scheduler = "judgeops-probe";
 const identity = name => `${name}@${project}.iam.gserviceaccount.com`;
@@ -17,10 +17,15 @@ async function command(args, optional = false) {
     const p = spawn("gcloud", [...args, "--project", project, "--quiet"], { stdio: ["ignore", "pipe", "pipe"] }); let out = "", err = "";
     p.stdout.on("data", b => { out += b; }); p.stderr.on("data", b => { err = (err + b).slice(-3000); }); p.on("error", reject); p.on("close", code => resolve({ code, out, err }));
   });
-  if (result.code && !optional) throw new Error(`GCP command failed: ${args.slice(0, 3).join(" ")} (run gcloud auth login if authentication expired)`);
+  if (result.code && !optional) throw new Error(`GCP command failed: ${args.slice(0, 3).join(" ")}; check the selected account, project permissions and billing.`);
   return result;
 }
 const token = (await command(["auth", "print-access-token"])).out.trim();
+// Fail before provisioning anything when the selected account cannot use the project.
+const projectInfo = JSON.parse((await command(["projects", "describe", project, "--format=json"])).out);
+if (projectInfo.lifecycleState !== "ACTIVE") throw new Error(`Project ${project} is not active.`);
+const billing = JSON.parse((await command(["billing", "projects", "describe", project, "--format=json"])).out);
+if (billing.billingEnabled !== true) throw new Error(`Billing is not enabled for ${project}. Link the intended billing account before deploying: https://console.cloud.google.com/billing/linkedaccount?project=${project}`);
 async function monitoring(path, method = "GET", body) {
   const response = await fetch(`https://monitoring.googleapis.com/v3/projects/${project}/${path}`, { method, redirect: "error", signal: AbortSignal.timeout(20000), headers: { authorization: `Bearer ${token}`, "content-type": "application/json" }, body: body === undefined ? undefined : JSON.stringify(body) });
   if (!response.ok) throw new Error(`Cloud Monitoring ${response.status}`); return response.json();

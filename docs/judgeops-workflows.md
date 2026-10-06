@@ -57,7 +57,7 @@ Google 真人 OAuth、實際扣款、外部信箱收件會明確標示 SKIP；�
 - 本機 `.env.local`：`JUDGEOPS_WORKFLOWS_ENABLED=true`，`JUDGEOPS_RUNTIME_DIR` 指到本專案 `apps/ops-runner/runtime` 的絕對路徑。保留 mode 600，勿提交 Git。
 - 固定 `JUDGEOPS_CODEX_MODEL=gpt-6-sol`。
 - 需要本機 Docker、Railway、Vercel、GitHub credential helper 和已登入 ChatGPT 的 Codex。`node scripts/operations/install-judgeops-launchagent.mjs` 安裝／更新啟動器。
-- GCP 部署：先 `gcloud auth login`；執行 `node scripts/operations/deploy-ops-monitor.mjs` 查看資源，再加 `--apply`。預設既有 project `black-agility-476214-s6`，region `asia-east1`。腳本只上傳 monitor 源碼。
+- GCP 部署：先 `gcloud auth login`；執行 `node scripts/operations/deploy-ops-monitor.mjs` 查看資源，再加 `--apply`。預設為目前正式 Google 登入所屬的 project `cpe-judge`（project number `799346221691`），region `asia-east1`。部署前會確認專案可存取、狀態 ACTIVE 且已啟用計費；腳本只上傳 monitor 源碼。可用 `JUDGEOPS_GCP_PROJECT` 明確覆寫部署專案。
 - 設定 Railway `JUDGEOPS_MONITOR_URL` 為生成的 reader URL。部署資料保存在 gitignored `generated/judgeops/gcp-monitor.json`。
 
 ## 中斷與稽核
@@ -81,6 +81,6 @@ Google 真人 OAuth、實際扣款、外部信箱收件會明確標示 SKIP；�
 
 首次映像建置遇到 Debian 套件下載緩慢，因此重用先前已驗證的依賴，清除舊應用來源後，以該版本的 Git archive 重建、核對 frozen lockfile，並逐一比對 1,053 個應用／測試／腳本檔案 SHA256，全部相符。來源比對、建置紀錄和正式工作報告保存在 `generated/judgeops`。啟動器亦加入短暫重試，處理 macOS 卸載舊程序尚未結束的競爭情況。
 
-GCP 實際部署仍待 owner 更新過期登入；不能宣稱獨立監控已上線。發布／rollback 已測試模擬故障、競爭更新及中斷，正式 provider 的版本讀取、GitHub 寫入權限及網站／worker 健康探測已核對。尚未故意對正式站製造故障來測試 rollback，第一次真實修復仍須在後台閱讀 PR 並核准。部署結果另記在 generated/judgeops。
+GCP 登入已恢復，確認 `cpe-judge` 就是正式 Google 登入專案；原預設 `black-agility-476214-s6` 不在目前帳號的存取範圍。`cpe-judge` 尚未啟用計費，仍需指定並連結計費帳戶後才能部署獨立監控，不能宣稱已上線。發布／rollback 已測試模擬故障、競爭更新及中斷，正式 provider 的版本讀取、GitHub 寫入權限及網站／worker 健康探測已核對。尚未故意對正式站製造故障來測試 rollback，第一次真實修復仍須在後台閱讀 PR 並核准。部署結果另記在 generated/judgeops。
 
 部署前備份：`generated/backups/judgeops-workflows-before-20261006.dump`，51,413,521 bytes，PG18 自訂格式，297 筆 catalog entries，權限 0600。已驗證 dump/catalog，未執行還原演練。
