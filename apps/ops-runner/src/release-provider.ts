@@ -18,15 +18,15 @@ async function vercel<T>(endpoint: string): Promise<T> {
   const r = await runProcess("vercel", ["api", `${endpoint}${endpoint.includes("?") ? "&" : "?"}teamId=${VERCEL_TEAM}`, "--raw"]);
   if (r.code) throw new Error("VERCEL_DEPLOYMENT_READ_FAILED"); return JSON.parse(r.stdout);
 }
-async function rollbackRailway(id: string) {
+export async function rollbackRailway(id: string) {
   if (!/^[a-f0-9-]{36}$/.test(id)) throw new Error("INVALID_DEPLOYMENT_ID");
   const config = JSON.parse(await readFile(join(homedir(), ".railway/config.json"), "utf8"));
   const token = config.user?.accessToken ?? config.user?.token;
   if (!token) throw new Error("RAILWAY_AUTH_REQUIRED");
-  const response = await fetch("https://backboard.railway.com/graphql/v2", { method: "POST", redirect: "error", signal: AbortSignal.timeout(20000), headers: { authorization: `Bearer ${token}`, "content-type": "application/json" }, body: JSON.stringify({ query: "mutation Rollback($id: String!) { deploymentRollback(id: $id) { id } }", variables: { id } }) });
+  const response = await fetch("https://backboard.railway.com/graphql/v2", { method: "POST", redirect: "error", signal: AbortSignal.timeout(20000), headers: { authorization: `Bearer ${token}`, "content-type": "application/json" }, body: JSON.stringify({ query: "mutation Rollback($id: String!) { deploymentRollback(id: $id) }", variables: { id } }) });
   if (!response.ok) throw new Error("RAILWAY_ROLLBACK_FAILED");
-  const data = await response.json() as { data?: { deploymentRollback?: { id: string } }; errors?: unknown[] };
-  if (data.errors || !data.data?.deploymentRollback?.id) throw new Error("RAILWAY_ROLLBACK_FAILED");
+  const data = await response.json() as { data?: { deploymentRollback?: boolean }; errors?: unknown[] };
+  if (data.errors?.length || data.data?.deploymentRollback !== true) throw new Error("RAILWAY_ROLLBACK_FAILED");
 }
 export class ProductionReleaseProvider implements ReleaseProvider {
   async currentMain() { return (await github<{ object: { sha: string } }>(`${repo}/git/ref/heads/main`)).object.sha; }
