@@ -5,6 +5,7 @@ import { prisma, Prisma } from "@oj/db";
 import { OPS_AI_TASK_UNITS, repairReady, opsWorkflowResultSchema, type OpsTaskKind, type OpsTaskEvent, type OpsWorkflowTask, type OpsWorkflowResult, type OpsWorkflowDashboard } from "@oj/shared";
 import { opsHash } from "./agent-ops.service";
 import { taipeiDay } from "./agent-ops.policy";
+import { automaticRepairPayload } from "./auto-repair.policy";
 const json = (value: unknown) => value as Prisma.InputJsonValue;
 const labels: Record<OpsTaskKind, string> = { VERIFY: "功能與安全巡檢", REPAIR: "隔離修復與審查", EVALUATE: "Agent 成效比較", RELEASE: "已批准的發布" };
 const LEASE = 180_000, DEADLINE = 60 * 60_000;
@@ -15,6 +16,7 @@ export class OpsWorkflowService implements OnModuleInit, OnModuleDestroy {
   private timer?: NodeJS.Timeout;
   get enabled() { return process.env.AGENT_OPS_WORKFLOWS_ENABLED === "true"; }
   get autoVerify() { return this.enabled && process.env.AGENT_OPS_AUTO_VERIFY !== "false"; }
+  get autoRepair() { return this.enabled && process.env.AGENT_OPS_AUTO_REPAIR === "true"; }
   onModuleInit() {
     if (process.env.NODE_ENV === "test") return;
     const tick = () => void this.schedule().catch(() => {});
@@ -22,10 +24,27 @@ export class OpsWorkflowService implements OnModuleInit, OnModuleDestroy {
   }
   onModuleDestroy() { if (this.timer) clearInterval(this.timer); }
   async schedule(now = new Date()) {
+    if (this.autoRepair) await this.scheduleRepairs(now);
     if (!this.autoVerify || new Date(+now + 8 * 3600_000).getUTCHours() < 8) return;
     const key = `verify:${taipeiDay(now)}`;
     await prisma.agentOpsTask.upsert({ where: { requestKey: key }, create: { requestKey: key, kind: "VERIFY", title: `${taipeiDay(now)} ${labels.VERIFY}`, payload: { scheduled: true } }, update: {} });
     await prisma.agentOpsTask.updateMany({ where: { kind: "VERIFY", status: "QUEUED", createdAt: { lt: new Date(+now - 86400_000) } }, data: { status: "CANCELLED", completedAt: now } });
+  }
+  async scheduleRepairs(now = new Date()) {
+    if (!this.autoRepair) return;
+    await prisma.$transaction(async tx => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(710053)`;
+      if (!(await tx.agentOpsState.findUnique({ where: { id: "global" } }))?.dispatchEnabled) return;
+      let pending = await tx.agentOpsTask.count({ where: { status: { in: ["QUEUED", "RUNNING", "PAUSED", "AWAITING_APPROVAL", "NEEDS_INPUT"] } } });
+      const reports = await tx.agentOpsRun.findMany({ where: { kind: "INCIDENT", status: "COMPLETED", completedAt: { gte: new Date(+now - 6 * 3600_000) }, incident: { recoveredAt: null } }, include: { incident: true }, orderBy: { completedAt: "desc" }, take: 20 });
+      for (const report of reports) {
+        if (pending >= 12) break;
+        const payload = automaticRepairPayload(report, now); if (!payload) continue;
+        const requestKey = `auto-repair:${payload.incidentId}`;
+        if (await tx.agentOpsTask.findUnique({ where: { requestKey } })) continue;
+        await tx.agentOpsTask.create({ data: { requestKey, kind: "REPAIR", title: `自動修復評估：${report.incident!.title}`, sourceRunId: report.id, payload: json(payload) } }); pending++;
+      }
+    });
   }
   async dashboard(): Promise<OpsWorkflowDashboard> {
     const [tasks, verify, evaluation, approvedReleases, revertedReleases] = await Promise.all([
@@ -36,7 +55,7 @@ export class OpsWorkflowService implements OnModuleInit, OnModuleDestroy {
       prisma.agentOpsTask.count({ where: { kind: "RELEASE", status: "ROLLED_BACK" } }),
     ]);
     const url = process.env.JUDGEOPS_MONITOR_URL;
-    return { tasks: tasks.map(present), latestVerification: verify ? present(verify) : null, evaluation: evaluation ? present(evaluation) : null, enabled: this.enabled, autoVerify: this.autoVerify, monitorUrl: url && /^https:\/\/[a-z0-9.-]+\.run\.app\/?$/.test(url) ? url : null, approvedReleases, revertedReleases };
+    return { tasks: tasks.map(present), latestVerification: verify ? present(verify) : null, evaluation: evaluation ? present(evaluation) : null, enabled: this.enabled, autoVerify: this.autoVerify, autoRepair: this.autoRepair, monitorUrl: url && /^https:\/\/[a-z0-9.-]+\.run\.app\/?$/.test(url) ? url : null, approvedReleases, revertedReleases };
   }
   async create(input: { kind: "VERIFY" | "REPAIR" | "EVALUATE"; requestId: string; sourceRunId?: string; objective?: string; files?: string[] }) {
     if (!this.enabled) throw new BadRequestException("工作流程尚未啟用。");
@@ -71,7 +90,17 @@ export class OpsWorkflowService implements OnModuleInit, OnModuleDestroy {
       if (await tx.agentOpsTask.count({ where: { status: "RUNNING" } }) || await tx.agentOpsRun.count({ where: { status: "RUNNING", leaseUntil: { gt: now } } })) return { task: null, reason: "BUSY" };
       const candidates = await tx.agentOpsTask.findMany({ where: { status: "QUEUED", availableAt: { lte: now } }, orderBy: { createdAt: "asc" }, take: 12 });
       const used = state.budgetDay === taipeiDay(now) ? state.attemptsToday : 0;
-      const row = candidates.find(c => used + OPS_AI_TASK_UNITS[c.kind as OpsTaskKind] <= state.dailyRunLimit);
+      let row: Row | undefined;
+      for (const candidate of candidates) {
+        if ((candidate.payload as { automatic?: boolean }).automatic) {
+          if (!this.autoRepair) continue;
+          const source = candidate.sourceRunId ? await tx.agentOpsRun.findUnique({ where: { id: candidate.sourceRunId }, include: { incident: true } }) : null;
+          if (!source || !automaticRepairPayload(source, now)) {
+            await tx.agentOpsTask.update({ where: { id: candidate.id }, data: { status: "CANCELLED", errorCode: "SOURCE_RECOVERED_OR_STALE", completedAt: now } }); continue;
+          }
+        }
+        if (used + OPS_AI_TASK_UNITS[candidate.kind as OpsTaskKind] <= state.dailyRunLimit) { row = candidate; break; }
+      }
       if (!row) return { task: null, reason: candidates.length ? "DAILY_LIMIT" : "IDLE" };
       const lease = randomBytes(32).toString("hex");
       const claimed = await tx.agentOpsTask.update({ where: { id: row.id }, data: { status: "RUNNING", credentialId, leaseHash: opsHash(lease), leaseUntil: new Date(+now + LEASE), deadlineAt: new Date(+now + DEADLINE), attempts: { increment: 1 }, errorCode: null } });

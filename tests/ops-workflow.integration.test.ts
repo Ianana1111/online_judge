@@ -55,4 +55,20 @@ describe.skipIf(process.env.RUN_JUDGEOPS_DB_TESTS !== "1")("durable workflow cla
     await reports.settings({ dispatchEnabled: false, dailyRunLimit: 4 });
     await expect(workflows.heartbeat(verify.task.id, credential, verify.lease)).rejects.toThrow();
   });
+  it("queues one automatic repair per reviewed incident and cancels recovered work before charging", async () => {
+    process.env.AGENT_OPS_AUTO_REPAIR = "true";
+    try {
+      const now = new Date();
+      const incident = await prisma.agentOpsIncident.create({ data: { code: "FUNCTIONAL_VERIFICATION_FAILED", title: "fixture", severity: "HIGH", firstSeenAt: now, lastSeenAt: now } });
+      const output = { summary: "程式需要檢查", specialist: "ENGINEER", findings: [{ text: "驗證失敗", evidenceIds: ["fixture"] }], hypotheses: [], actions: [{ title: "修復", detail: "先重現", risk: "CHANGE_REQUIRED" }], limitations: [], review: "SUPPORTED" };
+      const run = await prisma.agentOpsRun.create({ data: { queueKey: randomUUID(), kind: "INCIDENT", title: "fixture", status: "COMPLETED", completedAt: now, incidentId: incident.id, evidence: [{ id: "fixture", label: "fixture", observedAt: now.toISOString(), data: { failed: true } }], steps: [{}, {}, { role: "REVIEW", output }] } });
+      await Promise.all([workflows.scheduleRepairs(now), workflows.scheduleRepairs(now)]);
+      const tasks = await prisma.agentOpsTask.findMany({ where: { sourceRunId: run.id } });
+      expect(tasks).toHaveLength(1); expect(tasks[0].payload).toMatchObject({ automatic: true, files: [] });
+      await prisma.agentOpsIncident.update({ where: { id: incident.id }, data: { recoveredAt: now } });
+      expect((await workflows.claim(credential)).task).toBeNull();
+      expect((await prisma.agentOpsTask.findUniqueOrThrow({ where: { id: tasks[0].id } })).status).toBe("CANCELLED");
+      expect((await reports.dashboard()).counts.startsToday).toBe(0);
+    } finally { delete process.env.AGENT_OPS_AUTO_REPAIR; }
+  });
 });
