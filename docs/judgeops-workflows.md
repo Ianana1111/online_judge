@@ -24,7 +24,9 @@ Google 真人 OAuth、實際扣款、外部信箱收件會明確標示 SKIP；�
 
 ### REPAIR
 
-管理員提供具體重現方式與 1–4 個現有來源檔。只允許應用程式路徑，拒絕編排控制程式、部署設定、密鑰、migration 等檔案。
+管理員可提供具體重現方式與 1–4 個現有來源檔。啟用 `AGENT_OPS_AUTO_REPAIR=true` 後，系統也會將已完成三階段調查、獨立審查 SUPPORTED、包含變更建議且尚未恢復的事件自動排入修復評估。每個事件最多一筆，與手動任務共用佇列上限、單一執行者和每日額度；執行前再次核對事件與證據的新鮮度。已恢復或過期的工作會取消，不耗用模型額度。
+
+自動分流主管只從目前 Git 版本的允許檔案清單選 1–4 個檔案。付款、登入、權限、管理後台、金鑰、用量、編排控制程式與部署設定不在自動修復範圍；基礎設施問題或證據不足會標示 NEEDS_INPUT。工程師讀到程式後仍可拒絕提出無法證明的修復。所有修復都禁止改既有測試，只能另加受限的行為回歸測試。
 
 1. 工程代理收到受限來源及 SHA256，提出完整檔案替換和一個回歸測試。
 2. 測試必須在原版產生 assertion failure，在修復版全部通過；語法錯誤／匯入失敗不算有效重現。
@@ -47,9 +49,9 @@ Google 真人 OAuth、實際扣款、外部信箱收件會明確標示 SKIP；�
 
 ### EVALUATE
 
-兩個合成情境比較固定規則、單代理、三角色交接。最多 8 次模型呼叫，共占 3 份每日 AI 工作額度。記錄路由判斷、引用有效性、耗時和輸入／輸出 tokens。
+24 個合成情境比較固定規則、單代理、三角色交接，涵蓋健康、基礎設施、判題、門檻邊界、混合故障與提示注入。每批 8 個案例，最多 12 次模型呼叫，共占 3 份每日自動派工額度。模型看不到標準答案；三种方法使用相同資料與已明定的門檻。記錄路由判斷、引用有效性、誤報、漏報、耗時和輸入／輸出 tokens。每次呼叫保存含上下文雜湊的檢查點，重讀時保留原始耗時與用量，不重跑已完成呼叫。
 
-2026-10-06 實測：三種方法都是 2/2 正確、2/2 引用有效。單代理合计 28.993 秒／17,138 tokens；三角色 71.394 秒／51,666 tokens；規則不呼叫模型。只有兩個樣本，不能推論正式準確率、修復成功率或多代理的普遍優勢。
+2026-10-07 擴充實測：三種方法都是 24/24 分流正確、24/24 引用有效，誤報與漏報均為 0。單代理 39.419 秒／29,588 tokens；三角色 117.724 秒／93,100 tokens，約消耗 3.15 倍 tokens；規則不呼叫模型。共 12 次固定 Sol/high 呼叫。這是合成情境的規則遵循與分流評估，不能推論真實事件的修復成功率或多代理的普遍優勢。原始資料與每次呼叫檢查點位於 `generated/judgeops/evaluation-20261007`。
 
 ## 啟用
 
@@ -87,4 +89,11 @@ Google 真人 OAuth、實際扣款、外部信箱收件會明確標示 SKIP；�
 
 發布／rollback 已測試模擬故障、競爭更新及中斷，正式 provider 的版本讀取、GitHub 寫入權限及網站／worker 健康探測已核對。尚未故意對正式站製造故障來測試 rollback，第一次真實修復仍須在後台閱讀 PR 並核准。部署結果另記在 generated/judgeops。
 
-部署前備份：`generated/backups/judgeops-workflows-before-20261006.dump`，51,413,521 bytes，PG18 自訂格式，297 筆 catalog entries，權限 0600。已驗證 dump/catalog，未執行還原演練。
+部署前備份：`generated/backups/judgeops-workflows-before-20261006.dump`，51,413,521 bytes，PG18 自訂格式，297 筆 catalog entries，權限 0600。已驗證 dump/catalog；2026-10-07 已完成隔離還原演練，結果見下方補完紀錄。
+
+## 2026-10-07 補完驗收
+
+- `node scripts/operations/restore-drill.mjs <backup.dump>`：以無網路、無公開連接埠的一次性 PostgreSQL 18 還原，驗證索引、約束與聚合筆數後刪除演練容器和 volume。已實際通過 45 張表、430 題、40 個帳號、67 次 migration，無無效索引／約束；約 9 秒。沒有把正式個資傳到模型。
+- `node scripts/operations/configure-ops-alerts.mjs`：預設僅預覽。指定擁有者的 `JUDGEOPS_ALERT_EMAIL` 並加 `--apply` 後才建立／接上 GCP Email channel；保留既有 channel，遇到 UNVERIFIED 時要求信箱驗證，不把設定成功當作已收信。
+- `scripts/operations/release-drill.ts <verified-repair-result.json>`：針對真實已驗證 PR，在一次性 Cloud Run revisions 與本機 Git ref 執行相同 releaseFlow 的成功發布及注入 503 後復原；正式 main／流量不受影響。這不取代 Railway／Vercel 正式 rollback API 的故障演練。
+- 真人 Google OAuth、ECPay 實際扣款／退款、外部信箱收件仍須由指定測試帳號完成；不得用自動測試、建立訂單或供應商接受信件作為完成交易／收信的證明。

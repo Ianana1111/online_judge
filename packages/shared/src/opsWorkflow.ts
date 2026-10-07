@@ -3,7 +3,7 @@ const text = (max: number) => z.string().trim().min(1).max(max);
 export const opsTaskKindSchema = z.enum(["VERIFY", "REPAIR", "EVALUATE", "RELEASE"]);
 export type OpsTaskKind = z.infer<typeof opsTaskKindSchema>;
 export const opsSourcePathSchema = z.string().max(180).regex(/^(apps\/(web|api|judge)\/(app|components|lib|store|src)\/|packages\/shared\/src\/|tests\/)[a-zA-Z0-9_./[\]()-]+\.(tsx?|mjs)$/)
-  .refine(p => !p.split("/").some(s => s === "." || s === "..") && !/(agent-ops|opsWorkflow|agentOps|runtime-config|\.test\.)/.test(p), "Select application source files, not orchestration or tests");
+  .refine(p => !p.startsWith("tests/") && !p.split("/").some(s => s === "." || s === "..") && !/(agent-ops|opsWorkflow|agentOps|runtime-config|\.(test|spec)\.)/.test(p), "Select application source files, not orchestration or tests");
 export const opsTaskCreateSchema = z.object({
   kind: z.enum(["VERIFY", "REPAIR", "EVALUATE"]), requestId: z.string().uuid(),
   sourceRunId: z.string().cuid().optional(), objective: text(2000).optional(), files: z.array(opsSourcePathSchema).min(1).max(4).optional(),
@@ -26,7 +26,7 @@ export const opsTaskEventSchema = z.object({ sequence: z.number().int().min(0).m
 export type OpsTaskEvent = z.infer<typeof opsTaskEventSchema> & { at: string };
 export type OpsWorkflowTask = { id: string; kind: OpsTaskKind; status: string; title: string; createdAt: string; completedAt: string | null; sourceRunId: string | null; payload: Record<string, unknown>; events: OpsTaskEvent[]; result: OpsWorkflowResult | null; errorCode: string | null; approvalDigest: string | null; approvedAt: string | null; attempts: number };
 export type OpsWorkflowClaim = { task: OpsWorkflowTask; lease: string; leaseSeconds: number };
-export type OpsWorkflowDashboard = { tasks: OpsWorkflowTask[]; monitorUrl: string | null; enabled: boolean; autoVerify: boolean; latestVerification: OpsWorkflowTask | null; evaluation: OpsWorkflowTask | null; approvedReleases: number; revertedReleases: number };
+export type OpsWorkflowDashboard = { tasks: OpsWorkflowTask[]; monitorUrl: string | null; enabled: boolean; autoVerify: boolean; autoRepair: boolean; latestVerification: OpsWorkflowTask | null; evaluation: OpsWorkflowTask | null; approvedReleases: number; revertedReleases: number };
 export const OPS_AI_TASK_UNITS: Record<OpsTaskKind, number> = { VERIFY: 0, REPAIR: 1, EVALUATE: 3, RELEASE: 0 };
 export const REQUIRED_REPAIR_CHECKS = ["regression-proof", "full-suite", "qa-review", "security-review"] as const;
 export function repairReady(result: OpsWorkflowResult) {
