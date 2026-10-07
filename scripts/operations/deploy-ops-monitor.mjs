@@ -3,7 +3,7 @@ import { spawn } from "node:child_process";
 import { mkdtemp, cp, writeFile, rm, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-const project = process.env.JUDGEOPS_GCP_PROJECT ?? "cpe-judge", region = "asia-east1";
+const project = process.env.JUDGEOPS_GCP_PROJECT ?? "judge-510903", region = "asia-east1";
 if (!/^[a-z][a-z0-9-]{4,60}[a-z0-9]$/.test(project)) throw new Error("Invalid project id");
 const bucket = `${project}-judgeops-monitor`, registry = "judgeops", writer = "judgeops-monitor-writer", reader = "judgeops-status", scheduler = "judgeops-probe";
 const identity = name => `${name}@${project}.iam.gserviceaccount.com`;
@@ -17,7 +17,7 @@ async function command(args, optional = false) {
     const p = spawn("gcloud", [...args, "--project", project, "--quiet"], { stdio: ["ignore", "pipe", "pipe"] }); let out = "", err = "";
     p.stdout.on("data", b => { out += b; }); p.stderr.on("data", b => { err = (err + b).slice(-3000); }); p.on("error", reject); p.on("close", code => resolve({ code, out, err }));
   });
-  if (result.code && !optional) throw new Error(`GCP command failed: ${args.slice(0, 3).join(" ")}; check the selected account, project permissions and billing.`);
+  if (result.code && !optional) throw new Error(`GCP command failed: ${args.slice(0, 3).join(" ")}: ${result.err.trim()}`);
   return result;
 }
 const token = (await command(["auth", "print-access-token"])).out.trim();
