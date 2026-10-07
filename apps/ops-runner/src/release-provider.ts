@@ -18,15 +18,25 @@ async function vercel<T>(endpoint: string): Promise<T> {
   const r = await runProcess("vercel", ["api", `${endpoint}${endpoint.includes("?") ? "&" : "?"}teamId=${VERCEL_TEAM}`, "--raw"]);
   if (r.code) throw new Error("VERCEL_DEPLOYMENT_READ_FAILED"); return JSON.parse(r.stdout);
 }
-async function rollbackRailway(id: string) {
+export async function requestVercelProduction(sha: string, signal: AbortSignal) {
+  if (!/^[a-f0-9]{40}$/.test(sha)) throw new Error("INVALID_RELEASE_SHA");
+  const [org, repo] = REPOSITORY.split("/");
+  const request = { name: "judges", project: VERCEL_PROJECT, target: "production", gitSource: { type: "github", org, repo, ref: "main", sha } };
+  const response = await runProcess("vercel", ["api", `/v13/deployments?teamId=${VERCEL_TEAM}`, "--method", "POST", "--input", "-", "--raw"], { input: JSON.stringify(request), signal, timeoutMs: 60_000 });
+  if (response.code) throw new Error("VERCEL_PRODUCTION_REQUEST_FAILED");
+  const deployment = JSON.parse(response.stdout) as { id?: string; target?: string; meta?: { githubCommitSha?: string } };
+  if (!deployment.id || !/^dpl_[a-zA-Z0-9]+$/.test(deployment.id) || deployment.target !== "production" || deployment.meta?.githubCommitSha !== sha) throw new Error("VERCEL_PRODUCTION_REQUEST_MISMATCH");
+  return deployment.id;
+}
+export async function rollbackRailway(id: string) {
   if (!/^[a-f0-9-]{36}$/.test(id)) throw new Error("INVALID_DEPLOYMENT_ID");
   const config = JSON.parse(await readFile(join(homedir(), ".railway/config.json"), "utf8"));
   const token = config.user?.accessToken ?? config.user?.token;
   if (!token) throw new Error("RAILWAY_AUTH_REQUIRED");
-  const response = await fetch("https://backboard.railway.com/graphql/v2", { method: "POST", redirect: "error", signal: AbortSignal.timeout(20000), headers: { authorization: `Bearer ${token}`, "content-type": "application/json" }, body: JSON.stringify({ query: "mutation Rollback($id: String!) { deploymentRollback(id: $id) { id } }", variables: { id } }) });
+  const response = await fetch("https://backboard.railway.com/graphql/v2", { method: "POST", redirect: "error", signal: AbortSignal.timeout(20000), headers: { authorization: `Bearer ${token}`, "content-type": "application/json" }, body: JSON.stringify({ query: "mutation Rollback($id: String!) { deploymentRollback(id: $id) }", variables: { id } }) });
   if (!response.ok) throw new Error("RAILWAY_ROLLBACK_FAILED");
-  const data = await response.json() as { data?: { deploymentRollback?: { id: string } }; errors?: unknown[] };
-  if (data.errors || !data.data?.deploymentRollback?.id) throw new Error("RAILWAY_ROLLBACK_FAILED");
+  const data = await response.json() as { data?: { deploymentRollback?: boolean }; errors?: unknown[] };
+  if (data.errors?.length || data.data?.deploymentRollback !== true) throw new Error("RAILWAY_ROLLBACK_FAILED");
 }
 export class ProductionReleaseProvider implements ReleaseProvider {
   async currentMain() { return (await github<{ object: { sha: string } }>(`${repo}/git/ref/heads/main`)).object.sha; }
@@ -42,13 +52,20 @@ export class ProductionReleaseProvider implements ReleaseProvider {
   }
   async deploy(sha: string, targets: ReleaseTargets, signal: AbortSignal) {
     if (!/^[a-f0-9]{40}$/.test(sha)) throw new Error("INVALID_RELEASE_SHA");
-    let readyWeb: string | null = null;
-    const end = Date.now() + 20 * 60_000;
+    let readyWeb: string | null = null, requestedWeb = false;
+    const started = Date.now(), end = started + 20 * 60_000;
     while (Date.now() < end) {
       if (signal.aborted) throw new Error("INTERRUPTED");
       if (await this.currentMain() !== sha) throw new Error("MAIN_CHANGED");
       const [api, judge, web] = await Promise.all([railwayDeployments(RAILWAY_API), railwayDeployments(JUDGE), vercel<{ deployments: { uid: string; readyState?: string; state?: string; meta?: { githubCommitSha?: string } }[] }>(`/v6/deployments?projectId=${VERCEL_PROJECT}&limit=30&target=production`)]);
       const a = api.find(d => d.meta?.commitHash === sha), j = judge.find(d => d.meta?.commitHash === sha), w = web.deployments.find(d => d.meta?.githubCommitSha === sha);
+      // A fast-forward can leave only an existing preview build for this SHA.
+      // Request production once; never promote preview settings or retry an ambiguous POST.
+      if (targets.web && !w && !requestedWeb && Date.now() - started >= 60_000) {
+        if (await this.currentMain() !== sha) throw new Error("MAIN_CHANGED");
+        requestedWeb = true;
+        await requestVercelProduction(sha, signal);
+      }
       for (const [needed, state] of [[targets.api, a?.status], [targets.judge, j?.status], [targets.web, w?.readyState ?? w?.state]] as const) if (needed && state && ["FAILED", "CRASHED", "ERROR", "CANCELED", "CANCELLED"].includes(state)) throw new Error("DEPLOYMENT_FAILED");
       if ((!targets.api || a?.status === "SUCCESS") && (!targets.judge || j?.status === "SUCCESS") && (!targets.web || (w?.readyState ?? w?.state) === "READY")) { readyWeb = targets.web ? w!.uid : null; break; }
       await delay(15_000, undefined, { signal });
