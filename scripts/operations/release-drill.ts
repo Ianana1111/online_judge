@@ -8,6 +8,7 @@ import { releaseFlow, type ReleaseProvider, type DeploymentSnapshot } from "../.
 import { git, github, REPOSITORY, SOURCE_REMOTE } from "../../apps/ops-runner/src/repository";
 import { runProcess } from "../../apps/ops-runner/src/process";
 
+async function main() {
 if (!process.argv[2]) throw new Error("Pass the result.json of a real, verified repair PR");
 const approved = opsWorkflowResultSchema.parse(JSON.parse(await readFile(resolve(process.argv[2]), "utf8")));
 if (!repairReady(approved)) throw new Error("VERIFIED_REPAIR_REQUIRED");
@@ -27,7 +28,8 @@ async function gcloud(args: string[], cleanup = false) {
 }
 const describe = async () => JSON.parse(await gcloud(["run", "services", "describe", service, "--region", region, "--format=json"]));
 const snapshot = async (): Promise<DeploymentSnapshot> => { const s = await describe(), revision = s.status.traffic.find((t: { percent: number }) => t.percent === 100)?.revisionName; if (!revision) throw new Error("DRILL_TRAFFIC_NOT_READY"); return { api: revision, judge: revision, web: revision }; };
-let failCandidate = false, created = false, url = "";
+let failCandidate = false, deploymentAttempted = false, url = "", passed = false;
+let failure: unknown;
 const outcomes: unknown[] = [];
 try {
   await git(temporary, ["init", "--bare"]);
@@ -36,8 +38,9 @@ try {
   if (await git(temporary, ["rev-parse", "FETCH_HEAD"]) !== approved.headSha || await git(temporary, ["rev-parse", "FETCH_HEAD^"]) !== approved.baseSha) throw new Error("DRILL_SOURCE_CHANGED");
   await git(temporary, ["update-ref", "refs/heads/drill", approved.baseSha!]);
   const deploy = async (fault: boolean) => {
+    deploymentAttempted = true;
     await gcloud(["run", "deploy", service, "--image", image, "--region", region, "--service-account", `judgeops-status@${project}.iam.gserviceaccount.com`, "--memory", "256Mi", "--cpu", "1", "--min", "0", "--max", "1", "--concurrency", "1", "--timeout", "30s", "--allow-unauthenticated", "--labels", "managed-by=judgeops,purpose=release-drill", "--set-env-vars", `MONITOR_MODE=reader,MONITOR_BUCKET=${fault ? `${project}-drill-nonexistent` : bucket}`]);
-    created = true; const state = await describe(); url = state.status.url;
+    const state = await describe(); url = state.status.url;
     await gcloud(["run", "services", "update-traffic", service, "--region", region, "--to-latest"]);
     return snapshot();
   };
@@ -60,9 +63,22 @@ try {
   const rollback = await releaseFlow(approved, targets, provider, signal, progress); outcomes.push(rollback);
   if (rollback.outcome !== "ROLLED_BACK" || !await provider.healthy(signal)) throw new Error("DRILL_ROLLBACK_FAILED");
   if (await git(temporary, ["rev-parse", "refs/heads/drill^{tree}"]) !== await git(temporary, ["rev-parse", `${approved.baseSha}^{tree}`])) throw new Error("DRILL_TREE_NOT_RESTORED");
-  await writeFile(join(directory, "result.json"), JSON.stringify({ completedAt: new Date().toISOString(), outcome: "PASS", scope: "Real isolated Cloud Run revisions and local Git refs using releaseFlow; does not exercise Railway/Vercel production rollback endpoints.", repairPullUrl: approved.pullUrl, service, outcomes }, null, 2), { mode: 0o600 });
+  passed = true;
   await progress("STAGING_PASS", "成功發布與失敗復原兩條實際雲端演練路徑通過。");
+} catch (error) {
+  failure = error;
 } finally {
-  if (created) await gcloud(["run", "services", "delete", service, "--region", region], true);
-  await rm(temporary, { recursive: true, force: true });
+  let cleanup = true;
+  try {
+    if (deploymentAttempted) {
+      const existing = JSON.parse(await gcloud(["run", "services", "list", "--region", region, "--format=json"], true)) as { metadata: { name: string } }[];
+      if (existing.some(item => item.metadata.name === service)) await gcloud(["run", "services", "delete", service, "--region", region], true);
+    }
+  } catch (error) { cleanup = false; failure ??= error; }
+  try { await rm(temporary, { recursive: true, force: true }); } catch (error) { cleanup = false; failure ??= error; }
+  await writeFile(join(directory, "result.json"), JSON.stringify({ completedAt: new Date().toISOString(), outcome: passed && cleanup && !failure ? "PASS" : "FAIL", cleanup, scope: "Real isolated Cloud Run revisions and local Git refs using releaseFlow; does not exercise Railway/Vercel production rollback endpoints.", repairPullUrl: approved.pullUrl, service, outcomes }, null, 2), { mode: 0o600 });
 }
+if (failure) throw failure;
+
+}
+void main().catch(error => { console.error(error instanceof Error ? error.message : "DRILL_FAILED"); process.exitCode = 1; });

@@ -73,7 +73,7 @@ export default function AgentOpsPage() {
       </section>
       {user && <WorkflowPanel userId={user.id} />}
       <section id="executor" className="oj-card scroll-mt-24 p-4 sm:p-5" aria-labelledby="executor-title">
-        <h2 id="executor-title" className="font-semibold text-ink-100">執行器與額度</h2><p className="mt-2 text-sm leading-6 text-ink-400">使用你已登入 ChatGPT 的 Codex CLI。報告與修復每個最多三次模型呼叫，成效比較最多八次。全部固定 GPT-6 Sol／high，不會自動改用付費 API；正式發布須由你核准。</p>
+        <h2 id="executor-title" className="font-semibold text-ink-100">執行器與額度</h2><p className="mt-2 text-sm leading-6 text-ink-400">使用你已登入 ChatGPT 的 Codex CLI。報告與手動修復最多三次模型呼叫，自動修復含分流最多四次，24 情境成效比較最多十二次。全部固定 GPT-6 Sol／high，不會自動改用付費 API；正式發布須由你核准。</p>
         <div className="mt-5 flex flex-wrap items-end gap-3">
           <label className="text-xs text-ink-300">每天 AI 工作額度（含重試）<input className="oj-input mt-2 block w-32" type="number" min={1} max={20} value={limit ?? data.settings.dailyRunLimit} onChange={e => setLimit(Number(e.target.value))} /></label>
           <button className="oj-btn-secondary text-xs" disabled={busy || !Number.isInteger(limit ?? data.settings.dailyRunLimit) || (limit ?? data.settings.dailyRunLimit) < 1 || (limit ?? data.settings.dailyRunLimit) > 20} onClick={() => mutation.mutate({ path: "/agent-ops/settings", method: "PATCH", body: { ...data.settings, dailyRunLimit: limit ?? data.settings.dailyRunLimit } })}>儲存上限</button>

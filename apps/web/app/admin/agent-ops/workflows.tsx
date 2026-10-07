@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { opsTaskCreateSchema, type OpsWorkflowDashboard, type OpsWorkflowTask } from "@oj/shared";
+import { opsTaskCreateSchema, repairReady, type OpsWorkflowDashboard, type OpsWorkflowTask } from "@oj/shared";
 import { apiFetch } from "@/lib/api";
 const labels: Record<string, string> = { QUEUED: "等待執行", RUNNING: "執行中", SUCCEEDED: "已完成", FAILED: "未通過", PAUSED: "已暫停", CANCELLED: "已取消", AWAITING_APPROVAL: "等待你的核准", APPROVED: "已核准", NEEDS_INPUT: "需要你處理", ROLLED_BACK: "已復原" };
 const date = (v: string | null) => v ? new Date(v).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "尚未執行";
@@ -53,7 +53,7 @@ function TaskReport({ task, busy, onAction }: { task: OpsWorkflowTask; busy: boo
   const [approve, setApprove] = useState(false), r = task.result;
   return <article className="oj-card min-w-0 p-4 sm:p-5" aria-label="工作報告">
     <div className="flex flex-wrap justify-between gap-2"><h3 className="text-sm font-semibold text-ink-100">{task.title}</h3><span className="text-xs text-brand">{labels[task.status] ?? task.status}</span></div>
-    {r && <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-ink-200">{r.summary}</p>}
+    {r && (task.kind === "REPAIR" && repairReady(r) ? <div className="mt-3 text-sm leading-7 text-ink-200"><p>修復已通過回歸證明、完整隔離測試，以及 QA／安全審查。發布狀態請見工作紀錄。</p><details className="mt-2 text-xs text-ink-400"><summary className="cursor-pointer">工程代理原始說明（測試由獨立執行器完成）</summary><p className="mt-2 whitespace-pre-wrap leading-6">{r.summary}</p></details></div> : <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-ink-200">{r.summary}</p>)}
     {task.errorCode && <p className="mt-3 text-xs leading-6 text-ink-300">工作暫停（{task.errorCode}）。請檢查執行器的紀錄與最後檢查點。發布與修復不會因斷線而自動重播。</p>}
     {task.events.length > 0 && <ol className="mt-4 space-y-3 border-l border-ink-600 pl-4">{task.events.map(e => <li key={e.sequence}><p className="text-xs font-medium text-ink-200">{e.detail}</p><p className="mt-1 text-[10px] text-ink-400">{date(e.at)} · {e.label}</p>{Object.keys(e.data).length > 0 && <details className="mt-1 text-[11px] text-ink-400"><summary className="cursor-pointer">檢查點資料</summary><pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-all">{JSON.stringify(e.data, null, 2)}</pre></details>}</li>)}</ol>}
     {r && <>

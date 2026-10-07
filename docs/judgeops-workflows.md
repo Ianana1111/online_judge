@@ -93,7 +93,14 @@ Google 真人 OAuth、實際扣款、外部信箱收件會明確標示 SKIP；�
 
 ## 2026-10-07 補完驗收
 
-- `node scripts/operations/restore-drill.mjs <backup.dump>`：以無網路、無公開連接埠的一次性 PostgreSQL 18 還原，驗證索引、約束與聚合筆數後刪除演練容器和 volume。已實際通過 45 張表、430 題、40 個帳號、67 次 migration，無無效索引／約束；約 9 秒。沒有把正式個資傳到模型。
+- `node scripts/operations/restore-drill.mjs <backup.dump>`：以無網路、無公開連接埠的一次性 PostgreSQL 18 還原，驗證索引、約束與聚合筆數後刪除演練容器和 volume。10/6 舊備份還原通過；10/7 新備份 `judgeops-completion-before-20261007.dump`（51,489,564 bytes）也實際還原通過：46 張表、430 題、43 個帳號、68 次 migration，無無效索引／約束；約 11 秒。報告 `generated/judgeops/restore-drill-2026-10-07/report.json`，備份 SHA256 `407438af79350e617300089ff4d745883783fc28eda3264d22484a1bafbf2efe`。沒有把正式個資傳到模型。
 - `node scripts/operations/configure-ops-alerts.mjs`：預設僅預覽。指定擁有者的 `JUDGEOPS_ALERT_EMAIL` 並加 `--apply` 後才建立／接上 GCP Email channel；保留既有 channel，遇到 UNVERIFIED 時要求信箱驗證，不把設定成功當作已收信。
 - `scripts/operations/release-drill.ts <verified-repair-result.json>`：針對真實已驗證 PR，在一次性 Cloud Run revisions 與本機 Git ref 執行相同 releaseFlow 的成功發布及注入 503 後復原；正式 main／流量不受影響。這不取代 Railway／Vercel 正式 rollback API 的故障演練。
-- 真人 Google OAuth、ECPay 實際扣款／退款、外部信箱收件仍須由指定測試帳號完成；不得用自動測試、建立訂單或供應商接受信件作為完成交易／收信的證明。
+- Google OAuth 已於台灣時間 10/7 12:19–12:21，以既有管理員帳號實際走 Google 帳號選擇 → 回站 → 個人首頁 → ADMIN 後台完成。未保存登入 cookie、OAuth state 或 code。
+- ECPay 實際扣款／退款、外部信箱收件仍須由指定測試帳號完成；不得用自動測試、建立訂單或供應商接受信件作為完成交易／收信的證明。告警收件信箱待擁有者指定，尚未建立通知 channel 或寄出測試信。
+- 新版自動修復派工已部署並啟用，完整隔離驗證為 434 項一般測試、16 項工作流程資料庫測試與 52 項桌機／手機瀏覽器流程通過；一般套件 82 項依環境條件跳過，不能把它們算作通過。證據為 `generated/judgeops/completion-suite-20261007/result.json`。
+- 24 情境真實模型評估已標明「本次驗收實測」匯入後台，工作 `cmuxlqpea000013bxztx6icym`。保留 12 次模型呼叫的原始耗時與用量，未重跑推論，也未假稱它是自動派工。評估原始產物為 `generated/judgeops/evaluation-20261007/`。
+- 真實修復工作 `cmuxlr9ql001dm5r773in0pjf` 已由正式執行器領取，修正 `previewText` 在 Unicode 邊界切出破字的問題。原版 3 個 assertion failure、0 runtime errors；修正版 4/4 通過，再通過完整隔離套件、52 個瀏覽器流程、QA 及安全審查後建立 [PR #1](https://github.com/Ianana1111/online_judge/pull/1)。精確版本 `f206439813e2ae03f66779c93ae211c7412dc507`，仍等待擁有者核准，未宣稱正式發布成功。
+- 以該 PR 執行的真實 Cloud Run 演練已通過正常發布及注入 503 後復原兩條路徑，健康檢查與 Git 原程式樹一致；一次性服務 `judgeops-release-drill-3f5d2a` 已刪除。結果 `generated/judgeops/judgeops-release-drill-3f5d2a/result.json` 為 PASS、cleanup=true。此演練沒有修改正式 main 或 Railway／Vercel 流量。
+- 唯讀查詢 Railway 正式 GraphQL schema 發現 `deploymentRollback(id: String!): Boolean!`，修正 adapter 原本把回傳值當作含 id 的物件之錯誤。六個 response contract 測試與十一個既有流程測試通過，拒絕 false/null/物件/GraphQL errors/HTTP errors；Vercel rollback 參數亦已核對。證據 `generated/judgeops/provider-contracts-20261007.json`，這是介面核對，不是正式環境破壞性 rollback 演練。
+- 工程代理只能產生提案，不能執行工具。後台將代理原始說明與實際隔離驗證結果分開顯示，避免模型的「未自行執行測試」被誤解成整個流程未測試。
