@@ -700,7 +700,7 @@ export interface TrafficSummary {
   distinctPaths: number;
   days: number;
   /** Every recorded pageview since tracking began, including rows already pruned by retention. */
-  allTimeViews: number;
+  allTimeViews?: number;
 }
 
 export interface DailyTrafficPoint {

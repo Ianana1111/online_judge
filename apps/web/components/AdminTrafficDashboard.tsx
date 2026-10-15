@@ -43,7 +43,8 @@ export default function AdminTrafficDashboard() {
           <div className="oj-card col-span-2 p-4 sm:col-span-1">
             <p className="text-xs text-ink-400">{t("All-time pageviews (all pages)")}</p>
             <p className="mt-1 font-mono text-2xl text-ink-50">
-              {trafficSummary ? trafficSummary.allTimeViews.toLocaleString() : "—"}
+              {/* Absent while an older API is still serving during a rolling deploy. */}
+              {trafficSummary?.allTimeViews != null ? trafficSummary.allTimeViews.toLocaleString() : "—"}
             </p>
           </div>
           <div className="oj-card p-4">
