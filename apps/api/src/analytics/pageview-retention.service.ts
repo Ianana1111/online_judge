@@ -8,6 +8,7 @@ const CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
 // Postgres instance (page_views writes are unauthenticated and unthrottled-by-content, so this
 // table grows with every page load on the site, forever, unless something prunes it).
 const RETENTION_DAYS = 400;
+export const PRUNED_PAGEVIEWS_COUNTER = "pageviews_pruned";
 
 @Injectable()
 export class PageviewRetentionService implements OnModuleInit, OnModuleDestroy {
@@ -28,7 +29,16 @@ export class PageviewRetentionService implements OnModuleInit, OnModuleDestroy {
   private async pruneOnce(): Promise<void> {
     try {
       const cutoff = new Date(Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000);
-      const { count } = await prisma.pageView.deleteMany({ where: { createdAt: { lt: cutoff } } });
+      // Pruned rows still count toward the all-time total (see AnalyticsService.trafficSummary).
+      const count = await prisma.$transaction(async (tx) => {
+        const { count } = await tx.pageView.deleteMany({ where: { createdAt: { lt: cutoff } } });
+        if (count > 0) await tx.siteCounter.upsert({
+          where: { key: PRUNED_PAGEVIEWS_COUNTER },
+          create: { key: PRUNED_PAGEVIEWS_COUNTER, value: count },
+          update: { value: { increment: count } },
+        });
+        return count;
+      });
       if (count > 0) this.logger.log(`Pruned ${count} page_views row(s) older than ${RETENTION_DAYS} days.`);
     } catch (err) {
       this.logger.warn(`page_views retention prune failed: ${String(err)}`);

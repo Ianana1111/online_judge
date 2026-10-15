@@ -497,6 +497,16 @@ model PageView {
   @@map("page_views")
 }
 
+/// Durable site-wide totals that must survive raw-row pruning (e.g. pageviews deleted by
+/// PageviewRetentionService are added to "pageviews_pruned" in the same transaction).
+model SiteCounter {
+  key       String   @id
+  value     BigInt   @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@map("site_counters")
+}
+
 /// One upgrade payment. With manual bank/LINE Pay transfer, the user submits a claim (PENDING)
 /// with a reference note, an admin verifies the money arrived and APPROVES (which extends the
 /// user's planExpiresAt), or REJECTS. `method` leaves room for an automated gateway (e.g. ECPay)
@@ -848,6 +858,7 @@ model Submission {
   @@index([contestParticipantId])
   @@index([verdict, createdAt])
   @@index([judgedAt])
+  @@index([createdAt])
   @@unique([userId, clientRequestId])
   @@map("submissions")
 }

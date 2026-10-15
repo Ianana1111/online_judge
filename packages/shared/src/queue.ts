@@ -17,6 +17,10 @@ export function submissionResultChannel(submissionId: string): string {
   return `submission:${submissionId}:status`;
 }
 
+/** Wakes every open site-wide submission feed stream when any practice submission is created or
+ * changes state. Carries no data — readers re-query the feed. */
+export const SUBMISSION_FEED_CHANNEL = "submissions:feed";
+
 // The "Run" feature (test your code against sample/custom input without submitting) — a distinct
 // queue from the two above because it never touches the Submission table or hidden TestCase data,
 // just compiles+runs the given source against whatever input cases were sent along.

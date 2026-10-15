@@ -316,6 +316,18 @@ export interface SubmissionListItem {
   createdAt: string;
 }
 
+/** One row of the site-wide submission feed — practice submissions only, never source code. */
+export interface SubmissionFeedItem {
+  id: string;
+  handle: string;
+  problemSlug: string;
+  problemTitle: string;
+  languageKey: string;
+  verdict: Verdict;
+  timeMs: number | null;
+  createdAt: string;
+}
+
 export interface ContestListItem {
   id: string;
   title: string;
@@ -687,6 +699,8 @@ export interface TrafficSummary {
   totalViews: number;
   distinctPaths: number;
   days: number;
+  /** Every recorded pageview since tracking began, including rows already pruned by retention. */
+  allTimeViews: number;
 }
 
 export interface DailyTrafficPoint {

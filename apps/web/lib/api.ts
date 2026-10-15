@@ -1,3 +1,5 @@
+import type { SubmissionFeedItem } from "./types";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 function readCookie(name: string): string | undefined {
@@ -158,6 +160,16 @@ class RecoverableStatusStream extends EventTarget {
 
 export function openSubmissionStream(submissionId: string) {
   return new RecoverableStatusStream(`/submissions/${submissionId}`, (value) => !["PENDING", "JUDGING"].includes(String(value.verdict)));
+}
+
+/** Site-wide submission feed. The server ends each stream after two minutes and EventSource
+ * reconnects on its own; callers keep a slow poll as the fallback. Returns a close function. */
+export function openSubmissionFeedStream(onItems: (items: SubmissionFeedItem[]) => void) {
+  const source = new EventSource(apiUrl("/submissions/feed/stream"), { withCredentials: true });
+  source.addEventListener("status", (event) => {
+    try { onItems(JSON.parse((event as MessageEvent).data)); } catch { /* next event or poll recovers */ }
+  });
+  return () => source.close();
 }
 
 export function openRunStream(runId: string) {

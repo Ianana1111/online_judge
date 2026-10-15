@@ -6,6 +6,7 @@ import { prisma } from "@oj/db";
 import { Prisma } from "@prisma/client";
 import type { RecordPageviewDto } from "@oj/shared";
 import { isBotUserAgent, isSpamReferrer } from "./pageview-filters";
+import { PRUNED_PAGEVIEWS_COUNTER } from "./pageview-retention.service";
 
 // Fixed taxonomy used to tag every scraped CPE problem's primary algorithmic topic (see
 // packages/db/scripts/apply-topic-tags.ts). Kept here so analytics queries know which tag slugs
@@ -282,15 +283,17 @@ export class AnalyticsService {
 
   async trafficSummary(days: number) {
     const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-    const [totalViews, distinctPaths] = await Promise.all([
+    const [totalViews, distinctPaths, retainedViews, pruned] = await Promise.all([
       prisma.pageView.count({ where: { createdAt: { gte: since } } }),
       prisma.pageView.findMany({
         where: { createdAt: { gte: since } },
         distinct: ["path"],
         select: { path: true },
       }),
+      prisma.pageView.count(),
+      prisma.siteCounter.findUnique({ where: { key: PRUNED_PAGEVIEWS_COUNTER } }),
     ]);
-    return { totalViews, distinctPaths: distinctPaths.length, days };
+    return { totalViews, distinctPaths: distinctPaths.length, days, allTimeViews: retainedViews + Number(pruned?.value ?? 0) };
   }
 
   async dailyTraffic(days: number) {

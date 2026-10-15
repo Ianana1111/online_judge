@@ -1,6 +1,7 @@
 import { Body, Controller, Get, HttpCode, Param, Post, Query, Req, Res } from "@nestjs/common";
 import type { Request, Response } from "express";
 import {
+  SUBMISSION_FEED_CHANNEL,
   createSubmissionSchema,
   isTerminalVerdict,
   submissionListQuerySchema,
@@ -29,6 +30,17 @@ export class SubmissionsController {
   @Get()
   list(@Query(new ZodValidationPipe(submissionListQuerySchema)) query: SubmissionListQueryDto, @CurrentUser() user: RequestUser) {
     return this.submissions.list(query, user);
+  }
+
+  // Declared before the ":id" routes so "feed" is never captured as a submission id.
+  @Get("feed")
+  feed() {
+    return this.submissions.feed();
+  }
+
+  @Get("feed/stream")
+  async feedStream(@Req() req: Request, @Res() res: Response) {
+    return serveStatusStream(req, res, SUBMISSION_FEED_CHANNEL, () => this.submissions.feed(), () => false);
   }
 
   @OptionalAuth()

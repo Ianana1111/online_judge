@@ -1,16 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { apiFetch } from "@/lib/api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiFetch, openSubmissionFeedStream } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import VerdictBadge from "@/components/VerdictBadge";
 import SubmissionCodeModal from "@/components/SubmissionCodeModal";
 import { SkeletonList } from "@/components/Skeleton";
 import QueryBoundary from "@/components/QueryBoundary";
 import { LANGUAGE_LABEL } from "@/lib/types";
-import type { SubmissionListItem, UserProfile } from "@/lib/types";
+import type { SubmissionFeedItem, SubmissionListItem, UserProfile } from "@/lib/types";
 import { useT } from "@/lib/i18n/LocaleContext";
 
 function SubmissionRow({ s, onOpen }: { s: SubmissionListItem; onOpen: (id: string) => void }) {
@@ -70,9 +70,71 @@ function SubmissionList({ items, onOpen }: { items: SubmissionListItem[]; onOpen
   </>;
 }
 
+function SubmissionFeed({ ownHandle, onOpen }: { ownHandle: string; onOpen: (id: string) => void }) {
+  const t = useT();
+  const queryClient = useQueryClient();
+  const feedQuery = useQuery({
+    queryKey: ["submissions", "feed"],
+    queryFn: () => apiFetch<SubmissionFeedItem[]>("/submissions/feed"),
+    refetchInterval: 30_000,
+  });
+  useEffect(() => openSubmissionFeedStream((items) => queryClient.setQueryData(["submissions", "feed"], items)), [queryClient]);
+
+  // Only your own rows open the code viewer — the API never returns other people's source.
+  const when = (s: SubmissionFeedItem) => {
+    const time = <time dateTime={s.createdAt}>{new Date(s.createdAt).toLocaleString()}</time>;
+    return s.handle === ownHandle
+      ? <button type="button" onClick={() => onOpen(s.id)} className="text-brand underline underline-offset-4" aria-label={t("View submission for {title}", { title: s.problemTitle })}>{time}</button>
+      : time;
+  };
+  const user = (s: SubmissionFeedItem) => <Link href={`/u/${s.handle}`} className="text-ink-200 hover:text-brand">{s.handle}</Link>;
+  const problem = (s: SubmissionFeedItem) => <Link href={`/problems/${s.problemSlug}`} className="text-ink-200 [overflow-wrap:anywhere] hover:text-brand">{s.problemTitle}</Link>;
+
+  return (
+    <QueryBoundary
+      query={feedQuery}
+      loading={<SkeletonList rows={8} />}
+      isEmpty={(d) => d.length === 0}
+      empty={<div className="oj-card p-4 text-sm text-ink-400">{t("No submissions yet.")}</div>}
+    >
+      {(items) => <>
+        <p className="text-xs text-ink-500">{t("Latest {n} practice submissions, updated live. Exam submissions are not shown.", { n: items.length })}</p>
+        <div className="space-y-3 sm:hidden">
+          {items.map((s) => <article key={s.id} className={`oj-card space-y-2 p-4 ${s.handle === ownHandle ? "border-brand/40" : ""}`}>
+            <div className="flex items-start justify-between gap-3">
+              <span className="min-w-0 font-medium">{problem(s)}</span>
+              <VerdictBadge verdict={s.verdict} size="sm" />
+            </div>
+            <p className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-ink-400">
+              {user(s)}
+              <span>{t(LANGUAGE_LABEL[s.languageKey] ?? s.languageKey)}</span>
+              <span>{s.timeMs != null ? `${s.timeMs} ms` : "—"}</span>
+              {when(s)}
+            </p>
+          </article>)}
+        </div>
+        <div className="hidden overflow-x-auto sm:block">
+          <table className="oj-table">
+            <thead><tr><th>{t("When")}</th><th>{t("User")}</th><th>{t("Problem")}</th><th>{t("Language")}</th><th>{t("Verdict")}</th><th>{t("Time")}</th></tr></thead>
+            <tbody>{items.map((s) => <tr key={s.id} className={`transition-colors hover:bg-ink-800/50 ${s.handle === ownHandle ? "bg-brand/5" : ""}`}>
+              <td className="font-mono text-xs text-ink-400">{when(s)}</td>
+              <td className="text-sm">{user(s)}</td>
+              <td>{problem(s)}</td>
+              <td className="text-xs text-ink-400">{t(LANGUAGE_LABEL[s.languageKey] ?? s.languageKey)}</td>
+              <td><VerdictBadge verdict={s.verdict} size="sm" /></td>
+              <td className="font-mono text-xs text-ink-400">{s.timeMs != null ? `${s.timeMs} ms` : "—"}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+      </>}
+    </QueryBoundary>
+  );
+}
+
 export default function MySubmissionsPage() {
   const t = useT();
   const { user, status: authStatus } = useAuthStore();
+  const [view, setView] = useState<"mine" | "everyone">("mine");
   const [groupBy, setGroupBy] = useState<"time" | "topic">("time");
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -125,6 +187,18 @@ export default function MySubmissionsPage() {
         )}
       </div>
 
+      <div role="tablist" aria-label={t("Submission view")} className="flex gap-1 rounded-xl border border-ink-700 bg-ink-900/40 p-1.5">
+        {([["mine", t("My submissions")], ["everyone", t("Everyone (live)")]] as const).map(([key, label]) => (
+          <button key={key} type="button" role="tab" aria-selected={view === key} onClick={() => setView(key)}
+            className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${view === key ? "bg-brand/10 text-brand" : "text-ink-300 hover:bg-ink-800"}`}>
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {view === "everyone" && user && <SubmissionFeed ownHandle={user.handle} onOpen={setOpenId} />}
+
+      {view === "mine" && <>
       <div className="flex gap-2">
         <button
           onClick={() => setGroupBy("time")}
@@ -174,6 +248,7 @@ export default function MySubmissionsPage() {
           </>
         )}
       </QueryBoundary>
+      </>}
 
       {openId && <SubmissionCodeModal submissionId={openId} onClose={() => setOpenId(null)} />}
     </div>

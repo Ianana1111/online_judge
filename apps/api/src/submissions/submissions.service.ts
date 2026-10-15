@@ -17,6 +17,7 @@ import { prisma, Prisma } from "@oj/db";
 import {
   JUDGE_LOCAL_QUEUE_NAME,
   JUDGE_REMOTE_QUEUE_NAME,
+  SUBMISSION_FEED_CHANNEL,
   isTerminalVerdict,
   submissionResultChannel,
   type CreateSubmissionDto,
@@ -31,6 +32,7 @@ import { BillingService, currentMonthKey } from "../billing/billing.service";
 import { AchievementsService } from "../achievements/achievements.service";
 
 const PAGE_SIZE = 20;
+const FEED_SIZE = 50;
 
 
 @Injectable()
@@ -92,6 +94,7 @@ export class SubmissionsService {
       });
       // The committed submission is the outbox. A queue outage is recovered by the dispatcher.
       void this.dispatchOne(submission.id).catch(() => this.logger.warn(`Submission ${submission.id} awaiting queue recovery`));
+      if (!submission.contestId) this.publishFeed();
       return { id: submission.id };
     } catch (error) {
       if (reserved) await releaseWork(this.redis, reserved.kind, userId, reserved.id, true).catch(() => {});
@@ -168,6 +171,45 @@ export class SubmissionsService {
     };
   }
 
+  private feedLoading: Promise<Awaited<ReturnType<SubmissionsService["loadFeed"]>>> | null = null;
+  private feedQueued: Promise<Awaited<ReturnType<SubmissionsService["loadFeed"]>>> | null = null;
+
+  /** Shared by every open feed stream in this process, so one publish costs one query rather than
+   * one per viewer. A caller arriving mid-read may have been woken by a write that read missed, so
+   * it waits for the next fresh read instead of joining the in-flight one. */
+  feed() {
+    if (!this.feedLoading) {
+      this.feedLoading = this.loadFeed().finally(() => { this.feedLoading = null; });
+      return this.feedLoading;
+    }
+    this.feedQueued ??= this.feedLoading.catch(() => undefined).then(() => { this.feedQueued = null; return this.feed(); });
+    return this.feedQueued;
+  }
+
+  /** Latest practice submissions from every user. Contest attempts are excluded (live exam
+   * activity is not public), as are hidden problems and accounts pending deletion. Never carries
+   * source code or compiler output. */
+  private async loadFeed() {
+    const rows = await prisma.submission.findMany({
+      where: { contestId: null, contestParticipantId: null, problem: { visibility: true }, user: { deletionRequestedAt: null } },
+      select: {
+        id: true, languageKey: true, verdict: true, timeMs: true, createdAt: true,
+        user: { select: { handle: true } },
+        problem: { select: { slug: true, title: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      take: FEED_SIZE,
+    });
+    return rows.map((s) => ({
+      id: s.id, handle: s.user.handle, problemSlug: s.problem.slug, problemTitle: s.problem.title,
+      languageKey: s.languageKey, verdict: s.verdict, timeMs: s.timeMs, createdAt: s.createdAt,
+    }));
+  }
+
+  private publishFeed() {
+    void this.redis.publish(SUBMISSION_FEED_CHANNEL, "1").catch(() => this.logger.warn("Submission feed notification unavailable"));
+  }
+
   /** Used by the internal judge-result callback. Returns the updated public detail (no
    * sourceCode) so the caller can publish it to the SSE channel. */
   // Only PENDING/JUDGING are valid states to update FROM — a submission already in a terminal
@@ -224,6 +266,7 @@ export class SubmissionsService {
       .catch(() => this.logger.warn("Could not release judge admission; lease will expire"));
     const publicDetail = this.toPublicDetail(updated!, false);
     await this.redis.publish(submissionResultChannel(submissionId), JSON.stringify(publicDetail)).catch(() => this.logger.warn(`Result ${submissionId} saved; live notification unavailable`));
+    if (!updated!.contestId) this.publishFeed();
 
     // After publishing, so a slow achievement evaluation never delays the verdict reaching the
     // live SSE stream — achievement/notification delivery is polled separately, not time-critical.

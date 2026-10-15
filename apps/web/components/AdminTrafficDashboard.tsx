@@ -39,7 +39,13 @@ export default function AdminTrafficDashboard() {
           <h2 className="text-sm font-semibold text-ink-200">{t("Site traffic (last {n} days)", { n: TRAFFIC_DAYS })}</h2>
           <p className="text-xs text-ink-500">{t("Bot/crawler traffic and known referrer-spam domains filtered server-side.")}</p>
         </div>
-        <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-2">
+        <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="oj-card col-span-2 p-4 sm:col-span-1">
+            <p className="text-xs text-ink-400">{t("All-time pageviews (all pages)")}</p>
+            <p className="mt-1 font-mono text-2xl text-ink-50">
+              {trafficSummary ? trafficSummary.allTimeViews.toLocaleString() : "—"}
+            </p>
+          </div>
           <div className="oj-card p-4">
             <p className="text-xs text-ink-400">{t("Pageviews")}</p>
             <p className="mt-1 font-mono text-2xl text-ink-50">
