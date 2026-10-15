@@ -66,7 +66,7 @@ export default function AdminUsersPage() {
       <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-ink-400"><p>查看帳號、學生身分與 Pro 權限。{data ? `共 ${data.length} 個帳號` : ""}</p><button className="oj-btn-secondary" disabled={isFetching} onClick={() => void refetch()}>更新列表</button></div>
       {isPending && <p role="status" className="text-sm text-ink-400">載入使用者中…</p>}
       {isError && <p role="alert" className="text-sm text-verdict-wa">無法取得使用者，請重新載入。</p>}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" role="region" aria-label={t("All accounts")} tabIndex={0}>
         <h2 className="mb-2 text-sm font-semibold text-ink-200">{t("All accounts")}</h2>
         <p className="mb-2 text-xs text-ink-500">
           {t("Use Grant if someone paid but wasn't upgraded — extends from their current expiry, same as a real purchase.")}
