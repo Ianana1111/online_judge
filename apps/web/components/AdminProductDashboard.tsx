@@ -40,7 +40,9 @@ export default function AdminProductDashboard() {
     {isPending && <p role="status" className="oj-card p-5 text-sm text-ink-300">正在載入營運數據…</p>}
     {isError && <div role="alert" className="oj-card flex flex-wrap items-center gap-3 p-5 text-sm text-verdict-wa">營運數據載入失敗。<button className="oj-btn-secondary" onClick={() => void refetch()}>重試</button></div>}
     {data && <>
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+        <Metric label="全站總提交量" value={data.usage.allTimeSubmissions != null ? number(data.usage.allTimeSubmissions) : "—"}
+          note={data.usage.allTimeAccepted != null ? `上線至今（含測驗），其中 AC ${number(data.usage.allTimeAccepted)} 筆` : "上線至今（含測驗）"} />
         <Metric label="新註冊帳號" value={number(data.usage.signups)} note="期間內建立、未申請刪除" />
         <Metric label="登入訪客" value={number(data.usage.loggedInVisitors)} note="至少有一次頁面瀏覽的帳號" />
         <Metric label="解題人數" value={number(data.usage.solvers)} note={`${number(submissionCount)} 次提交，${number(data.usage.acceptedUsers)} 人曾 AC`} />

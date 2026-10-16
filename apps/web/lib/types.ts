@@ -515,6 +515,8 @@ export interface ProductDashboard {
   usage: {
     signups: number; loggedInVisitors: number; solvers: number; acceptedUsers: number;
     submissions: Record<string, number>; examStarts: number; publishedPosts: number; publishedComments: number;
+    /** Since launch, ignoring the selected period. Absent while an older API is still serving. */
+    allTimeSubmissions?: number; allTimeAccepted?: number;
   };
   billing: {
     confirmedPaymentCount: number; confirmedGrossNtd: number; paidAt200: number; paidAt2000: number;

@@ -369,11 +369,16 @@ export class AnalyticsService {
     const hourlyTraffic = Array.from({ length: 24 }, (_, hour) => ({ hour, views: byHour.get(hour) ?? 0 }));
     const paidAt200 = await prisma.payment.count({ where: { status: "APPROVED", amountNtd: 200, paidAt: { gte: since } } });
     const paidAt2000 = await prisma.payment.count({ where: { status: "APPROVED", amountNtd: 2000, paidAt: { gte: since } } });
+    // All-time totals, independent of the selected period.
+    const [allTimeSubmissions, allTimeAccepted] = await Promise.all([
+      prisma.submission.count(),
+      prisma.submission.count({ where: { verdict: "AC" } }),
+    ]);
     return {
       days, timezone: "Asia/Taipei", hourlyTraffic,
       usage: { signups, loggedInVisitors: Number(loggedInViews[0]?.count ?? 0), solvers: Number(solvers[0]?.count ?? 0),
         acceptedUsers: Number(acceptedUsers[0]?.count ?? 0), submissions: Object.fromEntries(submissions.map(row => [row.verdict, row._count._all])),
-        examStarts, publishedPosts, publishedComments },
+        examStarts, publishedPosts, publishedComments, allTimeSubmissions, allTimeAccepted },
       billing: { confirmedPaymentCount: paidPayments._count._all, confirmedGrossNtd: paidPayments._sum.amountNtd ?? 0,
         paidAt200, paidAt2000, paymentStatuses: Object.fromEntries(paymentStatuses.map(row => [row.status, row._count._all])),
         activeSubscriptions, cancelledSubscriptions,
