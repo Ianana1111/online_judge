@@ -298,23 +298,29 @@ export default function SubmissionPanel({
               )}
             </p>
           )}
-          <select
-            aria-label={t("Language")}
-            value={languageKey}
-            onChange={(e) => {
-              const next = e.target.value;
-              languageDrafts.current[languageKey] = sourceCode;
-              setLanguageKey(next);
-              setSourceCode(languageDrafts.current[next] ?? STUB[next] ?? "");
-            }}
-            className="max-w-40 rounded-md border border-transparent bg-transparent px-2 py-0.5 text-sm text-ink-200 hover:bg-ink-800 focus:border-brand focus:outline-none"
-          >
-            {LANGUAGES.map((l) => (
-              <option key={l} value={l}>
-                {t(LANGUAGE_LABEL[l])}
-              </option>
-            ))}
-          </select>
+          {/* appearance-none: Linux WebKit otherwise draws a taller native GTK menulist that ignores our sizing. */}
+          <span className="relative inline-flex shrink-0">
+            <select
+              aria-label={t("Language")}
+              value={languageKey}
+              onChange={(e) => {
+                const next = e.target.value;
+                languageDrafts.current[languageKey] = sourceCode;
+                setLanguageKey(next);
+                setSourceCode(languageDrafts.current[next] ?? STUB[next] ?? "");
+              }}
+              className="h-6 max-w-40 appearance-none rounded-md border border-transparent bg-transparent py-0 pl-2 pr-6 text-sm leading-6 text-ink-200 hover:bg-ink-800 focus:border-brand focus:outline-none"
+            >
+              {LANGUAGES.map((l) => (
+                <option key={l} value={l}>
+                  {t(LANGUAGE_LABEL[l])}
+                </option>
+              ))}
+            </select>
+            <svg aria-hidden="true" viewBox="0 0 12 12" className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-ink-400">
+              <path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
         </div>
       </div>
 
