@@ -24,6 +24,14 @@ const nextConfig = {
     };
     return config;
   },
+  // The page-level redirect() in app/cpe and app/gpe streams a 200 with an empty shell, which search
+  // engines index as a thin duplicate. A config redirect answers with a real 308 first.
+  async redirects() {
+    return [
+      { source: "/cpe", destination: "/contests?tab=cpe", permanent: true },
+      { source: "/gpe", destination: "/contests?tab=gpe", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

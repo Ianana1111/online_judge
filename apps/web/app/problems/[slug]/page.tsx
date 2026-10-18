@@ -4,7 +4,7 @@ import { serverFetch, serverFetchAuthedDetailed } from "@/lib/serverApi";
 import { SITE_URL } from "@/lib/site";
 import { jsonLdScript } from "@/lib/jsonLd";
 import { previewText } from "@/lib/textPreview";
-import { stripProblemNumber } from "@/lib/problemTitle";
+import { problemSeoTitle, stripProblemNumber } from "@/lib/problemTitle";
 import type { ProblemDetail } from "@/lib/types";
 import ProblemView from "@/components/ProblemView";
 import StatementRenderer from "@/components/StatementRenderer";
@@ -18,16 +18,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const problem = await serverFetch<ProblemDetail>(`/problems/${slug}`);
   if (!problem) return {};
 
-  const title = stripProblemNumber(problem.title, problem.uvaId);
-  const description = previewText(problem.statementMd, 160);
+  const title = problemSeoTitle(problem);
+  const name = stripProblemNumber(problem.title, problem.uvaId);
+  const intro = `${problem.uvaId != null ? `UVa ${problem.uvaId} ` : ""}${name}：線上提交即時判題，支援 C、C++、Java、Python。`;
+  const description = `${intro}${previewText(problem.statementMd, Math.max(60, 160 - intro.length))}`;
   const url = `${SITE_URL}/problems/${slug}`;
+  // A segment's openGraph replaces the root one wholesale, so the site image must be restated.
+  const images = [`${SITE_URL}/opengraph-image`];
 
   return {
     title,
     description,
     alternates: { canonical: url },
-    openGraph: { type: "article", title, description, url },
-    twitter: { card: "summary_large_image", title, description },
+    openGraph: { type: "article", title, description, url, images },
+    twitter: { card: "summary_large_image", title, description, images },
   };
 }
 

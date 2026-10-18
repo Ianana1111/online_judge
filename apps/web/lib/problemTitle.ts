@@ -15,3 +15,14 @@ export function stripProblemNumber(title: string, uvaId?: number | null): string
   if (!match || Number(match[1]) !== uvaId) return title;
   return title.slice(match[0].length);
 }
+
+const SOURCE_KEYWORD: Record<string, string> = { CPE: "CPE", GPE: "GPE", UVA: "UVa" };
+
+/** Search-facing title. Students search by judge number ("UVa 100"), so unlike the on-page
+ * heading this keeps the number and names the exam the problem comes from. */
+export function problemSeoTitle(problem: { title: string; uvaId: number | null; source: string }): string {
+  const name = stripProblemNumber(problem.title, problem.uvaId);
+  const label = problem.uvaId != null ? `UVa ${problem.uvaId} - ${name}` : name;
+  const exam = SOURCE_KEYWORD[problem.source];
+  return exam ? `${label}｜${exam} 題目線上練習與解題` : `${label}｜程式題目線上練習`;
+}
