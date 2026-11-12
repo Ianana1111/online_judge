@@ -4,12 +4,120 @@ on:
   pull_request:
   push:
     branches: [main, "readiness/**"]
+  # Firefox / WebKit / iOS WebKit runs nightly (03:00 Taiwan) instead of on every push.
+  schedule:
+    - cron: "0 19 * * *"
 permissions:
   contents: read
+# A newer push to the same PR/branch makes the older run pointless, so it is cancelled. On main every
+# commit's run gates its own deployment: each gets its own group, so main runs never queue or cancel.
+concurrency:
+  group: readiness-${{ github.event_name }}-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
+  cancel-in-progress: true
+
+# The checks run as parallel jobs; `verify` waits for all of them. Its name is the required check
+# for the Vercel production alias (docs/launch-readiness/deployment-gates.md): keep it unique and
+# keep it depending on every other job. Railway waits for the whole workflow.
+env:
+  DATABASE_URL: postgresql://oj_test:oj_test_local_only@127.0.0.1:55432/oj_test
+  REDIS_URL: redis://127.0.0.1:56379
+  RUN_DB_TESTS: "1"
+  ECPAY_ENV: sandbox
+  NEXT_TELEMETRY_DISABLED: "1"
+  API_INTERNAL_URL: http://127.0.0.1:55440
+  NEXT_PUBLIC_API_URL: http://127.0.0.1:55440
+  PLAYWRIGHT_PRODUCTION: "1"
+
 jobs:
-  verify:
+  static:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: python3 scripts/generate-school-catalog.py --check
+      - run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/author-gpe-recovery.py --check
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm audit --prod --audit-level high
+
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: oj_test
+          POSTGRES_PASSWORD: oj_test_local_only
+          POSTGRES_DB: oj_test
+        ports: ["55432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U oj_test -d oj_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["56379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          migrate: "true"
+      - run: pnpm test
+
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: oj_test
+          POSTGRES_PASSWORD: oj_test_local_only
+          POSTGRES_DB: oj_test
+        ports: ["55432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U oj_test -d oj_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["56379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          migrate: "true"
+      - uses: docker/setup-buildx-action@v3
+      - name: Build backup image
+        uses: docker/build-push-action@v6
+        with: { context: ., file: docker/Dockerfile.backup, tags: oj-readiness-backup, load: true, cache-from: "type=gha,scope=backup", cache-to: "type=gha,scope=backup,mode=max" }
+      - run: python3 tests/backup-drill.py
+        env:
+          RUN_BACKUP_TESTS: "1"
+          BACKUP_TEST_SOURCE_CONTAINER: ${{ job.services.postgres.id }}
+      - run: pnpm --filter @oj/api build
+      - run: pnpm --filter @oj/judge build
+      - name: Build API image
+        uses: docker/build-push-action@v6
+        with: { context: ., file: docker/Dockerfile.api, tags: oj-readiness-api, load: true, cache-from: "type=gha,scope=api", cache-to: "type=gha,scope=api,mode=max" }
+      - name: Build judge image
+        uses: docker/build-push-action@v6
+        with: { context: ., file: docker/Dockerfile.judge, tags: oj-readiness-judge, load: true, cache-from: "type=gha,scope=judge", cache-to: "type=gha,scope=judge,mode=max" }
+      - run: pnpm test:runtime
+      - name: Build sandbox fixture image
+        uses: docker/build-push-action@v6
+        with: { context: tests/sandbox, tags: oj-readiness-sandbox-fixture, load: true, cache-from: "type=gha,scope=sandbox", cache-to: "type=gha,scope=sandbox,mode=max" }
+      - run: RUN_SANDBOX_TESTS=1 pnpm exec vitest run tests/sandbox-isolation.test.ts tests/gpe-recovery-sandbox.test.ts
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
     services:
       postgres:
         image: postgres:16-alpine
@@ -28,61 +136,53 @@ jobs:
           --health-cmd "redis-cli ping"
           --health-interval 5s --health-timeout 5s --health-retries 10
     env:
-      DATABASE_URL: postgresql://oj_test:oj_test_local_only@127.0.0.1:55432/oj_test
-      REDIS_URL: redis://127.0.0.1:56379
-      RUN_DB_TESTS: "1"
-      ECPAY_ENV: sandbox
-      NEXT_TELEMETRY_DISABLED: "1"
-      API_INTERNAL_URL: http://127.0.0.1:55440
-      NEXT_PUBLIC_API_URL: http://127.0.0.1:55440
-      PLAYWRIGHT_PRODUCTION: "1"
+      # Push and pull-request runs use Chromium (desktop + mobile); the nightly and manual runs add
+      # Firefox, WebKit and iOS WebKit (see playwright.config.ts).
+      CROSS_BROWSER_E2E: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && '1' || '0' }}
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: ./.github/actions/setup
         with:
-          node-version: "22"
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm db:generate
-      - run: pnpm --filter @oj/db exec prisma migrate deploy
-      - run: python3 scripts/generate-school-catalog.py --check
-      - run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/author-gpe-recovery.py --check
-      - run: pnpm typecheck
-      - run: pnpm lint
-      - run: pnpm test
-      - run: docker build -f docker/Dockerfile.backup -t oj-readiness-backup .
-      - run: python3 tests/backup-drill.py
-        env:
-          RUN_BACKUP_TESTS: "1"
-          BACKUP_TEST_SOURCE_CONTAINER: ${{ job.services.postgres.id }}
+          migrate: "true"
       - run: pnpm --filter @oj/api build
-      - run: pnpm --filter @oj/judge build
-      - run: docker build -f docker/Dockerfile.api -t oj-readiness-api .
-      - run: docker build -f docker/Dockerfile.judge -t oj-readiness-judge .
-      - run: pnpm test:runtime
-      - run: docker build --tag oj-readiness-sandbox-fixture tests/sandbox
-      - run: RUN_SANDBOX_TESTS=1 pnpm exec vitest run tests/sandbox-isolation.test.ts tests/gpe-recovery-sandbox.test.ts
+      - uses: actions/cache@v4
+        with:
+          path: apps/web/.next/cache
+          key: next-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('apps/web/**', 'packages/shared/**', '!apps/web/.next/**') }}
+          restore-keys: next-${{ hashFiles('pnpm-lock.yaml') }}-
       - run: pnpm --filter @oj/web build
-      - run: pnpm audit --prod --audit-level high
-      - run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ env.CROSS_BROWSER_E2E }}
+      - run: pnpm exec playwright install --with-deps ${{ env.CROSS_BROWSER_E2E == '1' && 'chromium firefox webkit' || 'chromium' }}
       - name: Check collection navigation repeatedly
+        if: env.CROSS_BROWSER_E2E == '1'
         run: pnpm exec playwright test tests/e2e/collections.spec.ts --repeat-each=3 --output=test-results/collections-repeat
-        env:
-          CROSS_BROWSER_E2E: "1"
       - run: pnpm test:e2e
-        env:
-          CROSS_BROWSER_E2E: "1"
       # Browser route fixtures cannot intercept server-side fetches. Keep the
       # real API separate so empty SSR data cannot mask the browser fixtures.
       - name: Check all pages against the real API
-        run: pnpm exec playwright test tests/e2e/full-site.spec.ts tests/e2e/editorials.spec.ts tests/e2e/editor-recovery.spec.ts tests/e2e/practice-workspace.spec.ts tests/e2e/run-consistency.spec.ts --output=test-results/full-site
+        run: pnpm exec playwright test tests/e2e/full-site.spec.ts tests/e2e/editorials.spec.ts tests/e2e/editor-recovery.spec.ts tests/e2e/practice-workspace.spec.ts tests/e2e/run-consistency.spec.ts tests/e2e/learn-c.spec.ts --output=test-results/full-site
         env:
           RUN_FULL_SITE_E2E: "1"
-          CROSS_BROWSER_E2E: "1"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: browser-validation
           path: test-results/
           retention-days: 14
+
+  verify:
+    if: always()
+    needs: [static, unit, runtime, e2e]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every readiness job passed
+        run: |
+          echo 'static=${{ needs.static.result }} unit=${{ needs.unit.result }} runtime=${{ needs.runtime.result }} e2e=${{ needs.e2e.result }}'
+          test '${{ needs.static.result }}' = success
+          test '${{ needs.unit.result }}' = success
+          test '${{ needs.runtime.result }}' = success
+          test '${{ needs.e2e.result }}' = success
