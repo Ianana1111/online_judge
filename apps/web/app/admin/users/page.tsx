@@ -13,6 +13,8 @@ export default function AdminUsersPage() {
   const qc = useQueryClient();
   const [actingId, setActingId] = useState<string | null>(null);
   const [planError, setPlanError] = useState<string | null>(null);
+  // 全部帳號 / 學生（isStudent）/ 學 C 的學生（learnC，看得到 Learning C）
+  const [filter, setFilter] = useState<"all" | "students" | "learnC">("all");
 
   const { data, isPending, isError, isFetching, refetch } = useQuery({
     queryKey: ["users", "admin"],
@@ -27,6 +29,16 @@ export default function AdminUsersPage() {
   async function toggleStudent(id: string, isStudent: boolean) {
     try {
       await apiFetch(`/users/${id}/student`, { method: "PATCH", body: { isStudent } });
+      await qc.invalidateQueries({ queryKey: ["users", "admin"] });
+    } catch {
+      /* best-effort */
+    }
+  }
+
+  // Enrolling in C also makes the account a student; removing student status removes C too (API side).
+  async function toggleLearnC(id: string, learnC: boolean) {
+    try {
+      await apiFetch(`/users/${id}/learn-c`, { method: "PATCH", body: { learnC } });
       await qc.invalidateQueries({ queryKey: ["users", "admin"] });
     } catch {
       /* best-effort */
@@ -72,6 +84,14 @@ export default function AdminUsersPage() {
           {t("Use Grant if someone paid but wasn't upgraded — extends from their current expiry, same as a real purchase.")}
         </p>
         {planError && <p className="mb-2 text-sm text-verdict-wa">{planError}</p>}
+        <div className="mb-3 flex flex-wrap gap-2 text-xs" role="group" aria-label="篩選帳號">
+          {([["all", "全部帳號"], ["students", `學生（${data?.filter((u) => u.isStudent).length ?? 0}）`], ["learnC", `C 語言學生（${data?.filter((u) => u.learnC).length ?? 0}）`]] as const).map(([key, label]) => (
+            <button key={key} type="button" aria-pressed={filter === key} onClick={() => setFilter(key)}
+              className={filter === key ? "oj-btn-primary px-3 py-1" : "oj-btn-secondary px-3 py-1"}>
+              {label}
+            </button>
+          ))}
+        </div>
         <table className="oj-table">
           <thead>
             <tr>
@@ -80,11 +100,12 @@ export default function AdminUsersPage() {
               <th>{t("Role")}</th>
               <th>{t("Plan")}</th>
               <th>{t("My student")}</th>
+              <th title="勾選後，導覽列會出現 Learning C，也看得到 C 語言學習地圖（會一併設為學生）">C 語言</th>
               <th>{t("Created")}</th>
             </tr>
           </thead>
           <tbody>
-            {data?.map((u) => {
+            {data?.filter((u) => filter === "all" || (filter === "students" ? u.isStudent : u.learnC)).map((u) => {
               // Admins are never capped and students are auto-Pro regardless of the plan field
               // (see billing.service isUnlimited/isProActive) — granting/revoking here wouldn't
               // change what they actually see, so don't offer controls that couldn't do anything.
@@ -150,6 +171,19 @@ export default function AdminUsersPage() {
                           onChange={(e) => toggleStudent(u.id, e.target.checked)}
                         />
                         {u.isStudent ? t("Student") : "—"}
+                      </label>
+                    )}
+                  </td>
+                  <td>
+                    {u.role === "USER" && (
+                      <label className="flex items-center gap-2 text-xs text-ink-300">
+                        <input
+                          type="checkbox"
+                          checked={u.learnC}
+                          onChange={(e) => toggleLearnC(u.id, e.target.checked)}
+                          aria-label={`${u.handle} 學 C 語言`}
+                        />
+                        {u.learnC ? "C 語言" : "—"}
                       </label>
                     )}
                   </td>

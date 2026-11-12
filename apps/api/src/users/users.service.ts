@@ -208,6 +208,7 @@ export class UsersService {
         email: true,
         role: true,
         isStudent: true,
+        learnC: true,
         plan: true,
         planExpiresAt: true,
         createdAt: true,
@@ -225,11 +226,21 @@ export class UsersService {
     });
   }
 
+  // learnC (enrolled in C: Learning C nav + the C learning map) only exists on top of isStudent, so
+  // the two toggles keep each other consistent: enrolling in C makes the account a student, and
+  // removing student status also removes C.
   async setIsStudent(id: string, isStudent: boolean) {
     const existing = await prisma.user.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException("User not found");
-    const user = await prisma.user.update({ where: { id }, data: { isStudent } });
-    return { id: user.id, handle: user.handle, isStudent: user.isStudent };
+    const user = await prisma.user.update({ where: { id }, data: isStudent ? { isStudent } : { isStudent, learnC: false } });
+    return { id: user.id, handle: user.handle, isStudent: user.isStudent, learnC: user.learnC };
+  }
+
+  async setLearnC(id: string, learnC: boolean) {
+    const existing = await prisma.user.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException("User not found");
+    const user = await prisma.user.update({ where: { id }, data: learnC ? { learnC, isStudent: true } : { learnC } });
+    return { id: user.id, handle: user.handle, isStudent: user.isStudent, learnC: user.learnC };
   }
 
   /** Merge-patches User.settings (default language, daily goal, onboarding dismissal, ...) rather

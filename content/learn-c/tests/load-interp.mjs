@@ -4,7 +4,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 
-const dir = join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'interp');
+// 解譯器在網站裡（apps/web/lib/learn-c/interp），網站和這裡的測試共用同一份
+const dir = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'apps', 'web', 'lib', 'learn-c', 'interp');
 
 export function loadInterp() {
   const files = JSON.parse(readFileSync(join(dir, 'files.json'), 'utf8'));

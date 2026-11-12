@@ -152,6 +152,7 @@ export class AuthService {
     email: string;
     role: string;
     isStudent: boolean;
+    learnC: boolean;
     plan: "FREE" | "PRO";
     settings: Record<string, unknown>;
     bio: string;
@@ -187,6 +188,7 @@ export class AuthService {
       mfaRequired: Boolean(user.mfaEnabledAt && (!sid || !await this.redis.get(`mfa:session:${user.id}:${sid}`))),
       mfaEnrollmentRequired: user.role === "ADMIN" && process.env.ADMIN_MFA_REQUIRED === "true" && !user.mfaEnabledAt,
       isStudent: user.isStudent,
+      learnC: user.learnC,
       plan: unlimited ? "PRO" : "FREE",
       settings: (user.settings as Record<string, unknown>) ?? {},
       bio: user.bio,

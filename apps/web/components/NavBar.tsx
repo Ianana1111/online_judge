@@ -30,6 +30,9 @@ const AUTH_LINKS = [{ href: "/submissions", label: "My Submissions" }];
 // Only for logged-in students (isStudent, set by an admin) — not admins, they get the console link.
 const STUDENT_LINKS = [{ href: "/classes", label: "My Classes" }];
 
+// Students the tutor enrolled in C (learnC) and admins: the C learning map at /learn/c.
+const LEARN_C_LINK = { href: "/learn/c", label: "Learning C" };
+
 /** Every link the desktop nav can show, flattened into one list with a visibility predicate —
  * shared by the mobile drawer so the two never drift out of sync with each other. */
 function useNavLinks(user: User | null) {
@@ -42,6 +45,7 @@ function useNavLinks(user: User | null) {
     ...(user ? AUTH_LINKS : []),
     ...(showUpgrade ? [{ href: "/upgrade", label: "Upgrade Plan" }] : []),
     ...(showStudentLinks ? STUDENT_LINKS : []),
+    ...(user && (user.learnC || isAdmin) ? [LEARN_C_LINK] : []),
     ...(isAdmin ? [{ href: "/admin", label: "Console" }] : []),
   ];
 }
@@ -183,6 +187,16 @@ export default function NavBar() {
                   {t(l.label)}
                 </Link>
               ))}
+            {!!user && (user.learnC || isAdmin) && (
+              <Link
+                href={LEARN_C_LINK.href}
+                className={`text-sm font-medium leading-none transition-colors ${
+                  pathname?.startsWith(LEARN_C_LINK.href) ? "text-brand" : "text-ink-300 hover:text-ink-50"
+                }`}
+              >
+                {t(LEARN_C_LINK.label)}
+              </Link>
+            )}
             {isAdmin && <span className="mx-1 text-ink-500">|</span>}
             {isAdmin && (
               <Link

@@ -200,8 +200,8 @@ const t0 = Date.now();
 await Promise.all([solutions(), practice(), units()]);
 errors();
 traces();
-// 動畫：每一步都能 render（用打包後的 dist/app.js）
-for (const a of animSmoke()) if (!only || `anim ${a.name}`.includes(only)) record('anim', a.name, !a.error, a.error || `${a.steps} 步`);
+// 動畫：每一步都能 render（直接載入網站的動畫模組）
+for (const a of await animSmoke()) if (!only || `anim ${a.name}`.includes(only)) record('anim', a.name, !a.error, a.error || `${a.steps} 步`);
 rmSync(work, { recursive: true, force: true });
 
 const verbose = process.argv.includes('--verbose');

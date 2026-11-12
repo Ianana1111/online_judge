@@ -207,6 +207,9 @@ model User {
   /// from role=USER, which now also covers anyone who self-registered out of general interest).
   /// Gates the "My Classes" nav link and Class-tracking features.
   isStudent    Boolean  @default(false)
+  /// A tutored student who is also learning C: sees "Learning C" in the nav and can read the C
+  /// learning map (/learn/c). Always paired with isStudent (users.service keeps them in step).
+  learnC       Boolean  @default(false)
   /// Billing tier. FREE users are capped (submit quota + virtual-attempt count); PRO lifts both.
   /// PRO is only "active" while planExpiresAt is in the future — past that the account behaves as
   /// FREE again until another payment extends the date (see billing.service).

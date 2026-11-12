@@ -52,6 +52,7 @@ const overrides: Record<string, string> = {
   "Collections": "題目集",
   "Discussion": "討論",
   "My Classes": "我的課程",
+  "Learning C": "C 語言學習地圖",
   "Activity": "動態",
   "Not started": "尚未開始",
   "Title": "標題",

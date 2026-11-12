@@ -53,6 +53,8 @@ export interface User {
   email: string;
   role: "USER" | "ADMIN";
   isStudent: boolean;
+  /** Enrolled in C by the tutor: sees "Learning C" in the nav and can read the C learning map. */
+  learnC: boolean;
   plan: "FREE" | "PRO";
   settings: UserSettings;
   bio: string;
@@ -487,6 +489,7 @@ export interface AdminUser {
   email: string;
   role: "USER" | "ADMIN";
   isStudent: boolean;
+  learnC: boolean;
   // Effective plan (already accounts for a lapsed planExpiresAt and isStudent auto-Pro) — same
   // computation backing /billing/me, not the raw DB column.
   plan: "FREE" | "PRO";

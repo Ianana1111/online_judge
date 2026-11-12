@@ -141,6 +141,11 @@ export const setIsStudentSchema = z.object({
 });
 export type SetIsStudentDto = z.infer<typeof setIsStudentSchema>;
 
+export const setLearnCSchema = z.object({
+  learnC: z.boolean(),
+});
+export type SetLearnCDto = z.infer<typeof setLearnCSchema>;
+
 export const adminGrantPlanSchema = z.object({
   period: z.enum(["MONTHLY", "YEARLY"]),
 });

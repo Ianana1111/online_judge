@@ -1,19 +1,18 @@
 #!/usr/bin/env node
-// 打包學習地圖：
-//   node content/learn-c/build.mjs --content=<家教的 learning_map 資料夾> [--out=輸出資料夾] [--base=/learn/c/]
+// 打包學習地圖的內容：
+//   node content/learn-c/build.mjs --content=<家教的 learning_map 資料夾>
 //
-// 程式碼（這個資料夾）放在公開的 repo；內容（章節、練習、題目解答和筆記）放在家教資料夾，**不能**放進 repo。
-// 內容資料夾也可以用環境變數 LEARN_C_CONTENT 指定。
+// 程式碼在公開的 repo（頁面：apps/web/app/learn/c，互動元件和 C 解譯器：apps/web/lib/learn-c，由 Next.js 打包）；
+// 內容（章節、練習、題目解答和筆記）放在家教資料夾，**不能**放進 repo。內容資料夾也可以用環境變數 LEARN_C_CONTENT 指定。
 //
-// 輸出（預設 content/learn-c/dist，已 gitignore）：
-//   網站外殼：index.html、style.css、app.js、interp.js、worker.js（不含任何內容，可以公開）
-//   content.json：章節、題目、練習（只給學生看；用 publish.mjs 寫進資料庫，由 API 檢查權限後提供）
-//   data.js：本機預覽用（把 content.json 直接包成 script，只寫在本機的 dist，不要放到網站上）
+// 輸出 content/learn-c/dist/content.json（已 gitignore），再用 packages/db/scripts/publish-learn-content.ts 寫進資料庫，
+// 由 API 檢查權限後提供給學 C 的學生。打包時會檢查：引用的題目／練習／動畫都存在、:::trace 的程式能正常執行、
+// 練習的參考解答通過自己的測資。
 //
 // 題目會自動偵測：內容資料夾的上一層裡，每個 <數字>_class/P<數字>/ 有 solution.c 的就是一題。
 // 題名從 knowledge.md 的「# P1 題名：知識點筆記」抓，摘要從「> 本題主打：…」抓，
 // 「這題和第 1 堂課 P5 是同一題」會自動標成重複題。problems.json（選填）可以覆寫這些欄位或指定顏色。
-import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -23,17 +22,14 @@ import { loadInterp } from './tests/load-interp.mjs';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const arg = (n) => { const a = process.argv.find((x) => x.startsWith(`--${n}=`)); return a ? a.slice(n.length + 3) : null; };
 const OUT = arg('out') ? resolve(arg('out')) : join(HERE, 'dist');
-// --base=/learn/c/：網站上的路徑。給了就把 index.html 裡的檔案改成絕對路徑（網址不論有沒有結尾斜線都能載入）
-const BASE = arg('base') || '';
 const CONTENT = resolve(arg('content') || process.env.LEARN_C_CONTENT || HERE);
 if (!existsSync(join(CONTENT, 'chapters'))) {
   console.error(`找不到內容資料夾（${CONTENT}/chapters）。請用 --content=<家教的 learning_map 資料夾> 指定。`);
   process.exit(1);
 }
 const PROB_ROOT = existsSync(join(CONTENT, 'problems')) ? join(CONTENT, 'problems') : join(CONTENT, '..');
-const APP_FILES = ['util.js', 'markdown.js', 'runner.js', 'editor.js', 'diff.js', 'runbox.js', 'player.js', 'anim-core.js',
-  'anims-a.js', 'anims-b.js', 'anims-c.js', 'practice.js', 'page.js', 'loader.js', 'main.js'];
-const CSS_FILES = ['base.css', 'widgets.css'];
+// 網站上的學習地圖程式（動畫名稱從這裡找）
+const APP_DIR = join(HERE, '..', '..', 'apps', 'web', 'lib', 'learn-c', 'app');
 const read = (p) => readFileSync(p, 'utf8');
 const problems = [], warnings = [];
 const warn = (m) => warnings.push(m);
@@ -111,8 +107,8 @@ for (const p of practice) { if (prById[p.id]) error(`練習 id 重複：${p.id}`
 
 // ---------- 動畫名稱（從 anims-*.js 裡的 defineAnim("名稱" 找出來） ----------
 const animNames = new Set();
-for (const f of APP_FILES.filter((x) => x.startsWith('anims-'))) {
-  const p = join(HERE, 'src', 'app', f);
+for (const f of readdirSync(APP_DIR).filter((x) => /^anims-.*\.js$/.test(x))) {
+  const p = join(APP_DIR, f);
   if (!existsSync(p)) continue;
   for (const m of read(p).matchAll(/defineAnim\("([\w-]+)"/g)) animNames.add(m[1]);
 }
@@ -167,7 +163,7 @@ for (const p of practice) {
 if (errors) { console.error(`\n打包失敗：${errors} 個錯誤`); process.exit(1); }
 
 // ---------- 輸出 ----------
-// content：只給學生看的內容（章節、題目解答、筆記、練習）。只寫到本機的 dist，由 publish.mjs 寫進資料庫。
+// 只給學 C 的學生看的內容：只寫到本機的 dist（已 gitignore），由 publish-learn-content.ts 寫進資料庫
 const content = {
   chapters: chapters.map(({ file, ...c }) => c),
   problems,
@@ -175,52 +171,8 @@ const content = {
 };
 const contentJson = JSON.stringify(content);
 const contentVersion = createHash('sha256').update(contentJson).digest('hex').slice(0, 12);
-const app = '(function () {\n"use strict";\n' + APP_FILES.filter((f) => existsSync(join(HERE, 'src', 'app', f)))
-  .map((f) => `/* ===== ${f} ===== */\n` + read(join(HERE, 'src', 'app', f))).join('\n') + '\n})();\n';
-const css = CSS_FILES.map((f) => read(join(HERE, 'src', 'app', f))).join('\n');
-const interpFiles = JSON.parse(read(join(HERE, 'src', 'interp', 'files.json')));
-const interp = interpFiles.map((f) => read(join(HERE, 'src', 'interp', f))).join('\n');
-const worker = `importScripts("interp.js?v=__VERSION__");
-self.onmessage = function (e) {
-  var d = e.data, r;
-  try { r = self.CInterp.run(d.src, d.opts); }
-  catch (err) { r = { status: "runtime", out: "", exitCode: 0, warnings: [], steps: 0, trace: null, error: { line: 0, msg: "練習環境內部發生錯誤（不是你的程式的問題）：" + (err && err.message) } }; }
-  self.postMessage({ id: d.id, r: r });
-};
-`;
-const version = createHash('sha256').update(app + css + interp).digest('hex').slice(0, 10);
-// 頁面外殼：設定放在 <meta>（不能用內嵌 script）。local = 本機預覽，會多載入 data.js
-function page(local, api) {
-  let html = read(join(HERE, 'src', 'page.html')).replace(/__VERSION__/g, version)
-    .replace(/__BASE__/g, BASE).replace(/__API__/g, api || '')
-    .replace(/(href|src)="(style\.css|data\.js|app\.js)/g, `$1="${BASE}$2`);
-  if (!local) html = html.replace(/^.*data\.js.*\n/m, '');
-  return html;
-}
-const shell = { 'style.css': css, 'app.js': app, 'interp.js': interp, 'worker.js': worker.replace(/__VERSION__/g, version) };
-const write = (dir, files) => {
-  mkdirSync(dir, { recursive: true });
-  for (const [f, c] of Object.entries(files)) writeFileSync(join(dir, f), c);
-};
-const local = Object.assign({ 'index.html': page(true, ''), 'data.js': `window.LM_DATA = ${contentJson.replace(/<\//g, '<\\/')};\n`,
-  'content.json': JSON.stringify({ version: contentVersion, content }) }, shell);
-write(OUT, local);
-// --site=<資料夾>：網站用的靜態檔（樣式、程式、解譯器），**不含任何內容**（內容由 API 檢查權限後提供）。
-// 頁面本身有兩種給法：
-//   --shell-ts=<檔案.ts>：產生 TypeScript 模組，由 Next.js 路由回傳頁面，API 網址用網站的 NEXT_PUBLIC_API_URL（judge.tw 用這個）
-//   --api=<API 網址>：直接寫一個 index.html（API 網址寫死，給單純的靜態伺服器測試用）
-const SITE = arg('site');
-if (SITE) {
-  if (!arg('api') && !arg('shell-ts')) { console.error('--site 需要同時給 --shell-ts=<檔案> 或 --api=<API 網址>'); process.exit(1); }
-  for (const f of ['data.js', 'content.json', 'index.html']) rmSync(join(resolve(SITE), f), { force: true });
-  write(resolve(SITE), Object.assign(arg('api') ? { 'index.html': page(false, arg('api')) } : {}, shell));
-  if (arg('shell-ts')) {
-    writeFileSync(resolve(arg('shell-ts')), '// 由 content/learn-c/build.mjs 產生，不要手動修改。只有頁面外殼，不含任何課程內容。\n' +
-      `export const SHELL_HTML = ${JSON.stringify(page(false, '__API__'))};\n`);
-  }
-}
+mkdirSync(OUT, { recursive: true });
+writeFileSync(join(OUT, 'content.json'), JSON.stringify({ version: contentVersion, content }));
 for (const w of warnings) console.log('警告：' + w);
-const kb = (s) => (Buffer.byteLength(s) / 1024).toFixed(0) + ' KB';
 console.log(`完成：${chapters.length} 個章節、${problems.length} 道題目、${practice.length} 題練習、${animNames.size} 個動畫（內容版本 ${contentVersion}）`);
-console.log(`  本機：${OUT}（${Object.entries(local).map(([f, c]) => `${f} ${kb(c)}`).join('、')}）`);
-if (SITE) console.log(`  網站外殼：${resolve(SITE)}（不含內容）`);
+console.log(`  → ${join(OUT, 'content.json')}（${(Buffer.byteLength(contentJson) / 1024).toFixed(0)} KB）`);

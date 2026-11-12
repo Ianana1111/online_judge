@@ -10,6 +10,7 @@ import {
   deleteAccountSchema,
   requestSchoolVerificationSchema,
   setIsStudentSchema,
+  setLearnCSchema,
   updateProfileSchema,
   updateSettingsSchema,
   type ChangeHandleDto,
@@ -18,6 +19,7 @@ import {
   type DeleteAccountDto,
   type RequestSchoolVerificationDto,
   type SetIsStudentDto,
+  type SetLearnCDto,
   type UpdateProfileDto,
   type UpdateSettingsDto,
 } from "@oj/shared";
@@ -147,6 +149,12 @@ export class UsersController {
   @Patch(":id/student")
   setIsStudent(@Param("id") id: string, @Body(new ZodValidationPipe(setIsStudentSchema)) body: SetIsStudentDto) {
     return this.users.setIsStudent(id, body.isStudent);
+  }
+
+  @Roles("ADMIN")
+  @Patch(":id/learn-c")
+  setLearnC(@Param("id") id: string, @Body(new ZodValidationPipe(setLearnCSchema)) body: SetLearnCDto) {
+    return this.users.setLearnC(id, body.learnC);
   }
 
   @Public()
