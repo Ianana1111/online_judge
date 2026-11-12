@@ -303,8 +303,8 @@ model User {
   @@map("users")
 }
 
-/// Activated explicitly by an operator. The insert trigger awards slots atomically,
-/// including signups served by an older API instance during a rolling deployment.
+/// The new-member Pro gift (2026-10-03 to 2026-11-12). It has ended: the signup trigger was dropped
+/// and nothing grants new slots. The rows stay so earlier recipients keep their gift until it expires.
 model SignupProCampaign {
   id                String   @id
   startsAt          DateTime
