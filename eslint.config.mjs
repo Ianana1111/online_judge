@@ -4,7 +4,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 
 export default ts.config(
-  { ignores: ["**/node_modules/**", "**/.next/**", "**/next-env.d.ts", "**/dist/**", "**/.turbo/**", "**/public/vs/**", "**/audit/**", "**/test-results/**", "**/playwright-report/**", ".pnpm-store/**"] },
+  { ignores: ["**/node_modules/**", "**/.next/**", "**/next-env.d.ts", "**/dist/**", "**/.turbo/**", "**/public/vs/**", "**/public/learn/**", "content/learn-c/**", "**/audit/**", "**/test-results/**", "**/playwright-report/**", ".pnpm-store/**"] },
   js.configs.recommended,
   ...ts.configs.recommended,
   {

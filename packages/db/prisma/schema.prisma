@@ -499,6 +499,19 @@ model PageView {
 
 /// Durable site-wide totals that must survive raw-row pruning (e.g. pageviews deleted by
 /// PageviewRetentionService are added to "pageviews_pruned" in the same transaction).
+/// Tutoring-only teaching material (the C learning map at judge.tw/learn/c: chapters, practice
+/// problems, class solutions and notes). The repo is public, so this content never lives in git —
+/// content/learn-c/publish.mjs builds it from the tutor's private folder and writes the whole bundle
+/// here as one JSON document; GET /learn/:slug/content serves it only to tutored students and admins.
+model LearnContent {
+  slug      String   @id
+  version   String
+  content   Json
+  updatedAt DateTime @updatedAt
+
+  @@map("learn_contents")
+}
+
 model SiteCounter {
   key       String   @id
   value     BigInt   @default(0)

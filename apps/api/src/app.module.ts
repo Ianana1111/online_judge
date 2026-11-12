@@ -16,6 +16,7 @@ import { ContestsModule } from "./contests/contests.module";
 import { CsrfGuard } from "./common/csrf.guard";
 import { DiscussionsModule } from "./discussions/discussions.module";
 import { LeaderboardModule } from "./leaderboard/leaderboard.module";
+import { LearnModule } from "./learn/learn.module";
 import { NotificationsModule } from "./notifications/notifications.module";
 import { PostsModule } from "./posts/posts.module";
 import { REDIS_URL } from "./common/redis.providers";
@@ -51,6 +52,7 @@ import { UsersModule } from "./users/users.module";
     ClassesModule,
     CollectionsModule,
     LeaderboardModule,
+    LearnModule,
     BillingModule,
     NotificationsModule,
     AchievementsModule,
