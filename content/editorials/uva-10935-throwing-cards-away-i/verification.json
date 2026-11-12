@@ -1,0 +1,35 @@
+{
+  "sources": [
+    "https://cpe.mcu.edu.tw/cpe/problems/CPE261006/CPE261006-P3.uva10935.pdf",
+    "https://onlinejudge.org/external/109/10935.pdf"
+  ],
+  "constraints": [
+    "Each line holds one n; the official CPE data includes n above the stated 50, so this site allows 1 <= n <= 10000 and at most 1000 values, terminated by 0.",
+    "n = 1 prints 'Discarded cards:' with nothing after the colon."
+  ],
+  "independentMethod": "Simulate the deck with a growing Python list and a head index (no queue type), and cross-check against an explicit list-rotation simulation in unit tests.",
+  "oracleFile": "scripts/editorials/oracles/cpe_sitting_20261006.py",
+  "mutations": [
+    {
+      "id": "stops-early",
+      "label": "Stops when two cards remain",
+      "languageKey": "cpp17",
+      "find": "while (deck.size() >= 2)",
+      "replace": "while (deck.size() > 2)"
+    },
+    {
+      "id": "no-move-to-bottom",
+      "label": "Discards without moving the next card to the bottom",
+      "languageKey": "cpp17",
+      "find": "deck.push(deck.front());",
+      "replace": ""
+    },
+    {
+      "id": "comma-without-space",
+      "label": "Separates cards with a bare comma",
+      "languageKey": "cpp17",
+      "find": "line += first ? \" \" : \", \";",
+      "replace": "line += first ? \" \" : \",\";"
+    }
+  ]
+}

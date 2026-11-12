@@ -1,0 +1,11 @@
+{
+  "slug": "uva-10436-cheapest-way",
+  "title": "把過站費併入邊權的 Dijkstra，票價用整數精確四捨五入",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "sources": [
+    "https://cpe.mcu.edu.tw/cpe/problems/CPE261006/CPE261006-P4.uva10665.pdf",
+    "https://onlinejudge.org/external/106/10665.pdf"
+  ],
+  "constraints": [
+    "1 <= M <= 1000 cases; 1 < N < 26; the parcel string holds only capital letters before '#', up to 10000 of them (the official CPE data exceeds 1000), possibly none.",
+    "Letters beyond the N-th worker are ignored; a pigeonhole farther from (N+1)/2 must hold at least as many parcels; print the lexicographically smallest worker sequence."
+  ],
+  "independentMethod": "Place pigeonholes left to right, trying letters alphabetically and keeping a choice only if a distance-sorted completion satisfies the pairwise farther-means-heavier dominance check; unit tests compare against exhaustive permutation search for N <= 7.",
+  "oracleFile": "scripts/editorials/oracles/cpe_sitting_20261006.py",
+  "mutations": [
+    {
+      "id": "heavier-always-left",
+      "label": "Always puts the heavier tier count on the left",
+      "languageKey": "cpp17",
+      "find": "int w = take(a, b);",
+      "replace": "int w = take(a, a);"
+    },
+    {
+      "id": "ascending-counts",
+      "label": "Sorts counts ascending, putting light mail outside",
+      "languageKey": "cpp17",
+      "find": "sort(sorted.begin(), sorted.end(), greater<int>());",
+      "replace": "sort(sorted.begin(), sorted.end());"
+    },
+    {
+      "id": "counts-invalid-workers",
+      "label": "Counts letters beyond the N-th worker",
+      "languageKey": "cpp17",
+      "find": "if (ch >= 'A' && ch < 'A' + n) ++count[ch - 'A'];",
+      "replace": "if (ch >= 'A' && ch <= 'Z') ++count[(ch - 'A') % n];"
+    }
+  ]
+}

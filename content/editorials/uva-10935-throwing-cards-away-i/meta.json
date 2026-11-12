@@ -1,0 +1,11 @@
+{
+  "slug": "uva-10935-throwing-cards-away-i",
+  "title": "用佇列照規則模擬：丟頂牌、下一張移到底",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
+  ]
+}

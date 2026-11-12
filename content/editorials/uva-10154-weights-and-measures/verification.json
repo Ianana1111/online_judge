@@ -1,0 +1,35 @@
+{
+  "sources": [
+    "https://cpe.mcu.edu.tw/cpe/problems/CPE261006/CPE261006-P7.uva10154.pdf",
+    "https://onlinejudge.org/external/101/10154.pdf"
+  ],
+  "constraints": [
+    "1..5607 lines, each with exactly two integers weight and strength in 1..200000, read until end of file.",
+    "Strength includes the turtle's own weight; weights and strengths may repeat."
+  ],
+  "independentMethod": "Quadratic DP over turtles sorted by strength where best[k] is the lightest valid k-turtle stack; unit tests compare against exhaustive ordered-subset search for up to six turtles.",
+  "oracleFile": "scripts/editorials/oracles/cpe_sitting_20261006.py",
+  "mutations": [
+    {
+      "id": "sort-by-capacity",
+      "label": "Sorts by remaining capacity instead of strength",
+      "languageKey": "cpp17",
+      "find": "sort(turtles.begin(), turtles.end());",
+      "replace": "sort(turtles.begin(), turtles.end(), [](const pair<long long, long long> &x, const pair<long long, long long> &y) { return x.first - x.second < y.first - y.second; });"
+    },
+    {
+      "id": "excludes-own-weight",
+      "label": "Lets strength exclude the turtle's own weight",
+      "languageKey": "cpp17",
+      "find": "if (total > turtle.first) {",
+      "replace": "if (total > turtle.first + turtle.second) {"
+    },
+    {
+      "id": "drops-newcomer",
+      "label": "Drops the new turtle instead of the heaviest one",
+      "languageKey": "cpp17",
+      "find": "total -= stack.top();\n            stack.pop();",
+      "replace": "total -= turtle.second;\n            priority_queue<long long> rest;\n            bool removed = false;\n            while (!stack.empty()) { if (!removed && stack.top() == turtle.second) removed = true; else rest.push(stack.top()); stack.pop(); }\n            stack.swap(rest);"
+    }
+  ]
+}

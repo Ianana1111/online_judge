@@ -1,0 +1,11 @@
+{
+  "slug": "uva-10665-diatribe-against-pigeonholes",
+  "title": "包裹數排序後兩兩一層，由外往內放，再逐格取字母最小者",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
+  ]
+}

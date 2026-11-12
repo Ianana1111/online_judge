@@ -1,0 +1,11 @@
+{
+  "slug": "uva-10154-weights-and-measures",
+  "title": "依力量由小到大加入，超重就丟掉目前最重的烏龜",
+  "locale": "zh-TW",
+  "languages": [
+    "cpp17",
+    "c11",
+    "python3",
+    "java17"
+  ]
+}

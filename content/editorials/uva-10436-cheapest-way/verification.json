@@ -1,0 +1,35 @@
+{
+  "sources": [
+    "https://cpe.mcu.edu.tw/cpe/problems/CPE261006/CPE261006-P6.uva10436.pdf",
+    "https://onlinejudge.org/external/104/10436.pdf"
+  ],
+  "constraints": [
+    "Up to 1000 maps; 0 < nStation < 20 with unique names of 1-30 lowercase letters or digits; fees 0..1000; 0 < nPath < 20 roads of 1..1000 km, parallel roads allowed; 0 < nQuery < 10; passengers 1..10000.",
+    "Query endpoints differ and the minimum-cost station sequence is unique; fare = cost*1.1/passengers rounded half up to cents; blank line between maps only."
+  ],
+  "independentMethod": "Enumerate every simple path between the query stations by depth-first search, assert that exactly one attains the minimum cost, and round the fare with exact rational arithmetic.",
+  "oracleFile": "scripts/editorials/oracles/cpe_sitting_20261006.py",
+  "mutations": [
+    {
+      "id": "no-start-fee",
+      "label": "Skips the start station fee",
+      "languageKey": "cpp17",
+      "find": "cost[src] = fee[src];",
+      "replace": "cost[src] = 0;"
+    },
+    {
+      "id": "single-oil-cost",
+      "label": "Charges one taka per kilometer when relaxing",
+      "languageKey": "cpp17",
+      "find": "cost[y] = cost[x] + 2 * road[x][y] + fee[y];",
+      "replace": "cost[y] = cost[x] + road[x][y] + fee[y];"
+    },
+    {
+      "id": "truncated-fare",
+      "label": "Truncates the fare instead of rounding",
+      "languageKey": "cpp17",
+      "find": "long long cents = (cost[dst] * 220 + passengers) / (2 * passengers);",
+      "replace": "long long cents = cost[dst] * 110 / passengers;"
+    }
+  ]
+}

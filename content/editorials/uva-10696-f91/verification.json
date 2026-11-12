@@ -1,0 +1,35 @@
+{
+  "sources": [
+    "https://cpe.mcu.edu.tw/cpe/problems/CPE261006/CPE261006-P1.uva10696.pdf",
+    "https://onlinejudge.org/external/106/10696.pdf"
+  ],
+  "constraints": [
+    "Positive integers 1..1000000, at most 250000 values, one per line, terminated by a single 0 that is not processed.",
+    "Output exactly 'f91(N) = value' per value."
+  ],
+  "independentMethod": "Evaluate the nested recursive definition literally with an explicit pending-call counter (memoized per N), never using the closed form 91 / N-10.",
+  "oracleFile": "scripts/editorials/oracles/cpe_sitting_20261006.py",
+  "mutations": [
+    {
+      "id": "strict-boundary",
+      "label": "Treats 100 as the N-10 branch",
+      "languageKey": "cpp17",
+      "find": "n <= 100 ? 91 : n - 10",
+      "replace": "n < 100 ? 91 : n - 10"
+    },
+    {
+      "id": "prints-terminator",
+      "label": "Also processes the terminating zero",
+      "languageKey": "cpp17",
+      "find": "while (cin >> n && n != 0)",
+      "replace": "while (cin >> n)"
+    },
+    {
+      "id": "off-by-one-subtract",
+      "label": "Subtracts 11 for large N",
+      "languageKey": "cpp17",
+      "find": "n <= 100 ? 91 : n - 10",
+      "replace": "n <= 100 ? 91 : n - 11"
+    }
+  ]
+}
